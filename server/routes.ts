@@ -18,6 +18,11 @@ import mammoth from "mammoth";
 import multer from "multer";
 import { generateEvaluationQuestions } from "./aiEvaluationGenerator";
 
+// Helper to ensure string params (not arrays)
+function getStringParam(param: string | string[]): string {
+  return Array.isArray(param) ? param[0] : param;
+}
+
 // Multer configuration for Word document uploads
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -1005,7 +1010,7 @@ export async function registerRoutes(
       if (isFolderUrl && moduleNumber && modulePages) {
         try {
           // Extract folder ID
-          const folderIdMatch = levelSubject.textbookPdfUrl.match(/\/folders\/([a-zA-Z0-9_-]+)/);
+          const folderIdMatch = levelSubject.textbookPdfUrl?.match(/\/folders\/([a-zA-Z0-9_-]+)/);
           if (folderIdMatch) {
             const folderId = folderIdMatch[1];
             
@@ -1593,7 +1598,8 @@ export async function registerRoutes(
           totalPages,
           modulePagesConfig: typeof modulePagesConfig === 'string' 
             ? modulePagesConfig 
-            : JSON.stringify(modulePagesConfig)
+            : JSON.stringify(modulePagesConfig),
+          modulePDFsMap: '{}'
         });
         res.json(created);
       }
@@ -1612,7 +1618,7 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Missing modulePagesConfig" });
       }
 
-      const updated = await storage.updateTextbookConfig(req.params.id, {
+      const updated = await storage.updateTextbookConfig(getStringParam(req.params.id), {
         modulePagesConfig: typeof modulePagesConfig === 'string' 
           ? modulePagesConfig 
           : JSON.stringify(modulePagesConfig),
@@ -1629,7 +1635,7 @@ export async function registerRoutes(
   // Delete textbook config (Admin only)
   app.delete("/api/textbooks/:id", isAdmin, async (req, res) => {
     try {
-      await storage.deleteTextbookConfig(req.params.id);
+      await storage.deleteTextbookConfig(getStringParam(req.params.id));
       res.json({ message: "Textbook config deleted" });
     } catch (error) {
       console.error("Error deleting textbook config:", error);
@@ -1677,7 +1683,7 @@ export async function registerRoutes(
   // Get reservation by ID (Admin only)
   app.get("/api/reservations/:id", isAuthenticated, isAdmin, async (req, res) => {
     try {
-      const reservation = await storage.getReservationById(req.params.id);
+      const reservation = await storage.getReservationById(getStringParam(req.params.id));
       if (!reservation) {
         return res.status(404).json({ message: "Reservation not found" });
       }
@@ -1695,7 +1701,7 @@ export async function registerRoutes(
       if (!status || !["pending", "contacted", "enrolled", "rejected"].includes(status)) {
         return res.status(400).json({ message: "Invalid status" });
       }
-      const updated = await storage.updateReservationStatus(req.params.id, status);
+      const updated = await storage.updateReservationStatus(getStringParam(req.params.id), status);
       res.json(updated);
     } catch (error) {
       console.error("Error updating reservation:", error);
@@ -1706,7 +1712,7 @@ export async function registerRoutes(
   // Delete reservation (Admin only)
   app.delete("/api/reservations/:id", isAuthenticated, isAdmin, async (req, res) => {
     try {
-      await storage.deleteReservation(req.params.id);
+      await storage.deleteReservation(getStringParam(req.params.id));
       res.json({ message: "Reservation deleted" });
     } catch (error) {
       console.error("Error deleting reservation:", error);
@@ -1755,7 +1761,7 @@ export async function registerRoutes(
   // Update plan (Admin only)
   app.patch("/api/plans/:id", isAuthenticated, isAdmin, async (req, res) => {
     try {
-      const updated = await storage.updatePlanConfiguration(req.params.id, req.body);
+      const updated = await storage.updatePlanConfiguration(getStringParam(req.params.id), req.body);
       if (!updated) {
         return res.status(404).json({ message: "Plan not found" });
       }
@@ -1769,7 +1775,7 @@ export async function registerRoutes(
   // Delete plan (Admin only)
   app.delete("/api/plans/:id", isAuthenticated, isAdmin, async (req, res) => {
     try {
-      await storage.deletePlanConfiguration(req.params.id);
+      await storage.deletePlanConfiguration(getStringParam(req.params.id));
       res.json({ message: "Plan deleted" });
     } catch (error) {
       console.error("Error deleting plan:", error);
@@ -1878,7 +1884,7 @@ export async function registerRoutes(
   // Update adult cycle (Admin only)
   app.patch("/api/adult-cycles/:id", isAuthenticated, isAdmin, async (req, res) => {
     try {
-      const updated = await storage.updateAdultCycleConfiguration(req.params.id, req.body);
+      const updated = await storage.updateAdultCycleConfiguration(getStringParam(req.params.id), req.body);
       if (!updated) {
         return res.status(404).json({ message: "Cycle not found" });
       }
@@ -1892,7 +1898,7 @@ export async function registerRoutes(
   // Delete adult cycle (Admin only)
   app.delete("/api/adult-cycles/:id", isAuthenticated, isAdmin, async (req, res) => {
     try {
-      await storage.deleteAdultCycleConfiguration(req.params.id);
+      await storage.deleteAdultCycleConfiguration(getStringParam(req.params.id));
       res.json({ message: "Cycle deleted" });
     } catch (error) {
       console.error("Error deleting adult cycle:", error);
@@ -1968,7 +1974,7 @@ export async function registerRoutes(
   // PUT: Update copilot (Admin only)
   app.put("/api/gemini-copilots/:id", isAdmin, async (req, res) => {
     try {
-      const copilot = await storage.updateGeminiCopilot(req.params.id, req.body);
+      const copilot = await storage.updateGeminiCopilot(getStringParam(req.params.id), req.body);
       if (!copilot) {
         return res.status(404).json({ message: "Copilot not found" });
       }
@@ -1982,7 +1988,7 @@ export async function registerRoutes(
   // DELETE: Delete copilot (Admin only)
   app.delete("/api/gemini-copilots/:id", isAdmin, async (req, res) => {
     try {
-      await storage.deleteGeminiCopilot(req.params.id);
+      await storage.deleteGeminiCopilot(getStringParam(req.params.id));
       res.json({ message: "Copilot deleted successfully" });
     } catch (error) {
       console.error("Error deleting copilot:", error);
@@ -1993,7 +1999,7 @@ export async function registerRoutes(
   // PATCH: Toggle active status (Admin only)
   app.patch("/api/gemini-copilots/:id/toggle", isAdmin, async (req, res) => {
     try {
-      const copilot = await storage.toggleGeminiCopilotStatus(req.params.id);
+      const copilot = await storage.toggleGeminiCopilotStatus(getStringParam(req.params.id));
       if (!copilot) {
         return res.status(404).json({ message: "Copilot not found" });
       }
@@ -2061,7 +2067,7 @@ export async function registerRoutes(
   // PATCH: Update level plan (Admin only)
   app.patch("/api/level-plans/:id", isAdmin, async (req, res) => {
     try {
-      const plan = await storage.updateLevelPlanConfiguration(req.params.id, req.body);
+      const plan = await storage.updateLevelPlanConfiguration(getStringParam(req.params.id), req.body);
       if (!plan) {
         return res.status(404).json({ message: "Level plan not found" });
       }
@@ -2075,7 +2081,7 @@ export async function registerRoutes(
   // DELETE: Delete level plan (Admin only)
   app.delete("/api/level-plans/:id", isAdmin, async (req, res) => {
     try {
-      await storage.deleteLevelPlanConfiguration(req.params.id);
+      await storage.deleteLevelPlanConfiguration(getStringParam(req.params.id));
       res.json({ message: "Level plan deleted successfully" });
     } catch (error) {
       console.error("Error deleting level plan:", error);
