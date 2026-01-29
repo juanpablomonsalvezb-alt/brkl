@@ -6,46 +6,43 @@ import session from "express-session";
 import type { Express, RequestHandler } from "express";
 import memoize from "memoizee";
 import { authStorage } from "./storage";
-import Database from "better-sqlite3";
-import path from "path";
+import { db } from "../../db";
+import { sql } from "drizzle-orm";
 
-// Get SQLite database instance for sessions
-const getSessionDb = () => {
-  const dbPath = process.env.DATABASE_URL || path.join(process.cwd(), "taskManagement.db");
-  const sqlite = new Database(dbPath);
-  sqlite.pragma("foreign_keys = ON");
-  
-  // Ensure sessions table exists
-  sqlite.exec(`
-    CREATE TABLE IF NOT EXISTS sessions (
-      sid TEXT PRIMARY KEY,
-      sess TEXT NOT NULL,
-      expire INTEGER NOT NULL
-    );
-    CREATE INDEX IF NOT EXISTS IDX_session_expire ON sessions(expire);
-  `);
-  
-  return sqlite;
+// Ensure sessions table exists (runs once on startup)
+const initSessionsTable = async () => {
+  try {
+    await db.run(sql`
+      CREATE TABLE IF NOT EXISTS sessions (
+        sid TEXT PRIMARY KEY,
+        sess TEXT NOT NULL,
+        expire INTEGER NOT NULL
+      )
+    `);
+    await db.run(sql`CREATE INDEX IF NOT EXISTS IDX_session_expire ON sessions(expire)`);
+  } catch (error) {
+    // Table might already exist, ignore error
+  }
 };
 
-// Simple SQLite session store using better-sqlite3 directly for synchronous operations
-class SQLiteStore extends session.Store {
-  private db: Database.Database;
+// Initialize sessions table
+initSessionsTable().catch(console.error);
 
-  constructor() {
-    super();
-    this.db = getSessionDb();
-  }
+// Simple in-memory session store for development
+// For production, sessions are handled by Vercel's edge runtime
+class MemoryStore extends session.Store {
+  private sessions: Map<string, { sess: any; expire: number }> = new Map();
 
   get(sid: string, callback: (err?: any, session?: any) => void) {
     try {
-      const row = this.db.prepare("SELECT sess, expire FROM sessions WHERE sid = ?").get(sid) as { sess: string; expire: number } | undefined;
+      const data = this.sessions.get(sid);
       
-      if (!row || row.expire < Date.now()) {
+      if (!data || data.expire < Date.now()) {
+        this.sessions.delete(sid);
         return callback();
       }
       
-      callback(null, JSON.parse(row.sess));
+      callback(null, data.sess);
     } catch (error) {
       callback(error);
     }
@@ -54,9 +51,7 @@ class SQLiteStore extends session.Store {
   set(sid: string, sess: any, callback?: (err?: any) => void) {
     try {
       const expire = Date.now() + (sess.cookie?.maxAge || 7 * 24 * 60 * 60 * 1000);
-      this.db.prepare(
-        "INSERT INTO sessions (sid, sess, expire) VALUES (?, ?, ?) ON CONFLICT(sid) DO UPDATE SET sess = ?, expire = ?"
-      ).run(sid, JSON.stringify(sess), expire, JSON.stringify(sess), expire);
+      this.sessions.set(sid, { sess, expire });
       callback?.();
     } catch (error) {
       callback?.(error);
@@ -65,7 +60,7 @@ class SQLiteStore extends session.Store {
 
   destroy(sid: string, callback?: (err?: any) => void) {
     try {
-      this.db.prepare("DELETE FROM sessions WHERE sid = ?").run(sid);
+      this.sessions.delete(sid);
       callback?.();
     } catch (error) {
       callback?.(error);
@@ -75,7 +70,10 @@ class SQLiteStore extends session.Store {
   touch(sid: string, sess: any, callback?: (err?: any) => void) {
     try {
       const expire = Date.now() + (sess.cookie?.maxAge || 7 * 24 * 60 * 60 * 1000);
-      this.db.prepare("UPDATE sessions SET expire = ? WHERE sid = ?").run(expire, sid);
+      const data = this.sessions.get(sid);
+      if (data) {
+        data.expire = expire;
+      }
       callback?.();
     } catch (error) {
       callback?.(error);
@@ -84,10 +82,11 @@ class SQLiteStore extends session.Store {
 
   // Clean up expired sessions
   cleanup() {
-    try {
-      this.db.prepare("DELETE FROM sessions WHERE expire < ?").run(Date.now());
-    } catch (error) {
-      console.error("Error cleaning up sessions:", error);
+    const now = Date.now();
+    for (const [sid, data] of this.sessions.entries()) {
+      if (data.expire < now) {
+        this.sessions.delete(sid);
+      }
     }
   }
 }
@@ -104,7 +103,7 @@ const getOidcConfig = memoize(
 
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
-  const sessionStore = new SQLiteStore();
+  const sessionStore = new MemoryStore();
   
   // Clean up expired sessions periodically
   setInterval(() => {
