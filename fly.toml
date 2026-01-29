@@ -1,7 +1,7 @@
 # fly.toml app configuration file
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 
-app = "brkl"
+app = "app-dawn-wave-88"
 primary_region = "iad"
 
 [build]
