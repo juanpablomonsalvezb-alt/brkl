@@ -423,18 +423,6 @@ export default function Home() {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               className="max-w-5xl"
             >
-              {/* Eyebrow text - Harvard style */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="mb-8"
-              >
-                <span className="inline-block px-4 py-2 bg-[#a51c30]/10 border border-[#a51c30]/20 text-[#a51c30] text-xs font-semibold uppercase tracking-[0.2em] rounded-full">
-                  Instituto UCE Online
-                </span>
-              </motion.div>
-
               {/* Main headline - Bigger and bolder like Harvard */}
               <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif text-foreground mb-10 leading-[1.05] font-bold tracking-tight">
                 Libera tu tiempo.<br />
