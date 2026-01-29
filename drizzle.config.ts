@@ -1,14 +1,12 @@
 import { defineConfig } from "drizzle-kit";
-import path from "path";
-
-// Use local SQLite database file
-const dbPath = process.env.DATABASE_URL || path.join(process.cwd(), "taskManagement.db");
 
 export default defineConfig({
   out: "./migrations",
   schema: "./shared/schema.ts",
   dialect: "sqlite",
+  driver: "turso",
   dbCredentials: {
-    url: dbPath,
+    url: process.env.TURSO_DATABASE_URL!,
+    authToken: process.env.TURSO_AUTH_TOKEN!,
   },
 });
