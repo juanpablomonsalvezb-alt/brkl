@@ -25,8 +25,10 @@ interface PlanConfiguration {
   sortOrder: number;
 }
 
+type ExtendedPlan = PlanConfiguration & { type: 'full' | 'standard' | 'tutor' };
+
 interface SelectedPlan {
-  basePlan: PlanConfiguration | null;
+  basePlan: ExtendedPlan | null;
 }
 
 export function PlanConfiguratorNew() {
@@ -68,6 +70,9 @@ export function PlanConfiguratorNew() {
         subjects: JSON.stringify(parseSubjectsArray(level.subjects || '[]')),
         description: `Plan completo con todas las materias y acompañamiento integral para ${level.levelGroupName}.`,
         category: level.programType === 'menores' ? 'Jóvenes' : 'Adultos',
+        linkText: null,
+        isActive: true,
+        sortOrder: 0,
         type: 'full' as const,
       },
       {
@@ -83,6 +88,9 @@ export function PlanConfiguratorNew() {
         subjects: JSON.stringify(parseSubjectsArray(level.subjects || '[]')),
         description: `Plan estándar con todas las materias básicas para ${level.levelGroupName}.`,
         category: level.programType === 'menores' ? 'Jóvenes' : 'Adultos',
+        linkText: null,
+        isActive: true,
+        sortOrder: 0,
         type: 'standard' as const,
       },
       {
@@ -98,6 +106,9 @@ export function PlanConfiguratorNew() {
         subjects: JSON.stringify(parseSubjectsArray(level.subjects || '[]')),
         description: `Plan con tutoría personalizada para ${level.levelGroupName}.`,
         category: level.programType === 'menores' ? 'Jóvenes' : 'Adultos',
+        linkText: null,
+        isActive: true,
+        sortOrder: 0,
         type: 'tutor' as const,
       },
     ];
@@ -248,7 +259,7 @@ export function PlanConfiguratorNew() {
                     <div className="space-y-3">
                       <div className="text-center">
                         <Badge className="bg-[#002147]/10 text-[#002147] border border-[#002147]/30 mb-2 text-sm">
-                          {currentPlan.category || (currentPlan.type === 'youth' ? 'Jóvenes' : 'Adultos')}
+                          {currentPlan.category || 'Plan'}
                         </Badge>
                         <h4 className="text-xl font-bold text-[#002147] mb-1">
                           {currentPlan.planName}

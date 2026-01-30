@@ -13,6 +13,14 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, CheckCircle2 } from "lucide-react";
 
 const reservationSchema = z.object({
+  fullName: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
+  rut: z.string().min(8, "RUT inválido"),
+  email: z.string().email("Email inválido").refine(
+    (email) => email.endsWith("@gmail.com"),
+    { message: "Debe usar una cuenta de Gmail (@gmail.com)" }
+  ),
+  phone: z.string().min(8, "Teléfono inválido"),
+  dateOfBirth: z.string().min(1, "La fecha de nacimiento es requerida"),
   nivel: z.enum([
     // Menores - cursos individuales
     "7b", "8b", "1m", "2m", "3m", "4m",
@@ -20,6 +28,8 @@ const reservationSchema = z.object({
     "adultos_7b-8b", "adultos_1m-2m", "adultos_3m-4m"
   ]),
   programType: z.string().min(1, "Debes seleccionar un plan"),
+  howDidYouHear: z.string().optional(),
+  comments: z.string().optional(),
 });
 
 type ReservationFormData = z.infer<typeof reservationSchema>;
@@ -45,8 +55,15 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
   const form = useForm<ReservationFormData>({
     resolver: zodResolver(reservationSchema),
     defaultValues: {
+      fullName: "",
+      rut: "",
+      email: "",
+      phone: "",
+      dateOfBirth: "",
       nivel: "7b",
       programType: "",
+      howDidYouHear: "",
+      comments: "",
     },
   });
 

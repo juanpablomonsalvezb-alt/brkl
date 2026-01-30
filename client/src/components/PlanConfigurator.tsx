@@ -25,8 +25,12 @@ interface PlanConfiguration {
   sortOrder: number;
 }
 
+type YouthPlan = PlanConfiguration & { type: 'youth' };
+type AdultPlan = Omit<PlanConfiguration, 'planSubtitle' | 'category' | 'linkText' | 'isActive' | 'sortOrder'> & { type: 'adult' };
+type CombinedPlan = YouthPlan | AdultPlan;
+
 interface SelectedPlan {
-  basePlan: PlanConfiguration | null;
+  basePlan: CombinedPlan | null;
   hasTeacher: boolean;
   extras: string[];
 }
@@ -106,6 +110,11 @@ export function PlanConfigurator() {
     } catch {
       return [];
     }
+  };
+
+  // Type guard to check if plan is youth plan
+  const isYouthPlan = (plan: CombinedPlan): plan is YouthPlan => {
+    return plan.type === 'youth';
   };
 
   // Navigation functions for carousel
@@ -209,7 +218,7 @@ export function PlanConfigurator() {
                           {/* Plan Content */}
                           <div className="space-y-4">
                             {/* Category Badge */}
-                            {currentPlan.category && (
+                            {isYouthPlan(currentPlan) && currentPlan.category && (
                               <div className="flex justify-center">
                                 <Badge className="bg-[#D4AF37]/20 text-[#002147] border border-[#D4AF37]">
                                   {currentPlan.category}
@@ -222,7 +231,7 @@ export function PlanConfigurator() {
                               <h4 className="text-2xl font-bold text-[#002147] mb-1">
                                 {currentPlan.planName}
                               </h4>
-                              {currentPlan.planSubtitle && (
+                              {isYouthPlan(currentPlan) && currentPlan.planSubtitle && (
                                 <p className="text-sm text-[#002147]/60">
                                   {currentPlan.planSubtitle}
                                 </p>

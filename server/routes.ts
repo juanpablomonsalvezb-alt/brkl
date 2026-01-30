@@ -17,6 +17,7 @@ import {
 import mammoth from "mammoth";
 import multer from "multer";
 import { generateEvaluationQuestions } from "./aiEvaluationGenerator";
+import { registerEvaluationLinksRoutes } from "./evaluationLinksRoutes";
 
 // Helper to ensure string params (not arrays)
 function getStringParam(param: string | string[]): string {
@@ -169,6 +170,16 @@ export async function registerRoutes(
       return null;
     }
   };
+
+  // Health check endpoint for keep-alive service
+  app.get("/api/health", (req, res) => {
+    res.json({ 
+      status: "ok", 
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      service: "Instituto Barkley LMS"
+    });
+  });
 
   // Setup authentication (BEFORE registering other routes)
   // Only enable auth if OAuth credentials are configured
@@ -2099,6 +2110,9 @@ export async function registerRoutes(
       res.status(500).json({ message: "Failed to initialize level plans" });
     }
   });
+
+  // Register evaluation links routes
+  registerEvaluationLinksRoutes(app);
 
   return httpServer;
 }

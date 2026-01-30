@@ -8,8 +8,9 @@ export function registerEvaluationLinksRoutes(app: Express) {
   // GET: Obtener links de evaluaciones por curso y módulo
   app.get("/api/evaluation-links/:courseId/:moduleNumber", async (req: Request, res: Response) => {
     try {
-      const courseId = req.params.courseId;
-      const moduleNumber = parseInt(req.params.moduleNumber);
+      const courseId = Array.isArray(req.params.courseId) ? req.params.courseId[0] : req.params.courseId;
+      const moduleNumberParam = Array.isArray(req.params.moduleNumber) ? req.params.moduleNumber[0] : req.params.moduleNumber;
+      const moduleNumber = parseInt(moduleNumberParam);
 
       if (!courseId || isNaN(moduleNumber)) {
         return res.status(400).json({ error: "IDs inválidos" });
@@ -129,8 +130,7 @@ export function registerEvaluationLinksRoutes(app: Express) {
       const links = await db
         .select()
         .from(evaluationLinks)
-        .where(eq(evaluationLinks.courseId, courseId))
-        .orderBy(evaluationLinks.moduleNumber, evaluationLinks.evaluationNumber);
+        .where(eq(evaluationLinks.courseId, courseId as string));
 
       return res.json(links);
     } catch (error: any) {
@@ -142,15 +142,11 @@ export function registerEvaluationLinksRoutes(app: Express) {
   // DELETE: Eliminar un link específico
   app.delete("/api/evaluation-links/:id", async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-
-      if (isNaN(id)) {
-        return res.status(400).json({ error: "ID inválido" });
-      }
+      const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
       await db
         .delete(evaluationLinks)
-        .where(eq(evaluationLinks.id, id));
+        .where(eq(evaluationLinks.id, id as string));
 
       return res.json({ message: "Link eliminado exitosamente" });
     } catch (error: any) {
@@ -162,12 +158,8 @@ export function registerEvaluationLinksRoutes(app: Express) {
   // PUT: Actualizar un link específico
   app.put("/api/evaluation-links/:id", async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
+      const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
       const updateData = req.body;
-
-      if (isNaN(id)) {
-        return res.status(400).json({ error: "ID inválido" });
-      }
 
       const validated = insertEvaluationLinkSchema.safeParse(updateData);
       if (!validated.success) {
@@ -183,7 +175,7 @@ export function registerEvaluationLinksRoutes(app: Express) {
           ...validated.data,
           updatedAt: new Date(),
         })
-        .where(eq(evaluationLinks.id, id))
+        .where(eq(evaluationLinks.id, id as string))
         .returning();
 
       if (updated.length === 0) {

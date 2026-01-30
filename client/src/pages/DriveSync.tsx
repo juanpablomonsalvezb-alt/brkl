@@ -39,10 +39,6 @@ interface LevelSubject {
   subjectId: string;
   level: { id: string, name: string };
   subject: { id: string, name: string };
-  id: string;
-  name: string;
-  type: string;
-  embedUrl: string;
   mimeType: string;
 }
 

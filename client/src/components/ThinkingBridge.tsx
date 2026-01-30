@@ -7,7 +7,7 @@ export function ThinkingBridge() {
     const isInView = useInView(containerRef, { once: true, margin: "-100px" });
 
     // Easing profesional tipo Apple/Stripe
-    const smoothEasing = [0.4, 0, 0.2, 1];
+    const smoothEasing = [0.4, 0, 0.2, 1] as const;
 
     return (
         <section ref={containerRef} className="bg-white py-20 overflow-hidden relative">
