@@ -612,48 +612,72 @@ export default function Home() {
                   </motion.a>
                 </div>
 
-                {/* Tertiary CTA Row - Minimal Inscriptions */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {/* Slim CTA 1 - Inscripciones (Crimson Outline) */}
+                {/* Premium Inscription CTAs - Ultra Minimal */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Premium CTA 1 - Crimson Glass Effect */}
                   <motion.button
                     onClick={() => setReservationDialogOpen(true)}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.9 }}
-                    whileHover={{ y: -1 }}
-                    whileTap={{ scale: 0.99 }}
-                    className="group relative overflow-hidden rounded-xl border border-[#a51c30]/30 bg-[#a51c30]/5 backdrop-blur-sm transition-all duration-300 hover:border-[#a51c30]/60 hover:bg-[#a51c30]/10 hover:shadow-lg hover:shadow-[#a51c30]/20"
+                    whileHover={{ y: -2, scale: 1.01 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="group relative overflow-hidden rounded-2xl border border-[#a51c30]/20 bg-gradient-to-br from-[#a51c30]/[0.02] via-white/50 to-[#a51c30]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#a51c30]/40 hover:shadow-2xl hover:shadow-[#a51c30]/10"
                   >
-                    <div className="relative flex items-center justify-center gap-2 px-6 py-3.5">
-                      <Calendar className="w-4 h-4 text-[#a51c30]" />
-                      <span className="text-base font-semibold text-[#a51c30] tracking-wide">
-                        Inscripciones Aquí
+                    {/* Gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#a51c30]/0 via-[#a51c30]/[0.03] to-[#a51c30]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
+                      {/* Minimal icon with subtle animation */}
+                      <div className="relative">
+                        <Calendar className="w-[18px] h-[18px] text-[#a51c30] group-hover:scale-110 transition-transform duration-300" />
+                        {/* Pulse effect */}
+                        <div className="absolute inset-0 rounded-full bg-[#a51c30]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                      </div>
+                      
+                      <span className="text-[15px] font-semibold text-[#a51c30] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
+                        Inscripciones
                       </span>
                       
-                      {/* Subtle shine on hover */}
-                      <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-[#a51c30]/10 to-transparent" />
+                      {/* Subtle arrow indicator */}
+                      <ArrowRight className="w-[16px] h-[16px] text-[#a51c30]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                     </div>
+                    
+                    {/* Animated border glow */}
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#a51c30]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
                   </motion.button>
 
-                  {/* Slim CTA 2 - Inscripciones (Navy Outline) */}
+                  {/* Premium CTA 2 - Navy Glass Effect */}
                   <motion.button
                     onClick={() => setReservationDialogOpen(true)}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 1.0 }}
-                    whileHover={{ y: -1 }}
-                    whileTap={{ scale: 0.99 }}
-                    className="group relative overflow-hidden rounded-xl border border-[#002147]/30 bg-[#002147]/5 backdrop-blur-sm transition-all duration-300 hover:border-[#002147]/60 hover:bg-[#002147]/10 hover:shadow-lg hover:shadow-[#002147]/20"
+                    whileHover={{ y: -2, scale: 1.01 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="group relative overflow-hidden rounded-2xl border border-[#002147]/20 bg-gradient-to-br from-[#002147]/[0.02] via-white/50 to-[#002147]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#002147]/40 hover:shadow-2xl hover:shadow-[#002147]/10"
                   >
-                    <div className="relative flex items-center justify-center gap-2 px-6 py-3.5">
-                      <Calendar className="w-4 h-4 text-[#002147]" />
-                      <span className="text-base font-semibold text-[#002147] tracking-wide">
-                        Inscripciones Aquí
+                    {/* Gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#002147]/0 via-[#002147]/[0.03] to-[#002147]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
+                      {/* Minimal icon with subtle animation */}
+                      <div className="relative">
+                        <Calendar className="w-[18px] h-[18px] text-[#002147] group-hover:scale-110 transition-transform duration-300" />
+                        {/* Pulse effect */}
+                        <div className="absolute inset-0 rounded-full bg-[#002147]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                      </div>
+                      
+                      <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
+                        Inscripciones
                       </span>
                       
-                      {/* Subtle shine on hover */}
-                      <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-[#002147]/10 to-transparent" />
+                      {/* Subtle arrow indicator */}
+                      <ArrowRight className="w-[16px] h-[16px] text-[#002147]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                     </div>
+                    
+                    {/* Animated border glow */}
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#002147]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
                   </motion.button>
                 </div>
 
