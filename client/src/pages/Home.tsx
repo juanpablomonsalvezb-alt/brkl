@@ -724,9 +724,6 @@ export default function Home() {
                       }}
                     />
                   </div>
-                  <span className="text-xs font-semibold text-[#1e1e1e] opacity-0 group-hover:opacity-100 transition-opacity duration-300 absolute -bottom-8 whitespace-nowrap">
-                    DEMRE
-                  </span>
                 </motion.div>
 
                 {/* PAES Logo */}
@@ -749,9 +746,6 @@ export default function Home() {
                       }}
                     />
                   </div>
-                  <span className="text-xs font-semibold text-[#1e1e1e] opacity-0 group-hover:opacity-100 transition-opacity duration-300 absolute -bottom-8 whitespace-nowrap">
-                    PAES
-                  </span>
                 </motion.div>
 
                 {/* MINEDUC Logo */}
@@ -767,9 +761,6 @@ export default function Home() {
                       className="w-full h-full object-contain"
                     />
                   </div>
-                  <span className="text-xs font-semibold text-[#1e1e1e] opacity-0 group-hover:opacity-100 transition-opacity duration-300 absolute -bottom-8 whitespace-nowrap">
-                    MINEDUC
-                  </span>
                 </motion.div>
               </div>
             </motion.div>
