@@ -1,7 +1,7 @@
-import express, { Router } from "express";
+import express from "express";
 import serverless from "serverless-http";
 import { registerRoutes } from "../../server/routes";
-import { createStorage } from "../../server/storage";
+import { storage } from "../../server/storage";
 import session from "express-session";
 
 const api = express();
@@ -23,7 +23,6 @@ api.use(
   })
 );
 
-const storage = createStorage();
 registerRoutes(api, storage);
 
 export const handler = serverless(api);
