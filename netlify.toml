@@ -18,3 +18,5 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+  external_node_modules = ["@libsql/client"]
+  included_files = ["node_modules/@libsql/**/*"]
