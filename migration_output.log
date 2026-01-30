@@ -1,0 +1,202 @@
+[dotenv@17.2.3] injecting env (3) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+🚀 Starting FULL background migration...
+📝 Log file: migration_log.txt
+
+📊 Found 24 tables to migrate
+
+
+📦 adult_cycle_configurations: 2 records
+   ✅ Inserted: 2/2
+
+📦 conversations: 0 records
+   ⏭️  Skipping (empty)
+
+📦 enrollments: 0 records
+   ⏭️  Skipping (empty)
+
+📦 evaluation_links: 0 records
+   ⏭️  Skipping (empty)
+
+📦 evaluation_progress: 0 records
+   ⏭️  Skipping (empty)
+
+📦 gemini_copilots: 4 records
+   ✅ Inserted: 4/4
+
+📦 learning_objectives: 1155 records
+   Progress: 50/1155
+   Progress: 100/1155
+   Progress: 150/1155
+   Progress: 200/1155
+   Progress: 250/1155
+   Progress: 300/1155
+   Progress: 350/1155
+   Progress: 400/1155
+   Progress: 450/1155
+   Progress: 500/1155
+   Progress: 550/1155
+   Progress: 600/1155
+   Progress: 650/1155
+   Progress: 700/1155
+   Progress: 750/1155
+   Progress: 800/1155
+   Progress: 850/1155
+   Progress: 900/1155
+   Progress: 950/1155
+   Progress: 1000/1155
+   Progress: 1050/1155
+   Progress: 1100/1155
+   Progress: 1150/1155
+   ✅ Inserted: 1155/1155
+
+📦 level_plan_configurations: 5 records
+   ✅ Inserted: 5/5
+
+📦 level_subjects: 77 records
+   Progress: 50/77
+   ✅ Inserted: 77/77
+
+📦 levels: 11 records
+   ✅ Inserted: 11/11
+
+📦 messages: 0 records
+   ⏭️  Skipping (empty)
+
+📦 module_evaluations: 4620 records
+   Progress: 50/4620
+   Progress: 100/4620
+   Progress: 150/4620
+   Progress: 200/4620
+   Progress: 250/4620
+   Progress: 300/4620
+   Progress: 350/4620
+   Progress: 400/4620
+   Progress: 450/4620
+   Progress: 500/4620
+   Progress: 550/4620
+   Progress: 600/4620
+   Progress: 650/4620
+   Progress: 700/4620
+   Progress: 750/4620
+   Progress: 800/4620
+   Progress: 850/4620
+   Progress: 900/4620
+   Progress: 950/4620
+   Progress: 1000/4620
+   Progress: 1050/4620
+   Progress: 1100/4620
+   Progress: 1150/4620
+   Progress: 1200/4620
+   Progress: 1250/4620
+   Progress: 1300/4620
+   Progress: 1350/4620
+   Progress: 1400/4620
+   Progress: 1450/4620
+   Progress: 1500/4620
+   Progress: 1550/4620
+   Progress: 1600/4620
+   Progress: 1650/4620
+   Progress: 1700/4620
+   Progress: 1750/4620
+   Progress: 1800/4620
+   Progress: 1850/4620
+   Progress: 1900/4620
+   Progress: 1950/4620
+   Progress: 2000/4620
+   Progress: 2050/4620
+   Progress: 2100/4620
+   Progress: 2150/4620
+   Progress: 2200/4620
+   Progress: 2250/4620
+   Progress: 2300/4620
+   Progress: 2350/4620
+   Progress: 2400/4620
+   Progress: 2450/4620
+   Progress: 2500/4620
+   Progress: 2550/4620
+   Progress: 2600/4620
+   Progress: 2650/4620
+   Progress: 2700/4620
+   Progress: 2750/4620
+   Progress: 2800/4620
+   Progress: 2850/4620
+   Progress: 2900/4620
+   Progress: 2950/4620
+   Progress: 3000/4620
+   Progress: 3050/4620
+   Progress: 3100/4620
+   Progress: 3150/4620
+   Progress: 3200/4620
+   Progress: 3250/4620
+   Progress: 3300/4620
+   Progress: 3350/4620
+   Progress: 3400/4620
+   Progress: 3450/4620
+   Progress: 3500/4620
+   Progress: 3550/4620
+   Progress: 3600/4620
+   Progress: 3650/4620
+   Progress: 3700/4620
+   Progress: 3750/4620
+   Progress: 3800/4620
+   Progress: 3850/4620
+   Progress: 3900/4620
+   Progress: 3950/4620
+   Progress: 4000/4620
+   Progress: 4050/4620
+   Progress: 4100/4620
+   Progress: 4150/4620
+   Progress: 4200/4620
+   Progress: 4250/4620
+   Progress: 4300/4620
+   Progress: 4350/4620
+   Progress: 4400/4620
+   Progress: 4450/4620
+   Progress: 4500/4620
+   Progress: 4550/4620
+   Progress: 4600/4620
+   ✅ Inserted: 4620/4620
+
+📦 plan_configurations: 3 records
+   ✅ Inserted: 3/3
+
+📦 program_calendar: 0 records
+   ⏭️  Skipping (empty)
+
+📦 reservations: 6 records
+   ✅ Inserted: 6/6
+
+📦 sessions: 1 records
+   ✅ Inserted: 1/1
+
+📦 site_configuration: 2 records
+   ✅ Inserted: 2/2
+
+📦 student_progress: 0 records
+   ⏭️  Skipping (empty)
+
+📦 subjects: 7 records
+   ✅ Inserted: 7/7
+
+📦 textbook_configs: 0 records
+   ⏭️  Skipping (empty)
+
+📦 user_profiles: 0 records
+   ⏭️  Skipping (empty)
+
+📦 users: 0 records
+   ⏭️  Skipping (empty)
+
+📦 weekly_completion: 0 records
+   ⏭️  Skipping (empty)
+
+📦 weekly_resources: 49 records
+   ✅ Inserted: 49/49
+
+
+🎉 MIGRATION COMPLETE!
+✅ Total inserted: 5942
+⚠️  Total errors: 0
+⏭️  Total skipped: 0
+
+✨ You can now use your site at: https://brkl.onrender.com

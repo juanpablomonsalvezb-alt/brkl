@@ -19,6 +19,7 @@ import multer from "multer";
 import { generateEvaluationQuestions } from "./aiEvaluationGenerator";
 import { registerEvaluationLinksRoutes } from "./evaluationLinksRoutes";
 import { registerFaqRoutes } from "./faqRoutes";
+import { registerPaesRoutes } from "./paesRoutes";
 
 // Helper to ensure string params (not arrays)
 function getStringParam(param: string | string[]): string {
@@ -2117,6 +2118,9 @@ export async function registerRoutes(
 
   // Register FAQ routes
   registerFaqRoutes(app);
+
+  // Register PAES routes
+  registerPaesRoutes(app);
 
   return httpServer;
 }

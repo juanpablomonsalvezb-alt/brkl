@@ -174,3 +174,24 @@
     @apply bg-white/80 backdrop-blur-sm border border-white/20;
   }
 }
+/* Premium Shimmer Animation for Buttons */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Gradient animation for cyberpunk button */
+@keyframes gradient-xy {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-xy {
+  background-size: 400% 400%;
+  animation: gradient-xy 3s ease infinite;
+}

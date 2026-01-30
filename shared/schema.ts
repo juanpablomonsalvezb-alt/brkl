@@ -619,3 +619,105 @@ export const insertFaqSchema = createInsertSchema(faqs, {
 
 export type Faq = typeof faqs.$inferSelect;
 export type InsertFaq = z.infer<typeof insertFaqSchema>;
+
+// ============================================
+// PAES Plans - Preparación PAES System
+// ============================================
+
+// PAES Subjects (Materias disponibles)
+export const paesSubjects = sqliteTable("paes_subjects", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  name: text("name").notNull(), // "Lenguaje", "Matemática", "Matemática 2", etc.
+  description: text("description"),
+  basePrice: integer("base_price").notNull(), // Precio base del servicio (IA + Ensayos)
+  sortOrder: integer("sort_order").default(0).notNull(),
+  isActive: integer("is_active", { mode: "boolean" }).default(true).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
+});
+
+export const insertPaesSubjectSchema = createInsertSchema(paesSubjects, {
+  name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
+  description: z.string().optional(),
+  basePrice: z.number().int().min(0, "El precio debe ser mayor o igual a 0"),
+  sortOrder: z.number().int().min(0).optional().default(0),
+  isActive: z.boolean().optional().default(true),
+}).omit({ id: true, createdAt: true, updatedAt: true });
+
+export type PaesSubject = typeof paesSubjects.$inferSelect;
+export type InsertPaesSubject = z.infer<typeof insertPaesSubjectSchema>;
+
+// PAES Plans Configuration
+export const paesPlans = sqliteTable("paes_plans", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  name: text("name").notNull(), // "Plan Individual", "Plan Duo", etc.
+  description: text("description"),
+  // Precios
+  basePricePerSubject: integer("base_price_per_subject").notNull(), // Precio por materia (IA + Ensayos)
+  tutorPricePerSubject: integer("tutor_price_per_subject"), // Precio adicional por tutor (opcional)
+  // Configuración
+  maxSubjects: integer("max_subjects"), // Límite de materias (null = sin límite)
+  includesTutor: integer("includes_tutor", { mode: "boolean" }).default(false).notNull(),
+  // Metadata
+  features: text("features"), // JSON array de características
+  sortOrder: integer("sort_order").default(0).notNull(),
+  isActive: integer("is_active", { mode: "boolean" }).default(true).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
+});
+
+export const insertPaesPlanSchema = createInsertSchema(paesPlans, {
+  name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
+  description: z.string().optional(),
+  basePricePerSubject: z.number().int().min(0),
+  tutorPricePerSubject: z.number().int().min(0).optional(),
+  maxSubjects: z.number().int().min(1).optional(),
+  includesTutor: z.boolean().optional().default(false),
+  features: z.string().optional(),
+  sortOrder: z.number().int().min(0).optional().default(0),
+  isActive: z.boolean().optional().default(true),
+}).omit({ id: true, createdAt: true, updatedAt: true });
+
+export type PaesPlan = typeof paesPlans.$inferSelect;
+export type InsertPaesPlan = z.infer<typeof insertPaesPlanSchema>;
+
+// Student PAES Subscriptions (Inscripciones de estudiantes)
+export const paesSubscriptions = sqliteTable("paes_subscriptions", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  studentName: text("student_name").notNull(),
+  studentEmail: text("student_email").notNull(),
+  studentPhone: text("student_phone"),
+  // Plan seleccionado
+  planId: text("plan_id").references(() => paesPlans.id),
+  // Materias seleccionadas (JSON array de subject IDs)
+  selectedSubjects: text("selected_subjects").notNull(), // JSON: ["id1", "id2", ...]
+  // Tutor
+  includesTutor: integer("includes_tutor", { mode: "boolean" }).default(false).notNull(),
+  // Precios
+  totalPrice: integer("total_price").notNull(),
+  // Estado
+  status: text("status").default("pending").notNull(), // pending, active, completed, cancelled
+  startDate: integer("start_date", { mode: "timestamp" }),
+  endDate: integer("end_date", { mode: "timestamp" }),
+  // Metadata
+  notes: text("notes"),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
+});
+
+export const insertPaesSubscriptionSchema = createInsertSchema(paesSubscriptions, {
+  studentName: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
+  studentEmail: z.string().email("Email inválido"),
+  studentPhone: z.string().optional(),
+  planId: z.string().optional(),
+  selectedSubjects: z.string().min(1, "Debe seleccionar al menos una materia"),
+  includesTutor: z.boolean().optional().default(false),
+  totalPrice: z.number().int().min(0),
+  status: z.enum(["pending", "active", "completed", "cancelled"]).optional().default("pending"),
+  startDate: z.date().optional(),
+  endDate: z.date().optional(),
+  notes: z.string().optional(),
+}).omit({ id: true, createdAt: true, updatedAt: true });
+
+export type PaesSubscription = typeof paesSubscriptions.$inferSelect;
+export type InsertPaesSubscription = z.infer<typeof insertPaesSubscriptionSchema>;

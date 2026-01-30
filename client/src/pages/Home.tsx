@@ -17,6 +17,7 @@ import { motion } from "framer-motion";
 import { ThinkingBridge } from "@/components/ThinkingBridge";
 import { ReservationDialog } from "@/components/ReservationDialog";
 import { PlanConfiguratorNew } from "@/components/PlanConfiguratorNew";
+import PaesConfigurator from "@/components/PaesConfigurator";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -265,7 +266,7 @@ export default function Home() {
 
       <main className="bg-[#fafafa]">
         {/* Hero Section - Harvard White Background Style with Branded Patterns */}
-        <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-white">
+        <section className="relative min-h-[50vh] flex items-center overflow-hidden bg-white pt-2">
           {/* Pure white base */}
           <div className="absolute inset-0 bg-white" />
 
@@ -451,57 +452,304 @@ export default function Home() {
                 Educación asincrónica de alto rendimiento, impulsada por IA y dirigida por <span className="text-foreground font-medium">Success Mentors</span> especializados.
               </motion.p>
 
-              {/* CTA Buttons with better spacing */}
+              {/* Premium Harvard-Inspired CTA System - Minimal + Memorable */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="flex flex-col sm:flex-row gap-5"
+                transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className="flex flex-col gap-3 max-w-4xl mx-auto"
               >
-                <Button
-                  size="lg"
-                  onClick={() => setReservationDialogOpen(true)}
-                  className="bg-[#a51c30] text-white hover:bg-[#8a1828] rounded-full px-12 py-7 text-base font-semibold transition-all group shadow-2xl hover:shadow-[#a51c30]/50 hover:scale-105"
-                >
-                  <Calendar className="mr-2 w-5 h-5" />
-                  Reservar Cupo
-                  <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="bg-white border-2 border-foreground/20 text-foreground hover:bg-foreground/5 hover:border-foreground/40 rounded-full px-12 py-7 text-base font-semibold transition-all hover:scale-105"
-                >
-                  Conoce el Método
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
+                {/* Primary CTA Row - Harvard Refined Minimalism */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                  {/* Primary CTA - Exámenes Libres (Harvard Crimson) */}
+                  <motion.a
+                    href="#planes"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const element = document.getElementById('planes');
+                      if (element) {
+                        const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - 80;
+                        const startPosition = window.pageYOffset;
+                        const distance = targetPosition - startPosition;
+                        const duration = 1500; // 1.5 segundos (más lento)
+                        let start: number | null = null;
+
+                        const animation = (currentTime: number) => {
+                          if (start === null) start = currentTime;
+                          const timeElapsed = currentTime - start;
+                          const progress = Math.min(timeElapsed / duration, 1);
+                          
+                          // Easing function (ease-in-out-cubic) para suavidad
+                          const ease = progress < 0.5
+                            ? 4 * progress * progress * progress
+                            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                          
+                          window.scrollTo(0, startPosition + distance * ease);
+                          
+                          if (timeElapsed < duration) {
+                            requestAnimationFrame(animation);
+                          }
+                        };
+                        
+                        requestAnimationFrame(animation);
+                      }
+                    }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.7 }}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#a51c30] to-[#8a1828] p-[1px] transition-all duration-300 hover:shadow-2xl hover:shadow-[#a51c30]/30"
+                  >
+                    {/* Subtle animated border glow */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37] via-[#a51c30] to-[#D4AF37] opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-sm" />
+                    
+                    {/* Main content */}
+                    <div className="relative h-full bg-gradient-to-br from-[#a51c30] to-[#8a1828] rounded-2xl px-8 py-5 flex items-center justify-between">
+                      {/* Left content */}
+                      <div className="flex items-center gap-4">
+                        {/* Minimal icon badge */}
+                        <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 group-hover:border-[#D4AF37]/50 transition-all duration-300">
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                        </div>
+                        
+                        {/* Typography-focused content */}
+                        <div className="text-left">
+                          <div className="text-lg font-bold tracking-tight text-white leading-tight mb-1">
+                            Exámenes Libres
+                          </div>
+                          <div className="text-sm font-medium text-white/70 tracking-wide">
+                            Validación de Estudios
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Minimal arrow indicator */}
+                      <div className="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm group-hover:bg-white/20 transition-all duration-300">
+                        <ChevronRight className="w-5 h-5 text-white group-hover:translate-x-0.5 transition-transform" />
+                      </div>
+                      
+                      {/* Subtle shine on hover */}
+                      <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                    </div>
+                  </motion.a>
+
+                  {/* Secondary CTA - Preparación PAES (Harvard Navy + Gold) */}
+                  <motion.a
+                    href="#paes"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const element = document.getElementById('paes');
+                      if (element) {
+                        const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - 80;
+                        const startPosition = window.pageYOffset;
+                        const distance = targetPosition - startPosition;
+                        const duration = 1500; // 1.5 segundos (más lento)
+                        let start: number | null = null;
+
+                        const animation = (currentTime: number) => {
+                          if (start === null) start = currentTime;
+                          const timeElapsed = currentTime - start;
+                          const progress = Math.min(timeElapsed / duration, 1);
+                          
+                          // Easing function (ease-in-out-cubic) para suavidad
+                          const ease = progress < 0.5
+                            ? 4 * progress * progress * progress
+                            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                          
+                          window.scrollTo(0, startPosition + distance * ease);
+                          
+                          if (timeElapsed < duration) {
+                            requestAnimationFrame(animation);
+                          }
+                        };
+                        
+                        requestAnimationFrame(animation);
+                      }
+                    }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.8 }}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="group relative overflow-hidden rounded-2xl bg-[#002147] p-[1px] transition-all duration-300 hover:shadow-2xl hover:shadow-[#002147]/40"
+                  >
+                    {/* Subtle gold accent glow */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37] via-[#002147] to-[#D4AF37] opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-sm" />
+                    
+                    {/* Main content */}
+                    <div className="relative h-full bg-[#002147] rounded-2xl px-8 py-5 flex items-center justify-between">
+                      {/* Left content */}
+                      <div className="flex items-center gap-4">
+                        {/* Minimal icon badge with gold accent */}
+                        <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 group-hover:border-[#D4AF37]/40 transition-all duration-300">
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                          </svg>
+                        </div>
+                        
+                        {/* Typography-focused content */}
+                        <div className="text-left">
+                          <div className="text-lg font-bold tracking-tight text-white leading-tight mb-1">
+                            Preparación PAES
+                          </div>
+                          <div className="text-sm font-medium text-white/60 tracking-wide">
+                            Puntaje Nacional
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Minimal arrow indicator */}
+                      <div className="flex items-center justify-center w-9 h-9 rounded-full bg-white/5 backdrop-blur-sm group-hover:bg-[#D4AF37]/20 transition-all duration-300">
+                        <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-0.5 transition-transform" />
+                      </div>
+                      
+                      {/* Subtle shine on hover */}
+                      <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-[#D4AF37]/5 to-transparent" />
+                    </div>
+                  </motion.a>
+                </div>
+
+                {/* Tertiary CTA Row - Minimal Inscriptions */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Slim CTA 1 - Inscripciones (Crimson Outline) */}
+                  <motion.button
+                    onClick={() => setReservationDialogOpen(true)}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.9 }}
+                    whileHover={{ y: -1 }}
+                    whileTap={{ scale: 0.99 }}
+                    className="group relative overflow-hidden rounded-xl border border-[#a51c30]/30 bg-[#a51c30]/5 backdrop-blur-sm transition-all duration-300 hover:border-[#a51c30]/60 hover:bg-[#a51c30]/10 hover:shadow-lg hover:shadow-[#a51c30]/20"
+                  >
+                    <div className="relative flex items-center justify-center gap-2 px-6 py-3.5">
+                      <Calendar className="w-4 h-4 text-[#a51c30]" />
+                      <span className="text-base font-semibold text-[#a51c30] tracking-wide">
+                        Inscripciones Aquí
+                      </span>
+                      
+                      {/* Subtle shine on hover */}
+                      <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-[#a51c30]/10 to-transparent" />
+                    </div>
+                  </motion.button>
+
+                  {/* Slim CTA 2 - Inscripciones (Navy Outline) */}
+                  <motion.button
+                    onClick={() => setReservationDialogOpen(true)}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 1.0 }}
+                    whileHover={{ y: -1 }}
+                    whileTap={{ scale: 0.99 }}
+                    className="group relative overflow-hidden rounded-xl border border-[#002147]/30 bg-[#002147]/5 backdrop-blur-sm transition-all duration-300 hover:border-[#002147]/60 hover:bg-[#002147]/10 hover:shadow-lg hover:shadow-[#002147]/20"
+                  >
+                    <div className="relative flex items-center justify-center gap-2 px-6 py-3.5">
+                      <Calendar className="w-4 h-4 text-[#002147]" />
+                      <span className="text-base font-semibold text-[#002147] tracking-wide">
+                        Inscripciones Aquí
+                      </span>
+                      
+                      {/* Subtle shine on hover */}
+                      <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-[#002147]/10 to-transparent" />
+                    </div>
+                  </motion.button>
+                </div>
+
               </motion.div>
 
-              {/* Trust indicators - Harvard style */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-                className="mt-16 flex flex-wrap items-center gap-8 text-foreground/60 text-sm"
-              >
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-[#a51c30]" />
-                  <span>100% Aprobación</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-[#a51c30]" />
-                  <span>Certificación MINEDUC</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-[#a51c30]" />
-                  <span>Metodología Barkley</span>
-                </div>
-              </motion.div>
             </motion.div>
           </div>
 
           {/* Bottom fade to next section */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white/50 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white via-white/50 to-transparent" />
+        </section>
+
+        {/* Institutional Logos Section - DEMRE, PAES, MINEDUC */}
+        <section className="bg-[#fafafa] py-6 border-t border-[#1e1e1e]/5 -mt-12">
+          <div className="container-harvard">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center"
+            >
+              <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#1e1e1e]/40 mb-3">
+                Respaldo Institucional Oficial
+              </p>
+              <div className="flex flex-nowrap items-center justify-center gap-16 md:gap-24 lg:gap-32 opacity-25 grayscale hover:grayscale-0 hover:opacity-60 transition-all duration-500 overflow-x-auto pb-1">
+                {/* DEMRE Logo */}
+                <motion.div
+                  whileHover={{ scale: 1.2, opacity: 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col items-center justify-center gap-3 group relative flex-shrink-0"
+                >
+                  <div className="w-32 h-32 flex items-center justify-center">
+                    <img 
+                      src="/demre.webp" 
+                      alt="DEMRE - Universidad de Chile" 
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const parent = e.currentTarget.parentElement;
+                        if (parent) {
+                          parent.innerHTML = '<svg class="w-16 h-16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="#003DA5" opacity="0.2"/><text x="12" y="14" text-anchor="middle" fill="#003DA5" font-size="8" font-weight="bold">DEMRE</text></svg>';
+                        }
+                      }}
+                    />
+                  </div>
+                  <span className="text-xs font-semibold text-[#1e1e1e] opacity-0 group-hover:opacity-100 transition-opacity duration-300 absolute -bottom-8 whitespace-nowrap">
+                    DEMRE
+                  </span>
+                </motion.div>
+
+                {/* PAES Logo */}
+                <motion.div
+                  whileHover={{ scale: 1.2, opacity: 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col items-center justify-center gap-3 group relative flex-shrink-0"
+                >
+                  <div className="w-32 h-32 flex items-center justify-center">
+                    <img 
+                      src="/paes.webp" 
+                      alt="PAES - Prueba de Acceso" 
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const parent = e.currentTarget.parentElement;
+                        if (parent) {
+                          parent.innerHTML = '<svg class="w-16 h-16" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="2" width="20" height="20" rx="2" fill="#002147" opacity="0.2"/><text x="12" y="14" text-anchor="middle" fill="#002147" font-size="8" font-weight="bold">PAES</text></svg>';
+                        }
+                      }}
+                    />
+                  </div>
+                  <span className="text-xs font-semibold text-[#1e1e1e] opacity-0 group-hover:opacity-100 transition-opacity duration-300 absolute -bottom-8 whitespace-nowrap">
+                    PAES
+                  </span>
+                </motion.div>
+
+                {/* MINEDUC Logo */}
+                <motion.div
+                  whileHover={{ scale: 1.2, opacity: 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col items-center justify-center gap-3 group relative flex-shrink-0"
+                >
+                  <div className="w-32 h-32 flex items-center justify-center">
+                    <img 
+                      src="/mineduc.png" 
+                      alt="MINEDUC - Gobierno de Chile" 
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <span className="text-xs font-semibold text-[#1e1e1e] opacity-0 group-hover:opacity-100 transition-opacity duration-300 absolute -bottom-8 whitespace-nowrap">
+                    MINEDUC
+                  </span>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
         </section>
 
         {/* High-End Video Players Section */}
@@ -594,8 +842,10 @@ export default function Home() {
         {/* Thinking Bridge - Metaphor Section */}
         <ThinkingBridge />
 
-        {/* Interactive Plan Configurator - New Premium Version */}
-        <PlanConfiguratorNew />
+        {/* Interactive Plan Configurator - MOVED UP */}
+        <div id="planes" className="scroll-mt-20">
+          <PlanConfiguratorNew />
+        </div>
 
         {/* Academic Copilot Section - 3 Columns */}
         <section className="py-32 bg-gradient-to-br from-[#0a1628] via-[#0d1b2a] to-[#1b263b] relative overflow-hidden">
@@ -806,6 +1056,11 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* PAES Plan Configurator */}
+      <div id="paes" className="scroll-mt-20">
+        <PaesConfigurator />
+      </div>
 
       {/* Harvard-Style Benefits Section */}
       <section className="py-24 bg-white">
