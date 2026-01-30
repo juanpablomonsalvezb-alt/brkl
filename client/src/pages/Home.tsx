@@ -73,6 +73,18 @@ export default function Home() {
     staleTime: 5 * 60 * 1000,
   });
 
+  // Fetch FAQs from API
+  const { data: faqs, isLoading: isLoadingFaqs } = useQuery<Array<{
+    id: string;
+    question: string;
+    answer: string;
+    category?: string | null;
+    sortOrder: number;
+  }>>({
+    queryKey: ['/api/faqs'],
+    staleTime: 5 * 60 * 1000,
+  });
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -1083,109 +1095,32 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="max-w-6xl mx-auto"
           >
-            <Accordion type="single" collapsible className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {/* Pregunta 1 */}
-              <AccordionItem value="item-1" className="border border-[#002147]/10 rounded-lg px-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <AccordionTrigger className="text-left font-semibold text-[#002147] hover:text-[#a51c30] py-6">
-                  ¿Cómo funciona el sistema de validación de estudios?
-                </AccordionTrigger>
-                <AccordionContent className="text-[#002147]/80 leading-relaxed pb-6">
-                  Nuestro sistema está alineado 100% con el currículo nacional chileno. Estudias de forma asíncrona con materiales diseñados específicamente, asistencia de Academic Copilot 24/7, y evaluaciones regulares que validan tu progreso. Al completar cada nivel, recibes certificación oficial reconocida por MINEDUC.
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* Pregunta 2 */}
-              <AccordionItem value="item-2" className="border border-[#002147]/10 rounded-lg px-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <AccordionTrigger className="text-left font-semibold text-[#002147] hover:text-[#a51c30] py-6">
-                  ¿Cuánto tiempo toma completar cada nivel?
-                </AccordionTrigger>
-                <AccordionContent className="text-[#002147]/80 leading-relaxed pb-6">
-                  El programa está diseñado para completarse en 8 meses (marzo a octubre) por nivel. Sin embargo, con nuestro sistema flexible, puedes avanzar a tu propio ritmo. Algunos estudiantes completan más rápido, otros prefieren tomarse el tiempo completo.
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* Pregunta 3 */}
-              <AccordionItem value="item-3" className="border border-[#002147]/10 rounded-lg px-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <AccordionTrigger className="text-left font-semibold text-[#002147] hover:text-[#a51c30] py-6">
-                  ¿El certificado es válido y reconocido por MINEDUC?
-                </AccordionTrigger>
-                <AccordionContent className="text-[#002147]/80 leading-relaxed pb-6">
-                  Sí, todos nuestros certificados son 100% válidos y reconocidos oficialmente. Cumplimos con todos los requisitos del Ministerio de Educación de Chile para validación de estudios, lo que te permite continuar estudios superiores o acceder al mundo laboral sin problemas.
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* Pregunta 4 */}
-              <AccordionItem value="item-4" className="border border-[#002147]/10 rounded-lg px-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <AccordionTrigger className="text-left font-semibold text-[#002147] hover:text-[#a51c30] py-6">
-                  ¿Necesito conocimientos previos para inscribirme?
-                </AccordionTrigger>
-                <AccordionContent className="text-[#002147]/80 leading-relaxed pb-6">
-                  Solo necesitas haber completado el nivel anterior al que deseas cursar. Si quieres validar 1° Medio, debes haber completado 8° Básico, y así sucesivamente. No se requieren conocimientos técnicos especiales, solo ganas de aprender y acceso a internet.
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* Pregunta 5 */}
-              <AccordionItem value="item-5" className="border border-[#002147]/10 rounded-lg px-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <AccordionTrigger className="text-left font-semibold text-[#002147] hover:text-[#a51c30] py-6">
-                  ¿Qué incluye Academic Copilot exactamente?
-                </AccordionTrigger>
-                <AccordionContent className="text-[#002147]/80 leading-relaxed pb-6">
-                  Academic Copilot es tu asistente de IA personalizado disponible 24/7. Te ayuda a resolver dudas al instante, explica conceptos complejos adaptándose a tu nivel, te guía paso a paso en ejercicios, y te da retroalimentación inmediata. Es como tener un profesor particular siempre disponible.
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* Pregunta 6 */}
-              <AccordionItem value="item-6" className="border border-[#002147]/10 rounded-lg px-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <AccordionTrigger className="text-left font-semibold text-[#002147] hover:text-[#a51c30] py-6">
-                  ¿Cuál es la diferencia entre Plan Full, Estándar y Mentor?
-                </AccordionTrigger>
-                <AccordionContent className="text-[#002147]/80 leading-relaxed pb-6">
-                  <strong>Plan Full:</strong> Incluye todo el material, Academic Copilot, evaluaciones y seguimiento completo.<br/>
-                  <strong>Plan Estándar:</strong> Material básico y Academic Copilot, ideal si eres autodidacta.<br/>
-                  <strong>Plan Mentor:</strong> Además de todo lo anterior, incluye 2 sesiones mensuales con un mentor personal vía Zoom para planificación y seguimiento personalizado.
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* Pregunta 7 */}
-              <AccordionItem value="item-7" className="border border-[#002147]/10 rounded-lg px-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <AccordionTrigger className="text-left font-semibold text-[#002147] hover:text-[#a51c30] py-6">
-                  ¿Hay requisitos de edad o nivel académico?
-                </AccordionTrigger>
-                <AccordionContent className="text-[#002147]/80 leading-relaxed pb-6">
-                  Para menores (7° Básico a 4° Medio): Edad según nivel que deseas cursar. Para adultos: Mayor de 18 años sin límite de edad superior. El único requisito académico es haber completado el nivel anterior al que deseas validar.
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* Pregunta 8 */}
-              <AccordionItem value="item-8" className="border border-[#002147]/10 rounded-lg px-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <AccordionTrigger className="text-left font-semibold text-[#002147] hover:text-[#a51c30] py-6">
-                  ¿Cómo son las evaluaciones y exámenes?
-                </AccordionTrigger>
-                <AccordionContent className="text-[#002147]/80 leading-relaxed pb-6">
-                  Las evaluaciones son 100% online y están diseñadas según el Método Barkley: ráfagas de estudio de 20 minutos seguidas de evaluaciones cortas. Hay evaluaciones formativas continuas y evaluaciones sumativas al final de cada unidad. Todo el sistema está pensado para maximizar tu aprendizaje efectivo.
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* Pregunta 9 */}
-              <AccordionItem value="item-9" className="border border-[#002147]/10 rounded-lg px-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <AccordionTrigger className="text-left font-semibold text-[#002147] hover:text-[#a51c30] py-6">
-                  ¿Puedo estudiar a mi propio ritmo o hay horarios fijos?
-                </AccordionTrigger>
-                <AccordionContent className="text-[#002147]/80 leading-relaxed pb-6">
-                  El sistema es 100% flexible. Estudias cuando quieras, a tu propio ritmo. Solo hay fechas límite para las evaluaciones finales de cada módulo, pero tienes amplio margen para organizarte según tu disponibilidad. Perfecto si trabajas o tienes otras responsabilidades.
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* Pregunta 10 */}
-              <AccordionItem value="item-10" className="border border-[#002147]/10 rounded-lg px-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <AccordionTrigger className="text-left font-semibold text-[#002147] hover:text-[#a51c30] py-6">
-                  ¿Qué pasa si necesito pausar mis estudios?
-                </AccordionTrigger>
-                <AccordionContent className="text-[#002147]/80 leading-relaxed pb-6">
-                  Entendemos que surgen imprevistos. Puedes solicitar una pausa temporal en tus estudios comunicándote con tu coordinador académico. Dependiendo del plan y el momento, podemos congelar tu matrícula para que continúes cuando estés listo, sin perder tu progreso.
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+            {isLoadingFaqs ? (
+              <div className="flex justify-center items-center py-12">
+                <Loader2 className="w-8 h-8 animate-spin text-[#002147]" />
+              </div>
+            ) : faqs && faqs.length > 0 ? (
+              <Accordion type="single" collapsible className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {faqs.map((faq, index) => (
+                  <AccordionItem 
+                    key={faq.id} 
+                    value={`item-${index + 1}`} 
+                    className="border border-[#002147]/10 rounded-lg px-6 bg-white shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <AccordionTrigger className="text-left font-semibold text-[#002147] hover:text-[#a51c30] py-6">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-[#002147]/80 leading-relaxed pb-6 whitespace-pre-wrap">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            ) : (
+              <div className="text-center py-12 text-[#002147]/60">
+                No hay preguntas frecuentes disponibles en este momento.
+              </div>
+            )}
 
             {/* CTA después del FAQ */}
             <div className="mt-12 text-center p-8 bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef] rounded-xl border-2 border-[#D4AF37]/20">

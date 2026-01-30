@@ -18,6 +18,7 @@ import mammoth from "mammoth";
 import multer from "multer";
 import { generateEvaluationQuestions } from "./aiEvaluationGenerator";
 import { registerEvaluationLinksRoutes } from "./evaluationLinksRoutes";
+import { registerFaqRoutes } from "./faqRoutes";
 
 // Helper to ensure string params (not arrays)
 function getStringParam(param: string | string[]): string {
@@ -2113,6 +2114,9 @@ export async function registerRoutes(
 
   // Register evaluation links routes
   registerEvaluationLinksRoutes(app);
+
+  // Register FAQ routes
+  registerFaqRoutes(app);
 
   return httpServer;
 }

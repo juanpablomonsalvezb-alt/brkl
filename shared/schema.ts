@@ -593,3 +593,29 @@ export const insertGeminiCopilotSchema = createInsertSchema(geminiCopilots, {
 
 export type GeminiCopilot = typeof geminiCopilots.$inferSelect;
 export type InsertGeminiCopilot = z.infer<typeof insertGeminiCopilotSchema>;
+
+// ============================================
+// FAQ - Frequently Asked Questions
+// ============================================
+
+export const faqs = sqliteTable("faqs", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  question: text("question").notNull(),
+  answer: text("answer").notNull(),
+  category: text("category"), // Optional: "planes", "academico", "certificacion", etc.
+  sortOrder: integer("sort_order").default(0).notNull(),
+  isActive: integer("is_active", { mode: "boolean" }).default(true).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
+});
+
+export const insertFaqSchema = createInsertSchema(faqs, {
+  question: z.string().min(5, "La pregunta debe tener al menos 5 caracteres"),
+  answer: z.string().min(10, "La respuesta debe tener al menos 10 caracteres"),
+  category: z.string().optional(),
+  sortOrder: z.number().int().min(0).optional().default(0),
+  isActive: z.boolean().optional().default(true),
+}).omit({ id: true, createdAt: true, updatedAt: true });
+
+export type Faq = typeof faqs.$inferSelect;
+export type InsertFaq = z.infer<typeof insertFaqSchema>;
