@@ -481,9 +481,14 @@ export default function Home() {
                         <div className="absolute inset-0 rounded-full bg-[#a51c30]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
                       </div>
                       
-                      <span className="text-[15px] font-semibold text-[#a51c30] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
-                        Exámenes Libres
-                      </span>
+                      <div className="flex flex-col items-center">
+                        <span className="text-[15px] font-semibold text-[#a51c30] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
+                          Exámenes Libres
+                        </span>
+                        <span className="text-[11px] text-[#a51c30]/60 mt-0.5">
+                          7º a 4º Medio
+                        </span>
+                      </div>
                       
                       <ArrowRight className="w-[16px] h-[16px] text-[#a51c30]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                     </div>
@@ -542,9 +547,14 @@ export default function Home() {
                         <div className="absolute inset-0 rounded-full bg-[#D4AF37]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
                       </div>
                       
-                      <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
-                        Validación
-                      </span>
+                      <div className="flex flex-col items-center">
+                        <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
+                          Validación
+                        </span>
+                        <span className="text-[11px] text-[#D4AF37]/80 mt-0.5">
+                          Adultos
+                        </span>
+                      </div>
                       
                       <ArrowRight className="w-[16px] h-[16px] text-[#D4AF37]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                     </div>
@@ -552,33 +562,6 @@ export default function Home() {
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#D4AF37]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
                   </motion.a>
 
-                  {/* Inscription Button 2 - Gold */}
-                  <motion.button
-                    onClick={() => setReservationDialogOpen(true)}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 1.1 }}
-                    whileHover={{ y: -2, scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative overflow-hidden rounded-2xl border border-[#D4AF37]/20 bg-gradient-to-br from-[#D4AF37]/[0.02] via-white/50 to-[#D4AF37]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#D4AF37]/40 hover:shadow-2xl hover:shadow-[#D4AF37]/10"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/0 via-[#D4AF37]/[0.03] to-[#D4AF37]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
-                      <div className="relative">
-                        <Calendar className="w-[18px] h-[18px] text-[#D4AF37] group-hover:scale-110 transition-transform duration-300" />
-                        <div className="absolute inset-0 rounded-full bg-[#D4AF37]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                      </div>
-                      
-                      <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
-                        Inscripciones
-                      </span>
-                      
-                      <ArrowRight className="w-[16px] h-[16px] text-[#D4AF37]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                    </div>
-                    
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#D4AF37]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-                  </motion.button>
                 </div>
 
                 {/* Column 3: PAES */}
@@ -613,38 +596,11 @@ export default function Home() {
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#002147]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
                   </motion.a>
 
-                  {/* Inscription Button 3 - Navy */}
-                  <motion.button
-                    onClick={() => setReservationDialogOpen(true)}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 1.2 }}
-                    whileHover={{ y: -2, scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative overflow-hidden rounded-2xl border border-[#002147]/20 bg-gradient-to-br from-[#002147]/[0.02] via-white/50 to-[#002147]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#002147]/40 hover:shadow-2xl hover:shadow-[#002147]/10"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#002147]/0 via-[#002147]/[0.03] to-[#002147]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
-                      <div className="relative">
-                        <Calendar className="w-[18px] h-[18px] text-[#002147] group-hover:scale-110 transition-transform duration-300" />
-                        <div className="absolute inset-0 rounded-full bg-[#002147]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                      </div>
-                      
-                      <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
-                        Inscripciones
-                      </span>
-                      
-                      <ArrowRight className="w-[16px] h-[16px] text-[#002147]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                    </div>
-                    
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#002147]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-                  </motion.button>
                 </div>
                 </div>
 
-                {/* Premium Inscription CTAs - Ultra Minimal - 3 Columns */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Premium Inscription CTAs - Single Row */}
+                <div className="flex justify-center gap-4">
                   {/* Premium CTA 1 - Crimson Glass Effect */}
                   <motion.button
                     onClick={() => setReservationDialogOpen(true)}
