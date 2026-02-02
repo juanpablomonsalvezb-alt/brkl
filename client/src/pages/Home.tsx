@@ -502,9 +502,9 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 1.0 }}
-                    whileHover={{ y: -2, scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative overflow-hidden rounded-2xl border border-[#a51c30]/20 bg-gradient-to-br from-[#a51c30]/[0.02] via-white/50 to-[#a51c30]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#a51c30]/40 hover:shadow-2xl hover:shadow-[#a51c30]/10"
+                    whileHover={{ y: -3, scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="group relative overflow-hidden rounded-2xl border border-[#a51c30]/20 bg-gradient-to-br from-[#a51c30]/[0.02] via-white/50 to-[#a51c30]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#a51c30]/50 hover:bg-[#a51c30]/[0.05] hover:shadow-2xl hover:shadow-[#a51c30]/20"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-[#a51c30]/0 via-[#a51c30]/[0.03] to-[#a51c30]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     
@@ -586,9 +586,11 @@ export default function Home() {
                         <div className="absolute inset-0 rounded-full bg-[#002147]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
                       </div>
                       
-                      <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
-                        PAES
-                      </span>
+                      <div className="flex flex-col items-center">
+                        <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
+                          PAES
+                        </span>
+                      </div>
                       
                       <ArrowRight className="w-[16px] h-[16px] text-[#002147]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                     </div>
@@ -599,107 +601,6 @@ export default function Home() {
                 </div>
                 </div>
 
-                {/* Premium Inscription CTAs - Single Row */}
-                <div className="flex justify-center gap-4">
-                  {/* Premium CTA 1 - Crimson Glass Effect */}
-                  <motion.button
-                    onClick={() => setReservationDialogOpen(true)}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.9 }}
-                    whileHover={{ y: -2, scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative overflow-hidden rounded-2xl border border-[#a51c30]/20 bg-gradient-to-br from-[#a51c30]/[0.02] via-white/50 to-[#a51c30]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#a51c30]/40 hover:shadow-2xl hover:shadow-[#a51c30]/10"
-                  >
-                    {/* Gradient overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#a51c30]/0 via-[#a51c30]/[0.03] to-[#a51c30]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
-                      {/* Minimal icon with subtle animation */}
-                      <div className="relative">
-                        <Calendar className="w-[18px] h-[18px] text-[#a51c30] group-hover:scale-110 transition-transform duration-300" />
-                        {/* Pulse effect */}
-                        <div className="absolute inset-0 rounded-full bg-[#a51c30]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                      </div>
-                      
-                      <span className="text-[15px] font-semibold text-[#a51c30] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
-                        Inscripciones
-                      </span>
-                      
-                      {/* Subtle arrow indicator */}
-                      <ArrowRight className="w-[16px] h-[16px] text-[#a51c30]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                    </div>
-                    
-                    {/* Animated border glow */}
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#a51c30]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-                  </motion.button>
-
-                  {/* Premium CTA 2 - Navy Glass Effect */}
-                  <motion.button
-                    onClick={() => setReservationDialogOpen(true)}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 1.0 }}
-                    whileHover={{ y: -2, scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative overflow-hidden rounded-2xl border border-[#002147]/20 bg-gradient-to-br from-[#002147]/[0.02] via-white/50 to-[#002147]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#002147]/40 hover:shadow-2xl hover:shadow-[#002147]/10"
-                  >
-                    {/* Gradient overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#002147]/0 via-[#002147]/[0.03] to-[#002147]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
-                      {/* Minimal icon with subtle animation */}
-                      <div className="relative">
-                        <Calendar className="w-[18px] h-[18px] text-[#002147] group-hover:scale-110 transition-transform duration-300" />
-                        {/* Pulse effect */}
-                        <div className="absolute inset-0 rounded-full bg-[#002147]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                      </div>
-                      
-                      <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
-                        Inscripciones
-                      </span>
-                      
-                      {/* Subtle arrow indicator */}
-                      <ArrowRight className="w-[16px] h-[16px] text-[#002147]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                    </div>
-                    
-                    {/* Animated border glow */}
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#002147]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-                  </motion.button>
-
-                  {/* Premium CTA 3 - Purple Glass Effect */}
-                  <motion.button
-                    onClick={() => setReservationDialogOpen(true)}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 1.1 }}
-                    whileHover={{ y: -2, scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative overflow-hidden rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-500/[0.02] via-white/50 to-purple-500/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-purple-500/40 hover:shadow-2xl hover:shadow-purple-500/10"
-                  >
-                    {/* Gradient overlay on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/[0.03] to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
-                      {/* Minimal icon with subtle animation */}
-                      <div className="relative">
-                        <Calendar className="w-[18px] h-[18px] text-purple-600 group-hover:scale-110 transition-transform duration-300" />
-                        {/* Pulse effect */}
-                        <div className="absolute inset-0 rounded-full bg-purple-500/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                      </div>
-                      
-                      <span className="text-[15px] font-semibold text-purple-600 tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
-                        Inscripciones
-                      </span>
-                      
-                      {/* Subtle arrow indicator */}
-                      <ArrowRight className="w-[16px] h-[16px] text-purple-600/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                    </div>
-                    
-                    {/* Animated border glow */}
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-purple-500/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-                  </motion.button>
-                </div>
 
               </motion.div>
 
