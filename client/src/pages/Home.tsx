@@ -461,198 +461,51 @@ export default function Home() {
               >
                 {/* Primary CTA Row - Harvard Refined Minimalism */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                  {/* Primary CTA - Exámenes Libres (Harvard Crimson) */}
+                  {/* Minimal CTA 1 - Exámenes Libres */}
                   <motion.a
                     href="#planes"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const element = document.getElementById('planes');
-                      if (element) {
-                        const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - 80;
-                        const startPosition = window.pageYOffset;
-                        const distance = targetPosition - startPosition;
-                        const duration = 1500; // 1.5 segundos (más lento)
-                        let start: number | null = null;
-
-                        const animation = (currentTime: number) => {
-                          if (start === null) start = currentTime;
-                          const timeElapsed = currentTime - start;
-                          const progress = Math.min(timeElapsed / duration, 1);
-                          
-                          // Easing function (ease-in-out-cubic) para suavidad
-                          const ease = progress < 0.5
-                            ? 4 * progress * progress * progress
-                            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                          
-                          window.scrollTo(0, startPosition + distance * ease);
-                          
-                          if (timeElapsed < duration) {
-                            requestAnimationFrame(animation);
-                          }
-                        };
-                        
-                        requestAnimationFrame(animation);
-                      }
-                    }}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.7 }}
-                    whileHover={{ y: -2 }}
+                    transition={{ duration: 0.4, delay: 0.6 }}
+                    whileHover={{ y: -1, scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#a51c30] to-[#8a1828] p-[1px] transition-all duration-300 hover:shadow-2xl hover:shadow-[#a51c30]/30"
+                    className="group relative px-6 py-3 rounded-xl border border-[#a51c30]/30 bg-white hover:border-[#a51c30] hover:shadow-md transition-all duration-300"
                   >
-                    {/* Subtle animated border glow */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37] via-[#a51c30] to-[#D4AF37] opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-sm" />
-                    
-                    {/* Main content */}
-                    <div className="relative h-full bg-gradient-to-br from-[#a51c30] to-[#8a1828] rounded-2xl px-6 py-4 flex flex-col items-center justify-center text-center">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 group-hover:border-[#D4AF37]/50 transition-all duration-300 mb-3">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                      </div>
-                      
-                      <div className="text-base font-bold tracking-tight text-white leading-tight mb-1">
-                        Exámenes Libres
-                      </div>
-                      <div className="text-xs font-medium text-white/70 tracking-wide mb-3">
-                        Decreto 2272
-                      </div>
-                      
-                      <div className="flex items-center justify-center gap-2">
-                        <span className="text-sm font-semibold text-white">Ver Planes</span>
-                        <ChevronRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
-                      </div>
-                      
-                      <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                    <div className="flex items-center gap-2">
+                      <div className="text-sm font-bold text-[#a51c30]">Exámenes Libres</div>
+                      <ChevronRight className="w-4 h-4 text-[#a51c30] group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </motion.a>
 
-                  {/* Secondary CTA - Preparación PAES (Harvard Navy + Gold) */}
+                  {/* Minimal CTA 2 - PAES */}
                   <motion.a
                     href="#paes"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const element = document.getElementById('paes');
-                      if (element) {
-                        const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - 80;
-                        const startPosition = window.pageYOffset;
-                        const distance = targetPosition - startPosition;
-                        const duration = 1500;
-                        let start: number | null = null;
-
-                        const animation = (currentTime: number) => {
-                          if (start === null) start = currentTime;
-                          const timeElapsed = currentTime - start;
-                          const progress = Math.min(timeElapsed / duration, 1);
-                          
-                          const ease = progress < 0.5
-                            ? 4 * progress * progress * progress
-                            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                          
-                          window.scrollTo(0, startPosition + distance * ease);
-                          
-                          if (timeElapsed < duration) {
-                            requestAnimationFrame(animation);
-                          }
-                        };
-                        
-                        requestAnimationFrame(animation);
-                      }
-                    }}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.8 }}
-                    whileHover={{ y: -2 }}
+                    transition={{ duration: 0.4, delay: 0.7 }}
+                    whileHover={{ y: -1, scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="group relative overflow-hidden rounded-2xl bg-[#002147] p-[1px] transition-all duration-300 hover:shadow-2xl hover:shadow-[#002147]/40"
+                    className="group relative px-6 py-3 rounded-xl border border-[#002147]/30 bg-white hover:border-[#002147] hover:shadow-md transition-all duration-300"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37] via-[#002147] to-[#D4AF37] opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-sm" />
-                    
-                    <div className="relative h-full bg-[#002147] rounded-2xl px-6 py-4 flex flex-col items-center justify-center text-center">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 group-hover:border-[#D4AF37]/40 transition-all duration-300 mb-3">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                      </div>
-                      
-                      <div className="text-base font-bold tracking-tight text-white leading-tight mb-1">
-                        Preparación PAES
-                      </div>
-                      <div className="text-xs font-medium text-white/60 tracking-wide mb-3">
-                        Puntaje Nacional
-                      </div>
-                      
-                      <div className="flex items-center justify-center gap-2">
-                        <span className="text-sm font-semibold text-white">Ver Planes</span>
-                        <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
-                      </div>
-                      
-                      <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-[#D4AF37]/5 to-transparent" />
+                    <div className="flex items-center gap-2">
+                      <div className="text-sm font-bold text-[#002147]">PAES</div>
+                      <ChevronRight className="w-4 h-4 text-[#002147] group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </motion.a>
 
-                  {/* Tertiary CTA - Validación de Estudios (Gold/Purple accent) */}
+                  {/* Minimal CTA 3 - Validación */}
                   <motion.a
                     href="#planes"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const element = document.getElementById('planes');
-                      if (element) {
-                        const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - 80;
-                        const startPosition = window.pageYOffset;
-                        const distance = targetPosition - startPosition;
-                        const duration = 1500;
-                        let start: number | null = null;
-
-                        const animation = (currentTime: number) => {
-                          if (start === null) start = currentTime;
-                          const timeElapsed = currentTime - start;
-                          const progress = Math.min(timeElapsed / duration, 1);
-                          
-                          const ease = progress < 0.5
-                            ? 4 * progress * progress * progress
-                            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                          
-                          window.scrollTo(0, startPosition + distance * ease);
-                          
-                          if (timeElapsed < duration) {
-                            requestAnimationFrame(animation);
-                          }
-                        };
-                        
-                        requestAnimationFrame(animation);
-                      }
-                    }}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.85 }}
-                    whileHover={{ y: -2 }}
+                    transition={{ duration: 0.4, delay: 0.8 }}
+                    whileHover={{ y: -1, scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#6B46C1] to-[#553C9A] p-[1px] transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/40"
+                    className="group relative px-6 py-3 rounded-xl border border-[#D4AF37]/40 bg-white hover:border-[#D4AF37] hover:shadow-md transition-all duration-300"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37] via-[#6B46C1] to-[#D4AF37] opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-sm" />
-                    
-                    <div className="relative h-full bg-gradient-to-br from-[#6B46C1] to-[#553C9A] rounded-2xl px-6 py-4 flex flex-col items-center justify-center text-center">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 group-hover:border-[#D4AF37]/40 transition-all duration-300 mb-3">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      
-                      <div className="text-base font-bold tracking-tight text-white leading-tight mb-1">
-                        Validación de Estudios
-                      </div>
-                      <div className="text-xs font-medium text-white/60 tracking-wide mb-3">
-                        Educación de Adultos
-                      </div>
-                      
-                      <div className="flex items-center justify-center gap-2">
-                        <span className="text-sm font-semibold text-white">Ver Planes</span>
-                        <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
-                      </div>
-                      
-                      <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-[#D4AF37]/5 to-transparent" />
+                    <div className="flex items-center gap-2">
+                      <div className="text-sm font-bold text-[#002147]">Validación</div>
+                      <ChevronRight className="w-4 h-4 text-[#D4AF37] group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </motion.a>
                 </div>
