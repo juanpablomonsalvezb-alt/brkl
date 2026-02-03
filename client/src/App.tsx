@@ -20,6 +20,8 @@ import EvaluationLinksAdmin from "@/pages/EvaluationLinksAdmin";
 import GeminiCopilotsAdmin from "@/pages/GeminiCopilotsAdmin";
 import FaqAdmin from "@/pages/FaqAdmin";
 import PaesAdmin from "@/pages/PaesAdmin";
+import ReservationsAdmin from "@/pages/ReservationsAdmin";
+import AcademicCopilot from "@/pages/AcademicCopilot";
 
 import Lenis from 'lenis';
 import { useEffect } from "react";
@@ -67,6 +69,8 @@ function Router() {
       <Route path="/gemini-copilots-admin" component={GeminiCopilotsAdmin} />
       <Route path="/faq-admin" component={FaqAdmin} />
       <Route path="/paes-admin" component={PaesAdmin} />
+      <Route path="/reservations-admin" component={ReservationsAdmin} />
+      <Route path="/academic-copilot" component={AcademicCopilot} />
       <Route component={NotFound} />
     </Switch>
   );

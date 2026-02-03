@@ -59,6 +59,10 @@ export default function PaesConfigurator() {
 
   const isSelected = (subjectId: string) => selectedSubjects.includes(subjectId);
 
+  const formatPrice = (price: number) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   if (isLoading) {
     return (
       <div className="py-24 bg-gradient-to-b from-white to-gray-50">
@@ -84,12 +88,27 @@ export default function PaesConfigurator() {
           transition={{ duration: 0.6 }}
           className="text-center mb-6"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-[#002147] mb-2">
-            PAES
-          </h2>
-          <p className="text-sm text-[#002147]/70 max-w-2xl mx-auto">
-            Selecciona las materias que necesitas • Incluye IA + Ensayos
-          </p>
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-5xl md:text-6xl font-bold text-[#002147] mb-3 tracking-tight">
+                PAES
+              </h2>
+              <p className="text-lg text-[#002147]/70 max-w-2xl mx-auto">
+                Selecciona las materias que necesitas • Incluye IA + Ensayos
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <a
+                href="/academic-copilot"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#A51C30] to-[#8B1725] hover:from-[#8B1725] hover:to-[#6B1219] text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+                Ir a Academic Copilot
+              </a>
+            </div>
+          </div>
         </motion.div>
 
         {/* Two Module Layout - Horizontal */}
@@ -161,8 +180,29 @@ export default function PaesConfigurator() {
               <CardContent className="p-6 flex flex-col h-full gap-0">
                 {/* Header */}
                 <div className="pb-4 border-b-2 border-[#002147]/10 flex-shrink-0">
-                  <h3 className="text-xl font-bold text-[#002147] mb-1">Tu Plan</h3>
-                  <p className="text-xs text-[#002147]/60">Valores y resumen</p>
+                  <h3 className="text-xl font-bold text-[#002147] mb-2">Tu Plan PAES</h3>
+                  
+                  {/* Descripción del programa */}
+                  <div className="bg-[#002147]/5 rounded-lg p-3 border border-[#002147]/10">
+                    <div className="space-y-1 text-xs text-[#002147]/70">
+                      <p className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 bg-[#A51C30] rounded-full"></span>
+                        <span className="font-semibold">Plataforma + IA</span>
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 bg-[#A51C30] rounded-full"></span>
+                        <span>32 semanas</span>
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 bg-[#A51C30] rounded-full"></span>
+                        <span>32 evaluaciones de proceso</span>
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 bg-[#A51C30] rounded-full"></span>
+                        <span>2 ensayos generales</span>
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Scrollable Content Area - Fixed Height */}
@@ -193,7 +233,7 @@ export default function PaesConfigurator() {
                                 className="flex justify-between items-center bg-gradient-to-r from-[#002147]/5 to-transparent rounded-lg px-4 py-3 border border-[#002147]/10"
                               >
                                 <span className="font-bold text-sm text-[#002147]">{subject.name}</span>
-                                <span className="text-sm font-semibold text-[#002147]">${subject.basePrice.toLocaleString()}</span>
+                                <span className="text-sm font-semibold text-[#002147]">${formatPrice(subject.basePrice)}</span>
                               </motion.div>
                             ))}
                         </div>
@@ -203,10 +243,10 @@ export default function PaesConfigurator() {
                       <div className="flex justify-between items-center pt-3 border-t border-[#002147]/10">
                         <span className="text-sm font-medium text-[#002147]/70">Subtotal</span>
                         <span className="text-lg font-bold text-[#002147]">
-                          ${selectedSubjects.reduce((sum, id) => {
+                          ${formatPrice(selectedSubjects.reduce((sum, id) => {
                             const subject = subjects?.find(s => s.id === id);
                             return sum + (subject?.basePrice || 0);
-                          }, 0).toLocaleString()}
+                          }, 0))}
                         </span>
                       </div>
 
@@ -234,7 +274,7 @@ export default function PaesConfigurator() {
                           </motion.div>
                         </div>
                         <div className="text-xs font-semibold text-[#D4AF37]">
-                          +${TUTOR_PRICE_PER_SUBJECT.toLocaleString()} CLP por materia
+                          +${formatPrice(TUTOR_PRICE_PER_SUBJECT)} por materia
                         </div>
                         {includeTutor && (
                           <motion.div
@@ -244,7 +284,7 @@ export default function PaesConfigurator() {
                           >
                             <span className="text-xs text-[#002147]/70">Total tutor:</span>
                             <span className="text-sm font-bold text-[#D4AF37]">
-                              +${(TUTOR_PRICE_PER_SUBJECT * selectedSubjects.length).toLocaleString()}
+                              +${formatPrice(TUTOR_PRICE_PER_SUBJECT * selectedSubjects.length)}
                             </span>
                           </motion.div>
                         )}
@@ -260,7 +300,7 @@ export default function PaesConfigurator() {
                     <div className="border-t-2 border-[#002147]/20 pt-4">
                       <div className="bg-gradient-to-br from-[#002147]/10 to-[#002147]/5 rounded-2xl p-5 shadow-inner">
                         <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-bold text-[#002147]">Total Mensual</span>
+                          <span className="text-sm font-bold text-[#002147]">Marzo - Octubre</span>
                           <Sparkles className="w-5 h-5 text-[#D4AF37]" />
                         </div>
                         <motion.div
@@ -270,9 +310,9 @@ export default function PaesConfigurator() {
                           transition={{ duration: 0.3 }}
                           className="text-5xl font-bold text-right"
                         >
-                          ${totalPrice.toLocaleString()}
+                          ${formatPrice(totalPrice)}
                         </motion.div>
-                        <div className="text-right text-xs text-[#002147]/60 font-medium mt-1">CLP mensuales</div>
+                        <div className="text-right text-xs text-[#002147]/60 font-medium mt-1">8 meses de preparación</div>
                       </div>
                     </div>
                   )}

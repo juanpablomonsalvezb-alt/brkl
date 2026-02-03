@@ -1674,7 +1674,9 @@ export async function registerRoutes(
         });
       }
       
+      // Create reservation
       const reservation = await storage.createReservation(result.data);
+      
       res.status(201).json(reservation);
     } catch (error) {
       console.error("Error creating reservation:", error);
@@ -1933,6 +1935,27 @@ export async function registerRoutes(
   // ============================================
   // Gemini Copilots Routes
   // ============================================
+
+  // POST: Send chat message to Gemini
+  app.post("/api/academic-copilot/chat", async (req, res) => {
+    try {
+      const { message, conversationHistory } = req.body;
+      
+      if (!message) {
+        return res.status(400).json({ message: "Message is required" });
+      }
+
+      const { sendChatMessage } = await import('./geminiChat');
+      const response = await sendChatMessage(message, conversationHistory || []);
+      
+      res.json({ response });
+    } catch (error) {
+      console.error("Error in chat:", error);
+      res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Failed to process chat message" 
+      });
+    }
+  });
 
   // GET: Get all copilots
   app.get("/api/gemini-copilots", async (req, res) => {

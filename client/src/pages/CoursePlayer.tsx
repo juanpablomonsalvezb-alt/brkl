@@ -902,8 +902,13 @@ export default function CoursePlayer() {
 
               {/* RIGHT METRICS PANEL */}
               <div className="hidden xl:block w-72 shrink-0 space-y-4">
+                {/* Academic Copilot Button */}
+                <div className="sticky top-4">
+                  <GeminiCopilotButton levelId={levelCode} variant="sidebar" />
+                </div>
+
                 {/* Progress Chart */}
-                <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm sticky top-4">
+                <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Avance Total</h4>
                   <div className="flex items-center justify-center">
                     <ResponsiveContainer width={130} height={130}>
@@ -1159,9 +1164,6 @@ export default function CoursePlayer() {
           />
         )
       }
-
-      {/* Floating Gemini Copilot Button */}
-      <GeminiCopilotButton levelId={levelCode} variant="floating" />
     </>
   );
 }

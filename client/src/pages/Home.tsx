@@ -16,7 +16,8 @@ import { motion } from "framer-motion";
 
 import { ThinkingBridge } from "@/components/ThinkingBridge";
 import { ReservationDialog } from "@/components/ReservationDialog";
-import { PlanConfiguratorNew } from "@/components/PlanConfiguratorNew";
+import { PlanConfiguratorYouth } from "@/components/PlanConfiguratorYouth";
+import { PlanConfiguratorAdults } from "@/components/PlanConfiguratorAdults";
 import PaesConfigurator from "@/components/PaesConfigurator";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -203,7 +204,7 @@ export default function Home() {
                   onClick={() => setReservationDialogOpen(true)}
                   className="text-[14px] text-[#1e1e1e] hover:text-[#a51c30] font-normal transition-colors whitespace-nowrap"
                 >
-                  Reserva
+                  Inscripción
                 </button>
               </div>
 
@@ -562,6 +563,33 @@ export default function Home() {
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#D4AF37]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
                   </motion.a>
 
+                  {/* Inscription Button 2 - Gold */}
+                  <motion.button
+                    onClick={() => setReservationDialogOpen(true)}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 1.1 }}
+                    whileHover={{ y: -3, scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="group relative overflow-hidden rounded-2xl border border-[#D4AF37]/20 bg-gradient-to-br from-[#D4AF37]/[0.02] via-white/50 to-[#D4AF37]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/[0.05] hover:shadow-2xl hover:shadow-[#D4AF37]/20"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/0 via-[#D4AF37]/[0.03] to-[#D4AF37]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
+                      <div className="relative">
+                        <Calendar className="w-[18px] h-[18px] text-[#D4AF37] group-hover:scale-110 transition-transform duration-300" />
+                        <div className="absolute inset-0 rounded-full bg-[#D4AF37]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                      </div>
+                      
+                      <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
+                        Inscripciones
+                      </span>
+                      
+                      <ArrowRight className="w-[16px] h-[16px] text-[#D4AF37]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                    </div>
+                    
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#D4AF37]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+                  </motion.button>
                 </div>
 
                 {/* Column 3: PAES */}
@@ -571,7 +599,7 @@ export default function Home() {
                     href="#paes"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.8 }}
+                    transition={{ duration: 0.6, delay: 0.9 }}
                     whileHover={{ y: -2, scale: 1.01 }}
                     whileTap={{ scale: 0.98 }}
                     className="group relative overflow-hidden rounded-2xl border border-[#002147]/20 bg-gradient-to-br from-[#002147]/[0.02] via-white/50 to-[#002147]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#002147]/40 hover:shadow-2xl hover:shadow-[#002147]/10"
@@ -589,6 +617,9 @@ export default function Home() {
                       <div className="flex flex-col items-center">
                         <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
                           PAES
+                        </span>
+                        <span className="text-[11px] text-[#002147]/60 mt-0.5">
+                          Preparación
                         </span>
                       </div>
                       
@@ -807,13 +838,108 @@ export default function Home() {
 
         {/* Interactive Plan Configurator - MOVED UP */}
         <div id="planes" className="scroll-mt-20">
-          <PlanConfiguratorNew />
+          {/* Youth Plans - Exámenes Libres */}
+          <PlanConfiguratorYouth />
         </div>
+
+        {/* Platform Showcase Section - Split Layout */}
+        <section className="py-32 bg-gradient-to-br from-white via-gray-50 to-white relative overflow-hidden">
+          {/* Subtle Background Pattern */}
+          <div className="absolute inset-0 opacity-[0.02]">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `radial-gradient(circle at 2px 2px, #a51c30 1px, transparent 0)`,
+              backgroundSize: '40px 40px'
+            }}></div>
+          </div>
+
+          <div className="container-harvard relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="grid lg:grid-cols-[1fr_2.34fr] gap-16 items-center"
+            >
+              {/* Left Column - Text Content */}
+              <div className="space-y-8">
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                >
+                  <Badge className="mb-6 bg-[#a51c30]/10 text-[#a51c30] hover:bg-[#a51c30]/20 border-[#a51c30]/20 px-4 py-2 text-sm font-semibold">
+                    La Plataforma del Futuro
+                  </Badge>
+                  
+                  <h2 className="text-5xl md:text-6xl font-serif font-bold text-foreground leading-tight mb-6">
+                    Transforma tu preparación con{" "}
+                    <span className="text-[#a51c30] italic">Barkley</span>
+                  </h2>
+                  
+                  <div className="space-y-6 text-lg text-foreground/80 leading-relaxed">
+                    <p>
+                      El <span className="font-semibold text-foreground">ecosistema inteligente</span> que reemplaza los métodos tradicionales por una ruta estratégica de <span className="font-semibold text-[#a51c30]">16 módulos</span>.
+                    </p>
+                    
+                    <p>
+                      Entrena con <span className="font-semibold text-foreground">32 ensayos de proceso</span> y resuelve cualquier duda al instante con nuestro <span className="font-semibold text-[#a51c30]">Academic Copilot</span>, la IA pedagógica disponible para ti las 24 horas.
+                    </p>
+                    
+                    <p>
+                      Avanza a tu propio ritmo con <span className="font-semibold text-foreground">tecnología de vanguardia</span> y asegura tu cupo en la universidad con la ventaja competitiva que solo la inteligencia artificial te puede dar.
+                    </p>
+                  </div>
+
+                </motion.div>
+              </div>
+
+              {/* Right Column - Video Player */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="group"
+              >
+                <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl overflow-hidden shadow-2xl hover:shadow-[0_30px_60px_-15px_rgba(165,28,48,0.3)] transition-all duration-500 p-4">
+                  {/* Glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#a51c30]/20 via-transparent to-[#a51c30]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative rounded-xl overflow-hidden shadow-inner" style={{ height: '450px' }}>
+                    <video 
+                      controls
+                      className="w-full h-full rounded-lg"
+                      poster="/portada_plataforma.png"
+                      style={{
+                        boxShadow: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+                        objectFit: 'cover',
+                        backgroundColor: '#000'
+                      }}
+                    >
+                      <source src="/final_plataforma.mov" type="video/mp4" />
+                      Tu navegador no soporta el elemento de video.
+                    </video>
+                    
+                    {/* Elegant shine effect on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+                  </div>
+
+                  {/* Decorative corner accent */}
+                  <div className="absolute top-8 right-8 w-20 h-20 border-t-2 border-r-2 border-[#a51c30]/30 rounded-tr-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Adult Plans - Validación */}
+        <PlanConfiguratorAdults />
 
         {/* Academic Copilot Section - 3 Columns */}
         <section className="py-32 bg-gradient-to-br from-[#0a1628] via-[#0d1b2a] to-[#1b263b] relative overflow-hidden">
           <div className="max-w-[1600px] mx-auto px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.9fr_0.9fr] gap-12 items-center">
               
               {/* Left Column - Video Loop */}
               <motion.div
