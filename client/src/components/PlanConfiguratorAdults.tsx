@@ -203,13 +203,22 @@ export function PlanConfiguratorAdults() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
           {/* Render all 3 plans simultaneously */}
           {allPlans.map((plan, index) => {
-            // Define color variations for each plan
-            const colors = [
-              { from: '#8B1725', to: '#6B1219', border: '#8B1725', light: '#8B1725' }, // Plan 1 - Dark Crimson (10% más oscuro)
-              { from: '#C41E3A', to: '#A51C30', border: '#C41E3A', light: '#C41E3A' }, // Plan 2 - Lighter Crimson
-              { from: '#DC143C', to: '#C41E3A', border: '#DC143C', light: '#DC143C' }, // Plan 3 - Bright Crimson (más vibrante)
+            const colorSchemes = [
+              { 
+                base: { bg: '#f1f5f9', border: '#cbd5e1', text: '#475569' },
+                hover: { from: '#10b981', to: '#14b8a6', border: '#10b981', shadow: '#10b98120' }
+              },
+              { 
+                base: { bg: '#f1f5f9', border: '#cbd5e1', text: '#475569' },
+                hover: { from: '#059669', to: '#0d9488', border: '#059669', shadow: '#05966920' }
+              },
+              { 
+                base: { bg: '#f1f5f9', border: '#cbd5e1', text: '#475569' },
+                hover: { from: '#14b8a6', to: '#06b6d4', border: '#14b8a6', shadow: '#14b8a620' }
+              }
             ];
-            const planColors = colors[index];
+            const scheme = colorSchemes[index];
+            const isSelected = selectedPlanIndex === index;
             
             return (
             <motion.div
@@ -219,30 +228,31 @@ export function PlanConfiguratorAdults() {
               transition={{ duration: 0.6, delay: 0.2 + (index * 0.1) }}
             >
               <Card 
-                className={`border-2 shadow-2xl overflow-hidden bg-white transition-all duration-300 cursor-pointer flex flex-col ${
-                  selectedPlanIndex === index 
-                    ? `ring-4 ring-opacity-20 scale-105` 
-                    : 'border-[#002147]/20 hover:shadow-[#002147]/10'
+                className={`border-2 shadow-2xl overflow-hidden transition-all duration-500 cursor-pointer flex flex-col group ${
+                  isSelected 
+                    ? 'ring-4 ring-opacity-20 scale-105' 
+                    : 'hover:shadow-[0_20px_50px_rgba(16,185,129,0.3)] hover:scale-[1.02]'
                 }`}
                 onClick={() => selectPlan(index)}
                 style={{ 
                   minHeight: '580px', 
                   maxHeight: '580px',
-                  borderColor: selectedPlanIndex === index ? planColors.border : undefined,
-                  boxShadow: selectedPlanIndex === index ? `0 0 0 4px ${planColors.border}20, 0 10px 30px ${planColors.border}30` : undefined
+                  background: isSelected ? `linear-gradient(135deg, ${scheme.hover.from} 0%, ${scheme.hover.to} 100%)` : scheme.base.bg,
+                  borderColor: isSelected ? scheme.hover.border : scheme.base.border,
+                  boxShadow: isSelected ? `0 0 0 4px ${scheme.hover.shadow}, 0 10px 30px ${scheme.hover.shadow}` : undefined
                 }}
               >
                 {/* Header */}
                 <div 
-                  className="p-4 text-center border-b border-[#002147]/10"
+                  className={`p-4 text-center border-b transition-all duration-500 ${isSelected ? 'border-white/20' : 'border-slate-300'}`}
                   style={{
-                    background: `linear-gradient(to right, ${planColors.from}, ${planColors.to})`
+                    background: isSelected ? `linear-gradient(to right, ${scheme.hover.from}, ${scheme.hover.to})` : 'linear-gradient(to right, #64748b, #475569)'
                   }}
                 >
-                  <h3 className="text-xl font-bold text-white mb-1 tracking-tight">
+                  <h3 className={`text-xl font-bold mb-1 tracking-tight transition-colors duration-500 ${isSelected ? 'text-white' : 'text-white group-hover:text-white'}`}>
                     {plan.planName}
                   </h3>
-                  <p className="text-sm text-white/90 font-light">
+                  <p className={`text-sm font-light transition-colors duration-500 ${isSelected ? 'text-white/90' : 'text-white/80 group-hover:text-white/90'}`}>
                     {plan.planSubtitle}
                   </p>
                 </div>
@@ -250,30 +260,30 @@ export function PlanConfiguratorAdults() {
                 {/* Content */}
                 <div className="p-5 flex-1 flex flex-col">
                   {/* Pricing */}
-                  <div className="relative overflow-hidden rounded-lg p-4 mb-4 border border-[#002147]/10 bg-gradient-to-br from-[#002147]/5 to-white">
+                  <div className={`relative overflow-hidden rounded-lg p-4 mb-4 border transition-all duration-500 ${isSelected ? 'border-white/20 bg-white/10' : 'border-slate-300 bg-white group-hover:border-emerald-300'}`}>
                     {/* Harvard accent line */}
                     <div 
-                      className="absolute top-0 left-0 right-0 h-1"
+                      className="absolute top-0 left-0 right-0 h-1 transition-all duration-500"
                       style={{
-                        background: `linear-gradient(to right, ${planColors.from}, ${planColors.to})`
+                        background: isSelected ? `linear-gradient(to right, ${scheme.hover.from}, ${scheme.hover.to})` : 'linear-gradient(to right, #64748b, #475569)'
                       }}
                     ></div>
                     
                     <div className="relative text-center pt-1">
-                      <div className="text-xs font-semibold text-[#002147]/60 mb-1.5 tracking-wider uppercase">Inversión Anual</div>
-                      <div className="text-3xl font-bold mb-1" style={{ color: planColors.light }}>
+                      <div className={`text-xs font-semibold mb-1.5 tracking-wider uppercase transition-colors duration-500 ${isSelected ? 'text-white/80' : 'text-slate-600 group-hover:text-emerald-600'}`}>Inversión Anual</div>
+                      <div className={`text-3xl font-bold mb-1 transition-colors duration-500`} style={{ color: isSelected ? '#ffffff' : scheme.base.text }}>
                         {formatCurrency(plan.annualTotal || 0)}
                       </div>
-                      <div className="text-xs text-[#002147]/60">30 semanas</div>
+                      <div className={`text-xs transition-colors duration-500 ${isSelected ? 'text-white/70' : 'text-slate-600 group-hover:text-emerald-500'}`}>30 semanas</div>
                     </div>
                   </div>
 
                   {/* Compact Info */}
                   <div className="space-y-3 mb-4 flex-1">
                     {/* Academic Structure */}
-                    <div className="bg-[#002147]/5 rounded-lg p-3 border border-[#002147]/10">
-                      <h5 className="font-semibold text-[#002147] text-xs mb-1.5 uppercase tracking-wide">Estructura</h5>
-                      <div className="text-xs text-[#002147]/70 space-y-1">
+                    <div className={`rounded-lg p-3 border transition-all duration-500 ${isSelected ? 'bg-white/10 border-white/20' : 'bg-slate-50 border-slate-200 group-hover:bg-emerald-50 group-hover:border-emerald-200'}`}>
+                      <h5 className={`font-semibold text-xs mb-1.5 uppercase tracking-wide transition-colors duration-500 ${isSelected ? 'text-white' : 'text-slate-700 group-hover:text-emerald-700'}`}>Estructura</h5>
+                      <div className={`text-xs space-y-1 transition-colors duration-500 ${isSelected ? 'text-white/80' : 'text-slate-600 group-hover:text-emerald-600'}`}>
                         <p>• {plan.academicLoad}</p>
                         <p>• {plan.evaluationsDetail}</p>
                       </div>
@@ -281,17 +291,13 @@ export function PlanConfiguratorAdults() {
 
                     {/* Subjects */}
                     <div 
-                      className="rounded-lg p-3 border"
-                      style={{
-                        backgroundColor: `${planColors.light}0D`,
-                        borderColor: `${planColors.light}1A`
-                      }}
+                      className={`rounded-lg p-3 border transition-all duration-500 ${isSelected ? 'bg-white/10 border-white/20' : 'bg-slate-50 border-slate-200 group-hover:bg-emerald-50 group-hover:border-emerald-200'}`}
                     >
-                      <h5 className="font-semibold text-xs mb-1.5 uppercase tracking-wide" style={{ color: planColors.light }}>Asignaturas</h5>
+                      <h5 className={`font-semibold text-xs mb-1.5 uppercase tracking-wide transition-colors duration-500 ${isSelected ? 'text-white' : 'text-slate-700 group-hover:text-emerald-700'}`}>Asignaturas</h5>
                       <div className="grid grid-cols-1 gap-1">
                         {parseSubjects(plan.subjects).map((subject, idx) => (
-                          <div key={idx} className="flex items-center gap-2 text-xs text-[#002147]/70">
-                            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: planColors.light }}></span>
+                          <div key={idx} className={`flex items-center gap-2 text-xs transition-colors duration-500 ${isSelected ? 'text-white/80' : 'text-slate-600 group-hover:text-emerald-600'}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors duration-500`} style={{ backgroundColor: isSelected ? '#ffffff' : scheme.base.text }}></span>
                             <span className="leading-tight">{subject}</span>
                           </div>
                         ))}
@@ -305,30 +311,13 @@ export function PlanConfiguratorAdults() {
                       e.stopPropagation();
                       selectPlan(index);
                     }}
-                    className={`w-full font-semibold transition-all text-sm py-3 text-white shadow-md hover:shadow-lg ${
-                      selectedPlanIndex === index
+                    className={`w-full font-semibold transition-all duration-500 text-sm py-3 text-white shadow-md hover:shadow-lg ${
+                      isSelected
                         ? 'bg-green-600 hover:bg-green-700'
-                        : ''
+                        : 'bg-slate-600 hover:bg-emerald-600 group-hover:bg-emerald-500'
                     }`}
-                    style={
-                      selectedPlanIndex !== index
-                        ? {
-                            backgroundColor: planColors.from,
-                          }
-                        : undefined
-                    }
-                    onMouseEnter={(e) => {
-                      if (selectedPlanIndex !== index) {
-                        e.currentTarget.style.backgroundColor = planColors.to;
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (selectedPlanIndex !== index) {
-                        e.currentTarget.style.backgroundColor = planColors.from;
-                      }
-                    }}
                   >
-                    {selectedPlanIndex === index ? (
+                    {isSelected ? (
                       <>
                         <Check className="w-4 h-4 mr-2" />
                         Seleccionado

@@ -2,6 +2,12 @@ import type { Express, Request, Response } from "express";
 import { db } from "./db";
 import { faqs, insertFaqSchema, type Faq, type InsertFaq } from "../shared/schema";
 import { eq, desc } from "drizzle-orm";
+import multer from "multer";
+import mammoth from "mammoth";
+import { z } from "zod";
+
+// Configurar multer para manejar archivos en memoria
+const upload = multer({ storage: multer.memoryStorage() });
 
 export function registerFaqRoutes(app: Express) {
   // GET: Obtener todas las FAQ activas (para el público)
@@ -155,6 +161,97 @@ export function registerFaqRoutes(app: Express) {
     } catch (error: any) {
       console.error("Error reordering FAQs:", error);
       return res.status(500).json({ error: "Error al reordenar FAQs" });
+    }
+  });
+
+  // POST: Importación masiva de FAQs desde archivo Word
+  app.post("/api/admin/faqs/import", upload.single("file"), async (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No se ha proporcionado ningún archivo" });
+      }
+
+      // Verificar que sea un archivo Word
+      if (!req.file.originalname.match(/\.(docx)$/)) {
+        return res.status(400).json({ error: "Solo se permiten archivos Word (.docx)" });
+      }
+
+      // Extraer texto del documento Word
+      const result = await mammoth.convertToHtml({ buffer: req.file.buffer });
+      const html = result.value;
+
+      // Parsear HTML para extraer tablas
+      const tableRegex = /<table[^>]*>([\s\S]*?)<\/table>/gi;
+      const rowRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
+      const cellRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi;
+
+      const tables = html.match(tableRegex);
+      
+      if (!tables || tables.length === 0) {
+        return res.status(400).json({ error: "No se encontraron tablas en el documento" });
+      }
+
+      const faqsToImport: InsertFaq[] = [];
+      let sortOrder = 0;
+
+      // Procesar la primera tabla
+      const table = tables[0];
+      const rows = table.match(rowRegex);
+
+      if (!rows || rows.length < 2) {
+        return res.status(400).json({ error: "La tabla debe tener al menos 2 filas (encabezado + datos)" });
+      }
+
+      // Saltar la primera fila (encabezado)
+      for (let i = 1; i < rows.length; i++) {
+        const cells = rows[i].match(cellRegex);
+        
+        if (cells && cells.length >= 2) {
+          // Limpiar HTML tags de las celdas
+          const question = cells[0].replace(/<[^>]*>/g, '').trim();
+          const answer = cells[1].replace(/<[^>]*>/g, '').trim();
+
+          if (question && answer) {
+            faqsToImport.push({
+              question,
+              answer,
+              category: "General",
+              sortOrder: sortOrder++,
+              isActive: true,
+            });
+          }
+        }
+      }
+
+      if (faqsToImport.length === 0) {
+        return res.status(400).json({ error: "No se encontraron preguntas válidas en el documento" });
+      }
+
+      // Opción de reemplazar o agregar
+      const replaceAll = req.body.replaceAll === "true" || req.body.replaceAll === true;
+
+      if (replaceAll) {
+        // Eliminar todas las FAQs existentes
+        await db.delete(faqs);
+      }
+
+      // Insertar nuevas FAQs
+      const inserted = await db
+        .insert(faqs)
+        .values(faqsToImport)
+        .returning();
+
+      return res.status(201).json({
+        message: `${inserted.length} FAQs importadas exitosamente`,
+        count: inserted.length,
+        faqs: inserted,
+      });
+    } catch (error: any) {
+      console.error("Error importing FAQs:", error);
+      return res.status(500).json({ 
+        error: "Error al importar FAQs",
+        details: error.message 
+      });
     }
   });
 }

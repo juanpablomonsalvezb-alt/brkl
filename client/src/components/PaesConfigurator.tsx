@@ -129,25 +129,25 @@ export default function PaesConfigurator() {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleSubjectToggle(subject.id)}
                       className={`
-                        p-4 rounded-xl border-2 transition-all duration-300 text-left flex items-center justify-between
+                        p-4 rounded-xl border-2 transition-all duration-500 text-left flex items-center justify-between group
                         ${isSelected(subject.id)
-                          ? 'border-[#002147] bg-gradient-to-br from-[#002147] to-[#003d82] text-white shadow-lg shadow-[#002147]/30'
-                          : 'border-[#002147]/20 bg-white hover:border-[#002147]/50 hover:shadow-md text-[#002147]'
+                          ? 'border-[#a51c30] bg-gradient-to-br from-[#a51c30] to-[#f97316] text-white shadow-lg shadow-[#a51c30]/30 scale-105'
+                          : 'border-slate-300 bg-slate-100 hover:border-red-400 hover:shadow-[0_10px_30px_rgba(165,28,48,0.2)] hover:bg-gradient-to-br hover:from-red-50 hover:to-orange-50 text-slate-700 hover:text-red-700'
                         }
                       `}
                     >
-                      <span className="font-bold text-base">
+                      <span className="font-bold text-base transition-colors duration-500">
                         {subject.name}
                       </span>
                       <div className={`
-                        w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all
+                        w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-500
                         ${isSelected(subject.id)
                           ? 'border-white bg-white scale-110'
-                          : 'border-[#002147]/30'
+                          : 'border-slate-400 group-hover:border-red-500 group-hover:bg-red-50'
                         }
                       `}>
                         {isSelected(subject.id) && (
-                          <CheckCircle2 className="w-5 h-5 text-[#002147]" />
+                          <CheckCircle2 className="w-5 h-5 text-[#a51c30]" />
                         )}
                       </div>
                     </motion.button>

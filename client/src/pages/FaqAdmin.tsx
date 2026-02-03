@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Edit, Trash2, GripVertical, Eye, EyeOff } from "lucide-react";
+import { Plus, Edit, Trash2, GripVertical, Eye, EyeOff, Upload, FileText } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface Faq {
   id: string;
@@ -26,7 +27,11 @@ export default function FaqAdmin() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
   const [editingFaq, setEditingFaq] = useState<Faq | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [replaceAll, setReplaceAll] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     question: "",
     answer: "",
@@ -119,6 +124,72 @@ export default function FaqAdmin() {
     },
   });
 
+  // Import FAQs mutation
+  const importFaqsMutation = useMutation({
+    mutationFn: async ({ file, replaceAll }: { file: File; replaceAll: boolean }) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("replaceAll", String(replaceAll));
+
+      const response = await fetch("/api/admin/faqs/import", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Error al importar FAQs");
+      }
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/faqs"] });
+      toast({ 
+        title: "Importación exitosa", 
+        description: `${data.count} FAQs importadas correctamente` 
+      });
+      setIsImportDialogOpen(false);
+      setSelectedFile(null);
+      setReplaceAll(false);
+    },
+    onError: (error: Error) => {
+      toast({ 
+        title: "Error al importar", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    },
+  });
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.name.endsWith('.docx')) {
+        toast({
+          title: "Archivo inválido",
+          description: "Solo se permiten archivos Word (.docx)",
+          variant: "destructive"
+        });
+        return;
+      }
+      setSelectedFile(file);
+    }
+  };
+
+  const handleImport = () => {
+    if (!selectedFile) {
+      toast({
+        title: "No hay archivo seleccionado",
+        description: "Por favor selecciona un archivo Word",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    importFaqsMutation.mutate({ file: selectedFile, replaceAll });
+  };
+
   const resetForm = () => {
     setFormData({
       question: "",
@@ -183,13 +254,96 @@ export default function FaqAdmin() {
             Administra las preguntas frecuentes del sitio web
           </p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={() => handleOpenDialog()} className="bg-[#002147] hover:bg-[#002147]/90">
-              <Plus className="w-4 h-4 mr-2" />
-              Nueva FAQ
-            </Button>
-          </DialogTrigger>
+        <div className="flex gap-3">
+          <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="border-[#002147] text-[#002147] hover:bg-[#002147]/10">
+                <Upload className="w-4 h-4 mr-2" />
+                Importar Word
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>Importar FAQs desde Word</DialogTitle>
+                <DialogDescription>
+                  Sube un archivo Word con una tabla de 2 columnas: Pregunta | Respuesta
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <Alert>
+                  <FileText className="h-4 w-4" />
+                  <AlertDescription>
+                    <strong>Formato requerido:</strong> Documento Word (.docx) con una tabla de 2 columnas.
+                    <br />Primera columna: Pregunta
+                    <br />Segunda columna: Respuesta
+                  </AlertDescription>
+                </Alert>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="file-upload">Seleccionar archivo</Label>
+                  <Input
+                    id="file-upload"
+                    type="file"
+                    accept=".docx"
+                    onChange={handleFileChange}
+                    ref={fileInputRef}
+                  />
+                  {selectedFile && (
+                    <p className="text-sm text-green-600 flex items-center gap-2">
+                      <FileText className="w-4 h-4" />
+                      {selectedFile.name}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="replace-all"
+                    checked={replaceAll}
+                    onCheckedChange={setReplaceAll}
+                  />
+                  <Label htmlFor="replace-all" className="text-sm">
+                    Reemplazar todas las FAQs existentes
+                  </Label>
+                </div>
+                
+                {replaceAll && (
+                  <Alert className="border-amber-500 bg-amber-50">
+                    <AlertDescription className="text-amber-800">
+                      ⚠️ Todas las FAQs existentes serán eliminadas y reemplazadas por las del archivo.
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </div>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsImportDialogOpen(false);
+                    setSelectedFile(null);
+                    setReplaceAll(false);
+                  }}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={handleImport}
+                  disabled={!selectedFile || importFaqsMutation.isPending}
+                  className="bg-[#002147] hover:bg-[#002147]/90"
+                >
+                  {importFaqsMutation.isPending ? "Importando..." : "Importar"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={() => handleOpenDialog()} className="bg-[#002147] hover:bg-[#002147]/90">
+                <Plus className="w-4 h-4 mr-2" />
+                Nueva FAQ
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingFaq ? "Editar FAQ" : "Nueva FAQ"}</DialogTitle>

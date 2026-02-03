@@ -18,6 +18,7 @@ import {
   Plus,
   Video,
   FileUp,
+  HelpCircle,
   Settings,
   Users,
   Database,
@@ -182,6 +183,12 @@ export default function Dashboard() {
                 <button className="w-full flex items-center gap-4 p-3 rounded-xl transition-all group text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-white/5">
                   <DollarSign className="w-5 h-5 shrink-0 transition-colors group-hover:text-white" />
                   {!isSidebarCollapsed && <span className="text-[13px] font-medium">Planes por Nivel</span>}
+                </button>
+              </Link>
+              <Link href="/faq-admin">
+                <button className="w-full flex items-center gap-4 p-3 rounded-xl transition-all group text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-white/5">
+                  <HelpCircle className="w-5 h-5 shrink-0 transition-colors group-hover:text-white" />
+                  {!isSidebarCollapsed && <span className="text-[13px] font-medium">Preguntas Frecuentes</span>}
                 </button>
               </Link>
             </>

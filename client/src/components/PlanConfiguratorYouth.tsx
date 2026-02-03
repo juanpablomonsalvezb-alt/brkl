@@ -179,14 +179,24 @@ export function PlanConfiguratorYouth() {
         {/* Main Grid - 3 Columns */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
           {allPlans.map((plan, index) => {
-            const colors = [
-              { from: '#8B1725', to: '#6B1219', border: '#8B1725', light: '#8B1725' },
-              { from: '#C41E3A', to: '#A51C30', border: '#C41E3A', light: '#C41E3A' },
-              { from: '#DC143C', to: '#C41E3A', border: '#DC143C', light: '#DC143C' },
+            const colorSchemes = [
+              { 
+                base: { bg: '#f1f5f9', border: '#cbd5e1', text: '#475569' },
+                hover: { from: '#3b82f6', to: '#8b5cf6', border: '#3b82f6', shadow: '#3b82f620' }
+              },
+              { 
+                base: { bg: '#f1f5f9', border: '#cbd5e1', text: '#475569' },
+                hover: { from: '#6366f1', to: '#8b5cf6', border: '#6366f1', shadow: '#6366f120' }
+              },
+              { 
+                base: { bg: '#f1f5f9', border: '#cbd5e1', text: '#475569' },
+                hover: { from: '#2563eb', to: '#7c3aed', border: '#2563eb', shadow: '#2563eb20' }
+              }
             ];
-            const planColors = colors[index];
+            const scheme = colorSchemes[index];
             const hasMentor = mentorStates[index];
             const currentPrice = hasMentor ? (plan.annualTotalWithMentor || plan.annualTotal) : plan.annualTotal;
+            const isSelected = selectedPlanIndex === index;
             
             return (
             <motion.div
@@ -196,48 +206,49 @@ export function PlanConfiguratorYouth() {
               transition={{ duration: 0.6, delay: 0.2 + (index * 0.1) }}
             >
               <Card 
-                className={`border-2 shadow-2xl overflow-hidden bg-white transition-all duration-300 cursor-pointer flex flex-col ${
-                  selectedPlanIndex === index 
+                className={`border-2 shadow-2xl overflow-hidden transition-all duration-500 cursor-pointer flex flex-col group ${
+                  isSelected 
                     ? 'ring-4 ring-opacity-20 scale-105' 
-                    : 'border-[#002147]/20 hover:shadow-[#002147]/10'
+                    : 'hover:shadow-[0_20px_50px_rgba(59,130,246,0.3)] hover:scale-[1.02]'
                 }`}
                 onClick={() => selectPlan(index)}
                 style={{ 
                   minHeight: '620px', 
                   maxHeight: '620px',
-                  borderColor: selectedPlanIndex === index ? planColors.border : undefined,
-                  boxShadow: selectedPlanIndex === index ? `0 0 0 4px ${planColors.border}20, 0 10px 30px ${planColors.border}30` : undefined
+                  background: isSelected ? `linear-gradient(135deg, ${scheme.hover.from} 0%, ${scheme.hover.to} 100%)` : scheme.base.bg,
+                  borderColor: isSelected ? scheme.hover.border : scheme.base.border,
+                  boxShadow: isSelected ? `0 0 0 4px ${scheme.hover.shadow}, 0 10px 30px ${scheme.hover.shadow}` : undefined
                 }}
               >
                 <div 
-                  className="p-4 text-center border-b border-[#002147]/10"
+                  className={`p-4 text-center border-b transition-all duration-500 ${isSelected ? 'border-white/20' : 'border-slate-300'}`}
                   style={{
-                    background: `linear-gradient(to right, ${planColors.from}, ${planColors.to})`
+                    background: isSelected ? `linear-gradient(to right, ${scheme.hover.from}, ${scheme.hover.to})` : 'linear-gradient(to right, #64748b, #475569)'
                   }}
                 >
-                  <h3 className="text-xl font-bold text-white mb-1 tracking-tight">
+                  <h3 className={`text-xl font-bold mb-1 tracking-tight transition-colors duration-500 ${isSelected ? 'text-white' : 'text-white group-hover:text-white'}`}>
                     {plan.planName}
                   </h3>
-                  <p className="text-sm text-white/90 font-light">
+                  <p className={`text-sm font-light transition-colors duration-500 ${isSelected ? 'text-white/90' : 'text-white/80 group-hover:text-white/90'}`}>
                     {plan.planSubtitle}
                   </p>
                 </div>
 
                 <div className="p-5 flex-1 flex flex-col">
-                  <div className="relative overflow-hidden rounded-lg p-4 mb-4 border border-[#002147]/10 bg-gradient-to-br from-[#002147]/5 to-white">
+                  <div className={`relative overflow-hidden rounded-lg p-4 mb-4 border transition-all duration-500 ${isSelected ? 'border-white/20 bg-white/10' : 'border-slate-300 bg-white group-hover:border-blue-300'}`}>
                     <div 
-                      className="absolute top-0 left-0 right-0 h-1"
+                      className="absolute top-0 left-0 right-0 h-1 transition-all duration-500"
                       style={{
-                        background: `linear-gradient(to right, ${planColors.from}, ${planColors.to})`
+                        background: isSelected ? `linear-gradient(to right, ${scheme.hover.from}, ${scheme.hover.to})` : 'linear-gradient(to right, #64748b, #475569)'
                       }}
                     ></div>
                     
                     <div className="relative text-center pt-1">
-                      <div className="text-xs font-semibold text-[#002147]/60 mb-1.5 tracking-wider uppercase">Marzo - Octubre</div>
-                      <div className="text-3xl font-bold mb-1" style={{ color: planColors.light }}>
+                      <div className={`text-xs font-semibold mb-1.5 tracking-wider uppercase transition-colors duration-500 ${isSelected ? 'text-white/80' : 'text-slate-600 group-hover:text-blue-600'}`}>Marzo - Octubre</div>
+                      <div className={`text-3xl font-bold mb-1 transition-colors duration-500`} style={{ color: isSelected ? '#ffffff' : scheme.base.text }}>
                         {formatCurrency(currentPrice || 0)}
                       </div>
-                      <div className="text-xs text-[#002147]/60">8 meses de formación</div>
+                      <div className={`text-xs transition-colors duration-500 ${isSelected ? 'text-white/70' : 'text-slate-600 group-hover:text-blue-500'}`}>8 meses de formación</div>
                     </div>
                   </div>
 
@@ -247,19 +258,16 @@ export function PlanConfiguratorYouth() {
                         e.stopPropagation();
                         toggleMentor(index);
                       }}
-                      className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all ${
+                      className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all duration-500 ${
                         hasMentor
                           ? 'border-green-500 bg-green-50 text-green-700'
-                          : 'border-[#002147]/20 bg-white text-[#002147]/70 hover:border-[#002147]/40'
+                          : isSelected 
+                            ? 'border-white/30 bg-white/10 text-white hover:bg-white/20'
+                            : 'border-slate-300 bg-white text-slate-700 hover:border-blue-400 group-hover:border-blue-400'
                       }`}
-                      style={
-                        hasMentor
-                          ? undefined
-                          : { borderColor: `${planColors.light}40` }
-                      }
                     >
                       <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
-                        hasMentor ? 'bg-green-500 border-green-500' : 'border-[#002147]/30'
+                        hasMentor ? 'bg-green-500 border-green-500' : isSelected ? 'border-white/50' : 'border-slate-400'
                       }`}>
                         {hasMentor && <Check className="w-3 h-3 text-white" />}
                       </div>
@@ -270,26 +278,22 @@ export function PlanConfiguratorYouth() {
                   </div>
 
                   <div className="space-y-3 mb-4 flex-1">
-                    <div className="bg-[#002147]/5 rounded-lg p-3 border border-[#002147]/10">
-                      <h5 className="font-semibold text-[#002147] text-xs mb-1.5 uppercase tracking-wide">Estructura</h5>
-                      <div className="text-xs text-[#002147]/70 space-y-1">
+                    <div className={`rounded-lg p-3 border transition-all duration-500 ${isSelected ? 'bg-white/10 border-white/20' : 'bg-slate-50 border-slate-200 group-hover:bg-blue-50 group-hover:border-blue-200'}`}>
+                      <h5 className={`font-semibold text-xs mb-1.5 uppercase tracking-wide transition-colors duration-500 ${isSelected ? 'text-white' : 'text-slate-700 group-hover:text-blue-700'}`}>Estructura</h5>
+                      <div className={`text-xs space-y-1 transition-colors duration-500 ${isSelected ? 'text-white/80' : 'text-slate-600 group-hover:text-blue-600'}`}>
                         <p>• {plan.academicLoad}</p>
                         <p>• {plan.evaluationsDetail}</p>
                       </div>
                     </div>
 
                     <div 
-                      className="rounded-lg p-3 border"
-                      style={{
-                        backgroundColor: `${planColors.light}0D`,
-                        borderColor: `${planColors.light}1A`
-                      }}
+                      className={`rounded-lg p-3 border transition-all duration-500 ${isSelected ? 'bg-white/10 border-white/20' : 'bg-slate-50 border-slate-200 group-hover:bg-blue-50 group-hover:border-blue-200'}`}
                     >
-                      <h5 className="font-semibold text-xs mb-1.5 uppercase tracking-wide" style={{ color: planColors.light }}>Asignaturas</h5>
+                      <h5 className={`font-semibold text-xs mb-1.5 uppercase tracking-wide transition-colors duration-500 ${isSelected ? 'text-white' : 'text-slate-700 group-hover:text-blue-700'}`}>Asignaturas</h5>
                       <div className="grid grid-cols-1 gap-1">
                         {parseSubjects(plan.subjects).map((subject, idx) => (
-                          <div key={idx} className="flex items-center gap-2 text-xs text-[#002147]/70">
-                            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: planColors.light }}></span>
+                          <div key={idx} className={`flex items-center gap-2 text-xs transition-colors duration-500 ${isSelected ? 'text-white/80' : 'text-slate-600 group-hover:text-blue-600'}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors duration-500`} style={{ backgroundColor: isSelected ? '#ffffff' : scheme.base.text }}></span>
                             <span className="leading-tight">{subject}</span>
                           </div>
                         ))}
@@ -302,28 +306,13 @@ export function PlanConfiguratorYouth() {
                       e.stopPropagation();
                       selectPlan(index);
                     }}
-                    className={`w-full font-semibold transition-all text-sm py-3 text-white shadow-md hover:shadow-lg ${
-                      selectedPlanIndex === index
+                    className={`w-full font-semibold transition-all duration-500 text-sm py-3 text-white shadow-md hover:shadow-lg ${
+                      isSelected
                         ? 'bg-green-600 hover:bg-green-700'
-                        : ''
+                        : 'bg-slate-600 hover:bg-blue-600 group-hover:bg-blue-500'
                     }`}
-                    style={
-                      selectedPlanIndex !== index
-                        ? { backgroundColor: planColors.from }
-                        : undefined
-                    }
-                    onMouseEnter={(e) => {
-                      if (selectedPlanIndex !== index) {
-                        e.currentTarget.style.backgroundColor = planColors.to;
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (selectedPlanIndex !== index) {
-                        e.currentTarget.style.backgroundColor = planColors.from;
-                      }
-                    }}
                   >
-                    {selectedPlanIndex === index ? (
+                    {isSelected ? (
                       <>
                         <Check className="w-4 h-4 mr-2" />
                         Seleccionado
