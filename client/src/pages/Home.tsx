@@ -22,7 +22,6 @@ import { PlanConfiguratorAdults } from "@/components/PlanConfiguratorAdults";
 import PaesConfigurator from "@/components/PaesConfigurator";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import SalesChatbot from "@/components/SalesChatbot";
 
 interface PlanConfiguration {
   id: string;
@@ -1609,9 +1608,6 @@ export default function Home() {
 
       {/* Reservation Dialog */}
       <ReservationDialog open={reservationDialogOpen} onOpenChange={setReservationDialogOpen} />
-      
-      {/* Sales Chatbot */}
-      <SalesChatbot />
     </div>
   );
 }
