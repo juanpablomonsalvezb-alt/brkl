@@ -57,35 +57,35 @@ const courseOptions = [
   { value: "paes_ciencias", label: "PAES - Ciencias", type: "paes", planGroup: "paes" },
 ];
 
-// Planes disponibles según el grupo (incluye matrícula $50.000 + IVA 19%)
+// Planes disponibles según el grupo (precio base + IVA 19%, matrícula incluida sin costo adicional)
 const plansByGroup: Record<string, Array<{ value: string; label: string; price: string }>> = {
   basica: [
-    { value: "basica_plataforma", label: "Plan Plataforma + IA - $654.500", price: "$654.500" },
-    { value: "basica_mentor", label: "Plan Plataforma + IA + Mentor - $940.100", price: "$940.100" },
+    { value: "basica_plataforma", label: "Plan Plataforma + IA - $595.000", price: "$595.000" },
+    { value: "basica_mentor", label: "Plan Plataforma + IA + Mentor - $880.600", price: "$880.600" },
   ],
   media1: [
-    { value: "media1_plataforma", label: "Plan Plataforma + IA - $702.100", price: "$702.100" },
-    { value: "media1_mentor", label: "Plan Plataforma + IA + Mentor - $987.700", price: "$987.700" },
+    { value: "media1_plataforma", label: "Plan Plataforma + IA - $642.600", price: "$642.600" },
+    { value: "media1_mentor", label: "Plan Plataforma + IA + Mentor - $928.200", price: "$928.200" },
   ],
   media2: [
-    { value: "media2_plataforma", label: "Plan Plataforma + IA - $749.700", price: "$749.700" },
-    { value: "media2_mentor", label: "Plan Plataforma + IA + Mentor - $1.035.300", price: "$1.035.300" },
+    { value: "media2_plataforma", label: "Plan Plataforma + IA - $690.200", price: "$690.200" },
+    { value: "media2_mentor", label: "Plan Plataforma + IA + Mentor - $975.800", price: "$975.800" },
   ],
   adultos_basica: [
-    { value: "adultos_basica", label: "Plan Básica - $487.900", price: "$487.900" },
+    { value: "adultos_basica", label: "Plan Básica - $428.400", price: "$428.400" },
   ],
   adultos_media1: [
-    { value: "adultos_media1", label: "Plan Media I - $535.500", price: "$535.500" },
+    { value: "adultos_media1", label: "Plan Media I - $476.000", price: "$476.000" },
   ],
   adultos_media2: [
-    { value: "adultos_media2", label: "Plan Media II - $583.100", price: "$583.100" },
+    { value: "adultos_media2", label: "Plan Media II - $523.600", price: "$523.600" },
   ],
   paes: [
-    { value: "paes_lenguaje", label: "Lenguaje - $297.500", price: "$297.500" },
-    { value: "paes_matematica", label: "Matemática (M1) - $297.500", price: "$297.500" },
-    { value: "paes_matematica2", label: "Matemática 2 (M2) - $392.700", price: "$392.700" },
-    { value: "paes_historia", label: "Historia y Ciencias Sociales - $249.900", price: "$249.900" },
-    { value: "paes_ciencias", label: "Ciencias - $249.900", price: "$249.900" },
+    { value: "paes_lenguaje", label: "Lenguaje - $238.000", price: "$238.000" },
+    { value: "paes_matematica", label: "Matemática (M1) - $238.000", price: "$238.000" },
+    { value: "paes_matematica2", label: "Matemática 2 (M2) - $333.200", price: "$333.200" },
+    { value: "paes_historia", label: "Historia y Ciencias Sociales - $190.400", price: "$190.400" },
+    { value: "paes_ciencias", label: "Ciencias - $190.400", price: "$190.400" },
   ],
 };
 
