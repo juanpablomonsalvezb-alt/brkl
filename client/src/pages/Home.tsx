@@ -509,33 +509,6 @@ export default function Home() {
                     </div>
                   </motion.a>
 
-                  {/* Inscription Button 1 - Crimson */}
-                  <motion.button
-                    onClick={() => setReservationDialogOpen(true)}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 1.0 }}
-                    whileHover={{ y: -3, scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="group relative overflow-hidden rounded-2xl border border-[#a51c30]/20 bg-gradient-to-br from-[#a51c30]/[0.02] via-white/50 to-[#a51c30]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#a51c30]/50 hover:bg-[#a51c30]/[0.05] hover:shadow-2xl hover:shadow-[#a51c30]/20"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#a51c30]/0 via-[#a51c30]/[0.03] to-[#a51c30]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
-                      <div className="relative">
-                        <Calendar className="w-[18px] h-[18px] text-[#a51c30] group-hover:scale-110 transition-transform duration-300" />
-                        <div className="absolute inset-0 rounded-full bg-[#a51c30]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                      </div>
-                      
-                      <span className="text-[15px] font-semibold text-[#a51c30] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
-                        Inscripciones
-                      </span>
-                      
-                      <ArrowRight className="w-[16px] h-[16px] text-[#a51c30]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                    </div>
-                    
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#a51c30]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-                  </motion.button>
                 </div>
 
                 {/* Column 2: Validación */}
@@ -578,33 +551,6 @@ export default function Home() {
                     </div>
                   </motion.a>
 
-                  {/* Inscription Button 2 - Gold */}
-                  <motion.button
-                    onClick={() => setReservationDialogOpen(true)}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 1.1 }}
-                    whileHover={{ y: -3, scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="group relative overflow-hidden rounded-2xl border border-[#D4AF37]/20 bg-gradient-to-br from-[#D4AF37]/[0.02] via-white/50 to-[#D4AF37]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/[0.05] hover:shadow-2xl hover:shadow-[#D4AF37]/20"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/0 via-[#D4AF37]/[0.03] to-[#D4AF37]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
-                      <div className="relative">
-                        <Calendar className="w-[18px] h-[18px] text-[#D4AF37] group-hover:scale-110 transition-transform duration-300" />
-                        <div className="absolute inset-0 rounded-full bg-[#D4AF37]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                      </div>
-                      
-                      <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
-                        Inscripciones
-                      </span>
-                      
-                      <ArrowRight className="w-[16px] h-[16px] text-[#D4AF37]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                    </div>
-                    
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#D4AF37]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-                  </motion.button>
                 </div>
 
                 {/* Column 3: PAES */}
@@ -647,33 +593,6 @@ export default function Home() {
                     </div>
                   </motion.a>
 
-                  {/* Inscription Button 3 - Navy */}
-                  <motion.button
-                    onClick={() => setReservationDialogOpen(true)}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 1.2 }}
-                    whileHover={{ y: -3, scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="group relative overflow-hidden rounded-2xl border border-[#002147]/20 bg-gradient-to-br from-[#002147]/[0.02] via-white/50 to-[#002147]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#002147]/50 hover:bg-[#002147]/[0.05] hover:shadow-2xl hover:shadow-[#002147]/20"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#002147]/0 via-[#002147]/[0.03] to-[#002147]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
-                      <div className="relative">
-                        <Calendar className="w-[18px] h-[18px] text-[#002147] group-hover:scale-110 transition-transform duration-300" />
-                        <div className="absolute inset-0 rounded-full bg-[#002147]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                      </div>
-                      
-                      <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
-                        Inscripciones
-                      </span>
-                      
-                      <ArrowRight className="w-[16px] h-[16px] text-[#002147]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                    </div>
-                    
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#002147]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-                  </motion.button>
                 </div>
                 </div>
 
