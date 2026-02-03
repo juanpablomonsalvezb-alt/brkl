@@ -39,17 +39,17 @@ export function PlanConfiguratorYouth() {
     });
   };
 
-  // Define the 3 youth plans (precio base + IVA 19%, matrícula incluida sin costo adicional)
+  // Define the 3 youth plans (precio incluye IVA 19% y matrícula)
   const allPlans: ExtendedPlan[] = [
     {
       id: 'plan_basica_jovenes',
       planKey: 'plan_7_8_basico',
       planName: 'Plan Básica',
       planSubtitle: '7° y 8° Básico',
-      monthlyPrice: 74375, // (595.000 / 8 meses)
+      monthlyPrice: 60000, // (480.000 / 8 meses)
       enrollmentPrice: 0,
-      annualTotal: 595000, // 500.000 * 1.19
-      annualTotalWithMentor: 823480, // 595.000 + (192.000 * 1.19)
+      annualTotal: 480000, // Nuevo precio con IVA incluido
+      annualTotalWithMentor: 708480, // 480.000 + (192.000 * 1.19)
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -70,10 +70,10 @@ export function PlanConfiguratorYouth() {
       planKey: 'plan_1_2_medio',
       planName: 'Plan Media I',
       planSubtitle: '1° y 2° Medio',
-      monthlyPrice: 80325, // (642.600 / 8 meses)
+      monthlyPrice: 65000, // (520.000 / 8 meses)
       enrollmentPrice: 0,
-      annualTotal: 642600, // 540.000 * 1.19
-      annualTotalWithMentor: 871080, // 642.600 + (192.000 * 1.19)
+      annualTotal: 520000, // Nuevo precio con IVA incluido
+      annualTotalWithMentor: 748480, // 520.000 + (192.000 * 1.19)
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -95,10 +95,10 @@ export function PlanConfiguratorYouth() {
       planKey: 'plan_3_4_medio',
       planName: 'Plan Media II',
       planSubtitle: '3° y 4° Medio',
-      monthlyPrice: 86275, // (690.200 / 8 meses)
+      monthlyPrice: 70000, // (560.000 / 8 meses)
       enrollmentPrice: 0,
-      annualTotal: 690200, // 580.000 * 1.19
-      annualTotalWithMentor: 918680, // 690.200 + (192.000 * 1.19)
+      annualTotal: 560000, // Nuevo precio con IVA incluido
+      annualTotalWithMentor: 788480, // 560.000 + (192.000 * 1.19)
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([

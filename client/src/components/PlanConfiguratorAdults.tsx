@@ -39,16 +39,16 @@ export function PlanConfiguratorAdults() {
   const isLoading = false;
   const isError = false;
 
-  // Define the 3 adult validation plans (precio base + IVA 19%, matrícula incluida sin costo adicional)
+  // Define the 3 adult validation plans (precio incluye IVA 19% y matrícula)
   const allPlans: ExtendedPlan[] = [
     {
       id: 'plan_basica',
       planKey: 'plan_basica_adultos',
       planName: 'Plan Básica',
       planSubtitle: 'Desde 1° Básico a 8° Básico',
-      monthlyPrice: 53550, // $428.400 / 8 meses
+      monthlyPrice: 45000, // $360.000 / 8 meses
       enrollmentPrice: 0,
-      annualTotal: 428400, // 360.000 * 1.19
+      annualTotal: 360000, // Nuevo precio con IVA incluido
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -69,9 +69,9 @@ export function PlanConfiguratorAdults() {
       planKey: 'plan_media_i_adultos',
       planName: 'Plan Media I',
       planSubtitle: '1er Nivel Medio (1° y 2°)',
-      monthlyPrice: 59500, // $476.000 / 8 meses
+      monthlyPrice: 50000, // $400.000 / 8 meses
       enrollmentPrice: 0,
-      annualTotal: 476000, // 400.000 * 1.19
+      annualTotal: 400000, // Nuevo precio con IVA incluido
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -93,9 +93,9 @@ export function PlanConfiguratorAdults() {
       planKey: 'plan_media_ii_adultos',
       planName: 'Plan Media II',
       planSubtitle: '2do Nivel Medio (3° y 4°)',
-      monthlyPrice: 65450, // $523.600 / 8 meses
+      monthlyPrice: 55000, // $440.000 / 8 meses
       enrollmentPrice: 0,
-      annualTotal: 523600, // 440.000 * 1.19
+      annualTotal: 440000, // Nuevo precio con IVA incluido
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
