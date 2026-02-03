@@ -61,15 +61,15 @@ const courseOptions = [
 const plansByGroup: Record<string, Array<{ value: string; label: string; price: string }>> = {
   basica: [
     { value: "basica_plataforma", label: "Plan Plataforma + IA - $595.000", price: "$595.000" },
-    { value: "basica_mentor", label: "Plan Plataforma + IA + Mentor - $880.600", price: "$880.600" },
+    { value: "basica_mentor", label: "Plan Plataforma + IA + Mentor - $823.480", price: "$823.480" },
   ],
   media1: [
     { value: "media1_plataforma", label: "Plan Plataforma + IA - $642.600", price: "$642.600" },
-    { value: "media1_mentor", label: "Plan Plataforma + IA + Mentor - $928.200", price: "$928.200" },
+    { value: "media1_mentor", label: "Plan Plataforma + IA + Mentor - $871.080", price: "$871.080" },
   ],
   media2: [
     { value: "media2_plataforma", label: "Plan Plataforma + IA - $690.200", price: "$690.200" },
-    { value: "media2_mentor", label: "Plan Plataforma + IA + Mentor - $975.800", price: "$975.800" },
+    { value: "media2_mentor", label: "Plan Plataforma + IA + Mentor - $918.680", price: "$918.680" },
   ],
   adultos_basica: [
     { value: "adultos_basica", label: "Plan Básica - $428.400", price: "$428.400" },

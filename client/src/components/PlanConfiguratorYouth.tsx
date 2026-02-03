@@ -49,7 +49,7 @@ export function PlanConfiguratorYouth() {
       monthlyPrice: 74375, // (595.000 / 8 meses)
       enrollmentPrice: 0,
       annualTotal: 595000, // 500.000 * 1.19
-      annualTotalWithMentor: 880600, // 740.000 * 1.19
+      annualTotalWithMentor: 823480, // 595.000 + (192.000 * 1.19)
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -73,7 +73,7 @@ export function PlanConfiguratorYouth() {
       monthlyPrice: 80325, // (642.600 / 8 meses)
       enrollmentPrice: 0,
       annualTotal: 642600, // 540.000 * 1.19
-      annualTotalWithMentor: 928200, // 780.000 * 1.19
+      annualTotalWithMentor: 871080, // 642.600 + (192.000 * 1.19)
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -98,7 +98,7 @@ export function PlanConfiguratorYouth() {
       monthlyPrice: 86275, // (690.200 / 8 meses)
       enrollmentPrice: 0,
       annualTotal: 690200, // 580.000 * 1.19
-      annualTotalWithMentor: 975800, // 820.000 * 1.19
+      annualTotalWithMentor: 918680, // 690.200 + (192.000 * 1.19)
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
