@@ -1245,34 +1245,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section - Harvard Style */}
-      <section className="py-24 bg-primary text-white">
-        <div className="container-harvard text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto space-y-8"
-          >
-            <h2 className="text-4xl md:text-5xl font-serif font-bold">
-              Comienza tu viaje educativo hoy
-            </h2>
-            <p className="text-xl text-white/90 leading-relaxed">
-              Agenda una reunión gratuita con nuestros asesores educativos y descubre cómo podemos ayudarte
-            </p>
-            <Button
-              size="lg"
-              onClick={() => setReservationDialogOpen(true)}
-              className="bg-white text-primary hover:bg-white/90 text-lg px-12 py-7 rounded-full font-semibold shadow-xl hover:shadow-2xl transition-all"
-            >
-              <Calendar className="mr-2 w-5 h-5" />
-              Agendar Reunión Gratuita
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </motion.div>
-        </div>
-      </section>
 
       <section className="bg-[#fafafa] py-16 border-t border-[#1e1e1e]/5">
         <div className="container-harvard">
