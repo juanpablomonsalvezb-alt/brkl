@@ -1534,7 +1534,7 @@ export default function Home() {
                     Trayectoria y Liderazgo Pedagógico
                   </h4>
                   <p className="text-[#1e1e1e]/80 leading-relaxed pl-10">
-                    La dirección de Barkley Institute cuenta con un respaldo de más de <span className="font-semibold text-[#002147]">20 años de experiencia directa</span> en el sistema educativo, con formación de postgrado en gestión y currículum, además de certificaciones en liderazgo educativo y aprendizaje por HarvardX. Esta base garantiza que cada decisión tecnológica tenga siempre un propósito pedagógico claro.
+                    El Método Barkley surge de una síntesis de más de <span className="font-semibold text-[#002147]">20 años de experiencia estratégica</span> en el diseño curricular y la gestión académica de alto desempeño. Nuestra metodología integra estándares internacionales de liderazgo educativo y aprendizaje adaptativo, asegurando que la tecnología sea un vehículo para la excelencia pedagógica y no solo una herramienta. Esta base sólida garantiza que cada módulo de nuestro ecosistema inteligente esté diseñado para maximizar el potencial cognitivo y el éxito académico de nuestros estudiantes.
                   </p>
                 </div>
 
