@@ -209,8 +209,8 @@ export function PlanConfiguratorYouth() {
                 }`}
                 onClick={() => selectPlan(index)}
                 style={{ 
-                  minHeight: '620px', 
-                  maxHeight: '620px',
+                  minHeight: '651px', 
+                  maxHeight: '651px',
                   background: scheme.base.bg,
                   borderColor: scheme.base.border
                 }}
