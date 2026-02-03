@@ -323,6 +323,12 @@ export function PlanConfiguratorAdults() {
         </div>
 
       </div>
+
+      {/* Reservation Dialog */}
+      <ReservationDialog 
+        open={isReservationOpen}
+        onOpenChange={setIsReservationOpen}
+      />
     </section>
   );
 }

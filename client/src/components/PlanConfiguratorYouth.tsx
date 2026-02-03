@@ -318,6 +318,12 @@ export function PlanConfiguratorYouth() {
         </div>
 
       </div>
+
+      {/* Reservation Dialog */}
+      <ReservationDialog 
+        open={isReservationOpen}
+        onOpenChange={setIsReservationOpen}
+      />
     </section>
   );
 }
