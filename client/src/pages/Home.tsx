@@ -198,7 +198,7 @@ export default function Home() {
                 <a href="#metodo" className="text-[14px] text-[#1e1e1e] hover:text-[#a51c30] font-normal transition-colors whitespace-nowrap">
                   Método
                 </a>
-                <a href="#" className="text-[14px] text-[#1e1e1e] hover:text-[#a51c30] font-normal transition-colors whitespace-nowrap">
+                <a href="#plataforma" className="text-[14px] text-[#1e1e1e] hover:text-[#a51c30] font-normal transition-colors whitespace-nowrap">
                   Plataforma
                 </a>
                 <button 
@@ -853,7 +853,7 @@ export default function Home() {
         </div>
 
         {/* Platform Showcase Section - Split Layout */}
-        <section className="py-32 bg-gradient-to-br from-white via-gray-50 to-white relative overflow-hidden">
+        <section id="plataforma" className="py-32 bg-gradient-to-br from-white via-gray-50 to-white relative overflow-hidden scroll-mt-20">
           {/* Subtle Background Pattern */}
           <div className="absolute inset-0 opacity-[0.02]">
             <div className="absolute inset-0" style={{
