@@ -191,10 +191,6 @@ export function PlanConfiguratorAdults() {
               <h2 className="text-5xl md:text-6xl font-bold text-[#002147] tracking-tight">
                 Plan Adultos
               </h2>
-              <div className="flex items-center gap-3 bg-[#002147]/5 border border-[#002147]/10 rounded-lg px-6 py-3">
-                <span className="text-sm font-medium text-[#002147]/70">Matrícula</span>
-                <span className="text-2xl font-bold text-[#A51C30]">$60.000</span>
-              </div>
             </div>
           </div>
         </motion.div>

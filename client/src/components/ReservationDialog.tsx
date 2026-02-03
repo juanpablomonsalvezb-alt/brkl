@@ -60,25 +60,28 @@ const courseOptions = [
 // Planes disponibles según el grupo (precio base + IVA 19%, matrícula incluida sin costo adicional)
 const plansByGroup: Record<string, Array<{ value: string; label: string; price: string }>> = {
   basica: [
-    { value: "basica_plataforma", label: "Plan Plataforma + IA - $595.000", price: "$595.000" },
-    { value: "basica_mentor", label: "Plan Plataforma + IA + Mentor - $823.480", price: "$823.480" },
+    { value: "basica_plataforma", label: "7° y 8° Básico - $595.000", price: "$595.000" },
+    { value: "basica_mentor", label: "7° y 8° Básico + Mentor - $823.480", price: "$823.480" },
   ],
   media1: [
-    { value: "media1_plataforma", label: "Plan Plataforma + IA - $642.600", price: "$642.600" },
-    { value: "media1_mentor", label: "Plan Plataforma + IA + Mentor - $871.080", price: "$871.080" },
+    { value: "media1_plataforma", label: "1° y 2° Medio - $642.600", price: "$642.600" },
+    { value: "media1_mentor", label: "1° y 2° Medio + Mentor - $871.080", price: "$871.080" },
   ],
   media2: [
-    { value: "media2_plataforma", label: "Plan Plataforma + IA - $690.200", price: "$690.200" },
-    { value: "media2_mentor", label: "Plan Plataforma + IA + Mentor - $918.680", price: "$918.680" },
+    { value: "media2_plataforma", label: "3° y 4° Medio - $690.200", price: "$690.200" },
+    { value: "media2_mentor", label: "3° y 4° Medio + Mentor - $918.680", price: "$918.680" },
   ],
   adultos_basica: [
-    { value: "adultos_basica", label: "Plan Básica - $428.400", price: "$428.400" },
+    { value: "adultos_basica", label: "Plan Básica (1° a 8° Básico) - $428.400", price: "$428.400" },
+    { value: "adultos_basica_mentor", label: "Plan Básica (1° a 8° Básico) + Mentor - $656.880", price: "$656.880" },
   ],
   adultos_media1: [
-    { value: "adultos_media1", label: "Plan Media I - $476.000", price: "$476.000" },
+    { value: "adultos_media1", label: "Plan Media I (1° y 2° Medio) - $476.000", price: "$476.000" },
+    { value: "adultos_media1_mentor", label: "Plan Media I (1° y 2° Medio) + Mentor - $704.480", price: "$704.480" },
   ],
   adultos_media2: [
-    { value: "adultos_media2", label: "Plan Media II - $523.600", price: "$523.600" },
+    { value: "adultos_media2", label: "Plan Media II (3° y 4° Medio) - $523.600", price: "$523.600" },
+    { value: "adultos_media2_mentor", label: "Plan Media II (3° y 4° Medio) + Mentor - $752.080", price: "$752.080" },
   ],
   paes: [
     { value: "paes_lenguaje", label: "Lenguaje - $238.000", price: "$238.000" },
