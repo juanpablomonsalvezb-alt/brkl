@@ -142,7 +142,7 @@ export default function Home() {
       id: "1",
       title: "Plan Barkley FOCUS",
       subtitle: "Jóvenes (7° a 4° Medio)",
-      price: "Matrícula: $50.000 Mensualidad: $75.000",
+      price: "Desde $654.500 (incluye matrícula e IVA)",
       description: "Preparación para Exámenes Libres (Decreto 2272). Diseñado para estudiantes que necesitan estructura y apoyo constante.",
       image: csThumbnail,
       category: "Validación de Estudios",

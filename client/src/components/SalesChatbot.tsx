@@ -34,7 +34,7 @@ const chatIntents: ChatIntent[] = [
   },
   {
     keywords: ["precio", "costo", "valor", "cuanto cuesta", "matrícula"],
-    response: "💰 Nuestros precios varían según el plan:\n\n• **Plan Menores**: Desde $60.000 matrícula\n• **Plan Adultos**: Planes desde $360.000 anuales\n• **Plan PAES**: Desde $200.000 por asignatura\n\nIncluyen acceso a nuestra plataforma 24/7 y material digital.",
+    response: "💰 Nuestros precios varían según el plan:\n\n• **Plan Menores**: Desde $654.500 (incluye matrícula e IVA)\n• **Plan Adultos**: Desde $487.900 (incluye matrícula e IVA)\n• **Plan PAES**: Desde $297.500 por asignatura (incluye matrícula e IVA)\n\n*Todos los precios incluyen matrícula de $50.000 e IVA 19%.\n\nIncluyen acceso a nuestra plataforma 24/7 y material digital.",
     suggestions: ["Ver detalles", "Inscribirme", "Formas de pago"]
   },
   {

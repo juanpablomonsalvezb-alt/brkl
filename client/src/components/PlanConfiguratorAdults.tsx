@@ -39,16 +39,16 @@ export function PlanConfiguratorAdults() {
   const isLoading = false;
   const isError = false;
 
-  // Define the 3 adult validation plans (precios netos sin IVA)
+  // Define the 3 adult validation plans (incluye matrícula $50.000 + IVA 19%)
   const allPlans: ExtendedPlan[] = [
     {
       id: 'plan_basica',
       planKey: 'plan_basica_adultos',
       planName: 'Plan Básica',
       planSubtitle: 'Desde 1° Básico a 8° Básico',
-      monthlyPrice: 30000, // $360,000 / 12 meses
-      enrollmentPrice: 0,
-      annualTotal: 360000,
+      monthlyPrice: 60988, // $487.900 / 8 meses
+      enrollmentPrice: 0, // Ya incluido en el precio total
+      annualTotal: 487900, // (360.000 + 50.000) * 1.19
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -69,9 +69,9 @@ export function PlanConfiguratorAdults() {
       planKey: 'plan_media_i_adultos',
       planName: 'Plan Media I',
       planSubtitle: '1er Nivel Medio (1° y 2°)',
-      monthlyPrice: 33333, // $400,000 / 12 meses
-      enrollmentPrice: 0,
-      annualTotal: 400000,
+      monthlyPrice: 66938, // $535.500 / 8 meses
+      enrollmentPrice: 0, // Ya incluido en el precio total
+      annualTotal: 535500, // (400.000 + 50.000) * 1.19
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -93,9 +93,9 @@ export function PlanConfiguratorAdults() {
       planKey: 'plan_media_ii_adultos',
       planName: 'Plan Media II',
       planSubtitle: '2do Nivel Medio (3° y 4°)',
-      monthlyPrice: 36667, // $440,000 / 12 meses
-      enrollmentPrice: 0,
-      annualTotal: 440000,
+      monthlyPrice: 72888, // $583.100 / 8 meses
+      enrollmentPrice: 0, // Ya incluido en el precio total
+      annualTotal: 583100, // (440.000 + 50.000) * 1.19
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -274,11 +274,12 @@ export function PlanConfiguratorAdults() {
                     <div className="absolute top-0 left-0 right-0 h-1 bg-slate-400"></div>
                     
                     <div className="relative text-center pt-1">
-                      <div className="text-xs font-semibold mb-1.5 tracking-wider uppercase text-slate-600">Inversión Anual</div>
+                      <div className="text-xs font-semibold mb-1.5 tracking-wider uppercase text-slate-600">Marzo - Octubre</div>
                       <div className="text-3xl font-bold mb-1 text-slate-700">
                         {formatCurrency(plan.annualTotal || 0)}
                       </div>
-                      <div className="text-xs text-slate-600">30 semanas</div>
+                      <div className="text-xs text-slate-600">30 semanas de formación</div>
+                      <div className="text-xs text-slate-500 mt-1">* Incluye matrícula, incluye I.V.A.</div>
                     </div>
                   </div>
 

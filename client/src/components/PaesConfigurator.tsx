@@ -20,20 +20,22 @@ export default function PaesConfigurator() {
   const [includeTutor, setIncludeTutor] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
 
-  // Precio del tutor por materia (configurable) - precio neto sin IVA
-  const TUTOR_PRICE_PER_SUBJECT = 50000;
+  // Precio del tutor por materia (configurable) - incluye matrícula e IVA
+  const TUTOR_PRICE_PER_SUBJECT = 59500; // (50.000 + matrícula ya incluida) * 1.19
+  const MATRICULA = 50000;
 
   // Fetch materias PAES
   const { data: subjects, isLoading } = useQuery<PaesSubject[]>({
     queryKey: ['/api/paes/subjects'],
   });
 
-  // Calcular precio total (precios netos sin IVA)
+  // Calcular precio total (incluye matrícula $50.000 por materia + IVA 19%)
   useEffect(() => {
     if (!subjects) return;
 
     const selectedSubjectsData = subjects.filter(s => selectedSubjects.includes(s.id));
-    const baseTotal = selectedSubjectsData.reduce((sum, s) => sum + s.basePrice, 0);
+    // Cada materia incluye matrícula de $50.000 + IVA 19%
+    const baseTotal = selectedSubjectsData.reduce((sum, s) => sum + Math.round((s.basePrice + MATRICULA) * 1.19), 0);
     const tutorTotal = includeTutor ? selectedSubjects.length * TUTOR_PRICE_PER_SUBJECT : 0;
     
     setTotalPrice(baseTotal + tutorTotal);
@@ -222,7 +224,7 @@ export default function PaesConfigurator() {
                                 className="flex justify-between items-center bg-gradient-to-r from-[#002147]/5 to-transparent rounded-lg px-4 py-3 border border-[#002147]/10"
                               >
                                 <span className="font-bold text-sm text-[#002147]">{subject.name}</span>
-                                <span className="text-sm font-semibold text-[#002147]">${formatPrice(subject.basePrice)}</span>
+                                <span className="text-sm font-semibold text-[#002147]">${formatPrice(Math.round((subject.basePrice + 50000) * 1.19))}</span>
                               </motion.div>
                             ))}
                         </div>
@@ -234,7 +236,7 @@ export default function PaesConfigurator() {
                         <span className="text-lg font-bold text-[#002147]">
                           ${formatPrice(selectedSubjects.reduce((sum, id) => {
                             const subject = subjects?.find(s => s.id === id);
-                            return sum + (subject?.basePrice || 0);
+                            return sum + Math.round(((subject?.basePrice || 0) + 50000) * 1.19);
                           }, 0))}
                         </span>
                       </div>
@@ -302,6 +304,7 @@ export default function PaesConfigurator() {
                           ${formatPrice(totalPrice)}
                         </motion.div>
                         <div className="text-right text-xs text-[#002147]/60 font-medium mt-1">8 meses de preparación</div>
+                        <div className="text-right text-xs text-[#002147]/50 font-medium">* Incluye matrícula, incluye I.V.A.</div>
                       </div>
                     </div>
                   )}

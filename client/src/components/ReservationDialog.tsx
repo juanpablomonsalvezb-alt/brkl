@@ -57,35 +57,35 @@ const courseOptions = [
   { value: "paes_ciencias", label: "PAES - Ciencias", type: "paes", planGroup: "paes" },
 ];
 
-// Planes disponibles según el grupo (precios netos sin IVA)
+// Planes disponibles según el grupo (incluye matrícula $50.000 + IVA 19%)
 const plansByGroup: Record<string, Array<{ value: string; label: string; price: string }>> = {
   basica: [
-    { value: "basica_plataforma", label: "Plan Plataforma + IA - $500.000", price: "$500.000" },
-    { value: "basica_mentor", label: "Plan Plataforma + IA + Mentor - $740.000", price: "$740.000" },
+    { value: "basica_plataforma", label: "Plan Plataforma + IA - $654.500", price: "$654.500" },
+    { value: "basica_mentor", label: "Plan Plataforma + IA + Mentor - $940.100", price: "$940.100" },
   ],
   media1: [
-    { value: "media1_plataforma", label: "Plan Plataforma + IA - $540.000", price: "$540.000" },
-    { value: "media1_mentor", label: "Plan Plataforma + IA + Mentor - $780.000", price: "$780.000" },
+    { value: "media1_plataforma", label: "Plan Plataforma + IA - $702.100", price: "$702.100" },
+    { value: "media1_mentor", label: "Plan Plataforma + IA + Mentor - $987.700", price: "$987.700" },
   ],
   media2: [
-    { value: "media2_plataforma", label: "Plan Plataforma + IA - $580.000", price: "$580.000" },
-    { value: "media2_mentor", label: "Plan Plataforma + IA + Mentor - $820.000", price: "$820.000" },
+    { value: "media2_plataforma", label: "Plan Plataforma + IA - $749.700", price: "$749.700" },
+    { value: "media2_mentor", label: "Plan Plataforma + IA + Mentor - $1.035.300", price: "$1.035.300" },
   ],
   adultos_basica: [
-    { value: "adultos_basica", label: "Plan Básica - $360.000", price: "$360.000" },
+    { value: "adultos_basica", label: "Plan Básica - $487.900", price: "$487.900" },
   ],
   adultos_media1: [
-    { value: "adultos_media1", label: "Plan Media I - $400.000", price: "$400.000" },
+    { value: "adultos_media1", label: "Plan Media I - $535.500", price: "$535.500" },
   ],
   adultos_media2: [
-    { value: "adultos_media2", label: "Plan Media II - $440.000", price: "$440.000" },
+    { value: "adultos_media2", label: "Plan Media II - $583.100", price: "$583.100" },
   ],
   paes: [
-    { value: "paes_lenguaje", label: "Lenguaje - $200.000", price: "$200.000" },
-    { value: "paes_matematica", label: "Matemática (M1) - $200.000", price: "$200.000" },
-    { value: "paes_matematica2", label: "Matemática 2 (M2) - $280.000", price: "$280.000" },
-    { value: "paes_historia", label: "Historia y Ciencias Sociales - $160.000", price: "$160.000" },
-    { value: "paes_ciencias", label: "Ciencias - $160.000", price: "$160.000" },
+    { value: "paes_lenguaje", label: "Lenguaje - $297.500", price: "$297.500" },
+    { value: "paes_matematica", label: "Matemática (M1) - $297.500", price: "$297.500" },
+    { value: "paes_matematica2", label: "Matemática 2 (M2) - $392.700", price: "$392.700" },
+    { value: "paes_historia", label: "Historia y Ciencias Sociales - $249.900", price: "$249.900" },
+    { value: "paes_ciencias", label: "Ciencias - $249.900", price: "$249.900" },
   ],
 };
 
@@ -420,6 +420,9 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
                       ))}
                     </SelectContent>
                   </Select>
+                  <p className="text-xs text-[#002147]/60 mt-1">
+                    * Incluye matrícula, incluye I.V.A.
+                  </p>
                   {form.formState.errors.selectedPlan && (
                     <p className="text-sm text-red-600 mt-1">
                       {form.formState.errors.selectedPlan.message}
