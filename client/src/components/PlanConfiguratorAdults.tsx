@@ -206,15 +206,15 @@ export function PlanConfiguratorAdults() {
             const colorSchemes = [
               { 
                 base: { bg: '#f1f5f9', border: '#cbd5e1', text: '#475569' },
-                hover: { from: '#10b981', to: '#14b8a6', border: '#10b981', shadow: '#10b98120' }
+                header: { normal: '#64748b', hover: '#fde68a' } // Amarillo pastel
               },
               { 
                 base: { bg: '#f1f5f9', border: '#cbd5e1', text: '#475569' },
-                hover: { from: '#059669', to: '#0d9488', border: '#059669', shadow: '#05966920' }
+                header: { normal: '#64748b', hover: '#fecaca' } // Rojo pastel
               },
               { 
                 base: { bg: '#f1f5f9', border: '#cbd5e1', text: '#475569' },
-                hover: { from: '#14b8a6', to: '#06b6d4', border: '#14b8a6', shadow: '#14b8a620' }
+                header: { normal: '#64748b', hover: '#fed7aa' } // Naranja pastel
               }
             ];
             const scheme = colorSchemes[index];
@@ -228,76 +228,78 @@ export function PlanConfiguratorAdults() {
               transition={{ duration: 0.6, delay: 0.2 + (index * 0.1) }}
             >
               <Card 
-                className={`border-2 shadow-2xl overflow-hidden transition-all duration-500 cursor-pointer flex flex-col group ${
+                className={`border-2 shadow-lg overflow-hidden transition-all duration-300 cursor-pointer flex flex-col group ${
                   isSelected 
-                    ? 'ring-4 ring-opacity-20 scale-105' 
-                    : 'hover:shadow-[0_20px_50px_rgba(16,185,129,0.3)] hover:scale-[1.02]'
+                    ? 'ring-2 ring-blue-300 scale-[1.02]' 
+                    : 'hover:shadow-xl'
                 }`}
                 onClick={() => selectPlan(index)}
                 style={{ 
                   minHeight: '580px', 
                   maxHeight: '580px',
-                  background: isSelected ? `linear-gradient(135deg, ${scheme.hover.from} 0%, ${scheme.hover.to} 100%)` : scheme.base.bg,
-                  borderColor: isSelected ? scheme.hover.border : scheme.base.border,
-                  boxShadow: isSelected ? `0 0 0 4px ${scheme.hover.shadow}, 0 10px 30px ${scheme.hover.shadow}` : undefined
+                  background: scheme.base.bg,
+                  borderColor: scheme.base.border
                 }}
               >
                 {/* Header */}
                 <div 
-                  className={`p-4 text-center border-b transition-all duration-500 ${isSelected ? 'border-white/20' : 'border-slate-300'}`}
+                  className="p-4 text-center border-b border-slate-300 transition-all duration-300"
                   style={{
-                    background: isSelected ? `linear-gradient(to right, ${scheme.hover.from}, ${scheme.hover.to})` : 'linear-gradient(to right, #64748b, #475569)'
+                    backgroundColor: isSelected ? scheme.header.hover : scheme.header.normal
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.backgroundColor = scheme.header.hover;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.backgroundColor = scheme.header.normal;
+                    }
                   }}
                 >
-                  <h3 className={`text-xl font-bold mb-1 tracking-tight transition-colors duration-500 ${isSelected ? 'text-white' : 'text-white group-hover:text-white'}`}>
+                  <h3 className={`text-xl font-bold mb-1 tracking-tight transition-colors duration-300 ${isSelected ? 'text-slate-800' : 'text-white group-hover:text-slate-800'}`}>
                     {plan.planName}
                   </h3>
-                  <p className={`text-sm font-light transition-colors duration-500 ${isSelected ? 'text-white/90' : 'text-white/80 group-hover:text-white/90'}`}>
+                  <p className={`text-sm font-light transition-colors duration-300 ${isSelected ? 'text-slate-700' : 'text-white/90 group-hover:text-slate-700'}`}>
                     {plan.planSubtitle}
                   </p>
                 </div>
 
                 {/* Content */}
-                <div className="p-5 flex-1 flex flex-col">
+                <div className="p-5 flex-1 flex flex-col bg-white">
                   {/* Pricing */}
-                  <div className={`relative overflow-hidden rounded-lg p-4 mb-4 border transition-all duration-500 ${isSelected ? 'border-white/20 bg-white/10' : 'border-slate-300 bg-white group-hover:border-emerald-300'}`}>
+                  <div className="relative overflow-hidden rounded-lg p-4 mb-4 border border-slate-300 bg-slate-50">
                     {/* Harvard accent line */}
-                    <div 
-                      className="absolute top-0 left-0 right-0 h-1 transition-all duration-500"
-                      style={{
-                        background: isSelected ? `linear-gradient(to right, ${scheme.hover.from}, ${scheme.hover.to})` : 'linear-gradient(to right, #64748b, #475569)'
-                      }}
-                    ></div>
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-slate-400"></div>
                     
                     <div className="relative text-center pt-1">
-                      <div className={`text-xs font-semibold mb-1.5 tracking-wider uppercase transition-colors duration-500 ${isSelected ? 'text-white/80' : 'text-slate-600 group-hover:text-emerald-600'}`}>Inversión Anual</div>
-                      <div className={`text-3xl font-bold mb-1 transition-colors duration-500`} style={{ color: isSelected ? '#ffffff' : scheme.base.text }}>
+                      <div className="text-xs font-semibold mb-1.5 tracking-wider uppercase text-slate-600">Inversión Anual</div>
+                      <div className="text-3xl font-bold mb-1 text-slate-700">
                         {formatCurrency(plan.annualTotal || 0)}
                       </div>
-                      <div className={`text-xs transition-colors duration-500 ${isSelected ? 'text-white/70' : 'text-slate-600 group-hover:text-emerald-500'}`}>30 semanas</div>
+                      <div className="text-xs text-slate-600">30 semanas</div>
                     </div>
                   </div>
 
                   {/* Compact Info */}
                   <div className="space-y-3 mb-4 flex-1">
                     {/* Academic Structure */}
-                    <div className={`rounded-lg p-3 border transition-all duration-500 ${isSelected ? 'bg-white/10 border-white/20' : 'bg-slate-50 border-slate-200 group-hover:bg-emerald-50 group-hover:border-emerald-200'}`}>
-                      <h5 className={`font-semibold text-xs mb-1.5 uppercase tracking-wide transition-colors duration-500 ${isSelected ? 'text-white' : 'text-slate-700 group-hover:text-emerald-700'}`}>Estructura</h5>
-                      <div className={`text-xs space-y-1 transition-colors duration-500 ${isSelected ? 'text-white/80' : 'text-slate-600 group-hover:text-emerald-600'}`}>
+                    <div className="rounded-lg p-3 border border-slate-200 bg-slate-50">
+                      <h5 className="font-semibold text-xs mb-1.5 uppercase tracking-wide text-slate-700">Estructura</h5>
+                      <div className="text-xs space-y-1 text-slate-600">
                         <p>• {plan.academicLoad}</p>
                         <p>• {plan.evaluationsDetail}</p>
                       </div>
                     </div>
 
                     {/* Subjects */}
-                    <div 
-                      className={`rounded-lg p-3 border transition-all duration-500 ${isSelected ? 'bg-white/10 border-white/20' : 'bg-slate-50 border-slate-200 group-hover:bg-emerald-50 group-hover:border-emerald-200'}`}
-                    >
-                      <h5 className={`font-semibold text-xs mb-1.5 uppercase tracking-wide transition-colors duration-500 ${isSelected ? 'text-white' : 'text-slate-700 group-hover:text-emerald-700'}`}>Asignaturas</h5>
+                    <div className="rounded-lg p-3 border border-slate-200 bg-slate-50">
+                      <h5 className="font-semibold text-xs mb-1.5 uppercase tracking-wide text-slate-700">Asignaturas</h5>
                       <div className="grid grid-cols-1 gap-1">
                         {parseSubjects(plan.subjects).map((subject, idx) => (
-                          <div key={idx} className={`flex items-center gap-2 text-xs transition-colors duration-500 ${isSelected ? 'text-white/80' : 'text-slate-600 group-hover:text-emerald-600'}`}>
-                            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors duration-500`} style={{ backgroundColor: isSelected ? '#ffffff' : scheme.base.text }}></span>
+                          <div key={idx} className="flex items-center gap-2 text-xs text-slate-600">
+                            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-slate-400"></span>
                             <span className="leading-tight">{subject}</span>
                           </div>
                         ))}
@@ -310,21 +312,11 @@ export function PlanConfiguratorAdults() {
                     onClick={(e) => {
                       e.stopPropagation();
                       selectPlan(index);
+                      setIsReservationOpen(true);
                     }}
-                    className={`w-full font-semibold transition-all duration-500 text-sm py-3 text-white shadow-md hover:shadow-lg ${
-                      isSelected
-                        ? 'bg-green-600 hover:bg-green-700'
-                        : 'bg-slate-600 hover:bg-emerald-600 group-hover:bg-emerald-500'
-                    }`}
+                    className="w-full font-semibold transition-all text-sm py-3 text-white shadow-md hover:shadow-lg bg-[#002147] hover:bg-[#001a3a] active:scale-95"
                   >
-                    {isSelected ? (
-                      <>
-                        <Check className="w-4 h-4 mr-2" />
-                        Seleccionado
-                      </>
-                    ) : (
-                      'Seleccionar Plan'
-                    )}
+                    Inscripción
                   </Button>
                 </div>
               </Card>

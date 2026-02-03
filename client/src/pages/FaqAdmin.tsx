@@ -281,12 +281,13 @@ export default function FaqAdmin() {
                 
                 <div className="space-y-2">
                   <Label htmlFor="file-upload">Seleccionar archivo</Label>
-                  <Input
+                  <input
                     id="file-upload"
                     type="file"
                     accept=".docx"
                     onChange={handleFileChange}
                     ref={fileInputRef}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   />
                   {selectedFile && (
                     <p className="text-sm text-green-600 flex items-center gap-2">
@@ -344,7 +345,7 @@ export default function FaqAdmin() {
                 Nueva FAQ
               </Button>
             </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingFaq ? "Editar FAQ" : "Nueva FAQ"}</DialogTitle>
               <DialogDescription>
@@ -425,8 +426,9 @@ export default function FaqAdmin() {
                 </Button>
               </DialogFooter>
             </form>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className="grid gap-4">

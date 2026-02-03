@@ -125,29 +125,29 @@ export default function PaesConfigurator() {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      whileHover={{ scale: 1.02 }}
+                      whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleSubjectToggle(subject.id)}
                       className={`
-                        p-4 rounded-xl border-2 transition-all duration-500 text-left flex items-center justify-between group
+                        p-4 rounded-xl border-2 transition-all duration-300 text-left flex items-center justify-between group
                         ${isSelected(subject.id)
-                          ? 'border-[#a51c30] bg-gradient-to-br from-[#a51c30] to-[#f97316] text-white shadow-lg shadow-[#a51c30]/30 scale-105'
-                          : 'border-slate-300 bg-slate-100 hover:border-red-400 hover:shadow-[0_10px_30px_rgba(165,28,48,0.2)] hover:bg-gradient-to-br hover:from-red-50 hover:to-orange-50 text-slate-700 hover:text-red-700'
+                          ? 'border-blue-300 bg-blue-100 shadow-md scale-[1.02]'
+                          : 'border-slate-300 bg-white hover:bg-gradient-to-r hover:from-pink-50 hover:to-purple-50 hover:border-pink-200'
                         }
                       `}
                     >
-                      <span className="font-bold text-base transition-colors duration-500">
+                      <span className={`font-bold text-base transition-colors duration-300 ${isSelected(subject.id) ? 'text-slate-800' : 'text-slate-700'}`}>
                         {subject.name}
                       </span>
                       <div className={`
-                        w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-500
+                        w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300
                         ${isSelected(subject.id)
-                          ? 'border-white bg-white scale-110'
-                          : 'border-slate-400 group-hover:border-red-500 group-hover:bg-red-50'
+                          ? 'border-blue-500 bg-blue-500 scale-110'
+                          : 'border-slate-400 group-hover:border-pink-400'
                         }
                       `}>
                         {isSelected(subject.id) && (
-                          <CheckCircle2 className="w-5 h-5 text-[#a51c30]" />
+                          <CheckCircle2 className="w-5 h-5 text-white" />
                         )}
                       </div>
                     </motion.button>
