@@ -195,7 +195,7 @@ export default function Home() {
                 <a href="#" className="text-[14px] text-[#1e1e1e] hover:text-[#a51c30] font-normal transition-colors whitespace-nowrap">
                   Programas
                 </a>
-                <a href="#" className="text-[14px] text-[#1e1e1e] hover:text-[#a51c30] font-normal transition-colors whitespace-nowrap">
+                <a href="#metodo" className="text-[14px] text-[#1e1e1e] hover:text-[#a51c30] font-normal transition-colors whitespace-nowrap">
                   Método
                 </a>
                 <a href="#" className="text-[14px] text-[#1e1e1e] hover:text-[#a51c30] font-normal transition-colors whitespace-nowrap">
@@ -757,7 +757,7 @@ export default function Home() {
         </section>
 
         {/* High-End Video Players Section */}
-        <section className="bg-gradient-to-br from-gray-50 via-white to-gray-50 py-32">
+        <section id="metodo" className="bg-gradient-to-br from-gray-50 via-white to-gray-50 py-32 scroll-mt-20">
           <div className="container-harvard">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
