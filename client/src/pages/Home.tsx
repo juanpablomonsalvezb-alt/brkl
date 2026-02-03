@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Search, Menu, GraduationCap, ChevronRight, X, Clock, Target, Brain, ArrowRight, Loader2, BookOpen, Users, Award, Calendar, Settings, Zap, Battery, Trophy, CheckCircle, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 
@@ -50,6 +51,7 @@ export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [reservationDialogOpen, setReservationDialogOpen] = useState(false);
+  const [nosotrosDialogOpen, setNosotrosDialogOpen] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [menuExpanded, setMenuExpanded] = useState(false);
@@ -201,6 +203,12 @@ export default function Home() {
                 <a href="#plataforma" className="text-[14px] text-[#1e1e1e] hover:text-[#a51c30] font-normal transition-colors whitespace-nowrap">
                   Plataforma
                 </a>
+                <button 
+                  onClick={() => setNosotrosDialogOpen(true)}
+                  className="text-[14px] text-[#1e1e1e] hover:text-[#a51c30] font-normal transition-colors whitespace-nowrap"
+                >
+                  Nosotros
+                </button>
                 <button 
                   onClick={() => setReservationDialogOpen(true)}
                   className="text-[14px] text-[#1e1e1e] hover:text-[#a51c30] font-normal transition-colors whitespace-nowrap"
@@ -1580,6 +1588,133 @@ export default function Home() {
           </Button>
         </div>
       )}
+
+      {/* Nosotros Dialog */}
+      <Dialog open={nosotrosDialogOpen} onOpenChange={setNosotrosDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto bg-white">
+          <DialogHeader className="border-b border-[#002147]/10 pb-6">
+            <DialogTitle className="text-4xl font-serif font-bold text-[#002147] text-center">
+              Transformando el Futuro de la Educación en Chile
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-8 py-6 px-2">
+            {/* Nuestra Identidad y Génesis */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-4"
+            >
+              <h3 className="text-2xl font-serif font-bold text-[#a51c30] flex items-center gap-3">
+                <div className="w-1.5 h-8 bg-[#a51c30] rounded-full"></div>
+                Nuestra Identidad y Génesis
+              </h3>
+              <div className="pl-6 space-y-4 text-[#1e1e1e]/80 leading-relaxed">
+                <p>
+                  <span className="font-bold text-[#002147]">Barkley Institute Online</span> es un ecosistema educativo de vanguardia diseñado para democratizar el acceso a una formación de alto nivel técnico y pedagógico. Formamos parte de <span className="font-semibold text-[#002147]">Stratmore Partners</span>, una organización dedicada a la investigación y desarrollo de soluciones tecnológicas aplicadas. Nuestra razón de ser es la integración inteligente de la Inteligencia Artificial y las metodologías activas en el proceso de enseñanza-aprendizaje, preparando a nuestros estudiantes para los desafíos de la era digital.
+                </p>
+                <p>
+                  No nos limitamos a ser una plataforma de contenidos; somos una <span className="font-semibold text-[#002147]">comunidad de aprendizaje</span> orientada al dominio de competencias específicas, inspirada en los estándares de excelencia de instituciones líderes a nivel global, pero adaptada a la realidad y necesidades del contexto nacional.
+                </p>
+              </div>
+            </motion.section>
+
+            {/* Los Pilares */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="space-y-4 bg-gradient-to-br from-[#002147]/[0.02] to-[#a51c30]/[0.02] p-6 rounded-xl border border-[#002147]/10"
+            >
+              <h3 className="text-2xl font-serif font-bold text-[#a51c30] flex items-center gap-3">
+                <div className="w-1.5 h-8 bg-[#a51c30] rounded-full"></div>
+                Los Pilares de la Experiencia Barkley
+              </h3>
+              <p className="pl-6 text-[#1e1e1e]/80 leading-relaxed">
+                Nuestra propuesta se sostiene sobre tres ejes fundamentales que garantizan un estándar de calidad superior:
+              </p>
+              
+              <div className="pl-6 space-y-6">
+                {/* Pilar 1 */}
+                <div className="space-y-2">
+                  <h4 className="text-lg font-bold text-[#002147] flex items-center gap-2">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#a51c30] text-white text-sm font-bold">1</span>
+                    Trayectoria y Liderazgo Pedagógico
+                  </h4>
+                  <p className="text-[#1e1e1e]/80 leading-relaxed pl-10">
+                    La dirección de Barkley Institute cuenta con un respaldo de más de <span className="font-semibold text-[#002147]">20 años de experiencia directa</span> en el sistema educativo, con formación de postgrado en gestión y currículum, además de certificaciones en liderazgo educativo y aprendizaje por HarvardX. Esta base garantiza que cada decisión tecnológica tenga siempre un propósito pedagógico claro.
+                  </p>
+                </div>
+
+                {/* Pilar 2 */}
+                <div className="space-y-2">
+                  <h4 className="text-lg font-bold text-[#002147] flex items-center gap-2">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#a51c30] text-white text-sm font-bold">2</span>
+                    Modelo de Dominio por Competencias
+                  </h4>
+                  <p className="text-[#1e1e1e]/80 leading-relaxed pl-10">
+                    Rompemos con la rigidez del modelo tradicional basado exclusivamente en el tiempo. En Barkley, lo que importa es el <span className="font-semibold text-[#002147]">logro de aprendizajes significativos</span>. Nuestro enfoque permite que cada estudiante avance de forma personalizada, asegurando que el conocimiento se traduzca en habilidades prácticas y verificables.
+                  </p>
+                </div>
+
+                {/* Pilar 3 */}
+                <div className="space-y-2">
+                  <h4 className="text-lg font-bold text-[#002147] flex items-center gap-2">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#a51c30] text-white text-sm font-bold">3</span>
+                    Acompañamiento Integral (Success Mentors)
+                  </h4>
+                  <p className="text-[#1e1e1e]/80 leading-relaxed pl-10">
+                    Entendemos que la educación online requiere cercanía. Por ello, hemos implementado un sistema de <span className="font-semibold text-[#002147]">mentores dedicados al éxito del estudiante</span>. No solo entregamos herramientas, sino que brindamos el soporte estratégico y motivacional necesario para que cada alumno culmine su proceso con éxito.
+                  </p>
+                </div>
+              </div>
+            </motion.section>
+
+            {/* Misión y Visión */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="grid md:grid-cols-2 gap-6"
+            >
+              {/* Misión */}
+              <div className="space-y-3 p-6 bg-gradient-to-br from-[#a51c30]/[0.05] to-transparent rounded-xl border border-[#a51c30]/20">
+                <h3 className="text-xl font-serif font-bold text-[#a51c30] flex items-center gap-2">
+                  <Target className="w-6 h-6" />
+                  Nuestra Misión
+                </h3>
+                <p className="text-[#1e1e1e]/80 leading-relaxed">
+                  Proveer soluciones educativas ágiles, innovadoras y profundamente humanas que empoderen a las personas para liderar su propio desarrollo profesional. Buscamos eliminar las brechas de acceso a la educación de calidad a través del uso ético de la tecnología, permitiendo un <span className="font-semibold text-[#002147]">aprendizaje sin fronteras</span>.
+                </p>
+              </div>
+
+              {/* Visión */}
+              <div className="space-y-3 p-6 bg-gradient-to-br from-[#002147]/[0.05] to-transparent rounded-xl border border-[#002147]/20">
+                <h3 className="text-xl font-serif font-bold text-[#002147] flex items-center gap-2">
+                  <Brain className="w-6 h-6" />
+                  Nuestra Visión
+                </h3>
+                <p className="text-[#1e1e1e]/80 leading-relaxed">
+                  Consolidarnos como la <span className="font-semibold text-[#002147]">institución referente en educación online en Chile</span>, siendo reconocidos por nuestra capacidad de innovar en el diseño instruccional y por formar profesionales capaces de integrar la tecnología y el pensamiento crítico en sus respectivos campos de acción.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Footer con logo o firma */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="pt-6 border-t border-[#002147]/10 text-center"
+            >
+              <p className="text-sm text-[#1e1e1e]/60 italic">
+                Parte de <span className="font-semibold text-[#002147]">Stratmore Partners</span>
+              </p>
+            </motion.div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Reservation Dialog */}
       <ReservationDialog open={reservationDialogOpen} onOpenChange={setReservationDialogOpen} />
