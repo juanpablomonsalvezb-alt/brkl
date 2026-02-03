@@ -173,15 +173,6 @@ export function PlanConfiguratorYouth() {
                 <span className="text-2xl font-bold text-[#A51C30]">$60.000</span>
               </div>
             </div>
-            <div className="flex justify-center">
-              <a
-                href="/academic-copilot"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#A51C30] to-[#8B1725] hover:from-[#8B1725] hover:to-[#6B1219] text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all"
-              >
-                <MessageSquare className="w-5 h-5" />
-                Ir a Academic Copilot
-              </a>
-            </div>
           </div>
         </motion.div>
 
