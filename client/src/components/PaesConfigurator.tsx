@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Sparkles, Brain, GraduationCap } from "lucide-react";
+import { ReservationDialog } from "@/components/ReservationDialog";
 
 interface PaesSubject {
   id: string;
@@ -19,6 +20,7 @@ export default function PaesConfigurator() {
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [includeTutor, setIncludeTutor] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [isReservationOpen, setIsReservationOpen] = useState(false);
 
   // Precio del tutor por materia (configurable) - precio base + IVA 19%
   const TUTOR_PRICE_PER_SUBJECT = 59500; // 50.000 * 1.19
@@ -49,13 +51,8 @@ export default function PaesConfigurator() {
   };
 
   const handleInscription = () => {
-    // TODO: Abrir modal de inscripción con datos seleccionados
-    console.log({
-      selectedSubjects,
-      includeTutor,
-      totalPrice
-    });
-    alert("Modal de inscripción próximamente!");
+    // Abrir el modal de inscripción
+    setIsReservationOpen(true);
   };
 
   const isSelected = (subjectId: string) => selectedSubjects.includes(subjectId);
@@ -324,6 +321,12 @@ export default function PaesConfigurator() {
           </motion.div>
         </div>
       </div>
+
+      {/* Reservation Dialog */}
+      <ReservationDialog 
+        open={isReservationOpen}
+        onOpenChange={setIsReservationOpen}
+      />
     </section>
   );
 }
