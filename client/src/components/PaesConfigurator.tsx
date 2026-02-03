@@ -52,7 +52,10 @@ export default function PaesConfigurator() {
 
   const handleInscription = () => {
     // Abrir el modal de inscripción
+    console.log("🔔 Botón de inscripción clickeado - abriendo modal");
+    console.log("Estado actual:", { selectedSubjects, includeTutor, totalPrice });
     setIsReservationOpen(true);
+    console.log("isReservationOpen cambiado a true");
   };
 
   const isSelected = (subjectId: string) => selectedSubjects.includes(subjectId);
