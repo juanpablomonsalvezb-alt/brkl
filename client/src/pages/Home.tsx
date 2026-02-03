@@ -140,7 +140,7 @@ export default function Home() {
       id: "1",
       title: "Plan Barkley FOCUS",
       subtitle: "Jóvenes (7° a 4° Medio)",
-      price: "Matrícula: $50.000 Mensualidad: $75.000",
+      price: "Matrícula: $59.500 Mensualidad: $89.250 (incluye IVA)",
       description: "Preparación para Exámenes Libres (Decreto 2272). Diseñado para estudiantes que necesitan estructura y apoyo constante.",
       image: csThumbnail,
       category: "Validación de Estudios",
@@ -471,31 +471,34 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.7 }}
-                    whileHover={{ y: -2, scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative overflow-hidden rounded-2xl border border-[#a51c30]/20 bg-gradient-to-br from-[#a51c30]/[0.02] via-white/50 to-[#a51c30]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#a51c30]/40 hover:shadow-2xl hover:shadow-[#a51c30]/10"
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="group relative overflow-hidden rounded-2xl border-2 border-[#a51c30]/30 bg-gradient-to-br from-[#a51c30]/[0.04] via-white/60 to-[#a51c30]/[0.06] backdrop-blur-xl transition-all duration-500 hover:border-[#a51c30]/60 hover:shadow-[0_20px_60px_-15px_rgba(165,28,48,0.3)] hover:bg-gradient-to-br hover:from-[#a51c30]/[0.08] hover:via-white/70 hover:to-[#a51c30]/[0.12]"
+                    style={{ transformStyle: 'preserve-3d' }}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#a51c30]/0 via-[#a51c30]/[0.03] to-[#a51c30]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    {/* Glow effect on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#a51c30]/0 via-[#a51c30]/[0.15] to-[#a51c30]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl" />
                     
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
+                    {/* Shimmer effect */}
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+                    
+                    <div className="relative flex items-center justify-center gap-3 px-8 py-5 transform group-hover:scale-[1.02] transition-transform duration-300">
                       <div className="relative">
-                        <GraduationCap className="w-[18px] h-[18px] text-[#a51c30] group-hover:scale-110 transition-transform duration-300" />
-                        <div className="absolute inset-0 rounded-full bg-[#a51c30]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                        <GraduationCap className="w-[20px] h-[20px] text-[#a51c30] group-hover:scale-125 group-hover:rotate-6 transition-all duration-300 drop-shadow-lg" />
+                        <div className="absolute inset-0 rounded-full bg-[#a51c30]/30 scale-0 group-hover:scale-[2] opacity-0 group-hover:opacity-100 transition-all duration-500 blur-md" />
                       </div>
                       
                       <div className="flex flex-col items-center">
-                        <span className="text-[15px] font-semibold text-[#a51c30] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
+                        <span className="text-[16px] font-bold text-[#a51c30] tracking-[0.02em] group-hover:tracking-[0.05em] transition-all duration-300 drop-shadow-sm">
                           Exámenes Libres
                         </span>
-                        <span className="text-[11px] text-[#a51c30]/60 mt-0.5">
+                        <span className="text-[11px] text-[#a51c30]/70 mt-0.5 font-medium">
                           7º a 4º Medio
                         </span>
                       </div>
                       
-                      <ArrowRight className="w-[16px] h-[16px] text-[#a51c30]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                      <ArrowRight className="w-[18px] h-[18px] text-[#a51c30]/70 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 drop-shadow-lg" />
                     </div>
-                    
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#a51c30]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
                   </motion.a>
 
                   {/* Inscription Button 1 - Crimson */}
@@ -531,37 +534,40 @@ export default function Home() {
                 <div className="flex flex-col gap-3">
                   {/* Premium CTA 2 - Validación */}
                   <motion.a
-                    href="#planes"
+                    href="#adultos"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.8 }}
-                    whileHover={{ y: -2, scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative overflow-hidden rounded-2xl border border-[#D4AF37]/20 bg-gradient-to-br from-[#D4AF37]/[0.02] via-white/50 to-[#D4AF37]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#D4AF37]/40 hover:shadow-2xl hover:shadow-[#D4AF37]/10"
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="group relative overflow-hidden rounded-2xl border-2 border-[#D4AF37]/30 bg-gradient-to-br from-[#D4AF37]/[0.04] via-white/60 to-[#D4AF37]/[0.06] backdrop-blur-xl transition-all duration-500 hover:border-[#D4AF37]/60 hover:shadow-[0_20px_60px_-15px_rgba(212,175,55,0.3)] hover:bg-gradient-to-br hover:from-[#D4AF37]/[0.08] hover:via-white/70 hover:to-[#D4AF37]/[0.12]"
+                    style={{ transformStyle: 'preserve-3d' }}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/0 via-[#D4AF37]/[0.03] to-[#D4AF37]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    {/* Glow effect on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/0 via-[#D4AF37]/[0.15] to-[#D4AF37]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl" />
                     
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
+                    {/* Shimmer effect */}
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+                    
+                    <div className="relative flex items-center justify-center gap-3 px-8 py-5 transform group-hover:scale-[1.02] transition-transform duration-300">
                       <div className="relative">
-                        <svg className="w-[18px] h-[18px] text-[#D4AF37] group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-[20px] h-[20px] text-[#D4AF37] group-hover:scale-125 group-hover:rotate-6 transition-all duration-300 drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <div className="absolute inset-0 rounded-full bg-[#D4AF37]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                        <div className="absolute inset-0 rounded-full bg-[#D4AF37]/30 scale-0 group-hover:scale-[2] opacity-0 group-hover:opacity-100 transition-all duration-500 blur-md" />
                       </div>
                       
                       <div className="flex flex-col items-center">
-                        <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
+                        <span className="text-[16px] font-bold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.05em] transition-all duration-300 drop-shadow-sm">
                           Validación
                         </span>
-                        <span className="text-[11px] text-[#D4AF37]/80 mt-0.5">
+                        <span className="text-[11px] text-[#D4AF37]/90 mt-0.5 font-medium">
                           Adultos
                         </span>
                       </div>
                       
-                      <ArrowRight className="w-[16px] h-[16px] text-[#D4AF37]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                      <ArrowRight className="w-[18px] h-[18px] text-[#D4AF37]/70 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 drop-shadow-lg" />
                     </div>
-                    
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#D4AF37]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
                   </motion.a>
 
                   {/* Inscription Button 2 - Gold */}
@@ -601,33 +607,36 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.9 }}
-                    whileHover={{ y: -2, scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative overflow-hidden rounded-2xl border border-[#002147]/20 bg-gradient-to-br from-[#002147]/[0.02] via-white/50 to-[#002147]/[0.03] backdrop-blur-xl transition-all duration-500 hover:border-[#002147]/40 hover:shadow-2xl hover:shadow-[#002147]/10"
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="group relative overflow-hidden rounded-2xl border-2 border-[#002147]/30 bg-gradient-to-br from-[#002147]/[0.04] via-white/60 to-[#002147]/[0.06] backdrop-blur-xl transition-all duration-500 hover:border-[#002147]/60 hover:shadow-[0_20px_60px_-15px_rgba(0,33,71,0.3)] hover:bg-gradient-to-br hover:from-[#002147]/[0.08] hover:via-white/70 hover:to-[#002147]/[0.12]"
+                    style={{ transformStyle: 'preserve-3d' }}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#002147]/0 via-[#002147]/[0.03] to-[#002147]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    {/* Glow effect on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#002147]/0 via-[#002147]/[0.15] to-[#002147]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl" />
                     
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-4">
+                    {/* Shimmer effect */}
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+                    
+                    <div className="relative flex items-center justify-center gap-3 px-8 py-5 transform group-hover:scale-[1.02] transition-transform duration-300">
                       <div className="relative">
-                        <svg className="w-[18px] h-[18px] text-[#002147] group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-[20px] h-[20px] text-[#002147] group-hover:scale-125 group-hover:rotate-6 transition-all duration-300 drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                         </svg>
-                        <div className="absolute inset-0 rounded-full bg-[#002147]/20 scale-0 group-hover:scale-150 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                        <div className="absolute inset-0 rounded-full bg-[#002147]/30 scale-0 group-hover:scale-[2] opacity-0 group-hover:opacity-100 transition-all duration-500 blur-md" />
                       </div>
                       
                       <div className="flex flex-col items-center">
-                        <span className="text-[15px] font-semibold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.04em] transition-all duration-300">
+                        <span className="text-[16px] font-bold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.05em] transition-all duration-300 drop-shadow-sm">
                           PAES
                         </span>
-                        <span className="text-[11px] text-[#002147]/60 mt-0.5">
+                        <span className="text-[11px] text-[#002147]/70 mt-0.5 font-medium">
                           Preparación
                         </span>
                       </div>
                       
-                      <ArrowRight className="w-[16px] h-[16px] text-[#002147]/60 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                      <ArrowRight className="w-[18px] h-[18px] text-[#002147]/70 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 drop-shadow-lg" />
                     </div>
-                    
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-[#002147]/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
                   </motion.a>
 
                   {/* Inscription Button 3 - Navy */}
@@ -935,7 +944,9 @@ export default function Home() {
         </section>
 
         {/* Adult Plans - Validación */}
-        <PlanConfiguratorAdults />
+        <div id="adultos" className="scroll-mt-20">
+          <PlanConfiguratorAdults />
+        </div>
 
         {/* Academic Copilot Section - 3 Columns */}
         <section className="py-32 bg-gradient-to-br from-[#0a1628] via-[#0d1b2a] to-[#1b263b] relative overflow-hidden">

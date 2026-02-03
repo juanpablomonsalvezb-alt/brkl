@@ -39,17 +39,17 @@ export function PlanConfiguratorYouth() {
     });
   };
 
-  // Define the 3 youth plans
+  // Define the 3 youth plans (precios incluyen IVA 19%)
   const allPlans: ExtendedPlan[] = [
     {
       id: 'plan_basica_jovenes',
       planKey: 'plan_7_8_basico',
       planName: 'Plan Básica',
       planSubtitle: '7° y 8° Básico',
-      monthlyPrice: 55000,
-      enrollmentPrice: 60000,
-      annualTotal: 500000,
-      annualTotalWithMentor: 740000,
+      monthlyPrice: 65450,
+      enrollmentPrice: 71400,
+      annualTotal: 595000,
+      annualTotalWithMentor: 880600,
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -70,10 +70,10 @@ export function PlanConfiguratorYouth() {
       planKey: 'plan_1_2_medio',
       planName: 'Plan Media I',
       planSubtitle: '1° y 2° Medio',
-      monthlyPrice: 60000,
-      enrollmentPrice: 60000,
-      annualTotal: 540000,
-      annualTotalWithMentor: 780000,
+      monthlyPrice: 71400,
+      enrollmentPrice: 71400,
+      annualTotal: 642600,
+      annualTotalWithMentor: 928200,
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -95,10 +95,10 @@ export function PlanConfiguratorYouth() {
       planKey: 'plan_3_4_medio',
       planName: 'Plan Media II',
       planSubtitle: '3° y 4° Medio',
-      monthlyPrice: 65000,
-      enrollmentPrice: 60000,
-      annualTotal: 580000,
-      annualTotalWithMentor: 820000,
+      monthlyPrice: 77350,
+      enrollmentPrice: 71400,
+      annualTotal: 690200,
+      annualTotalWithMentor: 975800,
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -255,6 +255,7 @@ export function PlanConfiguratorYouth() {
                         {formatCurrency(currentPrice || 0)}
                       </div>
                       <div className="text-xs text-slate-600">8 meses de formación</div>
+                      <div className="text-xs text-slate-500 mt-1">* Incluye IVA</div>
                     </div>
                   </div>
 
