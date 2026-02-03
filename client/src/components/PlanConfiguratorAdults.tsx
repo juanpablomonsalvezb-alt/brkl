@@ -39,16 +39,16 @@ export function PlanConfiguratorAdults() {
   const isLoading = false;
   const isError = false;
 
-  // Define the 3 adult validation plans (precios incluyen IVA 19%)
+  // Define the 3 adult validation plans (precios netos sin IVA)
   const allPlans: ExtendedPlan[] = [
     {
       id: 'plan_basica',
       planKey: 'plan_basica_adultos',
       planName: 'Plan Básica',
       planSubtitle: 'Desde 1° Básico a 8° Básico',
-      monthlyPrice: 35700, // $428,400 / 12 meses
+      monthlyPrice: 30000, // $360,000 / 12 meses
       enrollmentPrice: 0,
-      annualTotal: 428400,
+      annualTotal: 360000,
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -69,9 +69,9 @@ export function PlanConfiguratorAdults() {
       planKey: 'plan_media_i_adultos',
       planName: 'Plan Media I',
       planSubtitle: '1er Nivel Medio (1° y 2°)',
-      monthlyPrice: 39667, // $476,000 / 12 meses
+      monthlyPrice: 33333, // $400,000 / 12 meses
       enrollmentPrice: 0,
-      annualTotal: 476000,
+      annualTotal: 400000,
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -93,9 +93,9 @@ export function PlanConfiguratorAdults() {
       planKey: 'plan_media_ii_adultos',
       planName: 'Plan Media II',
       planSubtitle: '2do Nivel Medio (3° y 4°)',
-      monthlyPrice: 43633, // $523,600 / 12 meses
+      monthlyPrice: 36667, // $440,000 / 12 meses
       enrollmentPrice: 0,
-      annualTotal: 523600,
+      annualTotal: 440000,
       academicLoad: '15 Módulos (2 semanas c/u)',
       evaluationsDetail: '+60 Test de proceso, 2 Ensayos Generales',
       subjects: JSON.stringify([
@@ -279,7 +279,6 @@ export function PlanConfiguratorAdults() {
                         {formatCurrency(plan.annualTotal || 0)}
                       </div>
                       <div className="text-xs text-slate-600">30 semanas</div>
-                      <div className="text-xs text-slate-500 mt-1">* Incluye IVA</div>
                     </div>
                   </div>
 
