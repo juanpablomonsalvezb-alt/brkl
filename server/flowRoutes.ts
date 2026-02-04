@@ -40,7 +40,8 @@ export function registerFlowRoutes(app: Express) {
       // URLs de confirmación y retorno
       const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
       const urlConfirmation = `${baseUrl}/api/flow/confirm`;
-      const urlReturn = `${baseUrl}/payment-result`;
+      // Flow reemplaza {{token}} con el token real del pago
+      const urlReturn = `${baseUrl}/payment-result?token={{token}}`;
 
       // Crear pago en Flow (sin optional por ahora para debug)
       const paymentData = await flowService.createPayment({
@@ -66,6 +67,7 @@ export function registerFlowRoutes(app: Express) {
           paymentStatus: "pending",
           flowOrder: paymentData.flowOrder.toString(),
           flowToken: paymentData.token,
+          paymentAmount: amount, // Guardar el monto del pago
         })
         .where(eq(reservations.id, reservationId));
 
@@ -85,19 +87,38 @@ export function registerFlowRoutes(app: Express) {
 
   /**
    * Confirmación de pago desde Flow (webhook)
+   * IMPORTANTE: Este endpoint es llamado por Flow.cl para confirmar pagos
    */
   app.post("/api/flow/confirm", async (req, res) => {
     try {
-      const { token } = req.body;
+      const { token, s } = req.body;
 
       if (!token) {
+        console.error("Webhook error: Token no proporcionado");
         return res.status(400).send("Token no proporcionado");
+      }
+
+      // SEGURIDAD: Validar firma del webhook
+      if (!s) {
+        console.error("Webhook error: Firma no proporcionada");
+        return res.status(401).send("Firma no proporcionada");
+      }
+
+      // Validar que la firma sea correcta
+      const paramsToValidate = { token };
+      const isValidSignature = flowService.validateSignature(paramsToValidate, s);
+      
+      if (!isValidSignature) {
+        console.error("Webhook error: Firma inválida - posible ataque");
+        return res.status(401).send("Firma inválida");
       }
 
       // Obtener el estado del pago desde Flow
       const paymentStatus = await flowService.getPaymentStatus(token);
 
-      console.log("Flow payment confirmation:", paymentStatus);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log("Flow payment confirmation:", paymentStatus);
+      }
 
       // Buscar la reserva por flowOrder
       const [reservation] = await db

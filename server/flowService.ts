@@ -115,11 +115,14 @@ class FlowService {
       s: signature,
     };
 
-    // Log detallado para debug
-    console.log('=== Flow.cl Payment Request ===');
-    console.log('URL:', `${this.apiUrl}/payment/create`);
-    console.log('Params:', JSON.stringify(requestParams, null, 2));
-    console.log('================================');
+    // Log solo en desarrollo (no exponer credenciales en producción)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('=== Flow.cl Payment Request ===');
+      console.log('URL:', `${this.apiUrl}/payment/create`);
+      console.log('Amount:', params.amount);
+      console.log('Email:', params.email);
+      console.log('================================');
+    }
 
     try {
       // Flow.cl requiere form-urlencoded en el body
@@ -127,9 +130,6 @@ class FlowService {
       Object.entries(requestParams).forEach(([key, value]) => {
         formData.append(key, String(value));
       });
-      
-      console.log('Request URL:', `${this.apiUrl}/payment/create`);
-      console.log('Form Data:', formData.toString());
       
       const response = await axios.post(
         `${this.apiUrl}/payment/create`,
@@ -141,11 +141,12 @@ class FlowService {
         }
       );
 
-      console.log('Flow.cl response:', response.data);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Flow.cl response success');
+      }
       return response.data;
     } catch (error: any) {
-      console.error('Error creating Flow payment:', error.response?.data || error.message);
-      console.error('Full error:', error);
+      console.error('Error creating Flow payment:', error.response?.data?.message || error.message);
       throw new Error(error.response?.data?.message || 'Error al crear el pago en Flow');
     }
   }

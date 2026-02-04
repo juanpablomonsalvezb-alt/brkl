@@ -9,11 +9,12 @@ export default function PaymentResult() {
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState("");
   
-  // Debug: Log all parameters
-  console.log('Payment Result - Full URL:', window.location.href);
-  console.log('Payment Result - Search params:', Array.from(searchParams.entries()));
-  
   const token = searchParams.get("token");
+  
+  // Debug solo en desarrollo
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Payment Result - Token:', token ? 'Present' : 'Missing');
+  }
 
   useEffect(() => {
     if (!token) {
