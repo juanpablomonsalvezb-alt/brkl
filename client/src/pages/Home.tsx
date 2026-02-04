@@ -17,9 +17,9 @@ import { motion } from "framer-motion";
 
 // import { ThinkingBridge } from "@/components/ThinkingBridge"; // Temporalmente deshabilitado
 import { ReservationDialog } from "@/components/ReservationDialog";
-// import { PlanConfiguratorYouth } from "@/components/PlanConfiguratorYouth";
-// import { PlanConfiguratorAdults } from "@/components/PlanConfiguratorAdults";
-// import PaesConfigurator from "@/components/PaesConfigurator";
+import { PlanConfiguratorYouth } from "@/components/PlanConfiguratorYouth";
+import { PlanConfiguratorAdults } from "@/components/PlanConfiguratorAdults";
+import PaesConfigurator from "@/components/PaesConfigurator";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -775,7 +775,7 @@ export default function Home() {
         {/* Interactive Plan Configurator - MOVED UP */}
         <div id="planes" className="scroll-mt-20">
           {/* Youth Plans - Exámenes Libres */}
-          {/* <PlanConfiguratorYouth /> */}
+          <PlanConfiguratorYouth />
         </div>
 
         {/* Platform Showcase Section - Split Layout */}
@@ -871,7 +871,7 @@ export default function Home() {
 
         {/* Adult Plans - Validación */}
         <div id="adultos" className="scroll-mt-20">
-          {/* <PlanConfiguratorAdults /> */}
+          <PlanConfiguratorAdults />
         </div>
 
         {/* Academic Copilot Section - 3 Columns */}
@@ -1086,7 +1086,7 @@ export default function Home() {
 
       {/* PAES Plan Configurator */}
       <div id="paes" className="scroll-mt-20">
-        {/* <PaesConfigurator /> */}
+        <PaesConfigurator />
       </div>
 
       {/* Harvard-Style Benefits Section */}
