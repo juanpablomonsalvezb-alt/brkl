@@ -60,16 +60,16 @@ const courseOptions = [
 // Planes disponibles según el grupo (precio incluye IVA 19% y matrícula)
 const plansByGroup: Record<string, Array<{ value: string; label: string; price: string }>> = {
   basica: [
-    { value: "basica_plataforma", label: "7° y 8° Básico - $480.000", price: "$480.000" },
-    { value: "basica_mentor", label: "7° y 8° Básico + Mentor - $708.480", price: "$708.480" },
+    { value: "basica_plataforma", label: "Plataforma + IA: $480.000", price: "$480.000" },
+    { value: "basica_mentor", label: "Plataforma + IA + Mentor: $708.480", price: "$708.480" },
   ],
   media1: [
-    { value: "media1_plataforma", label: "1° y 2° Medio - $520.000", price: "$520.000" },
-    { value: "media1_mentor", label: "1° y 2° Medio + Mentor - $748.480", price: "$748.480" },
+    { value: "media1_plataforma", label: "Plataforma + IA: $520.000", price: "$520.000" },
+    { value: "media1_mentor", label: "Plataforma + IA + Mentor: $748.480", price: "$748.480" },
   ],
   media2: [
-    { value: "media2_plataforma", label: "3° y 4° Medio - $560.000", price: "$560.000" },
-    { value: "media2_mentor", label: "3° y 4° Medio + Mentor - $788.480", price: "$788.480" },
+    { value: "media2_plataforma", label: "Plataforma + IA: $560.000", price: "$560.000" },
+    { value: "media2_mentor", label: "Plataforma + IA + Mentor: $788.480", price: "$788.480" },
   ],
   adultos_basica: [
     { value: "adultos_basica", label: "Plan Básica (1° a 8° Básico) - $360.000", price: "$360.000" },
@@ -162,6 +162,9 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
     }
   }, [courseOfInterest, form]);
 
+  const [reservationId, setReservationId] = useState<string | null>(null);
+  const [showPaymentOption, setShowPaymentOption] = useState(false);
+
   const mutation = useMutation({
     mutationFn: async (data: ReservationFormData) => {
       const response = await fetch("/api/reservations", {
@@ -181,21 +184,57 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
 
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setReservationId(data.id);
+      setShowPaymentOption(true);
       setIsSuccess(true);
       toast({
-        title: "¡Reserva enviada!",
-        description: "Nos pondremos en contacto contigo pronto.",
+        title: "¡Reserva creada!",
+        description: "Ahora puedes proceder con el pago.",
       });
-      form.reset();
-      setTimeout(() => {
-        setIsSuccess(false);
-        onOpenChange(false);
-      }, 2000);
     },
     onError: (error: Error) => {
       toast({
         title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const paymentMutation = useMutation({
+    mutationFn: async () => {
+      if (!reservationId) throw new Error("No reservation ID");
+      
+      const formData = form.getValues();
+      const selectedPlanData = availablePlans.find(p => p.value === formData.selectedPlan);
+      
+      const response = await fetch("/api/flow/create-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reservationId,
+          planPrice: selectedPlanData?.price || "$0",
+          studentEmail: formData.studentEmail,
+          studentName: formData.studentFullName,
+        }),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Error al crear el pago");
+      }
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      // Redirigir a Flow.cl para completar el pago
+      window.location.href = data.paymentUrl;
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error al procesar pago",
         description: error.message,
         variant: "destructive",
       });
@@ -219,11 +258,49 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
           <div className="flex flex-col items-center justify-center py-12">
             <CheckCircle2 className="w-16 h-16 text-green-600 mb-4" />
             <h3 className="text-xl font-semibold text-[#002147] mb-2">
-              ¡Inscripción Enviada!
+              ¡Inscripción Creada!
             </h3>
-            <p className="text-[#002147]/70 text-center">
-              Nos pondremos en contacto contigo pronto.
-            </p>
+            
+            {showPaymentOption ? (
+              <>
+                <p className="text-[#002147]/70 text-center mb-6">
+                  Tu inscripción ha sido registrada. Ahora puedes proceder con el pago a través de Flow.cl
+                </p>
+                
+                <div className="flex gap-3">
+                  <Button
+                    onClick={() => {
+                      setIsSuccess(false);
+                      setShowPaymentOption(false);
+                      setReservationId(null);
+                      form.reset();
+                      onOpenChange(false);
+                    }}
+                    variant="outline"
+                  >
+                    Pagar después
+                  </Button>
+                  <Button
+                    onClick={() => paymentMutation.mutate()}
+                    disabled={paymentMutation.isPending}
+                    className="bg-[#A51C30] hover:bg-[#8B1725] text-white"
+                  >
+                    {paymentMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Procesando...
+                      </>
+                    ) : (
+                      "Pagar Ahora con Flow"
+                    )}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <p className="text-[#002147]/70 text-center">
+                Nos pondremos en contacto contigo pronto.
+              </p>
+            )}
           </div>
         ) : (
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

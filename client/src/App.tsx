@@ -6,11 +6,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
+import SimpleHome from "@/pages/SimpleInscripcion";
 import Dashboard from "@/pages/Dashboard";
 import CoursePlayer from "@/pages/CoursePlayer";
 import DriveSync from "@/pages/DriveSync";
 import TextbookConfig from "@/pages/TextbookConfig";
-import TextbookConfigNew from "@/pages/TextbookConfigNew";
+// import TextbookConfigNew from "@/pages/TextbookConfigNew"; // Temporalmente deshabilitado por error
 import Reservations from "@/pages/Reservations";
 import PlanSettings from "@/pages/PlanSettings";
 import LevelPlanSettings from "@/pages/LevelPlanSettings";
@@ -22,6 +23,8 @@ import FaqAdmin from "@/pages/FaqAdmin";
 import PaesAdmin from "@/pages/PaesAdmin";
 import ReservationsAdmin from "@/pages/ReservationsAdmin";
 import AcademicCopilot from "@/pages/AcademicCopilot";
+import PaymentResult from "@/pages/PaymentResult";
+import TestInscripcion from "@/pages/TestInscripcion";
 
 import Lenis from 'lenis';
 import { useEffect } from "react";
@@ -55,11 +58,12 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/test-inscripcion" component={SimpleHome} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/course/:id" component={CoursePlayer} />
       <Route path="/drive-sync" component={DriveSync} />
       <Route path="/textbook-config" component={TextbookConfig} />
-      <Route path="/textbook-config-new" component={TextbookConfigNew} />
+      {/* <Route path="/textbook-config-new" component={TextbookConfigNew} /> */}
       <Route path="/reservations" component={Reservations} />
       <Route path="/plan-settings" component={PlanSettings} />
       <Route path="/level-plan-settings" component={LevelPlanSettings} />
@@ -71,6 +75,8 @@ function Router() {
       <Route path="/paes-admin" component={PaesAdmin} />
       <Route path="/reservations-admin" component={ReservationsAdmin} />
       <Route path="/academic-copilot" component={AcademicCopilot} />
+      <Route path="/payment-result" component={PaymentResult} />
+      <Route path="/test-inscripcion" component={TestInscripcion} />
       <Route component={NotFound} />
     </Switch>
   );

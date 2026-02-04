@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, MessageCircle, Sparkles, User, Bot, Minimize2 } from "lucide-react";
+import { X, Send, MessageCircle, Sparkles, User, Bot, Minimize2, GraduationCap } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
@@ -21,10 +21,13 @@ interface ChatIntent {
   action?: string;
 }
 
+// Mensaje de bienvenida configurable
+const WELCOME_MESSAGE = "¡Hola! 👋 Bienvenido al Instituto UCE. Soy tu asistente virtual y estoy aquí para ayudarte con información sobre nuestros planes educativos, precios y proceso de inscripción. ¿En qué puedo ayudarte hoy?";
+
 const chatIntents: ChatIntent[] = [
   {
-    keywords: ["hola", "buenos días", "buenas tardes", "hey", "hi"],
-    response: "¡Hola! 👋 Soy tu asistente virtual del Instituto. ¿En qué puedo ayudarte hoy?",
+    keywords: ["hola", "buenos días", "buenas tardes", "hey", "hi", "hello"],
+    response: "¡Hola! 👋 Soy tu asistente virtual del Instituto UCE. ¿En qué puedo ayudarte hoy?",
     suggestions: ["Ver planes", "Precios", "Cómo inscribirme", "Horarios"]
   },
   {
@@ -61,10 +64,10 @@ export default function SalesChatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
-      text: "¡Hola! 👋 Soy tu asistente virtual. Estoy aquí para ayudarte con información sobre nuestros planes, precios y proceso de inscripción. ¿En qué puedo ayudarte?",
+      text: WELCOME_MESSAGE,
       sender: "bot",
       timestamp: new Date(),
-      suggestions: ["Ver planes", "Precios", "Cómo inscribirme"]
+      suggestions: ["Ver planes", "Precios", "Cómo inscribirme", "Horarios"]
     }
   ]);
   const [inputValue, setInputValue] = useState("");
@@ -184,9 +187,9 @@ export default function SalesChatbot() {
           >
             <Button
               onClick={() => setIsOpen(true)}
-              className="h-16 w-16 rounded-full bg-gradient-to-br from-[#002147] to-[#A51C30] shadow-2xl hover:shadow-[0_0_30px_rgba(165,28,48,0.5)] transition-all duration-300 hover:scale-110"
+              className="h-16 w-16 rounded-full bg-gradient-to-br from-[#002147] to-[#A51C30] shadow-2xl hover:shadow-[0_0_30px_rgba(165,28,48,0.5)] transition-all duration-300 hover:scale-110 group"
             >
-              <MessageCircle className="w-7 h-7 text-white" />
+              <GraduationCap className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
             </Button>
             <motion.div
               className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"
@@ -219,18 +222,21 @@ export default function SalesChatbot() {
             <div className="bg-gradient-to-r from-[#002147] to-[#A51C30] p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <Bot className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                    <GraduationCap className="w-7 h-7 text-[#A51C30]" />
                   </div>
                   <motion.div
-                    className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white"
+                    className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 rounded-full border-2 border-white shadow-md"
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ repeat: Infinity, duration: 2 }}
                   />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white text-sm">Asistente Virtual</h3>
-                  <p className="text-xs text-white/70">Siempre disponible</p>
+                  <h3 className="font-bold text-white text-base">Asistente Virtual UCE</h3>
+                  <p className="text-xs text-white/90 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+                    En línea
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -269,8 +275,8 @@ export default function SalesChatbot() {
                         )}
                       >
                         {message.sender === "bot" && (
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#002147] to-[#A51C30] flex items-center justify-center flex-shrink-0">
-                            <Bot className="w-5 h-5 text-white" />
+                          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center flex-shrink-0 shadow-md border-2 border-[#002147]/10">
+                            <GraduationCap className="w-5 h-5 text-[#A51C30]" />
                           </div>
                         )}
                         <div className="space-y-2 max-w-[75%]">
@@ -315,8 +321,8 @@ export default function SalesChatbot() {
                         animate={{ opacity: 1 }}
                         className="flex gap-2 items-center"
                       >
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#002147] to-[#A51C30] flex items-center justify-center">
-                          <Bot className="w-5 h-5 text-white" />
+                        <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-md border-2 border-[#002147]/10">
+                          <GraduationCap className="w-5 h-5 text-[#A51C30]" />
                         </div>
                         <div className="bg-slate-100 rounded-2xl px-4 py-3 rounded-tl-sm">
                           <div className="flex gap-1">

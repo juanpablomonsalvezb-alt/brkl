@@ -168,9 +168,10 @@ export default function TextbookConfigNew() {
   });
 
   const addModuleRange = () => {
-    const nextModule = Math.max(0, ...Object.keys(moduleRanges).map(Number)) + 1;
+    const existingModules = moduleRanges ? Object.keys(moduleRanges).map(Number) : [];
+    const nextModule = existingModules.length > 0 ? Math.max(0, ...existingModules) + 1 : 1;
     setModuleRanges({
-      ...moduleRanges,
+      ...(moduleRanges || {}),
       [nextModule]: { start: 1, end: 1 }
     });
     setEditingModule(nextModule);
@@ -219,7 +220,7 @@ export default function TextbookConfigNew() {
     });
   };
 
-  const canSave = selectedLevelSubjectId && pdfUrl && pdfName && Object.keys(moduleRanges).length > 0;
+  const canSave = selectedLevelSubjectId && pdfUrl && pdfName && moduleRanges && Object.keys(moduleRanges).length > 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -454,7 +455,7 @@ export default function TextbookConfigNew() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      {Object.keys(moduleRanges).length === 0 ? (
+                      {!moduleRanges || Object.keys(moduleRanges).length === 0 ? (
                         <div className="text-center py-8 text-gray-500">
                           <BookOpen className="w-12 h-12 mx-auto mb-2 opacity-50" />
                           <p>No hay módulos configurados</p>
@@ -551,9 +552,9 @@ export default function TextbookConfigNew() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Módulos Configurados</p>
-                  <p className="font-semibold">{Object.keys(moduleRanges).length}</p>
+                  <p className="font-semibold">{moduleRanges ? Object.keys(moduleRanges).length : 0}</p>
                 </div>
-                {Object.keys(moduleRanges).length > 0 && (
+                {moduleRanges && Object.keys(moduleRanges).length > 0 && (
                   <div>
                     <p className="text-sm text-gray-500 mb-2">Páginas Asignadas</p>
                     <div className="flex flex-wrap gap-1">

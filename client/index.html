@@ -26,6 +26,58 @@
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    
+    // Configuración personalizada en español
+    Tawk_API.customStyle = {
+      visibility : {
+        desktop : {
+          position : 'br',
+          xOffset : 20,
+          yOffset : 20
+        },
+        mobile : {
+          position : 'br',
+          xOffset : 10,
+          yOffset : 10
+        }
+      }
+    };
+    
+    // Mensaje de bienvenida personalizado
+    Tawk_API.onLoad = function(){
+      console.log('Tawk.to cargado - Configurando en español');
+      
+      // Personalizar nombre del agente
+      Tawk_API.setAttributes({
+        'name': 'Asistente Virtual UCE'
+      }, function(error){
+        if (!error) {
+          console.log('Nombre del agente configurado');
+        }
+      });
+      
+      // Agregar evento de bienvenida personalizado
+      Tawk_API.addEvent('visit', {
+        message: '¡Hola! 👋 Bienvenido al Instituto UCE'
+      }, function(error){
+        if (!error) {
+          console.log('Mensaje de bienvenida enviado');
+        }
+      });
+    };
+    
+    // Configurar visitante
+    Tawk_API.onBeforeLoad = function(){
+      Tawk_API.visitor = {
+        name : 'Visitante'
+      };
+    };
+    
+    // Mensaje cuando el chat se maximiza
+    Tawk_API.onChatMaximized = function(){
+      console.log('Chat maximizado');
+    };
+    
     (function(){
     var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
     s1.async=true;

@@ -15,11 +15,11 @@ import heroBg from "@assets/generated_images/harvard_yard_entrance_with_banners.
 
 import { motion } from "framer-motion";
 
-import { ThinkingBridge } from "@/components/ThinkingBridge";
+// import { ThinkingBridge } from "@/components/ThinkingBridge"; // Temporalmente deshabilitado
 import { ReservationDialog } from "@/components/ReservationDialog";
-import { PlanConfiguratorYouth } from "@/components/PlanConfiguratorYouth";
-import { PlanConfiguratorAdults } from "@/components/PlanConfiguratorAdults";
-import PaesConfigurator from "@/components/PaesConfigurator";
+// import { PlanConfiguratorYouth } from "@/components/PlanConfiguratorYouth";
+// import { PlanConfiguratorAdults } from "@/components/PlanConfiguratorAdults";
+// import PaesConfigurator from "@/components/PaesConfigurator";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -123,19 +123,19 @@ export default function Home() {
     }).format(value);
   };
 
-  // Map API plans to program format
-  const programs = apiPlans?.map((plan, index) => ({
+  // Map API plans to program format - with safety checks
+  const programs = (apiPlans && Array.isArray(apiPlans) ? apiPlans.map((plan, index) => ({
     id: plan.id,
     title: plan.planName,
     subtitle: plan.planSubtitle || "",
-    price: `Mensualidad: ${formatCurrency(plan.monthlyPrice)} | Matrícula: ${formatCurrency(plan.enrollmentPrice)}`,
+    price: `Mensualidad: ${formatCurrency(plan.monthlyPrice || 0)} | Matrícula: ${formatCurrency(plan.enrollmentPrice || 0)}`,
     description: plan.description || "",
     image: [csThumbnail, mathThumbnail, artThumbnail, heroBg][index % 4], // Rotate through images
     category: plan.category || "Validación de Estudios",
     linkText: plan.linkText || "Más Información",
     academicLoad: plan.academicLoad,
     evaluationsDetail: plan.evaluationsDetail,
-  })) || [
+  })) : null) || [
     // Fallback data if API fails
     {
       id: "1",
@@ -770,12 +770,12 @@ export default function Home() {
         </section>
 
         {/* Thinking Bridge - Metaphor Section */}
-        <ThinkingBridge />
+        {/* <ThinkingBridge /> */}
 
         {/* Interactive Plan Configurator - MOVED UP */}
         <div id="planes" className="scroll-mt-20">
           {/* Youth Plans - Exámenes Libres */}
-          <PlanConfiguratorYouth />
+          {/* <PlanConfiguratorYouth /> */}
         </div>
 
         {/* Platform Showcase Section - Split Layout */}
@@ -871,7 +871,7 @@ export default function Home() {
 
         {/* Adult Plans - Validación */}
         <div id="adultos" className="scroll-mt-20">
-          <PlanConfiguratorAdults />
+          {/* <PlanConfiguratorAdults /> */}
         </div>
 
         {/* Academic Copilot Section - 3 Columns */}
@@ -1086,7 +1086,7 @@ export default function Home() {
 
       {/* PAES Plan Configurator */}
       <div id="paes" className="scroll-mt-20">
-        <PaesConfigurator />
+        {/* <PaesConfigurator /> */}
       </div>
 
       {/* Harvard-Style Benefits Section */}

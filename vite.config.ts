@@ -8,9 +8,9 @@ import { metaImagesPlugin } from "./vite-plugin-meta-images";
 export default defineConfig({
   plugins: [
     react(),
-    runtimeErrorOverlay(),
+    // runtimeErrorOverlay(), // Temporalmente deshabilitado - podría estar causando el error
     tailwindcss(),
-    metaImagesPlugin(),
+    // metaImagesPlugin(), // Temporalmente deshabilitado para debug
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [

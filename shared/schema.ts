@@ -357,8 +357,26 @@ export const reservations = sqliteTable("reservations", {
   howDidYouHear: text("how_did_you_hear"),
   comments: text("comments"),
   
+  // Campos adicionales del nuevo formulario
+  studentFullName: text("student_full_name"),
+  studentRut: text("student_rut"),
+  studentEmail: text("student_email"),
+  guardianFullName: text("guardian_full_name"),
+  guardianRut: text("guardian_rut"),
+  guardianEmail: text("guardian_email"),
+  age: text("age"),
+  courseOfInterest: text("course_of_interest"),
+  selectedPlan: text("selected_plan"),
+  
+  // Flow.cl Payment Integration
+  paymentStatus: text("payment_status", { enum: ["pending", "completed", "failed", "cancelled"] }),
+  flowOrder: text("flow_order"), // Flow order number
+  flowToken: text("flow_token"), // Flow payment token
+  paymentDate: text("payment_date"), // Date when payment was completed
+  paymentAmount: integer("payment_amount"), // Amount paid in CLP
+  
   // Metadata
-  status: text("status", { enum: ["pending", "contacted", "enrolled", "rejected"] }).default("pending").notNull(),
+  status: text("status", { enum: ["pending", "contacted", "enrolled", "rejected", "confirmed", "cancelled"] }).default("pending").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
   updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
 });
@@ -373,18 +391,34 @@ const baseReservationSchema = createInsertSchema(reservations).omit({
 
 // Schema para el formulario con validación de Gmail
 export const insertReservationSchema = z.object({
-  fullName: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-  rut: z.string().min(8, "RUT inválido"),
-  email: z.string().email("Email inválido").refine(
-    (email) => email.endsWith("@gmail.com"),
-    { message: "Debe usar una cuenta de Gmail (@gmail.com)" }
-  ),
-  phone: z.string().min(8, "Teléfono inválido"),
-  dateOfBirth: z.string(),
-  programType: z.enum(["focus", "impulso", "stratmore", "tutoria"]),
+  // Campos antiguos (opcionales para compatibilidad)
+  fullName: z.string().optional(),
+  rut: z.string().optional(),
+  email: z.string().optional(),
+  phone: z.string().optional(),
+  dateOfBirth: z.string().optional(),
+  programType: z.enum(["focus", "impulso", "stratmore", "tutoria"]).optional(),
   levelInterest: z.string().optional(),
   howDidYouHear: z.string().optional(),
   comments: z.string().optional(),
+  
+  // Campos nuevos del formulario actual
+  studentFullName: z.string().min(2, "El nombre del alumno debe tener al menos 2 caracteres").optional(),
+  studentRut: z.string().min(8, "RUT del alumno inválido").optional(),
+  studentEmail: z.string().email("Email del alumno inválido").optional(),
+  guardianFullName: z.string().min(2, "El nombre del apoderado debe tener al menos 2 caracteres").optional(),
+  guardianRut: z.string().min(8, "RUT del apoderado inválido").optional(),
+  guardianEmail: z.string().email("Email del apoderado inválido").optional(),
+  age: z.string().optional(),
+  courseOfInterest: z.string().optional(),
+  selectedPlan: z.string().optional(),
+  
+  // Campos de pago (Flow.cl)
+  paymentStatus: z.enum(["pending", "completed", "failed", "cancelled"]).optional(),
+  flowOrder: z.string().optional(),
+  flowToken: z.string().optional(),
+  paymentDate: z.string().optional(),
+  paymentAmount: z.number().optional(),
 });
 
 export type Reservation = typeof reservations.$inferSelect;

@@ -8,10 +8,9 @@ if (process.env.NODE_ENV === "development") {
   dotenv.config({ path: ".env.local" });
 }
 
-// Create Turso client
+// Create client - using local SQLite database
 const client = createClient({
-  url: process.env.TURSO_DATABASE_URL!,
-  authToken: process.env.TURSO_AUTH_TOKEN!,
+  url: "file:./db.sqlite", // Using local database
 });
 
 // Create Drizzle instance

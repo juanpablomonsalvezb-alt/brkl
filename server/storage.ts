@@ -583,7 +583,19 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createReservation(data: InsertReservation): Promise<Reservation> {
-    const [reservation] = await db.insert(reservations).values(data).returning();
+    // Ensure both old and new fields are populated for compatibility
+    const reservationData = {
+      ...data,
+      // Map new fields to old fields if old fields are not provided
+      fullName: data.fullName || data.studentFullName || "N/A",
+      rut: data.rut || data.studentRut || "N/A",
+      email: data.email || data.studentEmail || "N/A",
+      phone: data.phone || "N/A",
+      dateOfBirth: data.dateOfBirth || "N/A",
+      programType: data.programType || "focus",
+    };
+    
+    const [reservation] = await db.insert(reservations).values(reservationData).returning();
     return reservation;
   }
 

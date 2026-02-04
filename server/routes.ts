@@ -21,6 +21,7 @@ import { registerEvaluationLinksRoutes } from "./evaluationLinksRoutes";
 import { registerFaqRoutes } from "./faqRoutes";
 import { registerPaesRoutes } from "./paesRoutes";
 import { registerSalesChatRoutes } from "./salesChatRoutes";
+import { registerFlowRoutes } from "./flowRoutes";
 
 // Helper to ensure string params (not arrays)
 function getStringParam(param: string | string[]): string {
@@ -2148,6 +2149,9 @@ export async function registerRoutes(
 
   // Register Sales Chat routes
   registerSalesChatRoutes(app);
+
+  // Register Flow.cl payment routes
+  registerFlowRoutes(app);
 
   return httpServer;
 }
