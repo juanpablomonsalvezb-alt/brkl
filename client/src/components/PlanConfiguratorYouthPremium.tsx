@@ -194,26 +194,18 @@ export function PlanConfiguratorYouthPremium() {
 
                   {/* Pricing */}
                   <div className="mb-8 pb-8 border-b border-white/10">
-                    <div className="flex items-baseline gap-2">
+                    <div className="flex items-baseline gap-1">
                       <span className="text-5xl font-bold text-white">
-                        ${plan.price.substring(0, 3)}
+                        ${plan.price}
                       </span>
-                      <div>
-                        <span className="text-2xl font-bold text-white/90">
-                          .{plan.price.substring(3)}
-                        </span>
-                        <span className="block text-sm text-white/60 mt-1">
-                          {plan.currency} · 8 meses
-                        </span>
-                      </div>
                     </div>
                     
-                    <div className="mt-3 flex flex-wrap gap-2">
+                    <div className="mt-4 flex flex-wrap gap-2">
                       <span className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/80">
                         IVA incluido
                       </span>
                       <span className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/80">
-                        Mentor incluido
+                        Marzo a Octubre
                       </span>
                     </div>
                   </div>
