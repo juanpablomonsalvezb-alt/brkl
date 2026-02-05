@@ -19,15 +19,15 @@ const PLAN_FEATURES = [
   { icon: Headphones, text: "Soporte Técnico 24/7: Asistencia continua para resolver inconvenientes" },
 ];
 
-// Planes disponibles (precios con IVA incluido)
+// Planes disponibles (precios con IVA incluido - Mentor incluido gratis)
 const PLANS = [
   {
     id: "basica",
     title: "Plan Básica",
     subtitle: "7º y 8º Básico",
     period: "Marzo - Octubre 2026",
-    price: "$480.000",
-    priceNote: "(IVA incluido)",
+    price: "$240.000",
+    priceNote: "(IVA incluido · Mentor incluido)",
     gradient: "from-blue-500 to-cyan-500",
   },
   {
@@ -35,8 +35,8 @@ const PLANS = [
     title: "Plan Media I",
     subtitle: "1º y 2º Medio",
     period: "Marzo - Octubre 2026",
-    price: "$520.000",
-    priceNote: "(IVA incluido)",
+    price: "$280.000",
+    priceNote: "(IVA incluido · Mentor incluido)",
     gradient: "from-purple-500 to-pink-500",
   },
   {
@@ -44,8 +44,8 @@ const PLANS = [
     title: "Plan Media II",
     subtitle: "3º y 4º Medio",
     period: "Marzo - Octubre 2026",
-    price: "$560.000",
-    priceNote: "(IVA incluido)",
+    price: "$320.000",
+    priceNote: "(IVA incluido · Mentor incluido)",
     gradient: "from-orange-500 to-red-500",
   },
 ];
