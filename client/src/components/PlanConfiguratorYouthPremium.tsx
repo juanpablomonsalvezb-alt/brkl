@@ -218,22 +218,6 @@ export function PlanConfiguratorYouthPremium() {
                     </div>
                   </div>
 
-                  {/* Key Features */}
-                  <div className="space-y-3 mb-8">
-                    {['Academic Copilot IA', 'Acceso ilimitado 24/7', '+100 evaluaciones', '4 ensayos oficiales'].map((feature, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.6 + (i * 0.1) }}
-                        className="flex items-center gap-3"
-                      >
-                        <Check className="w-5 h-5 text-green-400 flex-shrink-0" />
-                        <span className="text-sm text-white/80">{feature}</span>
-                      </motion.div>
-                    ))}
-                  </div>
 
                   {/* CTA Button */}
                   <Button
