@@ -17,7 +17,7 @@ import { motion } from "framer-motion";
 
 // import { ThinkingBridge } from "@/components/ThinkingBridge"; // Temporalmente deshabilitado
 import { ReservationDialog } from "@/components/ReservationDialog";
-import { PlanConfiguratorYouth } from "@/components/PlanConfiguratorYouth";
+import { PlanConfiguratorYouthNew } from "@/components/PlanConfiguratorYouthNew";
 import { PlanConfiguratorAdults } from "@/components/PlanConfiguratorAdults";
 import PaesConfigurator from "@/components/PaesConfigurator";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -775,7 +775,7 @@ export default function Home() {
         {/* Interactive Plan Configurator - MOVED UP */}
         <div id="planes" className="scroll-mt-20">
           {/* Youth Plans - Exámenes Libres */}
-          <PlanConfiguratorYouth />
+          <PlanConfiguratorYouthNew />
         </div>
 
         {/* Platform Showcase Section - Split Layout */}
