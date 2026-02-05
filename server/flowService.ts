@@ -138,6 +138,7 @@ class FlowService {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
+          timeout: 30000, // 30 segundos de timeout
         }
       );
 
@@ -175,6 +176,7 @@ class FlowService {
         `${this.apiUrl}/payment/getStatus`,
         {
           params: requestParams,
+          timeout: 30000, // 30 segundos de timeout
         }
       );
 

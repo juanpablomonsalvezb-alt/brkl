@@ -3,6 +3,7 @@ import { flowService } from "./flowService";
 import { db } from "./db";
 import { reservations } from "../shared/schema";
 import { eq } from "drizzle-orm";
+import { isValidEmail, getEmailErrorMessage } from "../shared/emailValidation";
 
 export function registerFlowRoutes(app: Express) {
   /**
@@ -18,6 +19,13 @@ export function registerFlowRoutes(app: Express) {
         });
       }
 
+      // Validar que el email sea de un dominio válido
+      if (!isValidEmail(studentEmail)) {
+        return res.status(400).json({
+          message: getEmailErrorMessage(studentEmail)
+        });
+      }
+
       // Obtener la reserva de la base de datos
       const [reservation] = await db
         .select()
@@ -26,6 +34,28 @@ export function registerFlowRoutes(app: Express) {
 
       if (!reservation) {
         return res.status(404).json({ message: "Reserva no encontrada" });
+      }
+
+      // IDEMPOTENCIA: Verificar si ya existe un pago en proceso o completado
+      if (reservation.flowOrder && reservation.flowToken) {
+        // Si el pago ya está completado, no crear uno nuevo
+        if (reservation.paymentStatus === "completed") {
+          return res.status(400).json({
+            message: "Esta reserva ya tiene un pago completado"
+          });
+        }
+
+        // Si hay un pago pendiente, devolver el existente
+        if (reservation.paymentStatus === "pending") {
+          const existingPaymentUrl = `https://sandbox.flow.cl/app/web/pay.php?token=${reservation.flowToken}`;
+          return res.json({
+            success: true,
+            paymentUrl: existingPaymentUrl,
+            flowOrder: parseInt(reservation.flowOrder),
+            token: reservation.flowToken,
+            message: "Ya existe un pago en proceso para esta reserva"
+          });
+        }
       }
 
       // Convertir el precio chileno a número
@@ -43,7 +73,7 @@ export function registerFlowRoutes(app: Express) {
       // Flow reemplaza {{token}} con el token real del pago
       const urlReturn = `${baseUrl}/payment-result?token={{token}}`;
 
-      // Crear pago en Flow (sin optional por ahora para debug)
+      // Crear pago en Flow con datos opcionales
       const paymentData = await flowService.createPayment({
         commerceOrder,
         subject: `Inscripción UCE - ${reservation.selectedPlan || 'Plan'}`,
@@ -52,12 +82,12 @@ export function registerFlowRoutes(app: Express) {
         email: studentEmail,
         urlConfirmation,
         urlReturn,
-        // optional: {
-        //   reservationId,
-        //   studentName,
-        //   plan: reservation.selectedPlan,
-        //   course: reservation.courseOfInterest,
-        // },
+        optional: {
+          reservationId,
+          studentName,
+          plan: reservation.selectedPlan || 'N/A',
+          course: reservation.courseOfInterest || 'N/A',
+        },
       });
 
       // Actualizar la reserva con los datos del pago

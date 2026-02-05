@@ -65,8 +65,25 @@ export async function initializeDatabase() {
     }
 
     console.log("✅ Base de datos verificada y lista");
+    
+    // Agregar índices para performance
+    await addFlowIndices();
   } catch (error) {
     console.error("❌ Error inicializando base de datos:", error);
     // No lanzar el error para que el servidor continúe
+  }
+}
+
+async function addFlowIndices() {
+  try {
+    const { sql } = await import("drizzle-orm");
+    
+    await db.run(sql`CREATE INDEX IF NOT EXISTS idx_reservations_flow_order ON reservations(flow_order)`);
+    await db.run(sql`CREATE INDEX IF NOT EXISTS idx_reservations_flow_token ON reservations(flow_token)`);
+    await db.run(sql`CREATE INDEX IF NOT EXISTS idx_reservations_payment_status ON reservations(payment_status)`);
+    
+    console.log("✅ Índices de Flow creados");
+  } catch (error) {
+    // Índices ya existen o hay error, no es crítico
   }
 }

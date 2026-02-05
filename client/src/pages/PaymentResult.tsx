@@ -8,6 +8,7 @@ export default function PaymentResult() {
   const searchParams = new URLSearchParams(location.split('?')[1] || '');
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState("");
+  const [retryCount, setRetryCount] = useState(0);
   
   const token = searchParams.get("token");
   
@@ -23,35 +24,63 @@ export default function PaymentResult() {
       return;
     }
 
-    // Verificar el estado del pago con el token
-    fetch(`/api/flow/payment-status/${token}`)
-      .then(res => res.json())
-      .then(data => {
+    let pollInterval: NodeJS.Timeout;
+    const MAX_RETRIES = 10; // 10 intentos = 30 segundos
+    const POLL_INTERVAL = 3000; // 3 segundos
+
+    const checkPaymentStatus = async () => {
+      try {
+        const res = await fetch(`/api/flow/payment-status/${token}`);
+        const data = await res.json();
+
         if (data.success && data.payment) {
           if (data.payment.status === 2) {
             setStatus("success");
             setMessage("¡Pago completado exitosamente!");
+            clearInterval(pollInterval);
           } else if (data.payment.status === 3) {
             setStatus("error");
             setMessage("El pago fue rechazado");
+            clearInterval(pollInterval);
           } else if (data.payment.status === 4) {
             setStatus("error");
             setMessage("El pago fue anulado");
+            clearInterval(pollInterval);
           } else {
-            setStatus("loading");
-            setMessage("Procesando pago...");
+            // Estado pendiente (1) - continuar polling
+            setMessage("Verificando el estado del pago...");
+            setRetryCount(prev => prev + 1);
           }
         } else {
           setStatus("error");
           setMessage("No se pudo verificar el estado del pago");
+          clearInterval(pollInterval);
         }
-      })
-      .catch(error => {
+      } catch (error) {
         console.error("Error checking payment:", error);
+        setRetryCount(prev => prev + 1);
+      }
+    };
+
+    // Primera verificación inmediata
+    checkPaymentStatus();
+
+    // Iniciar polling cada 3 segundos
+    pollInterval = setInterval(() => {
+      if (retryCount >= MAX_RETRIES) {
+        clearInterval(pollInterval);
         setStatus("error");
-        setMessage("Error al verificar el pago");
-      });
-  }, [token]);
+        setMessage("No se pudo confirmar el pago. Por favor, verifica tu email o contacta con soporte.");
+      } else {
+        checkPaymentStatus();
+      }
+    }, POLL_INTERVAL);
+
+    // Cleanup
+    return () => {
+      if (pollInterval) clearInterval(pollInterval);
+    };
+  }, [token, retryCount]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#002147] via-[#003366] to-[#A51C30] flex items-center justify-center p-4">
