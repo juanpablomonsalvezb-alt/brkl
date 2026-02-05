@@ -57,19 +57,16 @@ const courseOptions = [
   { value: "paes_ciencias", label: "PAES - Ciencias", type: "paes", planGroup: "paes" },
 ];
 
-// Planes disponibles según el grupo (precio incluye IVA 19% y matrícula)
+// Planes disponibles según el grupo (precio incluye IVA 19% y Mentor GRATIS)
 const plansByGroup: Record<string, Array<{ value: string; label: string; price: string }>> = {
   basica: [
-    { value: "basica_plataforma", label: "Plataforma + IA: $480.000", price: "$480.000" },
-    { value: "basica_mentor", label: "Plataforma + IA + Mentor: $708.480", price: "$708.480" },
+    { value: "basica_plan", label: "Plan Completo (Plataforma + IA + Mentor): $240.000", price: "$240.000" },
   ],
   media1: [
-    { value: "media1_plataforma", label: "Plataforma + IA: $520.000", price: "$520.000" },
-    { value: "media1_mentor", label: "Plataforma + IA + Mentor: $748.480", price: "$748.480" },
+    { value: "media1_plan", label: "Plan Completo (Plataforma + IA + Mentor): $280.000", price: "$280.000" },
   ],
   media2: [
-    { value: "media2_plataforma", label: "Plataforma + IA: $560.000", price: "$560.000" },
-    { value: "media2_mentor", label: "Plataforma + IA + Mentor: $788.480", price: "$788.480" },
+    { value: "media2_plan", label: "Plan Completo (Plataforma + IA + Mentor): $320.000", price: "$320.000" },
   ],
   adultos_basica: [
     { value: "adultos_basica", label: "Plan Básica (1° a 8° Básico) - $360.000", price: "$360.000" },
