@@ -169,21 +169,14 @@ export function PlanConfiguratorYouthPremium() {
                 <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${plan.accentColor}`} />
 
                 {/* Content */}
-                <div className="relative p-8">
+                <div className="relative p-6">
                   {/* Header */}
-                  <div className="mb-8">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${plan.accentColor}`} />
-                      <span className="text-sm font-medium text-white/70 uppercase tracking-wider">
-                        {plan.period}
-                      </span>
-                    </div>
-                    
+                  <div className="mb-6">
                     <h3 className="text-3xl font-bold text-white mb-2">
                       Plan {plan.level}
                     </h3>
                     
-                    <p className="text-lg font-medium text-white/80 mb-3">
+                    <p className="text-lg font-medium text-white/80 mb-2">
                       {plan.grades}
                     </p>
                     
@@ -193,7 +186,7 @@ export function PlanConfiguratorYouthPremium() {
                   </div>
 
                   {/* Pricing */}
-                  <div className="mb-8 pb-8 border-b border-white/10">
+                  <div className="mb-6 pb-6 border-b border-white/10">
                     <div className="flex items-baseline gap-1">
                       <span className="text-5xl font-bold text-white">
                         ${plan.price}
