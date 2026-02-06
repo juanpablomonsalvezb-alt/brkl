@@ -10,7 +10,10 @@
     "build": "tsx script/build.ts",
     "start": "NODE_ENV=production node dist/index.cjs",
     "check": "tsc",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "migrate:prod": "tsx scripts/migrate-production.ts",
+    "seed:prod": "tsx scripts/seed-production.ts",
+    "deploy:db": "npm run migrate:prod && npm run seed:prod"
   },
   "dependencies": {
     "@google/genai": "^1.38.0",

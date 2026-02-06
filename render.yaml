@@ -4,7 +4,7 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && npm run build && npm run deploy:db
     startCommand: node dist/index.cjs
     healthCheckPath: /
     envVars:
