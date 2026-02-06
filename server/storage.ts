@@ -583,15 +583,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createReservation(data: InsertReservation): Promise<Reservation> {
-    // Ensure both old and new fields are populated for compatibility
-    const reservationData = {
+    // Ensure all required NOT NULL fields have values
+    const reservationData: any = {
       ...data,
-      // Map new fields to old fields if old fields are not provided
-      fullName: data.fullName || data.studentFullName || "N/A",
-      rut: data.rut || data.studentRut || "N/A",
-      email: data.email || data.studentEmail || "N/A",
-      phone: data.phone || "N/A",
-      dateOfBirth: data.dateOfBirth || "N/A",
+      // Map new fields to old fields if old fields are not provided (required NOT NULL fields)
+      fullName: data.fullName || data.guardianFullName || data.studentFullName || "Por completar",
+      rut: data.rut || data.guardianRut || data.studentRut || "Por completar",
+      email: data.email || data.guardianEmail || data.studentEmail || "no-email@barkley.cl",
+      phone: data.phone || "Por completar",
+      dateOfBirth: data.dateOfBirth || "Por completar",
       programType: data.programType || "focus",
     };
     
