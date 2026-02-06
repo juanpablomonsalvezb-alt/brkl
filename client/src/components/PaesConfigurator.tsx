@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Sparkles, Brain, GraduationCap } from "lucide-react";
+import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Sparkles, Brain, GraduationCap, Check } from "lucide-react";
 import { ReservationDialog } from "@/components/ReservationDialog";
 
 interface PaesSubject {
@@ -30,13 +30,13 @@ export default function PaesConfigurator() {
     queryKey: ['/api/paes/subjects'],
   });
 
-  // Calcular precio total (precio base + IVA 19%, matrícula incluida sin costo adicional)
+  // Calcular precio total (los precios ya incluyen IVA)
   useEffect(() => {
     if (!subjects) return;
 
     const selectedSubjectsData = subjects.filter(s => selectedSubjects.includes(s.id));
-    // Aplicar IVA 19% a cada precio base
-    const baseTotal = selectedSubjectsData.reduce((sum, s) => sum + Math.round(s.basePrice * 1.19), 0);
+    // Los precios base ya incluyen IVA, solo sumar
+    const baseTotal = selectedSubjectsData.reduce((sum, s) => sum + s.basePrice, 0);
     const tutorTotal = includeTutor ? selectedSubjects.length * TUTOR_PRICE_PER_SUBJECT : 0;
     
     setTotalPrice(baseTotal + tutorTotal);
@@ -79,47 +79,60 @@ export default function PaesConfigurator() {
   }
 
   return (
-    <section className="py-8 bg-white relative overflow-hidden">
-      <div className="container mx-auto px-4 max-w-6xl">
+    <section className="py-16 bg-gradient-to-b from-white via-slate-50 to-white relative overflow-hidden">
+      <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-6"
+          className="text-center mb-12"
         >
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-5xl md:text-6xl font-bold text-[#002147] mb-3 tracking-tight">
-                PAES
-              </h2>
-              <p className="text-lg text-[#002147]/70 max-w-2xl mx-auto">
-                Selecciona las materias que necesitas • Incluye IA + Ensayos
-              </p>
-            </div>
+          <div className="inline-block mb-4">
+            <Badge className="bg-[#A51C30] text-white px-6 py-2 text-sm font-bold">
+              PREPARACIÓN PAES 2026
+            </Badge>
           </div>
+          <h2 className="text-5xl md:text-6xl font-black text-[#002147] mb-4 tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
+            Planes PAES
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Selecciona las materias que necesitas • Precio por asignatura
+          </p>
         </motion.div>
 
-        {/* Two Module Layout - Horizontal */}
-        <div className="grid lg:grid-cols-2 gap-6 items-start">
-          
-          {/* MODULE 1: Subject Selection (Left) */}
+        {/* Two Module Layout - Horizontal - MANTENER FUNCIONALIDAD ORIGINAL */}
+        <div className="grid lg:grid-cols-2 gap-8 items-start">
+          {/* MODULE 1: Subject Selection (Left) - CON DISEÑO PREMIUM */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4 }}
-            className="h-[480px]"
           >
-            <Card className="border-2 border-[#002147]/10 shadow-lg h-full">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-[#002147] mb-4 flex items-center gap-2">
-                  <GraduationCap className="w-5 h-5" />
-                  Asignaturas
-                </h3>
+            <Card className="relative overflow-hidden border-2 border-gray-200 shadow-xl bg-white">
+              {/* Harvard Accent Line */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-[#A51C30]"></div>
+              
+              <CardContent className="p-5">
+                {/* Header con ícono */}
+                <div className="flex justify-center mb-3">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#002147] to-[#001a35] flex items-center justify-center border-2 border-[#002147] shadow-lg">
+                    <GraduationCap className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+
+                <div className="text-center mb-4 border-b border-gray-100 pb-3">
+                  <h3 className="text-xl font-black text-[#002147] tracking-tight mb-1" style={{ fontFamily: 'Georgia, serif' }}>
+                    Asignaturas PAES
+                  </h3>
+                  <p className="text-xs text-gray-600">
+                    Selecciona las que necesites
+                  </p>
+                </div>
                 
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-1 gap-2">
                   {subjects?.map((subject, index) => (
                     <motion.button
                       key={subject.id}
@@ -130,25 +143,30 @@ export default function PaesConfigurator() {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleSubjectToggle(subject.id)}
                       className={`
-                        p-4 rounded-xl border-2 transition-all duration-300 text-left flex items-center justify-between group
+                        p-3 rounded-lg border-2 transition-all duration-300 text-left flex items-center justify-between group
                         ${isSelected(subject.id)
-                          ? 'border-blue-300 bg-blue-100 shadow-md scale-[1.02]'
-                          : 'border-slate-300 bg-white hover:bg-gradient-to-r hover:from-pink-50 hover:to-purple-50 hover:border-pink-200'
+                          ? 'border-green-500 bg-green-50 shadow-md'
+                          : 'border-gray-300 bg-white hover:bg-gray-50 hover:border-[#002147]'
                         }
                       `}
                     >
-                      <span className={`font-bold text-base transition-colors duration-300 ${isSelected(subject.id) ? 'text-slate-800' : 'text-slate-700'}`}>
-                        {subject.name}
-                      </span>
+                      <div className="flex-1">
+                        <span className={`font-bold text-sm block ${isSelected(subject.id) ? 'text-[#002147]' : 'text-gray-700'}`}>
+                          {subject.name}
+                        </span>
+                        <span className="text-xs font-semibold text-[#002147]">
+                          ${formatPrice(subject.basePrice)}
+                        </span>
+                      </div>
                       <div className={`
-                        w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300
+                        w-7 h-7 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300
                         ${isSelected(subject.id)
-                          ? 'border-blue-500 bg-blue-500 scale-110'
-                          : 'border-slate-400 group-hover:border-pink-400'
+                          ? 'border-green-500 bg-green-500'
+                          : 'border-gray-400 group-hover:border-[#002147]'
                         }
                       `}>
                         {isSelected(subject.id) && (
-                          <CheckCircle2 className="w-5 h-5 text-white" />
+                          <Check className="w-4 h-4 text-white" />
                         )}
                       </div>
                     </motion.button>
@@ -158,167 +176,76 @@ export default function PaesConfigurator() {
             </Card>
           </motion.div>
 
-          {/* MODULE 2: Values & Summary (Right) */}
+          {/* MODULE 2: Summary (Right) - CON DISEÑO PREMIUM */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="h-[480px]"
           >
-            <Card className="border-2 border-[#002147]/20 shadow-xl bg-gradient-to-br from-white to-gray-50/30 h-full">
-              <CardContent className="p-6 flex flex-col h-full gap-0">
-                {/* Header */}
-                <div className="pb-4 border-b-2 border-[#002147]/10 flex-shrink-0">
-                  <h3 className="text-xl font-bold text-[#002147] mb-2">Tu Plan PAES</h3>
-                  
-                  {/* Descripción del programa */}
-                  <div className="bg-[#002147]/5 rounded-lg p-3 border border-[#002147]/10">
-                    <div className="space-y-1 text-xs text-[#002147]/70">
-                      <p className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-[#A51C30] rounded-full"></span>
-                        <span className="font-semibold">Plataforma + IA</span>
-                      </p>
-                      <p className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-[#A51C30] rounded-full"></span>
-                        <span>32 semanas</span>
-                      </p>
-                      <p className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-[#A51C30] rounded-full"></span>
-                        <span>32 evaluaciones de proceso</span>
-                      </p>
-                      <p className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-[#A51C30] rounded-full"></span>
-                        <span>2 ensayos generales</span>
-                      </p>
-                    </div>
+            <Card className="relative overflow-hidden border-2 border-gray-200 shadow-xl bg-gradient-to-br from-white to-gray-50">
+              {/* Harvard Accent Line */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-[#A51C30]"></div>
+              
+              <CardContent className="p-5">
+                {/* Header con ícono */}
+                <div className="flex justify-center mb-3">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#002147] to-[#001a35] flex items-center justify-center border-2 border-[#002147] shadow-lg">
+                    <Sparkles className="w-6 h-6 text-white" />
                   </div>
                 </div>
 
-                {/* Scrollable Content Area - Fixed Height */}
-                <div className="flex-1 overflow-y-auto min-h-0 py-2">
-                  {selectedSubjects.length === 0 ? (
-                    <div className="text-center py-12">
-                      <div className="w-16 h-16 rounded-full bg-[#002147]/5 flex items-center justify-center mx-auto mb-4">
-                        <GraduationCap className="w-8 h-8 text-[#002147]/30" />
-                      </div>
-                      <p className="text-sm text-[#002147]/60 font-medium">
-                        Selecciona las asignaturas que necesitas
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4 py-2">
-                      {/* Selected Subjects with Prices */}
-                      <div className="space-y-2">
-                        <p className="text-xs font-semibold text-[#002147]/70 mb-3">Asignaturas seleccionadas:</p>
-                        <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2">
-                          {subjects
-                            ?.filter(s => selectedSubjects.includes(s.id))
-                            .map((subject, index) => (
-                              <motion.div
-                                key={subject.id}
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: index * 0.05 }}
-                                className="flex justify-between items-center bg-gradient-to-r from-[#002147]/5 to-transparent rounded-lg px-4 py-3 border border-[#002147]/10"
-                              >
-                                <span className="font-bold text-sm text-[#002147]">{subject.name}</span>
-                                <span className="text-sm font-semibold text-[#002147]">${formatPrice(Math.round(subject.basePrice * 1.19))}</span>
-                              </motion.div>
-                            ))}
-                        </div>
-                      </div>
-
-                      {/* Subtotal */}
-                      <div className="flex justify-between items-center pt-3 border-t border-[#002147]/10">
-                        <span className="text-sm font-medium text-[#002147]/70">Subtotal</span>
-                        <span className="text-lg font-bold text-[#002147]">
-                          ${formatPrice(selectedSubjects.reduce((sum, id) => {
-                            const subject = subjects?.find(s => s.id === id);
-                            return sum + Math.round((subject?.basePrice || 0) * 1.19);
-                          }, 0))}
-                        </span>
-                      </div>
-
-                      {/* Tutor Toggle */}
-                      <motion.div
-                        whileHover={{ scale: 1.01 }}
-                        whileTap={{ scale: 0.99 }}
-                        onClick={() => setIncludeTutor(!includeTutor)}
-                        className="cursor-pointer p-4 rounded-xl border-2 border-[#D4AF37]/40 bg-gradient-to-br from-[#D4AF37]/10 to-white hover:border-[#D4AF37]/60 transition-all"
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <Brain className="w-5 h-5 text-[#D4AF37]" />
-                            <span className="font-bold text-sm text-[#002147]">Tutor Personal</span>
-                          </div>
-                          <motion.div
-                            animate={{ scale: includeTutor ? [1, 1.2, 1] : 1 }}
-                            transition={{ duration: 0.3 }}
-                            className={`
-                              w-9 h-9 rounded-full border-2 flex items-center justify-center transition-all
-                              ${includeTutor ? 'border-[#D4AF37] bg-[#D4AF37]' : 'border-[#002147]/30 bg-white'}
-                            `}
-                          >
-                            {includeTutor && <CheckCircle2 className="w-5 h-5 text-white" />}
-                          </motion.div>
-                        </div>
-                        <div className="text-xs font-semibold text-[#D4AF37]">
-                          +${formatPrice(TUTOR_PRICE_PER_SUBJECT)} por materia
-                        </div>
-                        {includeTutor && (
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="mt-3 pt-3 border-t border-[#D4AF37]/20 flex justify-between items-center"
-                          >
-                            <span className="text-xs text-[#002147]/70">Total tutor:</span>
-                            <span className="text-sm font-bold text-[#D4AF37]">
-                              +${formatPrice(TUTOR_PRICE_PER_SUBJECT * selectedSubjects.length)}
-                            </span>
-                          </motion.div>
-                        )}
-                      </motion.div>
-                    </div>
-                  )}
+                <div className="text-center mb-4 border-b border-gray-100 pb-3">
+                  <h3 className="text-xl font-black text-[#002147] tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
+                    Tu Plan PAES
+                  </h3>
                 </div>
 
-                {/* Fixed Bottom Section */}
-                <div className="space-y-4 flex-shrink-0 mt-auto pt-4">
-                  {/* Total Section */}
-                  {selectedSubjects.length > 0 && (
-                    <div className="border-t-2 border-[#002147]/20 pt-4">
-                      <div className="bg-gradient-to-br from-[#002147]/10 to-[#002147]/5 rounded-2xl p-5 shadow-inner">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-bold text-[#002147]">Marzo - Octubre</span>
-                          <Sparkles className="w-5 h-5 text-[#D4AF37]" />
-                        </div>
-                        <motion.div
-                          key={totalPrice}
-                          initial={{ scale: 1.2, color: "#10b981" }}
-                          animate={{ scale: 1, color: "#002147" }}
-                          transition={{ duration: 0.3 }}
-                          className="text-5xl font-bold text-right"
-                        >
-                          ${formatPrice(totalPrice)}
-                        </motion.div>
-                        <div className="text-right text-xs text-[#002147]/60 font-medium mt-1">8 meses de preparación</div>
-                        <div className="text-right text-xs text-[#002147]/50 font-medium">* Incluye matrícula, incluye I.V.A.</div>
-                      </div>
+                {selectedSubjects.length === 0 ? (
+                  <div className="text-center py-8">
+                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3">
+                      <GraduationCap className="w-6 h-6 text-gray-400" />
                     </div>
-                  )}
+                    <p className="text-xs text-gray-600 font-medium">
+                      Selecciona las asignaturas que necesitas
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {/* Selected Subjects */}
+                    <div className="space-y-1.5">
+                      <p className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">Asignaturas:</p>
+                      {subjects
+                        ?.filter(s => selectedSubjects.includes(s.id))
+                        .map((subject) => (
+                          <div key={subject.id} className="flex justify-between items-center bg-white rounded-lg px-3 py-2 border border-gray-200">
+                            <span className="font-semibold text-sm text-[#002147]">{subject.name}</span>
+                            <span className="font-bold text-sm text-[#002147]">${formatPrice(subject.basePrice)}</span>
+                          </div>
+                        ))}
+                    </div>
 
-                  {/* CTA */}
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    {/* Total Section - Estilo Premium */}
+                    <div className="bg-gradient-to-br from-[#002147] to-[#001a35] rounded-xl p-4 text-white">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs font-semibold">Marzo - Octubre 2026</span>
+                        <Sparkles className="w-4 h-4 text-yellow-400" />
+                      </div>
+                      <div className="text-4xl font-black mb-1" style={{ fontFamily: 'Georgia, serif' }}>
+                        ${formatPrice(totalPrice)}
+                      </div>
+                      <p className="text-xs text-white/70">IVA incluido</p>
+                    </div>
+
+                    {/* CTA Button */}
                     <Button
                       onClick={handleInscription}
-                      disabled={selectedSubjects.length === 0}
-                      className="w-full bg-gradient-to-r from-[#a51c30] via-[#8a1828] to-[#a51c30] hover:from-[#8a1828] hover:via-[#6d1420] hover:to-[#8a1828] text-white py-6 text-lg font-bold shadow-xl disabled:opacity-40 transition-all duration-300 rounded-xl"
+                      className="w-full bg-[#A51C30] hover:bg-[#8B1725] text-white py-3 text-sm font-bold uppercase tracking-wider shadow-xl transition-all duration-300 rounded-xl"
                     >
-                      {selectedSubjects.length === 0 ? 'Selecciona asignaturas' : '🎓 Inscribirse Ahora'}
+                      Solicitar Inscripción
                     </Button>
-                  </motion.div>
-                </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </motion.div>

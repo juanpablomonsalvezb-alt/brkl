@@ -6,7 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
-import SimpleHome from "@/pages/SimpleInscripcion";
 import Dashboard from "@/pages/Dashboard";
 import CoursePlayer from "@/pages/CoursePlayer";
 import DriveSync from "@/pages/DriveSync";
@@ -24,7 +23,6 @@ import PaesAdmin from "@/pages/PaesAdmin";
 import ReservationsAdmin from "@/pages/ReservationsAdmin";
 import AcademicCopilot from "@/pages/AcademicCopilot";
 import PaymentResult from "@/pages/PaymentResult";
-import TestInscripcion from "@/pages/TestInscripcion";
 
 import Lenis from 'lenis';
 import { useEffect } from "react";
@@ -58,7 +56,6 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/test-inscripcion" component={SimpleHome} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/course/:id" component={CoursePlayer} />
       <Route path="/drive-sync" component={DriveSync} />
@@ -76,7 +73,6 @@ function Router() {
       <Route path="/reservations-admin" component={ReservationsAdmin} />
       <Route path="/academic-copilot" component={AcademicCopilot} />
       <Route path="/payment-result" component={PaymentResult} />
-      <Route path="/test-inscripcion" component={TestInscripcion} />
       <Route component={NotFound} />
     </Switch>
   );

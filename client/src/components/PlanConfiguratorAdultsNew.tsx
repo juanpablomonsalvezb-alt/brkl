@@ -1,102 +1,56 @@
 import { useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Check, Sparkles, BookOpen, TrendingUp, Clock, Headphones, FileText, Award, Users, BarChart, ChevronRight, Shield, Zap } from "lucide-react";
+import { motion } from "framer-motion";
+import { Check, ChevronRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ReservationDialog } from "./ReservationDialog";
+import { ReservationDialog } from "@/components/ReservationDialog";
 
-// Características premium con categorización
-const PREMIUM_FEATURES = [
+const ADULT_PLANS = [
   {
-    category: "Excelencia Académica",
-    icon: Shield,
-    items: [
-      "Sin Matrícula: Precio final transparente, sin cargos ocultos ni administrativos",
-      "Contenido MINEDUC: Curricularmente alineado con estándares oficiales y temario DEMRE",
-    ]
-  },
-  {
-    category: "Tecnología de Vanguardia",
-    icon: Zap,
-    items: [
-      "Academic Copilot con IA: Sistema predictivo que analiza tu rendimiento y personaliza tu ruta de aprendizaje",
-      "Acceso 24/7 sin Restricciones: Plataforma disponible en cualquier momento, estudia con total autonomía",
-    ]
-  },
-  {
-    category: "Recursos Completos",
-    icon: BookOpen,
-    items: [
-      "Material Digital Integral: Biblioteca completa con libros, guías y recursos teóricos descargables",
-      "+100 Evaluaciones Progresivas: Micro-tests calibrados para validar dominio de cada unidad temática",
-      "4 Ensayos de Alta Fidelidad: Simulacros que replican formato oficial con precisión milimétrica",
-    ]
-  },
-  {
-    category: "Acompañamiento Profesional",
-    icon: Users,
-    items: [
-      "Mentoring Estratégico: Orientación personalizada para optimizar tu planificación de estudio",
-      "Métricas Avanzadas: Dashboard con visualización de progreso, puntajes y proyección de resultados",
-      "Soporte Técnico Continuo: Asistencia profesional disponible 24/7 para cualquier necesidad",
-    ]
-  }
-];
-
-// Planes con diseño premium
-const PREMIUM_PLANS = [
-  {
-    id: "basica",
-    level: "Básica",
-    grades: "7º y 8º Básico",
-    period: "Mar — Oct 2026",
-    price: "240.000",
-    currency: "CLP",
-    description: "Fundamentos sólidos para la educación media",
+    id: 'plan_basica_adultos',
+    level: 'Básica',
+    grades: '1° Básico a 8° Básico',
+    price: '180.000',
+    description: 'Programa completo de validación para educación básica',
+    gradient: 'from-blue-600 via-blue-700 to-blue-800',
+    accentColor: 'from-blue-400 via-blue-500 to-blue-600',
     highlight: false,
-    gradient: "from-slate-700 via-slate-800 to-slate-900",
-    accentColor: "from-blue-500 to-cyan-500",
   },
   {
-    id: "media1",
-    level: "Media I",
-    grades: "1º y 2º Medio",
-    period: "Mar — Oct 2026",
-    price: "280.000",
-    currency: "CLP",
-    description: "Consolidación de competencias clave",
+    id: 'plan_media_i_adultos',
+    level: 'Media I',
+    grades: '1° y 2° Medio',
+    price: '220.000',
+    description: 'Validación de primer nivel de enseñanza media',
+    gradient: 'from-[#A51C30] via-[#8B1725] to-[#6B1220]',
+    accentColor: 'from-[#C41E3A] via-[#A51C30] to-[#8B1725]',
     highlight: true,
-    gradient: "from-[#002147] via-[#003366] to-[#004477]",
-    accentColor: "from-[#A51C30] to-[#C41E3A]",
   },
   {
-    id: "media2",
-    level: "Media II",
-    grades: "3º y 4º Medio",
-    period: "Mar — Oct 2026",
-    price: "320.000",
-    currency: "CLP",
-    description: "Preparación integral para la educación superior",
+    id: 'plan_media_ii_adultos',
+    level: 'Media II',
+    grades: '3° y 4° Medio',
+    price: '260.000',
+    description: 'Validación de segundo nivel de enseñanza media',
+    gradient: 'from-purple-600 via-purple-700 to-purple-800',
+    accentColor: 'from-purple-400 via-purple-500 to-purple-600',
     highlight: false,
-    gradient: "from-slate-700 via-slate-800 to-slate-900",
-    accentColor: "from-orange-500 to-red-500",
   },
 ];
 
-export function PlanConfiguratorYouthPremium() {
-  const [open, setOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<string>("");
+export function PlanConfiguratorAdultsNew() {
   const [hoveredPlan, setHoveredPlan] = useState<string | null>(null);
+  const [isReservationOpen, setIsReservationOpen] = useState(false);
+  const [selectedPlanId, setSelectedPlanId] = useState<string>('');
 
   const handleInscribir = (planId: string) => {
-    setSelectedPlan(planId);
-    setOpen(true);
+    setSelectedPlanId(planId);
+    setIsReservationOpen(true);
   };
 
   return (
-    <section className="relative py-24 bg-gradient-to-b from-white via-gray-50 to-white overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(0,33,71,0.03),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(165,28,48,0.03),transparent_50%)]" />
+    <section className="relative py-24 bg-white overflow-hidden">
+      {/* Background Decoration */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-transparent to-gray-50" />
       
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
@@ -108,17 +62,17 @@ export function PlanConfiguratorYouthPremium() {
           className="text-center mb-12"
         >
           <h2 className="text-5xl md:text-6xl font-bold text-[#002147] mb-3 tracking-tight">
-            Planes Exámenes Libres
+            Planes Validación de Estudios
           </h2>
           
           <p className="text-xl text-[#A51C30] font-semibold">
-            Menores de 18 años
+            Mayores de 18 años
           </p>
         </motion.div>
 
-        {/* Premium Plans Grid - Harvard-Inspired Elite Design */}
+        {/* Plans Grid - Harvard-Inspired Elite Design */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
-          {PREMIUM_PLANS.map((plan, index) => (
+          {ADULT_PLANS.map((plan, index) => (
             <motion.div
               key={plan.id}
               initial={{ opacity: 0, y: 50 }}
@@ -228,11 +182,14 @@ export function PlanConfiguratorYouthPremium() {
             </motion.div>
           ))}
         </div>
-
       </div>
 
       {/* Reservation Dialog */}
-      <ReservationDialog open={open} onOpenChange={setOpen} />
+      <ReservationDialog
+        open={isReservationOpen}
+        onOpenChange={setIsReservationOpen}
+        planId={selectedPlanId}
+      />
     </section>
   );
 }

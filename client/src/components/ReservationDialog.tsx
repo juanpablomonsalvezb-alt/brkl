@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2, Check } from "lucide-react";
 
 const reservationSchema = z.object({
   studentFullName: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
@@ -50,11 +50,7 @@ const courseOptions = [
   { value: "adultos_nivel1_media", label: "Nivel 1 Media (1° y 2° Medio)", type: "adultos", planGroup: "adultos_media1" },
   { value: "adultos_nivel2_media", label: "Nivel 2 Media (3° y 4° Medio)", type: "adultos", planGroup: "adultos_media2" },
   // PAES
-  { value: "paes_lenguaje", label: "PAES - Lenguaje", type: "paes", planGroup: "paes" },
-  { value: "paes_matematica", label: "PAES - Matemática", type: "paes", planGroup: "paes" },
-  { value: "paes_matematica2", label: "PAES - Matemática 2", type: "paes", planGroup: "paes" },
-  { value: "paes_historia", label: "PAES - Historia y Ciencias Sociales", type: "paes", planGroup: "paes" },
-  { value: "paes_ciencias", label: "PAES - Ciencias", type: "paes", planGroup: "paes" },
+  { value: "paes", label: "Selección de asignaturas", type: "paes", planGroup: "paes" },
 ];
 
 // Planes disponibles según el grupo (precio incluye IVA 19% y Mentor GRATIS)
@@ -81,10 +77,10 @@ const plansByGroup: Record<string, Array<{ value: string; label: string; price: 
     { value: "adultos_media2_mentor", label: "Plan Media II (3° y 4° Medio) + Mentor - $668.480", price: "$668.480" },
   ],
   paes: [
-    { value: "paes_lenguaje", label: "Lenguaje - $238.000", price: "$238.000" },
-    { value: "paes_matematica", label: "Matemática (M1) - $238.000", price: "$238.000" },
-    { value: "paes_matematica2", label: "Matemática 2 (M2) - $333.200", price: "$333.200" },
-    { value: "paes_historia", label: "Historia y Ciencias Sociales - $190.400", price: "$190.400" },
+    { value: "paes_lenguaje", label: "Lenguaje - $200.000", price: "$200.000" },
+    { value: "paes_matematica", label: "Matemática (M1) - $200.000", price: "$200.000" },
+    { value: "paes_matematica2", label: "Matemática 2 (M2) - $240.000", price: "$240.000" },
+    { value: "paes_historia", label: "Historia y Ciencias Sociales - $160.000", price: "$160.000" },
     { value: "paes_ciencias", label: "Ciencias - $190.400", price: "$190.400" },
   ],
 };
@@ -119,6 +115,8 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
   const [isSuccess, setIsSuccess] = useState(false);
   const [age, setAge] = useState({ years: 0, months: 0 });
   const [availablePlans, setAvailablePlans] = useState<Array<{ value: string; label: string; price: string }>>([]);
+  const [selectedPaesSubjects, setSelectedPaesSubjects] = useState<string[]>([]);
+  const [paesTotalPrice, setPaesTotalPrice] = useState(0);
 
   const form = useForm<ReservationFormData>({
     resolver: zodResolver(reservationSchema),
@@ -155,9 +153,43 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
         const plans = plansByGroup[selectedCourse.planGroup] || [];
         setAvailablePlans(plans);
         form.setValue("selectedPlan", ""); // Reset plan selection
+        
+        // Reset PAES selection when changing course
+        setSelectedPaesSubjects([]);
+        setPaesTotalPrice(0);
       }
     }
   }, [courseOfInterest, form]);
+
+  // Handle PAES checkbox toggle
+  const togglePaesSubject = (subjectValue: string) => {
+    setSelectedPaesSubjects(prev => {
+      if (prev.includes(subjectValue)) {
+        return prev.filter(v => v !== subjectValue);
+      } else {
+        return [...prev, subjectValue];
+      }
+    });
+  };
+
+  // Calculate PAES total price
+  useEffect(() => {
+    const selectedCourse = courseOptions.find(c => c.value === courseOfInterest);
+    if (selectedCourse?.planGroup === 'paes') {
+      const total = selectedPaesSubjects.reduce((sum, subjectValue) => {
+        const plan = plansByGroup.paes.find(p => p.value === subjectValue);
+        if (plan) {
+          const price = parseInt(plan.price.replace(/\D/g, ''));
+          return sum + price;
+        }
+        return sum;
+      }, 0);
+      setPaesTotalPrice(total);
+      
+      // Update form with selected subjects as a comma-separated string
+      form.setValue("selectedPlan", selectedPaesSubjects.join(', '));
+    }
+  }, [selectedPaesSubjects, courseOfInterest, form]);
 
   const [reservationId, setReservationId] = useState<string | null>(null);
   const [showPaymentOption, setShowPaymentOption] = useState(false);
@@ -481,30 +513,125 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
               {/* PARTE 3: SELECCIÓN DE PLAN */}
               {availablePlans.length > 0 && (
                 <div>
-                  <Label htmlFor="selectedPlan">Plan Seleccionado *</Label>
-                  <Select
-                    value={form.watch("selectedPlan")}
-                    onValueChange={(value) => form.setValue("selectedPlan", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona un plan" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {availablePlans.map((plan) => (
-                        <SelectItem key={plan.value} value={plan.value}>
-                          {plan.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-[#002147]/60 mt-1">
-                    * Incluye matrícula, incluye I.V.A.
-                  </p>
-                  {form.formState.errors.selectedPlan && (
-                    <p className="text-sm text-red-600 mt-1">
-                      {form.formState.errors.selectedPlan.message}
-                    </p>
-                  )}
+                  {(() => {
+                    const selectedCourse = courseOptions.find(c => c.value === courseOfInterest);
+                    const isPaes = selectedCourse?.planGroup === 'paes';
+                    
+                    if (isPaes) {
+                      // PAES: Dropdown con checkboxes para selección múltiple
+                      return (
+                        <div>
+                          <Label htmlFor="selectedPlan">Selección de Pruebas *</Label>
+                          <Select
+                            value="paes-selector"
+                            onValueChange={() => {}}
+                          >
+                            <SelectTrigger className="mt-1">
+                              <SelectValue>
+                                {selectedPaesSubjects.length === 0 
+                                  ? 'Selecciona las pruebas PAES'
+                                  : `${selectedPaesSubjects.length} asignatura${selectedPaesSubjects.length !== 1 ? 's' : ''} seleccionada${selectedPaesSubjects.length !== 1 ? 's' : ''}`
+                                }
+                              </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent className="max-h-[400px]">
+                              <div className="p-2">
+                                <p className="text-xs text-gray-600 mb-3 px-2 font-semibold">
+                                  Selecciona una o más asignaturas:
+                                </p>
+                                <div className="space-y-1">
+                                  {availablePlans.map((plan) => (
+                                    <div
+                                      key={plan.value}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        togglePaesSubject(plan.value);
+                                      }}
+                                      className={`
+                                        flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all
+                                        ${selectedPaesSubjects.includes(plan.value)
+                                          ? 'border-green-500 bg-green-50'
+                                          : 'border-gray-200 hover:border-[#002147] hover:bg-gray-50'
+                                        }
+                                      `}
+                                    >
+                                      <div className="flex items-center gap-3 flex-1">
+                                        <div className={`
+                                          w-5 h-5 rounded border-2 flex items-center justify-center transition-all flex-shrink-0
+                                          ${selectedPaesSubjects.includes(plan.value)
+                                            ? 'border-green-500 bg-green-500'
+                                            : 'border-gray-400'
+                                          }
+                                        `}>
+                                          {selectedPaesSubjects.includes(plan.value) && (
+                                            <Check className="w-3 h-3 text-white" />
+                                          )}
+                                        </div>
+                                        <span className="font-medium text-sm text-[#002147]">
+                                          {plan.label}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </SelectContent>
+                          </Select>
+                          
+                          {/* Total PAES */}
+                          {selectedPaesSubjects.length > 0 && (
+                            <div className="mt-3 p-3 bg-gradient-to-br from-[#002147] to-[#001a35] rounded-lg text-white">
+                              <div className="flex justify-between items-center">
+                                <span className="font-semibold text-sm">Total:</span>
+                                <span className="text-xl font-black" style={{ fontFamily: 'Georgia, serif' }}>
+                                  ${paesTotalPrice.toLocaleString('es-CL')}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                          
+                          <p className="text-xs text-[#002147]/60 mt-2">
+                            * Incluye matrícula, incluye I.V.A.
+                          </p>
+                          {form.formState.errors.selectedPlan && selectedPaesSubjects.length === 0 && (
+                            <p className="text-sm text-red-600 mt-1">
+                              Debes seleccionar al menos una asignatura
+                            </p>
+                          )}
+                        </div>
+                      );
+                    } else {
+                      // Otros planes: Select normal
+                      return (
+                        <div>
+                          <Label htmlFor="selectedPlan">Plan Seleccionado *</Label>
+                          <Select
+                            value={form.watch("selectedPlan")}
+                            onValueChange={(value) => form.setValue("selectedPlan", value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecciona un plan" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {availablePlans.map((plan) => (
+                                <SelectItem key={plan.value} value={plan.value}>
+                                  {plan.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <p className="text-xs text-[#002147]/60 mt-1">
+                            * Incluye matrícula, incluye I.V.A.
+                          </p>
+                          {form.formState.errors.selectedPlan && (
+                            <p className="text-sm text-red-600 mt-1">
+                              {form.formState.errors.selectedPlan.message}
+                            </p>
+                          )}
+                        </div>
+                      );
+                    }
+                  })()}
                 </div>
               )}
             </div>

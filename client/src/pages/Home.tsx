@@ -19,7 +19,9 @@ import { motion } from "framer-motion";
 import { ReservationDialog } from "@/components/ReservationDialog";
 import { PlanConfiguratorYouthPremium } from "@/components/PlanConfiguratorYouthPremium";
 import { PlanConfiguratorAdults } from "@/components/PlanConfiguratorAdults";
+import { PlanConfiguratorAdultsNew } from "@/components/PlanConfiguratorAdultsNew";
 import PaesConfigurator from "@/components/PaesConfigurator";
+import PremiumExperiences from "@/components/PremiumExperiences";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -769,6 +771,9 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Premium Experiences Section */}
+        <PremiumExperiences />
+
         {/* Thinking Bridge - Metaphor Section */}
         {/* <ThinkingBridge /> */}
 
@@ -776,6 +781,14 @@ export default function Home() {
         <div id="planes" className="scroll-mt-20">
           {/* Youth Plans - Exámenes Libres */}
           <PlanConfiguratorYouthPremium />
+          
+          {/* Adult Plans - Validación de Estudios */}
+          <PlanConfiguratorAdultsNew />
+          
+          {/* PAES Plans */}
+          <div id="paes" className="scroll-mt-20">
+            <PaesConfigurator />
+          </div>
         </div>
 
         {/* Platform Showcase Section - Split Layout */}
@@ -868,11 +881,6 @@ export default function Home() {
             </motion.div>
           </div>
         </section>
-
-        {/* Adult Plans - Validación */}
-        <div id="adultos" className="scroll-mt-20">
-          <PlanConfiguratorAdults />
-        </div>
 
         {/* Academic Copilot Section - 3 Columns */}
         <section className="py-32 bg-gradient-to-br from-[#0a1628] via-[#0d1b2a] to-[#1b263b] relative overflow-hidden">
@@ -1083,11 +1091,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* PAES Plan Configurator */}
-      <div id="paes" className="scroll-mt-20">
-        <PaesConfigurator />
-      </div>
 
       {/* Harvard-Style Benefits Section */}
       <section className="py-24 bg-white">
