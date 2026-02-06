@@ -81,7 +81,7 @@ const plansByGroup: Record<string, Array<{ value: string; label: string; price: 
     { value: "paes_matematica", label: "Matemática (M1) - $200.000", price: "$200.000" },
     { value: "paes_matematica2", label: "Matemática 2 (M2) - $240.000", price: "$240.000" },
     { value: "paes_historia", label: "Historia y Ciencias Sociales - $160.000", price: "$160.000" },
-    { value: "paes_ciencias", label: "Ciencias - $190.400", price: "$190.400" },
+    { value: "paes_ciencias", label: "Ciencias - $160.000", price: "$160.000" },
   ],
 };
 
