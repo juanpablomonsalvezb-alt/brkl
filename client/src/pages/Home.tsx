@@ -928,8 +928,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Platform Showcase Section - Split Layout */}
-        <section id="plataforma" className="py-32 bg-gradient-to-br from-white via-[#F5F1E8] to-white relative overflow-hidden scroll-mt-20">
+        {/* Platform Showcase Section - Standards.site Style */}
+        <section id="plataforma" className="py-32 bg-[#f2f2f2] scroll-mt-20">
           {/* Subtle Background Pattern */}
           <div className="absolute inset-0 opacity-[0.02]">
             <div className="absolute inset-0" style={{
@@ -1182,8 +1182,8 @@ export default function Home() {
 
       {/* Tech Stack / Partners Section */}
 
-      {/* Founder Story Section - Quiénes Somos */}
-      <section className="bg-[#F9F6EF] py-32">
+      {/* Founder Story Section - Standards.site Style */}
+      <section className="bg-white py-32">
         <div className="max-w-[1400px] mx-auto px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
@@ -1346,7 +1346,7 @@ export default function Home() {
       </section>
 
 
-      <section className="bg-[#fafafa] py-16 border-t border-[#1e1e1e]/5">
+      <section className="bg-[#f2f2f2] py-16">
         <div className="container-harvard">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1502,8 +1502,8 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-      {/* FAQ Section - Compact Horizontal */}
-      <section className="py-16 bg-gradient-to-br from-[#f8f9fa] to-white">
+      {/* FAQ Section - Standards.site Style */}
+      <section className="py-16 bg-white">
         <div className="max-w-[1200px] mx-auto px-8">
           {/* Header */}
           <div className="text-center mb-10">
