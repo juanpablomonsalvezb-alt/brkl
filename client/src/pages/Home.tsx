@@ -179,13 +179,15 @@ export default function Home() {
             
             {/* Logo with Institute Name - Always visible */}
             <a href="/" className="flex items-center gap-3 opacity-70 hover:opacity-100 transition-opacity z-10">
-              <GraduationCap className="w-9 h-9 text-[#a51c30]" strokeWidth={1.5} />
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#002F6C] to-[#003d8f] flex items-center justify-center">
+                <span className="text-white font-bold text-lg">B</span>
+              </div>
               <div className="flex flex-col">
-                <span className="text-[18px] font-serif font-bold text-[#a51c30] leading-none tracking-tight">
-                  BARKLEY
+                <span className="text-[18px] font-serif font-bold text-[#002F6C] leading-none tracking-tight">
+                  BLUE
                 </span>
-                <span className="text-[9px] text-[#1e1e1e] font-medium tracking-[0.15em] uppercase mt-0.5">
-                  INSTITUTO
+                <span className="text-[9px] text-[#1a1a1a] font-medium tracking-[0.15em] uppercase mt-0.5">
+                  TUTOR IA
                 </span>
               </div>
             </a>
@@ -218,33 +220,6 @@ export default function Home() {
                 </button>
               </div>
 
-              {/* Second Pill - Auth & Actions */}
-              <div className="flex items-center gap-4 bg-white rounded-full px-6 py-3 shadow-sm">
-                <Link href="/dashboard">
-                  <button className="text-[14px] text-[#1e1e1e] hover:text-[#a51c30] font-normal transition-colors whitespace-nowrap">
-                    Intranet
-                  </button>
-                </Link>
-                
-                {isLoading ? (
-                  <button className="flex items-center gap-2 text-[14px] text-[#1e1e1e]" disabled>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Cargando</span>
-                  </button>
-                ) : (
-                  <a href="/api/auth/google" data-testid="btn-login-google">
-                    <button className="flex items-center gap-2 text-[14px] text-[#1e1e1e] hover:text-[#a51c30] font-normal transition-colors whitespace-nowrap">
-                      <svg className="w-4 h-4" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                        <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                        <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" />
-                        <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                      </svg>
-                      <span>Ingresar</span>
-                    </button>
-                  </a>
-                )}
-              </div>
             </div>
 
             {/* Hamburger Button - Circle with 2 lines (shows when scrolled AND menu not expanded) */}
@@ -276,416 +251,287 @@ export default function Home() {
       <div className="h-20"></div>
 
       <main className="bg-[#fafafa]">
-        {/* Hero Section - Harvard White Background Style with Branded Patterns */}
-        <section className="relative min-h-[50vh] flex items-center overflow-hidden bg-white pt-2">
-          {/* Pure white base */}
-          <div className="absolute inset-0 bg-white" />
-
-          {/* Visible branded patterns - DNA of your model */}
+        {/* Hero Section - Anthropic + WSJ Style */}
+        <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-[#F7F2E9] pt-2">
+          {/* Premium cream background */}
+          <div className="absolute inset-0 bg-[#F7F2E9]" />
           
-          {/* Pattern 1: Dots Grid (neural connections) - Subtle pulse animation */}
-          <motion.div 
-            className="absolute inset-0" 
-            animate={{
-              opacity: [0.06, 0.08, 0.06],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            style={{
-              backgroundImage: 'radial-gradient(circle, #001f3f 1px, transparent 1px)',
-              backgroundSize: '50px 50px',
-            }} 
-          />
+          {/* Thin top border - 1px line */}
+          <div className="absolute top-0 left-0 right-0 h-px bg-[#002F6C]/20"></div>
 
-          {/* Pattern 2: Diagonal Lines (brain pathways) - Slow drift animation */}
-          <motion.div 
-            className="absolute inset-0" 
-            animate={{
-              backgroundPosition: ['0px 0px', '100px 100px', '0px 0px'],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-            style={{
-              backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 50px, #001f3f 50px, #001f3f 51px)',
-              opacity: 0.03
-            }} 
-          />
-
-          {/* Pattern 3: Large Circles (goals/targets) - Top Right - Breathing animation */}
-          <motion.div 
-            className="absolute -top-32 -right-32 w-[600px] h-[600px]"
-            animate={{
-              scale: [1, 1.05, 1],
-              rotate: [0, 5, 0]
-            }}
-            transition={{
-              duration: 15,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            <motion.div 
-              className="w-full h-full rounded-full border-4 border-[#001f3f] opacity-5"
-              animate={{
-                scale: [1, 1.02, 1],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            ></motion.div>
-            <motion.div 
-              className="absolute top-[100px] left-[100px] w-[400px] h-[400px] rounded-full border-4 border-[#001f3f] opacity-5"
-              animate={{
-                scale: [1, 1.03, 1],
-              }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5
-              }}
-            ></motion.div>
-            <motion.div 
-              className="absolute top-[200px] left-[200px] w-[200px] h-[200px] rounded-full border-4 border-[#001f3f] opacity-5"
-              animate={{
-                scale: [1, 1.05, 1],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1
-              }}
-            ></motion.div>
-          </motion.div>
-
-          {/* Pattern 4: Clock/Time Symbol - Bottom Left - Rotating clock hands */}
-          <motion.div 
-            className="absolute -bottom-20 -left-20 w-[400px] h-[400px] opacity-5"
-            animate={{
-              scale: [1, 1.02, 1],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            <div className="w-full h-full rounded-full border-[6px] border-[#001f3f]"></div>
-            {/* Hour hand - slow rotation */}
-            <motion.div 
-              className="absolute top-1/2 left-1/2 w-[4px] h-[150px] bg-[#001f3f] origin-bottom"
-              style={{
-                transform: 'translate(-50%, -150px)',
-                transformOrigin: 'bottom center'
-              }}
-              animate={{
-                rotate: [0, 360]
-              }}
-              transition={{
-                duration: 60,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            ></motion.div>
-            {/* Minute hand - faster rotation */}
-            <motion.div 
-              className="absolute top-1/2 left-1/2 w-[100px] h-[4px] bg-[#001f3f] origin-left"
-              style={{
-                transformOrigin: 'left center'
-              }}
-              animate={{
-                rotate: [0, 360]
-              }}
-              transition={{
-                duration: 30,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            ></motion.div>
-          </motion.div>
-
-          {/* Pattern 5: Brain Waves - Horizontal - Wave animation */}
-          <motion.div 
-            className="absolute inset-0"
-            animate={{
-              backgroundPosition: ['0px 0px', '0px 200px', '0px 0px'],
-              opacity: [0.02, 0.03, 0.02]
-            }}
-            transition={{
-              duration: 12,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            style={{
-              backgroundImage: `repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 100px,
-                #001f3f 100px,
-                #001f3f 102px
-              )`,
-            }} 
-          />
-
-          {/* Subtle gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-50/20 via-transparent to-white" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
-
-          <div className="container-harvard relative z-10 pt-32 pb-40">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="max-w-5xl"
-            >
-              {/* Main headline - Bigger and bolder like Harvard */}
-              <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif text-foreground mb-10 leading-[1.05] font-bold tracking-tight">
-                Libera tu tiempo.<br />
-                <span className="text-[#a51c30] italic font-light">Domina tu meta.</span>
-              </h1>
-
-              {/* Subheadline with better styling */}
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-xl md:text-2xl text-foreground/80 mb-12 leading-[1.6] font-light max-w-3xl"
-              >
-                Educación asincrónica de alto rendimiento, impulsada por IA y dirigida por <span className="text-foreground font-medium">Success Mentors</span> especializados.
-              </motion.p>
-
-              {/* Premium Harvard-Inspired CTA System - Minimal + Memorable */}
+          <div className="container-harvard relative z-10 pt-40 pb-32">
+            <div className="max-w-6xl mx-auto">
+              
+              {/* WSJ-Style Giant Serif Headline */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="flex flex-col gap-3 max-w-4xl mx-auto"
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                className="space-y-12"
               >
-                {/* Primary CTA Row - 3 Columns with Inscriptions */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
-                  {/* Column 1: Exámenes Libres */}
-                  <div className="flex flex-col gap-3">
-                    {/* Premium CTA 1 - Exámenes Libres */}
-                    <motion.a
-                    href="#planes"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.7 }}
-                    whileHover={{ y: -4, scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="group relative overflow-hidden rounded-2xl border-2 border-[#a51c30]/30 bg-gradient-to-br from-[#a51c30]/[0.04] via-white/60 to-[#a51c30]/[0.06] backdrop-blur-xl transition-all duration-500 hover:border-[#a51c30]/60 hover:shadow-[0_20px_60px_-15px_rgba(165,28,48,0.3)] hover:bg-gradient-to-br hover:from-[#a51c30]/[0.08] hover:via-white/70 hover:to-[#a51c30]/[0.12]"
-                    style={{ transformStyle: 'preserve-3d' }}
+                {/* Main Headline - WSJ Style: Gigante, Serif, Contundente */}
+                <h1 className="text-7xl md:text-8xl lg:text-9xl font-serif text-[#002F6C] leading-[0.95] font-bold tracking-tight">
+                  Piensa.<br />
+                  Aprende.<br />
+                  Crea.
+                </h1>
+
+                {/* Subheadline - Clean and direct */}
+                <div className="max-w-3xl">
+                  <p className="text-2xl md:text-3xl text-[#2E2D29] leading-[1.4] font-light">
+                    El tutor IA basado en el Método Socrático y el Andamiaje de <span className="font-serif font-semibold text-[#002F6C]">Stanford University</span>.
+                  </p>
+                  <p className="text-lg md:text-xl text-[#2E2D29]/70 mt-4 leading-relaxed">
+                    Potenciado por la experiencia de <span className="font-semibold text-[#2E2D29]">Juan Pablo Monsalvez</span> (CEO Stratmore Partners, Certificado HarvardX).
+                  </p>
+                </div>
+
+                {/* CTA - Cardinal Red, Bold, Clear */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  <motion.button
+                    onClick={() => setReservationDialogOpen(true)}
+                    whileHover={{ x: 4 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-3 bg-[#8C1515] px-10 py-5 text-white font-bold text-xl uppercase tracking-wide hover:bg-[#7a1212] transition-colors"
                   >
-                    {/* Glow effect on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#a51c30]/0 via-[#a51c30]/[0.15] to-[#a51c30]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl" />
-                    
-                    {/* Shimmer effect */}
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-                    
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-5 transform group-hover:scale-[1.02] transition-transform duration-300">
-                      <div className="relative">
-                        <GraduationCap className="w-[20px] h-[20px] text-[#a51c30] group-hover:scale-125 group-hover:rotate-6 transition-all duration-300 drop-shadow-lg" />
-                        <div className="absolute inset-0 rounded-full bg-[#a51c30]/30 scale-0 group-hover:scale-[2] opacity-0 group-hover:opacity-100 transition-all duration-500 blur-md" />
-                      </div>
-                      
-                      <div className="flex flex-col items-center">
-                        <span className="text-[16px] font-bold text-[#a51c30] tracking-[0.02em] group-hover:tracking-[0.05em] transition-all duration-300 drop-shadow-sm">
-                          Exámenes Libres
-                        </span>
-                        <span className="text-[11px] text-[#a51c30]/70 mt-0.5 font-medium">
-                          7º a 4º Medio
-                        </span>
-                      </div>
-                      
-                      <ArrowRight className="w-[18px] h-[18px] text-[#a51c30]/70 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 drop-shadow-lg" />
+                    <span>Probar BLUE Gratis</span>
+                    <ArrowRight className="w-6 h-6" />
+                  </motion.button>
+                </motion.div>
+
+                {/* Academic Credentials Badge */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.6 }}
+                  className="pt-8 border-t border-[#002F6C]/10"
+                >
+                  <div className="flex items-center gap-6 text-sm text-[#2E2D29]/60">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-[#002F6C]" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+                      </svg>
+                      <span className="font-medium">Stanford University</span>
                     </div>
-                  </motion.a>
-
-                </div>
-
-                {/* Column 2: Validación */}
-                <div className="flex flex-col gap-3">
-                  {/* Premium CTA 2 - Validación */}
-                  <motion.a
-                    href="#adultos"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.8 }}
-                    whileHover={{ y: -4, scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="group relative overflow-hidden rounded-2xl border-2 border-[#D4AF37]/30 bg-gradient-to-br from-[#D4AF37]/[0.04] via-white/60 to-[#D4AF37]/[0.06] backdrop-blur-xl transition-all duration-500 hover:border-[#D4AF37]/60 hover:shadow-[0_20px_60px_-15px_rgba(212,175,55,0.3)] hover:bg-gradient-to-br hover:from-[#D4AF37]/[0.08] hover:via-white/70 hover:to-[#D4AF37]/[0.12]"
-                    style={{ transformStyle: 'preserve-3d' }}
-                  >
-                    {/* Glow effect on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/0 via-[#D4AF37]/[0.15] to-[#D4AF37]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl" />
-                    
-                    {/* Shimmer effect */}
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-                    
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-5 transform group-hover:scale-[1.02] transition-transform duration-300">
-                      <div className="relative">
-                        <svg className="w-[20px] h-[20px] text-[#D4AF37] group-hover:scale-125 group-hover:rotate-6 transition-all duration-300 drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <div className="absolute inset-0 rounded-full bg-[#D4AF37]/30 scale-0 group-hover:scale-[2] opacity-0 group-hover:opacity-100 transition-all duration-500 blur-md" />
-                      </div>
-                      
-                      <div className="flex flex-col items-center">
-                        <span className="text-[16px] font-bold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.05em] transition-all duration-300 drop-shadow-sm">
-                          Validación
-                        </span>
-                        <span className="text-[11px] text-[#D4AF37]/90 mt-0.5 font-medium">
-                          Adultos
-                        </span>
-                      </div>
-                      
-                      <ArrowRight className="w-[18px] h-[18px] text-[#D4AF37]/70 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 drop-shadow-lg" />
+                    <div className="w-1 h-1 rounded-full bg-[#002F6C]/30"></div>
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-[#002F6C]" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+                      </svg>
+                      <span className="font-medium">Harvard University</span>
                     </div>
-                  </motion.a>
-
-                </div>
-
-                {/* Column 3: PAES */}
-                <div className="flex flex-col gap-3">
-                  {/* Premium CTA 3 - PAES */}
-                  <motion.a
-                    href="#paes"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.9 }}
-                    whileHover={{ y: -4, scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="group relative overflow-hidden rounded-2xl border-2 border-[#002147]/30 bg-gradient-to-br from-[#002147]/[0.04] via-white/60 to-[#002147]/[0.06] backdrop-blur-xl transition-all duration-500 hover:border-[#002147]/60 hover:shadow-[0_20px_60px_-15px_rgba(0,33,71,0.3)] hover:bg-gradient-to-br hover:from-[#002147]/[0.08] hover:via-white/70 hover:to-[#002147]/[0.12]"
-                    style={{ transformStyle: 'preserve-3d' }}
-                  >
-                    {/* Glow effect on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#002147]/0 via-[#002147]/[0.15] to-[#002147]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl" />
-                    
-                    {/* Shimmer effect */}
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-                    
-                    <div className="relative flex items-center justify-center gap-3 px-8 py-5 transform group-hover:scale-[1.02] transition-transform duration-300">
-                      <div className="relative">
-                        <svg className="w-[20px] h-[20px] text-[#002147] group-hover:scale-125 group-hover:rotate-6 transition-all duration-300 drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                        <div className="absolute inset-0 rounded-full bg-[#002147]/30 scale-0 group-hover:scale-[2] opacity-0 group-hover:opacity-100 transition-all duration-500 blur-md" />
-                      </div>
-                      
-                      <div className="flex flex-col items-center">
-                        <span className="text-[16px] font-bold text-[#002147] tracking-[0.02em] group-hover:tracking-[0.05em] transition-all duration-300 drop-shadow-sm">
-                          PAES
-                        </span>
-                        <span className="text-[11px] text-[#002147]/70 mt-0.5 font-medium">
-                          Preparación
-                        </span>
-                      </div>
-                      
-                      <ArrowRight className="w-[18px] h-[18px] text-[#002147]/70 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 drop-shadow-lg" />
-                    </div>
-                  </motion.a>
-
-                </div>
-                </div>
-
+                  </div>
+                </motion.div>
 
               </motion.div>
-
-            </motion.div>
+            </div>
           </div>
-
-          {/* Bottom fade to next section */}
-          <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white via-white/50 to-transparent" />
         </section>
 
-        {/* Institutional Logos Section - DEMRE, PAES, MINEDUC */}
-        <section className="bg-[#fafafa] py-6 border-t border-[#1e1e1e]/5 -mt-12">
+        {/* Our Science Section - Founder Credentials + Methodology */}
+        <section id="ciencia" className="bg-[#F7F2E9] py-32 scroll-mt-20 border-t border-[#002F6C]/20" style={{ borderTopWidth: '1px' }}>
           <div className="container-harvard">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="text-center"
+              className="max-w-6xl mx-auto"
             >
-              <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#1e1e1e]/40 mb-3">
-                Respaldo Institucional Oficial
-              </p>
-              <div className="flex flex-nowrap items-center justify-center gap-16 md:gap-24 lg:gap-32 opacity-25 grayscale hover:grayscale-0 hover:opacity-60 transition-all duration-500 overflow-x-auto pb-1">
-                {/* DEMRE Logo */}
+              {/* Header - WSJ Style */}
+              <div className="mb-20">
+                <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-[#002F6C] leading-tight mb-6">
+                  Nuestra Ciencia
+                </h2>
+                <div className="h-1 w-24 bg-[#002F6C] mb-8"></div>
+                <p className="text-2xl text-[#2E2D29] leading-relaxed max-w-4xl">
+                  BLUE no es un experimento. Es el resultado de décadas de experiencia pedagógica combinada con la ciencia del aprendizaje de las universidades más prestigiosas del mundo.
+                </p>
+              </div>
+
+              {/* Founder Bio Section */}
+              <div className="grid md:grid-cols-5 gap-12 mb-20">
+                {/* Left - Profile */}
                 <motion.div
-                  whileHover={{ scale: 1.2, opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                  className="flex flex-col items-center justify-center gap-3 group relative flex-shrink-0"
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  className="md:col-span-2"
                 >
-                  <div className="w-32 h-32 flex items-center justify-center">
-                    <img 
-                      src="/demre.webp" 
-                      alt="DEMRE - Universidad de Chile" 
-                      className="w-full h-full object-contain"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        const parent = e.currentTarget.parentElement;
-                        if (parent) {
-                          parent.innerHTML = '<svg class="w-16 h-16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="#003DA5" opacity="0.2"/><text x="12" y="14" text-anchor="middle" fill="#003DA5" font-size="8" font-weight="bold">DEMRE</text></svg>';
-                        }
-                      }}
-                    />
+                  <div className="bg-[#F9F6EF] rounded-lg p-8 border border-[#002F6C]/20">
+                    {/* Photo */}
+                    <div className="mb-6">
+                      <img 
+                        src="/imagen01.jpg"
+                        alt="Juan Pablo Monsalvez - Fundador BLUE" 
+                        className="w-full h-64 object-cover rounded-lg border border-[#002F6C]/20"
+                      />
+                    </div>
+                    
+                    {/* Name & Title */}
+                    <h3 className="text-3xl font-serif font-bold text-[#002F6C] mb-2">
+                      Juan Pablo Monsalvez
+                    </h3>
+                    <p className="text-lg text-[#2E2D29] font-medium mb-4">
+                      Fundador & Arquitecto Pedagógico
+                    </p>
+                    
+                    {/* Credentials */}
+                    <div className="space-y-3 pt-4 border-t border-[#002F6C]/10">
+                      <div className="flex items-start gap-3">
+                        <svg className="w-5 h-5 text-[#002F6C] mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+                        </svg>
+                        <div>
+                          <p className="font-semibold text-[#002F6C]">HarvardX</p>
+                          <p className="text-sm text-[#2E2D29]/70">Certificación en Ciencias del Aprendizaje</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <svg className="w-5 h-5 text-[#002F6C] mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+                        </svg>
+                        <div>
+                          <p className="font-semibold text-[#002F6C]">20+ Años</p>
+                          <p className="text-sm text-[#2E2D29]/70">Experiencia en Educación</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <svg className="w-5 h-5 text-[#002F6C] mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+                        </svg>
+                        <div>
+                          <p className="font-semibold text-[#002F6C]">Miles de Estudiantes</p>
+                          <p className="text-sm text-[#2E2D29]/70">Formados en Chile</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
 
-                {/* PAES Logo */}
+                {/* Right - Biography */}
                 <motion.div
-                  whileHover={{ scale: 1.2, opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                  className="flex flex-col items-center justify-center gap-3 group relative flex-shrink-0"
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  className="md:col-span-3"
                 >
-                  <div className="w-32 h-32 flex items-center justify-center">
-                    <img 
-                      src="/paes.webp" 
-                      alt="PAES - Prueba de Acceso" 
-                      className="w-full h-full object-contain"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        const parent = e.currentTarget.parentElement;
-                        if (parent) {
-                          parent.innerHTML = '<svg class="w-16 h-16" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="2" width="20" height="20" rx="2" fill="#002147" opacity="0.2"/><text x="12" y="14" text-anchor="middle" fill="#002147" font-size="8" font-weight="bold">PAES</text></svg>';
-                        }
-                      }}
-                    />
-                  </div>
-                </motion.div>
+                  <div className="space-y-6 text-lg text-[#2E2D29] leading-relaxed">
+                    <p className="text-2xl font-serif text-[#002F6C] font-bold">
+                      La Trayectoria
+                    </p>
+                    
+                    <p>
+                      Durante <span className="font-semibold text-[#002F6C]">dos décadas</span>, Juan Pablo Monsalvez ha dedicado su vida a comprender una pregunta fundamental: <span className="italic">¿cómo hacer que los estudiantes realmente aprendan a pensar?</span>
+                    </p>
+                    
+                    <p>
+                      Su respuesta no vino de los métodos tradicionales. Vino de <span className="font-semibold text-[#002F6C]">Harvard University</span>, donde se certificó en las ciencias del aprendizaje que transforman la educación moderna.
+                    </p>
+                    
+                    <p>
+                      BLUE es la culminación de esa búsqueda: un sistema que replica el <span className="font-semibold text-[#002F6C]">Método Socrático</span> usado en Stanford, pero escalado a través de inteligencia artificial para llegar a cada hogar chileno.
+                    </p>
 
-                {/* MINEDUC Logo */}
-                <motion.div
-                  whileHover={{ scale: 1.2, opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                  className="flex flex-col items-center justify-center gap-3 group relative flex-shrink-0"
-                >
-                  <div className="w-32 h-32 flex items-center justify-center">
-                    <img 
-                      src="/mineduc.png" 
-                      alt="MINEDUC - Gobierno de Chile" 
-                      className="w-full h-full object-contain"
-                    />
+                    <div className="bg-[#F9F6EF] rounded-lg p-6 border-l-4 border-[#002F6C] mt-8">
+                      <p className="text-xl font-serif italic text-[#002F6C]">
+                        "BLUE nunca da la respuesta. Hace las preguntas correctas para que el alumno la descubra por sí mismo."
+                      </p>
+                      <p className="text-sm text-[#2E2D29]/70 mt-2">
+                        — Juan Pablo Monsalvez
+                      </p>
+                    </div>
                   </div>
                 </motion.div>
               </div>
+
+              {/* Methodology Section */}
+              <div className="border-t border-[#002F6C]/10 pt-20">
+                <h3 className="text-4xl md:text-5xl font-serif font-bold text-[#002F6C] mb-12">
+                  El Método Socrático (Scaffolding)
+                </h3>
+
+                <div className="grid md:grid-cols-3 gap-8">
+                  {/* Principle 1 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                  >
+                    <div className="bg-[#F9F6EF] rounded-lg p-8 border border-[#002F6C]/20 h-full">
+                      <div className="text-6xl font-serif font-bold text-[#002F6C] mb-4">01</div>
+                      <h4 className="text-2xl font-serif font-bold text-[#002F6C] mb-4">
+                        Nunca da respuestas
+                      </h4>
+                      <p className="text-[#2E2D29] leading-relaxed">
+                        BLUE no resuelve el ejercicio por ti. Te guía con preguntas estratégicas para que <span className="font-semibold">tú</span> descubras la solución.
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  {/* Principle 2 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                  >
+                    <div className="bg-[#F9F6EF] rounded-lg p-8 border border-[#002F6C]/20 h-full">
+                      <div className="text-6xl font-serif font-bold text-[#002F6C] mb-4">02</div>
+                      <h4 className="text-2xl font-serif font-bold text-[#002F6C] mb-4">
+                        Andamiaje Inteligente
+                      </h4>
+                      <p className="text-[#2E2D29] leading-relaxed">
+                        Adapta la dificultad de las preguntas según tu nivel, construyendo conocimiento paso a paso como lo haría un <span className="font-semibold">mentor experto</span>.
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  {/* Principle 3 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                  >
+                    <div className="bg-[#F9F6EF] rounded-lg p-8 border border-[#002F6C]/20 h-full">
+                      <div className="text-6xl font-serif font-bold text-[#002F6C] mb-4">03</div>
+                      <h4 className="text-2xl font-serif font-bold text-[#002F6C] mb-4">
+                        Validado por Harvard
+                      </h4>
+                      <p className="text-[#2E2D29] leading-relaxed">
+                        Estudio publicado en <span className="font-semibold italic">Nature</span> (2025) demuestra que duplica la velocidad de aprendizaje vs. métodos tradicionales.
+                      </p>
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Bottom Citation */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="mt-12 text-center"
+              >
+                <p className="text-sm text-[#1a1a1a]/50 italic">
+                  "La IA que no da la respuesta, enseña a pensar"
+                </p>
+              </motion.div>
             </motion.div>
           </div>
         </section>
 
-        {/* High-End Video Players Section */}
-        <section id="metodo" className="bg-gradient-to-br from-gray-50 via-white to-gray-50 py-32 scroll-mt-20">
+        {/* BLUE Features Section - WSJ Style */}
+        <section id="metodo" className="bg-white py-32 scroll-mt-20 border-t border-[#002F6C]/20" style={{ borderTopWidth: '1px' }}>
           <div className="container-harvard">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -694,79 +540,393 @@ export default function Home() {
               transition={{ duration: 0.6 }}
               className="space-y-16"
             >
-              {/* Section Header */}
-              <div className="text-center space-y-6">
-                <h2 className="text-5xl md:text-6xl font-serif font-bold text-foreground leading-tight">
-                  Descubre nuestro método
+              {/* Section Header - WSJ Style */}
+              <div className="max-w-4xl">
+                <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-[#002F6C] leading-tight mb-6">
+                  Funcionalidades Diseñadas para el Hogar Chileno
                 </h2>
-                <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
-                  Conoce cómo transformamos la educación a través de estos videos
+                <div className="h-1 w-24 bg-[#002F6C] mb-8"></div>
+                <p className="text-2xl text-[#2E2D29] leading-relaxed">
+                  BLUE no es una plataforma más. Es un tutor inteligente construido específicamente para familias homeschooling y estudiantes que necesitan estructura.
                 </p>
               </div>
 
-              {/* Two Video Players Side by Side */}
-              <div className="grid md:grid-cols-2 gap-12 max-w-7xl mx-auto">
+              {/* Three Features - Numbered WSJ Style */}
+              <div className="grid md:grid-cols-3 gap-12 max-w-7xl mx-auto">
                 
-                {/* Video Player 1 - Left */}
+                {/* Feature 1 - Voz Nativa */}
                 <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                  className="group"
+                  transition={{ duration: 0.8, delay: 0.1 }}
                 >
-                  <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl overflow-hidden shadow-2xl hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] transition-all duration-500 p-4">
-                    <div className="relative rounded-xl overflow-hidden shadow-inner" style={{ height: '350px' }}>
-                      <video 
-                        controls
-                        className="w-full h-full rounded-lg"
-                        poster="/video-poster-1.jpg"
-                        style={{
-                          boxShadow: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
-                          objectFit: 'contain',
-                          backgroundColor: '#000'
-                        }}
-                      >
-                        <source src="/video1.mp4" type="video/mp4" />
-                        Tu navegador no soporta el elemento de video.
-                      </video>
-                      
-                      {/* Elegant shine effect on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+                  <div className="bg-white rounded-lg p-8 border border-[#002F6C]/20 h-full">
+                    <div className="text-6xl font-serif font-bold text-[#002F6C] mb-6">01</div>
+                    
+                    <h3 className="text-3xl font-serif font-bold text-[#002F6C] mb-4">
+                      Voz Nativa
+                    </h3>
+                    
+                    <p className="text-lg text-[#2E2D29] leading-relaxed mb-6">
+                      Los niños pequeños pueden aprender <span className="font-semibold text-[#002F6C]">hablando</span>. BLUE escucha y responde por voz, perfecto para quienes aún no escriben con fluidez.
+                    </p>
+
+                    <div className="pt-4 border-t border-[#002F6C]/10">
+                      <p className="text-sm text-[#2E2D29]/60 font-medium">
+                        Ideal para estudiantes de 7° básico y menores
+                      </p>
                     </div>
                   </div>
                 </motion.div>
 
-                {/* Video Player 2 - Right */}
+                {/* Feature 2 - Currículum Chileno */}
                 <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                  className="group"
+                  transition={{ duration: 0.8, delay: 0.2 }}
                 >
-                  <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl overflow-hidden shadow-2xl hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] transition-all duration-500 p-4">
-                    <div className="relative rounded-xl overflow-hidden shadow-inner" style={{ height: '350px' }}>
-                      <video 
-                        controls
-                        className="w-full h-full rounded-lg"
-                        poster="/video-poster-2.jpg"
-                        style={{
-                          boxShadow: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
-                          objectFit: 'contain',
-                          backgroundColor: '#000'
-                        }}
-                      >
-                        <source src="/video2.mp4" type="video/mp4" />
-                        Tu navegador no soporta el elemento de video.
-                      </video>
-                      
-                      {/* Elegant shine effect on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+                  <div className="bg-white rounded-lg p-8 border border-[#002F6C]/20 h-full">
+                    <div className="text-6xl font-serif font-bold text-[#002F6C] mb-6">02</div>
+                    
+                    <h3 className="text-3xl font-serif font-bold text-[#002F6C] mb-4">
+                      Currículum Chileno
+                    </h3>
+                    
+                    <p className="text-lg text-[#2E2D29] leading-relaxed mb-6">
+                      Adaptado <span className="font-semibold text-[#002F6C]">100% al MINEDUC</span>. Cada contenido, cada ejercicio, cada evaluación está alineado con los programas oficiales de estudio chilenos.
+                    </p>
+
+                    <div className="pt-4 border-t border-[#002F6C]/10">
+                      <p className="text-sm text-[#2E2D29]/60 font-medium">
+                        De 7° básico a 4° medio completo
+                      </p>
                     </div>
                   </div>
                 </motion.div>
+
+                {/* Feature 3 - Dashboard Padres */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                >
+                  <div className="bg-white rounded-lg p-8 border border-[#002F6C]/20 h-full">
+                    <div className="text-6xl font-serif font-bold text-[#002F6C] mb-6">03</div>
+                    
+                    <h3 className="text-3xl font-serif font-bold text-[#002F6C] mb-4">
+                      Dashboard Padres
+                    </h3>
+                    
+                    <p className="text-lg text-[#2E2D29] leading-relaxed mb-6">
+                      Reportes de progreso directo a tu correo. Monitorea el avance sin interrumpir la autonomía. Incluye métricas <span className="font-semibold text-[#002F6C]">anti-procrastinación</span>.
+                    </p>
+
+                    <div className="pt-4 border-t border-[#002F6C]/10">
+                      <p className="text-sm text-[#2E2D29]/60 font-medium">
+                        Reportes semanales automáticos
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
               </div>
+
+              {/* Bottom CTA - Clean Stanford style */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="text-center mt-12"
+              >
+                <p className="text-lg text-[#2E2D29]/70 mb-6">
+                  Ideal para familias homeschooling y estudiantes que procrastinan
+                </p>
+                <motion.button
+                  onClick={() => setReservationDialogOpen(true)}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#003d8f] transition-colors"
+                >
+                  <span>Prueba BLUE gratis</span>
+                  <ArrowRight className="w-5 h-5" />
+                </motion.button>
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Plans and Programs Section - WSJ Style */}
+        <section id="planes" className="bg-[#F7F2E9] py-32 scroll-mt-20 border-t border-[#002F6C]/20" style={{ borderTopWidth: '1px' }}>
+          <div className="container-harvard">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="max-w-7xl mx-auto"
+            >
+              {/* Header - WSJ Style */}
+              <div className="mb-20">
+                <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-[#002F6C] leading-tight mb-6">
+                  Planes y Programas 2026
+                </h2>
+                <div className="h-1 w-24 bg-[#002F6C] mb-8"></div>
+                <p className="text-2xl text-[#2E2D29] leading-relaxed max-w-4xl">
+                  Ciclo académico de 10 meses: Marzo - Diciembre. Todos los valores incluyen 19% de IVA.
+                </p>
+              </div>
+
+              {/* Plans Table - Desktop */}
+              <div className="hidden lg:block overflow-hidden border border-[#002F6C]/20 rounded-lg">
+                <table className="w-full">
+                  <thead className="bg-[#002F6C] text-white">
+                    <tr>
+                      <th className="text-left py-4 px-6 font-serif font-bold text-lg">Plan / Programa</th>
+                      <th className="text-left py-4 px-6 font-serif font-bold text-lg">Público Objetivo</th>
+                      <th className="text-left py-4 px-6 font-serif font-bold text-lg">Enfoque Académico</th>
+                      <th className="text-right py-4 px-6 font-serif font-bold text-lg">Mensual</th>
+                      <th className="text-right py-4 px-6 font-serif font-bold text-lg">Anual (10 cuotas)</th>
+                      <th className="text-center py-4 px-6 font-serif font-bold text-lg">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* BLUE Home */}
+                    <tr className="border-b border-[#002F6C]/10 hover:bg-[#F9F6EF] transition-colors">
+                      <td className="py-6 px-6">
+                        <div className="font-serif font-bold text-xl text-[#002F6C]">BLUE Home</div>
+                      </td>
+                      <td className="py-6 px-6 text-[#2E2D29]">1º Básico a 4º Medio</td>
+                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Acompañamiento integral en todas las asignaturas (inc. Ed. Física)</td>
+                      <td className="py-6 px-6 text-right">
+                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$17.900</div>
+                      </td>
+                      <td className="py-6 px-6 text-right">
+                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$179.000</div>
+                      </td>
+                      <td className="py-6 px-6 text-center">
+                        <button
+                          onClick={() => setReservationDialogOpen(true)}
+                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
+                        >
+                          Contratar
+                        </button>
+                      </td>
+                    </tr>
+
+                    {/* Exámenes Libres */}
+                    <tr className="border-b border-[#002F6C]/10 hover:bg-[#F9F6EF] transition-colors">
+                      <td className="py-6 px-6">
+                        <div className="font-serif font-bold text-xl text-[#002F6C]">Exámenes Libres</div>
+                      </td>
+                      <td className="py-6 px-6 text-[#2E2D29]">7º Básico a 4º Medio</td>
+                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Preparación intensiva para validación de estudios (menores)</td>
+                      <td className="py-6 px-6 text-right">
+                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$29.900</div>
+                      </td>
+                      <td className="py-6 px-6 text-right">
+                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$299.000</div>
+                      </td>
+                      <td className="py-6 px-6 text-center">
+                        <button
+                          onClick={() => setReservationDialogOpen(true)}
+                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
+                        >
+                          Contratar
+                        </button>
+                      </td>
+                    </tr>
+
+                    {/* Validación Adultos */}
+                    <tr className="border-b border-[#002F6C]/10 hover:bg-[#F9F6EF] transition-colors">
+                      <td className="py-6 px-6">
+                        <div className="font-serif font-bold text-xl text-[#002F6C]">Validación Adultos</div>
+                      </td>
+                      <td className="py-6 px-6 text-[#2E2D29]">Mayores de 18 años</td>
+                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Nivelación acelerada y estratégica para fines laborales</td>
+                      <td className="py-6 px-6 text-right">
+                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$24.900</div>
+                      </td>
+                      <td className="py-6 px-6 text-right">
+                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$249.000</div>
+                      </td>
+                      <td className="py-6 px-6 text-center">
+                        <button
+                          onClick={() => setReservationDialogOpen(true)}
+                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
+                        >
+                          Contratar
+                        </button>
+                      </td>
+                    </tr>
+
+                    {/* PAES M1 / Lenguaje */}
+                    <tr className="border-b border-[#002F6C]/10 hover:bg-[#F9F6EF] transition-colors">
+                      <td className="py-6 px-6">
+                        <div className="font-serif font-bold text-xl text-[#002F6C]">PAES (M1 / Lenguaje)</div>
+                      </td>
+                      <td className="py-6 px-6 text-[#2E2D29]">Alumnos de 4º Medio</td>
+                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Preparación específica por área (valor unitario)</td>
+                      <td className="py-6 px-6 text-right">
+                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$12.000</div>
+                      </td>
+                      <td className="py-6 px-6 text-right">
+                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$120.000</div>
+                      </td>
+                      <td className="py-6 px-6 text-center">
+                        <button
+                          onClick={() => setReservationDialogOpen(true)}
+                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
+                        >
+                          Contratar
+                        </button>
+                      </td>
+                    </tr>
+
+                    {/* PAES M2 */}
+                    <tr className="border-b border-[#002F6C]/10 hover:bg-[#F9F6EF] transition-colors">
+                      <td className="py-6 px-6">
+                        <div className="font-serif font-bold text-xl text-[#002F6C]">PAES (M2)</div>
+                      </td>
+                      <td className="py-6 px-6 text-[#2E2D29]">Futuros STEM</td>
+                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Razonamiento matemático de alta complejidad</td>
+                      <td className="py-6 px-6 text-right">
+                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$20.000</div>
+                      </td>
+                      <td className="py-6 px-6 text-right">
+                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$200.000</div>
+                      </td>
+                      <td className="py-6 px-6 text-center">
+                        <button
+                          onClick={() => setReservationDialogOpen(true)}
+                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
+                        >
+                          Contratar
+                        </button>
+                      </td>
+                    </tr>
+
+                    {/* PAES Historia / CC */}
+                    <tr className="hover:bg-[#F9F6EF] transition-colors">
+                      <td className="py-6 px-6">
+                        <div className="font-serif font-bold text-xl text-[#002F6C]">PAES (Historia / CC)</div>
+                      </td>
+                      <td className="py-6 px-6 text-[#2E2D29]">Alumnos de 4º Medio</td>
+                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Preparación para pruebas electivas específicas (valor unitario)</td>
+                      <td className="py-6 px-6 text-right">
+                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$10.000</div>
+                      </td>
+                      <td className="py-6 px-6 text-right">
+                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$100.000</div>
+                      </td>
+                      <td className="py-6 px-6 text-center">
+                        <button
+                          onClick={() => setReservationDialogOpen(true)}
+                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
+                        >
+                          Contratar
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Plans Cards - Mobile */}
+              <div className="lg:hidden space-y-6">
+                {/* Card template for each plan */}
+                {[
+                  {
+                    name: "BLUE Home",
+                    target: "1º Básico a 4º Medio",
+                    focus: "Acompañamiento integral en todas las asignaturas (inc. Ed. Física)",
+                    monthly: "$17.900",
+                    annual: "$179.000"
+                  },
+                  {
+                    name: "Exámenes Libres",
+                    target: "7º Básico a 4º Medio",
+                    focus: "Preparación intensiva para validación de estudios (menores)",
+                    monthly: "$29.900",
+                    annual: "$299.000"
+                  },
+                  {
+                    name: "Validación Adultos",
+                    target: "Mayores de 18 años",
+                    focus: "Nivelación acelerada y estratégica para fines laborales",
+                    monthly: "$24.900",
+                    annual: "$249.000"
+                  },
+                  {
+                    name: "PAES (M1 / Lenguaje)",
+                    target: "Alumnos de 4º Medio",
+                    focus: "Preparación específica por área (valor unitario)",
+                    monthly: "$12.000",
+                    annual: "$120.000"
+                  },
+                  {
+                    name: "PAES (M2)",
+                    target: "Futuros STEM",
+                    focus: "Razonamiento matemático de alta complejidad",
+                    monthly: "$20.000",
+                    annual: "$200.000"
+                  },
+                  {
+                    name: "PAES (Historia / CC)",
+                    target: "Alumnos de 4º Medio",
+                    focus: "Preparación para pruebas electivas específicas (valor unitario)",
+                    monthly: "$10.000",
+                    annual: "$100.000"
+                  }
+                ].map((plan, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className="bg-[#F9F6EF] rounded-lg p-6 border border-[#002F6C]/20"
+                  >
+                    <h3 className="font-serif font-bold text-2xl text-[#002F6C] mb-2">{plan.name}</h3>
+                    <p className="text-sm text-[#2E2D29] mb-4">{plan.target}</p>
+                    <p className="text-sm text-[#2E2D29]/70 mb-6">{plan.focus}</p>
+                    
+                    <div className="flex items-end justify-between mb-6">
+                      <div>
+                        <div className="text-xs text-[#2E2D29]/60 mb-1">Mensual</div>
+                        <div className="font-serif font-bold text-3xl text-[#002F6C]">{plan.monthly}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xs text-[#2E2D29]/60 mb-1">Anual (10 cuotas)</div>
+                        <div className="font-serif font-bold text-xl text-[#2E2D29]">{plan.annual}</div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => setReservationDialogOpen(true)}
+                      className="w-full bg-[#002F6C] text-white py-3 font-semibold hover:bg-[#003d8f] transition-colors"
+                    >
+                      Contratar
+                    </button>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Footer Note */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="mt-12 text-center"
+              >
+                <p className="text-sm text-[#2E2D29]/60">
+                  Todos los valores incluyen 19% de IVA. Ciclo académico: Marzo - Diciembre (10 meses).
+                </p>
+              </motion.div>
             </motion.div>
           </div>
         </section>
@@ -792,11 +952,11 @@ export default function Home() {
         </div>
 
         {/* Platform Showcase Section - Split Layout */}
-        <section id="plataforma" className="py-32 bg-gradient-to-br from-white via-gray-50 to-white relative overflow-hidden scroll-mt-20">
+        <section id="plataforma" className="py-32 bg-gradient-to-br from-white via-[#F5F1E8] to-white relative overflow-hidden scroll-mt-20">
           {/* Subtle Background Pattern */}
           <div className="absolute inset-0 opacity-[0.02]">
             <div className="absolute inset-0" style={{
-              backgroundImage: `radial-gradient(circle at 2px 2px, #a51c30 1px, transparent 0)`,
+              backgroundImage: `radial-gradient(circle at 2px 2px, #002F6C 1px, transparent 0)`,
               backgroundSize: '40px 40px'
             }}></div>
           </div>
@@ -817,29 +977,38 @@ export default function Home() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.2 }}
                 >
-                  <Badge className="mb-6 bg-[#a51c30]/10 text-[#a51c30] hover:bg-[#a51c30]/20 border-[#a51c30]/20 px-4 py-2 text-sm font-semibold">
+                  <Badge className="mb-6 bg-[#002F6C]/10 text-[#002F6C] hover:bg-[#002F6C]/20 border-[#002F6C]/20 px-4 py-2 text-sm font-semibold">
                     La Plataforma del Futuro
                   </Badge>
                   
-                  <h2 className="text-5xl md:text-6xl font-serif font-bold text-foreground leading-tight mb-6">
-                    Transforma tu preparación con{" "}
-                    <span className="text-[#a51c30] italic">Barkley</span>
+                  <h2 className="text-5xl md:text-6xl font-serif font-bold text-[#1a1a1a] leading-tight mb-6">
+                    Aprende con{" "}
+                    <span className="text-[#002F6C] italic">BLUE</span>
                   </h2>
                   
-                  <div className="space-y-6 text-lg text-foreground/80 leading-relaxed">
+                  <div className="space-y-6 text-lg text-[#1a1a1a]/80 leading-relaxed">
                     <p>
-                      El <span className="font-semibold text-foreground">ecosistema inteligente</span> que reemplaza los métodos tradicionales por una ruta estratégica de <span className="font-semibold text-[#a51c30]">16 módulos</span>.
+                      La <span className="font-semibold text-[#1a1a1a]">plataforma educativa</span> que combina inteligencia artificial con el currículo oficial del MINEDUC, diseñada para <span className="font-semibold text-[#002F6C]">familias homeschooling</span>.
                     </p>
                     
                     <p>
-                      Entrena con <span className="font-semibold text-foreground">32 ensayos de proceso</span> y resuelve cualquier duda al instante con nuestro <span className="font-semibold text-[#a51c30]">Academic Copilot</span>, la IA pedagógica disponible para ti las 24 horas.
+                      BLUE interactúa por <span className="font-semibold text-[#002F6C]">voz nativa</span>, envía reportes automáticos a los padres y mantiene la motivación alta con <span className="font-semibold text-[#1a1a1a]">gamificación científicamente validada</span>.
                     </p>
                     
                     <p>
-                      Avanza a tu propio ritmo con <span className="font-semibold text-foreground">tecnología de vanguardia</span> y asegura tu cupo en la universidad con la ventaja competitiva que solo la inteligencia artificial te puede dar.
+                      Tu hijo avanza a su propio ritmo con <span className="font-semibold text-[#002F6C]">tecnología de Stanford</span>, mientras tú monitoras su progreso sin interferir en su autonomía.
                     </p>
                   </div>
 
+                  <motion.button
+                    onClick={() => setReservationDialogOpen(true)}
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all mt-8"
+                  >
+                    <span>Comienza hoy</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.button>
                 </motion.div>
               </div>
 
@@ -851,9 +1020,9 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: 0.3 }}
                 className="group"
               >
-                <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl overflow-hidden shadow-2xl hover:shadow-[0_30px_60px_-15px_rgba(165,28,48,0.3)] transition-all duration-500 p-4">
+                <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl overflow-hidden shadow-2xl hover:shadow-[0_30px_60px_-15px_rgba(0,47,108,0.3)] transition-all duration-500 p-4">
                   {/* Glow effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#a51c30]/20 via-transparent to-[#a51c30]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#002F6C]/20 via-transparent to-[#002F6C]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   
                   <div className="relative rounded-xl overflow-hidden shadow-inner" style={{ height: '450px' }}>
                     <video 
@@ -875,16 +1044,24 @@ export default function Home() {
                   </div>
 
                   {/* Decorative corner accent */}
-                  <div className="absolute top-8 right-8 w-20 h-20 border-t-2 border-r-2 border-[#a51c30]/30 rounded-tr-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute top-8 right-8 w-20 h-20 border-t-2 border-r-2 border-[#002F6C]/30 rounded-tr-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
               </motion.div>
             </motion.div>
           </div>
         </section>
 
-        {/* Academic Copilot Section - 3 Columns */}
-        <section className="py-32 bg-gradient-to-br from-[#0a1628] via-[#0d1b2a] to-[#1b263b] relative overflow-hidden">
-          <div className="max-w-[1600px] mx-auto px-8">
+        {/* BLUE in Action Section - 3 Columns */}
+        <section className="py-32 bg-gradient-to-br from-[#002F6C] via-[#003d8f] to-[#002F6C] relative overflow-hidden">
+          {/* Elegant pattern overlay */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
+              backgroundSize: '50px 50px',
+            }}></div>
+          </div>
+
+          <div className="max-w-[1600px] mx-auto px-8 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.9fr_0.9fr] gap-12 items-center">
               
               {/* Left Column - Video Loop */}
@@ -905,7 +1082,7 @@ export default function Home() {
                   <source src="/video3.mp4" type="video/mp4" />
                   Tu navegador no soporta videos.
                 </video>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1e1e1e] via-transparent to-transparent pointer-events-none"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#002F6C] via-transparent to-transparent pointer-events-none"></div>
               </motion.div>
 
               {/* Center Column - Title & Description */}
@@ -919,20 +1096,20 @@ export default function Home() {
               >
                 <div className="space-y-3">
                   <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-white leading-[1.1] tracking-tight">
-                    Conoce a <span className="text-[#D4AF37]">ACADEMIC COPILOT</span>:<br />
-                    <span className="text-white/90">Tu Mentor Inteligente 24/7</span>
+                    Conoce a <span className="text-[#D4AF37]">BLUE</span>:<br />
+                    <span className="text-white/90">Tu Tutor IA Inteligente</span>
                   </h2>
-                  <p className="text-[#a51c30] text-lg md:text-xl font-semibold italic">
-                    No es solo Inteligencia Artificial. Es el futuro del éxito académico en Chile.
+                  <p className="text-[#F5F1E8] text-lg md:text-xl font-semibold italic">
+                    La IA que no da la respuesta, enseña a pensar
                   </p>
                 </div>
-                <div className="h-0.5 bg-[#a51c30] w-16" />
-                <p className="text-white/75 text-base md:text-lg leading-[1.7] font-normal">
-                  ¿Te imaginas tener a un profesor experto a tu lado, en cada tarea, a cualquier hora? Academic Copilot es la pieza central del ecosistema educativo de nuestro instituto. Es mucho más que una IA: es un <span className="text-[#D4AF37] font-semibold">Success Mentor personalizado</span> para estudiantes de 7º básico a 4º medio.
+                <div className="h-0.5 bg-[#D4AF37] w-16" />
+                <p className="text-white/85 text-base md:text-lg leading-[1.7] font-normal">
+                  ¿Te imaginas tener un tutor experto disponible en todo momento? BLUE aplica la <span className="text-[#D4AF37] font-semibold">Metodología Socrática de Stanford</span>, guiando a tu hijo mediante preguntas inteligentes en lugar de entregarle respuestas directas.
                 </p>
               </motion.div>
 
-              {/* Right Column - Academic Copilot Features */}
+              {/* Right Column - BLUE Features */}
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -941,32 +1118,32 @@ export default function Home() {
                 className="relative"
                 style={{ minHeight: '600px' }}
               >
-                <div className="bg-gradient-to-br from-[#0f1a2e] via-[#132238] to-[#172a42] rounded-2xl p-8 shadow-2xl border border-white/10 h-full flex flex-col justify-center">
+                <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 h-full flex flex-col justify-center">
                   <div className="mb-8">
                     <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                      ¿Por qué elegir <span className="text-[#D4AF37]">Academic Copilot</span>?
+                      ¿Por qué elegir <span className="text-[#D4AF37]">BLUE</span>?
                     </h3>
-                    <div className="h-0.5 bg-[#a51c30] w-12" />
+                    <div className="h-0.5 bg-[#D4AF37] w-12" />
                   </div>
                   
                   <div className="space-y-6">
                     <div className="space-y-5">
                       <div className="flex items-start gap-4">
-                        <div className="text-3xl shrink-0">🚀</div>
+                        <div className="text-3xl shrink-0">🧠</div>
                         <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">Dominio Multidisciplinario</h4>
-                          <p className="text-white/70 text-sm leading-relaxed">
-                            Experto en todas las materias del currículo escolar chileno
+                          <h4 className="text-white font-bold mb-1 text-lg">Método Socrático</h4>
+                          <p className="text-white/80 text-sm leading-relaxed">
+                            Enseña a pensar mediante preguntas guiadas, no entregando respuestas
                           </p>
                         </div>
                       </div>
 
                       <div className="flex items-start gap-4">
-                        <div className="text-3xl shrink-0">🧠</div>
+                        <div className="text-3xl shrink-0">🎤</div>
                         <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">Método Socrático</h4>
-                          <p className="text-white/70 text-sm leading-relaxed">
-                            Aprende pensando: te guía con preguntas para que descubras las respuestas
+                          <h4 className="text-white font-bold mb-1 text-lg">Interacción por Voz</h4>
+                          <p className="text-white/80 text-sm leading-relaxed">
+                            Los niños pequeños aprenden hablando naturalmente con BLUE
                           </p>
                         </div>
                       </div>
@@ -974,9 +1151,19 @@ export default function Home() {
                       <div className="flex items-start gap-4">
                         <div className="text-3xl shrink-0">🇨🇱</div>
                         <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">Alineado al Currículo Nacional</h4>
-                          <p className="text-white/70 text-sm leading-relaxed">
-                            100% compatible con los programas de estudio chilenos
+                          <h4 className="text-white font-bold mb-1 text-lg">100% Currículo MINEDUC</h4>
+                          <p className="text-white/80 text-sm leading-relaxed">
+                            Alineado con los programas oficiales chilenos
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-4">
+                        <div className="text-3xl shrink-0">📊</div>
+                        <div>
+                          <h4 className="text-white font-bold mb-1 text-lg">Dashboard Padres</h4>
+                          <p className="text-white/80 text-sm leading-relaxed">
+                            Reportes de progreso automáticos a tu correo
                           </p>
                         </div>
                       </div>
@@ -984,19 +1171,9 @@ export default function Home() {
                       <div className="flex items-start gap-4">
                         <div className="text-3xl shrink-0">⚡</div>
                         <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">Feedback Inmediato</h4>
-                          <p className="text-white/70 text-sm leading-relaxed">
-                            Respuestas instantáneas para mantener tu ritmo de aprendizaje
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-4">
-                        <div className="text-3xl shrink-0">🎓</div>
-                        <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">Tecnología con Propósito</h4>
-                          <p className="text-white/70 text-sm leading-relaxed">
-                            IA diseñada exclusivamente para potenciar tu éxito académico
+                          <h4 className="text-white font-bold mb-1 text-lg">Anti-Procrastinación</h4>
+                          <p className="text-white/80 text-sm leading-relaxed">
+                            Gamificación basada en psicología del comportamiento
                           </p>
                         </div>
                       </div>
@@ -1013,8 +1190,8 @@ export default function Home() {
 
       {/* Tech Stack / Partners Section */}
 
-      {/* Mentor Section - White Background 2 Columns */}
-      <section className="bg-white py-32">
+      {/* Founder Story Section - Quiénes Somos */}
+      <section className="bg-[#F9F6EF] py-32">
         <div className="max-w-[1400px] mx-auto px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
@@ -1024,14 +1201,19 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl"
+              className="relative h-[500px] rounded-lg overflow-hidden border border-[#002F6C]/20"
             >
               <img 
                 src="/imagen01.jpg"
-                alt="Mentor Barkley" 
+                alt="Fundador - Experto en Educación" 
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#002147]/30 via-transparent to-transparent"></div>
+              
+              {/* Badge on Image - Clean design */}
+              <div className="absolute bottom-8 left-8 bg-white rounded-lg px-6 py-4 border border-[#002F6C]/20">
+                <div className="text-3xl font-bold font-serif text-[#002F6C]">20+ años</div>
+                <div className="text-sm text-[#2E2D29] font-medium">de experiencia docente</div>
+              </div>
             </motion.div>
 
             {/* Right Column - Content */}
@@ -1042,48 +1224,53 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="space-y-6"
             >
-              {/* Title - Grande */}
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#002147] leading-[1.1]">
-                La figura del <span className="text-[#a51c30] italic">Mentor</span> en Barkley
+              {/* Badge */}
+              <div className="inline-block">
+                <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#002F6C]/5 text-[#002F6C] text-sm font-medium rounded-full border border-[#002F6C]/10">
+                  Quiénes Somos
+                </span>
+              </div>
+
+              {/* Title */}
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#002F6C] leading-[1.1]">
+                Escalando la experiencia docente con tecnología
               </h2>
 
               {/* Decorative line */}
-              <div className="h-1 w-20 bg-[#D4AF37]"></div>
+              <div className="h-0.5 w-16 bg-[#002F6C]"></div>
 
-              {/* Description - Texto más pequeño */}
-              <p className="text-base md:text-lg text-[#002147]/80 leading-[1.8] font-normal">
-                La figura del Mentor en Barkley actúa como el puente estratégico entre la tecnología y el aprendizaje efectivo. Cada estudiante cuenta con dos sesiones online mensuales vía Zoom, diseñadas para la planificación de objetivos, resolución de nudos críticos y reforzamiento motivacional. Más que un instructor, es un guía que supervisa diariamente el progreso, gestiona el calendario de metas y garantiza la excelencia académica.
-              </p>
+              {/* Description */}
+              <div className="space-y-4 text-base md:text-lg text-[#2E2D29] leading-[1.8]">
+                <p>
+                  <span className="font-serif font-bold text-[#002F6C]">BLUE</span> nació de una necesidad real: cómo llevar <span className="font-semibold text-[#002F6C]">20 años de experiencia docente</span> a miles de niños simultáneamente.
+                </p>
+                
+                <p>
+                  Como educador con dos décadas formando estudiantes, comprendí que el modelo tradicional tiene un límite: <span className="font-semibold text-[#8C1515]">un profesor solo puede atender a un número limitado de alumnos</span>.
+                </p>
 
-              {/* Key Features */}
-              <div className="grid grid-cols-2 gap-6 pt-6">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#D4AF37]"></div>
-                    <span className="text-sm font-semibold text-[#002147]">2 Sesiones Mensuales</span>
-                  </div>
-                  <p className="text-xs text-[#002147]/60 ml-4">Reuniones online vía Zoom</p>
+                <p>
+                  La tecnología de <span className="font-semibold text-[#002F6C]">Stanford</span> nos permitió hacer algo revolucionario: <span className="font-semibold text-[#002F6C]">multiplicar la capacidad de guiar, sin perder la calidad pedagógica</span>.
+                </p>
+
+                <p className="text-[#002F6C] font-semibold italic">
+                  BLUE es mi experiencia convertida en IA, disponible para cada familia chilena que busca excelencia educativa.
+                </p>
+              </div>
+
+              {/* Key Stats - Clean, no gradients */}
+              <div className="grid grid-cols-3 gap-4 pt-6">
+                <div className="text-center p-4 bg-white rounded-lg border border-[#002F6C]/20">
+                  <div className="text-3xl font-bold font-serif text-[#002F6C]">20+</div>
+                  <div className="text-xs text-[#2E2D29]/60 mt-1">Años Docente</div>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#D4AF37]"></div>
-                    <span className="text-sm font-semibold text-[#002147]">Seguimiento Diario</span>
-                  </div>
-                  <p className="text-xs text-[#002147]/60 ml-4">Supervisión continua del progreso</p>
+                <div className="text-center p-4 bg-white rounded-lg border border-[#002F6C]/20">
+                  <div className="text-3xl font-bold font-serif text-[#002F6C]">1000s</div>
+                  <div className="text-xs text-[#2E2D29]/60 mt-1">Estudiantes</div>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#D4AF37]"></div>
-                    <span className="text-sm font-semibold text-[#002147]">Planificación Estratégica</span>
-                  </div>
-                  <p className="text-xs text-[#002147]/60 ml-4">Objetivos y calendario de metas</p>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#D4AF37]"></div>
-                    <span className="text-sm font-semibold text-[#002147]">Refuerzo Motivacional</span>
-                  </div>
-                  <p className="text-xs text-[#002147]/60 ml-4">Apoyo emocional y académico</p>
+                <div className="text-center p-4 bg-white rounded-lg border border-[#002F6C]/20">
+                  <div className="text-3xl font-bold font-serif text-[#002F6C]">24/7</div>
+                  <div className="text-xs text-[#2E2D29]/60 mt-1">Con BLUE</div>
                 </div>
               </div>
             </motion.div>
@@ -1436,7 +1623,7 @@ export default function Home() {
 
           <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-[10px] font-medium tracking-[0.15em] text-white/50 uppercase">
-              © 2026 Barkley Instituto Chile. Todos los derechos reservados.
+              © 2026 BLUE - Tutor IA. Todos los derechos reservados.
             </p>
             <div className="flex items-center gap-6 text-[10px] font-medium tracking-[0.15em] text-white/50">
               <span>Neurociencia Aplicada</span>
