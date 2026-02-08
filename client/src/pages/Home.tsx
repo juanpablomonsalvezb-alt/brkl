@@ -928,161 +928,166 @@ export default function Home() {
           </div>
         </div>
 
-        {/* MediaGrid Section - Standards.site Style */}
-        <section className="py-32 bg-[#f2f2f2]">
-          <div className="container-harvard">
-            {/* Header */}
-            <div className="max-w-4xl mb-16">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a1a] leading-tight mb-6">
-                La Plataforma en Acción
-              </h2>
-              <p className="text-xl md:text-2xl text-[#666666] leading-relaxed font-light">
-                Visualiza cómo BLUE transforma el aprendizaje
-              </p>
-            </div>
+                {/* MediaGrid Section - Standards.site Style (Real Implementation) */}
+        <section className="py-0 bg-white">
+          <div className="w-full max-w-[2000px] mx-auto">
+            
+            {/* Full Width Hero Media */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative w-full"
+              style={{ 
+                aspectRatio: '2/1',
+              }}
+            >
+              <div className="absolute inset-0 bg-[#0066FF]/90 hover:bg-[#0066FF]/70 transition-all duration-300 cursor-pointer">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <div className="w-3 h-3 rounded-full bg-white mb-6 mx-auto"></div>
+                    <h3 className="text-4xl md:text-5xl font-light">BLUE en Acción</h3>
+                    <p className="text-xl font-light mt-4 opacity-90">Plataforma de aprendizaje inteligente</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
 
-            {/* MediaGrid - Images with Color Overlays */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
+            {/* Two Column Grid */}
+            <div className="grid md:grid-cols-2 gap-0">
               
-              {/* Grid Item 1 - Blue Overlay */}
+              {/* Item 1 - Voz Nativa */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="relative aspect-square overflow-hidden group cursor-pointer"
+                transition={{ duration: 0.6 }}
+                className="relative group cursor-pointer"
+                style={{ aspectRatio: '1/1' }}
               >
-                <div className="absolute inset-0 bg-[#0066FF] opacity-90 group-hover:opacity-75 transition-opacity"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white p-6">
-                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
-                    <h4 className="text-lg font-normal">Dashboard Padres</h4>
+                <div className="absolute inset-0 bg-[#FF2E00]/90 group-hover:bg-[#FF2E00]/70 transition-all duration-300">
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <div className="text-center text-white">
+                      <div className="w-2 h-2 rounded-full bg-white mb-6 mx-auto"></div>
+                      <h4 className="text-2xl md:text-3xl font-light">Voz Nativa</h4>
+                      <p className="text-base font-light mt-3 opacity-90">Interacción por voz para niños</p>
+                    </div>
                   </div>
                 </div>
               </motion.div>
 
-              {/* Grid Item 2 - Red Overlay */}
+              {/* Item 2 - Dashboard Padres */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="relative aspect-square overflow-hidden group cursor-pointer"
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="relative group cursor-pointer"
+                style={{ aspectRatio: '1/1' }}
               >
-                <div className="absolute inset-0 bg-[#FF2E00] opacity-90 group-hover:opacity-75 transition-opacity"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white p-6">
-                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
-                    <h4 className="text-lg font-normal">Voz Nativa</h4>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Grid Item 3 - Green Overlay */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="relative aspect-square overflow-hidden group cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-[#00CC66] opacity-90 group-hover:opacity-75 transition-opacity"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white p-6">
-                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
-                    <h4 className="text-lg font-normal">Método Socrático</h4>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Grid Item 4 - Purple Overlay */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="relative aspect-square overflow-hidden group cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-[#9933FF] opacity-90 group-hover:opacity-75 transition-opacity"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white p-6">
-                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
-                    <h4 className="text-lg font-normal">Gamificación</h4>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Grid Item 5 - Orange Overlay */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="relative aspect-square overflow-hidden group cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-[#FF6600] opacity-90 group-hover:opacity-75 transition-opacity"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white p-6">
-                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
-                    <h4 className="text-lg font-normal">Evaluaciones</h4>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Grid Item 6 - Pink Overlay */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                className="relative aspect-square overflow-hidden group cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-[#FF0099] opacity-90 group-hover:opacity-75 transition-opacity"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white p-6">
-                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
-                    <h4 className="text-lg font-normal">Progreso</h4>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Grid Item 7 - Cyan Overlay */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                className="relative aspect-square overflow-hidden group cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-[#00CCFF] opacity-90 group-hover:opacity-75 transition-opacity"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white p-6">
-                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
-                    <h4 className="text-lg font-normal">PAES</h4>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Grid Item 8 - Yellow Overlay */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.7 }}
-                className="relative aspect-square overflow-hidden group cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-[#FFCC00] opacity-90 group-hover:opacity-75 transition-opacity"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white p-6">
-                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
-                    <h4 className="text-lg font-normal">Currículum MINEDUC</h4>
+                <div className="absolute inset-0 bg-[#00CC66]/90 group-hover:bg-[#00CC66]/70 transition-all duration-300">
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <div className="text-center text-white">
+                      <div className="w-2 h-2 rounded-full bg-white mb-6 mx-auto"></div>
+                      <h4 className="text-2xl md:text-3xl font-light">Dashboard Padres</h4>
+                      <p className="text-base font-light mt-3 opacity-90">Seguimiento en tiempo real</p>
+                    </div>
                   </div>
                 </div>
               </motion.div>
 
             </div>
+
+            {/* Three Column Grid */}
+            <div className="grid md:grid-cols-3 gap-0">
+              
+              {/* Item 3 - Método Socrático */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="relative group cursor-pointer"
+                style={{ aspectRatio: '1/1' }}
+              >
+                <div className="absolute inset-0 bg-[#9933FF]/90 group-hover:bg-[#9933FF]/70 transition-all duration-300">
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <div className="text-center text-white">
+                      <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                      <h4 className="text-xl md:text-2xl font-light">Método Socrático</h4>
+                      <p className="text-sm font-light mt-2 opacity-90">Preguntas que enseñan</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Item 4 - Gamificación */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="relative group cursor-pointer"
+                style={{ aspectRatio: '1/1' }}
+              >
+                <div className="absolute inset-0 bg-[#FF6600]/90 group-hover:bg-[#FF6600]/70 transition-all duration-300">
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <div className="text-center text-white">
+                      <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                      <h4 className="text-xl md:text-2xl font-light">Anti-Procrastinación</h4>
+                      <p className="text-sm font-light mt-2 opacity-90">Gamificación científica</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Item 5 - Currículum MINEDUC */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="relative group cursor-pointer"
+                style={{ aspectRatio: '1/1' }}
+              >
+                <div className="absolute inset-0 bg-[#FFCC00]/90 group-hover:bg-[#FFCC00]/70 transition-all duration-300">
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <div className="text-center text-white">
+                      <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                      <h4 className="text-xl md:text-2xl font-light">100% MINEDUC</h4>
+                      <p className="text-sm font-light mt-2 opacity-90">Currículum oficial</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+            </div>
+
+            {/* Full Width Bottom */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative w-full"
+              style={{ aspectRatio: '2/1' }}
+            >
+              <div className="absolute inset-0 bg-[#FF0099]/90 hover:bg-[#FF0099]/70 transition-all duration-300 cursor-pointer">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <div className="w-3 h-3 rounded-full bg-white mb-6 mx-auto"></div>
+                    <h3 className="text-4xl md:text-5xl font-light">Resultados Comprobados</h3>
+                    <p className="text-xl font-light mt-4 opacity-90">Miles de estudiantes transformados</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
           </div>
         </section>
+
+
 
 
 
