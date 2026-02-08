@@ -928,6 +928,164 @@ export default function Home() {
           </div>
         </div>
 
+        {/* MediaGrid Section - Standards.site Style */}
+        <section className="py-32 bg-[#f2f2f2]">
+          <div className="container-harvard">
+            {/* Header */}
+            <div className="max-w-4xl mb-16">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a1a] leading-tight mb-6">
+                La Plataforma en Acción
+              </h2>
+              <p className="text-xl md:text-2xl text-[#666666] leading-relaxed font-light">
+                Visualiza cómo BLUE transforma el aprendizaje
+              </p>
+            </div>
+
+            {/* MediaGrid - Images with Color Overlays */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
+              
+              {/* Grid Item 1 - Blue Overlay */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="relative aspect-square overflow-hidden group cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-[#0066FF] opacity-90 group-hover:opacity-75 transition-opacity"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white p-6">
+                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                    <h4 className="text-lg font-normal">Dashboard Padres</h4>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Grid Item 2 - Red Overlay */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="relative aspect-square overflow-hidden group cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-[#FF2E00] opacity-90 group-hover:opacity-75 transition-opacity"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white p-6">
+                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                    <h4 className="text-lg font-normal">Voz Nativa</h4>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Grid Item 3 - Green Overlay */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="relative aspect-square overflow-hidden group cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-[#00CC66] opacity-90 group-hover:opacity-75 transition-opacity"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white p-6">
+                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                    <h4 className="text-lg font-normal">Método Socrático</h4>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Grid Item 4 - Purple Overlay */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="relative aspect-square overflow-hidden group cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-[#9933FF] opacity-90 group-hover:opacity-75 transition-opacity"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white p-6">
+                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                    <h4 className="text-lg font-normal">Gamificación</h4>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Grid Item 5 - Orange Overlay */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="relative aspect-square overflow-hidden group cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-[#FF6600] opacity-90 group-hover:opacity-75 transition-opacity"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white p-6">
+                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                    <h4 className="text-lg font-normal">Evaluaciones</h4>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Grid Item 6 - Pink Overlay */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+                className="relative aspect-square overflow-hidden group cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-[#FF0099] opacity-90 group-hover:opacity-75 transition-opacity"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white p-6">
+                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                    <h4 className="text-lg font-normal">Progreso</h4>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Grid Item 7 - Cyan Overlay */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className="relative aspect-square overflow-hidden group cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-[#00CCFF] opacity-90 group-hover:opacity-75 transition-opacity"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white p-6">
+                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                    <h4 className="text-lg font-normal">PAES</h4>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Grid Item 8 - Yellow Overlay */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+                className="relative aspect-square overflow-hidden group cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-[#FFCC00] opacity-90 group-hover:opacity-75 transition-opacity"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white p-6">
+                    <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                    <h4 className="text-lg font-normal">Currículum MINEDUC</h4>
+                  </div>
+                </div>
+              </motion.div>
+
+            </div>
+          </div>
+        </section>
+
+
+
         {/* Platform Showcase Section - Standards.site Style */}
         <section id="plataforma" className="py-32 bg-[#f2f2f2] scroll-mt-20">
           {/* Subtle Background Pattern */}
