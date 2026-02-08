@@ -928,7 +928,7 @@ export default function Home() {
           </div>
         </div>
 
-                {/* MediaGrid Section - Standards.site Style (Real Implementation) */}
+                        {/* MediaGrid Section - Standards.site Style with Real Images */}
         <section className="py-0 bg-white">
           <div className="w-full max-w-[2000px] mx-auto">
             
@@ -938,11 +938,14 @@ export default function Home() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative w-full"
-              style={{ 
-                aspectRatio: '2/1',
-              }}
+              className="relative w-full overflow-hidden"
+              style={{ aspectRatio: '2/1' }}
             >
+              <img 
+                src="/portada_plataforma.png" 
+                alt="BLUE Plataforma" 
+                className="absolute inset-0 w-full h-full object-cover"
+              />
               <div className="absolute inset-0 bg-[#0066FF]/90 hover:bg-[#0066FF]/70 transition-all duration-300 cursor-pointer">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center text-white">
@@ -963,9 +966,14 @@ export default function Home() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="relative group cursor-pointer"
+                className="relative group cursor-pointer overflow-hidden"
                 style={{ aspectRatio: '1/1' }}
               >
+                <img 
+                  src="/1.png" 
+                  alt="Voz Nativa" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 bg-[#FF2E00]/90 group-hover:bg-[#FF2E00]/70 transition-all duration-300">
                   <div className="absolute inset-0 flex items-center justify-center p-8">
                     <div className="text-center text-white">
@@ -983,9 +991,14 @@ export default function Home() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="relative group cursor-pointer"
+                className="relative group cursor-pointer overflow-hidden"
                 style={{ aspectRatio: '1/1' }}
               >
+                <img 
+                  src="/2.png" 
+                  alt="Dashboard Padres" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 bg-[#00CC66]/90 group-hover:bg-[#00CC66]/70 transition-all duration-300">
                   <div className="absolute inset-0 flex items-center justify-center p-8">
                     <div className="text-center text-white">
@@ -1008,9 +1021,14 @@ export default function Home() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="relative group cursor-pointer"
+                className="relative group cursor-pointer overflow-hidden"
                 style={{ aspectRatio: '1/1' }}
               >
+                <img 
+                  src="/3.png" 
+                  alt="Método Socrático" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 bg-[#9933FF]/90 group-hover:bg-[#9933FF]/70 transition-all duration-300">
                   <div className="absolute inset-0 flex items-center justify-center p-8">
                     <div className="text-center text-white">
@@ -1028,9 +1046,14 @@ export default function Home() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="relative group cursor-pointer"
+                className="relative group cursor-pointer overflow-hidden"
                 style={{ aspectRatio: '1/1' }}
               >
+                <img 
+                  src="/video-poster-1.jpg" 
+                  alt="Anti-Procrastinación" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 bg-[#FF6600]/90 group-hover:bg-[#FF6600]/70 transition-all duration-300">
                   <div className="absolute inset-0 flex items-center justify-center p-8">
                     <div className="text-center text-white">
@@ -1048,9 +1071,14 @@ export default function Home() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="relative group cursor-pointer"
+                className="relative group cursor-pointer overflow-hidden"
                 style={{ aspectRatio: '1/1' }}
               >
+                <img 
+                  src="/video-poster-2.jpg" 
+                  alt="Currículum MINEDUC" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 bg-[#FFCC00]/90 group-hover:bg-[#FFCC00]/70 transition-all duration-300">
                   <div className="absolute inset-0 flex items-center justify-center p-8">
                     <div className="text-center text-white">
@@ -1070,9 +1098,14 @@ export default function Home() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative w-full"
+              className="relative w-full overflow-hidden"
               style={{ aspectRatio: '2/1' }}
             >
+              <img 
+                src="/imagen01.jpg" 
+                alt="Resultados Comprobados" 
+                className="absolute inset-0 w-full h-full object-cover"
+              />
               <div className="absolute inset-0 bg-[#FF0099]/90 hover:bg-[#FF0099]/70 transition-all duration-300 cursor-pointer">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center text-white">
@@ -1086,6 +1119,8 @@ export default function Home() {
 
           </div>
         </section>
+
+
 
 
 
