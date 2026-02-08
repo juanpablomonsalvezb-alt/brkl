@@ -1028,135 +1028,150 @@ export default function Home() {
           </div>
         </section>
 
-        {/* BLUE in Action Section - 3 Columns */}
-        <section className="py-32 bg-gradient-to-br from-[#002F6C] via-[#003d8f] to-[#002F6C] relative overflow-hidden">
-          {/* Elegant pattern overlay */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute inset-0" style={{
-              backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-              backgroundSize: '50px 50px',
-            }}></div>
-          </div>
+        {/* Case Studies Section - Standards.site Style with Color Blocks */}
+        <section className="py-32 bg-white relative overflow-hidden">
+          <div className="container-harvard">
+            {/* Header */}
+            <div className="max-w-4xl mb-16">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a1a] leading-tight mb-6">
+                Casos de Éxito
+              </h2>
+              <p className="text-xl md:text-2xl text-[#666666] leading-relaxed font-light">
+                Estudiantes reales transformando su aprendizaje con BLUE
+              </p>
+            </div>
 
-          <div className="max-w-[1600px] mx-auto px-8 relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.9fr_0.9fr] gap-12 items-center">
-              
-              {/* Left Column - Video Loop */}
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                className="relative h-[600px] rounded-2xl overflow-hidden shadow-2xl"
-              >
-                <video 
-                  autoPlay 
-                  loop 
-                  muted 
-                  playsInline
-                  className="w-full h-full object-cover"
-                >
-                  <source src="/video3.mp4" type="video/mp4" />
-                  Tu navegador no soporta videos.
-                </video>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#002F6C] via-transparent to-transparent pointer-events-none"></div>
-              </motion.div>
-
-              {/* Center Column - Title & Description */}
+            {/* Color Blocks Grid - Standards.site Style */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
+              {/* Case Study 1 - Bright Blue */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="space-y-6 lg:col-span-1 flex flex-col justify-center"
-                style={{ minHeight: '600px' }}
+                transition={{ duration: 0.6 }}
+                className="bg-[#0066FF] p-8 aspect-square flex flex-col justify-between"
               >
-                <div className="space-y-3">
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-white leading-[1.1] tracking-tight">
-                    Conoce a <span className="text-[#D4AF37]">BLUE</span>:<br />
-                    <span className="text-white/90">Tu Tutor IA Inteligente</span>
-                  </h2>
-                  <p className="text-[#F5F1E8] text-lg md:text-xl font-semibold italic">
-                    La IA que no da la respuesta, enseña a pensar
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    María, 8° Básico
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "Pasé de 4.5 a 6.2 en Matemáticas en solo 3 meses usando BLUE"
                   </p>
                 </div>
-                <div className="h-0.5 bg-[#D4AF37] w-16" />
-                <p className="text-white/85 text-base md:text-lg leading-[1.7] font-normal">
-                  ¿Te imaginas tener un tutor experto disponible en todo momento? BLUE aplica la <span className="text-[#D4AF37] font-semibold">Metodología Socrática de Stanford</span>, guiando a tu hijo mediante preguntas inteligentes en lugar de entregarle respuestas directas.
-                </p>
+                <div className="text-sm text-white/70 font-light">
+                  Exámenes Libres · Santiago
+                </div>
               </motion.div>
 
-              {/* Right Column - BLUE Features */}
+              {/* Case Study 2 - Vibrant Red */}
               <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="relative"
-                style={{ minHeight: '600px' }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="bg-[#FF2E00] p-8 aspect-square flex flex-col justify-between"
               >
-                <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 h-full flex flex-col justify-center">
-                  <div className="mb-8">
-                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                      ¿Por qué elegir <span className="text-[#D4AF37]">BLUE</span>?
-                    </h3>
-                    <div className="h-0.5 bg-[#D4AF37] w-12" />
-                  </div>
-                  
-                  <div className="space-y-6">
-                    <div className="space-y-5">
-                      <div className="flex items-start gap-4">
-                        <div className="text-3xl shrink-0">🧠</div>
-                        <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">Método Socrático</h4>
-                          <p className="text-white/80 text-sm leading-relaxed">
-                            Enseña a pensar mediante preguntas guiadas, no entregando respuestas
-                          </p>
-                        </div>
-                      </div>
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Carlos, Validación Adultos
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "Terminé mi 4° Medio en 8 meses mientras trabajaba tiempo completo"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  Validación · Valparaíso
+                </div>
+              </motion.div>
 
-                      <div className="flex items-start gap-4">
-                        <div className="text-3xl shrink-0">🎤</div>
-                        <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">Interacción por Voz</h4>
-                          <p className="text-white/80 text-sm leading-relaxed">
-                            Los niños pequeños aprenden hablando naturalmente con BLUE
-                          </p>
-                        </div>
-                      </div>
+              {/* Case Study 3 - Bright Green */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="bg-[#00CC66] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Sofía, PAES
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "820 puntos en Matemática M2 con el método Socrático de BLUE"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  PAES 2025 · Concepción
+                </div>
+              </motion.div>
 
-                      <div className="flex items-start gap-4">
-                        <div className="text-3xl shrink-0">🇨🇱</div>
-                        <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">100% Currículo MINEDUC</h4>
-                          <p className="text-white/80 text-sm leading-relaxed">
-                            Alineado con los programas oficiales chilenos
-                          </p>
-                        </div>
-                      </div>
+              {/* Case Study 4 - Purple */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="bg-[#9933FF] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Diego, 1° Medio
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "BLUE me ayudó a entender Ciencias con preguntas que me hacían pensar"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  BLUE Home · La Serena
+                </div>
+              </motion.div>
 
-                      <div className="flex items-start gap-4">
-                        <div className="text-3xl shrink-0">📊</div>
-                        <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">Dashboard Padres</h4>
-                          <p className="text-white/80 text-sm leading-relaxed">
-                            Reportes de progreso automáticos a tu correo
-                          </p>
-                        </div>
-                      </div>
+              {/* Case Study 5 - Orange */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="bg-[#FF6600] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Valentina, 3° Medio
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "Mi familia homeschooling encontró en BLUE el tutor perfecto 24/7"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  Homeschooling · Puerto Montt
+                </div>
+              </motion.div>
 
-                      <div className="flex items-start gap-4">
-                        <div className="text-3xl shrink-0">⚡</div>
-                        <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">Anti-Procrastinación</h4>
-                          <p className="text-white/80 text-sm leading-relaxed">
-                            Gamificación basada en psicología del comportamiento
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
+              {/* Case Study 6 - Pink */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="bg-[#FF0099] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Matías, 7° Básico
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "Aprender hablando con BLUE es increíble, es como tener un profesor siempre disponible"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  Voz Nativa · Temuco
                 </div>
               </motion.div>
 
