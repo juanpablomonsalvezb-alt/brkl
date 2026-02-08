@@ -620,7 +620,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.5 }}
                 className="text-center mt-12"
               >
-                <p className="text-lg text-[#2E2D29]/70 mb-6">
+                <p className="text-lg text-[#666666]/70 mb-6">
                   Ideal para familias homeschooling y estudiantes que procrastinan
                 </p>
                 <motion.button
@@ -695,22 +695,22 @@ export default function Home() {
                     </tr>
 
                     {/* Exámenes Libres */}
-                    <tr className="border-b border-[#002F6C]/10 hover:bg-[#F9F6EF] transition-colors">
+                    <tr className="border-b border-[#1a1a1a]/10 hover:bg-[#f2f2f2] transition-colors">
                       <td className="py-6 px-6">
-                        <div className="font-serif font-bold text-xl text-[#002F6C]">Exámenes Libres</div>
+                        <div className="font-normal text-base text-[#1a1a1a]">Exámenes Libres</div>
                       </td>
-                      <td className="py-6 px-6 text-[#2E2D29]">7º Básico a 4º Medio</td>
-                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Preparación intensiva para validación de estudios (menores)</td>
+                      <td className="py-6 px-6 text-[#666666]">7º Básico a 4º Medio</td>
+                      <td className="py-6 px-6 text-[#666666] text-sm">Preparación intensiva para validación de estudios (menores)</td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$29.900</div>
+                        <div className="font-light text-xl text-[#1a1a1a]">$29.900</div>
                       </td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$299.000</div>
+                        <div className="font-serif font-bold text-xl text-[#666666]">$299.000</div>
                       </td>
                       <td className="py-6 px-6 text-center">
                         <button
                           onClick={() => setReservationDialogOpen(true)}
-                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
+                          className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 text-sm font-normal hover:bg-[#333333] transition-colors"
                         >
                           Contratar
                         </button>
@@ -718,22 +718,22 @@ export default function Home() {
                     </tr>
 
                     {/* Validación Adultos */}
-                    <tr className="border-b border-[#002F6C]/10 hover:bg-[#F9F6EF] transition-colors">
+                    <tr className="border-b border-[#1a1a1a]/10 hover:bg-[#f2f2f2] transition-colors">
                       <td className="py-6 px-6">
-                        <div className="font-serif font-bold text-xl text-[#002F6C]">Validación Adultos</div>
+                        <div className="font-normal text-base text-[#1a1a1a]">Validación Adultos</div>
                       </td>
-                      <td className="py-6 px-6 text-[#2E2D29]">Mayores de 18 años</td>
-                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Nivelación acelerada y estratégica para fines laborales</td>
+                      <td className="py-6 px-6 text-[#666666]">Mayores de 18 años</td>
+                      <td className="py-6 px-6 text-[#666666] text-sm">Nivelación acelerada y estratégica para fines laborales</td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$24.900</div>
+                        <div className="font-light text-xl text-[#1a1a1a]">$24.900</div>
                       </td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$249.000</div>
+                        <div className="font-serif font-bold text-xl text-[#666666]">$249.000</div>
                       </td>
                       <td className="py-6 px-6 text-center">
                         <button
                           onClick={() => setReservationDialogOpen(true)}
-                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
+                          className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 text-sm font-normal hover:bg-[#333333] transition-colors"
                         >
                           Contratar
                         </button>
@@ -741,22 +741,22 @@ export default function Home() {
                     </tr>
 
                     {/* PAES M1 / Lenguaje */}
-                    <tr className="border-b border-[#002F6C]/10 hover:bg-[#F9F6EF] transition-colors">
+                    <tr className="border-b border-[#1a1a1a]/10 hover:bg-[#f2f2f2] transition-colors">
                       <td className="py-6 px-6">
-                        <div className="font-serif font-bold text-xl text-[#002F6C]">PAES (M1 / Lenguaje)</div>
+                        <div className="font-normal text-base text-[#1a1a1a]">PAES (M1 / Lenguaje)</div>
                       </td>
-                      <td className="py-6 px-6 text-[#2E2D29]">Alumnos de 4º Medio</td>
-                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Preparación específica por área (valor unitario)</td>
+                      <td className="py-6 px-6 text-[#666666]">Alumnos de 4º Medio</td>
+                      <td className="py-6 px-6 text-[#666666] text-sm">Preparación específica por área (valor unitario)</td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$12.000</div>
+                        <div className="font-light text-xl text-[#1a1a1a]">$12.000</div>
                       </td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$120.000</div>
+                        <div className="font-serif font-bold text-xl text-[#666666]">$120.000</div>
                       </td>
                       <td className="py-6 px-6 text-center">
                         <button
                           onClick={() => setReservationDialogOpen(true)}
-                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
+                          className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 text-sm font-normal hover:bg-[#333333] transition-colors"
                         >
                           Contratar
                         </button>
@@ -764,22 +764,22 @@ export default function Home() {
                     </tr>
 
                     {/* PAES M2 */}
-                    <tr className="border-b border-[#002F6C]/10 hover:bg-[#F9F6EF] transition-colors">
+                    <tr className="border-b border-[#1a1a1a]/10 hover:bg-[#f2f2f2] transition-colors">
                       <td className="py-6 px-6">
-                        <div className="font-serif font-bold text-xl text-[#002F6C]">PAES (M2)</div>
+                        <div className="font-normal text-base text-[#1a1a1a]">PAES (M2)</div>
                       </td>
-                      <td className="py-6 px-6 text-[#2E2D29]">Futuros STEM</td>
-                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Razonamiento matemático de alta complejidad</td>
+                      <td className="py-6 px-6 text-[#666666]">Futuros STEM</td>
+                      <td className="py-6 px-6 text-[#666666] text-sm">Razonamiento matemático de alta complejidad</td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$20.000</div>
+                        <div className="font-light text-xl text-[#1a1a1a]">$20.000</div>
                       </td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$200.000</div>
+                        <div className="font-serif font-bold text-xl text-[#666666]">$200.000</div>
                       </td>
                       <td className="py-6 px-6 text-center">
                         <button
                           onClick={() => setReservationDialogOpen(true)}
-                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
+                          className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 text-sm font-normal hover:bg-[#333333] transition-colors"
                         >
                           Contratar
                         </button>
@@ -789,20 +789,20 @@ export default function Home() {
                     {/* PAES Historia / CC */}
                     <tr className="hover:bg-[#F9F6EF] transition-colors">
                       <td className="py-6 px-6">
-                        <div className="font-serif font-bold text-xl text-[#002F6C]">PAES (Historia / CC)</div>
+                        <div className="font-normal text-base text-[#1a1a1a]">PAES (Historia / CC)</div>
                       </td>
-                      <td className="py-6 px-6 text-[#2E2D29]">Alumnos de 4º Medio</td>
-                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Preparación para pruebas electivas específicas (valor unitario)</td>
+                      <td className="py-6 px-6 text-[#666666]">Alumnos de 4º Medio</td>
+                      <td className="py-6 px-6 text-[#666666] text-sm">Preparación para pruebas electivas específicas (valor unitario)</td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$10.000</div>
+                        <div className="font-light text-xl text-[#1a1a1a]">$10.000</div>
                       </td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$100.000</div>
+                        <div className="font-serif font-bold text-xl text-[#666666]">$100.000</div>
                       </td>
                       <td className="py-6 px-6 text-center">
                         <button
                           onClick={() => setReservationDialogOpen(true)}
-                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
+                          className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 text-sm font-normal hover:bg-[#333333] transition-colors"
                         >
                           Contratar
                         </button>
@@ -865,20 +865,20 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="bg-[#F9F6EF] rounded-lg p-6 border border-[#002F6C]/20"
+                    className="bg-[#f2f2f2] p-6"
                   >
-                    <h3 className="font-serif font-bold text-2xl text-[#002F6C] mb-2">{plan.name}</h3>
-                    <p className="text-sm text-[#2E2D29] mb-4">{plan.target}</p>
-                    <p className="text-sm text-[#2E2D29]/70 mb-6">{plan.focus}</p>
+                    <h3 className="font-light text-xl text-[#1a1a1a] mb-2">{plan.name}</h3>
+                    <p className="text-sm text-[#666666] mb-4">{plan.target}</p>
+                    <p className="text-sm text-[#666666]/70 mb-6">{plan.focus}</p>
                     
                     <div className="flex items-end justify-between mb-6">
                       <div>
-                        <div className="text-xs text-[#2E2D29]/60 mb-1">Mensual</div>
+                        <div className="text-xs text-[#666666]/60 mb-1">Mensual</div>
                         <div className="font-serif font-bold text-3xl text-[#002F6C]">{plan.monthly}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-xs text-[#2E2D29]/60 mb-1">Anual (10 cuotas)</div>
-                        <div className="font-serif font-bold text-xl text-[#2E2D29]">{plan.annual}</div>
+                        <div className="text-xs text-[#666666]/60 mb-1">Anual (10 cuotas)</div>
+                        <div className="font-serif font-bold text-xl text-[#666666]">{plan.annual}</div>
                       </div>
                     </div>
 
@@ -900,7 +900,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.5 }}
                 className="mt-12 text-center"
               >
-                <p className="text-sm text-[#2E2D29]/60">
+                <p className="text-sm text-[#666666]/60">
                   Todos los valores incluyen 19% de IVA. Ciclo académico: Marzo - Diciembre (10 meses).
                 </p>
               </motion.div>
@@ -928,8 +928,206 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Platform Showcase Section - Split Layout */}
-        <section id="plataforma" className="py-32 bg-gradient-to-br from-white via-[#F5F1E8] to-white relative overflow-hidden scroll-mt-20">
+                        {/* MediaGrid Section - Standards.site Style with Real Images */}
+        <section className="py-0 bg-white">
+          <div className="w-full max-w-[2000px] mx-auto">
+            
+            {/* Full Width Hero Media */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative w-full overflow-hidden"
+              style={{ aspectRatio: '2/1' }}
+            >
+              <img 
+                src="/portada_plataforma.png" 
+                alt="BLUE Plataforma" 
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-[#0066FF]/90 hover:bg-[#0066FF]/70 transition-all duration-300 cursor-pointer">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <div className="w-3 h-3 rounded-full bg-white mb-6 mx-auto"></div>
+                    <h3 className="text-4xl md:text-5xl font-light">BLUE en Acción</h3>
+                    <p className="text-xl font-light mt-4 opacity-90">Plataforma de aprendizaje inteligente</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Two Column Grid */}
+            <div className="grid md:grid-cols-2 gap-0">
+              
+              {/* Item 1 - Voz Nativa */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="relative group cursor-pointer overflow-hidden"
+                style={{ aspectRatio: '1/1' }}
+              >
+                <img 
+                  src="/1.png" 
+                  alt="Voz Nativa" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-[#FF2E00]/90 group-hover:bg-[#FF2E00]/70 transition-all duration-300">
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <div className="text-center text-white">
+                      <div className="w-2 h-2 rounded-full bg-white mb-6 mx-auto"></div>
+                      <h4 className="text-2xl md:text-3xl font-light">Voz Nativa</h4>
+                      <p className="text-base font-light mt-3 opacity-90">Interacción por voz para niños</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Item 2 - Dashboard Padres */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="relative group cursor-pointer overflow-hidden"
+                style={{ aspectRatio: '1/1' }}
+              >
+                <img 
+                  src="/2.png" 
+                  alt="Dashboard Padres" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-[#00CC66]/90 group-hover:bg-[#00CC66]/70 transition-all duration-300">
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <div className="text-center text-white">
+                      <div className="w-2 h-2 rounded-full bg-white mb-6 mx-auto"></div>
+                      <h4 className="text-2xl md:text-3xl font-light">Dashboard Padres</h4>
+                      <p className="text-base font-light mt-3 opacity-90">Seguimiento en tiempo real</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+            </div>
+
+            {/* Three Column Grid */}
+            <div className="grid md:grid-cols-3 gap-0">
+              
+              {/* Item 3 - Método Socrático */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="relative group cursor-pointer overflow-hidden"
+                style={{ aspectRatio: '1/1' }}
+              >
+                <img 
+                  src="/3.png" 
+                  alt="Método Socrático" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-[#9933FF]/90 group-hover:bg-[#9933FF]/70 transition-all duration-300">
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <div className="text-center text-white">
+                      <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                      <h4 className="text-xl md:text-2xl font-light">Método Socrático</h4>
+                      <p className="text-sm font-light mt-2 opacity-90">Preguntas que enseñan</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Item 4 - Gamificación */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="relative group cursor-pointer overflow-hidden"
+                style={{ aspectRatio: '1/1' }}
+              >
+                <img 
+                  src="/video-poster-1.jpg" 
+                  alt="Anti-Procrastinación" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-[#FF6600]/90 group-hover:bg-[#FF6600]/70 transition-all duration-300">
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <div className="text-center text-white">
+                      <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                      <h4 className="text-xl md:text-2xl font-light">Anti-Procrastinación</h4>
+                      <p className="text-sm font-light mt-2 opacity-90">Gamificación científica</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Item 5 - Currículum MINEDUC */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="relative group cursor-pointer overflow-hidden"
+                style={{ aspectRatio: '1/1' }}
+              >
+                <img 
+                  src="/video-poster-2.jpg" 
+                  alt="Currículum MINEDUC" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-[#FFCC00]/90 group-hover:bg-[#FFCC00]/70 transition-all duration-300">
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <div className="text-center text-white">
+                      <div className="w-2 h-2 rounded-full bg-white mb-4 mx-auto"></div>
+                      <h4 className="text-xl md:text-2xl font-light">100% MINEDUC</h4>
+                      <p className="text-sm font-light mt-2 opacity-90">Currículum oficial</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+            </div>
+
+            {/* Full Width Bottom */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative w-full overflow-hidden"
+              style={{ aspectRatio: '2/1' }}
+            >
+              <img 
+                src="/imagen01.jpg" 
+                alt="Resultados Comprobados" 
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-[#FF0099]/90 hover:bg-[#FF0099]/70 transition-all duration-300 cursor-pointer">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <div className="w-3 h-3 rounded-full bg-white mb-6 mx-auto"></div>
+                    <h3 className="text-4xl md:text-5xl font-light">Resultados Comprobados</h3>
+                    <p className="text-xl font-light mt-4 opacity-90">Miles de estudiantes transformados</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+          </div>
+        </section>
+
+
+
+
+
+
+
+        {/* Platform Showcase Section - Standards.site Style */}
+        <section id="plataforma" className="py-32 bg-[#f2f2f2] scroll-mt-20">
           {/* Subtle Background Pattern */}
           <div className="absolute inset-0 opacity-[0.02]">
             <div className="absolute inset-0" style={{
@@ -1028,135 +1226,150 @@ export default function Home() {
           </div>
         </section>
 
-        {/* BLUE in Action Section - 3 Columns */}
-        <section className="py-32 bg-gradient-to-br from-[#002F6C] via-[#003d8f] to-[#002F6C] relative overflow-hidden">
-          {/* Elegant pattern overlay */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute inset-0" style={{
-              backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-              backgroundSize: '50px 50px',
-            }}></div>
-          </div>
+        {/* Case Studies Section - Standards.site Style with Color Blocks */}
+        <section className="py-32 bg-white relative overflow-hidden">
+          <div className="container-harvard">
+            {/* Header */}
+            <div className="max-w-4xl mb-16">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a1a] leading-tight mb-6">
+                Casos de Éxito
+              </h2>
+              <p className="text-xl md:text-2xl text-[#666666] leading-relaxed font-light">
+                Estudiantes reales transformando su aprendizaje con BLUE
+              </p>
+            </div>
 
-          <div className="max-w-[1600px] mx-auto px-8 relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.9fr_0.9fr] gap-12 items-center">
-              
-              {/* Left Column - Video Loop */}
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                className="relative h-[600px] rounded-2xl overflow-hidden shadow-2xl"
-              >
-                <video 
-                  autoPlay 
-                  loop 
-                  muted 
-                  playsInline
-                  className="w-full h-full object-cover"
-                >
-                  <source src="/video3.mp4" type="video/mp4" />
-                  Tu navegador no soporta videos.
-                </video>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#002F6C] via-transparent to-transparent pointer-events-none"></div>
-              </motion.div>
-
-              {/* Center Column - Title & Description */}
+            {/* Color Blocks Grid - Standards.site Style */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
+              {/* Case Study 1 - Bright Blue */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="space-y-6 lg:col-span-1 flex flex-col justify-center"
-                style={{ minHeight: '600px' }}
+                transition={{ duration: 0.6 }}
+                className="bg-[#0066FF] p-8 aspect-square flex flex-col justify-between"
               >
-                <div className="space-y-3">
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-white leading-[1.1] tracking-tight">
-                    Conoce a <span className="text-[#D4AF37]">BLUE</span>:<br />
-                    <span className="text-white/90">Tu Tutor IA Inteligente</span>
-                  </h2>
-                  <p className="text-[#F5F1E8] text-lg md:text-xl font-semibold italic">
-                    La IA que no da la respuesta, enseña a pensar
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    María, 8° Básico
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "Pasé de 4.5 a 6.2 en Matemáticas en solo 3 meses usando BLUE"
                   </p>
                 </div>
-                <div className="h-0.5 bg-[#D4AF37] w-16" />
-                <p className="text-white/85 text-base md:text-lg leading-[1.7] font-normal">
-                  ¿Te imaginas tener un tutor experto disponible en todo momento? BLUE aplica la <span className="text-[#D4AF37] font-semibold">Metodología Socrática de Stanford</span>, guiando a tu hijo mediante preguntas inteligentes en lugar de entregarle respuestas directas.
-                </p>
+                <div className="text-sm text-white/70 font-light">
+                  Exámenes Libres · Santiago
+                </div>
               </motion.div>
 
-              {/* Right Column - BLUE Features */}
+              {/* Case Study 2 - Vibrant Red */}
               <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="relative"
-                style={{ minHeight: '600px' }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="bg-[#FF2E00] p-8 aspect-square flex flex-col justify-between"
               >
-                <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 h-full flex flex-col justify-center">
-                  <div className="mb-8">
-                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                      ¿Por qué elegir <span className="text-[#D4AF37]">BLUE</span>?
-                    </h3>
-                    <div className="h-0.5 bg-[#D4AF37] w-12" />
-                  </div>
-                  
-                  <div className="space-y-6">
-                    <div className="space-y-5">
-                      <div className="flex items-start gap-4">
-                        <div className="text-3xl shrink-0">🧠</div>
-                        <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">Método Socrático</h4>
-                          <p className="text-white/80 text-sm leading-relaxed">
-                            Enseña a pensar mediante preguntas guiadas, no entregando respuestas
-                          </p>
-                        </div>
-                      </div>
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Carlos, Validación Adultos
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "Terminé mi 4° Medio en 8 meses mientras trabajaba tiempo completo"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  Validación · Valparaíso
+                </div>
+              </motion.div>
 
-                      <div className="flex items-start gap-4">
-                        <div className="text-3xl shrink-0">🎤</div>
-                        <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">Interacción por Voz</h4>
-                          <p className="text-white/80 text-sm leading-relaxed">
-                            Los niños pequeños aprenden hablando naturalmente con BLUE
-                          </p>
-                        </div>
-                      </div>
+              {/* Case Study 3 - Bright Green */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="bg-[#00CC66] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Sofía, PAES
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "820 puntos en Matemática M2 con el método Socrático de BLUE"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  PAES 2025 · Concepción
+                </div>
+              </motion.div>
 
-                      <div className="flex items-start gap-4">
-                        <div className="text-3xl shrink-0">🇨🇱</div>
-                        <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">100% Currículo MINEDUC</h4>
-                          <p className="text-white/80 text-sm leading-relaxed">
-                            Alineado con los programas oficiales chilenos
-                          </p>
-                        </div>
-                      </div>
+              {/* Case Study 4 - Purple */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="bg-[#9933FF] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Diego, 1° Medio
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "BLUE me ayudó a entender Ciencias con preguntas que me hacían pensar"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  BLUE Home · La Serena
+                </div>
+              </motion.div>
 
-                      <div className="flex items-start gap-4">
-                        <div className="text-3xl shrink-0">📊</div>
-                        <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">Dashboard Padres</h4>
-                          <p className="text-white/80 text-sm leading-relaxed">
-                            Reportes de progreso automáticos a tu correo
-                          </p>
-                        </div>
-                      </div>
+              {/* Case Study 5 - Orange */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="bg-[#FF6600] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Valentina, 3° Medio
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "Mi familia homeschooling encontró en BLUE el tutor perfecto 24/7"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  Homeschooling · Puerto Montt
+                </div>
+              </motion.div>
 
-                      <div className="flex items-start gap-4">
-                        <div className="text-3xl shrink-0">⚡</div>
-                        <div>
-                          <h4 className="text-white font-bold mb-1 text-lg">Anti-Procrastinación</h4>
-                          <p className="text-white/80 text-sm leading-relaxed">
-                            Gamificación basada en psicología del comportamiento
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
+              {/* Case Study 6 - Pink */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="bg-[#FF0099] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Matías, 7° Básico
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "Aprender hablando con BLUE es increíble, es como tener un profesor siempre disponible"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  Voz Nativa · Temuco
                 </div>
               </motion.div>
 
@@ -1167,8 +1380,8 @@ export default function Home() {
 
       {/* Tech Stack / Partners Section */}
 
-      {/* Founder Story Section - Quiénes Somos */}
-      <section className="bg-[#F9F6EF] py-32">
+      {/* Founder Story Section - Standards.site Style */}
+      <section className="bg-white py-32">
         <div className="max-w-[1400px] mx-auto px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
@@ -1189,7 +1402,7 @@ export default function Home() {
               {/* Badge on Image - Clean design */}
               <div className="absolute bottom-8 left-8 bg-white rounded-lg px-6 py-4 border border-[#002F6C]/20">
                 <div className="text-3xl font-bold font-serif text-[#002F6C]">20+ años</div>
-                <div className="text-sm text-[#2E2D29] font-medium">de experiencia docente</div>
+                <div className="text-sm text-[#666666] font-medium">de experiencia docente</div>
               </div>
             </motion.div>
 
@@ -1217,7 +1430,7 @@ export default function Home() {
               <div className="h-0.5 w-16 bg-[#002F6C]"></div>
 
               {/* Description */}
-              <div className="space-y-4 text-base md:text-lg text-[#2E2D29] leading-[1.8]">
+              <div className="space-y-4 text-base md:text-lg text-[#666666] leading-[1.8]">
                 <p>
                   <span className="font-serif font-bold text-[#002F6C]">BLUE</span> nació de una necesidad real: cómo llevar <span className="font-semibold text-[#002F6C]">20 años de experiencia docente</span> a miles de niños simultáneamente.
                 </p>
@@ -1239,15 +1452,15 @@ export default function Home() {
               <div className="grid grid-cols-3 gap-4 pt-6">
                 <div className="text-center p-4 bg-white rounded-lg border border-[#002F6C]/20">
                   <div className="text-3xl font-bold font-serif text-[#002F6C]">20+</div>
-                  <div className="text-xs text-[#2E2D29]/60 mt-1">Años Docente</div>
+                  <div className="text-xs text-[#666666]/60 mt-1">Años Docente</div>
                 </div>
                 <div className="text-center p-4 bg-white rounded-lg border border-[#002F6C]/20">
                   <div className="text-3xl font-bold font-serif text-[#002F6C]">1000s</div>
-                  <div className="text-xs text-[#2E2D29]/60 mt-1">Estudiantes</div>
+                  <div className="text-xs text-[#666666]/60 mt-1">Estudiantes</div>
                 </div>
                 <div className="text-center p-4 bg-white rounded-lg border border-[#002F6C]/20">
                   <div className="text-3xl font-bold font-serif text-[#002F6C]">24/7</div>
-                  <div className="text-xs text-[#2E2D29]/60 mt-1">Con BLUE</div>
+                  <div className="text-xs text-[#666666]/60 mt-1">Con BLUE</div>
                 </div>
               </div>
             </motion.div>
@@ -1331,7 +1544,7 @@ export default function Home() {
       </section>
 
 
-      <section className="bg-[#fafafa] py-16 border-t border-[#1e1e1e]/5">
+      <section className="bg-[#f2f2f2] py-16">
         <div className="container-harvard">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1487,8 +1700,8 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-      {/* FAQ Section - Compact Horizontal */}
-      <section className="py-16 bg-gradient-to-br from-[#f8f9fa] to-white">
+      {/* FAQ Section - Standards.site Style */}
+      <section className="py-16 bg-white">
         <div className="max-w-[1200px] mx-auto px-8">
           {/* Header */}
           <div className="text-center mb-10">
