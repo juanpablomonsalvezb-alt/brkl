@@ -620,7 +620,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.5 }}
                 className="text-center mt-12"
               >
-                <p className="text-lg text-[#666666]/70 mb-6">
+                <p className="text-lg text-[#2E2D29]/70 mb-6">
                   Ideal para familias homeschooling y estudiantes que procrastinan
                 </p>
                 <motion.button
@@ -695,22 +695,22 @@ export default function Home() {
                     </tr>
 
                     {/* Exámenes Libres */}
-                    <tr className="border-b border-[#1a1a1a]/10 hover:bg-[#f2f2f2] transition-colors">
+                    <tr className="border-b border-[#002F6C]/10 hover:bg-[#F9F6EF] transition-colors">
                       <td className="py-6 px-6">
-                        <div className="font-normal text-base text-[#1a1a1a]">Exámenes Libres</div>
+                        <div className="font-serif font-bold text-xl text-[#002F6C]">Exámenes Libres</div>
                       </td>
-                      <td className="py-6 px-6 text-[#666666]">7º Básico a 4º Medio</td>
-                      <td className="py-6 px-6 text-[#666666] text-sm">Preparación intensiva para validación de estudios (menores)</td>
+                      <td className="py-6 px-6 text-[#2E2D29]">7º Básico a 4º Medio</td>
+                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Preparación intensiva para validación de estudios (menores)</td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-light text-xl text-[#1a1a1a]">$29.900</div>
+                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$29.900</div>
                       </td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-xl text-[#666666]">$299.000</div>
+                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$299.000</div>
                       </td>
                       <td className="py-6 px-6 text-center">
                         <button
                           onClick={() => setReservationDialogOpen(true)}
-                          className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 text-sm font-normal hover:bg-[#333333] transition-colors"
+                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
                         >
                           Contratar
                         </button>
@@ -718,22 +718,22 @@ export default function Home() {
                     </tr>
 
                     {/* Validación Adultos */}
-                    <tr className="border-b border-[#1a1a1a]/10 hover:bg-[#f2f2f2] transition-colors">
+                    <tr className="border-b border-[#002F6C]/10 hover:bg-[#F9F6EF] transition-colors">
                       <td className="py-6 px-6">
-                        <div className="font-normal text-base text-[#1a1a1a]">Validación Adultos</div>
+                        <div className="font-serif font-bold text-xl text-[#002F6C]">Validación Adultos</div>
                       </td>
-                      <td className="py-6 px-6 text-[#666666]">Mayores de 18 años</td>
-                      <td className="py-6 px-6 text-[#666666] text-sm">Nivelación acelerada y estratégica para fines laborales</td>
+                      <td className="py-6 px-6 text-[#2E2D29]">Mayores de 18 años</td>
+                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Nivelación acelerada y estratégica para fines laborales</td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-light text-xl text-[#1a1a1a]">$24.900</div>
+                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$24.900</div>
                       </td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-xl text-[#666666]">$249.000</div>
+                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$249.000</div>
                       </td>
                       <td className="py-6 px-6 text-center">
                         <button
                           onClick={() => setReservationDialogOpen(true)}
-                          className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 text-sm font-normal hover:bg-[#333333] transition-colors"
+                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
                         >
                           Contratar
                         </button>
@@ -741,22 +741,22 @@ export default function Home() {
                     </tr>
 
                     {/* PAES M1 / Lenguaje */}
-                    <tr className="border-b border-[#1a1a1a]/10 hover:bg-[#f2f2f2] transition-colors">
+                    <tr className="border-b border-[#002F6C]/10 hover:bg-[#F9F6EF] transition-colors">
                       <td className="py-6 px-6">
-                        <div className="font-normal text-base text-[#1a1a1a]">PAES (M1 / Lenguaje)</div>
+                        <div className="font-serif font-bold text-xl text-[#002F6C]">PAES (M1 / Lenguaje)</div>
                       </td>
-                      <td className="py-6 px-6 text-[#666666]">Alumnos de 4º Medio</td>
-                      <td className="py-6 px-6 text-[#666666] text-sm">Preparación específica por área (valor unitario)</td>
+                      <td className="py-6 px-6 text-[#2E2D29]">Alumnos de 4º Medio</td>
+                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Preparación específica por área (valor unitario)</td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-light text-xl text-[#1a1a1a]">$12.000</div>
+                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$12.000</div>
                       </td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-xl text-[#666666]">$120.000</div>
+                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$120.000</div>
                       </td>
                       <td className="py-6 px-6 text-center">
                         <button
                           onClick={() => setReservationDialogOpen(true)}
-                          className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 text-sm font-normal hover:bg-[#333333] transition-colors"
+                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
                         >
                           Contratar
                         </button>
@@ -764,22 +764,22 @@ export default function Home() {
                     </tr>
 
                     {/* PAES M2 */}
-                    <tr className="border-b border-[#1a1a1a]/10 hover:bg-[#f2f2f2] transition-colors">
+                    <tr className="border-b border-[#002F6C]/10 hover:bg-[#F9F6EF] transition-colors">
                       <td className="py-6 px-6">
-                        <div className="font-normal text-base text-[#1a1a1a]">PAES (M2)</div>
+                        <div className="font-serif font-bold text-xl text-[#002F6C]">PAES (M2)</div>
                       </td>
-                      <td className="py-6 px-6 text-[#666666]">Futuros STEM</td>
-                      <td className="py-6 px-6 text-[#666666] text-sm">Razonamiento matemático de alta complejidad</td>
+                      <td className="py-6 px-6 text-[#2E2D29]">Futuros STEM</td>
+                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Razonamiento matemático de alta complejidad</td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-light text-xl text-[#1a1a1a]">$20.000</div>
+                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$20.000</div>
                       </td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-xl text-[#666666]">$200.000</div>
+                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$200.000</div>
                       </td>
                       <td className="py-6 px-6 text-center">
                         <button
                           onClick={() => setReservationDialogOpen(true)}
-                          className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 text-sm font-normal hover:bg-[#333333] transition-colors"
+                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
                         >
                           Contratar
                         </button>
@@ -789,20 +789,20 @@ export default function Home() {
                     {/* PAES Historia / CC */}
                     <tr className="hover:bg-[#F9F6EF] transition-colors">
                       <td className="py-6 px-6">
-                        <div className="font-normal text-base text-[#1a1a1a]">PAES (Historia / CC)</div>
+                        <div className="font-serif font-bold text-xl text-[#002F6C]">PAES (Historia / CC)</div>
                       </td>
-                      <td className="py-6 px-6 text-[#666666]">Alumnos de 4º Medio</td>
-                      <td className="py-6 px-6 text-[#666666] text-sm">Preparación para pruebas electivas específicas (valor unitario)</td>
+                      <td className="py-6 px-6 text-[#2E2D29]">Alumnos de 4º Medio</td>
+                      <td className="py-6 px-6 text-[#2E2D29] text-sm">Preparación para pruebas electivas específicas (valor unitario)</td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-light text-xl text-[#1a1a1a]">$10.000</div>
+                        <div className="font-serif font-bold text-2xl text-[#002F6C]">$10.000</div>
                       </td>
                       <td className="py-6 px-6 text-right">
-                        <div className="font-serif font-bold text-xl text-[#666666]">$100.000</div>
+                        <div className="font-serif font-bold text-xl text-[#2E2D29]">$100.000</div>
                       </td>
                       <td className="py-6 px-6 text-center">
                         <button
                           onClick={() => setReservationDialogOpen(true)}
-                          className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-4 py-2 text-sm font-normal hover:bg-[#333333] transition-colors"
+                          className="inline-flex items-center gap-2 bg-[#002F6C] text-white px-4 py-2 text-sm font-semibold hover:bg-[#003d8f] transition-colors"
                         >
                           Contratar
                         </button>
@@ -865,20 +865,20 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="bg-[#f2f2f2] p-6"
+                    className="bg-[#F9F6EF] rounded-lg p-6 border border-[#002F6C]/20"
                   >
-                    <h3 className="font-light text-xl text-[#1a1a1a] mb-2">{plan.name}</h3>
-                    <p className="text-sm text-[#666666] mb-4">{plan.target}</p>
-                    <p className="text-sm text-[#666666]/70 mb-6">{plan.focus}</p>
+                    <h3 className="font-serif font-bold text-2xl text-[#002F6C] mb-2">{plan.name}</h3>
+                    <p className="text-sm text-[#2E2D29] mb-4">{plan.target}</p>
+                    <p className="text-sm text-[#2E2D29]/70 mb-6">{plan.focus}</p>
                     
                     <div className="flex items-end justify-between mb-6">
                       <div>
-                        <div className="text-xs text-[#666666]/60 mb-1">Mensual</div>
+                        <div className="text-xs text-[#2E2D29]/60 mb-1">Mensual</div>
                         <div className="font-serif font-bold text-3xl text-[#002F6C]">{plan.monthly}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-xs text-[#666666]/60 mb-1">Anual (10 cuotas)</div>
-                        <div className="font-serif font-bold text-xl text-[#666666]">{plan.annual}</div>
+                        <div className="text-xs text-[#2E2D29]/60 mb-1">Anual (10 cuotas)</div>
+                        <div className="font-serif font-bold text-xl text-[#2E2D29]">{plan.annual}</div>
                       </div>
                     </div>
 
@@ -900,7 +900,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.5 }}
                 className="mt-12 text-center"
               >
-                <p className="text-sm text-[#666666]/60">
+                <p className="text-sm text-[#2E2D29]/60">
                   Todos los valores incluyen 19% de IVA. Ciclo académico: Marzo - Diciembre (10 meses).
                 </p>
               </motion.div>
@@ -1189,7 +1189,7 @@ export default function Home() {
               {/* Badge on Image - Clean design */}
               <div className="absolute bottom-8 left-8 bg-white rounded-lg px-6 py-4 border border-[#002F6C]/20">
                 <div className="text-3xl font-bold font-serif text-[#002F6C]">20+ años</div>
-                <div className="text-sm text-[#666666] font-medium">de experiencia docente</div>
+                <div className="text-sm text-[#2E2D29] font-medium">de experiencia docente</div>
               </div>
             </motion.div>
 
@@ -1217,7 +1217,7 @@ export default function Home() {
               <div className="h-0.5 w-16 bg-[#002F6C]"></div>
 
               {/* Description */}
-              <div className="space-y-4 text-base md:text-lg text-[#666666] leading-[1.8]">
+              <div className="space-y-4 text-base md:text-lg text-[#2E2D29] leading-[1.8]">
                 <p>
                   <span className="font-serif font-bold text-[#002F6C]">BLUE</span> nació de una necesidad real: cómo llevar <span className="font-semibold text-[#002F6C]">20 años de experiencia docente</span> a miles de niños simultáneamente.
                 </p>
@@ -1239,15 +1239,15 @@ export default function Home() {
               <div className="grid grid-cols-3 gap-4 pt-6">
                 <div className="text-center p-4 bg-white rounded-lg border border-[#002F6C]/20">
                   <div className="text-3xl font-bold font-serif text-[#002F6C]">20+</div>
-                  <div className="text-xs text-[#666666]/60 mt-1">Años Docente</div>
+                  <div className="text-xs text-[#2E2D29]/60 mt-1">Años Docente</div>
                 </div>
                 <div className="text-center p-4 bg-white rounded-lg border border-[#002F6C]/20">
                   <div className="text-3xl font-bold font-serif text-[#002F6C]">1000s</div>
-                  <div className="text-xs text-[#666666]/60 mt-1">Estudiantes</div>
+                  <div className="text-xs text-[#2E2D29]/60 mt-1">Estudiantes</div>
                 </div>
                 <div className="text-center p-4 bg-white rounded-lg border border-[#002F6C]/20">
                   <div className="text-3xl font-bold font-serif text-[#002F6C]">24/7</div>
-                  <div className="text-xs text-[#666666]/60 mt-1">Con BLUE</div>
+                  <div className="text-xs text-[#2E2D29]/60 mt-1">Con BLUE</div>
                 </div>
               </div>
             </motion.div>

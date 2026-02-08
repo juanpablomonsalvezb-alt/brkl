@@ -865,7 +865,7 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="bg-[#f2f2f2] p-6"
+                    className="bg-[#F9F6EF] rounded-lg p-6 border border-[#002F6C]/20"
                   >
                     <h3 className="font-light text-xl text-[#1a1a1a] mb-2">{plan.name}</h3>
                     <p className="text-sm text-[#666666] mb-4">{plan.target}</p>
