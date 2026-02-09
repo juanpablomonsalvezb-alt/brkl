@@ -21,7 +21,6 @@ import { PlanConfiguratorYouthPremium } from "@/components/PlanConfiguratorYouth
 import { PlanConfiguratorAdults } from "@/components/PlanConfiguratorAdults";
 import { PlanConfiguratorAdultsNew } from "@/components/PlanConfiguratorAdultsNew";
 import PaesConfigurator from "@/components/PaesConfigurator";
-import PremiumExperiences from "@/components/PremiumExperiences";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -909,7 +908,6 @@ export default function Home() {
         </section>
 
         {/* Premium Experiences Section */}
-        <PremiumExperiences />
 
         {/* Thinking Bridge - Metaphor Section */}
         {/* <ThinkingBridge /> */}
@@ -1226,7 +1224,156 @@ export default function Home() {
           </div>
         </section>
 
-        
+        {/* Case Studies Section - Standards.site Style with Color Blocks */}
+        <section className="py-32 bg-white relative overflow-hidden">
+          <div className="container-harvard">
+            {/* Header */}
+            <div className="max-w-4xl mb-16">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a1a] leading-tight mb-6">
+                Casos de Éxito
+              </h2>
+              <p className="text-xl md:text-2xl text-[#666666] leading-relaxed font-light">
+                Estudiantes reales transformando su aprendizaje con BLUE
+              </p>
+            </div>
+
+            {/* Color Blocks Grid - Standards.site Style */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
+              {/* Case Study 1 - Bright Blue */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="bg-[#0066FF] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    María, 8° Básico
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "Pasé de 4.5 a 6.2 en Matemáticas en solo 3 meses usando BLUE"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  Exámenes Libres · Santiago
+                </div>
+              </motion.div>
+
+              {/* Case Study 2 - Vibrant Red */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="bg-[#FF2E00] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Carlos, Validación Adultos
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "Terminé mi 4° Medio en 8 meses mientras trabajaba tiempo completo"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  Validación · Valparaíso
+                </div>
+              </motion.div>
+
+              {/* Case Study 3 - Bright Green */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="bg-[#00CC66] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Sofía, PAES
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "820 puntos en Matemática M2 con el método Socrático de BLUE"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  PAES 2025 · Concepción
+                </div>
+              </motion.div>
+
+              {/* Case Study 4 - Purple */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="bg-[#9933FF] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Diego, 1° Medio
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "BLUE me ayudó a entender Ciencias con preguntas que me hacían pensar"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  BLUE Home · La Serena
+                </div>
+              </motion.div>
+
+              {/* Case Study 5 - Orange */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="bg-[#FF6600] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Valentina, 3° Medio
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "Mi familia homeschooling encontró en BLUE el tutor perfecto 24/7"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  Homeschooling · Puerto Montt
+                </div>
+              </motion.div>
+
+              {/* Case Study 6 - Pink */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="bg-[#FF0099] p-8 aspect-square flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-2 h-2 rounded-full bg-white mb-6"></div>
+                  <h3 className="text-2xl font-normal text-white mb-4">
+                    Matías, 7° Básico
+                  </h3>
+                  <p className="text-white/90 font-light leading-relaxed">
+                    "Aprender hablando con BLUE es increíble, es como tener un profesor siempre disponible"
+                  </p>
+                </div>
+                <div className="text-sm text-white/70 font-light">
+                  Voz Nativa · Temuco
+                </div>
+              </motion.div>
+
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* Tech Stack / Partners Section */}
