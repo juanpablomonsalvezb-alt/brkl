@@ -77,7 +77,10 @@ background-color: var(--controls-backdrop-color);
                   
                   <!-- Precio -->
                   <div class="mb-10 pb-8 border-b border-gray-200">
-                    <div class="text-heading-1 text-gray-950-ink mb-2" style="font-family: var(--font-harvey-serif); font-size: 3.5rem; line-height: 1; font-weight: 700; letter-spacing: -0.02em;">$250.000</div>
+                    <div class="mb-2 flex items-baseline gap-2">
+                      <span class="text-gray-500" style="font-family: var(--font-harvey-sans); font-size: 1.25rem; font-weight: 500;">CLP</span>
+                      <span class="text-gray-950-ink" style="font-family: var(--font-harvey-serif); font-size: 2.5rem; line-height: 1; font-weight: 600; letter-spacing: -0.01em;">$250.000</span>
+                    </div>
                     <div class="text-body-2 text-gray-500 font-medium" style="font-family: var(--font-harvey-sans);">Pago Único</div>
                   </div>
                   
@@ -122,7 +125,10 @@ background-color: var(--controls-backdrop-color);
                   
                   <!-- Precio -->
                   <div class="mb-10 pb-8 border-b border-gray-200">
-                    <div class="text-heading-1 text-gray-950-ink mb-2" style="font-family: var(--font-harvey-serif); font-size: 3.5rem; line-height: 1; font-weight: 700; letter-spacing: -0.02em;">$200.000</div>
+                    <div class="mb-2 flex items-baseline gap-2">
+                      <span class="text-gray-500" style="font-family: var(--font-harvey-sans); font-size: 1.25rem; font-weight: 500;">CLP</span>
+                      <span class="text-gray-950-ink" style="font-family: var(--font-harvey-serif); font-size: 2.5rem; line-height: 1; font-weight: 600; letter-spacing: -0.01em;">$200.000</span>
+                    </div>
                     <div class="text-body-2 text-gray-500 font-medium" style="font-family: var(--font-harvey-sans);">Pago Único</div>
                   </div>
                   
@@ -167,7 +173,10 @@ background-color: var(--controls-backdrop-color);
                   
                   <!-- Precio -->
                   <div class="mb-10 pb-8 border-b border-gray-200">
-                    <div class="text-heading-1 text-gray-950-ink mb-2" style="font-family: var(--font-harvey-serif); font-size: 3.5rem; line-height: 1; font-weight: 700; letter-spacing: -0.02em;">$150.000</div>
+                    <div class="mb-2 flex items-baseline gap-2">
+                      <span class="text-gray-500" style="font-family: var(--font-harvey-sans); font-size: 1.25rem; font-weight: 500;">CLP</span>
+                      <span class="text-gray-950-ink" style="font-family: var(--font-harvey-serif); font-size: 2.5rem; line-height: 1; font-weight: 600; letter-spacing: -0.01em;">$150.000</span>
+                    </div>
                     <div class="text-body-2 text-gray-500 font-medium" style="font-family: var(--font-harvey-sans);">Pago Único</div>
                   </div>
                   
@@ -212,7 +221,10 @@ background-color: var(--controls-backdrop-color);
                   
                   <!-- Precio -->
                   <div class="mb-10 pb-8 border-b border-gray-200">
-                    <div class="text-heading-1 text-gray-950-ink mb-2" style="font-family: var(--font-harvey-serif); font-size: 3.5rem; line-height: 1; font-weight: 700; letter-spacing: -0.02em;">$150.000</div>
+                    <div class="mb-2 flex items-baseline gap-2">
+                      <span class="text-gray-500" style="font-family: var(--font-harvey-sans); font-size: 1.25rem; font-weight: 500;">CLP</span>
+                      <span class="text-gray-950-ink" style="font-family: var(--font-harvey-serif); font-size: 2.5rem; line-height: 1; font-weight: 600; letter-spacing: -0.01em;">$150.000</span>
+                    </div>
                     <div class="text-body-2 text-gray-500 font-medium" style="font-family: var(--font-harvey-sans);">Pago Único</div>
                   </div>
                   
@@ -440,16 +452,16 @@ background-color: var(--controls-backdrop-color);
   color: #1e40af;
 }
 
-/* Animación del precio en hover */
-.pricing-card [style*="font-size: 3.5rem"] {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+/* Animación del precio en hover - Versión sutil */
+.pricing-card [style*="font-size: 2.5rem"] {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 2;
 }
 
-.pricing-card:hover [style*="font-size: 3.5rem"] {
-  transform: scale(1.08);
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+.pricing-card:hover [style*="font-size: 2.5rem"] {
+  transform: translateY(-2px);
+  color: #1e40af;
 }
 
 /* Botón con efecto shimmer */
