@@ -17,7 +17,28 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useQuery } from "@tanstack/react-query";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ReservationDialog } from "@/components/ReservationDialog";
+
+const fadeUp = {
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-60px" },
+  transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
+};
+
+function CountUp({ to, duration = 1.4 }: { to: number; duration?: number }) {
+  const mv = useMotionValue(0);
+  const spring = useSpring(mv, { duration: duration * 1000, bounce: 0 });
+  const rounded = useTransform(spring, (v) => Math.round(v));
+  const [display, setDisplay] = useState(0);
+  useEffect(() => {
+    const unsub = rounded.on("change", (v) => setDisplay(v));
+    mv.set(to);
+    return unsub;
+  }, [to]);
+  return <>{display}</>;
+}
 
 interface Faq {
   id: string;
@@ -144,7 +165,7 @@ export default function Home() {
           <div className="hidden lg:flex items-center gap-3">
             <Button
               onClick={() => document.getElementById("matricula")?.scrollIntoView({ behavior: "smooth" })}
-              className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-md font-semibold"
+              className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-md font-semibold transition-all hover:shadow-lg hover:shadow-secondary/30 hover:-translate-y-0.5"
               data-testid="button-matricula-nav"
             >
               Matricúlate sin compromiso
@@ -184,10 +205,14 @@ export default function Home() {
       {/* ===== HERO + FORMULARIO ===== */}
       <section id="inicio" className="py-14 md:py-20">
         <div className="max-w-[1280px] mx-auto px-6 md:px-10 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-start">
-          <div>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
             <p className="font-label text-xs text-secondary mb-4">Educación básica y media online · Reconocimiento MINEDUC</p>
-            <h1 className="font-display text-4xl md:text-5xl font-bold leading-[1.15] mb-6 text-primary">
-              Un colegio online con la seriedad de uno presencial.
+            <h1 className="font-display text-4xl md:text-5xl font-bold leading-[1.15] mb-6">
+              Un colegio online con{" "}
+              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                la seriedad
+              </span>{" "}
+              de uno presencial.
             </h1>
             <p className="text-lg text-foreground/75 leading-relaxed mb-8 max-w-[52ch]">
               Barkley Online educa desde 5° básico a 4° medio bajo el modelo de autorregulación
@@ -233,10 +258,16 @@ export default function Home() {
                 Hablar con un asesor
               </button>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Formulario de matrícula — destacado, sin compromiso */}
-          <div id="matricula" className="scroll-mt-24 bg-card border border-border rounded-lg shadow-lg p-7 md:p-9">
+          {/* Formulario de matrícula — destacado, sin compromiso, glassmorphism sutil */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.15 }}
+            id="matricula"
+            className="scroll-mt-24 bg-card/80 backdrop-blur-md border border-border rounded-lg shadow-xl p-7 md:p-9"
+          >
             <h2 className="font-display text-2xl font-bold text-primary mb-2">Matrícula sin compromiso</h2>
             <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
               Completa tus datos y te contactamos para conversar tu caso. Sin costo, sin obligación
@@ -320,7 +351,7 @@ export default function Home() {
                 <Button
                   type="submit"
                   disabled={formState === "loading"}
-                  className="bg-primary hover:bg-primary/90 disabled:opacity-60 text-primary-foreground rounded-md h-12 text-base font-semibold mt-1"
+                  className="bg-primary hover:bg-primary/90 disabled:opacity-60 text-primary-foreground rounded-md h-12 text-base font-semibold mt-1 transition-all hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5"
                   data-testid="button-submit-matricula"
                 >
                   {formState === "loading" ? (
@@ -337,39 +368,71 @@ export default function Home() {
                 </p>
               </form>
             )}
-          </div>
+          </motion.div>
         </div>
       </section>
+
+      {/* ===== CIFRAS REALES (sin métricas inventadas) ===== */}
+      <motion.section {...fadeUp} className="bg-primary text-primary-foreground py-12 md:py-16">
+        <div className="max-w-[1280px] mx-auto px-6 md:px-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {[
+            { value: <><CountUp to={9} />&nbsp;niveles</>, label: "5° básico a 4° medio" },
+            { value: <><CountUp to={100} />%</>, label: "Alineado a bases MINEDUC" },
+            { value: "1 a 1", label: "Seguimiento por algoritmo" },
+            { value: "2027", label: "Apertura generación fundadora" },
+          ].map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+            >
+              <div className="font-display text-3xl md:text-4xl font-bold">{s.value}</div>
+              <div className="text-xs md:text-sm text-primary-foreground/75 mt-2">{s.label}</div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
 
       {/* ===== MÉTODO ===== */}
       <section id="metodo" className="bg-muted py-16 md:py-24">
         <div className="max-w-[1280px] mx-auto px-6 md:px-10">
-          <p className="font-label text-xs text-secondary mb-3">Nuestro método</p>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-primary max-w-[36ch] mb-4">
-            Un modelo educativo con fundamento, no una promesa vacía.
-          </h2>
-          <p className="text-foreground/70 max-w-[60ch] mb-12 leading-relaxed">
-            No copiamos la sala de clases tradicional a una pantalla. Construimos el plan de
-            estudio alrededor de cómo los estudiantes aprenden a sostener el foco y organizar su
-            propio aprendizaje.
-          </p>
+          <motion.div {...fadeUp}>
+            <p className="font-label text-xs text-secondary mb-3">Nuestro método</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-primary max-w-[36ch] mb-4">
+              Un modelo educativo con fundamento, no una promesa vacía.
+            </h2>
+            <p className="text-foreground/70 max-w-[60ch] mb-12 leading-relaxed">
+              No copiamos la sala de clases tradicional a una pantalla. Construimos el plan de
+              estudio alrededor de cómo los estudiantes aprenden a sostener el foco y organizar su
+              propio aprendizaje.
+            </p>
+          </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {PRINCIPIOS.map((p) => (
-              <div key={p.title} className="bg-card border border-border rounded-lg p-7">
+            {PRINCIPIOS.map((p, i) => (
+              <motion.div
+                key={p.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="bg-card border border-border rounded-lg p-7 transition-shadow hover:shadow-xl"
+              >
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-5">
                   <p.icon className="w-6 h-6 text-primary" strokeWidth={1.75} />
                 </div>
                 <h3 className="font-display text-lg font-bold text-primary mb-3">{p.title}</h3>
                 <p className="text-foreground/70 leading-relaxed text-[15px]">{p.body}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ===== FAQ ===== */}
-      <section id="faq" className="py-16 md:py-24">
+      <motion.section {...fadeUp} id="faq" className="py-16 md:py-24">
         <div className="max-w-[760px] mx-auto px-6 md:px-10">
           <p className="font-label text-xs text-secondary mb-3 text-center">Preguntas frecuentes</p>
           <h2 className="font-display text-3xl font-bold text-primary text-center mb-12">
@@ -393,10 +456,10 @@ export default function Home() {
             <p className="text-center text-muted-foreground text-sm">Aún no hay preguntas publicadas.</p>
           )}
         </div>
-      </section>
+      </motion.section>
 
       {/* ===== CTA FINAL ===== */}
-      <section className="bg-primary text-primary-foreground py-16 px-6 text-center">
+      <motion.section {...fadeUp} className="bg-primary text-primary-foreground py-16 px-6 text-center">
         <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 max-w-[28ch] mx-auto">
           Conversemos sobre la educación de tu hijo o hija.
         </h2>
@@ -406,11 +469,11 @@ export default function Home() {
         </p>
         <Button
           onClick={() => document.getElementById("matricula")?.scrollIntoView({ behavior: "smooth" })}
-          className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-md h-12 px-8 font-semibold"
+          className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-md h-12 px-8 font-semibold transition-all hover:shadow-lg hover:shadow-secondary/30 hover:-translate-y-0.5"
         >
           Ir al formulario de matrícula
         </Button>
-      </section>
+      </motion.section>
 
       {/* ===== FOOTER ===== */}
       <footer className="bg-sidebar text-sidebar-foreground py-12 px-6">
