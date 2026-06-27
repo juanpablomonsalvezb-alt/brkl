@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { Link } from "wouter";
 import { Menu, X, ArrowRight, Brain, Compass, ShieldCheck, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring, useScroll, useTransform } from "framer-motion";
 import { ReservationDialog } from "@/components/ReservationDialog";
 
 const LAUNCH_DATE = new Date("2027-03-01T08:00:00-04:00");
@@ -96,6 +96,12 @@ export default function Home() {
   const [cursorHover, setCursorHover] = useState(false);
 
   const countdown = useCountdown(LAUNCH_DATE);
+
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: heroProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const ringY = useTransform(heroProgress, [0, 1], [0, 160]);
+  const ringRotateBoost = useTransform(heroProgress, [0, 1], [0, 40]);
+  const watermarkY = useTransform(heroProgress, [0, 1], [0, -60]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -210,81 +216,111 @@ export default function Home() {
       </header>
 
       {/* ===== HERO ===== */}
-      <section className="relative pt-40 pb-24 md:pt-52 md:pb-32 overflow-hidden">
-        <motion.svg
-          className="absolute -right-40 top-10 w-[600px] h-[600px] opacity-[0.5] pointer-events-none"
-          viewBox="0 0 200 200"
-          initial={{ rotate: 0 }}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 90, repeat: Infinity, ease: "linear" }}
+      <section ref={heroRef} className="relative pt-40 pb-24 md:pt-52 md:pb-40 overflow-hidden">
+        {/* Watermark numérico — profundidad real, no decoración hueca */}
+        <motion.div
+          style={{ y: watermarkY }}
+          aria-hidden
+          className="absolute -top-10 md:top-4 right-0 md:right-[6%] font-display text-[34vw] md:text-[20rem] leading-none text-primary/[0.06] select-none pointer-events-none tracking-tighter"
         >
-          <motion.path
-            d="M100 20 C140 20 180 60 180 100 C180 140 140 180 100 180 C60 180 20 140 20 100 C20 70 40 45 65 32"
-            fill="none"
-            stroke="hsl(var(--primary))"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 2.4, ease: "easeInOut" }}
-          />
-          <motion.circle
-            cx="100"
-            cy="100"
-            r="55"
-            fill="none"
-            stroke="hsl(var(--accent))"
-            strokeWidth="0.6"
-            strokeDasharray="2 6"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 0.7 }}
-            transition={{ duration: 1.8, delay: 0.6 }}
-          />
+          27
+        </motion.div>
+
+        <motion.svg
+          style={{ y: ringY, rotate: ringRotateBoost }}
+          className="absolute -right-32 md:-right-24 top-16 md:top-24 w-[460px] md:w-[560px] h-[460px] md:h-[560px] opacity-[0.55] pointer-events-none"
+          viewBox="0 0 200 200"
+        >
+          <motion.g
+            initial={{ rotate: 0 }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 90, repeat: Infinity, ease: "linear" }}
+            style={{ originX: "100px", originY: "100px" }}
+          >
+            <motion.path
+              d="M100 20 C140 20 180 60 180 100 C180 140 140 180 100 180 C60 180 20 140 20 100 C20 70 40 45 65 32"
+              fill="none"
+              stroke="hsl(var(--primary))"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 2.4, ease: "easeInOut" }}
+            />
+            <motion.circle
+              cx="100"
+              cy="100"
+              r="55"
+              fill="none"
+              stroke="hsl(var(--accent))"
+              strokeWidth="0.6"
+              strokeDasharray="2 6"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 0.7 }}
+              transition={{ duration: 1.8, delay: 0.6 }}
+            />
+          </motion.g>
         </motion.svg>
 
-        <div className="max-w-[1320px] mx-auto px-6 md:px-10 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="font-label text-[11px] text-primary mb-7 flex items-center gap-2"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-            Generación fundadora · MINEDUC Chile
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="font-display text-[13vw] leading-[0.94] md:text-[5.6rem] lg:text-[6.6rem] font-medium tracking-tight max-w-[18ch]"
-          >
-            El colegio que se adapta a ti abre sus puertas en 2027.
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.25 }}
-            className="mt-9 max-w-[44ch] text-lg md:text-xl text-foreground/75 leading-relaxed"
-          >
-            Instituto Barkley abre matrículas en marzo de 2027 con cupos limitados para su
-            generación fundadora. Currículum alineado MINEDUC, modelo de autorregulación de
-            Russell Barkley, ritmo propio. Reserva tu lugar antes que el resto se entere.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-            className="mt-10"
-          >
-            <a
-              href="#lista"
-              className="font-label text-[11px] text-foreground/70 hover:text-primary border-b border-foreground/30 hover:border-primary pb-1 transition-colors"
+        <div className="max-w-[1320px] mx-auto px-6 md:px-10 relative grid md:grid-cols-[1.3fr_0.7fr] gap-10">
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              className="font-label text-[11px] text-primary mb-7 flex items-center gap-2"
             >
-              Ver apertura de matrículas ↓
-            </a>
+              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+              Generación fundadora · MINEDUC Chile
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="font-display text-[12vw] leading-[0.92] md:text-[5.2rem] lg:text-[6.2rem] font-medium tracking-tight max-w-[16ch]"
+            >
+              El colegio que se adapta a ti abre sus puertas en{" "}
+              <span className="inline-block text-primary -rotate-1 origin-left">2027</span>.
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.25 }}
+              className="mt-9 max-w-[42ch] text-lg md:text-xl text-foreground/75 leading-relaxed"
+            >
+              Instituto Barkley abre matrículas en marzo de 2027 con cupos limitados para su
+              generación fundadora. Currículum alineado MINEDUC, modelo de autorregulación de
+              Russell Barkley, ritmo propio. Reserva tu lugar antes que el resto se entere.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+              className="mt-10"
+            >
+              <a
+                href="#lista"
+                className="font-label text-[11px] text-foreground/70 hover:text-primary border-b border-foreground/30 hover:border-primary pb-1 transition-colors"
+              >
+                Ver apertura de matrículas ↓
+              </a>
+            </motion.div>
+          </div>
+
+          {/* Nota lateral — rompe la columna única */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.55 }}
+            className="hidden md:block self-end mb-2 bg-card border border-border rounded-sm p-6 -rotate-1 shadow-lg shadow-foreground/5"
+          >
+            <p className="font-label text-[10px] text-primary mb-2">NOTA AL MARGEN</p>
+            <p className="text-sm text-foreground/70 leading-relaxed font-serif italic">
+              "No es una promesa vacía — es un cronograma con fecha."
+            </p>
           </motion.div>
         </div>
       </section>
@@ -302,21 +338,39 @@ export default function Home() {
       </div>
 
       {/* ===== COUNTDOWN ===== */}
-      <section className="py-24 md:py-32 text-center">
-        <div className="font-label text-[11px] text-primary mb-8">Apertura de matrículas en</div>
-        <div className="flex items-end justify-center gap-6 md:gap-12 flex-wrap px-6">
+      <section className="relative py-28 md:py-40 text-center overflow-hidden">
+        <div
+          aria-hidden
+          className="absolute inset-x-0 top-1/2 -translate-y-1/2 font-display text-[40vw] leading-none text-foreground/[0.025] select-none pointer-events-none whitespace-nowrap text-center"
+        >
+          2027
+        </div>
+
+        <div className="font-label text-[11px] text-primary mb-10 relative">Apertura de matrículas en</div>
+        <div className="flex items-end justify-center gap-3 md:gap-8 flex-wrap px-6 relative">
           {[
-            ["DÍAS", countdown.days],
-            ["HRS", countdown.hours],
-            ["MIN", countdown.minutes],
-            ["SEG", countdown.seconds],
-          ].map(([label, value]) => (
-            <div key={label as string}>
-              <div className="font-display text-5xl md:text-7xl text-foreground tabular-nums">
+            ["DÍAS", countdown.days, true],
+            ["HRS", countdown.hours, false],
+            ["MIN", countdown.minutes, false],
+            ["SEG", countdown.seconds, false],
+          ].map(([label, value, big], i) => (
+            <motion.div
+              key={label as string}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              className={big ? "" : "mb-2 md:mb-4"}
+            >
+              <div
+                className={`font-display text-foreground tabular-nums ${
+                  big ? "text-7xl md:text-[9rem] text-primary leading-none" : "text-4xl md:text-6xl"
+                }`}
+              >
                 {String(value).padStart(2, "0")}
               </div>
               <div className="font-label text-[10px] text-foreground/50 mt-2">{label}</div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
@@ -329,16 +383,24 @@ export default function Home() {
             No copiamos la sala de clases. Copiamos cómo se aprende a sostener el foco.
           </h2>
 
-          <div className="mt-16 grid md:grid-cols-3 gap-px bg-background/15">
-            {PRINCIPIOS.map((p) => (
-              <div key={p.n} className="bg-foreground p-8 md:p-10">
+          <div className="mt-20 grid md:grid-cols-3 gap-px bg-background/15">
+            {PRINCIPIOS.map((p, i) => (
+              <motion.div
+                key={p.n}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.6, delay: i * 0.12 }}
+                style={{ marginTop: i === 1 ? "2.5rem" : 0 }}
+                className="bg-foreground p-8 md:p-10"
+              >
                 <div className="flex items-center justify-between mb-8">
                   <span className="font-display text-sm text-background/40">{p.n}</span>
                   <p.icon className="w-6 h-6 text-accent" strokeWidth={1.5} />
                 </div>
                 <h3 className="font-display text-2xl mb-4">{p.title}</h3>
                 <p className="text-background/65 leading-relaxed text-[15px]">{p.body}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
