@@ -99,8 +99,6 @@ export default function Home() {
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: heroProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const ringY = useTransform(heroProgress, [0, 1], [0, 160]);
-  const ringRotateBoost = useTransform(heroProgress, [0, 1], [0, 40]);
   const watermarkY = useTransform(heroProgress, [0, 1], [0, -60]);
 
   useEffect(() => {
@@ -148,7 +146,7 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-background text-foreground font-serif relative cursor-none">
+    <div className="bg-background text-foreground font-sans relative cursor-none">
       {/* Cursor custom */}
       <motion.div
         className="fixed top-0 left-0 w-6 h-6 rounded-full border border-primary pointer-events-none z-[100] mix-blend-difference hidden md:block"
@@ -160,9 +158,9 @@ export default function Home() {
         }}
       />
 
-      {/* Grano de papel */}
+      {/* Grano */}
       <div
-        className="pointer-events-none fixed inset-0 z-[1] opacity-[0.035] mix-blend-multiply"
+        className="pointer-events-none fixed inset-0 z-[1] opacity-[0.05] mix-blend-overlay"
         style={{
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
@@ -215,122 +213,84 @@ export default function Home() {
         )}
       </header>
 
-      {/* ===== HERO ===== */}
-      <section ref={heroRef} className="relative pt-40 pb-24 md:pt-52 md:pb-40 overflow-hidden">
-        {/* Watermark numérico — profundidad real, no decoración hueca */}
+      {/* ===== HERO — tipografía kinética ===== */}
+      <section ref={heroRef} className="relative pt-36 pb-20 md:pt-48 md:pb-28 overflow-hidden">
         <motion.div
           style={{ y: watermarkY }}
           aria-hidden
-          className="absolute -top-10 md:top-4 right-0 md:right-[6%] font-display text-[34vw] md:text-[20rem] leading-none text-primary/[0.06] select-none pointer-events-none tracking-tighter"
+          className="absolute inset-x-0 top-[8%] flex justify-center overflow-hidden select-none pointer-events-none"
         >
-          27
+          <span className="font-label text-[13vw] md:text-[7rem] text-foreground/[0.04] whitespace-nowrap tracking-tight">
+            GENERACIÓN FUNDADORA — GENERACIÓN FUNDADORA
+          </span>
         </motion.div>
 
-        <motion.svg
-          style={{ y: ringY, rotate: ringRotateBoost }}
-          className="absolute -right-32 md:-right-24 top-16 md:top-24 w-[460px] md:w-[560px] h-[460px] md:h-[560px] opacity-[0.55] pointer-events-none"
-          viewBox="0 0 200 200"
-        >
-          <motion.g
-            initial={{ rotate: 0 }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 90, repeat: Infinity, ease: "linear" }}
-            style={{ originX: "100px", originY: "100px" }}
+        <div className="max-w-[1320px] mx-auto px-6 md:px-10 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="font-label text-[11px] text-primary mb-8 flex items-center gap-2"
           >
-            <motion.path
-              d="M100 20 C140 20 180 60 180 100 C180 140 140 180 100 180 C60 180 20 140 20 100 C20 70 40 45 65 32"
-              fill="none"
-              stroke="hsl(var(--primary))"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 2.4, ease: "easeInOut" }}
-            />
-            <motion.circle
-              cx="100"
-              cy="100"
-              r="55"
-              fill="none"
-              stroke="hsl(var(--accent))"
-              strokeWidth="0.6"
-              strokeDasharray="2 6"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 0.7 }}
-              transition={{ duration: 1.8, delay: 0.6 }}
-            />
-          </motion.g>
-        </motion.svg>
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            Generación fundadora · MINEDUC Chile
+          </motion.div>
 
-        <div className="max-w-[1320px] mx-auto px-6 md:px-10 relative grid md:grid-cols-[1.3fr_0.7fr] gap-10">
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-              className="font-label text-[11px] text-primary mb-7 flex items-center gap-2"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              Generación fundadora · MINEDUC Chile
-            </motion.div>
+          <h1 className="font-display leading-[0.88] tracking-tight">
+            {[
+              ["El colegio que", "text-foreground"],
+              ["se adapta a ti,", "text-foreground"],
+              ["abre en 2027", "text-primary"],
+            ].map(([line, color], i) => (
+              <span key={line} className="block overflow-hidden">
+                <motion.span
+                  initial={{ y: "110%" }}
+                  animate={{ y: "0%" }}
+                  transition={{ duration: 0.9, delay: 0.15 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                  className={`block whitespace-nowrap text-[9.5vw] md:text-[4.6rem] lg:text-[5.6rem] font-semibold ${color}`}
+                >
+                  {line}
+                </motion.span>
+              </span>
+            ))}
+          </h1>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="font-display text-[12vw] leading-[0.92] md:text-[5.2rem] lg:text-[6.2rem] font-medium tracking-tight max-w-[16ch]"
-            >
-              El colegio que se adapta a ti abre sus puertas en{" "}
-              <span className="inline-block text-primary -rotate-1 origin-left">2027</span>.
-            </motion.h1>
-
+          <div className="mt-12 md:mt-16 grid md:grid-cols-[1fr_auto] gap-8 items-end">
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.25 }}
-              className="mt-9 max-w-[42ch] text-lg md:text-xl text-foreground/75 leading-relaxed"
+              transition={{ duration: 0.7, delay: 0.7 }}
+              className="max-w-[42ch] text-lg md:text-xl text-foreground/70 leading-relaxed"
             >
               Instituto Barkley abre matrículas en marzo de 2027 con cupos limitados para su
               generación fundadora. Currículum alineado MINEDUC, modelo de autorregulación de
-              Russell Barkley, ritmo propio. Reserva tu lugar antes que el resto se entere.
+              Russell Barkley, ritmo propio.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="mt-10"
+              transition={{ duration: 0.7, delay: 0.8 }}
+              data-magnetic-zone
             >
-              <a
-                href="#lista"
-                className="font-label text-[11px] text-foreground/70 hover:text-primary border-b border-foreground/30 hover:border-primary pb-1 transition-colors"
+              <MagneticButton
+                onClick={() => document.getElementById("lista")?.scrollIntoView({ behavior: "smooth" })}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-sm font-label text-[11px] h-14 px-8 inline-flex items-center gap-2 whitespace-nowrap"
               >
-                Ver apertura de matrículas ↓
-              </a>
+                Asegurar mi cupo
+                <ArrowRight className="w-4 h-4" />
+              </MagneticButton>
             </motion.div>
           </div>
-
-          {/* Nota lateral — rompe la columna única */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.55 }}
-            className="hidden md:block self-end mb-2 bg-card border border-border rounded-sm p-6 -rotate-1 shadow-lg shadow-foreground/5"
-          >
-            <p className="font-label text-[10px] text-primary mb-2">NOTA AL MARGEN</p>
-            <p className="text-sm text-foreground/70 leading-relaxed font-serif italic">
-              "No es una promesa vacía — es un cronograma con fecha."
-            </p>
-          </motion.div>
         </div>
       </section>
 
       {/* ===== MARQUEE TICKER ===== */}
-      <div className="bg-foreground text-background py-4 overflow-hidden border-y border-background/10">
+      <div className="bg-primary text-primary-foreground py-4 overflow-hidden -rotate-1 scale-105">
         <motion.div
-          className="flex whitespace-nowrap font-label text-xs"
+          className="flex whitespace-nowrap font-label text-xs font-bold"
           animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
         >
           <span className="pr-8">{ticker}</span>
           <span className="pr-8">{ticker}</span>
@@ -376,14 +336,14 @@ export default function Home() {
       </section>
 
       {/* ===== MÉTODO (teaser) ===== */}
-      <section id="metodo" className="bg-foreground text-background py-24 md:py-32">
+      <section id="metodo" className="py-24 md:py-32">
         <div className="max-w-[1320px] mx-auto px-6 md:px-10">
           <div className="font-label text-[11px] text-accent mb-5">El método</div>
-          <h2 className="font-display text-3xl md:text-5xl font-medium max-w-[20ch] leading-[1.08]">
+          <h2 className="font-display text-3xl md:text-5xl font-bold max-w-[20ch] leading-[1.08]">
             No copiamos la sala de clases. Copiamos cómo se aprende a sostener el foco.
           </h2>
 
-          <div className="mt-20 grid md:grid-cols-3 gap-px bg-background/15">
+          <div className="mt-20 grid md:grid-cols-3 gap-px bg-border">
             {PRINCIPIOS.map((p, i) => (
               <motion.div
                 key={p.n}
@@ -392,14 +352,14 @@ export default function Home() {
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.6, delay: i * 0.12 }}
                 style={{ marginTop: i === 1 ? "2.5rem" : 0 }}
-                className="bg-foreground p-8 md:p-10"
+                className="bg-card p-8 md:p-10"
               >
                 <div className="flex items-center justify-between mb-8">
-                  <span className="font-display text-sm text-background/40">{p.n}</span>
-                  <p.icon className="w-6 h-6 text-accent" strokeWidth={1.5} />
+                  <span className="font-display text-sm text-foreground/30">{p.n}</span>
+                  <p.icon className="w-6 h-6 text-secondary" strokeWidth={1.5} />
                 </div>
-                <h3 className="font-display text-2xl mb-4">{p.title}</h3>
-                <p className="text-background/65 leading-relaxed text-[15px]">{p.body}</p>
+                <h3 className="font-display text-2xl mb-4 font-bold">{p.title}</h3>
+                <p className="text-foreground/60 leading-relaxed text-[15px]">{p.body}</p>
               </motion.div>
             ))}
           </div>
@@ -444,7 +404,7 @@ export default function Home() {
                 placeholder="tu@correo.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-14 px-5 bg-card border border-border rounded-sm font-serif text-base focus:outline-none focus:border-primary"
+                className="h-14 px-5 bg-card border border-border rounded-sm font-sans text-base focus:outline-none focus:border-primary"
                 data-testid="input-email-waitlist"
               />
               <div className="grid grid-cols-2 gap-4">
@@ -453,13 +413,13 @@ export default function Home() {
                   placeholder="Tu nombre (opcional)"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="h-14 px-5 bg-card border border-border rounded-sm font-serif text-base focus:outline-none focus:border-primary"
+                  className="h-14 px-5 bg-card border border-border rounded-sm font-sans text-base focus:outline-none focus:border-primary"
                   data-testid="input-name-waitlist"
                 />
                 <select
                   value={levelInterest}
                   onChange={(e) => setLevelInterest(e.target.value)}
-                  className="h-14 px-5 bg-card border border-border rounded-sm font-serif text-base focus:outline-none focus:border-primary text-foreground/70"
+                  className="h-14 px-5 bg-card border border-border rounded-sm font-sans text-base focus:outline-none focus:border-primary text-foreground/70"
                   data-testid="select-level-waitlist"
                 >
                   <option value="">Nivel de interés</option>
