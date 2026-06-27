@@ -42,8 +42,8 @@ const PRINCIPIOS = [
   },
   {
     icon: Compass,
-    title: "Ritmo propio, meta común",
-    body: "Sin clases sincrónicas obligatorias de 8 horas diarias. El estudiante organiza su carga semanal según su propio ritmo, con seguimiento quincenal de avance real.",
+    title: "Aprendizaje asincrónico",
+    body: "Sin clases en vivo por Zoom o Google Meet, sin horario predeterminado. Un algoritmo de seguimiento mide los resultados de cada estudiante y ajusta el ritmo y el contenido según su avance real.",
   },
   {
     icon: ShieldCheck,
@@ -124,7 +124,7 @@ export default function Home() {
               B
             </div>
             <div className="leading-tight">
-              <div className="font-display text-xl font-bold text-primary">Instituto Barkley</div>
+              <div className="font-display text-xl font-bold text-primary">Barkley Online</div>
               <div className="font-label text-[10px] text-muted-foreground">Colegio online · Chile</div>
             </div>
           </Link>
@@ -190,17 +190,23 @@ export default function Home() {
               Un colegio online con la seriedad de uno presencial.
             </h1>
             <p className="text-lg text-foreground/75 leading-relaxed mb-8 max-w-[52ch]">
-              Instituto Barkley educa desde 7° básico a 4° medio bajo el modelo de autorregulación
+              Barkley Online educa desde 7° básico a 4° medio bajo el modelo de autorregulación
               del Dr. Russell Barkley, con un plan de estudios alineado a las bases curriculares
               del Ministerio de Educación. Abrimos matrículas para nuestra generación fundadora
               en marzo de 2027.
+            </p>
+            <p className="text-base text-foreground/70 leading-relaxed mb-8 max-w-[54ch]">
+              Aprendizaje <strong className="text-primary">asincrónico</strong>: sin clases en
+              vivo por Zoom o Google Meet, sin horario predeterminado. Cada estudiante avanza
+              según su propio plan, y un algoritmo de seguimiento mide sus resultados y ajusta
+              el ritmo y el contenido en consecuencia.
             </p>
 
             <div className="grid sm:grid-cols-3 gap-4 mb-8">
               {[
                 ["Currículum", "Alineado MINEDUC"],
                 ["Metodología", "Modelo Dr. Barkley"],
-                ["Modalidad", "100% online, ritmo propio"],
+                ["Modalidad", "Asincrónico, ritmo propio"],
               ].map(([label, value]) => (
                 <div key={label} className="border-l-4 border-secondary pl-4">
                   <div className="font-label text-[11px] text-muted-foreground">{label}</div>
@@ -408,7 +414,7 @@ export default function Home() {
       <footer className="bg-sidebar text-sidebar-foreground py-12 px-6">
         <div className="max-w-[1280px] mx-auto grid md:grid-cols-3 gap-8 text-sm">
           <div>
-            <div className="font-display text-lg font-bold mb-2">Instituto Barkley</div>
+            <div className="font-display text-lg font-bold mb-2">Barkley Online</div>
             <p className="text-sidebar-foreground/65 leading-relaxed">
               Colegio online · Educación media · Chile
               <br />
@@ -439,7 +445,7 @@ export default function Home() {
           </div>
         </div>
         <div className="max-w-[1280px] mx-auto mt-10 pt-6 border-t border-sidebar-border text-xs text-sidebar-foreground/50">
-          © {new Date().getFullYear()} Instituto Barkley. Todos los derechos reservados.
+          © {new Date().getFullYear()} Barkley Online. Todos los derechos reservados.
         </div>
       </footer>
 
