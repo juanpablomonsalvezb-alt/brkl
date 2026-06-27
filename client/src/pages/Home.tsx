@@ -95,9 +95,19 @@ export default function Home() {
 
   return (
     <div className="bg-background text-foreground font-sans">
-      {/* ===== BARRA SUPERIOR ===== */}
-      <div className="bg-primary text-primary-foreground text-center py-2 px-4 text-sm font-medium">
-        Generación fundadora 2027 · Proceso de reconocimiento MINEDUC en curso
+      {/* ===== BARRA SUPERIOR — contacto real, patrón estándar de sitio institucional ===== */}
+      <div className="bg-primary text-primary-foreground py-2 px-4">
+        <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-1.5 text-xs sm:text-sm">
+          <span className="font-medium">Generación fundadora 2027 · Proceso de reconocimiento MINEDUC en curso</span>
+          <div className="flex items-center gap-4 text-primary-foreground/85">
+            <a href="mailto:admisiones@institutobarkley.cl" className="flex items-center gap-1.5 hover:text-secondary">
+              <Mail className="w-3.5 h-3.5" /> admisiones@institutobarkley.cl
+            </a>
+            <button onClick={() => setCallDialogOpen(true)} className="flex items-center gap-1.5 hover:text-secondary">
+              <Phone className="w-3.5 h-3.5" /> Agendar llamada
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* ===== NAV ===== */}
