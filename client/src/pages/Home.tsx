@@ -47,8 +47,8 @@ const PRINCIPIOS = [
   },
   {
     icon: ShieldCheck,
-    title: "Currículum oficial",
-    body: "Plan de estudios alineado a las bases curriculares del MINEDUC. El egresado obtiene la misma licencia de enseñanza media que un colegio presencial.",
+    title: "Preparación para exámenes libres",
+    body: "Plan de estudios alineado a las bases curriculares del MINEDUC. Preparamos a cada estudiante para dar exámenes libres ante el Ministerio de Educación y obtener su licencia de enseñanza media por la vía oficial.",
   },
 ];
 
@@ -185,14 +185,16 @@ export default function Home() {
       <section id="inicio" className="py-14 md:py-20">
         <div className="max-w-[1280px] mx-auto px-6 md:px-10 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-start">
           <div>
-            <p className="font-label text-xs text-secondary mb-4">Educación media online · Reconocimiento MINEDUC</p>
+            <p className="font-label text-xs text-secondary mb-4">Educación básica y media online · Reconocimiento MINEDUC</p>
             <h1 className="font-display text-4xl md:text-5xl font-bold leading-[1.15] mb-6 text-primary">
               Un colegio online con la seriedad de uno presencial.
             </h1>
             <p className="text-lg text-foreground/75 leading-relaxed mb-8 max-w-[52ch]">
-              Barkley Online educa desde 7° básico a 4° medio bajo el modelo de autorregulación
-              del Dr. Russell Barkley, con un plan de estudios alineado a las bases curriculares
-              del Ministerio de Educación. Abrimos matrículas para nuestra generación fundadora
+              Barkley Online educa desde 5° básico a 4° medio bajo el modelo de autorregulación
+              del Dr. Russell Barkley. Preparamos a cada estudiante para dar{" "}
+              <strong className="text-primary">exámenes libres</strong> ante el Ministerio de
+              Educación — no entregamos la licencia directamente, formamos para que la rindas y
+              la obtengas por la vía oficial. Abrimos matrículas para nuestra generación fundadora
               en marzo de 2027.
             </p>
             <p className="text-base text-foreground/70 leading-relaxed mb-8 max-w-[54ch]">
@@ -304,7 +306,7 @@ export default function Home() {
                       data-testid="select-level-matricula"
                     >
                       <option value="">Selecciona un nivel</option>
-                      {["7° Básico", "8° Básico", "1° Medio", "2° Medio", "3° Medio", "4° Medio", "Validación de estudios (adulto)"].map(
+                      {["5° Básico", "6° Básico", "7° Básico", "8° Básico", "1° Medio", "2° Medio", "3° Medio", "4° Medio", "Validación de estudios (adulto)"].map(
                         (l) => (
                           <option key={l} value={l}>{l}</option>
                         )
