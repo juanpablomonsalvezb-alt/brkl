@@ -2,14 +2,14 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist/public",
   "functions": {
-    "api/handler.cjs": {
+    "api/handler.mjs": {
       "maxDuration": 30
     }
   },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/handler.cjs"
+      "destination": "/api/handler.mjs"
     },
     {
       "source": "/(.*)",
