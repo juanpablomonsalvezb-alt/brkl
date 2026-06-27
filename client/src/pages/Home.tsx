@@ -24,7 +24,7 @@ const PRINCIPIOS = [
     n: "03",
     icon: ShieldCheck,
     title: "Validado por el sistema",
-    body: "Currículum alineado MINEDUC desde el diseño. Misma licencia de enseñanza media que un colegio presencial al cierre del proceso.",
+    body: "Currículum alineado MINEDUC. Misma licencia de enseñanza media que un colegio presencial.",
   },
 ];
 
@@ -115,7 +115,7 @@ export default function Home() {
   }, [cursorX, cursorY]);
 
   const ticker = useMemo(
-    () => Array.from({ length: 6 }, () => "LISTA DE ESPERA ABIERTA — ABRIMOS MARZO 2027").join(" · "),
+    () => Array.from({ length: 6 }, () => "GENERACIÓN FUNDADORA — MATRÍCULAS MARZO 2027").join(" · "),
     []
   );
 
@@ -177,7 +177,7 @@ export default function Home() {
 
           <div className="hidden md:flex items-center gap-2 font-label text-[10px] text-foreground/55">
             <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-            EN CONSTRUCCIÓN · ABRE MARZO 2027
+            APERTURA DE MATRÍCULAS · MARZO 2027
           </div>
 
           <div data-magnetic-zone className="hidden lg:block">
@@ -185,7 +185,7 @@ export default function Home() {
               onClick={() => document.getElementById("lista")?.scrollIntoView({ behavior: "smooth" })}
               className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-sm font-label text-[11px] h-10 px-5 inline-flex items-center"
             >
-              Unirme a la lista
+              Asegurar mi cupo
             </MagneticButton>
           </div>
 
@@ -203,7 +203,7 @@ export default function Home() {
               }}
               className="bg-primary text-primary-foreground rounded-sm font-label text-xs h-11 w-full"
             >
-              Unirme a la lista
+              Asegurar mi cupo
             </Button>
           </div>
         )}
@@ -250,7 +250,7 @@ export default function Home() {
             className="font-label text-[11px] text-primary mb-7 flex items-center gap-2"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-            En construcción · MINEDUC Chile
+            Generación fundadora · MINEDUC Chile
           </motion.div>
 
           <motion.h1
@@ -259,7 +259,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="font-display text-[13vw] leading-[0.94] md:text-[5.6rem] lg:text-[6.6rem] font-medium tracking-tight max-w-[18ch]"
           >
-            Estamos construyendo el colegio que se adapta a ti.
+            El colegio que se adapta a ti abre sus puertas en 2027.
           </motion.h1>
 
           <motion.p
@@ -268,9 +268,9 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.25 }}
             className="mt-9 max-w-[44ch] text-lg md:text-xl text-foreground/75 leading-relaxed"
           >
-            Instituto Barkley abre matrículas en marzo de 2027. Hoy estamos en diseño curricular
-            y desarrollo de plataforma — esto es un adelanto, no el producto final. Si quieres
-            enterarte primero, déjanos tu correo.
+            Instituto Barkley abre matrículas en marzo de 2027 con cupos limitados para su
+            generación fundadora. Currículum alineado MINEDUC, modelo de autorregulación de
+            Russell Barkley, ritmo propio. Reserva tu lugar antes que el resto se entere.
           </motion.p>
 
           <motion.div
@@ -283,7 +283,7 @@ export default function Home() {
               href="#lista"
               className="font-label text-[11px] text-foreground/70 hover:text-primary border-b border-foreground/30 hover:border-primary pb-1 transition-colors"
             >
-              Ir a la lista de espera ↓
+              Ver apertura de matrículas ↓
             </a>
           </motion.div>
         </div>
@@ -303,7 +303,7 @@ export default function Home() {
 
       {/* ===== COUNTDOWN ===== */}
       <section className="py-24 md:py-32 text-center">
-        <div className="font-label text-[11px] text-primary mb-8">Cuenta regresiva a marzo 2027</div>
+        <div className="font-label text-[11px] text-primary mb-8">Apertura de matrículas en</div>
         <div className="flex items-end justify-center gap-6 md:gap-12 flex-wrap px-6">
           {[
             ["DÍAS", countdown.days],
@@ -324,9 +324,9 @@ export default function Home() {
       {/* ===== MÉTODO (teaser) ===== */}
       <section id="metodo" className="bg-foreground text-background py-24 md:py-32">
         <div className="max-w-[1320px] mx-auto px-6 md:px-10">
-          <div className="font-label text-[11px] text-accent mb-5">El método — en desarrollo</div>
+          <div className="font-label text-[11px] text-accent mb-5">El método</div>
           <h2 className="font-display text-3xl md:text-5xl font-medium max-w-[20ch] leading-[1.08]">
-            Esto es lo que estamos diseñando, no lo que ya existe.
+            No copiamos la sala de clases. Copiamos cómo se aprende a sostener el foco.
           </h2>
 
           <div className="mt-16 grid md:grid-cols-3 gap-px bg-background/15">
@@ -347,13 +347,13 @@ export default function Home() {
       {/* ===== WAITLIST ===== */}
       <section id="lista" className="py-28 md:py-40 scroll-mt-20">
         <div className="max-w-[640px] mx-auto px-6 text-center">
-          <div className="font-label text-[11px] text-primary mb-6">Lista de espera</div>
+          <div className="font-label text-[11px] text-primary mb-6">Generación fundadora</div>
           <h2 className="font-display text-4xl md:text-5xl font-medium mb-6 leading-[1.08]">
-            Sé de los primeros en saberlo.
+            Asegura tu cupo antes de la apertura oficial.
           </h2>
           <p className="text-foreground/65 leading-relaxed mb-12">
-            Te escribimos cuando abramos inscripciones — sin spam, sin newsletters genéricos.
-            Solo lo necesario para decidir a tiempo.
+            Los cupos de la generación fundadora son limitados. Déjanos tu correo y te
+            contactamos directamente cuando abramos el proceso de matrícula — sin spam.
           </p>
 
           {formState === "success" || formState === "duplicate" ? (
@@ -364,7 +364,7 @@ export default function Home() {
             >
               <Check className="w-8 h-8 text-accent" />
               <p className="font-display text-xl">
-                {formState === "duplicate" ? "Ya estabas en la lista." : "Listo, quedaste en la lista."}
+                {formState === "duplicate" ? "Ya tienes tu cupo reservado." : "Listo, tu cupo está reservado."}
               </p>
               <p className="text-background/60 text-sm">Te avisamos apenas abramos inscripciones.</p>
             </motion.div>
@@ -421,7 +421,7 @@ export default function Home() {
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <>
-                      Unirme a la lista
+                      Asegurar mi cupo
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -445,7 +445,7 @@ export default function Home() {
         <div className="max-w-[1320px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <span className="font-display text-lg">Instituto Barkley</span>
           <p className="font-label text-[10px] text-foreground/50 text-center">
-            Proyecto en construcción · Apertura marzo 2027 · Chile
+            Generación fundadora · Apertura de matrículas marzo 2027 · Chile
           </p>
         </div>
       </footer>
