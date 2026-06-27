@@ -1,39 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* National 2 Font - Official Harvard Font */
-@font-face {
-  font-family: 'National 2';
-  src: url('/fonts/TestNational2-Light.otf') format('opentype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'National 2';
-  src: url('/fonts/TestNational2-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'National 2';
-  src: url('/fonts/TestNational2-Medium.otf') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'National 2';
-  src: url('/fonts/TestNational2-Bold.otf') format('opentype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -79,56 +46,54 @@
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
-  --font-sans: 'National 2', system-ui, -apple-system, sans-serif;
-  --font-display: 'Merriweather', serif;
-  --font-serif: 'Merriweather', serif;
+  --font-sans: 'Source Serif 4', serif;
+  --font-display: 'Fraunces', serif;
+  --font-serif: 'Source Serif 4', serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
 :root {
-  /* Deep Blue Theme #001f3f */
-  --background: 210 20% 98%;
-  /* Very light blueish grey for background */
-  --foreground: 210 50% 12%;
-  /* Deep blue almost black */
+  /* Cuaderno de Campo — papel cálido + tinta + terracota */
+  --background: 38 35% 95%;
+  --foreground: 25 30% 11%;
 
-  --card: 0 0% 100%;
-  --card-foreground: 210 50% 12%;
+  --card: 38 32% 97%;
+  --card-foreground: 25 30% 11%;
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 210 50% 12%;
+  --popover: 38 32% 98%;
+  --popover-foreground: 25 30% 11%;
 
-  /* Primary #001f3f -> HSL 210, 100%, 12% */
-  --primary: 210 100% 12%;
-  --primary-foreground: 0 0% 100%;
+  /* Terracota — energía, foco, atención (modelo Barkley) */
+  --primary: 14 65% 45%;
+  --primary-foreground: 38 35% 97%;
 
-  --secondary: 210 30% 96%;
-  --secondary-foreground: 210 100% 12%;
+  --secondary: 95 18% 30%;
+  --secondary-foreground: 38 35% 97%;
 
-  --muted: 210 20% 96%;
-  --muted-foreground: 215 20% 45%;
+  --muted: 35 22% 90%;
+  --muted-foreground: 25 15% 38%;
 
-  /* Progress accent - Subtle Blue */
-  --accent: 200 80% 60%;
-  --accent-foreground: 0 0% 100%;
+  /* Acento ámbar */
+  --accent: 40 75% 55%;
+  --accent-foreground: 25 30% 11%;
 
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
+  --destructive: 4 70% 48%;
+  --destructive-foreground: 38 35% 97%;
 
-  --border: 210 20% 90%;
-  --input: 210 20% 90%;
-  --ring: 210 100% 12%;
+  --border: 35 22% 84%;
+  --input: 35 22% 84%;
+  --ring: 14 65% 45%;
 
-  --radius: 0.75rem;
-  /* 12px */
+  --radius: 0.25rem;
 
-  --sidebar: 210 100% 12%;
-  --sidebar-foreground: 210 20% 90%;
-  --sidebar-primary: 200 80% 60%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 210 50% 20%;
-  --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-border: 210 50% 20%;
-  --sidebar-ring: 200 80% 60%;
+  --sidebar: 25 30% 11%;
+  --sidebar-foreground: 38 30% 92%;
+  --sidebar-primary: 14 65% 45%;
+  --sidebar-primary-foreground: 38 35% 97%;
+  --sidebar-accent: 95 18% 30%;
+  --sidebar-accent-foreground: 38 35% 97%;
+  --sidebar-border: 25 25% 20%;
+  --sidebar-ring: 40 75% 55%;
 }
 
 @layer base {
@@ -151,13 +116,20 @@
   h4,
   h5,
   h6 {
-    @apply font-serif tracking-tight text-foreground;
-    font-weight: 700;
+    font-family: 'Fraunces', serif;
+    @apply tracking-tight text-foreground;
+    font-weight: 600;
     text-wrap: balance;
   }
 
   .font-sans-safe {
-    font-family: 'National 2', system-ui, sans-serif;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .font-label {
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 }
 
