@@ -1,129 +1,77 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { Menu, X, ArrowRight, Brain, Compass, ShieldCheck, Loader2, Check } from "lucide-react";
+import {
+  Menu,
+  X,
+  ArrowRight,
+  Brain,
+  Compass,
+  ShieldCheck,
+  Loader2,
+  Check,
+  Phone,
+  Mail,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { motion, useMotionValue, useSpring, useScroll, useTransform } from "framer-motion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useQuery } from "@tanstack/react-query";
 import { ReservationDialog } from "@/components/ReservationDialog";
 
-const LAUNCH_DATE = new Date("2027-03-01T08:00:00-04:00");
+interface Faq {
+  id: string;
+  question: string;
+  answer: string;
+  category?: string | null;
+  sortOrder: number;
+}
+
+const NAV_LINKS = [
+  { label: "Inicio", href: "#inicio" },
+  { label: "Nuestro método", href: "#metodo" },
+  { label: "Admisión", href: "#matricula" },
+  { label: "Preguntas frecuentes", href: "#faq" },
+];
 
 const PRINCIPIOS = [
   {
-    n: "01",
     icon: Brain,
     title: "Función ejecutiva primero",
-    body: "Adaptamos el modelo de autorregulación de Russell Barkley al currículum chileno: planificar, sostener atención y autoevaluarse antes de avanzar de contenido.",
+    body: "Adaptamos el modelo de autorregulación del Dr. Russell Barkley al currículum chileno: cada estudiante aprende a planificar, sostener la atención y autoevaluarse antes de avanzar de contenido.",
   },
   {
-    n: "02",
     icon: Compass,
     title: "Ritmo propio, meta común",
-    body: "Sin clases sincrónicas obligatorias de 8 horas. Carga semanal según la curva de energía real de cada estudiante, con hitos quincenales verificables.",
+    body: "Sin clases sincrónicas obligatorias de 8 horas diarias. El estudiante organiza su carga semanal según su propio ritmo, con seguimiento quincenal de avance real.",
   },
   {
-    n: "03",
     icon: ShieldCheck,
-    title: "Validado por el sistema",
-    body: "Currículum alineado MINEDUC. Misma licencia de enseñanza media que un colegio presencial.",
+    title: "Currículum oficial",
+    body: "Plan de estudios alineado a las bases curriculares del MINEDUC. El egresado obtiene la misma licencia de enseñanza media que un colegio presencial.",
   },
 ];
-
-function useCountdown(target: Date) {
-  const [diff, setDiff] = useState(() => Math.max(0, target.getTime() - Date.now()));
-  useEffect(() => {
-    const id = setInterval(() => setDiff(Math.max(0, target.getTime() - Date.now())), 1000);
-    return () => clearInterval(id);
-  }, [target]);
-  const days = Math.floor(diff / 86400000);
-  const hours = Math.floor((diff % 86400000) / 3600000);
-  const minutes = Math.floor((diff % 3600000) / 60000);
-  const seconds = Math.floor((diff % 60000) / 1000);
-  return { days, hours, minutes, seconds };
-}
-
-function MagneticButton({ children, onClick, className, type = "button", disabled }: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  className?: string;
-  type?: "button" | "submit";
-  disabled?: boolean;
-}) {
-  const ref = useRef<HTMLButtonElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const sx = useSpring(x, { stiffness: 200, damping: 14 });
-  const sy = useSpring(y, { stiffness: 200, damping: 14 });
-
-  return (
-    <motion.button
-      ref={ref}
-      type={type}
-      disabled={disabled}
-      onMouseMove={(e) => {
-        const r = ref.current?.getBoundingClientRect();
-        if (!r) return;
-        x.set((e.clientX - r.left - r.width / 2) * 0.3);
-        y.set((e.clientY - r.top - r.height / 2) * 0.3);
-      }}
-      onMouseLeave={() => {
-        x.set(0);
-        y.set(0);
-      }}
-      onClick={onClick}
-      style={{ x: sx, y: sy }}
-      className={className}
-      data-testid="button-magnetic"
-    >
-      {children}
-    </motion.button>
-  );
-}
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [callDialogOpen, setCallDialogOpen] = useState(false);
-  const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [levelInterest, setLevelInterest] = useState("");
   const [formState, setFormState] = useState<"idle" | "loading" | "success" | "error" | "duplicate">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
-  const cursorSx = useSpring(cursorX, { stiffness: 500, damping: 40 });
-  const cursorSy = useSpring(cursorY, { stiffness: 500, damping: 40 });
-  const [cursorHover, setCursorHover] = useState(false);
-
-  const countdown = useCountdown(LAUNCH_DATE);
-
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: heroProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const watermarkY = useTransform(heroProgress, [0, 1], [0, -60]);
+  const { data: faqs } = useQuery<Faq[]>({
+    queryKey: ["/api/faqs"],
+    staleTime: 5 * 60 * 1000,
+  });
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 12);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      cursorX.set(e.clientX - 12);
-      cursorY.set(e.clientY - 12);
-      const el = document.elementFromPoint(e.clientX, e.clientY);
-      setCursorHover(!!el?.closest("[data-magnetic-zone]"));
-    };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [cursorX, cursorY]);
-
-  const ticker = useMemo(
-    () => Array.from({ length: 6 }, () => "GENERACIÓN FUNDADORA — MATRÍCULAS MARZO 2027").join(" · "),
-    []
-  );
-
-  const submitWaitlist = async () => {
+  const submitMatricula = async () => {
     setFormState("loading");
     setErrorMsg("");
     try {
@@ -134,7 +82,7 @@ export default function Home() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setErrorMsg(data.message || "No se pudo registrar");
+        setErrorMsg(data.message || "No se pudo enviar tu solicitud");
         setFormState("error");
         return;
       }
@@ -146,329 +94,331 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-background text-foreground font-sans relative cursor-none">
-      {/* Cursor custom */}
-      <motion.div
-        className="fixed top-0 left-0 w-6 h-6 rounded-full border border-primary pointer-events-none z-[100] mix-blend-difference hidden md:block"
-        style={{
-          x: cursorSx,
-          y: cursorSy,
-          scale: cursorHover ? 2.4 : 1,
-          backgroundColor: cursorHover ? "hsl(var(--primary))" : "transparent",
-        }}
-      />
-
-      {/* Grano */}
-      <div
-        className="pointer-events-none fixed inset-0 z-[1] opacity-[0.05] mix-blend-overlay"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-        }}
-      />
+    <div className="bg-background text-foreground font-sans">
+      {/* ===== BARRA SUPERIOR ===== */}
+      <div className="bg-primary text-primary-foreground text-center py-2 px-4 text-sm font-medium">
+        Generación fundadora 2027 · Proceso de reconocimiento MINEDUC en curso
+      </div>
 
       {/* ===== NAV ===== */}
       <header
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-          scrolled ? "bg-background/95 backdrop-blur-sm border-b border-border shadow-sm" : "bg-transparent"
+        className={`sticky top-0 z-50 bg-background transition-shadow ${
+          scrolled ? "shadow-md border-b border-border" : "border-b border-transparent"
         }`}
       >
-        <div className="max-w-[1320px] mx-auto px-6 md:px-10 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-baseline gap-2">
-            <span className="font-display text-2xl font-semibold tracking-tight">Barkley</span>
-            <span className="font-label text-[10px] text-primary translate-y-[-2px]">Instituto</span>
+        <div className="max-w-[1280px] mx-auto px-6 md:px-10 h-20 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-display text-xl border-2 border-secondary">
+              B
+            </div>
+            <div className="leading-tight">
+              <div className="font-display text-xl font-bold text-primary">Instituto Barkley</div>
+              <div className="font-label text-[10px] text-muted-foreground">Colegio online · Chile</div>
+            </div>
           </Link>
 
-          <div className="hidden md:flex items-center gap-2 font-label text-[10px] text-foreground/55">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-            APERTURA DE MATRÍCULAS · MARZO 2027
-          </div>
+          <nav className="hidden lg:flex items-center gap-8">
+            {NAV_LINKS.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                className="text-sm font-medium text-foreground/75 hover:text-primary transition-colors"
+              >
+                {l.label}
+              </a>
+            ))}
+          </nav>
 
-          <div data-magnetic-zone className="hidden lg:block">
-            <MagneticButton
-              onClick={() => document.getElementById("lista")?.scrollIntoView({ behavior: "smooth" })}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-sm font-label text-[11px] h-10 px-5 inline-flex items-center"
+          <div className="hidden lg:flex items-center gap-3">
+            <Button
+              onClick={() => document.getElementById("matricula")?.scrollIntoView({ behavior: "smooth" })}
+              className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-md font-semibold"
+              data-testid="button-matricula-nav"
             >
-              Asegurar mi cupo
-            </MagneticButton>
+              Matricúlate sin compromiso
+            </Button>
           </div>
 
           <button className="lg:hidden p-2" onClick={() => setMobileMenuOpen((v) => !v)} aria-label="Menú">
-            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-background border-t border-border px-6 py-6">
+          <div className="lg:hidden bg-background border-t border-border px-6 py-6 flex flex-col gap-4">
+            {NAV_LINKS.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-base font-medium text-foreground/80"
+              >
+                {l.label}
+              </a>
+            ))}
             <Button
               onClick={() => {
                 setMobileMenuOpen(false);
-                document.getElementById("lista")?.scrollIntoView({ behavior: "smooth" });
+                document.getElementById("matricula")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="bg-primary text-primary-foreground rounded-sm font-label text-xs h-11 w-full"
+              className="bg-secondary text-secondary-foreground rounded-md font-semibold mt-2"
             >
-              Asegurar mi cupo
+              Matricúlate sin compromiso
             </Button>
           </div>
         )}
       </header>
 
-      {/* ===== HERO — tipografía kinética ===== */}
-      <section ref={heroRef} className="relative pt-36 pb-20 md:pt-48 md:pb-28 overflow-hidden">
-        <motion.div
-          style={{ y: watermarkY }}
-          aria-hidden
-          className="absolute inset-x-0 top-[8%] flex justify-center overflow-hidden select-none pointer-events-none"
-        >
-          <span className="font-label text-[13vw] md:text-[7rem] text-foreground/[0.04] whitespace-nowrap tracking-tight">
-            GENERACIÓN FUNDADORA — GENERACIÓN FUNDADORA
-          </span>
-        </motion.div>
+      {/* ===== HERO + FORMULARIO ===== */}
+      <section id="inicio" className="py-14 md:py-20">
+        <div className="max-w-[1280px] mx-auto px-6 md:px-10 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-start">
+          <div>
+            <p className="font-label text-xs text-secondary mb-4">Educación media online · Reconocimiento MINEDUC</p>
+            <h1 className="font-display text-4xl md:text-5xl font-bold leading-[1.15] mb-6 text-primary">
+              Un colegio online con la seriedad de uno presencial.
+            </h1>
+            <p className="text-lg text-foreground/75 leading-relaxed mb-8 max-w-[52ch]">
+              Instituto Barkley educa desde 7° básico a 4° medio bajo el modelo de autorregulación
+              del Dr. Russell Barkley, con un plan de estudios alineado a las bases curriculares
+              del Ministerio de Educación. Abrimos matrículas para nuestra generación fundadora
+              en marzo de 2027.
+            </p>
 
-        <div className="max-w-[1320px] mx-auto px-6 md:px-10 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="font-label text-[11px] text-primary mb-8 flex items-center gap-2"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            Generación fundadora · MINEDUC Chile
-          </motion.div>
-
-          <h1 className="font-display leading-[0.88] tracking-tight">
-            {[
-              ["El colegio que", "text-foreground"],
-              ["se adapta a ti,", "text-foreground"],
-              ["abre en 2027", "text-primary"],
-            ].map(([line, color], i) => (
-              <span key={line} className="block overflow-hidden">
-                <motion.span
-                  initial={{ y: "110%" }}
-                  animate={{ y: "0%" }}
-                  transition={{ duration: 0.9, delay: 0.15 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                  className={`block whitespace-nowrap text-[9.5vw] md:text-[4.6rem] lg:text-[5.6rem] font-semibold ${color}`}
-                >
-                  {line}
-                </motion.span>
-              </span>
-            ))}
-          </h1>
-
-          <div className="mt-12 md:mt-16 grid md:grid-cols-[1fr_auto] gap-8 items-end">
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.7 }}
-              className="max-w-[42ch] text-lg md:text-xl text-foreground/70 leading-relaxed"
-            >
-              Instituto Barkley abre matrículas en marzo de 2027 con cupos limitados para su
-              generación fundadora. Currículum alineado MINEDUC, modelo de autorregulación de
-              Russell Barkley, ritmo propio.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.8 }}
-              data-magnetic-zone
-            >
-              <MagneticButton
-                onClick={() => document.getElementById("lista")?.scrollIntoView({ behavior: "smooth" })}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-sm font-label text-[11px] h-14 px-8 inline-flex items-center gap-2 whitespace-nowrap"
-              >
-                Asegurar mi cupo
-                <ArrowRight className="w-4 h-4" />
-              </MagneticButton>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== MARQUEE TICKER ===== */}
-      <div className="bg-primary text-primary-foreground py-4 overflow-hidden -rotate-1 scale-105">
-        <motion.div
-          className="flex whitespace-nowrap font-label text-xs font-bold"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-        >
-          <span className="pr-8">{ticker}</span>
-          <span className="pr-8">{ticker}</span>
-        </motion.div>
-      </div>
-
-      {/* ===== COUNTDOWN ===== */}
-      <section className="relative py-28 md:py-40 text-center overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute inset-x-0 top-1/2 -translate-y-1/2 font-display text-[40vw] leading-none text-foreground/[0.025] select-none pointer-events-none whitespace-nowrap text-center"
-        >
-          2027
-        </div>
-
-        <div className="font-label text-[11px] text-primary mb-10 relative">Apertura de matrículas en</div>
-        <div className="flex items-end justify-center gap-3 md:gap-8 flex-wrap px-6 relative">
-          {[
-            ["DÍAS", countdown.days, true],
-            ["HRS", countdown.hours, false],
-            ["MIN", countdown.minutes, false],
-            ["SEG", countdown.seconds, false],
-          ].map(([label, value, big], i) => (
-            <motion.div
-              key={label as string}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className={big ? "" : "mb-2 md:mb-4"}
-            >
-              <div
-                className={`font-display text-foreground tabular-nums ${
-                  big ? "text-7xl md:text-[9rem] text-primary leading-none" : "text-4xl md:text-6xl"
-                }`}
-              >
-                {String(value).padStart(2, "0")}
-              </div>
-              <div className="font-label text-[10px] text-foreground/50 mt-2">{label}</div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== MÉTODO (teaser) ===== */}
-      <section id="metodo" className="py-24 md:py-32">
-        <div className="max-w-[1320px] mx-auto px-6 md:px-10">
-          <div className="font-label text-[11px] text-accent mb-5">El método</div>
-          <h2 className="font-display text-3xl md:text-5xl font-bold max-w-[20ch] leading-[1.08]">
-            No copiamos la sala de clases. Copiamos cómo se aprende a sostener el foco.
-          </h2>
-
-          <div className="mt-20 grid md:grid-cols-3 gap-px bg-border">
-            {PRINCIPIOS.map((p, i) => (
-              <motion.div
-                key={p.n}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.6, delay: i * 0.12 }}
-                style={{ marginTop: i === 1 ? "2.5rem" : 0 }}
-                className="bg-card p-8 md:p-10"
-              >
-                <div className="flex items-center justify-between mb-8">
-                  <span className="font-display text-sm text-foreground/30">{p.n}</span>
-                  <p.icon className="w-6 h-6 text-secondary" strokeWidth={1.5} />
+            <div className="grid sm:grid-cols-3 gap-4 mb-8">
+              {[
+                ["Currículum", "Alineado MINEDUC"],
+                ["Metodología", "Modelo Dr. Barkley"],
+                ["Modalidad", "100% online, ritmo propio"],
+              ].map(([label, value]) => (
+                <div key={label} className="border-l-4 border-secondary pl-4">
+                  <div className="font-label text-[11px] text-muted-foreground">{label}</div>
+                  <div className="font-semibold text-primary text-sm mt-1">{value}</div>
                 </div>
-                <h3 className="font-display text-2xl mb-4 font-bold">{p.title}</h3>
-                <p className="text-foreground/60 leading-relaxed text-[15px]">{p.body}</p>
-              </motion.div>
-            ))}
+              ))}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-6">
+              <a
+                href="#metodo"
+                className="text-sm font-semibold text-primary hover:text-secondary underline underline-offset-4"
+              >
+                Conocer nuestro método →
+              </a>
+              <button
+                onClick={() => setCallDialogOpen(true)}
+                className="text-sm font-semibold text-foreground/70 hover:text-primary flex items-center gap-2"
+                data-testid="button-agendar-llamada"
+              >
+                <Phone className="w-4 h-4" />
+                Hablar con un asesor
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* ===== WAITLIST ===== */}
-      <section id="lista" className="py-28 md:py-40 scroll-mt-20">
-        <div className="max-w-[640px] mx-auto px-6 text-center">
-          <div className="font-label text-[11px] text-primary mb-6">Generación fundadora</div>
-          <h2 className="font-display text-4xl md:text-5xl font-medium mb-6 leading-[1.08]">
-            Asegura tu cupo antes de la apertura oficial.
-          </h2>
-          <p className="text-foreground/65 leading-relaxed mb-12">
-            Los cupos de la generación fundadora son limitados. Déjanos tu correo y te
-            contactamos directamente cuando abramos el proceso de matrícula — sin spam.
-          </p>
+          {/* Formulario de matrícula — destacado, sin compromiso */}
+          <div id="matricula" className="scroll-mt-24 bg-card border border-border rounded-lg shadow-lg p-7 md:p-9">
+            <h2 className="font-display text-2xl font-bold text-primary mb-2">Matrícula sin compromiso</h2>
+            <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+              Completa tus datos y te contactamos para conversar tu caso. Sin costo, sin obligación
+              de continuar.
+            </p>
 
-          {formState === "success" || formState === "duplicate" ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-foreground text-background rounded-sm p-10 flex flex-col items-center gap-3"
-            >
-              <Check className="w-8 h-8 text-accent" />
-              <p className="font-display text-xl">
-                {formState === "duplicate" ? "Ya tienes tu cupo reservado." : "Listo, tu cupo está reservado."}
-              </p>
-              <p className="text-background/60 text-sm">Te avisamos apenas abramos inscripciones.</p>
-            </motion.div>
-          ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                submitWaitlist();
-              }}
-              className="flex flex-col gap-4 text-left"
-            >
-              <input
-                type="email"
-                required
-                placeholder="tu@correo.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-14 px-5 bg-card border border-border rounded-sm font-sans text-base focus:outline-none focus:border-primary"
-                data-testid="input-email-waitlist"
-              />
-              <div className="grid grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="Tu nombre (opcional)"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="h-14 px-5 bg-card border border-border rounded-sm font-sans text-base focus:outline-none focus:border-primary"
-                  data-testid="input-name-waitlist"
-                />
-                <select
-                  value={levelInterest}
-                  onChange={(e) => setLevelInterest(e.target.value)}
-                  className="h-14 px-5 bg-card border border-border rounded-sm font-sans text-base focus:outline-none focus:border-primary text-foreground/70"
-                  data-testid="select-level-waitlist"
-                >
-                  <option value="">Nivel de interés</option>
-                  {["7° Básico", "8° Básico", "1° Medio", "2° Medio", "3° Medio", "4° Medio", "Adulto"].map((l) => (
-                    <option key={l} value={l}>{l}</option>
-                  ))}
-                </select>
+            {formState === "success" || formState === "duplicate" ? (
+              <div className="bg-muted rounded-md p-6 flex flex-col items-center gap-3 text-center">
+                <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+                  <Check className="w-6 h-6" />
+                </div>
+                <p className="font-display text-lg font-bold text-primary">
+                  {formState === "duplicate" ? "Ya tenemos tu solicitud." : "Solicitud recibida."}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Un asesor de admisión te contactará a la brevedad.
+                </p>
               </div>
+            ) : (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  submitMatricula();
+                }}
+                className="flex flex-col gap-4"
+              >
+                <div>
+                  <label className="text-sm font-medium text-foreground/80 block mb-1.5">
+                    Nombre del apoderado o estudiante
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Nombre completo"
+                    className="w-full h-12 px-4 bg-background border border-input rounded-md text-base focus:outline-none focus:ring-2 focus:ring-ring"
+                    data-testid="input-name-matricula"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground/80 block mb-1.5">Correo electrónico</label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="tu@correo.com"
+                    className="w-full h-12 px-4 bg-background border border-input rounded-md text-base focus:outline-none focus:ring-2 focus:ring-ring"
+                    data-testid="input-email-matricula"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground/80 block mb-1.5">Nivel de interés</label>
+                  <select
+                    value={levelInterest}
+                    onChange={(e) => setLevelInterest(e.target.value)}
+                    className="w-full h-12 px-4 bg-background border border-input rounded-md text-base text-foreground/80 focus:outline-none focus:ring-2 focus:ring-ring"
+                    data-testid="select-level-matricula"
+                  >
+                    <option value="">Selecciona un nivel</option>
+                    {["7° Básico", "8° Básico", "1° Medio", "2° Medio", "3° Medio", "4° Medio", "Validación de estudios (adulto)"].map(
+                      (l) => (
+                        <option key={l} value={l}>{l}</option>
+                      )
+                    )}
+                  </select>
+                </div>
 
-              {formState === "error" && (
-                <p className="text-destructive text-sm font-label text-[11px]">{errorMsg}</p>
-              )}
+                {formState === "error" && <p className="text-destructive text-sm font-medium">{errorMsg}</p>}
 
-              <div data-magnetic-zone>
-                <MagneticButton
+                <Button
                   type="submit"
                   disabled={formState === "loading"}
-                  className="w-full bg-primary hover:bg-primary/90 disabled:opacity-60 text-primary-foreground rounded-sm h-14 text-base inline-flex items-center justify-center gap-2"
+                  className="bg-primary hover:bg-primary/90 disabled:opacity-60 text-primary-foreground rounded-md h-12 text-base font-semibold mt-1"
+                  data-testid="button-submit-matricula"
                 >
                   {formState === "loading" ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <>
-                      Asegurar mi cupo
-                      <ArrowRight className="w-4 h-4" />
+                      Enviar solicitud
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </>
                   )}
-                </MagneticButton>
-              </div>
-            </form>
-          )}
-
-          <button
-            onClick={() => setCallDialogOpen(true)}
-            className="mt-8 font-label text-[10px] text-foreground/50 hover:text-primary border-b border-foreground/20 hover:border-primary pb-1"
-            data-testid="button-agendar-llamada"
-          >
-            ¿Quieres conversar antes? Agenda una llamada
-          </button>
+                </Button>
+                <p className="text-xs text-muted-foreground text-center">
+                  Sin compromiso. No se requiere pago en esta etapa.
+                </p>
+              </form>
+            )}
+          </div>
         </div>
       </section>
 
-      {/* ===== FOOTER ===== */}
-      <footer className="border-t border-border py-14 px-6">
-        <div className="max-w-[1320px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <span className="font-display text-lg">Instituto Barkley</span>
-          <p className="font-label text-[10px] text-foreground/50 text-center">
-            Generación fundadora · Apertura de matrículas marzo 2027 · Chile
+      {/* ===== MÉTODO ===== */}
+      <section id="metodo" className="bg-muted py-16 md:py-24">
+        <div className="max-w-[1280px] mx-auto px-6 md:px-10">
+          <p className="font-label text-xs text-secondary mb-3">Nuestro método</p>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-primary max-w-[36ch] mb-4">
+            Un modelo educativo con fundamento, no una promesa vacía.
+          </h2>
+          <p className="text-foreground/70 max-w-[60ch] mb-12 leading-relaxed">
+            No copiamos la sala de clases tradicional a una pantalla. Construimos el plan de
+            estudio alrededor de cómo los estudiantes aprenden a sostener el foco y organizar su
+            propio aprendizaje.
           </p>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {PRINCIPIOS.map((p) => (
+              <div key={p.title} className="bg-card border border-border rounded-lg p-7">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-5">
+                  <p.icon className="w-6 h-6 text-primary" strokeWidth={1.75} />
+                </div>
+                <h3 className="font-display text-lg font-bold text-primary mb-3">{p.title}</h3>
+                <p className="text-foreground/70 leading-relaxed text-[15px]">{p.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FAQ ===== */}
+      <section id="faq" className="py-16 md:py-24">
+        <div className="max-w-[760px] mx-auto px-6 md:px-10">
+          <p className="font-label text-xs text-secondary mb-3 text-center">Preguntas frecuentes</p>
+          <h2 className="font-display text-3xl font-bold text-primary text-center mb-12">
+            Antes de matricularte
+          </h2>
+
+          {faqs && faqs.length > 0 ? (
+            <Accordion type="single" collapsible className="space-y-3">
+              {faqs.map((f) => (
+                <AccordionItem key={f.id} value={f.id} className="bg-card border border-border rounded-md px-6">
+                  <AccordionTrigger className="font-display text-left text-base font-bold text-primary hover:no-underline py-4">
+                    {f.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-foreground/70 leading-relaxed pb-4">
+                    {f.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          ) : (
+            <p className="text-center text-muted-foreground text-sm">Aún no hay preguntas publicadas.</p>
+          )}
+        </div>
+      </section>
+
+      {/* ===== CTA FINAL ===== */}
+      <section className="bg-primary text-primary-foreground py-16 px-6 text-center">
+        <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 max-w-[28ch] mx-auto">
+          Conversemos sobre la educación de tu hijo o hija.
+        </h2>
+        <p className="text-primary-foreground/75 mb-8 max-w-[50ch] mx-auto">
+          Completa el formulario de matrícula o agenda una llamada con un asesor de admisión —
+          sin costo, sin compromiso.
+        </p>
+        <Button
+          onClick={() => document.getElementById("matricula")?.scrollIntoView({ behavior: "smooth" })}
+          className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-md h-12 px-8 font-semibold"
+        >
+          Ir al formulario de matrícula
+        </Button>
+      </section>
+
+      {/* ===== FOOTER ===== */}
+      <footer className="bg-sidebar text-sidebar-foreground py-12 px-6">
+        <div className="max-w-[1280px] mx-auto grid md:grid-cols-3 gap-8 text-sm">
+          <div>
+            <div className="font-display text-lg font-bold mb-2">Instituto Barkley</div>
+            <p className="text-sidebar-foreground/65 leading-relaxed">
+              Colegio online · Educación media · Chile
+              <br />
+              Generación fundadora — apertura marzo 2027
+            </p>
+          </div>
+          <div>
+            <div className="font-label text-xs text-secondary mb-3">Contacto</div>
+            <p className="flex items-center gap-2 text-sidebar-foreground/80 mb-2">
+              <Mail className="w-4 h-4" /> admisiones@institutobarkley.cl
+            </p>
+            <button
+              onClick={() => setCallDialogOpen(true)}
+              className="flex items-center gap-2 text-sidebar-foreground/80 hover:text-secondary"
+            >
+              <Phone className="w-4 h-4" /> Agendar llamada con asesor
+            </button>
+          </div>
+          <div>
+            <div className="font-label text-xs text-secondary mb-3">Navegación</div>
+            <div className="flex flex-col gap-2">
+              {NAV_LINKS.map((l) => (
+                <a key={l.href} href={l.href} className="text-sidebar-foreground/80 hover:text-secondary">
+                  {l.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="max-w-[1280px] mx-auto mt-10 pt-6 border-t border-sidebar-border text-xs text-sidebar-foreground/50">
+          © {new Date().getFullYear()} Instituto Barkley. Todos los derechos reservados.
         </div>
       </footer>
 
