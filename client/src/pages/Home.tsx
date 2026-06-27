@@ -13,6 +13,8 @@ import {
   Mail,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useQuery } from "@tanstack/react-query";
 import { ReservationDialog } from "@/components/ReservationDialog";
@@ -253,47 +255,56 @@ export default function Home() {
                 }}
                 className="flex flex-col gap-4"
               >
-                <div>
-                  <label className="text-sm font-medium text-foreground/80 block mb-1.5">
-                    Nombre del apoderado o estudiante
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Nombre completo"
-                    className="w-full h-12 px-4 bg-background border border-input rounded-md text-base focus:outline-none focus:ring-2 focus:ring-ring"
-                    data-testid="input-name-matricula"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground/80 block mb-1.5">Correo electrónico</label>
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="tu@correo.com"
-                    className="w-full h-12 px-4 bg-background border border-input rounded-md text-base focus:outline-none focus:ring-2 focus:ring-ring"
-                    data-testid="input-email-matricula"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground/80 block mb-1.5">Nivel de interés</label>
-                  <select
-                    value={levelInterest}
-                    onChange={(e) => setLevelInterest(e.target.value)}
-                    className="w-full h-12 px-4 bg-background border border-input rounded-md text-base text-foreground/80 focus:outline-none focus:ring-2 focus:ring-ring"
-                    data-testid="select-level-matricula"
-                  >
-                    <option value="">Selecciona un nivel</option>
-                    {["7° Básico", "8° Básico", "1° Medio", "2° Medio", "3° Medio", "4° Medio", "Validación de estudios (adulto)"].map(
-                      (l) => (
-                        <option key={l} value={l}>{l}</option>
-                      )
-                    )}
-                  </select>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="col-span-full">
+                    <Label htmlFor="name-matricula" className="text-sm font-medium text-foreground/80">
+                      Nombre del apoderado o estudiante <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="name-matricula"
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Nombre completo"
+                      className="mt-1.5 h-12"
+                      data-testid="input-name-matricula"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email-matricula" className="text-sm font-medium text-foreground/80">
+                      Correo electrónico <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="email-matricula"
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="tu@correo.com"
+                      className="mt-1.5 h-12"
+                      data-testid="input-email-matricula"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="level-matricula" className="text-sm font-medium text-foreground/80">
+                      Nivel de interés
+                    </Label>
+                    <select
+                      id="level-matricula"
+                      value={levelInterest}
+                      onChange={(e) => setLevelInterest(e.target.value)}
+                      className="mt-1.5 w-full h-12 px-3 bg-background border border-input rounded-md text-base text-foreground/80 focus:outline-none focus:ring-2 focus:ring-ring"
+                      data-testid="select-level-matricula"
+                    >
+                      <option value="">Selecciona un nivel</option>
+                      {["7° Básico", "8° Básico", "1° Medio", "2° Medio", "3° Medio", "4° Medio", "Validación de estudios (adulto)"].map(
+                        (l) => (
+                          <option key={l} value={l}>{l}</option>
+                        )
+                      )}
+                    </select>
+                  </div>
                 </div>
 
                 {formState === "error" && <p className="text-destructive text-sm font-medium">{errorMsg}</p>}
