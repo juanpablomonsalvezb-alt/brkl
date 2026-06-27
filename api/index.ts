@@ -2,7 +2,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import express from "express";
 import { registerRoutes } from "../server/routes";
-import { serveStatic } from "../server/static";
 
 // Create Express app for Vercel
 const app = express();
@@ -36,11 +35,8 @@ async function initializeApp() {
     return res.status(status).json({ message });
   });
   
-  // Serve static files in production
-  if (process.env.NODE_ENV === "production") {
-    serveStatic(app);
-  }
-  
+  // Vercel sirve client/dist/public como estáticos vía outputDirectory + rewrites,
+  // no acá: esta función solo maneja /api/*.
   routesInitialized = true;
 }
 
