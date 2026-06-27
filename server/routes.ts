@@ -1,14 +1,16 @@
 import type { Express, RequestHandler } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
+import { eq } from "drizzle-orm";
 import { storage } from "./storage";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
 import {
   insertLevelSchema, insertSubjectSchema, insertLevelSubjectSchema,
   insertLearningObjectiveSchema, insertWeeklyResourceSchema, insertStudentProgressSchema,
   insertEvaluationProgressSchema, updateLevelSubjectTextbookSchema, updateLearningObjectivePagesSchema,
-  insertReservationSchema
+  insertReservationSchema, insertWaitlistSchema, waitlistSignups
 } from "@shared/schema";
+import { db } from "./db";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
 import {
   getAllModulesSchedule, getModuleSchedule, getCalendarSummary,
@@ -183,6 +185,32 @@ export async function registerRoutes(
       uptime: process.uptime(),
       service: "Instituto Barkley LMS"
     });
+  });
+
+  // Waitlist — captación de correos en etapa pre-lanzamiento
+  app.post("/api/waitlist", async (req, res) => {
+    try {
+      const parsed = insertWaitlistSchema.safeParse(req.body);
+      if (!parsed.success) {
+        return res.status(400).json({ message: "Datos inválidos", errors: parsed.error.flatten() });
+      }
+      const existing = await db
+        .select({ id: waitlistSignups.id })
+        .from(waitlistSignups)
+        .where(eq(waitlistSignups.email, parsed.data.email))
+        .limit(1);
+      if (existing.length > 0) {
+        return res.status(200).json({ message: "Ya estabas en la lista", alreadySubscribed: true });
+      }
+      await db.insert(waitlistSignups).values(parsed.data);
+      res.status(201).json({ message: "Listo, te avisamos apenas abramos inscripciones" });
+    } catch (error: any) {
+      if (String(error?.message || "").includes("UNIQUE")) {
+        return res.status(200).json({ message: "Ya estabas en la lista", alreadySubscribed: true });
+      }
+      console.error("Error en waitlist signup:", error);
+      res.status(500).json({ message: "No se pudo registrar, intenta de nuevo" });
+    }
   });
 
   // Setup authentication (BEFORE registering other routes)

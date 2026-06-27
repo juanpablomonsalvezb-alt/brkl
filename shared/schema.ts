@@ -9,6 +9,24 @@ export * from "./models/auth";
 // Re-export chat models (conversations and messages tables)
 export * from "./models/chat";
 
+// Waitlist — captación de correos en etapa pre-lanzamiento (sin venta de planes)
+export const waitlistSignups = sqliteTable("waitlist_signups", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  email: text("email").notNull().unique(),
+  name: text("name"),
+  levelInterest: text("level_interest"),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+});
+
+export const insertWaitlistSchema = z.object({
+  email: z.string().trim().toLowerCase().email("Email inválido"),
+  name: z.string().trim().min(2).max(120).optional(),
+  levelInterest: z.string().trim().max(40).optional(),
+});
+
+export type WaitlistSignup = typeof waitlistSignups.$inferSelect;
+export type InsertWaitlistSignup = z.infer<typeof insertWaitlistSchema>;
+
 // Enums - SQLite doesn't have native enums, so we use text with check constraints
 // For simplicity, we'll just use text fields and validate in the application layer
 
