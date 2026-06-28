@@ -152,7 +152,7 @@ function InscripcionForm({ idPrefix }: { idPrefix: string }) {
         {state === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Quiero inscribirme<ArrowRight className="ml-2 h-4 w-4" /></>}
       </Button>
       <p className="col-span-full text-center text-xs text-muted-foreground">
-        Sin compromiso · sin costo en esta etapa · cupos generación fundadora 2027
+        Sin compromiso · sin costo en esta etapa · cupos limitados año académico 2027
       </p>
     </form>
   );
@@ -288,7 +288,7 @@ const ASIGNATURAS = [
 ];
 
 const HERO_PHOTO =
-  "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=70";
+  "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1600&q=70";
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
@@ -318,7 +318,7 @@ export default function Home() {
       {/* ===== BARRA SUPERIOR ===== */}
       <div className="bg-primary px-4 py-2 text-primary-foreground">
         <div className="mx-auto flex max-w-[1280px] flex-col items-center justify-between gap-1.5 text-xs sm:flex-row sm:text-sm">
-          <span className="font-medium">Generación fundadora · Inscripciones abren marzo 2027</span>
+          <span className="font-medium">Admisión abierta · Año académico 2027</span>
           <div className="flex items-center gap-4 text-primary-foreground/85">
             <a href="mailto:admisiones@barkley.cl" className="flex items-center gap-1.5 hover:text-secondary">
               <Mail className="h-3.5 w-3.5" /> admisiones@barkley.cl
@@ -435,7 +435,7 @@ export default function Home() {
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15 }} id="inscripcion-hero" className="shadow-premium-lg rounded-2xl border border-border bg-card p-6 md:p-8">
             <div className="mb-1 flex items-center gap-2">
               <CalendarCheck className="h-5 w-5 text-secondary" />
-              <span className="font-label text-xs text-secondary">Generación fundadora 2027</span>
+              <span className="font-label text-xs text-secondary">Admisión 2027</span>
             </div>
             <h2 className="mb-2 font-display text-2xl font-bold text-primary">Inscríbete sin compromiso</h2>
             <p className="mb-6 text-sm text-muted-foreground">
@@ -453,7 +453,7 @@ export default function Home() {
             { node: <><CountUp to={9} /> niveles</>, label: "5° básico a 4° medio" },
             { node: <CountUp to={100} suffix="%" />, label: "Alineado a bases MINEDUC" },
             { node: <CountUp to={0} />, label: "Clases por Zoom o Meet" },
-            { node: <>2027</>, label: "Generación fundadora" },
+            { node: <>2027</>, label: "Año académico" },
           ].map((s, i) => (
             <motion.div key={i} {...fadeUp} transition={{ duration: 0.5, delay: i * 0.08 }}>
               <div className="font-display text-3xl font-bold md:text-4xl">{s.node}</div>
@@ -578,12 +578,12 @@ export default function Home() {
       <section id="inscripcion" className="scroll-mt-24 bg-muted py-16 md:py-24">
         <div className="mx-auto grid max-w-[1100px] items-center gap-10 px-6 md:px-10 lg:grid-cols-[1fr_1.1fr]">
           <motion.div {...fadeUp}>
-            <p className="font-label gold-rule mb-3 text-xs text-secondary">Admisión generación fundadora 2027</p>
+            <p className="font-label gold-rule mb-3 text-xs text-secondary">Proceso de admisión 2027</p>
             <h2 className="mb-4 font-display text-3xl font-bold text-primary md:text-4xl">
-              Asegura tu cupo para marzo de 2027.
+              Asegura el cupo de tu hijo o hija para el año académico 2027.
             </h2>
             <p className="mb-6 leading-relaxed text-foreground/70">
-              Las inscripciones de la generación fundadora son limitadas. Déjanos tus datos y un asesor de
+              Los cupos por nivel son limitados. Déjanos tus datos y un asesor de
               admisión te contacta — sin costo, sin obligación de continuar.
             </p>
             <ul className="space-y-2 text-sm text-foreground/75">
@@ -640,7 +640,7 @@ export default function Home() {
             <p className="leading-relaxed text-white/65">
               Colegio online asincrónico · Chile
               <br />
-              Generación fundadora — apertura marzo 2027
+              Admisión año académico 2027
             </p>
           </div>
           <div>
