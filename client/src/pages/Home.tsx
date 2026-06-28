@@ -29,7 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useQuery } from "@tanstack/react-query";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring, useScroll, useTransform } from "framer-motion";
 import { ReservationDialog } from "@/components/ReservationDialog";
 
 const fadeUp = {
@@ -180,7 +180,7 @@ function PlatformPreview() {
       </div>
 
       {/* Marco de navegador */}
-      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-xl">
+      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-premium-lg">
         <div className="flex items-center gap-1.5 border-b border-border bg-muted/60 px-4 py-2.5">
           <span className="h-2.5 w-2.5 rounded-full bg-destructive/40" />
           <span className="h-2.5 w-2.5 rounded-full bg-secondary/50" />
@@ -292,6 +292,9 @@ const HERO_PHOTO =
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: heroProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const photoY = useTransform(heroProgress, [0, 1], ["0%", "12%"]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [callDialogOpen, setCallDialogOpen] = useState(false);
   const [photoOk, setPhotoOk] = useState(true);
@@ -310,7 +313,8 @@ export default function Home() {
   const goInscripcion = () => document.getElementById("inscripcion")?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <div className="bg-background font-sans text-foreground">
+    <div className="relative bg-background font-sans text-foreground">
+      <div className="grain-overlay pointer-events-none fixed inset-0 z-[1] opacity-[0.025] mix-blend-multiply" />
       {/* ===== BARRA SUPERIOR ===== */}
       <div className="bg-primary px-4 py-2 text-primary-foreground">
         <div className="mx-auto flex max-w-[1280px] flex-col items-center justify-between gap-1.5 text-xs sm:flex-row sm:text-sm">
@@ -358,32 +362,63 @@ export default function Home() {
         )}
       </header>
 
-      {/* ===== HERO con fotografía + formulario ===== */}
-      <section className="relative isolate overflow-hidden bg-primary">
-        {/* Foto de fondo (con fallback a navy si no carga) */}
+      {/* ===== HERO con fotografía dúotono + formulario ===== */}
+      <section ref={heroRef} className="relative isolate overflow-hidden bg-primary">
+        {/* Grano táctil — profundidad, no decoración hueca */}
+        <div className="grain-overlay pointer-events-none absolute inset-0 z-[2] opacity-[0.06] mix-blend-overlay" />
+
+        {/* Foto de fondo con parallax + tratamiento dúotono navy/dorado (no overlay plano genérico) */}
         {photoOk && (
-          <img
+          <motion.img
+            style={{ y: photoY, filter: "grayscale(1) contrast(1.15)" }}
             src={HERO_PHOTO}
             alt="Estudiante aprendiendo en casa a su propio ritmo"
             onError={() => setPhotoOk(false)}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-x-0 -top-10 h-[115%] w-full object-cover"
           />
         )}
-        {/* Overlay navy para legibilidad y coherencia de marca */}
+        {/* Capa 1: navy multiply — tiñe la foto del color de marca en vez de oscurecerla plano */}
+        <div className="absolute inset-0" style={{ background: "hsl(218 60% 22%)", mixBlendMode: "multiply" }} />
+        {/* Capa 2: degradé direccional para legibilidad del texto */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(100deg, hsl(218 52% 13% / 0.95) 0%, hsl(218 52% 14% / 0.85) 45%, hsl(218 50% 16% / 0.6) 100%)",
+              "linear-gradient(100deg, hsl(218 52% 12% / 0.92) 0%, hsl(218 52% 13% / 0.78) 45%, hsl(218 50% 15% / 0.5) 100%)",
           }}
         />
+        {/* Capa 3: insinuación dorada en el borde — firma de marca, sutil */}
+        <div
+          className="absolute inset-0 mix-blend-screen"
+          style={{ background: "radial-gradient(ellipse 60% 50% at 85% 15%, hsl(38 75% 50% / 0.18), transparent 70%)" }}
+        />
 
-        <div className="relative mx-auto grid max-w-[1280px] items-center gap-10 px-6 py-16 md:px-10 md:py-24 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="relative z-[3] mx-auto grid max-w-[1280px] items-center gap-10 px-6 py-16 md:px-10 md:py-24 lg:grid-cols-[1.05fr_0.95fr]">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-primary-foreground">
-            <p className="font-label mb-4 text-xs text-secondary">Educación básica y media · Reconocimiento MINEDUC</p>
+            <p className="font-label gold-rule mb-4 text-xs text-secondary">Educación básica y media · Reconocimiento MINEDUC</p>
             <h1 className="mb-6 font-display text-4xl font-bold leading-[1.08] md:text-[3.5rem]">
               El colegio que se adapta a{" "}
-              <span className="text-secondary">tu ritmo</span>, no al revés.
+              <span className="relative inline-block text-secondary">
+                tu ritmo
+                <motion.svg
+                  className="absolute -bottom-1.5 left-0 w-full"
+                  height="10"
+                  viewBox="0 0 220 10"
+                  preserveAspectRatio="none"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1, delay: 0.6, ease: "easeInOut" }}
+                >
+                  <motion.path
+                    d="M2 7C50 2 170 2 218 7"
+                    fill="none"
+                    stroke="hsl(var(--secondary))"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                </motion.svg>
+              </span>
+              , no al revés.
             </h1>
             <p className="mb-6 max-w-[50ch] text-lg leading-relaxed text-primary-foreground/85">
               Colegio <strong className="text-secondary">100% asincrónico</strong>: sin clases en vivo por Zoom o
@@ -397,7 +432,7 @@ export default function Home() {
           </motion.div>
 
           {/* Formulario grande (reemplaza el antiguo "tu semana / tu ritmo") */}
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15 }} id="inscripcion-hero" className="rounded-2xl border border-border bg-card p-6 shadow-2xl md:p-8">
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15 }} id="inscripcion-hero" className="shadow-premium-lg rounded-2xl border border-border bg-card p-6 md:p-8">
             <div className="mb-1 flex items-center gap-2">
               <CalendarCheck className="h-5 w-5 text-secondary" />
               <span className="font-label text-xs text-secondary">Generación fundadora 2027</span>
@@ -433,7 +468,7 @@ export default function Home() {
         <div className="mx-auto max-w-[1280px] px-6 md:px-10">
           <div className="grid items-center gap-12 lg:grid-cols-[0.85fr_1.15fr]">
             <motion.div {...fadeUp}>
-              <p className="font-label mb-3 text-xs text-secondary">La plataforma por dentro</p>
+              <p className="font-label gold-rule mb-3 text-xs text-secondary">La plataforma por dentro</p>
               <h2 className="mb-4 font-display text-3xl font-bold text-primary md:text-4xl">
                 Mira cómo se ve aprender en Barkley.
               </h2>
@@ -468,7 +503,7 @@ export default function Home() {
       <section id="asignaturas" className="bg-muted py-16 md:py-24">
         <div className="mx-auto max-w-[1280px] px-6 md:px-10">
           <motion.div {...fadeUp} className="mb-10">
-            <p className="font-label mb-3 text-xs text-secondary">Plan de estudios</p>
+            <p className="font-label gold-rule mb-3 text-xs text-secondary">Plan de estudios</p>
             <h2 className="max-w-[30ch] font-display text-3xl font-bold text-primary md:text-4xl">
               Áreas alineadas a las bases curriculares del MINEDUC.
             </h2>
@@ -488,7 +523,7 @@ export default function Home() {
       <section className="bg-primary py-16 text-primary-foreground md:py-20">
         <div className="mx-auto grid max-w-[1280px] items-center gap-10 px-6 md:grid-cols-2 md:px-10">
           <motion.div {...fadeUp}>
-            <p className="font-label mb-3 text-xs text-secondary">Para quién es</p>
+            <p className="font-label gold-rule mb-3 text-xs text-secondary">Para quién es</p>
             <h2 className="mb-4 font-display text-3xl font-bold md:text-4xl">Pensado para quien necesita otro ritmo.</h2>
             <p className="leading-relaxed text-primary-foreground/80">
               Estudiantes que aprenden distinto, familias que quieren acompañamiento real, y adultos que buscan
@@ -516,7 +551,7 @@ export default function Home() {
       <section id="metodo" className="py-16 md:py-24">
         <div className="mx-auto max-w-[1280px] px-6 md:px-10">
           <motion.div {...fadeUp} className="mb-12">
-            <p className="font-label mb-3 text-xs text-secondary">Nuestro método</p>
+            <p className="font-label gold-rule mb-3 text-xs text-secondary">Nuestro método</p>
             <h2 className="mb-4 max-w-[34ch] font-display text-3xl font-bold text-primary md:text-4xl">
               Un modelo educativo con fundamento, no una promesa vacía.
             </h2>
@@ -527,7 +562,7 @@ export default function Home() {
           </motion.div>
           <div className="grid gap-6 md:grid-cols-3">
             {PRINCIPIOS.map((p, i) => (
-              <motion.div key={p.title} {...fadeUp} transition={{ duration: 0.5, delay: i * 0.1 }} className="rounded-lg border border-border bg-card p-7 transition-shadow hover:shadow-xl">
+              <motion.div key={p.title} {...fadeUp} transition={{ duration: 0.5, delay: i * 0.1 }} className="rounded-lg border border-border bg-card p-7 transition-shadow hover:shadow-premium-lg">
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                   <p.icon className="h-6 w-6 text-primary" strokeWidth={1.75} />
                 </div>
@@ -543,7 +578,7 @@ export default function Home() {
       <section id="inscripcion" className="scroll-mt-24 bg-muted py-16 md:py-24">
         <div className="mx-auto grid max-w-[1100px] items-center gap-10 px-6 md:px-10 lg:grid-cols-[1fr_1.1fr]">
           <motion.div {...fadeUp}>
-            <p className="font-label mb-3 text-xs text-secondary">Admisión generación fundadora 2027</p>
+            <p className="font-label gold-rule mb-3 text-xs text-secondary">Admisión generación fundadora 2027</p>
             <h2 className="mb-4 font-display text-3xl font-bold text-primary md:text-4xl">
               Asegura tu cupo para marzo de 2027.
             </h2>
@@ -557,7 +592,7 @@ export default function Home() {
               ))}
             </ul>
           </motion.div>
-          <motion.div {...fadeUp} className="rounded-2xl border border-border bg-card p-7 shadow-xl md:p-8">
+          <motion.div {...fadeUp} className="rounded-2xl border border-border bg-card shadow-premium-lg p-7 md:p-8">
             <InscripcionForm idPrefix="sec" />
           </motion.div>
         </div>
@@ -566,7 +601,7 @@ export default function Home() {
       {/* ===== FAQ ===== */}
       <motion.section {...fadeUp} id="faq" className="py-16 md:py-24">
         <div className="mx-auto max-w-[760px] px-6 md:px-10">
-          <p className="font-label mb-3 text-center text-xs text-secondary">Preguntas frecuentes</p>
+          <p className="font-label gold-rule justify-center mb-3 text-center text-xs text-secondary">Preguntas frecuentes</p>
           <h2 className="mb-12 text-center font-display text-3xl font-bold text-primary">Antes de inscribirte</h2>
           {faqs && faqs.length > 0 ? (
             <Accordion type="single" collapsible className="space-y-3">
