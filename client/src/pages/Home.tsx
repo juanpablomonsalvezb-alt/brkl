@@ -148,7 +148,7 @@ function InscripcionForm({ idPrefix }: { idPrefix: string }) {
         </select>
       </div>
       {state === "error" && <p className="col-span-full text-sm font-medium text-destructive">{err}</p>}
-      <Button type="submit" disabled={state === "loading"} className="col-span-full mt-1 h-12 rounded-md bg-primary text-base font-semibold text-primary-foreground transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30 disabled:opacity-60" data-testid={`button-submit-${idPrefix}`}>
+      <Button type="submit" disabled={state === "loading"} className="col-span-full mt-1 h-12 rounded-md bg-primary text-base font-semibold text-primary-foreground transition-opacity hover:opacity-70 disabled:opacity-60" data-testid={`button-submit-${idPrefix}`}>
         {state === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Quiero inscribirme<ArrowRight className="ml-2 h-4 w-4" /></>}
       </Button>
       <p className="col-span-full text-center text-xs text-muted-foreground">
@@ -346,7 +346,7 @@ export default function Home() {
             ))}
           </nav>
           <div className="hidden lg:flex">
-            <Button onClick={goInscripcion} className="rounded-md bg-secondary font-semibold text-secondary-foreground transition-all hover:-translate-y-0.5 hover:bg-secondary/90 hover:shadow-lg hover:shadow-secondary/30">
+            <Button onClick={goInscripcion} className="rounded-md bg-secondary font-semibold text-secondary-foreground transition-opacity hover:opacity-70">
               Inscríbete
             </Button>
           </div>
@@ -378,13 +378,13 @@ export default function Home() {
           />
         )}
         {/* Capa 1: navy multiply — tiñe la foto del color de marca en vez de oscurecerla plano */}
-        <div className="absolute inset-0" style={{ background: "hsl(218 60% 22%)", mixBlendMode: "multiply" }} />
+        <div className="absolute inset-0" style={{ background: "hsl(0 0% 8%)", mixBlendMode: "multiply" }} />
         {/* Capa 2: degradé direccional para legibilidad del texto */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(100deg, hsl(218 52% 12% / 0.92) 0%, hsl(218 52% 13% / 0.78) 45%, hsl(218 50% 15% / 0.5) 100%)",
+              "linear-gradient(100deg, hsl(0 0% 4% / 0.92) 0%, hsl(0 0% 5% / 0.78) 45%, hsl(0 0% 8% / 0.5) 100%)",
           }}
         />
         {/* Capa 3: insinuación dorada en el borde — firma de marca, sutil */}
@@ -623,7 +623,7 @@ export default function Home() {
         <h2 className="mx-auto mb-4 max-w-[28ch] font-display text-3xl font-bold md:text-4xl">Conversemos sobre la educación de tu hijo o hija.</h2>
         <p className="mx-auto mb-8 max-w-[50ch] text-primary-foreground/75">Inscríbete o agenda una llamada con un asesor de admisión — sin costo, sin compromiso.</p>
         <div className="flex flex-wrap items-center justify-center gap-4">
-          <Button onClick={goInscripcion} className="h-12 rounded-md bg-secondary px-8 font-semibold text-secondary-foreground transition-all hover:-translate-y-0.5 hover:bg-secondary/90 hover:shadow-lg hover:shadow-secondary/30">
+          <Button onClick={goInscripcion} className="h-12 rounded-md bg-secondary px-8 font-semibold text-secondary-foreground transition-opacity hover:opacity-70">
             Inscríbete ahora
           </Button>
           <button onClick={() => setCallDialogOpen(true)} className="flex h-12 items-center gap-2 rounded-md border border-primary-foreground/30 px-6 font-semibold hover:bg-primary-foreground/10">
@@ -633,7 +633,7 @@ export default function Home() {
       </motion.section>
 
       {/* ===== FOOTER (navy explícito + texto claro) ===== */}
-      <footer style={{ backgroundColor: "hsl(218 52% 14%)", color: "hsl(42 38% 92%)" }} className="px-6 py-12">
+      <footer style={{ backgroundColor: "hsl(0 0% 0%)", color: "hsl(60 25% 92%)" }} className="px-6 py-12">
         <div className="mx-auto grid max-w-[1280px] gap-8 text-sm md:grid-cols-3">
           <div>
             <div className="mb-2 font-display text-lg font-bold text-white">Barkley Online</div>
