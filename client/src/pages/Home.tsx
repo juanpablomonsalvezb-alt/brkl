@@ -25,6 +25,11 @@ const GREEN = "#00b273";
 const PINK = "#fe76b4";
 const TEXT = "#525252";
 const FONT = "'Poppins', sans-serif";
+// Azul apagado real usado en titulares grandes e intro (no el navy puro de marca)
+const SLATE = "#5b7ba3";
+// Paneles de color sólido reales del hero (más claros que navy/morado de marca)
+const BLOCK_BLUE = "#4a90d9";
+const LAVENDER = "#b39ddb";
 
 // — Formas SVG equivalentes a los glifos reales (bpa-font-icons / IcoMoon no licenciados) —
 function ShapeCircle({ color, size = 40 }: { color: string; size?: number }) {
@@ -44,6 +49,21 @@ function ShapeFlower({ color, size = 40 }: { color: string; size?: number }) {
 }
 function ShapeArrow({ color, size = 40 }: { color: string; size?: number }) {
   return <svg width={size} height={size} viewBox="0 0 40 40"><polygon points="4,4 22,4 38,20 22,36 4,36 20,20" fill={color} /></svg>;
+}
+function ShapeHourglass({ color, size = 40 }: { color: string; size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 40 40"><path d="M6 2h28l-14 18z" fill={color} /><path d="M6 38h28l-14-18z" fill={color} /></svg>;
+}
+function ShapeStairs({ color, size = 40 }: { color: string; size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 40 40"><path d="M2 38V28h10V18h10V8h16v30z" fill={color} /></svg>;
+}
+function ShapeLeaf({ color, size = 40 }: { color: string; size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 40 40"><path d="M20 2C10 6 4 16 4 26c0 6 5 11 11 11 10 0 17-9 17-22 0-5-1-9-2-13-3 4-7 6-10 6-4 0-6-2-6-6z" fill={color} /></svg>;
+}
+function ShapeBars({ color, size = 40 }: { color: string; size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 40 40"><rect x="2" y="4" width="16" height="14" rx="7" fill={color} /><rect x="2" y="22" width="16" height="14" rx="7" fill={color} /></svg>;
+}
+function ShapeFastForward({ color, size = 40 }: { color: string; size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 40 40"><polygon points="2,4 18,20 2,36" fill={color} /><polygon points="20,4 36,20 20,36" fill={color} /></svg>;
 }
 const SHAPES = [ShapeCircle, ShapeTriangle, ShapeStar, ShapeHeart, ShapeFlower, ShapeArrow];
 
@@ -160,15 +180,21 @@ export default function Home() {
       {/* === HEADER — logo cuadrado + hamburguesa, como el real (icono search + MY ISB + MENU) === */}
       <header style={{ position: "sticky", top: 0, zIndex: 30, background: "#fff", borderBottom: "1px solid #eef1f5" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <a href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none" }}>
-            <div style={{ width: 44, height: 44, background: NAVY, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <span style={{ color: "#fff", fontWeight: 800, fontSize: 15, letterSpacing: "-0.5px" }}>BK</span>
+          {/* Logo con marco cuadrado + subrayado rojo, como el real (logo ISB: cuadro con borde navy, texto bold, filete rojo debajo) */}
+          <a href="/" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none" }}>
+            <div style={{ width: 60, height: 60, border: `2.5px solid ${NAVY}`, borderRadius: 4, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 4 }}>
+              <span style={{ color: NAVY, fontWeight: 800, fontSize: 20, letterSpacing: "-0.5px", lineHeight: 1 }}>BK</span>
+              <span style={{ width: 28, height: 3, background: RED, marginTop: 4, borderRadius: 2 }} />
             </div>
-            <span style={{ color: NAVY, fontWeight: 700, fontSize: 15, lineHeight: 1.25 }}>The Barkley<br /><span style={{ fontWeight: 400, fontSize: 13, color: TEXT }}>Online School</span></span>
+            <span style={{ color: NAVY, fontWeight: 700, fontSize: 16, lineHeight: 1.3 }}>The Barkley<br />Online School</span>
           </a>
-          <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-            <Search style={{ width: 18, height: 18, color: NAVY, cursor: "pointer" }} />
-            <a href="#inscripcion" style={{ fontSize: 13, fontWeight: 700, color: NAVY, textDecoration: "none", display: "none" }} className="hidden md:inline">MI BARKLEY</a>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <button aria-label="Buscar" style={{ width: 36, height: 36, borderRadius: "50%", background: "#f1f4f8", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+              <Search style={{ width: 16, height: 16, color: NAVY }} />
+            </button>
+            <span style={{ width: 1, height: 20, background: "#d8dee6" }} />
+            <a href="#inscripcion" style={{ fontSize: 13, fontWeight: 700, color: NAVY, textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>MI BARKLEY</a>
+            <span style={{ width: 1, height: 20, background: "#d8dee6" }} />
             <button aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"} onClick={() => setMenuOpen(o => !o)}
               style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: NAVY, fontFamily: FONT, fontSize: 13, fontWeight: 700 }}>
               {menuOpen ? <X style={{ width: 22, height: 22 }} /> : <Menu style={{ width: 22, height: 22 }} />}
@@ -191,30 +217,41 @@ export default function Home() {
         )}
       </header>
 
-      {/* === HERO — foto full-bleed 885px real + columna decorativa 314px real (getComputedStyle .hero-banner / .container--buttons--wrapper) === */}
+      {/* === HERO — foto full-bleed 885px real + columna con bloque azul medio (doble flecha) y lavanda (pétalos), texto overlay directo === */}
       <section style={{ position: "relative", display: "flex", height: "min(885px,88vh)" }}>
         <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
-          <img src={HERO_PHOTO} alt="" style={{ width: "100%", height: "100%", position: "absolute", inset: 0, objectFit: "cover" }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,51,102,0) 40%, rgba(0,51,102,0.6) 100%)" }} />
+          <img src={HERO_PHOTO} alt="" style={{ width: "100%", height: "100%", position: "absolute", inset: 0, objectFit: "cover", filter: "saturate(0.85)" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,51,102,0) 35%, rgba(20,35,55,0.75) 100%)" }} />
           <div style={{ position: "absolute", left: 40, right: 40, bottom: 48, color: "#fff" }}>
             <p style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", margin: "0 0 10px" }}>Líderes en Educación Asincrónica Inclusiva</p>
-            <h1 style={{ fontSize: "clamp(32px,5.5vw,56px)", fontWeight: 700, margin: 0, maxWidth: 720, lineHeight: 1.15 }}>El colegio online que se adapta a tu ritmo.</h1>
+            <h1 style={{ fontSize: "clamp(36px,6.5vw,72px)", fontWeight: 800, margin: 0, maxWidth: 760, lineHeight: 1.1 }}>El colegio online que se adapta a tu ritmo.</h1>
           </div>
         </div>
         <div style={{ width: 314, display: "flex", flexDirection: "column" }} className="hidden md:flex">
-          <div style={{ flex: 1, background: NAVY, display: "flex", alignItems: "center", justifyContent: "center" }}><ShapeTriangle color={GOLD} size={110} /></div>
-          <div style={{ flex: 1, background: PURPLE, display: "flex", alignItems: "center", justifyContent: "center" }}><ShapeCircle color={GOLD} size={110} /></div>
-          <a href="#plataforma" style={{ background: NAVY, color: "#fff", textDecoration: "none", fontSize: 15, fontWeight: 700, padding: "26px 20px", textAlign: "left", lineHeight: 1.4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>Tour virtual <ArrowUpRight style={{ width: 18, height: 18 }} /></a>
-          <a href="#faq" style={{ background: PURPLE, color: "#fff", textDecoration: "none", fontSize: 15, fontWeight: 700, padding: "26px 20px", textAlign: "left", lineHeight: 1.4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>Preguntas frecuentes <ArrowUpRight style={{ width: 18, height: 18 }} /></a>
+          <a href="#plataforma" style={{ flex: 1, background: BLOCK_BLUE, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><ShapeFastForward color={GOLD} size={100} /></div>
+            <div style={{ padding: "22px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#fff", fontWeight: 700, fontSize: 17 }}>Tour Virtual <ArrowUpRight style={{ width: 20, height: 20 }} /></div>
+          </a>
+          <a href="#faq" style={{ flex: 1, background: LAVENDER, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <div style={{ position: "absolute", top: 12, right: 12 }}><ShapeFlower color={PINK} size={90} /></div>
+            <div style={{ flex: 1 }} />
+            <div style={{ padding: "22px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", color: NAVY, fontWeight: 700, fontSize: 17 }}>Últimas Noticias <ArrowUpRight style={{ width: 20, height: 20 }} /></div>
+          </a>
         </div>
       </section>
 
-      {/* === INTRO — párrafo completo navy sólido 39px real (getComputedStyle: color rgb(0,51,102), 39px), formas solo decorativas inline === */}
-      <section id="nosotros" style={{ maxWidth: 1180, margin: "0 auto", padding: "80px 24px", textAlign: "center" }}>
-        <p style={{ fontSize: "clamp(24px,3.4vw,39px)", fontWeight: 400, lineHeight: 1.3, color: NAVY, margin: 0 }}>
-          Somos un colegio<ShapeInline color={NAVY} shape={ShapeCircle} /> 100% asincrónico en Chile<ShapeInline color={RED} shape={ShapeTriangle} /> para
-          estudiantes desde 5° básico hasta 4° medio<ShapeInline color={PURPLE} shape={ShapeStar} />, ofreciendo una
-          preparación rigurosa para rendir exámenes libres<ShapeInline color={GREEN} shape={ShapeFlower} /> ante personas de todo Chile<ShapeInline color={PINK} shape={ShapeHeart} />.
+      {/* Pestañas verticales fijas al borde derecho, siempre visibles — patrón real .sticky--cta--nav */}
+      <div style={{ position: "fixed", right: 0, top: "45%", zIndex: 25, display: "flex", flexDirection: "column" }} className="hidden md:flex">
+        <a href="#inscripcion" style={{ background: BLOCK_BLUE, color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>VISITAR</a>
+        <a href="#inscripcion" style={{ background: PINK, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>POSTULAR</a>
+      </div>
+
+      {/* === INTRO — azul apagado real (no navy puro), formas literales inline (hourglass/circle/triangle/stairs/leaf/bars) === */}
+      <section id="nosotros" style={{ maxWidth: 1180, margin: "0 auto", padding: "90px 24px", textAlign: "left" }}>
+        <p style={{ fontSize: "clamp(26px,3.6vw,42px)", fontWeight: 500, lineHeight: 1.35, color: SLATE, margin: 0 }}>
+          Somos un colegio<ShapeInline color={BLOCK_BLUE} shape={ShapeHourglass} /> 100% asincrónico en Chile<ShapeInline color={PINK} shape={ShapeCircle} /> para
+          estudiantes<ShapeInline color={RED} shape={ShapeTriangle} /> desde 5° básico hasta 4° medio<ShapeInline color={PURPLE} shape={ShapeStairs} />, ofreciendo una
+          preparación rigurosa y culturalmente cercana<ShapeInline color={GREEN} shape={ShapeLeaf} /> para rendir exámenes libres ante personas<ShapeInline color={GOLD} shape={ShapeBars} /> de todo Chile.
         </p>
       </section>
 
@@ -222,12 +259,14 @@ export default function Home() {
       <section style={{ background: "#f5f5f5", padding: "64px 0" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 0, marginBottom: 48, alignItems: "stretch" }}>
-            <div style={{ flex: "1 1 320px", minWidth: 260, background: GREEN, position: "relative", minHeight: 260, display: "flex", alignItems: "flex-end", padding: 24 }}>
-              <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=700&q=75" alt="" style={{ position: "absolute", inset: 24, width: "calc(100% - 48px)", height: "calc(100% - 48px)", objectFit: "cover", borderRadius: 8 }} />
+            <div style={{ flex: "1 1 320px", minWidth: 260, position: "relative", minHeight: 340, overflow: "hidden" }}>
+              <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=700&q=75" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+              <div style={{ position: "absolute", inset: 0, background: `${GREEN}66` }} />
+              <div style={{ position: "absolute", top: 16, left: 16 }}><ShapeLeaf color={GOLD} size={70} /></div>
             </div>
             <div style={{ flex: "1 1 380px", minWidth: 280, background: "#fff", padding: "40px 32px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Aprendizaje personalizado en Barkley</p>
-              <h2 style={{ fontSize: "clamp(24px,3.5vw,34px)", fontWeight: 700, color: NAVY, margin: "0 0 16px" }}>Una educación diseñada en torno a ti</h2>
+              <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 700, color: SLATE, margin: "0 0 16px" }}>Una educación diseñada en torno a ti</h2>
               <p style={{ fontSize: 15, margin: 0 }}>Barkley reconoce a cada estudiante como un individuo único. Nuestro plan se adapta a él, asegurando el apoyo académico necesario para prosperar dentro y fuera del aula.</p>
             </div>
           </div>
@@ -247,7 +286,7 @@ export default function Home() {
       <section id="metodo" style={{ padding: "64px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>De 5° básico a validación de adultos</p>
-          <h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 700, color: NAVY, margin: "0 0 40px" }}>Nuestro camino de aprendizaje</h2>
+          <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 700, color: SLATE, margin: "0 0 40px" }}>Nuestro camino de aprendizaje</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
             {NIVELES.map(n => (
               <a key={n.title} href="#inscripcion" style={{ flex: "1 1 260px", minWidth: 240, textDecoration: "none", color: NAVY, position: "relative", borderRadius: 16, overflow: "hidden", display: "block", boxShadow: "0 8px 24px -8px rgba(0,51,102,0.25)" }}>
@@ -267,7 +306,7 @@ export default function Home() {
       <section style={{ background: "#f5f5f5", padding: "64px 24px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Por qué Barkley</p>
-          <h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 700, color: NAVY, margin: "0 0 32px" }}>Historias que nos conectan</h2>
+          <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 700, color: SLATE, margin: "0 0 32px" }}>Historias que nos conectan</h2>
           <div style={{ display: "inline-flex", gap: 8, marginBottom: 40, background: "#fff", borderRadius: 999, padding: 6, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
             {(["estudiantes","apoderados"] as const).map(t => (
               <button key={t} onClick={() => setTab(t)} style={{
@@ -291,7 +330,7 @@ export default function Home() {
       <section style={{ padding: "56px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px", textAlign: "center" }}>Barkley en cifras</p>
-          <h2 style={{ fontSize: "clamp(24px,3.5vw,34px)", fontWeight: 700, color: NAVY, margin: "0 0 40px", textAlign: "center" }}>Más que un colegio</h2>
+          <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 700, color: SLATE, margin: "0 0 40px", textAlign: "center" }}>Más que un colegio</h2>
           {/* Tarjeta 351x465 real (getComputedStyle .fact-box), glifo 168px real */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
             {FACTS.map(s => (
@@ -309,7 +348,7 @@ export default function Home() {
       <section id="plataforma" style={{ background: "#f5f5f5", padding: "64px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Descubre y experimenta</p>
-          <h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 700, color: NAVY, margin: "0 0 40px" }}>La plataforma, por dentro</h2>
+          <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 700, color: SLATE, margin: "0 0 40px" }}>La plataforma, por dentro</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 28 }}>
             {PROGRAMAS.map(p => (
               <a key={p.title} href={p.href} style={{ flex: "1 1 300px", minWidth: 260, textDecoration: "none", color: TEXT, background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.05)" }}>
@@ -328,7 +367,7 @@ export default function Home() {
       {/* === FAQ === */}
       {faqs && faqs.length > 0 && (
         <section id="faq" style={{ maxWidth: 900, margin: "0 auto", padding: "64px 24px" }}>
-          <h2 style={{ fontSize: "clamp(24px,3.5vw,34px)", fontWeight: 700, color: NAVY, margin: "0 0 32px" }}>Preguntas frecuentes</h2>
+          <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 700, color: SLATE, margin: "0 0 32px" }}>Preguntas frecuentes</h2>
           <Accordion type="single" collapsible>
             {faqs.map(f => (
               <AccordionItem key={f.id} value={f.id} style={{ borderTop: "1px solid #eef1f5", borderBottom: "none" }}>
