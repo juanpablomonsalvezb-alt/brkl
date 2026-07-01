@@ -32,8 +32,8 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   );
 }
 
-// Hover real: scale sutil + sombra, como .hoverEffect de isb.be
-const cardHover = { whileHover: { y: -6, scale: 1.015 }, transition: { duration: 0.25, ease: "easeOut" as const } };
+// Hover EXACTO real: .hoverEffect{transition:all ease-in-out .25s}:hover{transform:scale(1.01)} — sin lift vertical
+const cardHover = { whileHover: { scale: 1.01 }, transition: { duration: 0.25, ease: "easeInOut" as const } };
 
 const NAVY = "#003366";
 const RED = "#FF3D37";
@@ -324,7 +324,7 @@ export default function Home() {
           <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
             {NIVELES.map((n, i) => (
               <Reveal key={n.title} delay={i * 0.1}>
-                <motion.a href="#inscripcion" whileHover={{ y: -6 }} transition={{ duration: 0.25 }} style={{ flex: "1 1 260px", minWidth: 240, textDecoration: "none", color: NAVY, position: "relative", overflow: "hidden", display: "block" }}>
+                <motion.a href="#inscripcion" whileHover={{ scale: 1.01 }} transition={{ duration: 0.25, ease: "easeInOut" }} style={{ flex: "1 1 260px", minWidth: 240, textDecoration: "none", color: NAVY, position: "relative", overflow: "hidden", display: "block" }}>
                   <img src={n.img} alt={n.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/2", objectFit: "cover", display: "block" }} />
                   <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,20,50,0) 35%, rgba(0,20,50,0.9) 100%)" }} />
                   <div style={{ position: "absolute", left: 20, right: 20, bottom: 18, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
@@ -358,10 +358,42 @@ export default function Home() {
             ))}
           </div>
         </div>
+        {/* Grilla de miniaturas de color + tarjeta destacada con insignia circular rotando, como el módulo real de Community Stories
+            (sin inventar nombres/identidades de personas reales — usamos categorías, no personas fabricadas) */}
+        <Reveal>
+          <div style={{ maxWidth: 1000, margin: "0 auto 40px", display: "flex", flexWrap: "wrap", gap: 20, alignItems: "stretch" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, flex: "1 1 320px" }}>
+              {[PINK, GREEN, RED, GOLD, PURPLE].map((c, i) => (
+                <div key={i} style={{ background: c, aspectRatio: "1", borderRadius: 8 }} />
+              ))}
+            </div>
+            <div style={{ flex: "1 1 380px", position: "relative", borderRadius: 12, overflow: "hidden", minHeight: 220 }}>
+              <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=75" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+              <div style={{ position: "absolute", left: 20, bottom: 20, right: 90, background: "rgba(0,51,102,0.88)", padding: "18px 22px", borderRadius: 4 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, color: "#fff" }}>
+                  <ShapeFastForward color={GREEN} size={26} />
+                  <span style={{ fontWeight: 700, fontSize: 20 }}>Aprendizaje personalizado</span>
+                </div>
+                <div style={{ width: 40, height: 1, background: "rgba(255,255,255,0.4)", margin: "10px 0" }} />
+                <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.06em", color: "#cfe0f5" }}>ENSEÑANZA MEDIA</span>
+              </div>
+              <motion.div
+                animate={{ rotate: 360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                style={{ position: "absolute", top: 16, right: 16, width: 74, height: 74, borderRadius: "50%", background: "rgba(255,255,255,0.15)", backdropFilter: "blur(2px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <svg width="74" height="74" viewBox="0 0 74 74">
+                  <path id="circlePath" d="M 37,37 m -28,0 a 28,28 0 1,1 56,0 a 28,28 0 1,1 -56,0" fill="none" />
+                  <text fontSize="9" fontWeight="700" fill="#fff" letterSpacing="2">
+                    <textPath href="#circlePath">+ VER MÁS · + VER MÁS ·</textPath>
+                  </text>
+                </svg>
+              </motion.div>
+            </div>
+          </div>
+        </Reveal>
         <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 24, justifyContent: "center" }}>
           {RAZONES.map((r, i) => (
             <Reveal key={r.title} delay={i * 0.08}>
-              <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }} style={{ flex: "1 1 260px", minWidth: 240, background: "#fff", borderRadius: 16, padding: 28, boxShadow: "0 4px 16px rgba(0,0,0,0.05)" }}>
+              <motion.div whileHover={{ scale: 1.01 }} transition={{ duration: 0.25, ease: "easeInOut" }} style={{ flex: "1 1 260px", minWidth: 240, background: "#fff", borderRadius: 16, padding: 28, boxShadow: "0 4px 16px rgba(0,0,0,0.05)" }}>
                 <h3 style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: "0 0 10px" }}>{r.title}</h3>
                 <p style={{ fontSize: 15, margin: 0 }}>{r.text}{tab === "apoderados" ? " Transparencia total desde el portal de apoderados." : ""}</p>
               </motion.div>
@@ -378,7 +410,7 @@ export default function Home() {
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
             {FACTS.map((s, i) => (
               <Reveal key={s.label} delay={i * 0.08}>
-                <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.25 }} style={{ flex: "1 1 260px", minWidth: 240, background: s.bg, borderRadius: 8, padding: "32px", position: "relative", minHeight: 260, display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden" }}>
+                <motion.div whileHover={{ scale: 1.01 }} transition={{ duration: 0.25, ease: "easeInOut" }} style={{ flex: "1 1 260px", minWidth: 240, background: s.bg, borderRadius: 8, padding: "32px", position: "relative", minHeight: 260, display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden" }}>
                   <div style={{ position: "absolute", top: -10, right: -10, opacity: 0.9 }}><s.shape color={s.shapeColor} size={150} /></div>
                   <p style={{ fontSize: 52, fontWeight: 800, color: s.numColor, margin: 0, position: "relative" }}>{s.n}</p>
                   <p style={{ fontSize: 15, margin: "8px 0 0", color: s.numColor, opacity: 0.75, position: "relative" }}>{s.label}</p>
