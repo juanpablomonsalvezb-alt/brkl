@@ -194,6 +194,7 @@ function InscripcionForm() {
 
 export default function Home() {
   const [tab, setTab] = useState<"estudiantes"|"apoderados">("estudiantes");
+  const [pilarIdx, setPilarIdx] = useState(0);
   const [callOpen, setCallOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5*60*1000 });
@@ -284,7 +285,7 @@ export default function Home() {
 
       {/* Pestañas verticales fijas al borde derecho, siempre visibles — patrón real .sticky--cta--nav */}
       <div style={{ position: "fixed", right: 0, top: "45%", zIndex: 25, display: "flex", flexDirection: "column" }} className="hidden md:flex">
-        <a href="#inscripcion" style={{ background: NAVY, color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>VISITAR</a>
+        <a href="#inscripcion" style={{ background: SLATE, color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>VISITAR</a>
         <a href="#inscripcion" style={{ background: PINK, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>POSTULAR</a>
       </div>
 
@@ -316,16 +317,30 @@ export default function Home() {
               </div>
             </div>
           </Reveal>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 32 }}>
-            {PILARES.map((p, i) => (
-              <Reveal key={p.title} delay={i * 0.08}>
-                <motion.div {...cardHover} style={{ flex: "1 1 240px", minWidth: 220 }}>
-                  <img src={p.img} alt={p.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/2", objectFit: "cover", borderRadius: 12, display: "block", marginBottom: 16 }} />
-                  <h3 style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: "0 0 8px" }}>{p.title}</h3>
-                  <p style={{ fontSize: 15, margin: 0, color: TEXT }}>{p.text}</p>
+          {/* Carrusel real "Four Areas of Focus": una tarjeta visible + flechas + indicador, no grid estático */}
+          <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+            <button aria-label="Anterior" onClick={() => setPilarIdx(i => (i - 1 + PILARES.length) % PILARES.length)}
+              style={{ width: 44, height: 44, borderRadius: "50%", border: `1.5px solid ${SLATE}`, background: "none", color: SLATE, cursor: "pointer", flexShrink: 0 }}>‹</button>
+            <div style={{ flex: 1, overflow: "hidden" }}>
+              <AnimatePresence mode="wait">
+                <motion.div key={pilarIdx} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.4 }}
+                  style={{ display: "flex", flexWrap: "wrap", gap: 32, alignItems: "center" }}>
+                  <img src={PILARES[pilarIdx].img} alt={PILARES[pilarIdx].title} style={{ flex: "1 1 320px", minWidth: 260, aspectRatio: "3/2", objectFit: "cover", borderRadius: 12, display: "block" }} />
+                  <div style={{ flex: "1 1 320px", minWidth: 260 }}>
+                    <h3 style={{ fontSize: "clamp(22px,2.6vw,32px)", fontWeight: 700, color: NAVY, margin: "0 0 12px" }}>{PILARES[pilarIdx].title}</h3>
+                    <p style={{ fontSize: 16, margin: 0, color: TEXT }}>{PILARES[pilarIdx].text}</p>
+                  </div>
                 </motion.div>
-              </Reveal>
-            ))}
+              </AnimatePresence>
+              <div style={{ display: "flex", gap: 8, marginTop: 28 }}>
+                {PILARES.map((_, i) => (
+                  <button key={i} aria-label={`Ir al panel ${i+1}`} onClick={() => setPilarIdx(i)}
+                    style={{ width: i === pilarIdx ? 28 : 8, height: 8, borderRadius: 4, border: "none", background: i === pilarIdx ? SLATE : "#d5dbe3", cursor: "pointer", transition: "width 0.3s" }} />
+                ))}
+              </div>
+            </div>
+            <button aria-label="Siguiente" onClick={() => setPilarIdx(i => (i + 1) % PILARES.length)}
+              style={{ width: 44, height: 44, borderRadius: "50%", border: `1.5px solid ${SLATE}`, background: "none", color: SLATE, cursor: "pointer", flexShrink: 0 }}>›</button>
           </div>
         </div>
       </section>
@@ -513,6 +528,19 @@ export default function Home() {
       <footer style={{ backgroundColor: NAVY, color: "#fff", padding: "56px 24px 24px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 30, left: -30, opacity: 0.5 }}><ShapeFlower color="#00b27355" size={120} /></div>
         <div style={{ position: "absolute", bottom: 40, left: 60, opacity: 0.6 }}><ShapeCircle color="#00b27377" size={40} /></div>
+        {/* Insignia circular "Volver arriba" rotando, como .back-top real */}
+        <button aria-label="Volver arriba" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          style={{ position: "absolute", right: 24, bottom: 24, width: 80, height: 80, borderRadius: "50%", background: "none", border: "1px solid rgba(255,255,255,0.4)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} className="hidden md:flex">
+          <motion.div animate={{ rotate: 360 }} transition={{ duration: 14, repeat: Infinity, ease: "linear" }} style={{ position: "absolute", inset: 0 }}>
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <path id="topPath" d="M 40,40 m -32,0 a 32,32 0 1,1 64,0 a 32,32 0 1,1 -64,0" fill="none" />
+              <text fontSize="9" fontWeight="700" fill="#fff" letterSpacing="2">
+                <textPath href="#topPath">VOLVER ARRIBA · VOLVER ARRIBA ·</textPath>
+              </text>
+            </svg>
+          </motion.div>
+          <ArrowUpRight style={{ width: 20, height: 20, color: "#fff", transform: "rotate(-45deg)" }} />
+        </button>
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 32, position: "relative" }}>
           <div style={{ flex: "1 1 240px" }}>
             <p style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px" }}>Barkley Online</p>
