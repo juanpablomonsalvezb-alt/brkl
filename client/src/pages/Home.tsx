@@ -442,17 +442,22 @@ export default function Home() {
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Descubre y experimenta</p>
           <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 700, color: SLATE, margin: "0 0 40px" }}>La plataforma, por dentro</h2>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 28 }}>
+          {/* Filas horizontales alternadas imagen/texto (izq-der, der-izq), como .program-box real (flex-direction row-reverse alternado) */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 56 }}>
             {PROGRAMAS.map((p, i) => (
-              <Reveal key={p.title} delay={(i % 3) * 0.08}>
-                <motion.a href={p.href} {...cardHover} style={{ flex: "1 1 300px", minWidth: 260, textDecoration: "none", color: TEXT, background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.05)", display: "block" }}>
-                  <img src={p.img} alt={p.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/2", objectFit: "cover", display: "block" }} />
-                  <div style={{ padding: 20 }}>
-                    <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.03em", margin: "0 0 4px" }}>{p.title}</p>
-                    <h3 style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: "0 0 8px" }}>{p.sub}</h3>
-                    <p style={{ fontSize: 14, margin: 0 }}>{p.text}</p>
+              <Reveal key={p.title} delay={i * 0.05}>
+                <a href={p.href} style={{ textDecoration: "none", color: TEXT, display: "flex", flexDirection: i % 2 === 0 ? "row" : "row-reverse", flexWrap: "wrap", gap: 40, alignItems: "center" }}>
+                  <div style={{ flex: "1 1 420px", minWidth: 280, overflow: "hidden", borderRadius: 12 }}>
+                    <motion.img src={p.img} alt={p.title} loading="lazy" whileHover={{ scale: 1.05 }} transition={{ duration: 0.4, ease: "easeInOut" }}
+                      style={{ width: "100%", aspectRatio: "16/10", objectFit: "cover", display: "block" }} />
                   </div>
-                </motion.a>
+                  <div style={{ flex: "1 1 320px", minWidth: 260 }}>
+                    <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.03em", margin: "0 0 6px" }}>{p.title}</p>
+                    <h3 style={{ fontSize: "clamp(22px,2.4vw,30px)", fontWeight: 700, color: NAVY, margin: "0 0 12px" }}>{p.sub}</h3>
+                    <p style={{ fontSize: 15, margin: "0 0 16px" }}>{p.text}</p>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 14, fontWeight: 700, color: NAVY }}>Ver más <ArrowUpRight style={{ width: 16, height: 16 }} /></span>
+                  </div>
+                </a>
               </Reveal>
             ))}
           </div>
