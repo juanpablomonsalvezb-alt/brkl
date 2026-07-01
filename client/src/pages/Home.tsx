@@ -14,8 +14,26 @@
 import { useState, useEffect, useRef } from "react";
 import { Loader2, Check, ArrowUpRight, Menu, X, Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { motion, AnimatePresence } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ReservationDialog } from "@/components/ReservationDialog";
+
+// Réplica de .fade-in-on-scroll / .animatedElement reales de isb.be (opacity+translateY al entrar en viewport)
+function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// Hover real: scale sutil + sombra, como .hoverEffect de isb.be
+const cardHover = { whileHover: { y: -6, scale: 1.015 }, transition: { duration: 0.25, ease: "easeOut" as const } };
 
 const NAVY = "#003366";
 const RED = "#FF3D37";
@@ -203,19 +221,25 @@ export default function Home() {
             </button>
           </div>
         </div>
-        {/* Overlay pantalla completa navy, links 48px blancos — medida real getComputedStyle(.nav-main a) */}
-        {menuOpen && (
-          <div style={{ position: "fixed", inset: 0, background: NAVY, zIndex: 40, padding: "60px 40px", display: "flex", flexDirection: "column", gap: 28, overflowY: "auto" }}>
-            <button aria-label="Cerrar menú" onClick={() => setMenuOpen(false)} style={{ alignSelf: "flex-end", background: "none", border: "none", color: "#fff", cursor: "pointer" }}><X style={{ width: 32, height: 32 }} /></button>
-            {NAV_LINKS.map(l => (
-              <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)} style={{ color: "#fff", textDecoration: "none", fontSize: "clamp(28px,6vw,48px)", fontWeight: 600 }}>{l.label}</a>
-            ))}
-            <div style={{ display: "flex", gap: 14, marginTop: 20 }}>
-              <a href="#inscripcion" style={{ textDecoration: "none", border: "1.5px solid #fff", color: "#fff", borderRadius: 999, padding: "12px 24px", fontSize: 16, fontWeight: 600 }}>Visitar</a>
-              <a href="#inscripcion" style={{ textDecoration: "none", background: RED, color: "#fff", borderRadius: 999, padding: "12px 24px", fontSize: 16, fontWeight: 600 }}>Postular</a>
-            </div>
-          </div>
-        )}
+        {/* Overlay pantalla completa navy, links 48px blancos — transición real: fondo fade + links deslizan hacia arriba en cascada */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}
+              style={{ position: "fixed", inset: 0, background: NAVY, zIndex: 40, padding: "60px 40px", display: "flex", flexDirection: "column", gap: 28, overflowY: "auto" }}>
+              <button aria-label="Cerrar menú" onClick={() => setMenuOpen(false)} style={{ alignSelf: "flex-end", background: "none", border: "none", color: "#fff", cursor: "pointer" }}><X style={{ width: 32, height: 32 }} /></button>
+              {NAV_LINKS.map((l, i) => (
+                <motion.a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}
+                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.08 * i }}
+                  style={{ color: "#fff", textDecoration: "none", fontSize: "clamp(28px,6vw,48px)", fontWeight: 600 }}>{l.label}</motion.a>
+              ))}
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.08 * NAV_LINKS.length + 0.1 }} style={{ display: "flex", gap: 14, marginTop: 20 }}>
+                <a href="#inscripcion" style={{ textDecoration: "none", border: "1.5px solid #fff", color: "#fff", borderRadius: 999, padding: "12px 24px", fontSize: 16, fontWeight: 600 }}>Visitar</a>
+                <a href="#inscripcion" style={{ textDecoration: "none", background: RED, color: "#fff", borderRadius: 999, padding: "12px 24px", fontSize: 16, fontWeight: 600 }}>Postular</a>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* === HERO — foto full-bleed 885px real + columna con bloque azul medio (doble flecha) y lavanda (pétalos), texto overlay directo === */}
@@ -223,21 +247,22 @@ export default function Home() {
         <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
           <img src={HERO_PHOTO} alt="" style={{ width: "100%", height: "100%", position: "absolute", inset: 0, objectFit: "cover", filter: "saturate(0.85)" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,51,102,0) 35%, rgba(20,35,55,0.75) 100%)" }} />
-          <div style={{ position: "absolute", left: 40, right: 40, bottom: 48, color: "#fff" }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            style={{ position: "absolute", left: 40, right: 40, bottom: 48, color: "#fff" }}>
             <p style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", margin: "0 0 10px" }}>Líderes en Educación Asincrónica Inclusiva</p>
             <h1 style={{ fontSize: "clamp(36px,6.5vw,72px)", fontWeight: 800, margin: 0, maxWidth: 760, lineHeight: 1.1 }}>El colegio online que se adapta a tu ritmo.</h1>
-          </div>
+          </motion.div>
         </div>
         <div style={{ width: 314, display: "flex", flexDirection: "column" }} className="hidden md:flex">
-          <a href="#plataforma" style={{ flex: 1, background: BLOCK_BLUE, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><ShapeFastForward color={GOLD} size={100} /></div>
+          <motion.a href="#plataforma" whileHover={{ opacity: 0.85 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: BLOCK_BLUE, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <motion.div whileHover={{ x: 6 }} transition={{ duration: 0.3 }} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><ShapeFastForward color={GOLD} size={100} /></motion.div>
             <div style={{ padding: "22px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#fff", fontWeight: 700, fontSize: 17 }}>Tour Virtual <ArrowUpRight style={{ width: 20, height: 20 }} /></div>
-          </a>
-          <a href="#faq" style={{ flex: 1, background: LAVENDER, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-            <div style={{ position: "absolute", top: 12, right: 12 }}><ShapeFlower color={PINK} size={90} /></div>
+          </motion.a>
+          <motion.a href="#faq" whileHover={{ opacity: 0.85 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: LAVENDER, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <motion.div whileHover={{ rotate: 15 }} transition={{ duration: 0.4 }} style={{ position: "absolute", top: 12, right: 12 }}><ShapeFlower color={PINK} size={90} /></motion.div>
             <div style={{ flex: 1 }} />
             <div style={{ padding: "22px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", color: NAVY, fontWeight: 700, fontSize: 17 }}>Últimas Noticias <ArrowUpRight style={{ width: 20, height: 20 }} /></div>
-          </a>
+          </motion.a>
         </div>
       </section>
 
@@ -249,35 +274,41 @@ export default function Home() {
 
       {/* === INTRO — azul apagado real (no navy puro), formas literales inline (hourglass/circle/triangle/stairs/leaf/bars) === */}
       <section id="nosotros" style={{ maxWidth: 1180, margin: "0 auto", padding: "90px 24px", textAlign: "left" }}>
-        <p style={{ fontSize: "clamp(26px,3.6vw,42px)", fontWeight: 500, lineHeight: 1.35, color: SLATE, margin: 0 }}>
-          Somos un colegio<ShapeInline color={BLOCK_BLUE} shape={ShapeHourglass} /> 100% asincrónico en Chile<ShapeInline color={PINK} shape={ShapeCircle} /> para
-          estudiantes<ShapeInline color={RED} shape={ShapeTriangle} /> desde 5° básico hasta 4° medio<ShapeInline color={PURPLE} shape={ShapeStairs} />, ofreciendo una
-          preparación rigurosa y culturalmente cercana<ShapeInline color={GREEN} shape={ShapeLeaf} /> para rendir exámenes libres ante personas<ShapeInline color={GOLD} shape={ShapeBars} /> de todo Chile.
-        </p>
+        <Reveal>
+          <p style={{ fontSize: "clamp(26px,3.6vw,42px)", fontWeight: 500, lineHeight: 1.35, color: SLATE, margin: 0 }}>
+            Somos un colegio<ShapeInline color={BLOCK_BLUE} shape={ShapeHourglass} /> 100% asincrónico en Chile<ShapeInline color={PINK} shape={ShapeCircle} /> para
+            estudiantes<ShapeInline color={RED} shape={ShapeTriangle} /> desde 5° básico hasta 4° medio<ShapeInline color={PURPLE} shape={ShapeStairs} />, ofreciendo una
+            preparación rigurosa y culturalmente cercana<ShapeInline color={GREEN} shape={ShapeLeaf} /> para rendir exámenes libres ante personas<ShapeInline color={GOLD} shape={ShapeBars} /> de todo Chile.
+          </p>
+        </Reveal>
       </section>
 
       {/* === PILARES — bloque de color sólido + foto, como "An Education Designed Around You" === */}
       <section style={{ background: "#f5f5f5", padding: "64px 0" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 0, marginBottom: 48, alignItems: "stretch" }}>
-            <div style={{ flex: "1 1 320px", minWidth: 260, position: "relative", minHeight: 340, overflow: "hidden" }}>
-              <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=700&q=75" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-              <div style={{ position: "absolute", inset: 0, background: `${GREEN}66` }} />
-              <div style={{ position: "absolute", top: 16, left: 16 }}><ShapeLeaf color={GOLD} size={70} /></div>
-            </div>
-            <div style={{ flex: "1 1 380px", minWidth: 280, background: "#fff", padding: "40px 32px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Aprendizaje personalizado en Barkley</p>
-              <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 700, color: SLATE, margin: "0 0 16px" }}>Una educación diseñada en torno a ti</h2>
-              <p style={{ fontSize: 15, margin: 0 }}>Barkley reconoce a cada estudiante como un individuo único. Nuestro plan se adapta a él, asegurando el apoyo académico necesario para prosperar dentro y fuera del aula.</p>
-            </div>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 32 }}>
-            {PILARES.map(p => (
-              <div key={p.title} style={{ flex: "1 1 240px", minWidth: 220 }}>
-                <img src={p.img} alt={p.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/2", objectFit: "cover", borderRadius: 12, display: "block", marginBottom: 16 }} />
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: "0 0 8px" }}>{p.title}</h3>
-                <p style={{ fontSize: 15, margin: 0, color: TEXT }}>{p.text}</p>
+          <Reveal>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 0, marginBottom: 48, alignItems: "stretch" }}>
+              <div style={{ flex: "1 1 320px", minWidth: 260, position: "relative", minHeight: 340, overflow: "hidden" }}>
+                <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=700&q=75" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+                <div style={{ position: "absolute", inset: 0, background: `${GREEN}66` }} />
+                <div style={{ position: "absolute", top: 16, left: 16 }}><ShapeLeaf color={GOLD} size={70} /></div>
               </div>
+              <div style={{ flex: "1 1 380px", minWidth: 280, background: "#fff", padding: "40px 32px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Aprendizaje personalizado en Barkley</p>
+                <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 700, color: SLATE, margin: "0 0 16px" }}>Una educación diseñada en torno a ti</h2>
+                <p style={{ fontSize: 15, margin: 0 }}>Barkley reconoce a cada estudiante como un individuo único. Nuestro plan se adapta a él, asegurando el apoyo académico necesario para prosperar dentro y fuera del aula.</p>
+              </div>
+            </div>
+          </Reveal>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 32 }}>
+            {PILARES.map((p, i) => (
+              <Reveal key={p.title} delay={i * 0.08}>
+                <motion.div {...cardHover} style={{ flex: "1 1 240px", minWidth: 220 }}>
+                  <img src={p.img} alt={p.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/2", objectFit: "cover", borderRadius: 12, display: "block", marginBottom: 16 }} />
+                  <h3 style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: "0 0 8px" }}>{p.title}</h3>
+                  <p style={{ fontSize: 15, margin: 0, color: TEXT }}>{p.text}</p>
+                </motion.div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -291,22 +322,24 @@ export default function Home() {
       <section style={{ background: BLOCK_BLUE, padding: "48px 24px 64px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
-            {NIVELES.map(n => (
-              <a key={n.title} href="#inscripcion" style={{ flex: "1 1 260px", minWidth: 240, textDecoration: "none", color: NAVY, position: "relative", overflow: "hidden", display: "block" }}>
-                <img src={n.img} alt={n.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/2", objectFit: "cover", display: "block" }} />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,20,50,0) 35%, rgba(0,20,50,0.9) 100%)" }} />
-                <div style={{ position: "absolute", left: 20, right: 20, bottom: 18, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-                  <div>
-                    <p style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>{n.title}</p>
-                    <p style={{ fontSize: 13, margin: "4px 0 0", opacity: 0.85, textTransform: "uppercase", letterSpacing: "0.04em" }}>{n.sub}</p>
+            {NIVELES.map((n, i) => (
+              <Reveal key={n.title} delay={i * 0.1}>
+                <motion.a href="#inscripcion" whileHover={{ y: -6 }} transition={{ duration: 0.25 }} style={{ flex: "1 1 260px", minWidth: 240, textDecoration: "none", color: NAVY, position: "relative", overflow: "hidden", display: "block" }}>
+                  <img src={n.img} alt={n.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/2", objectFit: "cover", display: "block" }} />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,20,50,0) 35%, rgba(0,20,50,0.9) 100%)" }} />
+                  <div style={{ position: "absolute", left: 20, right: 20, bottom: 18, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+                    <div>
+                      <p style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>{n.title}</p>
+                      <p style={{ fontSize: 13, margin: "4px 0 0", opacity: 0.85, textTransform: "uppercase", letterSpacing: "0.04em" }}>{n.sub}</p>
+                    </div>
+                    <ArrowUpRight style={{ width: 20, height: 20, flexShrink: 0 }} />
                   </div>
-                  <ArrowUpRight style={{ width: 20, height: 20, flexShrink: 0 }} />
-                </div>
-              </a>
+                </motion.a>
+              </Reveal>
             ))}
           </div>
           <div style={{ textAlign: "center", marginTop: 40 }}>
-            <a href="#plataforma" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: GOLD, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 14, letterSpacing: "0.03em", textTransform: "uppercase", borderRadius: 999, padding: "16px 32px" }}>Aprendizaje en Barkley <ArrowUpRight style={{ width: 16, height: 16 }} /></a>
+            <motion.a href="#plataforma" whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: GOLD, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 14, letterSpacing: "0.03em", textTransform: "uppercase", borderRadius: 999, padding: "16px 32px" }}>Aprendizaje en Barkley <ArrowUpRight style={{ width: 16, height: 16 }} /></motion.a>
           </div>
         </div>
       </section>
@@ -326,11 +359,13 @@ export default function Home() {
           </div>
         </div>
         <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 24, justifyContent: "center" }}>
-          {RAZONES.map(r => (
-            <div key={r.title} style={{ flex: "1 1 260px", minWidth: 240, background: "#fff", borderRadius: 16, padding: 28, boxShadow: "0 4px 16px rgba(0,0,0,0.05)" }}>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: "0 0 10px" }}>{r.title}</h3>
-              <p style={{ fontSize: 15, margin: 0 }}>{r.text}{tab === "apoderados" ? " Transparencia total desde el portal de apoderados." : ""}</p>
-            </div>
+          {RAZONES.map((r, i) => (
+            <Reveal key={r.title} delay={i * 0.08}>
+              <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }} style={{ flex: "1 1 260px", minWidth: 240, background: "#fff", borderRadius: 16, padding: 28, boxShadow: "0 4px 16px rgba(0,0,0,0.05)" }}>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: "0 0 10px" }}>{r.title}</h3>
+                <p style={{ fontSize: 15, margin: 0 }}>{r.text}{tab === "apoderados" ? " Transparencia total desde el portal de apoderados." : ""}</p>
+              </motion.div>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -341,12 +376,14 @@ export default function Home() {
           <p style={{ fontSize: 14, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px", textAlign: "center" }}>Barkley en cifras</p>
           <h2 style={{ fontSize: "clamp(34px,6vw,60px)", fontWeight: 800, color: NAVY, margin: "0 0 40px", textAlign: "center" }}>Más que un colegio</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
-            {FACTS.map(s => (
-              <div key={s.label} style={{ flex: "1 1 260px", minWidth: 240, background: s.bg, borderRadius: 8, padding: "32px", position: "relative", minHeight: 260, display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden" }}>
-                <div style={{ position: "absolute", top: -10, right: -10, opacity: 0.9 }}><s.shape color={s.shapeColor} size={150} /></div>
-                <p style={{ fontSize: 52, fontWeight: 800, color: s.numColor, margin: 0, position: "relative" }}>{s.n}</p>
-                <p style={{ fontSize: 15, margin: "8px 0 0", color: s.numColor, opacity: 0.75, position: "relative" }}>{s.label}</p>
-              </div>
+            {FACTS.map((s, i) => (
+              <Reveal key={s.label} delay={i * 0.08}>
+                <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.25 }} style={{ flex: "1 1 260px", minWidth: 240, background: s.bg, borderRadius: 8, padding: "32px", position: "relative", minHeight: 260, display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden" }}>
+                  <div style={{ position: "absolute", top: -10, right: -10, opacity: 0.9 }}><s.shape color={s.shapeColor} size={150} /></div>
+                  <p style={{ fontSize: 52, fontWeight: 800, color: s.numColor, margin: 0, position: "relative" }}>{s.n}</p>
+                  <p style={{ fontSize: 15, margin: "8px 0 0", color: s.numColor, opacity: 0.75, position: "relative" }}>{s.label}</p>
+                </motion.div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -358,15 +395,17 @@ export default function Home() {
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Descubre y experimenta</p>
           <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 700, color: SLATE, margin: "0 0 40px" }}>La plataforma, por dentro</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 28 }}>
-            {PROGRAMAS.map(p => (
-              <a key={p.title} href={p.href} style={{ flex: "1 1 300px", minWidth: 260, textDecoration: "none", color: TEXT, background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.05)" }}>
-                <img src={p.img} alt={p.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/2", objectFit: "cover", display: "block" }} />
-                <div style={{ padding: 20 }}>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.03em", margin: "0 0 4px" }}>{p.title}</p>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: "0 0 8px" }}>{p.sub}</h3>
-                  <p style={{ fontSize: 14, margin: 0 }}>{p.text}</p>
-                </div>
-              </a>
+            {PROGRAMAS.map((p, i) => (
+              <Reveal key={p.title} delay={(i % 3) * 0.08}>
+                <motion.a href={p.href} {...cardHover} style={{ flex: "1 1 300px", minWidth: 260, textDecoration: "none", color: TEXT, background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.05)", display: "block" }}>
+                  <img src={p.img} alt={p.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/2", objectFit: "cover", display: "block" }} />
+                  <div style={{ padding: 20 }}>
+                    <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.03em", margin: "0 0 4px" }}>{p.title}</p>
+                    <h3 style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: "0 0 8px" }}>{p.sub}</h3>
+                    <p style={{ fontSize: 14, margin: 0 }}>{p.text}</p>
+                  </div>
+                </motion.a>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -375,7 +414,7 @@ export default function Home() {
       {/* === FAQ === */}
       {faqs && faqs.length > 0 && (
         <section id="faq" style={{ maxWidth: 900, margin: "0 auto", padding: "64px 24px" }}>
-          <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 700, color: SLATE, margin: "0 0 32px" }}>Preguntas frecuentes</h2>
+          <Reveal><h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 700, color: SLATE, margin: "0 0 32px" }}>Preguntas frecuentes</h2></Reveal>
           <Accordion type="single" collapsible>
             {faqs.map(f => (
               <AccordionItem key={f.id} value={f.id} style={{ borderTop: "1px solid #eef1f5", borderBottom: "none" }}>
@@ -394,13 +433,15 @@ export default function Home() {
       {/* === CTA — bloque de color sólido navy === */}
       <section style={{ backgroundColor: NAVY, color: "#fff", padding: "72px 24px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", bottom: -20, left: -20, opacity: 0.5 }}><ShapeFlower color="#ffffff22" size={140} /></div>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center", position: "relative" }}>
-          <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, margin: "0 0 16px" }}>¿Quieres saber más sobre Barkley Online?</h2>
-          <p style={{ fontSize: 16, opacity: 0.85, margin: "0 0 28px" }}>Déjanos tus datos y te contactamos.</p>
-          <button onClick={() => document.getElementById("inscripcion")?.scrollIntoView({ behavior: "smooth" })}
-            style={{ fontSize: 15, fontWeight: 700, color: NAVY, background: GOLD, border: "none", borderRadius: 999, padding: "14px 30px", cursor: "pointer", fontFamily: FONT, display: "inline-flex", alignItems: "center", gap: 8 }}
-          >Ir al formulario de inscripción <ArrowUpRight style={{ width: 18, height: 18 }} /></button>
-        </div>
+        <Reveal>
+          <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center", position: "relative" }}>
+            <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, margin: "0 0 16px" }}>¿Quieres saber más sobre Barkley Online?</h2>
+            <p style={{ fontSize: 16, opacity: 0.85, margin: "0 0 28px" }}>Déjanos tus datos y te contactamos.</p>
+            <motion.button whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} onClick={() => document.getElementById("inscripcion")?.scrollIntoView({ behavior: "smooth" })}
+              style={{ fontSize: 15, fontWeight: 700, color: NAVY, background: GOLD, border: "none", borderRadius: 999, padding: "14px 30px", cursor: "pointer", fontFamily: FONT, display: "inline-flex", alignItems: "center", gap: 8 }}
+            >Ir al formulario de inscripción <ArrowUpRight style={{ width: 18, height: 18 }} /></motion.button>
+          </div>
+        </Reveal>
       </section>
 
       {/* === INSCRIPCIÓN === */}
