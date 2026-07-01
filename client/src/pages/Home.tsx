@@ -1,15 +1,18 @@
 /**
- * Clon estructural de https://www.isb.be/ (International School of Brussels) —
- * colegio internacional real, no agencia creativa. Estructura extraída del HTML
- * fuente real: header con nav + botones Visitar/Postular, hero slideshow con fade,
- * texto intro con palabras resaltadas de color, sección "pilares" con imagen+4 cajas,
- * grid de niveles educativos, testimonios en pestañas, franja de stats, grid de
- * programas, CTA, footer con contacto/enlaces/acreditación.
- * Paleta EXACTA real: navy #003366, rojo #FF3D37, dorado #FFC548, fondo blanco,
- * texto #525252, fuente Poppins.
+ * Clon estructural + visual de https://www.isb.be/ (International School of Brussels).
+ * Colores EXACTOS extraídos del CSS fuente real (main.css, tema Finalsite default_25):
+ * navy #003366, rojo #FF3D37, dorado #FFC548, morado #861fce, verde #00b273, rosa #fe76b4.
+ * Los íconos decorativos reales usan fuentes propietarias (bpa-font-icons / IcoMoon,
+ * licenciadas a Finalsite) — no se pueden copiar. Se reemplazan por formas SVG
+ * equivalentes (círculo, triángulo, estrella, corazón, flor, flecha) en los mismos
+ * colores y misma posición/tamaño relativo — mismo lenguaje visual, sin robar el asset.
+ * Estructura real: header con logo cuadrado + menú hamburguesa, hero full-bleed con
+ * columna de formas decorativas a la derecha, intro con palabras+forma inline,
+ * panel "Cuatro pilares" con bloque de color sólido + foto, fact-boxes negros con
+ * glifo grande de color, programa highlights, footer navy con formas orgánicas.
  */
 import { useState, useEffect, useRef } from "react";
-import { Loader2, Check, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Loader2, Check, ArrowUpRight, Menu, X, Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ReservationDialog } from "@/components/ReservationDialog";
@@ -17,15 +20,34 @@ import { ReservationDialog } from "@/components/ReservationDialog";
 const NAVY = "#003366";
 const RED = "#FF3D37";
 const GOLD = "#FFC548";
+const PURPLE = "#861fce";
+const GREEN = "#00b273";
+const PINK = "#fe76b4";
 const TEXT = "#525252";
 const FONT = "'Poppins', sans-serif";
 
-const HERO_SLIDES = [
-  "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1600&q=75",
-  "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1600&q=75",
-  "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1600&q=75",
-  "https://images.unsplash.com/photo-1610484826967-09c5720778c7?auto=format&fit=crop&w=1600&q=75",
-];
+// — Formas SVG equivalentes a los glifos reales (bpa-font-icons / IcoMoon no licenciados) —
+function ShapeCircle({ color, size = 40 }: { color: string; size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill={color} /></svg>;
+}
+function ShapeTriangle({ color, size = 40 }: { color: string; size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 40 40"><polygon points="20,2 38,36 2,36" fill={color} /></svg>;
+}
+function ShapeStar({ color, size = 40 }: { color: string; size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 40 40"><polygon points="20,1 25,15 39,15 27,24 32,38 20,29 8,38 13,24 1,15 15,15" fill={color} /></svg>;
+}
+function ShapeHeart({ color, size = 40 }: { color: string; size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 40 40"><path d="M20 36 C6 26 2 18 2 12 C2 5 8 1 13 1 C17 1 20 4 20 8 C20 4 23 1 27 1 C32 1 38 5 38 12 C38 18 34 26 20 36 Z" fill={color} /></svg>;
+}
+function ShapeFlower({ color, size = 40 }: { color: string; size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 40 40">{[0,72,144,216,288].map(a => <ellipse key={a} cx="20" cy="10" rx="8" ry="11" fill={color} transform={`rotate(${a} 20 20)`} />)}</svg>;
+}
+function ShapeArrow({ color, size = 40 }: { color: string; size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 40 40"><polygon points="4,4 22,4 38,20 22,36 4,36 20,20" fill={color} /></svg>;
+}
+const SHAPES = [ShapeCircle, ShapeTriangle, ShapeStar, ShapeHeart, ShapeFlower, ShapeArrow];
+
+const HERO_PHOTO = "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1800&q=75";
 
 const PILARES = [
   { title: "Acompañamiento", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=700&q=75", text: "Vínculos reales con asesores académicos que conocen a cada estudiante y lo acompañan en su progreso." },
@@ -46,11 +68,12 @@ const RAZONES = [
   { title: "Seguimiento real", text: "Sistema determinístico de progreso — sin inteligencia artificial generativa en el aula." },
 ];
 
-const STATS = [
-  { n: "100%", label: "Asincrónico", color: NAVY },
-  { n: "5°–4°", label: "Básico a Medio", color: RED },
-  { n: "6", label: "Asignaturas evaluadas", color: GOLD },
-  { n: "2027", label: "Año académico de apertura", color: NAVY },
+// Fact-boxes: fondo negro real, glifo grande de color arriba a la derecha (patrón exacto de .fact-box)
+const FACTS = [
+  { n: "100%", label: "Asincrónico", shape: ShapeArrow, color: GOLD },
+  { n: "5°–4°", label: "Básico a Medio", shape: ShapeCircle, color: GREEN },
+  { n: "6", label: "Asignaturas evaluadas", shape: ShapeHeart, color: PINK },
+  { n: "2027", label: "Año académico de apertura", shape: ShapeStar, color: GOLD },
 ];
 
 const PROGRAMAS = [
@@ -62,10 +85,23 @@ const PROGRAMAS = [
   { title: "Trámite", sub: "Validación de estudios", text: "Guías y asesoría personalizada para completar el trámite MINEDUC correctamente.", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=700&q=75", href: "#faq" },
 ];
 
+const NAV_LINKS = [
+  { label: "Nosotros", href: "#nosotros" },
+  { label: "Admisión", href: "#inscripcion" },
+  { label: "Aprendizaje", href: "#metodo" },
+  { label: "Plataforma", href: "#plataforma" },
+  { label: "Preguntas", href: "#faq" },
+];
+
 interface Faq { id: string; question: string; answer: string; sortOrder: number; }
 
-function Highlight({ color, children }: { color: string; children: string }) {
-  return <span style={{ position: "relative", fontWeight: 600, color }}>{children}</span>;
+function Highlight({ color, shape: Shape, children }: { color: string; shape: typeof ShapeCircle; children: string }) {
+  return (
+    <span style={{ position: "relative", fontWeight: 600, color: NAVY }}>
+      {children}
+      <span style={{ display: "inline-block", marginLeft: 8, verticalAlign: "middle" }}><Shape color={color} size={22} /></span>
+    </span>
+  );
 }
 
 function InscripcionForm() {
@@ -118,87 +154,88 @@ function InscripcionForm() {
 }
 
 export default function Home() {
-  const [slide, setSlide] = useState(0);
   const [tab, setTab] = useState<"estudiantes"|"apoderados">("estudiantes");
   const [callOpen, setCallOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5*60*1000 });
-  const slideRef = useRef<ReturnType<typeof setInterval>>(undefined);
-
-  useEffect(() => {
-    slideRef.current = setInterval(() => setSlide(i => (i + 1) % HERO_SLIDES.length), 5000);
-    return () => clearInterval(slideRef.current);
-  }, []);
-
-  const navLinks = [
-    { label: "Nosotros", href: "#nosotros" },
-    { label: "Admisión", href: "#inscripcion" },
-    { label: "Aprendizaje", href: "#metodo" },
-    { label: "Plataforma", href: "#plataforma" },
-    { label: "Preguntas", href: "#faq" },
-  ];
 
   return (
     <div style={{ backgroundColor: "#fff", color: TEXT, fontFamily: FONT, fontSize: 16, lineHeight: 1.8 }}>
 
-      {/* === HEADER === */}
-      <header style={{ position: "sticky", top: 0, zIndex: 20, background: "#fff", borderBottom: "1px solid #eef1f5" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-          <a href="/" style={{ textDecoration: "none", color: NAVY, fontWeight: 700, fontSize: 20, lineHeight: 1.1 }}>
-            Barkley<br /><span style={{ fontSize: 13, fontWeight: 400, color: TEXT }}>Online</span>
+      {/* === HEADER — logo cuadrado + hamburguesa, como el real (icono search + MY ISB + MENU) === */}
+      <header style={{ position: "sticky", top: 0, zIndex: 30, background: "#fff", borderBottom: "1px solid #eef1f5" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <a href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none" }}>
+            <div style={{ width: 44, height: 44, background: NAVY, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ color: "#fff", fontWeight: 800, fontSize: 15, letterSpacing: "-0.5px" }}>BK</span>
+            </div>
+            <span style={{ color: NAVY, fontWeight: 700, fontSize: 15, lineHeight: 1.25 }}>The Barkley<br /><span style={{ fontWeight: 400, fontSize: 13, color: TEXT }}>Online School</span></span>
           </a>
-          <nav style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
-            {navLinks.map(l => (
-              <a key={l.href} href={l.href} style={{ color: TEXT, textDecoration: "none", fontSize: 15, fontWeight: 500, transition: "color 0.2s" }}
-                onMouseEnter={e=>(e.currentTarget.style.color=NAVY)} onMouseLeave={e=>(e.currentTarget.style.color=TEXT)}>
-                {l.label}
-              </a>
-            ))}
-          </nav>
-          <div style={{ display: "flex", gap: 10 }}>
-            <a href="#inscripcion" style={{ textDecoration: "none", border: `1.5px solid ${NAVY}`, color: NAVY, borderRadius: 999, padding: "9px 18px", fontSize: 14, fontWeight: 600 }}>Visitar</a>
-            <a href="#inscripcion" style={{ textDecoration: "none", background: RED, color: "#fff", borderRadius: 999, padding: "9px 18px", fontSize: 14, fontWeight: 600 }}>Postular</a>
+          <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+            <Search style={{ width: 18, height: 18, color: NAVY, cursor: "pointer" }} />
+            <a href="#inscripcion" style={{ fontSize: 13, fontWeight: 700, color: NAVY, textDecoration: "none", display: "none" }} className="hidden md:inline">MI BARKLEY</a>
+            <button aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"} onClick={() => setMenuOpen(o => !o)}
+              style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: NAVY, fontFamily: FONT, fontSize: 13, fontWeight: 700 }}>
+              {menuOpen ? <X style={{ width: 22, height: 22 }} /> : <Menu style={{ width: 22, height: 22 }} />}
+              MENÚ
+            </button>
           </div>
         </div>
+        {menuOpen && (
+          <div style={{ background: NAVY, padding: "24px", display: "flex", flexDirection: "column", gap: 14 }}>
+            {NAV_LINKS.map(l => (
+              <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)} style={{ color: "#fff", textDecoration: "none", fontSize: 18, fontWeight: 600 }}>{l.label}</a>
+            ))}
+            <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+              <a href="#inscripcion" style={{ textDecoration: "none", border: "1.5px solid #fff", color: "#fff", borderRadius: 999, padding: "9px 18px", fontSize: 14, fontWeight: 600 }}>Visitar</a>
+              <a href="#inscripcion" style={{ textDecoration: "none", background: RED, color: "#fff", borderRadius: 999, padding: "9px 18px", fontSize: 14, fontWeight: 600 }}>Postular</a>
+            </div>
+          </div>
+        )}
       </header>
 
-      {/* === HERO — slideshow con fade + caption === */}
-      <section style={{ position: "relative", height: "70vh", minHeight: 420, overflow: "hidden" }}>
-        {HERO_SLIDES.map((src, i) => (
-          <img key={src} src={src} alt="" style={{
-            position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover",
-            opacity: i === slide ? 1 : 0, transition: "opacity 1s ease-in-out",
-          }} />
-        ))}
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,51,102,0) 40%, rgba(0,51,102,0.55) 100%)" }} />
-        <div style={{ position: "absolute", left: 24, bottom: 32, right: 24, color: "#fff" }}>
-          <p style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", margin: "0 0 8px" }}>Líderes en Educación Asincrónica Inclusiva</p>
-          <h1 style={{ fontSize: "clamp(28px,5vw,52px)", fontWeight: 700, margin: 0, maxWidth: 700, lineHeight: 1.15 }}>El colegio online que se adapta a tu ritmo.</h1>
+      {/* === HERO — foto full-bleed + columna de formas decorativas a la derecha (patrón real) === */}
+      <section style={{ position: "relative", display: "flex", minHeight: "72vh" }}>
+        <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
+          <img src={HERO_PHOTO} alt="" style={{ width: "100%", height: "100%", position: "absolute", inset: 0, objectFit: "cover" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,51,102,0) 40%, rgba(0,51,102,0.6) 100%)" }} />
+          <div style={{ position: "absolute", left: 24, right: 24, bottom: 32, color: "#fff" }}>
+            <p style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", margin: "0 0 8px" }}>Líderes en Educación Asincrónica Inclusiva</p>
+            <h1 style={{ fontSize: "clamp(28px,5vw,48px)", fontWeight: 700, margin: 0, maxWidth: 640, lineHeight: 1.15 }}>El colegio online que se adapta a tu ritmo.</h1>
+          </div>
         </div>
-        <button aria-label="Anterior" onClick={() => setSlide(i => (i - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
-          style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%", width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-          <ChevronLeft style={{ width: 20, height: 20, color: NAVY }} />
-        </button>
-        <button aria-label="Siguiente" onClick={() => setSlide(i => (i + 1) % HERO_SLIDES.length)}
-          style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%", width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-          <ChevronRight style={{ width: 20, height: 20, color: NAVY }} />
-        </button>
+        {/* Columna de formas decorativas de color — reemplaza el mosaico real de origami de isb.be */}
+        <div style={{ width: 130, display: "flex", flexDirection: "column" }} className="hidden md:flex">
+          <div style={{ flex: 1, background: NAVY, display: "flex", alignItems: "center", justifyContent: "center" }}><ShapeTriangle color={GOLD} size={64} /></div>
+          <div style={{ flex: 1, background: PURPLE, display: "flex", alignItems: "center", justifyContent: "center" }}><ShapeCircle color={GOLD} size={64} /></div>
+          <a href="#plataforma" style={{ background: NAVY, color: "#fff", textDecoration: "none", fontSize: 12, fontWeight: 700, padding: "18px 12px", textAlign: "center", lineHeight: 1.4 }}>Tour<br />virtual ↗</a>
+          <a href="#faq" style={{ background: PURPLE, color: "#fff", textDecoration: "none", fontSize: 12, fontWeight: 700, padding: "18px 12px", textAlign: "center", lineHeight: 1.4 }}>Preguntas<br />frecuentes ↗</a>
+        </div>
       </section>
 
-      {/* === INTRO — texto con palabras resaltadas de color, como isb.be === */}
+      {/* === INTRO — texto con palabras + forma inline, como el real (shape_blue_hourglass etc) === */}
       <section id="nosotros" style={{ maxWidth: 900, margin: "0 auto", padding: "56px 24px", textAlign: "center" }}>
-        <p style={{ fontSize: "clamp(20px,3vw,30px)", fontWeight: 400, lineHeight: 1.5, color: TEXT, margin: 0 }}>
-          Somos un <Highlight color={NAVY}>colegio</Highlight> 100% asincrónico en <Highlight color={RED}>Chile</Highlight> para{" "}
-          <Highlight color={GOLD}>estudiantes</Highlight> desde 5° básico hasta 4° <Highlight color={NAVY}>medio</Highlight>, ofreciendo una
-          preparación <Highlight color={RED}>rigurosa</Highlight> para rendir exámenes libres ante personas de todo{" "}
-          <Highlight color={GOLD}>Chile</Highlight>.
+        <p style={{ fontSize: "clamp(20px,3vw,30px)", fontWeight: 400, lineHeight: 1.6, color: TEXT, margin: 0 }}>
+          Somos un <Highlight color={NAVY} shape={ShapeCircle}>colegio</Highlight> 100% asincrónico en <Highlight color={RED} shape={ShapeTriangle}>Chile</Highlight> para{" "}
+          estudiantes desde 5° básico hasta 4° <Highlight color={PURPLE} shape={ShapeStar}>medio</Highlight>, ofreciendo una
+          preparación rigurosa para rendir <Highlight color={GREEN} shape={ShapeFlower}>exámenes libres</Highlight> ante el Ministerio de{" "}
+          <Highlight color={PINK} shape={ShapeHeart}>Educación</Highlight> de Chile.
         </p>
       </section>
 
-      {/* === PILARES — imagen grande + 4 cajas, como "An Education Designed Around You" === */}
-      <section style={{ background: "#f7f9fb", padding: "64px 24px" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Aprendizaje personalizado en Barkley</p>
-          <h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 700, color: NAVY, margin: "0 0 40px", maxWidth: 700 }}>Una educación diseñada en torno a ti</h2>
+      {/* === PILARES — bloque de color sólido + foto, como "An Education Designed Around You" === */}
+      <section style={{ background: "#f5f5f5", padding: "64px 0" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 0, marginBottom: 48, alignItems: "stretch" }}>
+            <div style={{ flex: "1 1 320px", minWidth: 260, background: GREEN, position: "relative", minHeight: 260, display: "flex", alignItems: "flex-end", padding: 24 }}>
+              <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=700&q=75" alt="" style={{ position: "absolute", inset: 24, width: "calc(100% - 48px)", height: "calc(100% - 48px)", objectFit: "cover", borderRadius: 8 }} />
+            </div>
+            <div style={{ flex: "1 1 380px", minWidth: 280, background: "#fff", padding: "40px 32px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Aprendizaje personalizado en Barkley</p>
+              <h2 style={{ fontSize: "clamp(24px,3.5vw,34px)", fontWeight: 700, color: NAVY, margin: "0 0 16px" }}>Una educación diseñada en torno a ti</h2>
+              <p style={{ fontSize: 15, margin: 0 }}>Barkley reconoce a cada estudiante como un individuo único. Nuestro plan se adapta a él, asegurando el apoyo académico necesario para prosperar dentro y fuera del aula.</p>
+            </div>
+          </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 32 }}>
             {PILARES.map(p => (
               <div key={p.title} style={{ flex: "1 1 240px", minWidth: 220 }}>
@@ -211,7 +248,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === NIVELES — "Nuestro camino de aprendizaje" === */}
+      {/* === NIVELES === */}
       <section id="metodo" style={{ padding: "64px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>De 5° básico a validación de adultos</p>
@@ -231,8 +268,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === RAZONES — reemplaza testimonios fabricados por razones reales, en pestañas === */}
-      <section style={{ background: "#f7f9fb", padding: "64px 24px" }}>
+      {/* === RAZONES — pestañas, sin testimonios fabricados con nombre === */}
+      <section style={{ background: "#f5f5f5", padding: "64px 24px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Por qué Barkley</p>
           <h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 700, color: NAVY, margin: "0 0 32px" }}>Historias que nos conectan</h2>
@@ -255,24 +292,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === STATS — "Más que un colegio" === */}
+      {/* === FACT-BOXES — fondo negro real + glifo grande de color arriba a la derecha === */}
       <section style={{ padding: "56px 24px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Barkley en cifras</p>
-          <h2 style={{ fontSize: "clamp(24px,3.5vw,34px)", fontWeight: 700, color: NAVY, margin: "0 0 40px" }}>Más que un colegio</h2>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 24, justifyContent: "center" }}>
-            {STATS.map(s => (
-              <div key={s.label} style={{ flex: "1 1 180px", minWidth: 160 }}>
-                <p style={{ fontSize: 44, fontWeight: 800, color: s.color, margin: 0 }}>{s.n}</p>
-                <p style={{ fontSize: 15, margin: "6px 0 0", color: TEXT }}>{s.label}</p>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px", textAlign: "center" }}>Barkley en cifras</p>
+          <h2 style={{ fontSize: "clamp(24px,3.5vw,34px)", fontWeight: 700, color: NAVY, margin: "0 0 40px", textAlign: "center" }}>Más que un colegio</h2>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
+            {FACTS.map(s => (
+              <div key={s.label} style={{ flex: "1 1 220px", minWidth: 200, background: "#000", borderRadius: 12, padding: 28, position: "relative", minHeight: 200, display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden" }}>
+                <div style={{ position: "absolute", top: 20, right: 20 }}><s.shape color={s.color} size={56} /></div>
+                <p style={{ fontSize: 40, fontWeight: 800, color: "#fff", margin: 0 }}>{s.n}</p>
+                <p style={{ fontSize: 14, margin: "6px 0 0", color: "#c9c9c9" }}>{s.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* === PROGRAMAS — grid tipo "Discover & Experience" === */}
-      <section id="plataforma" style={{ background: "#f7f9fb", padding: "64px 24px" }}>
+      {/* === PROGRAMAS === */}
+      <section id="plataforma" style={{ background: "#f5f5f5", padding: "64px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Descubre y experimenta</p>
           <h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 700, color: NAVY, margin: "0 0 40px" }}>La plataforma, por dentro</h2>
@@ -310,9 +348,10 @@ export default function Home() {
         </section>
       )}
 
-      {/* === CTA — navy, blanco === */}
-      <section style={{ backgroundColor: NAVY, color: "#fff", padding: "64px 24px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+      {/* === CTA — bloque de color sólido navy === */}
+      <section style={{ backgroundColor: NAVY, color: "#fff", padding: "72px 24px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", bottom: -20, left: -20, opacity: 0.5 }}><ShapeFlower color="#ffffff22" size={140} /></div>
+        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center", position: "relative" }}>
           <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, margin: "0 0 16px" }}>¿Quieres saber más sobre Barkley Online?</h2>
           <p style={{ fontSize: 16, opacity: 0.85, margin: "0 0 28px" }}>Déjanos tus datos y te contactamos.</p>
           <button onClick={() => document.getElementById("inscripcion")?.scrollIntoView({ behavior: "smooth" })}
@@ -321,7 +360,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === INSCRIPCIÓN (formulario) === */}
+      {/* === INSCRIPCIÓN === */}
       <section id="inscripcion" style={{ maxWidth: 1100, margin: "0 auto", padding: "64px 24px", display: "flex", flexWrap: "wrap", gap: 40 }}>
         <div style={{ flex: "1 1 320px", minWidth: 260 }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Admisión 2027</p>
@@ -333,36 +372,38 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === FOOTER — contacto, enlaces, acreditación real === */}
-      <footer style={{ backgroundColor: "#f7f9fb", color: TEXT, padding: "48px 24px 24px", borderTop: "1px solid #eef1f5" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 32 }}>
+      {/* === FOOTER — navy sólido + formas orgánicas, como el real === */}
+      <footer style={{ backgroundColor: NAVY, color: "#fff", padding: "56px 24px 24px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: 30, left: -30, opacity: 0.5 }}><ShapeFlower color="#00b27355" size={120} /></div>
+        <div style={{ position: "absolute", bottom: 40, left: 60, opacity: 0.6 }}><ShapeCircle color="#00b27377" size={40} /></div>
+        <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 32, position: "relative" }}>
           <div style={{ flex: "1 1 240px" }}>
-            <p style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: "0 0 8px" }}>Barkley Online</p>
-            <p style={{ fontSize: 14, margin: 0, lineHeight: 1.8 }}>Colegio 100% asincrónico · Chile<br /><a href="mailto:admisiones@barkley.cl" style={{ color: NAVY }}>admisiones@barkley.cl</a></p>
+            <p style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px" }}>Barkley Online</p>
+            <p style={{ fontSize: 14, margin: 0, lineHeight: 1.8, opacity: 0.85 }}>Colegio 100% asincrónico · Chile<br /><a href="mailto:admisiones@barkley.cl" style={{ color: "#fff" }}>admisiones@barkley.cl</a></p>
           </div>
           <div style={{ flex: "1 1 180px" }}>
-            <p style={{ fontSize: 14, fontWeight: 700, color: NAVY, margin: "0 0 10px" }}>Enlaces útiles</p>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6, fontSize: 14 }}>
-              <li><a href="#metodo" style={{ color: TEXT }}>El método</a></li>
-              <li><a href="#plataforma" style={{ color: TEXT }}>La plataforma</a></li>
-              <li><a href="#faq" style={{ color: TEXT }}>Preguntas frecuentes</a></li>
-              <li><a href="#inscripcion" style={{ color: TEXT }}>Inscripción</a></li>
+            <p style={{ fontSize: 14, fontWeight: 700, margin: "0 0 10px" }}>Enlaces útiles</p>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6, fontSize: 14, opacity: 0.85 }}>
+              <li><a href="#metodo" style={{ color: "#fff" }}>El método</a></li>
+              <li><a href="#plataforma" style={{ color: "#fff" }}>La plataforma</a></li>
+              <li><a href="#faq" style={{ color: "#fff" }}>Preguntas frecuentes</a></li>
+              <li><a href="#inscripcion" style={{ color: "#fff" }}>Inscripción</a></li>
             </ul>
           </div>
           <div style={{ flex: "1 1 180px" }}>
-            <p style={{ fontSize: 14, fontWeight: 700, color: NAVY, margin: "0 0 10px" }}>Contacto directo</p>
-            <button onClick={() => setCallOpen(true)} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: FONT, fontSize: 14, color: TEXT }}>Agendar llamada</button>
+            <p style={{ fontSize: 14, fontWeight: 700, margin: "0 0 10px" }}>Contacto directo</p>
+            <button onClick={() => setCallOpen(true)} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: FONT, fontSize: 14, color: "#fff", opacity: 0.85 }}>Agendar llamada</button>
           </div>
           <div style={{ flex: "1 1 220px" }}>
-            <p style={{ fontSize: 14, fontWeight: 700, color: NAVY, margin: "0 0 10px" }}>Validación oficial</p>
+            <p style={{ fontSize: 14, fontWeight: 700, margin: "0 0 10px" }}>Validación oficial</p>
             <p style={{ fontSize: 13, margin: 0, opacity: 0.75 }}>Preparación para Exámenes Libres ante el Ministerio de Educación de Chile (MINEDUC).</p>
           </div>
         </div>
-        <div style={{ maxWidth: 1280, margin: "32px auto 0", paddingTop: 20, borderTop: "1px solid #e2e7ee", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+        <div style={{ maxWidth: 1280, margin: "32px auto 0", paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.15)", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, position: "relative" }}>
           <p style={{ fontSize: 13, opacity: 0.6, margin: 0 }}>© {new Date().getFullYear()} Barkley Online</p>
-          <div style={{ display: "flex", gap: 16, fontSize: 13 }}>
-            <a href="/privacidad" style={{ color: TEXT }}>Privacidad</a>
-            <a href="/terminos" style={{ color: TEXT }}>Términos de uso</a>
+          <div style={{ display: "flex", gap: 16, fontSize: 13, opacity: 0.85 }}>
+            <a href="/privacidad" style={{ color: "#fff" }}>Privacidad</a>
+            <a href="/terminos" style={{ color: "#fff" }}>Términos de uso</a>
           </div>
         </div>
       </footer>
