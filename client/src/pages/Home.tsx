@@ -13,18 +13,16 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { ReservationDialog } from "@/components/ReservationDialog";
 
 // — Pares del hero: [palabra izq, palabra der, bg izq, bg der]
-// Colores extraídos de las animatedRows reales de unthink.ie
+// Colores hex EXACTOS extraídos del HTML fuente real de unthink.ie (animatedRow, 8 pares)
 const PAIRS: [string, string, string, string][] = [
-  ["colegio", "asincrónico", "rgb(255,103,117)", "rgb(255,255,118)"],
-  ["sin", "horario", "rgb(255,103,117)", "rgb(255,255,118)"],
-  ["tu", "ritmo", "rgb(220,145,240)", "rgb(255,171,57)"],
-  ["tu", "ritmo", "rgb(220,145,240)", "rgb(255,171,57)"],
-  ["exámenes", "libres", "rgb(255,181,181)", "rgb(0,226,165)"],
-  ["exámenes", "libres", "rgb(255,181,181)", "rgb(0,226,165)"],
-  ["5° básico", "4° medio", "rgb(133,217,255)", "rgb(255,218,99)"],
-  ["5° básico", "4° medio", "rgb(133,217,255)", "rgb(255,218,99)"],
-  ["aprende", "a tu paso", "rgb(255,103,117)", "rgb(255,255,118)"],
-  ["aprende", "a tu paso", "rgb(255,103,117)", "rgb(255,255,118)"],
+  ["colegio", "asincrónico", "#ff6775", "#ffff76"],
+  ["listo", "para aprender", "#dc91f0", "#ffab39"],
+  ["sin", "horario fijo", "#ffb5b5", "#00e2a5"],
+  ["exámenes", "libres", "#ff6775", "#b8efeb"],
+  ["tu", "ritmo", "#dc91f0", "#ffff76"],
+  ["colegio", "acompañado", "#00e2a5", "#ffab39"],
+  ["directo", "al MINEDUC", "#ffb5b5", "#ff6775"],
+  ["barkley", "online", "#dc91f0", "#b8efeb"],
 ];
 
 const BODY_FONT = "'Hanken Grotesk', sans-serif";
@@ -107,14 +105,25 @@ function InscripcionForm() {
 export default function Home() {
   const [pairIdx, setPairIdx] = useState(0);
   const [callOpen, setCallOpen] = useState(false);
+  const [heroStarted, setHeroStarted] = useState(false);
   const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5*60*1000 });
-  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const intervalRef = useRef<ReturnType<typeof setInterval>>(undefined);
 
-  // Cicla las parejas como hace el JS de unthink.ie
+  // Timing real de unthink.ie: 750ms por fila. Mobile autoplay inmediato,
+  // desktop arranca recién al primer hover sobre el hero (comportamiento exacto del sitio real).
   useEffect(() => {
-    timerRef.current = setTimeout(() => setPairIdx(i => (i + 1) % PAIRS.length), 2500);
-    return () => clearTimeout(timerRef.current);
-  }, [pairIdx]);
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    if (isMobile) {
+      intervalRef.current = setInterval(() => setPairIdx(i => (i + 1) % PAIRS.length), 750);
+      return () => clearInterval(intervalRef.current);
+    }
+  }, []);
+
+  const startHeroCycle = () => {
+    if (heroStarted) return;
+    setHeroStarted(true);
+    intervalRef.current = setInterval(() => setPairIdx(i => (i + 1) % PAIRS.length), 750);
+  };
 
   const [leftWord, rightWord, leftBg, rightBg] = PAIRS[pairIdx];
   const navLink: React.CSSProperties = {
@@ -145,11 +154,11 @@ export default function Home() {
         onMouseEnter={e=>fade(e,"0.4")} onMouseLeave={e=>fade(e,"1")}>Inscripción</a>
 
       {/* === HERO — 2 bloques de color 50/50, h1 80px weight 100 -2px === */}
-      <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
-        <div style={{ flex: 1, backgroundColor: leftBg, display: "flex", alignItems: "flex-end", padding: "0 15px 15px", transition: "background-color 0.6s ease" }}>
+      <div onMouseEnter={startHeroCycle} style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+        <div style={{ flex: 1, backgroundColor: leftBg, display: "flex", alignItems: "flex-end", padding: "0 15px 15px", transition: "background-color 0.15s ease" }}>
           <h1 style={{ fontSize: 80, fontWeight: 100, letterSpacing: "-2px", lineHeight: 1, margin: 0 }}>{leftWord}</h1>
         </div>
-        <div style={{ flex: 1, backgroundColor: rightBg, display: "flex", alignItems: "flex-end", padding: "0 15px 15px", transition: "background-color 0.6s ease" }}>
+        <div style={{ flex: 1, backgroundColor: rightBg, display: "flex", alignItems: "flex-end", padding: "0 15px 15px", transition: "background-color 0.15s ease" }}>
           <h1 style={{ fontSize: 80, fontWeight: 100, letterSpacing: "-2px", lineHeight: 1, margin: 0 }}>{rightWord}</h1>
         </div>
       </div>
