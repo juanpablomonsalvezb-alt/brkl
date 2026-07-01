@@ -46,57 +46,54 @@
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
-  --font-sans: 'Hanken Grotesk', sans-serif;
-  --font-display: 'Hanken Grotesk', sans-serif;
-  --font-serif: 'Hanken Grotesk', sans-serif;
-  --font-mono: 'Hanken Grotesk', sans-serif;
+  --font-sans: 'Poppins', sans-serif;
+  --font-display: 'Poppins', sans-serif;
+  --font-serif: 'Poppins', sans-serif;
+  --font-mono: 'Poppins', sans-serif;
 }
 
 :root {
-  /* Sistema visual extraído de unthink.ie (getComputedStyle real) aplicado
-     sobre el contenido de Barkley: crema rgb(244,244,234), negro puro, cero
-     radius, cero sombra, transición opacity-fade. Dorado se mantiene como
-     único acento de marca (unthink no tiene acento — Barkley sí necesita
-     distinguir CTAs). */
-  --background: 60 25% 94%;
-  --foreground: 0 0% 0%;
+  /* Sistema visual extraído de isb.be (International School of Brussels) real:
+     navy #003366, rojo #FF3D37, dorado #FFC548, fondo blanco, texto #525252,
+     Poppins. Colegio serio de verdad, no agencia creativa. */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 32%;
 
-  --card: 60 25% 94%;
-  --card-foreground: 0 0% 0%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 32%;
 
-  --popover: 60 20% 98%;
-  --popover-foreground: 0 0% 0%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 32%;
 
-  --primary: 0 0% 0%;
-  --primary-foreground: 60 25% 96%;
+  --primary: 210 100% 20%;
+  --primary-foreground: 0 0% 100%;
 
-  /* Dorado — único acento de marca */
-  --secondary: 38 62% 47%;
-  --secondary-foreground: 0 0% 0%;
+  --secondary: 1.8 100% 61%;
+  --secondary-foreground: 0 0% 100%;
 
-  --muted: 60 15% 89%;
-  --muted-foreground: 0 0% 30%;
+  --muted: 210 20% 96%;
+  --muted-foreground: 0 0% 40%;
 
-  --accent: 38 62% 47%;
-  --accent-foreground: 0 0% 0%;
+  --accent: 41 100% 64%;
+  --accent-foreground: 210 100% 20%;
 
-  --destructive: 4 65% 40%;
-  --destructive-foreground: 60 25% 96%;
+  --destructive: 1.8 100% 61%;
+  --destructive-foreground: 0 0% 100%;
 
-  --border: 0 0% 0%;
-  --input: 0 0% 0%;
-  --ring: 0 0% 0%;
+  --border: 210 20% 88%;
+  --input: 210 20% 88%;
+  --ring: 210 100% 20%;
 
-  --radius: 0px;
+  --radius: 12px;
 
-  --sidebar: 0 0% 0%;
-  --sidebar-foreground: 60 25% 96%;
-  --sidebar-primary: 38 62% 47%;
-  --sidebar-primary-foreground: 0 0% 0%;
-  --sidebar-accent: 0 0% 15%;
-  --sidebar-accent-foreground: 60 25% 96%;
-  --sidebar-border: 0 0% 20%;
-  --sidebar-ring: 38 62% 47%;
+  --sidebar: 210 100% 20%;
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-primary: 41 100% 64%;
+  --sidebar-primary-foreground: 210 100% 20%;
+  --sidebar-accent: 210 100% 25%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 210 100% 30%;
+  --sidebar-ring: 41 100% 64%;
 }
 
 @layer base {
@@ -119,7 +116,7 @@
   h4,
   h5,
   h6 {
-    font-family: 'Hanken Grotesk', sans-serif;
+    font-family: 'Poppins', sans-serif;
     letter-spacing: -0.02em;
     /* color: hereda del contenedor — NUNCA forzar aquí, rompe headings sobre fondos oscuros */
     font-weight: 300;
@@ -127,11 +124,11 @@
   }
 
   .font-sans-safe {
-    font-family: 'Hanken Grotesk', sans-serif;
+    font-family: 'Poppins', sans-serif;
   }
 
   .font-label {
-    font-family: 'Hanken Grotesk', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
