@@ -1,10 +1,9 @@
 /**
- * Clone 1:1 de unthink.ie — valores reales extraídos con getComputedStyle:
- * - Nav: 4 links fixed en esquinas (top/bottom 30px, left/right 30px, 35px, z-index 4/5)
- * - Hero: 2 bloques 50/50, h1 80px weight 100 -2px, cycling JS con pares de colores reales
- * - Text-box: 2 col 50%, title izq + párrafo der (35px)
- * - Cards: 2 col 50%, imagen full-width + caption flex justify-between
- * Contenido: Barkley Online (colegio asincrónico Chile) en lugar de agencia
+ * Clone 1:1 de unthink.ie — estructura completa extraída del HTML fuente real:
+ * nav 4 esquinas, hero split-color cycling, text-box, filas de tarjetas (2col/1col),
+ * tag-cards de color (col-3), doble quiebre de titular grande, sección "novedades",
+ * CTA negro "Hello", fila de 3 tarjetas teaser, footer de 5 columnas.
+ * Contenido: Barkley Online (colegio asincrónico Chile) en lugar de agencia de diseño.
  */
 import { useState, useEffect, useRef } from "react";
 import { Loader2, Check, ArrowUpRight } from "lucide-react";
@@ -31,19 +30,23 @@ const BODY_COLOR = "#000";
 const BODY_FS = 35;
 
 // — Datos de las "tarjetas de proyecto" (asignaturas/programas de Barkley)
-const CARDS = [
-  {
-    img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=900&q=75",
-    title: "Aprendizaje asincrónico",
-    cat: "Educación  Digital",
-    alt: "Aprendizaje",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=900&q=75",
-    title: "Exámenes libres MINEDUC",
-    cat: "Certificación  Oficial",
-    alt: "Exámenes libres",
-  },
+const CARDS_A = [
+  { img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=900&q=75", title: "Aprendizaje asincrónico", cat: "Educación  Digital", alt: "Aprendizaje" },
+  { img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=900&q=75", title: "Exámenes libres MINEDUC", cat: "Certificación  Oficial", alt: "Exámenes libres" },
+];
+const CARDS_C = [
+  { img: "https://images.unsplash.com/photo-1610484826967-09c5720778c7?auto=format&fit=crop&w=900&q=75", title: "Apoderados", cat: "Seguimiento  Portal", alt: "Apoderados" },
+  { img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=75", title: "Tutores por asignatura", cat: "Acompañamiento  1 a 1", alt: "Tutores" },
+];
+const CARDS_G = [
+  { img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=900&q=75", title: "Validación de estudios", cat: "Trámite  MINEDUC", alt: "Validación" },
+  { img: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=900&q=75", title: "Coordinación académica", cat: "Asesoría  Personal", alt: "Coordinación" },
+];
+
+const NOVEDADES = [
+  { tag: "Admisión", date: "Año académico 2027", text: "Abrimos el proceso de admisión 2027 para 5° básico a 4° medio y validación de adultos." },
+  { tag: "Fechas", date: "Sept – Oct", text: "Exámenes libres ante el MINEDUC: 4° medio y NEE fines de septiembre, resto en octubre." },
+  { tag: "Plataforma", date: "Todo el año", text: "Seguimiento determinístico de progreso, sin inteligencia artificial generativa en el aula." },
 ];
 
 interface Faq {
@@ -51,6 +54,31 @@ interface Faq {
   question: string;
   answer: string;
   sortOrder: number;
+}
+
+function ImgCard({ img, alt, title, cat, aspect = "4/3" }: { img: string; alt: string; title: string; cat: string; aspect?: string }) {
+  return (
+    <div>
+      <img src={img} alt={alt} loading="lazy" style={{ width: "100%", aspectRatio: aspect, objectFit: "cover", display: "block" }} />
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "12px 0 0", gap: 16 }}>
+        <span style={{ fontSize: BODY_FS, fontWeight: 300 }}>{title}</span>
+        <span style={{ fontSize: 18, color: "#6e6e6e", whiteSpace: "nowrap" }}>{cat}</span>
+      </div>
+    </div>
+  );
+}
+
+function TagCard({ bg, label, text, href }: { bg: string; label: string; text: string; href: string }) {
+  const [hover, setHover] = useState(false);
+  return (
+    <a href={href} style={{ textDecoration: "none", color: "#000", display: "block", flex: "0 0 25%", minWidth: 220, padding: "0 8px 24px" }}
+      onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+      <div style={{ background: bg, padding: 24, minHeight: 180, opacity: hover ? 0.7 : 1, transition: "opacity 0.25s ease-in-out" }}>
+        <span style={{ fontSize: 22, textDecoration: "underline", textUnderlineOffset: 8 }}>{label} ↗</span>
+        <p style={{ fontSize: BODY_FS, fontWeight: 300, margin: "16px 0 0" }}>{text}</p>
+      </div>
+    </a>
+  );
 }
 
 function InscripcionForm() {
@@ -140,6 +168,10 @@ export default function Home() {
   const fade = (e: React.MouseEvent<HTMLAnchorElement|HTMLButtonElement>, v: string) =>
     ((e.currentTarget as HTMLElement).style.opacity = v);
 
+  const rowStyle: React.CSSProperties = { display: "flex", flexWrap: "wrap", padding: "0 8px 60px", backgroundColor: BODY_BG };
+  const halfCol: React.CSSProperties = { flex: "0 0 50%", minWidth: 280, padding: "0 8px" };
+  const textBox: React.CSSProperties = { display: "flex", flexWrap: "wrap", backgroundColor: BODY_BG, padding: "60px 15px" };
+
   return (
     <div style={{ backgroundColor: BODY_BG, color: BODY_COLOR, fontFamily: BODY_FONT, fontSize: BODY_FS, fontWeight: 300 }}>
 
@@ -163,8 +195,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* === TEXT BOX 2 — "Somos Barkley Online" + párrafo (2 col 50%) === */}
-      <div style={{ display: "flex", flexWrap: "wrap", backgroundColor: BODY_BG, padding: "60px 15px" }}>
+      {/* === TEXT-BOX-2 — "Somos Barkley Online" + párrafo === */}
+      <div style={textBox}>
         <div style={{ flex: "0 0 50%", minWidth: 280, paddingRight: 15 }}>
           <p style={{ fontSize: BODY_FS, fontWeight: 300, margin: 0, lineHeight: 1.15 }}>Somos Barkley Online</p>
         </div>
@@ -174,70 +206,111 @@ export default function Home() {
             Desde 5° básico a 4° medio — y validación para adultos — preparando para rendir
             exámenes libres ante el Ministerio de Educación de Chile.
           </p>
+          <a href="/nosotros" style={{ display: "inline-block", marginTop: 24, fontSize: 22, color: "#000", textDecoration: "underline", textUnderlineOffset: 10 }}>Más sobre nosotros ↗</a>
         </div>
       </div>
 
-      {/* === TARJETA 1 — Aprendizaje asincrónico (2 col 50%, imagen + caption) === */}
-      <div id="metodo" style={{ display: "flex", flexWrap: "wrap", padding: "0 15px 60px", backgroundColor: BODY_BG }}>
-        {CARDS.map((c, i) => (
-          <div key={c.title} style={{ flex: "0 0 50%", minWidth: 280, padding: i===0 ? "0 15px 0 0" : "0 0 0 15px" }}>
-            <img src={c.img} alt={c.alt} loading="lazy"
-              style={{ width: "100%", aspectRatio: "4/3", objectFit: "cover", display: "block" }}
-            />
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "12px 0 0", gap: 16 }}>
-              <span style={{ fontSize: BODY_FS, fontWeight: 300 }}>{c.title}</span>
-              <span style={{ fontSize: 18, color: "#6e6e6e", whiteSpace: "nowrap" }}>{c.cat}</span>
-            </div>
-          </div>
-        ))}
+      {/* === FILA A — 2 col: Aprendizaje asincrónico / Exámenes libres === */}
+      <div id="metodo" style={rowStyle}>
+        {CARDS_A.map(c => <div key={c.title} style={halfCol}><ImgCard {...c} /></div>)}
       </div>
 
-      {/* === TEXT BOX — "El ritmo es tuyo." (2 col 50%) === */}
-      <div style={{ display: "flex", flexWrap: "wrap", backgroundColor: BODY_BG, padding: "60px 15px" }}>
-        <div style={{ flex: "0 0 50%", minWidth: 280, paddingRight: 15 }}>
-          <p style={{ fontSize: 60, fontWeight: 100, letterSpacing: "-2px", lineHeight: 1.05, margin: 0 }}>
+      {/* === FILA B — 1 col full: La plataforma === */}
+      <div id="plataforma" style={{ ...rowStyle, display: "block" }}>
+        <ImgCard img="https://images.unsplash.com/photo-1555212697-194d092e3b8f?auto=format&fit=crop&w=1380&q=75" alt="Plataforma Barkley Online" title="La plataforma" cat="Asignaturas  Progreso  Seguimiento" aspect="16/7" />
+      </div>
+
+      {/* === FILA C — 2 col: Apoderados / Tutores === */}
+      <div style={rowStyle}>
+        {CARDS_C.map(c => <div key={c.title} style={halfCol}><ImgCard {...c} /></div>)}
+      </div>
+
+      {/* === FILA D — tag-card de color, col-3 (como "Books" en el real) === */}
+      <div style={{ display: "flex", flexWrap: "wrap", padding: "0 8px 60px" }}>
+        <TagCard bg="#ffff76" label="Preguntas frecuentes" text="Todo lo que preguntan los apoderados." href="#faq" />
+      </div>
+
+      {/* === TEXT-BOX-6 — "El ritmo es tuyo." headline grande === */}
+      <div style={textBox}>
+        <div style={{ flex: "0 0 75%", minWidth: 280 }}>
+          <p style={{ fontSize: 60, fontWeight: 100, letterSpacing: "-2px", lineHeight: 1.05, margin: "0 0 24px" }}>
             El ritmo<br />es tuyo.
           </p>
-        </div>
-        <div style={{ flex: "0 0 50%", minWidth: 280, paddingLeft: 15, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
-          <a href="#metodo" style={{ fontSize: BODY_FS, fontWeight: 300, color: BODY_COLOR, textDecoration: "none", opacity: 0.75, transition: "opacity 0.25s ease-in-out" }}
+          <a href="#metodo" style={{ fontSize: 22, fontWeight: 300, color: BODY_COLOR, textDecoration: "underline", textUnderlineOffset: 10, opacity: 0.75, transition: "opacity 0.25s ease-in-out" }}
             onMouseEnter={e=>fade(e,"0.3")} onMouseLeave={e=>fade(e,"0.75")}>
             Conoce el método ↗
           </a>
         </div>
       </div>
 
-      {/* === TARJETA 3 — La plataforma (1 col full) === */}
-      <div id="plataforma" style={{ padding: "0 15px 60px", backgroundColor: BODY_BG }}>
-        <img
-          src="https://images.unsplash.com/photo-1555212697-194d092e3b8f?auto=format&fit=crop&w=1380&q=75"
-          alt="Plataforma Barkley Online" loading="lazy"
-          style={{ width: "100%", aspectRatio: "16/7", objectFit: "cover", display: "block" }}
-        />
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "12px 0 0", gap: 16 }}>
-          <span style={{ fontSize: BODY_FS, fontWeight: 300 }}>La plataforma</span>
-          <span style={{ fontSize: 18, color: "#6e6e6e" }}>Asignaturas  Progreso  Seguimiento</span>
-        </div>
+      {/* === FILA E — 1 col full: Validación de estudios === */}
+      <div style={{ ...rowStyle, display: "block" }}>
+        <ImgCard img="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1380&q=75" alt="Validación de estudios" title="Validación de estudios" cat="Trámite  MINEDUC  Oficial" aspect="16/7" />
       </div>
 
-      {/* === TEXT BOX — "El algoritmo te acompaña." === */}
-      <div style={{ display: "flex", flexWrap: "wrap", backgroundColor: BODY_BG, padding: "60px 15px" }}>
-        <div style={{ flex: "0 0 50%", minWidth: 280, paddingRight: 15 }}>
-          <p style={{ fontSize: 60, fontWeight: 100, letterSpacing: "-2px", lineHeight: 1.05, margin: 0 }}>
+      {/* === TEXT-BOX-10 — "El algoritmo te acompaña." headline, alineado a la derecha (offset-lg-3 real) === */}
+      <div style={{ ...textBox, justifyContent: "flex-end" }}>
+        <div style={{ flex: "0 0 75%", minWidth: 280 }}>
+          <p style={{ fontSize: 60, fontWeight: 100, letterSpacing: "-2px", lineHeight: 1.05, margin: "0 0 24px" }}>
             El algoritmo<br />te acompaña.
           </p>
-        </div>
-        <div style={{ flex: "0 0 50%", minWidth: 280, paddingLeft: 15, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
-          <p style={{ fontSize: BODY_FS, fontWeight: 300, opacity: 0.75, margin: 0, lineHeight: 1.4 }}>
+          <p style={{ fontSize: BODY_FS, fontWeight: 300, opacity: 0.75, margin: "0 0 24px", lineHeight: 1.4 }}>
             Un sistema determinístico mide tus resultados y ajusta el ritmo y el contenido.
             Sin inteligencia artificial generativa — seguimiento real, sin hype.
           </p>
+          <a href="#plataforma" style={{ fontSize: 22, fontWeight: 300, color: BODY_COLOR, textDecoration: "underline", textUnderlineOffset: 10, opacity: 0.75, transition: "opacity 0.25s ease-in-out" }}
+            onMouseEnter={e=>fade(e,"0.3")} onMouseLeave={e=>fade(e,"0.75")}>
+            Cómo funciona la plataforma ↗
+          </a>
         </div>
+      </div>
+
+      {/* === FILA G — 2 col: Validación / Coordinación === */}
+      <div style={rowStyle}>
+        {CARDS_G.map(c => <div key={c.title} style={halfCol}><ImgCard {...c} /></div>)}
+      </div>
+
+      {/* === FILA H — tag-card azul, col-3 === */}
+      <div style={{ display: "flex", flexWrap: "wrap", padding: "0 8px 60px" }}>
+        <TagCard bg="#76daff" label="La plataforma" text="Todo el sistema, por dentro." href="#plataforma" />
+      </div>
+
+      {/* === FILA I — mixta 1 imagen (mitad) + 1 tag-card morada (cuarto) === */}
+      <div style={{ display: "flex", flexWrap: "wrap", padding: "0 8px 60px" }}>
+        <div style={{ flex: "0 0 50%", minWidth: 280, padding: "0 8px" }}>
+          <ImgCard img="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=75" alt="Apoderados" title="Portal de apoderados" cat="Transparencia  Total" />
+        </div>
+        <TagCard bg="#b576ff" label="Para apoderados" text="Seguimiento en tiempo real, sin sorpresas." href="#inscripcion" />
+      </div>
+
+      {/* === TEXT-BOX-14 — "Novedades" label + headline, fondo negro === */}
+      <div style={{ display: "flex", flexWrap: "wrap", backgroundColor: "#000", color: "#fff", padding: "60px 15px" }}>
+        <div style={{ flex: "0 0 50%", minWidth: 280, paddingRight: 15 }}>
+          <p style={{ fontSize: BODY_FS, fontWeight: 300, margin: 0 }}>Novedades</p>
+        </div>
+        <div style={{ flex: "0 0 50%", minWidth: 280, paddingLeft: 15 }}>
+          <p style={{ fontSize: 50, fontWeight: 100, letterSpacing: "-2px", lineHeight: 1.05, margin: 0 }}>
+            Mantente al día con fechas, procesos y novedades del colegio.
+          </p>
+        </div>
+      </div>
+
+      {/* Grid simple en vez del glide-slider real — mismo contenido, sin dependencia de carrusel. */}
+      <div style={{ backgroundColor: "#000", color: "#fff", padding: "0 15px 60px", display: "flex", flexWrap: "wrap", gap: 24 }}>
+        {NOVEDADES.map(n => (
+          <div key={n.tag} style={{ flex: "0 0 30%", minWidth: 260 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 18, color: "#7f7f7f", marginBottom: 12 }}>
+              <span>{n.date}</span>
+              <span style={{ background: "#fff", color: "#000", padding: "4px 10px" }}>{n.tag}</span>
+            </div>
+            <p style={{ fontSize: 22, fontWeight: 300, margin: 0 }}>{n.text}</p>
+          </div>
+        ))}
       </div>
 
       {/* === FAQ === */}
       {faqs && faqs.length > 0 && (
-        <div style={{ padding: "60px 15px", backgroundColor: BODY_BG }}>
+        <div id="faq" style={{ padding: "60px 15px", backgroundColor: BODY_BG }}>
           <p style={{ fontSize: BODY_FS, fontWeight: 300, marginBottom: 40 }}>Preguntas frecuentes</p>
           <Accordion type="single" collapsible>
             {faqs.map(f => (
@@ -272,7 +345,7 @@ export default function Home() {
       </div>
 
       {/* === INSCRIPCIÓN (formulario) === */}
-      <div id="inscripcion" style={{ display: "flex", flexWrap: "wrap", backgroundColor: BODY_BG, padding: "60px 15px" }}>
+      <div id="inscripcion" style={textBox}>
         <div style={{ flex: "0 0 50%", minWidth: 280, paddingRight: 15 }}>
           <p style={{ fontSize: BODY_FS, fontWeight: 300, margin: 0 }}>Admisión 2027</p>
           <p style={{ fontSize: 18, opacity: 0.5, margin: "8px 0 0" }}>Sin compromiso · sin costo</p>
@@ -282,25 +355,59 @@ export default function Home() {
         </div>
       </div>
 
-      {/* === FOOTER === */}
-      <footer style={{ backgroundColor: "#000", color: "#fff", padding: "40px 15px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 24 }}>
-          <div>
-            <p style={{ fontSize: 22, fontWeight: 300, margin: 0 }}>Barkley Online</p>
-            <p style={{ fontSize: 16, opacity: 0.4, margin: "6px 0 0" }}>Colegio asincrónico · Chile</p>
+      {/* === FOOTER TEASER — 3 tarjetas (6+3+3), como el real === */}
+      <div style={{ display: "flex", flexWrap: "wrap", backgroundColor: "#000" }}>
+        <a href="#metodo" style={{ flex: "0 0 50%", minWidth: 300, textDecoration: "none", color: "#000" }}>
+          <div style={{ background: "#b576ff", padding: 30, minHeight: 220 }}>
+            <span style={{ fontSize: 22, textDecoration: "underline", textUnderlineOffset: 8 }}>Ver el método completo ↗</span>
+            <p style={{ fontSize: BODY_FS, fontWeight: 300, margin: "16px 0 0" }}>Cada asignatura, cada evaluación, sin sorpresas.</p>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <a href="mailto:admisiones@barkley.cl" style={{ fontSize: 16, color: "#fff", textDecoration: "none", opacity: 0.5, transition: "opacity 0.25s" }}
-              onMouseEnter={e=>((e.currentTarget as HTMLElement).style.opacity="1")} onMouseLeave={e=>((e.currentTarget as HTMLElement).style.opacity="0.5")}>
-              admisiones@barkley.cl
-            </a>
-            <button onClick={() => setCallOpen(true)}
-              style={{ fontSize: 16, color: "#fff", background: "none", border: "none", padding: 0, cursor: "pointer", opacity: 0.5, transition: "opacity 0.25s", fontFamily: BODY_FONT, textAlign: "left" }}
-              onMouseEnter={e=>(e.currentTarget.style.opacity="1")} onMouseLeave={e=>(e.currentTarget.style.opacity="0.5")}
-            >Agendar llamada</button>
+        </a>
+        <a href="/nosotros" style={{ flex: "0 0 25%", minWidth: 260, textDecoration: "none", color: "#fff", position: "relative", backgroundImage: "linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=700&q=75)", backgroundSize: "cover", backgroundPosition: "center" }}>
+          <div style={{ padding: 30, minHeight: 220 }}>
+            <span style={{ fontSize: 22, textDecoration: "underline", textUnderlineOffset: 8 }}>Sobre Barkley ↗</span>
+          </div>
+        </a>
+        <a href="#inscripcion" style={{ flex: "0 0 25%", minWidth: 260, textDecoration: "none", color: "#000" }}>
+          <div style={{ background: "#ffb5b5", padding: 30, minHeight: 220 }}>
+            <span style={{ fontSize: 22, textDecoration: "underline", textUnderlineOffset: 8 }}>Para apoderados ↗</span>
+            <p style={{ fontSize: BODY_FS, fontWeight: 300, margin: "16px 0 0" }}>Todo el trámite, explicado simple.</p>
+          </div>
+        </a>
+      </div>
+
+      {/* === FOOTER — 5 columnas reales === */}
+      <footer style={{ backgroundColor: "#989898", color: "#000", padding: "40px 15px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
+          <div style={{ flex: "0 0 20%", minWidth: 180 }}>
+            <p style={{ fontSize: 18, textDecoration: "underline", textUnderlineOffset: 10, margin: "0 0 10px" }}>Visítanos</p>
+            <p style={{ fontSize: 18, margin: 0, lineHeight: 1.6 }}>Online · Chile<br /><a href="mailto:admisiones@barkley.cl" style={{ color: "#000" }}>admisiones@barkley.cl</a></p>
+          </div>
+          <div style={{ flex: "0 0 20%", minWidth: 180 }}>
+            <p style={{ fontSize: 18, textDecoration: "underline", textUnderlineOffset: 10, margin: "0 0 10px" }}>Navega</p>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4, fontSize: 18 }}>
+              <li><a href="#metodo" style={{ color: "#000" }}>El método</a></li>
+              <li><a href="#plataforma" style={{ color: "#000" }}>La plataforma</a></li>
+              <li><a href="#faq" style={{ color: "#000" }}>Preguntas frecuentes</a></li>
+              <li><a href="#inscripcion" style={{ color: "#000" }}>Inscripción</a></li>
+            </ul>
+          </div>
+          <div style={{ flex: "0 0 20%", minWidth: 180 }}>
+            <p style={{ fontSize: 18, textDecoration: "underline", textUnderlineOffset: 10, margin: "0 0 10px" }}>Descubre más</p>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4, fontSize: 18 }}>
+              <li><a href="/nosotros" style={{ color: "#000" }}>Sobre Barkley</a></li>
+              <li><button onClick={() => setCallOpen(true)} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: BODY_FONT, fontSize: 18, color: "#000" }}>Agendar llamada</button></li>
+            </ul>
+          </div>
+          <div style={{ flex: "0 0 20%", minWidth: 180 }}>
+            <p style={{ fontSize: 18, textDecoration: "underline", textUnderlineOffset: 10, margin: "0 0 10px" }}>Políticas</p>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4, fontSize: 18 }}>
+              <li><a href="/privacidad" style={{ color: "#000" }}>Privacidad</a></li>
+              <li><a href="/terminos" style={{ color: "#000" }}>Términos de uso</a></li>
+            </ul>
           </div>
         </div>
-        <p style={{ fontSize: 14, opacity: 0.25, marginTop: 40 }}>© {new Date().getFullYear()} Barkley Online</p>
+        <p style={{ fontSize: 14, opacity: 0.5, marginTop: 40 }}>© {new Date().getFullYear()} Barkley Online</p>
       </footer>
 
       <ReservationDialog open={callOpen} onOpenChange={setCallOpen} />
