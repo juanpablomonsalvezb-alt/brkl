@@ -89,11 +89,12 @@ const RAZONES = [
 ];
 
 // Fact-boxes: fondo negro real, glifo grande de color arriba a la derecha (patrón exacto de .fact-box)
+// Pastel real: bg claro + chevron/forma grande como marca de agua + número gigante (no negro con ícono chico)
 const FACTS = [
-  { n: "100%", label: "Asincrónico", shape: ShapeArrow, color: GOLD },
-  { n: "5°–4°", label: "Básico a Medio", shape: ShapeCircle, color: GREEN },
-  { n: "6", label: "Asignaturas evaluadas", shape: ShapeHeart, color: PINK },
-  { n: "2027", label: "Año académico de apertura", shape: ShapeStar, color: GOLD },
+  { n: "100%", label: "Asincrónico", shape: ShapeFastForward, bg: "#fdeccb", numColor: NAVY, shapeColor: "#fbd98a" },
+  { n: "5°–4°", label: "Básico a Medio", shape: ShapeStairs, bg: "#d9ecff", numColor: NAVY, shapeColor: "#a9d3ff" },
+  { n: "6", label: "Asignaturas evaluadas", shape: ShapeHourglass, bg: "#e3d9f7", numColor: NAVY, shapeColor: "#c6b3ea" },
+  { n: "2027", label: "Año académico de apertura", shape: ShapeLeaf, bg: "#d7f0e3", numColor: NAVY, shapeColor: "#a9dfc3" },
 ];
 
 const PROGRAMAS = [
@@ -242,7 +243,7 @@ export default function Home() {
 
       {/* Pestañas verticales fijas al borde derecho, siempre visibles — patrón real .sticky--cta--nav */}
       <div style={{ position: "fixed", right: 0, top: "45%", zIndex: 25, display: "flex", flexDirection: "column" }} className="hidden md:flex">
-        <a href="#inscripcion" style={{ background: BLOCK_BLUE, color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>VISITAR</a>
+        <a href="#inscripcion" style={{ background: NAVY, color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>VISITAR</a>
         <a href="#inscripcion" style={{ background: PINK, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>POSTULAR</a>
       </div>
 
@@ -282,22 +283,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === NIVELES === */}
-      <section id="metodo" style={{ padding: "64px 24px" }}>
+      {/* === NIVELES — panel azul sólido detrás + botón dorado debajo, como el real === */}
+      <section id="metodo" style={{ padding: "64px 24px 0", textAlign: "center" }}>
+        <p style={{ fontSize: 14, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>De 5° básico a validación de adultos</p>
+        <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 800, color: NAVY, margin: "0 0 40px" }}>Nuestro camino de aprendizaje</h2>
+      </section>
+      <section style={{ background: BLOCK_BLUE, padding: "48px 24px 64px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>De 5° básico a validación de adultos</p>
-          <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 700, color: SLATE, margin: "0 0 40px" }}>Nuestro camino de aprendizaje</h2>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
             {NIVELES.map(n => (
-              <a key={n.title} href="#inscripcion" style={{ flex: "1 1 260px", minWidth: 240, textDecoration: "none", color: NAVY, position: "relative", borderRadius: 16, overflow: "hidden", display: "block", boxShadow: "0 8px 24px -8px rgba(0,51,102,0.25)" }}>
+              <a key={n.title} href="#inscripcion" style={{ flex: "1 1 260px", minWidth: 240, textDecoration: "none", color: NAVY, position: "relative", overflow: "hidden", display: "block" }}>
                 <img src={n.img} alt={n.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/2", objectFit: "cover", display: "block" }} />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,51,102,0) 40%, rgba(0,51,102,0.85) 100%)" }} />
-                <div style={{ position: "absolute", left: 20, bottom: 18, color: "#fff" }}>
-                  <p style={{ fontSize: 19, fontWeight: 700, margin: 0 }}>{n.title}</p>
-                  <p style={{ fontSize: 14, margin: "4px 0 0", opacity: 0.9 }}>{n.sub}</p>
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,20,50,0) 35%, rgba(0,20,50,0.9) 100%)" }} />
+                <div style={{ position: "absolute", left: 20, right: 20, bottom: 18, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+                  <div>
+                    <p style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>{n.title}</p>
+                    <p style={{ fontSize: 13, margin: "4px 0 0", opacity: 0.85, textTransform: "uppercase", letterSpacing: "0.04em" }}>{n.sub}</p>
+                  </div>
+                  <ArrowUpRight style={{ width: 20, height: 20, flexShrink: 0 }} />
                 </div>
               </a>
             ))}
+          </div>
+          <div style={{ textAlign: "center", marginTop: 40 }}>
+            <a href="#plataforma" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: GOLD, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 14, letterSpacing: "0.03em", textTransform: "uppercase", borderRadius: 999, padding: "16px 32px" }}>Aprendizaje en Barkley <ArrowUpRight style={{ width: 16, height: 16 }} /></a>
           </div>
         </div>
       </section>
@@ -326,18 +335,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === FACT-BOXES — fondo negro real + glifo grande de color arriba a la derecha === */}
-      <section style={{ padding: "56px 24px" }}>
+      {/* === FACT-BOXES — pastel real con forma grande de fondo + número gigante (verificado en vivo, no negro) === */}
+      <section style={{ padding: "72px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px", textAlign: "center" }}>Barkley en cifras</p>
-          <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 700, color: SLATE, margin: "0 0 40px", textAlign: "center" }}>Más que un colegio</h2>
-          {/* Tarjeta 351x465 real (getComputedStyle .fact-box), glifo 168px real */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px", textAlign: "center" }}>Barkley en cifras</p>
+          <h2 style={{ fontSize: "clamp(34px,6vw,60px)", fontWeight: 800, color: NAVY, margin: "0 0 40px", textAlign: "center" }}>Más que un colegio</h2>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
             {FACTS.map(s => (
-              <div key={s.label} style={{ flex: "1 1 280px", minWidth: 260, background: "#000", borderRadius: 4, padding: "0 32px 40px", position: "relative", minHeight: 420, display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden" }}>
-                <div style={{ position: "absolute", top: 32, right: 32 }}><s.shape color={s.color} size={130} /></div>
-                <p style={{ fontSize: 48, fontWeight: 800, color: "#fff", margin: 0 }}>{s.n}</p>
-                <p style={{ fontSize: 15, margin: "8px 0 0", color: "#c9c9c9" }}>{s.label}</p>
+              <div key={s.label} style={{ flex: "1 1 260px", minWidth: 240, background: s.bg, borderRadius: 8, padding: "32px", position: "relative", minHeight: 260, display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden" }}>
+                <div style={{ position: "absolute", top: -10, right: -10, opacity: 0.9 }}><s.shape color={s.shapeColor} size={150} /></div>
+                <p style={{ fontSize: 52, fontWeight: 800, color: s.numColor, margin: 0, position: "relative" }}>{s.n}</p>
+                <p style={{ fontSize: 15, margin: "8px 0 0", color: s.numColor, opacity: 0.75, position: "relative" }}>{s.label}</p>
               </div>
             ))}
           </div>
