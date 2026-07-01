@@ -206,8 +206,8 @@ export default function Home() {
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           {/* Logo con marco cuadrado + subrayado rojo, como el real (logo ISB: cuadro con borde navy, texto bold, filete rojo debajo) */}
           <a href="/" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none" }}>
-            <div style={{ width: 60, height: 60, border: `2.5px solid ${NAVY}`, borderRadius: 4, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 4 }}>
-              <span style={{ color: NAVY, fontWeight: 800, fontSize: 20, letterSpacing: "-0.5px", lineHeight: 1 }}>BK</span>
+            <div style={{ width: 60, height: 60, background: NAVY, border: `2.5px solid ${NAVY}`, borderRadius: 4, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 4 }}>
+              <span style={{ color: "#fff", fontWeight: 800, fontSize: 20, letterSpacing: "-0.5px", lineHeight: 1 }}>BK</span>
               <span style={{ width: 28, height: 3, background: RED, marginTop: 4, borderRadius: 2 }} />
             </div>
             <span style={{ color: NAVY, fontWeight: 700, fontSize: 16, lineHeight: 1.3 }}>The Barkley<br />Online School</span>
@@ -252,10 +252,14 @@ export default function Home() {
         <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
           <img src={HERO_PHOTO} alt="" style={{ width: "100%", height: "100%", position: "absolute", inset: 0, objectFit: "cover", filter: "saturate(0.85)" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,51,102,0) 35%, rgba(20,35,55,0.75) 100%)" }} />
+          {/* Un solo titular gigante real (sin eyebrow separado — la etiqueta real ES el h1), flechas prev/next circulares bottom-right junto al texto */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            style={{ position: "absolute", left: 40, right: 40, bottom: 48, color: "#fff" }}>
-            <p style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", margin: "0 0 10px" }}>Líderes en Educación Asincrónica Inclusiva</p>
-            <h1 style={{ fontSize: "clamp(36px,6.5vw,72px)", fontWeight: 800, margin: 0, maxWidth: 760, lineHeight: 1.1 }}>El colegio online que se adapta a tu ritmo.</h1>
+            style={{ position: "absolute", left: 40, right: 40, bottom: 48, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+            <h1 style={{ fontSize: "clamp(36px,6.5vw,68px)", fontWeight: 800, margin: 0, maxWidth: 760, lineHeight: 1.1 }}>Líderes en Educación Asincrónica Inclusiva</h1>
+            <div style={{ display: "flex", gap: 10, flexShrink: 0 }} className="hidden md:flex">
+              <button aria-label="Anterior" style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid #fff", background: "none", color: "#fff", cursor: "pointer" }}>‹</button>
+              <button aria-label="Siguiente" style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid #fff", background: "none", color: "#fff", cursor: "pointer" }}>›</button>
+            </div>
           </motion.div>
         </div>
         <div style={{ width: 314, display: "flex", flexDirection: "column" }} className="hidden md:flex">
@@ -263,8 +267,15 @@ export default function Home() {
             <motion.div whileHover={{ x: 6 }} transition={{ duration: 0.3 }} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><ShapeFastForward color={GOLD} size={100} /></motion.div>
             <div style={{ padding: "22px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#fff", fontWeight: 700, fontSize: 17 }}>Tour Virtual <ArrowUpRight style={{ width: 20, height: 20 }} /></div>
           </motion.a>
+          {/* Pinwheel de 4 cuartos rosa, como el real (2x2), sobre lavanda */}
           <motion.a href="#faq" whileHover={{ opacity: 0.85 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: LAVENDER, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-            <motion.div whileHover={{ rotate: 15 }} transition={{ duration: 0.4 }} style={{ position: "absolute", top: 12, right: 12 }}><ShapeFlower color={PINK} size={90} /></motion.div>
+            <motion.div whileHover={{ rotate: 8 }} transition={{ duration: 0.4 }} style={{ position: "absolute", top: 14, right: 14, width: 100, height: 100, display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr" }}>
+              {/* Un solo path (cuarto de disco, pivote en la esquina interior) espejado en las 4 celdas → pinwheel */}
+              <svg viewBox="0 0 50 50"><path d="M50,50 L50,0 A50,50 0 0,0 0,50 Z" fill={PINK} /></svg>
+              <svg viewBox="0 0 50 50" style={{ transform: "scaleX(-1)" }}><path d="M50,50 L50,0 A50,50 0 0,0 0,50 Z" fill={PINK} /></svg>
+              <svg viewBox="0 0 50 50" style={{ transform: "scaleY(-1)" }}><path d="M50,50 L50,0 A50,50 0 0,0 0,50 Z" fill={PINK} /></svg>
+              <svg viewBox="0 0 50 50" style={{ transform: "scale(-1,-1)" }}><path d="M50,50 L50,0 A50,50 0 0,0 0,50 Z" fill={PINK} /></svg>
+            </motion.div>
             <div style={{ flex: 1 }} />
             <div style={{ padding: "22px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", color: NAVY, fontWeight: 700, fontSize: 17 }}>Últimas Noticias <ArrowUpRight style={{ width: 20, height: 20 }} /></div>
           </motion.a>
