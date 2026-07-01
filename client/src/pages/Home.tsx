@@ -12,7 +12,10 @@
  * glifo grande de color, programa highlights, footer navy con formas orgánicas.
  */
 import { useState, useEffect, useRef } from "react";
-import { Loader2, Check, ArrowUpRight, Menu, X, Search } from "lucide-react";
+import {
+  Loader2, Check, ArrowUpRight, Menu, X, Search,
+  Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
+} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -24,7 +27,7 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
     <motion.div
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.1, margin: "0px 0px -80px 0px" }}
       transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
@@ -49,39 +52,41 @@ const SLATE = "#5b7ba3";
 const BLOCK_BLUE = "#4a90d9";
 const LAVENDER = "#b39ddb";
 
-// — Formas SVG equivalentes a los glifos reales (bpa-font-icons / IcoMoon no licenciados) —
+// Íconos reales de Lucide (ya en el proyecto) en vez de SVG dibujados a mano —
+// el font-icon real de isb.be (bpa-font-icons/IcoMoon) es un asset de tema Finalsite
+// pagado, no reproducible; Lucide da la misma pulcritud con licencia abierta (ISC).
 function ShapeCircle({ color, size = 40 }: { color: string; size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill={color} /></svg>;
+  return <Circle color={color} fill={color} size={size} strokeWidth={0} />;
 }
 function ShapeTriangle({ color, size = 40 }: { color: string; size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 40 40"><polygon points="20,2 38,36 2,36" fill={color} /></svg>;
+  return <Triangle color={color} fill={color} size={size} strokeWidth={0} />;
 }
 function ShapeStar({ color, size = 40 }: { color: string; size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 40 40"><polygon points="20,1 25,15 39,15 27,24 32,38 20,29 8,38 13,24 1,15 15,15" fill={color} /></svg>;
+  return <Star color={color} fill={color} size={size} strokeWidth={0} />;
 }
 function ShapeHeart({ color, size = 40 }: { color: string; size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 40 40"><path d="M20 36 C6 26 2 18 2 12 C2 5 8 1 13 1 C17 1 20 4 20 8 C20 4 23 1 27 1 C32 1 38 5 38 12 C38 18 34 26 20 36 Z" fill={color} /></svg>;
+  return <Heart color={color} fill={color} size={size} strokeWidth={0} />;
 }
 function ShapeFlower({ color, size = 40 }: { color: string; size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 40 40">{[0,72,144,216,288].map(a => <ellipse key={a} cx="20" cy="10" rx="8" ry="11" fill={color} transform={`rotate(${a} 20 20)`} />)}</svg>;
+  return <Leaf color={color} fill={color} size={size} strokeWidth={0} />;
 }
 function ShapeArrow({ color, size = 40 }: { color: string; size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 40 40"><polygon points="4,4 22,4 38,20 22,36 4,36 20,20" fill={color} /></svg>;
+  return <ChevronsRight color={color} size={size} strokeWidth={2.5} />;
 }
 function ShapeHourglass({ color, size = 40 }: { color: string; size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 40 40"><path d="M6 2h28l-14 18z" fill={color} /><path d="M6 38h28l-14-18z" fill={color} /></svg>;
+  return <Hourglass color={color} fill={color} size={size} strokeWidth={1} />;
 }
 function ShapeStairs({ color, size = 40 }: { color: string; size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 40 40"><path d="M2 38V28h10V18h10V8h16v30z" fill={color} /></svg>;
+  return <Rows3 color={color} fill={color} size={size} strokeWidth={1.5} />;
 }
 function ShapeLeaf({ color, size = 40 }: { color: string; size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 40 40"><path d="M20 2C10 6 4 16 4 26c0 6 5 11 11 11 10 0 17-9 17-22 0-5-1-9-2-13-3 4-7 6-10 6-4 0-6-2-6-6z" fill={color} /></svg>;
+  return <Leaf color={color} fill={color} size={size} strokeWidth={0} />;
 }
 function ShapeBars({ color, size = 40 }: { color: string; size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 40 40"><rect x="2" y="4" width="16" height="14" rx="7" fill={color} /><rect x="2" y="22" width="16" height="14" rx="7" fill={color} /></svg>;
+  return <Rows3 color={color} fill={color} size={size} strokeWidth={1.5} />;
 }
 function ShapeFastForward({ color, size = 40 }: { color: string; size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 40 40"><polygon points="2,4 18,20 2,36" fill={color} /><polygon points="20,4 36,20 20,36" fill={color} /></svg>;
+  return <ChevronsRight color={color} size={size} strokeWidth={3} />;
 }
 const SHAPES = [ShapeCircle, ShapeTriangle, ShapeStar, ShapeHeart, ShapeFlower, ShapeArrow];
 
