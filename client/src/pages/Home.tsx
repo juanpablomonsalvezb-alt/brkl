@@ -95,13 +95,8 @@ const NAV_LINKS = [
 
 interface Faq { id: string; question: string; answer: string; sortOrder: number; }
 
-function Highlight({ color, shape: Shape, children }: { color: string; shape: typeof ShapeCircle; children: string }) {
-  return (
-    <span style={{ position: "relative", fontWeight: 600, color: NAVY }}>
-      {children}
-      <span style={{ display: "inline-block", marginLeft: 8, verticalAlign: "middle" }}><Shape color={color} size={22} /></span>
-    </span>
-  );
+function ShapeInline({ color, shape: Shape }: { color: string; shape: typeof ShapeCircle }) {
+  return <span style={{ display: "inline-block", margin: "0 4px", verticalAlign: "middle", transform: "translateY(2px)" }}><Shape color={color} size={28} /></span>;
 }
 
 function InscripcionForm() {
@@ -181,45 +176,45 @@ export default function Home() {
             </button>
           </div>
         </div>
+        {/* Overlay pantalla completa navy, links 48px blancos — medida real getComputedStyle(.nav-main a) */}
         {menuOpen && (
-          <div style={{ background: NAVY, padding: "24px", display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={{ position: "fixed", inset: 0, background: NAVY, zIndex: 40, padding: "60px 40px", display: "flex", flexDirection: "column", gap: 28, overflowY: "auto" }}>
+            <button aria-label="Cerrar menú" onClick={() => setMenuOpen(false)} style={{ alignSelf: "flex-end", background: "none", border: "none", color: "#fff", cursor: "pointer" }}><X style={{ width: 32, height: 32 }} /></button>
             {NAV_LINKS.map(l => (
-              <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)} style={{ color: "#fff", textDecoration: "none", fontSize: 18, fontWeight: 600 }}>{l.label}</a>
+              <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)} style={{ color: "#fff", textDecoration: "none", fontSize: "clamp(28px,6vw,48px)", fontWeight: 600 }}>{l.label}</a>
             ))}
-            <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
-              <a href="#inscripcion" style={{ textDecoration: "none", border: "1.5px solid #fff", color: "#fff", borderRadius: 999, padding: "9px 18px", fontSize: 14, fontWeight: 600 }}>Visitar</a>
-              <a href="#inscripcion" style={{ textDecoration: "none", background: RED, color: "#fff", borderRadius: 999, padding: "9px 18px", fontSize: 14, fontWeight: 600 }}>Postular</a>
+            <div style={{ display: "flex", gap: 14, marginTop: 20 }}>
+              <a href="#inscripcion" style={{ textDecoration: "none", border: "1.5px solid #fff", color: "#fff", borderRadius: 999, padding: "12px 24px", fontSize: 16, fontWeight: 600 }}>Visitar</a>
+              <a href="#inscripcion" style={{ textDecoration: "none", background: RED, color: "#fff", borderRadius: 999, padding: "12px 24px", fontSize: 16, fontWeight: 600 }}>Postular</a>
             </div>
           </div>
         )}
       </header>
 
-      {/* === HERO — foto full-bleed + columna de formas decorativas a la derecha (patrón real) === */}
-      <section style={{ position: "relative", display: "flex", minHeight: "72vh" }}>
+      {/* === HERO — foto full-bleed 885px real + columna decorativa 314px real (getComputedStyle .hero-banner / .container--buttons--wrapper) === */}
+      <section style={{ position: "relative", display: "flex", height: "min(885px,88vh)" }}>
         <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
           <img src={HERO_PHOTO} alt="" style={{ width: "100%", height: "100%", position: "absolute", inset: 0, objectFit: "cover" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,51,102,0) 40%, rgba(0,51,102,0.6) 100%)" }} />
-          <div style={{ position: "absolute", left: 24, right: 24, bottom: 32, color: "#fff" }}>
-            <p style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", margin: "0 0 8px" }}>Líderes en Educación Asincrónica Inclusiva</p>
-            <h1 style={{ fontSize: "clamp(28px,5vw,48px)", fontWeight: 700, margin: 0, maxWidth: 640, lineHeight: 1.15 }}>El colegio online que se adapta a tu ritmo.</h1>
+          <div style={{ position: "absolute", left: 40, right: 40, bottom: 48, color: "#fff" }}>
+            <p style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", margin: "0 0 10px" }}>Líderes en Educación Asincrónica Inclusiva</p>
+            <h1 style={{ fontSize: "clamp(32px,5.5vw,56px)", fontWeight: 700, margin: 0, maxWidth: 720, lineHeight: 1.15 }}>El colegio online que se adapta a tu ritmo.</h1>
           </div>
         </div>
-        {/* Columna de formas decorativas de color — reemplaza el mosaico real de origami de isb.be */}
-        <div style={{ width: 130, display: "flex", flexDirection: "column" }} className="hidden md:flex">
-          <div style={{ flex: 1, background: NAVY, display: "flex", alignItems: "center", justifyContent: "center" }}><ShapeTriangle color={GOLD} size={64} /></div>
-          <div style={{ flex: 1, background: PURPLE, display: "flex", alignItems: "center", justifyContent: "center" }}><ShapeCircle color={GOLD} size={64} /></div>
-          <a href="#plataforma" style={{ background: NAVY, color: "#fff", textDecoration: "none", fontSize: 12, fontWeight: 700, padding: "18px 12px", textAlign: "center", lineHeight: 1.4 }}>Tour<br />virtual ↗</a>
-          <a href="#faq" style={{ background: PURPLE, color: "#fff", textDecoration: "none", fontSize: 12, fontWeight: 700, padding: "18px 12px", textAlign: "center", lineHeight: 1.4 }}>Preguntas<br />frecuentes ↗</a>
+        <div style={{ width: 314, display: "flex", flexDirection: "column" }} className="hidden md:flex">
+          <div style={{ flex: 1, background: NAVY, display: "flex", alignItems: "center", justifyContent: "center" }}><ShapeTriangle color={GOLD} size={110} /></div>
+          <div style={{ flex: 1, background: PURPLE, display: "flex", alignItems: "center", justifyContent: "center" }}><ShapeCircle color={GOLD} size={110} /></div>
+          <a href="#plataforma" style={{ background: NAVY, color: "#fff", textDecoration: "none", fontSize: 15, fontWeight: 700, padding: "26px 20px", textAlign: "left", lineHeight: 1.4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>Tour virtual <ArrowUpRight style={{ width: 18, height: 18 }} /></a>
+          <a href="#faq" style={{ background: PURPLE, color: "#fff", textDecoration: "none", fontSize: 15, fontWeight: 700, padding: "26px 20px", textAlign: "left", lineHeight: 1.4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>Preguntas frecuentes <ArrowUpRight style={{ width: 18, height: 18 }} /></a>
         </div>
       </section>
 
-      {/* === INTRO — texto con palabras + forma inline, como el real (shape_blue_hourglass etc) === */}
-      <section id="nosotros" style={{ maxWidth: 900, margin: "0 auto", padding: "56px 24px", textAlign: "center" }}>
-        <p style={{ fontSize: "clamp(20px,3vw,30px)", fontWeight: 400, lineHeight: 1.6, color: TEXT, margin: 0 }}>
-          Somos un <Highlight color={NAVY} shape={ShapeCircle}>colegio</Highlight> 100% asincrónico en <Highlight color={RED} shape={ShapeTriangle}>Chile</Highlight> para{" "}
-          estudiantes desde 5° básico hasta 4° <Highlight color={PURPLE} shape={ShapeStar}>medio</Highlight>, ofreciendo una
-          preparación rigurosa para rendir <Highlight color={GREEN} shape={ShapeFlower}>exámenes libres</Highlight> ante el Ministerio de{" "}
-          <Highlight color={PINK} shape={ShapeHeart}>Educación</Highlight> de Chile.
+      {/* === INTRO — párrafo completo navy sólido 39px real (getComputedStyle: color rgb(0,51,102), 39px), formas solo decorativas inline === */}
+      <section id="nosotros" style={{ maxWidth: 1180, margin: "0 auto", padding: "80px 24px", textAlign: "center" }}>
+        <p style={{ fontSize: "clamp(24px,3.4vw,39px)", fontWeight: 400, lineHeight: 1.3, color: NAVY, margin: 0 }}>
+          Somos un colegio<ShapeInline color={NAVY} shape={ShapeCircle} /> 100% asincrónico en Chile<ShapeInline color={RED} shape={ShapeTriangle} /> para
+          estudiantes desde 5° básico hasta 4° medio<ShapeInline color={PURPLE} shape={ShapeStar} />, ofreciendo una
+          preparación rigurosa para rendir exámenes libres<ShapeInline color={GREEN} shape={ShapeFlower} /> ante personas de todo Chile<ShapeInline color={PINK} shape={ShapeHeart} />.
         </p>
       </section>
 
@@ -297,12 +292,13 @@ export default function Home() {
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px", textAlign: "center" }}>Barkley en cifras</p>
           <h2 style={{ fontSize: "clamp(24px,3.5vw,34px)", fontWeight: 700, color: NAVY, margin: "0 0 40px", textAlign: "center" }}>Más que un colegio</h2>
+          {/* Tarjeta 351x465 real (getComputedStyle .fact-box), glifo 168px real */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
             {FACTS.map(s => (
-              <div key={s.label} style={{ flex: "1 1 220px", minWidth: 200, background: "#000", borderRadius: 12, padding: 28, position: "relative", minHeight: 200, display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden" }}>
-                <div style={{ position: "absolute", top: 20, right: 20 }}><s.shape color={s.color} size={56} /></div>
-                <p style={{ fontSize: 40, fontWeight: 800, color: "#fff", margin: 0 }}>{s.n}</p>
-                <p style={{ fontSize: 14, margin: "6px 0 0", color: "#c9c9c9" }}>{s.label}</p>
+              <div key={s.label} style={{ flex: "1 1 280px", minWidth: 260, background: "#000", borderRadius: 4, padding: "0 32px 40px", position: "relative", minHeight: 420, display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden" }}>
+                <div style={{ position: "absolute", top: 32, right: 32 }}><s.shape color={s.color} size={130} /></div>
+                <p style={{ fontSize: 48, fontWeight: 800, color: "#fff", margin: 0 }}>{s.n}</p>
+                <p style={{ fontSize: 15, margin: "8px 0 0", color: "#c9c9c9" }}>{s.label}</p>
               </div>
             ))}
           </div>
