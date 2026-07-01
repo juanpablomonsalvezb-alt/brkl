@@ -1,48 +1,50 @@
 /**
- * Home — estructura fiel a unthink.ie (getComputedStyle real):
- * - Font: 35px para TODO (nav, body, headings, tags)
- * - Padding: 0 15px en todas las secciones
- * - Alternas: crema #f4f4ea / negro
- * - Sin jerarquía tipográfica extra, sin sombras, radius 0
- * - Transiciones: opacity 0.25s ease-in-out únicamente
+ * Clone 1:1 de unthink.ie — valores reales extraídos con getComputedStyle:
+ * - Nav: 4 links fixed en esquinas (top/bottom 30px, left/right 30px, 35px, z-index 4/5)
+ * - Hero: 2 bloques 50/50, h1 80px weight 100 -2px, cycling JS con pares de colores reales
+ * - Text-box: 2 col 50%, title izq + párrafo der (35px)
+ * - Cards: 2 col 50%, imagen full-width + caption flex justify-between
+ * Contenido: Barkley Online (colegio asincrónico Chile) en lugar de agencia
  */
-import { useState, useRef } from "react";
-import { Link } from "wouter";
-import { Loader2, Check, Phone, Mail, ArrowUpRight } from "lucide-react";
-import { motion } from "framer-motion";
-import { ReservationDialog } from "@/components/ReservationDialog";
+import { useState, useEffect, useRef } from "react";
+import { Loader2, Check, ArrowUpRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ReservationDialog } from "@/components/ReservationDialog";
 
-const CREAM = "rgb(244,244,234)";
-const HERO_PHOTO =
-  "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1600&q=70";
-
-const NAV_LINKS = [
-  { label: "El método", href: "#metodo" },
-  { label: "La plataforma", href: "#plataforma" },
-  { label: "Inscripción", href: "#inscripcion" },
-  { label: "Contacto", href: "#contacto" },
+// — Pares del hero: [palabra izq, palabra der, bg izq, bg der]
+// Colores extraídos de las animatedRows reales de unthink.ie
+const PAIRS: [string, string, string, string][] = [
+  ["colegio", "asincrónico", "rgb(255,103,117)", "rgb(255,255,118)"],
+  ["sin", "horario", "rgb(255,103,117)", "rgb(255,255,118)"],
+  ["tu", "ritmo", "rgb(220,145,240)", "rgb(255,171,57)"],
+  ["tu", "ritmo", "rgb(220,145,240)", "rgb(255,171,57)"],
+  ["exámenes", "libres", "rgb(255,181,181)", "rgb(0,226,165)"],
+  ["exámenes", "libres", "rgb(255,181,181)", "rgb(0,226,165)"],
+  ["5° básico", "4° medio", "rgb(133,217,255)", "rgb(255,218,99)"],
+  ["5° básico", "4° medio", "rgb(133,217,255)", "rgb(255,218,99)"],
+  ["aprende", "a tu paso", "rgb(255,103,117)", "rgb(255,255,118)"],
+  ["aprende", "a tu paso", "rgb(255,103,117)", "rgb(255,255,118)"],
 ];
 
-const PROGRAMAS = [
+const BODY_FONT = "'Hanken Grotesk', sans-serif";
+const BODY_BG = "#f4f4ea";
+const BODY_COLOR = "#000";
+const BODY_FS = 35;
+
+// — Datos de las "tarjetas de proyecto" (asignaturas/programas de Barkley)
+const CARDS = [
   {
+    img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=900&q=75",
     title: "Aprendizaje asincrónico",
-    tags: ["Sin Zoom", "Sin horario fijo", "Ritmo propio"],
-    img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1380&q=70",
-    alt: "Estudiante aprendiendo en casa",
+    cat: "Educación  Digital",
+    alt: "Aprendizaje",
   },
   {
-    title: "Exámenes libres ante el MINEDUC",
-    tags: ["5° básico", "4° medio", "Licencia oficial"],
-    img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1380&q=70",
-    alt: "Estudiante rindiendo examen",
-  },
-  {
-    title: "La plataforma",
-    tags: ["Sin IA en el aula", "Algoritmo adaptativo", "Seguimiento real"],
-    img: "https://images.unsplash.com/photo-1555212697-194d092e3b8f?auto=format&fit=crop&w=1380&q=70",
-    alt: "Plataforma Barkley Online",
+    img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=900&q=75",
+    title: "Exámenes libres MINEDUC",
+    cat: "Certificación  Oficial",
+    alt: "Exámenes libres",
   },
 ];
 
@@ -57,275 +59,239 @@ function InscripcionForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [level, setLevel] = useState("");
-  const [state, setState] = useState<"idle" | "loading" | "success" | "error" | "duplicate">("idle");
+  const [st, setSt] = useState<"idle"|"loading"|"success"|"error"|"duplicate">("idle");
   const [err, setErr] = useState("");
-
   const submit = async () => {
-    setState("loading");
-    setErr("");
+    setSt("loading"); setErr("");
     try {
-      const res = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name: name || undefined, levelInterest: level || undefined }),
-      });
-      const data = await res.json();
-      if (!res.ok) { setErr(data.message || "No se pudo enviar"); setState("error"); return; }
-      setState(data.alreadySubscribed ? "duplicate" : "success");
-    } catch { setErr("Sin conexión"); setState("error"); }
+      const res = await fetch("/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, name: name||undefined, levelInterest: level||undefined }) });
+      const d = await res.json();
+      if (!res.ok) { setErr(d.message||"Error"); setSt("error"); return; }
+      setSt(d.alreadySubscribed ? "duplicate" : "success");
+    } catch { setErr("Sin conexión"); setSt("error"); }
   };
-
-  if (state === "success" || state === "duplicate") {
-    return (
-      <div className="flex flex-col gap-4 py-8">
-        <Check className="h-8 w-8" />
-        <p style={{ fontSize: 35 }} className="font-light">
-          {state === "duplicate" ? "Ya tenemos tu inscripción." : "Inscripción recibida."}
-        </p>
-        <p className="text-sm">Un asesor te contactará a la brevedad.</p>
-      </div>
-    );
-  }
-
+  if (st === "success" || st === "duplicate") return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: "60px 0" }}>
+      <Check style={{ width: 32, height: 32 }} />
+      <p style={{ fontSize: 35, fontWeight: 300, margin: 0 }}>{st === "duplicate" ? "Ya tenemos tu inscripción." : "Inscripción recibida."}</p>
+      <p style={{ fontSize: 18, opacity: 0.6, margin: 0 }}>Un asesor te contactará a la brevedad.</p>
+    </div>
+  );
+  const inp: React.CSSProperties = { borderBottom: "1px solid #000", background: "none", fontSize: 22, fontWeight: 300, padding: "8px 0", outline: "none", width: "100%", fontFamily: BODY_FONT };
   return (
-    <form onSubmit={(e) => { e.preventDefault(); submit(); }} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1">
-        <label className="text-sm opacity-60">Nombre del apoderado o estudiante *</label>
-        <input
-          required value={name} onChange={(e) => setName(e.target.value)}
-          placeholder="Nombre completo"
-          className="border-b border-current bg-transparent py-2 text-lg outline-none placeholder:opacity-40"
-          data-testid="input-name"
-        />
+    <form onSubmit={e => { e.preventDefault(); submit(); }} style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        <label style={{ fontSize: 15, opacity: 0.5 }}>Nombre del apoderado o estudiante *</label>
+        <input required value={name} onChange={e=>setName(e.target.value)} placeholder="Nombre completo" style={inp} data-testid="input-name" />
       </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-sm opacity-60">Correo electrónico *</label>
-        <input
-          type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-          placeholder="tu@correo.com"
-          className="border-b border-current bg-transparent py-2 text-lg outline-none placeholder:opacity-40"
-          data-testid="input-email"
-        />
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        <label style={{ fontSize: 15, opacity: 0.5 }}>Correo electrónico *</label>
+        <input type="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@correo.com" style={inp} data-testid="input-email" />
       </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-sm opacity-60">Nivel de interés</label>
-        <select
-          value={level} onChange={(e) => setLevel(e.target.value)}
-          className="border-b border-current bg-transparent py-2 text-lg outline-none"
-          data-testid="select-level"
-        >
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        <label style={{ fontSize: 15, opacity: 0.5 }}>Nivel de interés</label>
+        <select value={level} onChange={e=>setLevel(e.target.value)} style={{ ...inp, cursor: "pointer" }} data-testid="select-level">
           <option value="">Selecciona un nivel</option>
-          {["5° Básico","6° Básico","7° Básico","8° Básico","1° Medio","2° Medio","3° Medio","4° Medio","Validación adulto"].map(l => (
-            <option key={l} value={l}>{l}</option>
-          ))}
+          {["5° Básico","6° Básico","7° Básico","8° Básico","1° Medio","2° Medio","3° Medio","4° Medio","Validación adulto"].map(l=><option key={l} value={l}>{l}</option>)}
         </select>
       </div>
-      {state === "error" && <p className="text-sm text-red-600">{err}</p>}
-      <button
-        type="submit" disabled={state === "loading"}
-        className="mt-2 flex items-center gap-2 border-b border-current pb-1 text-left text-lg opacity-100 transition-opacity hover:opacity-60 disabled:opacity-40"
-        data-testid="button-submit"
-      >
-        {state === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Quiero inscribirme <ArrowUpRight className="h-4 w-4" /></>}
+      {st==="error" && <p style={{ color: "red", fontSize: 16, margin: 0 }}>{err}</p>}
+      <button type="submit" disabled={st==="loading"} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 22, fontWeight: 300, background: "none", border: "none", borderBottom: "1px solid #000", padding: "8px 0", cursor: "pointer", fontFamily: BODY_FONT, opacity: st==="loading"?0.4:1, width: "fit-content" }}>
+        {st==="loading" ? <Loader2 style={{ width: 18, height: 18 }} className="animate-spin" /> : <>Quiero inscribirme <ArrowUpRight style={{ width: 18, height: 18 }} /></>}
       </button>
-      <p className="text-sm opacity-50">Sin compromiso · sin costo en esta etapa · cupos limitados año académico 2027</p>
+      <p style={{ fontSize: 14, opacity: 0.4, margin: 0 }}>Sin compromiso · sin costo · cupos limitados año académico 2027</p>
     </form>
   );
 }
 
 export default function Home() {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [pairIdx, setPairIdx] = useState(0);
   const [callOpen, setCallOpen] = useState(false);
-  const [photoOk, setPhotoOk] = useState(true);
+  const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5*60*1000 });
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5 * 60 * 1000 });
+  // Cicla las parejas como hace el JS de unthink.ie
+  useEffect(() => {
+    timerRef.current = setTimeout(() => setPairIdx(i => (i + 1) % PAIRS.length), 2500);
+    return () => clearTimeout(timerRef.current);
+  }, [pairIdx]);
 
-  const goInscripcion = () => document.getElementById("inscripcion")?.scrollIntoView({ behavior: "smooth" });
-
-  const s = { fontSize: 35, fontWeight: 300, lineHeight: "1.1" };
+  const [leftWord, rightWord, leftBg, rightBg] = PAIRS[pairIdx];
+  const navLink: React.CSSProperties = {
+    position: "fixed",
+    fontSize: 35,
+    fontWeight: 300,
+    color: BODY_COLOR,
+    textDecoration: "none",
+    transition: "opacity 0.5s ease",
+    zIndex: 4,
+    fontFamily: BODY_FONT,
+    lineHeight: 1,
+  };
+  const fade = (e: React.MouseEvent<HTMLAnchorElement|HTMLButtonElement>, v: string) =>
+    ((e.currentTarget as HTMLElement).style.opacity = v);
 
   return (
-    <div style={{ backgroundColor: CREAM, color: "#000", fontFamily: "'Hanken Grotesk', sans-serif" }}>
+    <div style={{ backgroundColor: BODY_BG, color: BODY_COLOR, fontFamily: BODY_FONT, fontSize: BODY_FS, fontWeight: 300 }}>
 
-      {/* ===== NAV — 35px, plano, sin botón extra ===== */}
-      <header style={{ position: "sticky", top: 0, zIndex: 50, backgroundColor: CREAM, borderBottom: "none", padding: "0 15px" }}>
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", paddingTop: 20, paddingBottom: 20 }}>
-          <Link href="/" style={{ ...s, textDecoration: "none", color: "#000" }}>Barkley Online</Link>
-          <nav className="hidden md:flex" style={{ gap: 32, display: "flex" }}>
-            {NAV_LINKS.map(l => (
-              <a key={l.href} href={l.href}
-                style={{ ...s, fontSize: 18, textDecoration: "none", color: "#000", opacity: 0.85, transition: "opacity 0.25s ease-in-out" }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = "0.4")}
-                onMouseLeave={e => (e.currentTarget.style.opacity = "0.85")}
-              >{l.label}</a>
-            ))}
-          </nav>
-          <button className="md:hidden" onClick={() => setMobileOpen(v => !v)} style={{ ...s, fontSize: 18, background: "none", border: "none", cursor: "pointer" }}>
-            {mobileOpen ? "Cerrar" : "Menú"}
-          </button>
+      {/* === NAV — 4 links FIXED en las 4 esquinas (replicado exacto) === */}
+      <a href="/" style={{ ...navLink, top: 30, left: 30, zIndex: 5 }}
+        onMouseEnter={e=>fade(e,"0.4")} onMouseLeave={e=>fade(e,"1")}>Barkley Online</a>
+      <a href="#metodo" style={{ ...navLink, top: 30, right: 30 }}
+        onMouseEnter={e=>fade(e,"0.4")} onMouseLeave={e=>fade(e,"1")}>El método</a>
+      <a href="#plataforma" style={{ ...navLink, bottom: 30, left: 30 }}
+        onMouseEnter={e=>fade(e,"0.4")} onMouseLeave={e=>fade(e,"1")}>La plataforma</a>
+      <a href="#inscripcion" style={{ ...navLink, bottom: 30, right: 30 }}
+        onMouseEnter={e=>fade(e,"0.4")} onMouseLeave={e=>fade(e,"1")}>Inscripción</a>
+
+      {/* === HERO — 2 bloques de color 50/50, h1 80px weight 100 -2px === */}
+      <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+        <div style={{ flex: 1, backgroundColor: leftBg, display: "flex", alignItems: "flex-end", padding: "0 15px 15px", transition: "background-color 0.6s ease" }}>
+          <h1 style={{ fontSize: 80, fontWeight: 100, letterSpacing: "-2px", lineHeight: 1, margin: 0 }}>{leftWord}</h1>
         </div>
-        {mobileOpen && (
-          <div style={{ padding: "20px 0", display: "flex", flexDirection: "column", gap: 16 }}>
-            {NAV_LINKS.map(l => (
-              <a key={l.href} href={l.href} onClick={() => setMobileOpen(false)}
-                style={{ ...s, fontSize: 22, textDecoration: "none", color: "#000" }}>{l.label}</a>
-            ))}
-          </div>
-        )}
-      </header>
+        <div style={{ flex: 1, backgroundColor: rightBg, display: "flex", alignItems: "flex-end", padding: "0 15px 15px", transition: "background-color 0.6s ease" }}>
+          <h1 style={{ fontSize: 80, fontWeight: 100, letterSpacing: "-2px", lineHeight: 1, margin: 0 }}>{rightWord}</h1>
+        </div>
+      </div>
 
-      {/* ===== HERO — fullHeight 100vh, foto con overlay texto ===== */}
-      <section style={{ position: "relative", height: "100vh", overflow: "hidden", padding: "0 15px" }}>
-        {photoOk && (
-          <img src={HERO_PHOTO} alt="Estudiante" onError={() => setPhotoOk(false)}
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "grayscale(0.3)" }} />
-        )}
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 100%)" }} />
-        <div style={{ position: "relative", height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end", paddingBottom: 48 }}>
-          <p style={{ ...s, fontSize: "clamp(42px, 6vw, 80px)", color: "#fff", fontWeight: 200, letterSpacing: "-0.02em", lineHeight: 1, maxWidth: "14ch" }}>
-            El colegio que<br />se adapta<br />a tu ritmo.
+      {/* === TEXT BOX 2 — "Somos Barkley Online" + párrafo (2 col 50%) === */}
+      <div style={{ display: "flex", flexWrap: "wrap", backgroundColor: BODY_BG, padding: "60px 15px" }}>
+        <div style={{ flex: "0 0 50%", minWidth: 280, paddingRight: 15 }}>
+          <p style={{ fontSize: BODY_FS, fontWeight: 300, margin: 0, lineHeight: 1.15 }}>Somos Barkley Online</p>
+        </div>
+        <div style={{ flex: "0 0 50%", minWidth: 280, paddingLeft: 15 }}>
+          <p style={{ fontSize: BODY_FS, fontWeight: 300, opacity: 0.75, margin: 0, lineHeight: 1.4 }}>
+            Un colegio 100% asincrónico, sin clases en vivo por Zoom o Meet, sin horario fijo.
+            Desde 5° básico a 4° medio — y validación para adultos — preparando para rendir
+            exámenes libres ante el Ministerio de Educación de Chile.
           </p>
-          <a href="#inscripcion" onClick={(e) => { e.preventDefault(); goInscripcion(); }}
-            style={{ marginTop: 32, color: "#fff", fontSize: 18, opacity: 0.85, transition: "opacity 0.25s", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6 }}
-            onMouseEnter={e => (e.currentTarget.style.opacity = "0.4")}
-            onMouseLeave={e => (e.currentTarget.style.opacity = "0.85")}
-          >Inscríbete <ArrowUpRight style={{ width: 16, height: 16 }} /></a>
         </div>
-      </section>
+      </div>
 
-      {/* ===== TEXT BOX 1 — "Somos Barkley Online" (crema, 35px) ===== */}
-      <section style={{ padding: "80px 15px", backgroundColor: CREAM }}>
-        <p style={{ ...s }}>Somos Barkley Online</p>
-        <p style={{ ...s, marginTop: 24, maxWidth: "60ch", opacity: 0.75 }}>
-          Un colegio 100% asincrónico: sin clases en vivo por Zoom o Meet, sin horario predeterminado.
-          Desde 5° básico a 4° medio — y validación para adultos — preparando para rendir exámenes libres
-          ante el Ministerio de Educación de Chile.
-        </p>
-      </section>
-
-      {/* ===== PROGRAMA CARDS + TEXT BOXES alternados ===== */}
-      {PROGRAMAS.map((p, i) => (
-        <div key={p.title}>
-          {/* Card de programa — imagen full-width + título + tags (35px) */}
-          <section style={{ padding: "0 15px 0", backgroundColor: i % 2 === 0 ? CREAM : "#f0f0e8" }}>
-            <img src={p.img} alt={p.alt}
-              style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", display: "block", filter: "grayscale(0.15)" }}
-              loading="lazy"
+      {/* === TARJETA 1 — Aprendizaje asincrónico (2 col 50%, imagen + caption) === */}
+      <div id="metodo" style={{ display: "flex", flexWrap: "wrap", padding: "0 15px 60px", backgroundColor: BODY_BG }}>
+        {CARDS.map((c, i) => (
+          <div key={c.title} style={{ flex: "0 0 50%", minWidth: 280, padding: i===0 ? "0 15px 0 0" : "0 0 0 15px" }}>
+            <img src={c.img} alt={c.alt} loading="lazy"
+              style={{ width: "100%", aspectRatio: "4/3", objectFit: "cover", display: "block" }}
             />
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: "24px 0 48px" }}>
-              <p style={{ ...s }}>{p.title}</p>
-              <p style={{ fontSize: 18, opacity: 0.55 }}>{p.tags.join("  ·  ")}</p>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "12px 0 0", gap: 16 }}>
+              <span style={{ fontSize: BODY_FS, fontWeight: 300 }}>{c.title}</span>
+              <span style={{ fontSize: 18, color: "#6e6e6e", whiteSpace: "nowrap" }}>{c.cat}</span>
             </div>
-          </section>
+          </div>
+        ))}
+      </div>
 
-          {/* Text box después de cada card */}
-          {i === 0 && (
-            <section id="metodo" style={{ padding: "80px 15px", backgroundColor: CREAM }}>
-              <p style={{ ...s, fontSize: "clamp(28px, 4vw, 55px)", fontWeight: 200, lineHeight: 1.05, letterSpacing: "-0.02em" }}>
-                El aprendizaje es<br />asincrónico.
-              </p>
-              <a href="#plataforma"
-                style={{ marginTop: 32, fontSize: 18, color: "#000", opacity: 0.7, transition: "opacity 0.25s", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6 }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = "0.3")}
-                onMouseLeave={e => (e.currentTarget.style.opacity = "0.7")}
-              >Cómo funciona el método <ArrowUpRight style={{ width: 16, height: 16 }} /></a>
-            </section>
-          )}
-          {i === 1 && (
-            <section style={{ padding: "80px 15px", backgroundColor: CREAM }}>
-              <p style={{ ...s, fontSize: "clamp(28px, 4vw, 55px)", fontWeight: 200, lineHeight: 1.05, letterSpacing: "-0.02em" }}>
-                El algoritmo<br />te acompaña.
-              </p>
-              <p style={{ ...s, marginTop: 24, maxWidth: "50ch", opacity: 0.75 }}>
-                Un sistema determinístico mide los resultados de cada estudiante y ajusta el
-                ritmo y el contenido en consecuencia. Sin inteligencia artificial generativa
-                en el aula — solo seguimiento real.
-              </p>
-            </section>
-          )}
-          {i === 2 && (
-            <section id="plataforma" style={{ padding: "80px 15px", backgroundColor: CREAM }}>
-              <p style={{ ...s, fontSize: "clamp(28px, 4vw, 55px)", fontWeight: 200, lineHeight: 1.05, letterSpacing: "-0.02em" }}>
-                Construida<br />desde cero.
-              </p>
-              <p style={{ ...s, marginTop: 24, maxWidth: "50ch", opacity: 0.75 }}>
-                Sin Moodle, sin plantillas genéricas. Plataforma propia diseñada para
-                el modelo de autorregulación del Dr. Russell Barkley.
-              </p>
-            </section>
-          )}
+      {/* === TEXT BOX — "El ritmo es tuyo." (2 col 50%) === */}
+      <div style={{ display: "flex", flexWrap: "wrap", backgroundColor: BODY_BG, padding: "60px 15px" }}>
+        <div style={{ flex: "0 0 50%", minWidth: 280, paddingRight: 15 }}>
+          <p style={{ fontSize: 60, fontWeight: 100, letterSpacing: "-2px", lineHeight: 1.05, margin: 0 }}>
+            El ritmo<br />es tuyo.
+          </p>
         </div>
-      ))}
+        <div style={{ flex: "0 0 50%", minWidth: 280, paddingLeft: 15, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+          <a href="#metodo" style={{ fontSize: BODY_FS, fontWeight: 300, color: BODY_COLOR, textDecoration: "none", opacity: 0.75, transition: "opacity 0.25s ease-in-out" }}
+            onMouseEnter={e=>fade(e,"0.3")} onMouseLeave={e=>fade(e,"0.75")}>
+            Conoce el método ↗
+          </a>
+        </div>
+      </div>
 
-      {/* ===== FAQ ===== */}
+      {/* === TARJETA 3 — La plataforma (1 col full) === */}
+      <div id="plataforma" style={{ padding: "0 15px 60px", backgroundColor: BODY_BG }}>
+        <img
+          src="https://images.unsplash.com/photo-1555212697-194d092e3b8f?auto=format&fit=crop&w=1380&q=75"
+          alt="Plataforma Barkley Online" loading="lazy"
+          style={{ width: "100%", aspectRatio: "16/7", objectFit: "cover", display: "block" }}
+        />
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "12px 0 0", gap: 16 }}>
+          <span style={{ fontSize: BODY_FS, fontWeight: 300 }}>La plataforma</span>
+          <span style={{ fontSize: 18, color: "#6e6e6e" }}>Asignaturas  Progreso  Seguimiento</span>
+        </div>
+      </div>
+
+      {/* === TEXT BOX — "El algoritmo te acompaña." === */}
+      <div style={{ display: "flex", flexWrap: "wrap", backgroundColor: BODY_BG, padding: "60px 15px" }}>
+        <div style={{ flex: "0 0 50%", minWidth: 280, paddingRight: 15 }}>
+          <p style={{ fontSize: 60, fontWeight: 100, letterSpacing: "-2px", lineHeight: 1.05, margin: 0 }}>
+            El algoritmo<br />te acompaña.
+          </p>
+        </div>
+        <div style={{ flex: "0 0 50%", minWidth: 280, paddingLeft: 15, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+          <p style={{ fontSize: BODY_FS, fontWeight: 300, opacity: 0.75, margin: 0, lineHeight: 1.4 }}>
+            Un sistema determinístico mide tus resultados y ajusta el ritmo y el contenido.
+            Sin inteligencia artificial generativa — seguimiento real, sin hype.
+          </p>
+        </div>
+      </div>
+
+      {/* === FAQ === */}
       {faqs && faqs.length > 0 && (
-        <section style={{ padding: "80px 15px", backgroundColor: CREAM }}>
-          <p style={{ ...s, marginBottom: 48 }}>Preguntas frecuentes</p>
-          <Accordion type="single" collapsible className="space-y-0">
+        <div style={{ padding: "60px 15px", backgroundColor: BODY_BG }}>
+          <p style={{ fontSize: BODY_FS, fontWeight: 300, marginBottom: 40 }}>Preguntas frecuentes</p>
+          <Accordion type="single" collapsible>
             {faqs.map(f => (
               <AccordionItem key={f.id} value={f.id} style={{ borderTop: "1px solid rgba(0,0,0,0.15)", borderBottom: "none" }}>
-                <AccordionTrigger style={{ fontSize: 22, fontWeight: 300, padding: "20px 0", textAlign: "left" }} className="hover:no-underline">
+                <AccordionTrigger style={{ fontSize: 22, fontWeight: 300, padding: "18px 0" }} className="hover:no-underline">
                   {f.question}
                 </AccordionTrigger>
-                <AccordionContent style={{ fontSize: 18, opacity: 0.75, paddingBottom: 20 }}>
+                <AccordionContent style={{ fontSize: 18, opacity: 0.7, paddingBottom: 18 }}>
                   {f.answer}
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
-        </section>
+        </div>
       )}
 
-      {/* ===== CTA / HELLO — fondo negro, blanco, 35px ===== */}
-      <section id="contacto" style={{ backgroundColor: "#000", color: "#fff", padding: "80px 15px" }}>
-        <p style={{ ...s }}>Inscríbete.</p>
-        <p style={{ ...s, marginTop: 16, maxWidth: "40ch", opacity: 0.75 }}>
-          ¿Quieres saber más sobre Barkley Online?<br />Conversemos.
-        </p>
-        <button onClick={goInscripcion}
-          style={{ marginTop: 32, fontSize: 18, color: "#fff", background: "none", border: "none", cursor: "pointer", opacity: 0.85, transition: "opacity 0.25s", padding: 0, display: "inline-flex", alignItems: "center", gap: 6 }}
-          onMouseEnter={e => (e.currentTarget.style.opacity = "0.4")}
-          onMouseLeave={e => (e.currentTarget.style.opacity = "0.85")}
-        >Ir al formulario de inscripción <ArrowUpRight style={{ width: 16, height: 16 }} /></button>
-        <div style={{ marginTop: 16 }}>
-          <button onClick={() => setCallOpen(true)}
-            style={{ fontSize: 18, color: "#fff", background: "none", border: "none", cursor: "pointer", opacity: 0.6, transition: "opacity 0.25s", padding: 0, display: "inline-flex", alignItems: "center", gap: 6 }}
-            onMouseEnter={e => (e.currentTarget.style.opacity = "0.3")}
-            onMouseLeave={e => (e.currentTarget.style.opacity = "0.6")}
-          ><Phone style={{ width: 14 }} /> Agendar llamada</button>
+      {/* === CTA / HELLO — fondo negro, blanco === */}
+      <div style={{ backgroundColor: "#000", color: "#fff", padding: "60px 15px", display: "flex", flexWrap: "wrap" }}>
+        <div style={{ flex: "0 0 50%", minWidth: 280, paddingRight: 15 }}>
+          <p style={{ fontSize: BODY_FS, fontWeight: 300, margin: 0 }}>Inscríbete.</p>
         </div>
-      </section>
+        <div style={{ flex: "0 0 50%", minWidth: 280, paddingLeft: 15 }}>
+          <p style={{ fontSize: BODY_FS, fontWeight: 300, margin: "0 0 24px", opacity: 0.75, lineHeight: 1.3 }}>
+            ¿Quieres saber más sobre Barkley Online?<br />
+            Déjanos tus datos y te contactamos. ↗
+          </p>
+          <button onClick={() => document.getElementById("inscripcion")?.scrollIntoView({ behavior: "smooth" })}
+            style={{ fontSize: 22, fontWeight: 300, color: "#fff", background: "none", border: "none", borderBottom: "1px solid #fff", padding: "6px 0", cursor: "pointer", fontFamily: BODY_FONT, opacity: 0.75, transition: "opacity 0.25s", display: "inline-flex", alignItems: "center", gap: 6 }}
+            onMouseEnter={e=>(e.currentTarget.style.opacity="0.4")} onMouseLeave={e=>(e.currentTarget.style.opacity="0.75")}
+          >Ir al formulario de inscripción <ArrowUpRight style={{ width: 18, height: 18 }} /></button>
+        </div>
+      </div>
 
-      {/* ===== INSCRIPCIÓN — sección dedicada, crema ===== */}
-      <section id="inscripcion" style={{ backgroundColor: CREAM, padding: "80px 15px" }}>
-        <p style={{ ...s, marginBottom: 48 }}>Admisión 2027</p>
-        <div style={{ maxWidth: 560 }}>
+      {/* === INSCRIPCIÓN (formulario) === */}
+      <div id="inscripcion" style={{ display: "flex", flexWrap: "wrap", backgroundColor: BODY_BG, padding: "60px 15px" }}>
+        <div style={{ flex: "0 0 50%", minWidth: 280, paddingRight: 15 }}>
+          <p style={{ fontSize: BODY_FS, fontWeight: 300, margin: 0 }}>Admisión 2027</p>
+          <p style={{ fontSize: 18, opacity: 0.5, margin: "8px 0 0" }}>Sin compromiso · sin costo</p>
+        </div>
+        <div style={{ flex: "0 0 50%", minWidth: 280, paddingLeft: 15 }}>
           <InscripcionForm />
         </div>
-      </section>
+      </div>
 
-      {/* ===== FOOTER — negro ===== */}
-      <footer style={{ backgroundColor: "#000", color: "#fff", padding: "60px 15px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48 }}>
+      {/* === FOOTER === */}
+      <footer style={{ backgroundColor: "#000", color: "#fff", padding: "40px 15px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 24 }}>
           <div>
-            <p style={{ fontSize: 22, fontWeight: 300 }}>Barkley Online</p>
-            <p style={{ fontSize: 16, opacity: 0.55, marginTop: 8 }}>Colegio asincrónico · Chile</p>
-            <p style={{ fontSize: 16, opacity: 0.55, marginTop: 4 }}>Admisión año académico 2027</p>
+            <p style={{ fontSize: 22, fontWeight: 300, margin: 0 }}>Barkley Online</p>
+            <p style={{ fontSize: 16, opacity: 0.4, margin: "6px 0 0" }}>Colegio asincrónico · Chile</p>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <a href="mailto:admisiones@barkley.cl"
-              style={{ fontSize: 16, color: "#fff", opacity: 0.6, textDecoration: "none", transition: "opacity 0.25s", display: "flex", alignItems: "center", gap: 6 }}
-              onMouseEnter={e => (e.currentTarget.style.opacity = "1")}
-              onMouseLeave={e => (e.currentTarget.style.opacity = "0.6")}
-            ><Mail style={{ width: 14 }} /> admisiones@barkley.cl</a>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <a href="mailto:admisiones@barkley.cl" style={{ fontSize: 16, color: "#fff", textDecoration: "none", opacity: 0.5, transition: "opacity 0.25s" }}
+              onMouseEnter={e=>((e.currentTarget as HTMLElement).style.opacity="1")} onMouseLeave={e=>((e.currentTarget as HTMLElement).style.opacity="0.5")}>
+              admisiones@barkley.cl
+            </a>
             <button onClick={() => setCallOpen(true)}
-              style={{ fontSize: 16, color: "#fff", background: "none", border: "none", cursor: "pointer", opacity: 0.6, transition: "opacity 0.25s", padding: 0, display: "flex", alignItems: "center", gap: 6, textAlign: "left" }}
-              onMouseEnter={e => (e.currentTarget.style.opacity = "1")}
-              onMouseLeave={e => (e.currentTarget.style.opacity = "0.6")}
-            ><Phone style={{ width: 14 }} /> Agendar llamada</button>
+              style={{ fontSize: 16, color: "#fff", background: "none", border: "none", padding: 0, cursor: "pointer", opacity: 0.5, transition: "opacity 0.25s", fontFamily: BODY_FONT, textAlign: "left" }}
+              onMouseEnter={e=>(e.currentTarget.style.opacity="1")} onMouseLeave={e=>(e.currentTarget.style.opacity="0.5")}
+            >Agendar llamada</button>
           </div>
         </div>
-        <p style={{ fontSize: 14, opacity: 0.35, marginTop: 48 }}>© {new Date().getFullYear()} Barkley Online</p>
+        <p style={{ fontSize: 14, opacity: 0.25, marginTop: 40 }}>© {new Date().getFullYear()} Barkley Online</p>
       </footer>
 
       <ReservationDialog open={callOpen} onOpenChange={setCallOpen} />
