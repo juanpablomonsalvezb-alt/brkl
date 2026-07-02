@@ -52,8 +52,9 @@ const FONT = "'Poppins', sans-serif";
 // Azul apagado real usado en titulares grandes e intro (no el navy puro de marca)
 const SLATE = "#5b7ba3";
 // Paneles de color sólido reales del hero (más claros que navy/morado de marca)
-const BLOCK_BLUE = "#4a90d9";
-const LAVENDER = "#b39ddb";
+const BLOCK_BLUE = "#4a7be0";
+const PURPLE_PANEL = "#861fce"; // morado saturado real del panel "Latest News" (medido en vivo)
+const VIVID_BLUE = "#0b63e5"; // azul vivo real de las secciones Learning Journey / Stories
 
 // Íconos reales de Lucide (ya en el proyecto) en vez de SVG dibujados a mano —
 // el font-icon real de isb.be (bpa-font-icons/IcoMoon) es un asset de tema Finalsite
@@ -205,26 +206,26 @@ export default function Home() {
   return (
     <div style={{ backgroundColor: "#fff", color: TEXT, fontFamily: FONT, fontSize: 16, lineHeight: 1.8 }}>
 
-      {/* === HEADER — logo cuadrado + hamburguesa, como el real (icono search + MY ISB + MENU) === */}
-      <header style={{ position: "sticky", top: 0, zIndex: 30, background: "#fff", borderBottom: "1px solid #eef1f5" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          {/* Logo con marco cuadrado + subrayado rojo, como el real (logo ISB: cuadro con borde navy, texto bold, filete rojo debajo) */}
-          <a href="/" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none" }}>
-            <div style={{ width: 60, height: 60, background: NAVY, border: `2.5px solid ${NAVY}`, borderRadius: 4, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 4 }}>
-              <span style={{ color: "#fff", fontWeight: 800, fontSize: 20, letterSpacing: "-0.5px", lineHeight: 1 }}>BK</span>
-              <span style={{ width: 28, height: 3, background: RED, marginTop: 4, borderRadius: 2 }} />
+      {/* === HEADER — overlay transparente sobre el hero, como el real: logo con marco blanco
+          translúcido + nombre blanco sobre la foto; controles de la derecha sobre bloque blanco === */}
+      <header style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 30 }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+          <a href="/" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none", padding: "30px 0 0 45px" }}>
+            <div style={{ width: 84, height: 84, background: "rgba(0,32,61,0.45)", border: "2px solid #fff", borderRadius: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 4 }}>
+              <span style={{ color: "#fff", fontWeight: 800, fontSize: 30, letterSpacing: "-0.5px", lineHeight: 1 }}>BK</span>
+              <span style={{ width: 40, height: 3, background: RED, marginTop: 5, borderRadius: 2 }} />
             </div>
-            <span style={{ color: NAVY, fontWeight: 700, fontSize: 16, lineHeight: 1.3 }}>The Barkley<br />Online School</span>
+            <span style={{ color: "#fff", fontWeight: 600, fontSize: 19, lineHeight: 1.35 }}>The Barkley<br />Online School</span>
           </a>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <button aria-label="Buscar" style={{ width: 36, height: 36, borderRadius: "50%", background: "#f1f4f8", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-              <Search style={{ width: 16, height: 16, color: NAVY }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 18, background: "#fff", padding: "26px 40px 26px 32px" }}>
+            <button aria-label="Buscar" style={{ width: 40, height: 40, borderRadius: "50%", background: "#f1f4f8", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+              <Search style={{ width: 17, height: 17, color: NAVY }} />
             </button>
-            <span style={{ width: 1, height: 20, background: "#d8dee6" }} />
-            <a href="#inscripcion" style={{ fontSize: 13, fontWeight: 700, color: NAVY, textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>MI BARKLEY</a>
-            <span style={{ width: 1, height: 20, background: "#d8dee6" }} />
+            <span style={{ width: 1, height: 22, background: "#d8dee6" }} />
+            <a href="#inscripcion" style={{ fontSize: 14, fontWeight: 600, color: NAVY, textDecoration: "none", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}>MI BARKLEY</a>
+            <span style={{ width: 1, height: 22, background: "#d8dee6" }} />
             <button aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"} onClick={() => setMenuOpen(o => !o)}
-              style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: NAVY, fontFamily: FONT, fontSize: 13, fontWeight: 700 }}>
+              style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: NAVY, fontFamily: FONT, fontSize: 14, fontWeight: 600, letterSpacing: "0.05em" }}>
               {menuOpen ? <X style={{ width: 22, height: 22 }} /> : <Menu style={{ width: 22, height: 22 }} />}
               MENÚ
             </button>
@@ -251,37 +252,48 @@ export default function Home() {
         </AnimatePresence>
       </header>
 
-      {/* === HERO — foto full-bleed 885px real + columna con bloque azul medio (doble flecha) y lavanda (pétalos), texto overlay directo === */}
-      <section style={{ position: "relative", display: "flex", height: "min(885px,88vh)" }}>
+      {/* === HERO — como el real: marco blanco de 15px alrededor, foto a la izquierda,
+          columna derecha con bloque azul (doble triángulo dorado cortado por el borde)
+          y bloque morado saturado (pinwheel rosa), texto de paneles abajo-izquierda === */}
+      <section style={{ position: "relative", display: "flex", gap: 15, padding: 15, background: "#fff", height: "min(885px,88vh)", boxSizing: "border-box" }}>
         <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
           <img src={HERO_PHOTO} alt="" style={{ width: "100%", height: "100%", position: "absolute", inset: 0, objectFit: "cover", filter: "saturate(0.85)" }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,51,102,0) 35%, rgba(20,35,55,0.75) 100%)" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,51,102,0) 45%, rgba(20,35,55,0.6) 100%)" }} />
           {/* Un solo titular gigante real (sin eyebrow separado — la etiqueta real ES el h1), flechas prev/next circulares bottom-right junto al texto */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            style={{ position: "absolute", left: 40, right: 40, bottom: 48, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-            <h1 style={{ fontSize: "clamp(36px,6.5vw,68px)", fontWeight: 800, margin: 0, maxWidth: 760, lineHeight: 1.1 }}>Líderes en Educación Asincrónica Inclusiva</h1>
+            style={{ position: "absolute", left: 45, right: 40, bottom: 42, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+            <h1 style={{ fontSize: "clamp(36px,5vw,69px)", fontWeight: 600, margin: 0, maxWidth: 780, lineHeight: 1.05 }}>Líderes en Educación Asincrónica Inclusiva</h1>
             <div style={{ display: "flex", gap: 10, flexShrink: 0 }} className="hidden md:flex">
-              <button aria-label="Anterior" style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid #fff", background: "none", color: "#fff", cursor: "pointer" }}>‹</button>
-              <button aria-label="Siguiente" style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid #fff", background: "none", color: "#fff", cursor: "pointer" }}>›</button>
+              <button aria-label="Anterior" style={{ width: 48, height: 48, borderRadius: "50%", border: "1.5px solid #fff", background: "none", color: "#fff", cursor: "pointer", fontSize: 18 }}>‹</button>
+              <button aria-label="Siguiente" style={{ width: 48, height: 48, borderRadius: "50%", border: "1.5px solid #fff", background: "none", color: "#fff", cursor: "pointer", fontSize: 18 }}>›</button>
             </div>
           </motion.div>
         </div>
-        <div style={{ width: 314, display: "flex", flexDirection: "column" }} className="hidden md:flex">
-          <motion.a href="#plataforma" whileHover={{ opacity: 0.85 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: BLOCK_BLUE, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-            <motion.div whileHover={{ x: 6 }} transition={{ duration: 0.3 }} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><ShapeFastForward color={GOLD} size={100} /></motion.div>
-            <div style={{ padding: "22px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", color: "#fff", fontWeight: 700, fontSize: 17 }}>Tour Virtual <ArrowUpRight style={{ width: 20, height: 20 }} /></div>
+        <div style={{ width: 314, display: "flex", flexDirection: "column", gap: 0 }} className="hidden md:flex">
+          <motion.a href="#plataforma" whileHover={{ opacity: 0.9 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: BLOCK_BLUE, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+            {/* Doble triángulo SÓLIDO dorado gigante, cortado por el borde derecho — patrón real (▶▶, no chevrón) */}
+            <motion.div whileHover={{ x: 6 }} transition={{ duration: 0.3 }} style={{ position: "absolute", top: "6%", right: -40 }}>
+              <svg width="230" height="190" viewBox="0 0 230 190">
+                <polygon points="10,20 105,95 10,170" fill={GOLD} />
+                <polygon points="115,20 210,95 115,170" fill={GOLD} />
+              </svg>
+            </motion.div>
+            <div style={{ padding: "28px 26px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", color: "#fff", fontWeight: 500, fontSize: 26, lineHeight: 1.25 }}>
+              <span>Tour<br />Virtual</span> <ArrowUpRight style={{ width: 26, height: 26, marginBottom: 6 }} />
+            </div>
           </motion.a>
-          {/* Pinwheel de 4 cuartos rosa, como el real (2x2), sobre lavanda */}
-          <motion.a href="#faq" whileHover={{ opacity: 0.85 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: LAVENDER, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-            <motion.div whileHover={{ rotate: 8 }} transition={{ duration: 0.4 }} style={{ position: "absolute", top: 14, right: 14, width: 100, height: 100, display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr" }}>
+          {/* Pinwheel de 4 cuartos rosa arriba, sobre morado saturado real (#861FCE), texto blanco */}
+          <motion.a href="#faq" whileHover={{ opacity: 0.9 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: PURPLE_PANEL, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+            <motion.div whileHover={{ rotate: 8 }} transition={{ duration: 0.4 }} style={{ position: "absolute", top: 12, right: -26, width: 190, height: 190, display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr", gap: 8 }}>
               {/* Un solo path (cuarto de disco, pivote en la esquina interior) espejado en las 4 celdas → pinwheel */}
               <svg viewBox="0 0 50 50"><path d="M50,50 L50,0 A50,50 0 0,0 0,50 Z" fill={PINK} /></svg>
               <svg viewBox="0 0 50 50" style={{ transform: "scaleX(-1)" }}><path d="M50,50 L50,0 A50,50 0 0,0 0,50 Z" fill={PINK} /></svg>
               <svg viewBox="0 0 50 50" style={{ transform: "scaleY(-1)" }}><path d="M50,50 L50,0 A50,50 0 0,0 0,50 Z" fill={PINK} /></svg>
               <svg viewBox="0 0 50 50" style={{ transform: "scale(-1,-1)" }}><path d="M50,50 L50,0 A50,50 0 0,0 0,50 Z" fill={PINK} /></svg>
             </motion.div>
-            <div style={{ flex: 1 }} />
-            <div style={{ padding: "22px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", color: NAVY, fontWeight: 700, fontSize: 17 }}>Últimas Noticias <ArrowUpRight style={{ width: 20, height: 20 }} /></div>
+            <div style={{ padding: "28px 26px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", color: "#fff", fontWeight: 500, fontSize: 26, lineHeight: 1.25 }}>
+              <span>Últimas<br />Noticias</span> <ArrowUpRight style={{ width: 26, height: 26, marginBottom: 6 }} />
+            </div>
           </motion.a>
         </div>
       </section>
@@ -313,7 +325,7 @@ export default function Home() {
               </div>
               <div style={{ flex: "1 1 380px", minWidth: 280, background: "#fff", padding: "40px 32px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                 <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Sin clases en vivo. Sin horarios fijos.</p>
-                <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 700, color: NAVY, margin: "0 0 16px" }}>Aprende cuando puedas. Avanza a tu ritmo real.</h2>
+                <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 600, color: NAVY, margin: "0 0 16px" }}>Aprende cuando puedas. Avanza a tu ritmo real.</h2>
                 <p style={{ fontSize: 15, margin: 0 }}>Barkley es 100% asincrónico: nada de clases por Zoom ni horarios que cumplir. Cada estudiante avanza a su propio paso, con tutores y asesores disponibles cuando los necesita — pensado para quienes no tienen acceso constante a un horario fijo, y para quienes aprenden distinto.</p>
               </div>
             </div>
@@ -348,39 +360,42 @@ export default function Home() {
 
       {/* === NIVELES — panel azul sólido detrás + botón dorado debajo, como el real === */}
       <section id="metodo" style={{ padding: "64px 24px 0", textAlign: "center" }}>
-        <p style={{ fontSize: 14, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>De 5° básico a validación de adultos</p>
-        <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 800, color: NAVY, margin: "0 0 40px" }}>Nuestro camino de aprendizaje</h2>
+        <p style={{ fontSize: 14, fontWeight: 600, color: SLATE, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>De 5° básico a validación de adultos</p>
+        {/* h2 slate 600 — como "Our Learning Journey" real (no navy bold) */}
+        <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 600, color: SLATE, margin: "0 0 48px" }}>Nuestro camino de aprendizaje</h2>
       </section>
-      <section style={{ background: BLOCK_BLUE, padding: "48px 24px 64px" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
+      <section style={{ background: VIVID_BLUE, padding: "0 24px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", transform: "translateY(-24px)" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
             {NIVELES.map((n, i) => (
-              <Reveal key={n.title} delay={i * 0.1} style={{ flex: "1 1 260px", minWidth: 240 }}>
+              <Reveal key={n.title} delay={i * 0.1} style={{ flex: "1 1 280px", minWidth: 250 }}>
+                {/* Tarjetas altas tipo retrato con overlay navy denso abajo, título 26px sobre subtítulo+flecha — patrón real */}
                 <motion.a href="#inscripcion" whileHover={{ scale: 1.01 }} transition={{ duration: 0.25, ease: "easeInOut" }} style={{ textDecoration: "none", color: NAVY, position: "relative", overflow: "hidden", display: "block" }}>
-                  <img src={n.img} alt={n.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/2", objectFit: "cover", display: "block" }} />
-                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,20,50,0) 35%, rgba(0,20,50,0.9) 100%)" }} />
-                  <div style={{ position: "absolute", left: 20, right: 20, bottom: 18, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-                    <div>
-                      <p style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>{n.title}</p>
-                      <p style={{ fontSize: 13, margin: "4px 0 0", opacity: 0.85, textTransform: "uppercase", letterSpacing: "0.04em" }}>{n.sub}</p>
+                  <img src={n.img} alt={n.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/3.4", objectFit: "cover", display: "block" }} />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(10,25,50,0) 40%, rgba(10,25,50,0.92) 100%)" }} />
+                  <div style={{ position: "absolute", left: 28, right: 24, bottom: 24, color: "#fff" }}>
+                    <p style={{ fontSize: 26, fontWeight: 500, margin: 0, lineHeight: 1.25 }}>{n.title}</p>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                      <p style={{ fontSize: 13, margin: 0, opacity: 0.9, textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600 }}>{n.sub}</p>
+                      <ArrowUpRight style={{ width: 22, height: 22, flexShrink: 0 }} />
                     </div>
-                    <ArrowUpRight style={{ width: 20, height: 20, flexShrink: 0 }} />
                   </div>
                 </motion.a>
               </Reveal>
             ))}
           </div>
-          <div style={{ textAlign: "center", marginTop: 40 }}>
-            <motion.a href="#plataforma" whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: GOLD, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 14, letterSpacing: "0.03em", textTransform: "uppercase", borderRadius: 999, padding: "16px 32px" }}>Aprendizaje en Barkley <ArrowUpRight style={{ width: 16, height: 16 }} /></motion.a>
+          <div style={{ textAlign: "center", marginTop: 56 }}>
+            <motion.a href="#plataforma" whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: GOLD, color: NAVY, textDecoration: "none", fontWeight: 600, fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase", borderRadius: 999, padding: "18px 36px" }}>Aprendizaje en Barkley <ArrowUpRight style={{ width: 16, height: 16 }} /></motion.a>
           </div>
         </div>
       </section>
 
-      {/* === RAZONES — pestañas, sin testimonios fabricados con nombre === */}
-      <section style={{ background: "#f5f5f5", padding: "64px 24px" }}>
+      {/* === RAZONES / HISTORIAS — sobre el MISMO azul vivo continuo del real (Stories That Connect Us),
+          texto blanco, sin testimonios fabricados con nombre === */}
+      <section style={{ background: VIVID_BLUE, padding: "72px 24px 64px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Por qué Barkley</p>
-          <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 700, color: SLATE, margin: "0 0 32px" }}>Historias que nos conectan</h2>
+          <p style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.85)", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>Por qué Barkley</p>
+          <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 600, color: "#fff", margin: "0 0 32px" }}>Historias que nos conectan</h2>
           <div style={{ display: "inline-flex", gap: 8, marginBottom: 40, background: "#fff", borderRadius: 999, padding: 6, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
             {(["estudiantes","apoderados"] as const).map(t => (
               <button key={t} onClick={() => setTab(t)} style={{
@@ -425,8 +440,8 @@ export default function Home() {
         <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 24, justifyContent: "center" }}>
           {RAZONES.map((r, i) => (
             <Reveal key={r.title} delay={i * 0.08} style={{ flex: "1 1 260px", minWidth: 240 }}>
-              <motion.div whileHover={{ scale: 1.01 }} transition={{ duration: 0.25, ease: "easeInOut" }} style={{ background: "#fff", borderRadius: 16, padding: 28, boxShadow: "0 4px 16px rgba(0,0,0,0.05)" }}>
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: "0 0 10px" }}>{r.title}</h3>
+              <motion.div whileHover={{ scale: 1.01 }} transition={{ duration: 0.25, ease: "easeInOut" }} style={{ background: "#fff", borderRadius: 16, padding: 28, boxShadow: "0 4px 16px rgba(0,20,60,0.18)" }}>
+                <h3 style={{ fontSize: 18, fontWeight: 600, color: NAVY, margin: "0 0 10px" }}>{r.title}</h3>
                 <p style={{ fontSize: 15, margin: 0 }}>{r.text}{tab === "apoderados" ? " Transparencia total desde el portal de apoderados." : ""}</p>
               </motion.div>
             </Reveal>
@@ -438,7 +453,7 @@ export default function Home() {
       <section style={{ padding: "72px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px", textAlign: "center" }}>Barkley en cifras</p>
-          <h2 style={{ fontSize: "clamp(34px,6vw,60px)", fontWeight: 800, color: NAVY, margin: "0 0 40px", textAlign: "center" }}>Más que un colegio</h2>
+          <h2 style={{ fontSize: "clamp(34px,6vw,60px)", fontWeight: 600, color: NAVY, margin: "0 0 40px", textAlign: "center" }}>Más que un colegio</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
             {FACTS.map((s, i) => (
               <Reveal key={s.label} delay={i * 0.08} style={{ flex: "1 1 260px", minWidth: 240 }}>
@@ -457,7 +472,7 @@ export default function Home() {
       <section id="plataforma" style={{ background: "#f5f5f5", padding: "64px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Descubre y experimenta</p>
-          <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 700, color: SLATE, margin: "0 0 40px" }}>La plataforma, por dentro</h2>
+          <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 600, color: SLATE, margin: "0 0 40px" }}>La plataforma, por dentro</h2>
           {/* Filas horizontales alternadas imagen/texto (izq-der, der-izq), como .program-box real (flex-direction row-reverse alternado) */}
           <div style={{ display: "flex", flexDirection: "column", gap: 56 }}>
             {PROGRAMAS.map((p, i) => (
@@ -483,7 +498,7 @@ export default function Home() {
       {/* === FAQ === */}
       {faqs && faqs.length > 0 && (
         <section id="faq" style={{ maxWidth: 900, margin: "0 auto", padding: "64px 24px" }}>
-          <Reveal><h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 700, color: SLATE, margin: "0 0 32px" }}>Preguntas frecuentes</h2></Reveal>
+          <Reveal><h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 600, color: SLATE, margin: "0 0 32px" }}>Preguntas frecuentes</h2></Reveal>
           <Accordion type="single" collapsible>
             {faqs.map(f => (
               <AccordionItem key={f.id} value={f.id} style={{ borderTop: "1px solid #eef1f5", borderBottom: "none" }}>
@@ -504,7 +519,7 @@ export default function Home() {
         <div style={{ position: "absolute", bottom: -20, left: -20, opacity: 0.5 }}><ShapeFlower color="#ffffff22" size={140} /></div>
         <Reveal>
           <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center", position: "relative" }}>
-            <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, margin: "0 0 16px" }}>¿Quieres saber más sobre Barkley Online?</h2>
+            <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 600, margin: "0 0 16px" }}>¿Quieres saber más sobre Barkley Online?</h2>
             <p style={{ fontSize: 16, opacity: 0.85, margin: "0 0 28px" }}>Déjanos tus datos y te contactamos.</p>
             <motion.button whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} onClick={() => document.getElementById("inscripcion")?.scrollIntoView({ behavior: "smooth" })}
               style={{ fontSize: 15, fontWeight: 700, color: NAVY, background: GOLD, border: "none", borderRadius: 999, padding: "14px 30px", cursor: "pointer", fontFamily: FONT, display: "inline-flex", alignItems: "center", gap: 8 }}
@@ -517,7 +532,7 @@ export default function Home() {
       <section id="inscripcion" style={{ maxWidth: 1100, margin: "0 auto", padding: "64px 24px", display: "flex", flexWrap: "wrap", gap: 40 }}>
         <div style={{ flex: "1 1 320px", minWidth: 260 }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Admisión 2027</p>
-          <h2 style={{ fontSize: "clamp(24px,3.5vw,32px)", fontWeight: 700, color: NAVY, margin: 0 }}>Inscríbete.</h2>
+          <h2 style={{ fontSize: "clamp(24px,3.5vw,32px)", fontWeight: 600, color: NAVY, margin: 0 }}>Inscríbete.</h2>
           <p style={{ fontSize: 15, opacity: 0.7, margin: "10px 0 0" }}>Sin compromiso · sin costo</p>
         </div>
         <div style={{ flex: "1 1 380px", minWidth: 280 }}>
