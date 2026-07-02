@@ -217,7 +217,9 @@ export default function Home() {
             </div>
             <span style={{ color: "#fff", fontWeight: 600, fontSize: 19, lineHeight: 1.35 }}>The Barkley<br />Online School</span>
           </a>
-          <div style={{ display: "flex", alignItems: "center", gap: 18, background: "#fff", padding: "26px 40px 26px 32px" }}>
+          {/* Ancho fijo = gap 15 + columna de paneles 314 + padding 15 → el bloque blanco
+              calza exacto con la columna derecha y nunca tapa la foto */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 14, background: "#fff", padding: "26px 30px 26px 20px", width: 344, boxSizing: "border-box", flexShrink: 0 }}>
             <button aria-label="Buscar" style={{ width: 40, height: 40, borderRadius: "50%", background: "#f1f4f8", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
               <Search style={{ width: 17, height: 17, color: NAVY }} />
             </button>
