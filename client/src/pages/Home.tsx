@@ -109,10 +109,27 @@ const NIVELES = [
   { title: "Validación de Adultos", sub: "Mayores de 18 años", img: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=700&q=75" },
 ];
 
+// Cuatro pilares — cada uno inspirado en la filosofía de un referente internacional real
+// (Wolsey Hall Oxford, Oxford Home Schooling, NEC, ICS Learn), aterrizado en features
+// que Barkley ya tiene construidas (AdvisorService, TutoringService, AdaptiveProfileService,
+// gating determinístico) — no son promesas de marketing, son el producto.
 const RAZONES = [
-  { title: "Sin horario fijo", text: "Estudias cuando puedes, a tu propio ritmo, sin clases en vivo obligatorias." },
-  { title: "Validación oficial", text: "Preparamos exámenes libres ante el Ministerio de Educación de Chile." },
-  { title: "Seguimiento real", text: "Sistema determinístico de progreso — sin inteligencia artificial generativa en el aula." },
+  {
+    title: "Tu horario, no el nuestro",
+    text: "Sin clases en vivo ni bloques fijos que cumplir. Avanzas cuando tu día lo permite, y un asesor asignado sigue tu progreso completo de principio a fin — así nadie avanza solo por defecto.",
+  },
+  {
+    title: "Ayuda cuando la pides, no cuando toca",
+    text: "La tutoría no es una clase obligatoria: es apoyo por asignatura, disponible cuando realmente lo necesitas, no un horario más que administrar.",
+  },
+  {
+    title: "Pensado para quien no encaja en el molde",
+    text: "TDAH, dislexia, trabajo, distancia, otro ritmo de vida — el sistema se adapta al perfil de cada estudiante, no al revés. La educación tradicional no está pensada para todos; esta sí.",
+  },
+  {
+    title: "Sin clases en vivo no es sin compañía",
+    text: "Estudiar solo no significa aprender en soledad: tu progreso se mide de verdad, con reglas claras y objetivas — y siempre hay alguien revisando cómo vas, no solo un video que corre sin que nadie lo vea.",
+  },
 ];
 
 // Fact-boxes: fondo negro real, glifo grande de color arriba a la derecha (patrón exacto de .fact-box)
