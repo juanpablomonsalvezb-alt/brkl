@@ -96,7 +96,7 @@ const SHAPES = [ShapeCircle, ShapeTriangle, ShapeStar, ShapeHeart, ShapeFlower, 
 const HERO_PHOTO = "/images/hero-estudiante.jpeg";
 
 const PILARES = [
-  { title: "Acompañamiento", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=700&q=75", text: "Vínculos reales con asesores académicos que conocen a cada estudiante y lo acompañan en su progreso." },
+  { title: "Acompañamiento", img: "/images/acompanamiento.jpeg", text: "Vínculos reales con asesores académicos que conocen a cada estudiante y lo acompañan en su progreso." },
   { title: "Metodología", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=700&q=75", text: "Nuestros tutores diseñan evaluación y contenido diferenciado según el perfil de cada estudiante." },
   { title: "Rutas flexibles", img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=700&q=75", text: "Cada estudiante avanza a su ritmo, con fechas límite claras y amplio margen de organización." },
   { title: "Plataforma", img: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=700&q=75", text: "Seguimiento determinístico de progreso, evaluación diferenciada y acompañamiento docente." },
