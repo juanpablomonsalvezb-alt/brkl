@@ -93,7 +93,7 @@ function ShapeFastForward({ color, size = 40 }: { color: string; size?: number }
 }
 const SHAPES = [ShapeCircle, ShapeTriangle, ShapeStar, ShapeHeart, ShapeFlower, ShapeArrow];
 
-const HERO_PHOTO = "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1800&q=75";
+const HERO_PHOTO = "/images/hero-estudiante.jpeg";
 
 const PILARES = [
   { title: "Acompañamiento", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=700&q=75", text: "Vínculos reales con asesores académicos que conocen a cada estudiante y lo acompañan en su progreso." },
