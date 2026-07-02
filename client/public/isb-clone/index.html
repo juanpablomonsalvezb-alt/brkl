@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Barkley Online | Colegio 100% Asincrónico Chile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/isb-clone/application.css">
+<link rel="stylesheet" href="/isb-clone/main.css">
+<style>
+  :root { --primary-color: #003366; --secondary-color: #FF3D37; --tertiary-color: #FFC548; }
+  html { font-family: "Poppins", sans-serif; }
+  body, p { font-family: "Poppins", sans-serif !important; }
+  #fsPoweredByFinalsite { display: none !important; }
+  .canvas-menu, #menu-area, #active-overlay { display: none !important; }
+  [class*="shape_"]::after, .fact-box:before, .hp-highlights:before { display: none !important; }
+  /* pin-spacer de GSAP ScrollTrigger congelado a mitad de scroll (altura+padding falsos) — sin
+     el scroll-jacking en vivo, forzamos altura real de contenido. */
+  .pin-spacer { height: auto !important; padding: 0 !important; }
+</style>
+</head>
+<body class="fsLiveMode fsHasHeader fsHasMenu fsHasFooter fsHasOneColumnLayout home fsLocation1 fsAccountBarTop fsHasTheme10 no-horizontal-nav hasHero has-container--buttons first-animation--visible second-animation--visible third-animation--visible fourth-animation--visible site-is--loaded">
+<a id="fsSkipToMainContentLink" href="#fsPageContent">Saltar al contenido principal</a>
+<div id="fsPageWrapper">
+<html><body><header class="fsHeader" id="fsHeader">
+<div class="fsBanner fsStyleAutoclear" data-settings-id="114962" data-use-new="true" id="fsEl_118393">
+<section class="fsElement fsContainer header--holder" data-use-new="true" id="fsEl_118398">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118398">Header Holder</h2>
+</header>
+<div class="fsElementContent">
+<section class="fsElement fsLocationElement fsSingleItem header--logo fsThumbnailOriginal fsThumbnailFull" data-use-new="true" id="fsEl_118408">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118408">Header Logo</h2>
+</header>
+<div class="fsElementContent">
+<article class="fsLocationSingleItem"><div class="fsThumbnail fsThumbnailLogo"><a class="fsLocationLink" href="#"><img alt="" data-aspect-ratio="1.0" loading="lazy" src="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' width='106' height='106' viewBox='0 0 106 106'&gt;&lt;rect x='3' y='3' width='100' height='100' fill='%23003366' stroke='%23003366' stroke-width='4'/&gt;&lt;text x='53' y='58' font-family='Poppins,sans-serif' font-size='34' font-weight='800' fill='white' text-anchor='middle'&gt;BK&lt;/text&gt;&lt;rect x='30' y='72' width='46' height='5' rx='2.5' fill='%23FF3D37'/&gt;&lt;/svg&gt;" style=""/></a></div><a class="fsLocationLink fsLocationLinkWrapper" href="#"><div class="fsTitle fsLocationTitle">The Barkley</div><div class="fsLocationSubtitle">Online School</div></a></article>
+</div>
+</section>
+<section class="fsElement fsContainer header--right--column" data-use-new="true" id="fsEl_118409">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118409">Header Right Column</h2>
+</header>
+<div class="fsElementContent">
+<section class="fsElement fsSearchElement fsSearchForm header--search custom--search" id="fsEl_118410">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118410">Search</h2>
+<div class="fsElementHeaderContent">
+<button aria-label="open search" class="open-site-search"><span>Open Search</span></button>
+</div>
+</header>
+<div class="fsElementContent inner-wrapper-search"><div class="search-wrapper"><footer>
+<div class="fsElementFooterContent">
+<button aria-label="close search" class="close-site-search"><span>Close Search</span></button>
+</div>
+</footer>
+<form action="https://www.isb.be/search-results" data-controller="search-form" data-draft-mode="false" method="get" novalidate="novalidate">
+<label class="fsFieldLabel" for="fsSearchInput_118410">Search</label>
+<div class="fsSearchElementKeyword">
+<input class="fsStyleSearchField fsStyleDefaultField" data-search-form-target="input" id="fsSearchInput_118410" name="q" placeholder="Buscar en el sitio..." type="text"/>
+<button aria-label="Clear" class="fsButtonClear fsStateHidden" data-action="click-&gt;search-form#clearSearch" data-search-form-target="clear" type="reset">
+<span>Clear</span>
+</button>
+</div>
+<button class="fsSearchElementSearchButton fsStyleUpdateButton" type="submit">Search</button>
+</form>
+</div></div>
+</section>
+<section class="fsElement fsEmbed toggle-menu-container" data-use-new="true" id="fsEl_118412">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118412">Toggle Menu Container</h2>
+</header>
+<div class="fsElementContent">
+<button aria-label="show canvas menu" class="mobile-toggle" data-text="menu">
+<span>Menú</span>
+</button>
+</div>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+</header></body></html>
+<html><body><div class="fsPageBodyWrapper" id="fsPageBodyWrapper"><section class="fsElement fsNavigation fsList sticky--cta--nav" data-use-new="true" id="fsEl_118854">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118854">Sticky CTA</h2>
+</header>
+<div class="fsElementContent">
+<nav><ul class="fsNavLevel1"><li><a href="/admissions/inquire"> visit</a></li><li><a href="/admissions/apply">apply</a></li></ul></nav>
+</div>
+</section>
+<section class="fsElement fsNavigation fsBreadcrumb site-bread" data-use-new="true" id="fsEl_118728">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118728">Breadcrumb</h2>
+</header>
+<div class="fsElementContent">
+<nav aria-label="breadcrumbs">
+<ul>
+<li aria-current="location">
+			Home
+</li>
+</ul>
+</nav>
+</div>
+</section><div class="fsStyleAutoclear fsPageBody" id="fsPageBody">
+<main class="fsPageContent" id="fsPageContent">
+<h1 class="fsPageTitle">Home</h1>
+<div class="fsPageLayout fsLayout fsOneColumnLayout fsStyleAutoclear" data-use-new="true" id="fsEl_104438">
+<div class="fsDiv fsStyleAutoclear" id="fsEl_104439">
+<section class="fsElement fsContent site--preloader" data-use-new="true" id="fsEl_118725" style="display: none;"><div class="inner-prelader-wrapper">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118725">Everyone</h2>
+</header>
+<div class="fsElementContent">
+<ul>
+<li><em>Included</em></li>
+<li><em>Challenged</em></li>
+<li><em>Successful</em></li>
+</ul>
+</div>
+<div class="icon-list-wrapper">
+<ul class="icons-list">
+<li class="first-set">
+<div class="icon icon-one"><span>Icon</span></div>
+<div class="icon icon-two"><span>Icon</span></div>
+<div class="icon icon-three"><span>Icon</span></div>
+</li>
+<li class="second-set">
+<div class="icon icon-one"><span>Icon</span></div>
+<div class="icon icon-two"><span>Icon</span></div>
+<div class="icon icon-three"><span>Icon</span></div>
+</li>
+<li class="third-set">
+<div class="icon icon-one"><span>Icon</span></div>
+<div class="icon icon-two"><span>Icon</span></div>
+<div class="icon icon-three"><span>Icon</span></div>
+</li>
+<li class="fourth-set">
+<div class="icon icon-one"><span>Icon</span></div>
+<div class="icon icon-two"><span>Icon</span></div>
+<div class="icon icon-three"><span>Icon</span></div>
+</li>
+<li class="fifth-set">
+<div class="icon icon-one"><span>Icon</span></div>
+<div class="icon icon-two"><span>Icon</span></div>
+<div class="icon icon-three"><span>Icon</span></div>
+</li>
+<li class="six-set">
+<div class="icon icon-one"><span>Icon</span></div>
+<div class="icon icon-two"><span>Icon</span></div>
+<div class="icon icon-three"><span>Icon</span></div>
+</li>
+</ul>
+</div>
+</div></section>
+<section class="fsElement fsContent homepage-intro" data-use-new="true" id="fsEl_118379"><div class="area-inner">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118379">Intro text</h2>
+</header>
+<div class="fsElementContent">
+<p>Somos un colegio <span class="shape_blue_hourglass"></span> 100% asincrónico en Chile <span class="shape_pink_circle"></span> para estudiantes <span class="shape_red_triangle"></span> desde 5° básico hasta 4° medio <span class="shape_purple_stairs"></span>, ofreciendo preparación rigurosa y culturalmente cercana <span class="shape_green_flower"></span> para rendir exámenes libres ante personas <span class="shape_yellow_bars"></span> de todo Chile.</p>
+</div>
+</div></section>
+<div class="fsElement fsContainer homepage-learning" data-use-new="true" id="fsEl_123444">
+<div class="pin-spacer" style="order: 0; place-self: auto; grid-area: auto; z-index: auto; float: none; flex-shrink: 1; display: block; margin: 0px; inset: auto; position: relative; flex-basis: auto; overflow: visible; box-sizing: border-box; width: 1410px; height: 1761px; padding: 0px 0px 1000px;"><div class="fsElementContent scroll-area" style="translate: none; rotate: none; scale: none; inset: 0px auto auto 0px; margin: 0px; max-width: 1410px; width: 1410px; max-height: 761px; height: 761px; padding: 0px; transform: translate(0px, 0px);">
+<section class="fsElement fsResourceElement fsSingleItem learning-intro fsResourcesCombined" data-display-items="collections_and_resources" data-source-element-id="123445" data-source-page-id="4747" data-use-new="true" id="fsEl_123445">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_123445">Una educación diseñada en torno a ti</h2>
+<div class="fsElementHeaderContent">
+<p>Aprendizaje personalizado en Barkley</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>Barkley reconoce a cada estudiante como un individuo único. Nuestro currículum se adapta a él, asegurando el apoyo necesario para prosperar dentro y fuera del aula.</p>
+</div>
+<button class="intro-indicator"><span>Our four areas of focus</span></button></footer></header>
+<div class="fsElementContent">
+<article class="fsResource fsResourceTypeImage"><div alt="" class="image-holder" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="HomePage.jpg" data-resource-uuid="bfdac341-9dfa-4fb9-b2ad-7030c54f056b" loading="lazy" src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></div></article>
+</div>
+</section>
+<section class="fsElement fsContainer learning-slider" data-use-new="true" id="fsEl_123446"><div class="area-wrapper"><div class="image-slider"><div class="fsElementContent intro-desktop-image">
+<article class="fsResource fsResourceTypeImage"><div alt="" class="image-holder" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756812093/isb/t1z7yx1esncyhju95jcr/HomePage.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="HomePage.jpg" data-resource-uuid="bfdac341-9dfa-4fb9-b2ad-7030c54f056b" loading="lazy" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></div></article>
+</div><div class="image-inner slick-initialized slick-slider"><div class="slick-list draggable" style="height: 761px;"><div class="slick-track" style="opacity: 1; width: 2708px;"><div aria-hidden="false" class="fsElementContent image-element slick-slide slick-current slick-active" data-slick-index="0" style="width: 677px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;" tabindex="0">
+<article class="fsResource fsResourceTypeImage"><div alt="" class="image-holder" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="Relationships.jpg" data-resource-uuid="e53241ef-ebcc-4267-bd93-9bf36251e46e" loading="lazy" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></div></article>
+</div><div aria-hidden="true" class="fsElementContent image-element slick-slide" data-slick-index="1" style="width: 677px; position: relative; left: -677px; top: 0px; z-index: 998; opacity: 0;" tabindex="-1">
+<article class="fsResource fsResourceTypeImage"><div alt="" class="image-holder" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="pedagogy.jpg" data-resource-uuid="0a02f813-9fd3-45c4-a06f-db329850171b" loading="lazy" src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></div></article>
+</div><div aria-hidden="true" class="fsElementContent image-element slick-slide" data-slick-index="2" style="width: 677px; position: relative; left: -1354px; top: 0px; z-index: 998; opacity: 0;" tabindex="-1">
+<article class="fsResource fsResourceTypeImage"><div alt="" class="image-holder" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="FlexibleLearningPaths.jpg" data-resource-uuid="0dcf16ae-1df0-4623-9d51-848eed911445" loading="lazy" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></div></article>
+</div><div aria-hidden="true" class="fsElementContent image-element slick-slide" data-slick-index="3" style="width: 677px; position: relative; left: -2031px; top: 0px; z-index: 998; opacity: 0;" tabindex="-1">
+<article class="fsResource fsResourceTypeImage"><div alt="" class="image-holder" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg" data-resource-uuid="a45db26d-29d2-44fb-b712-714f38bb459d" loading="lazy" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></div></article>
+</div></div></div></div></div>
+<div class="text-wrapper"><header class="intro-desktop-text" style="margin-top: 0px;">
+<h2 class="fsElementTitle" id="fsElementTitle_123445">Una educación diseñada en torno a ti</h2>
+<div class="fsElementHeaderContent">
+<p>Aprendizaje personalizado en Barkley</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>Barkley reconoce a cada estudiante como un individuo único. Nuestro currículum se adapta a él, asegurando el apoyo necesario para prosperar dentro y fuera del aula.</p>
+</div>
+<button class="intro-indicator"><span>Our four areas of focus</span></button></footer><button class="intro-trigger"><span>Our four areas of focus</span></button></header>
+<div class="text-slider"><header>
+<h2 class="fsElementTitle" id="fsElementTitle_123446">Cuatro Áreas de Enfoque</h2>
+<div class="fsElementHeaderContent">
+<p>Aprendizaje personalizado en Barkley</p>
+</div>
+</header><div class="fsElementContent slick-initialized slick-slider slick-dotted">
+<div class="slick-list draggable"><div class="slick-track" style="opacity: 1; width: 2248px;"><section aria-hidden="false" aria-labelledby="slick-slide-control60" class="fsElement fsResourceElement fsSingleItem learning-box fsResourcesCombined slick-slide slick-current slick-active" data-display-items="collections_and_resources" data-slick-index="0" data-source-element-id="123447" data-source-page-id="4747" data-use-new="true" id="slick-slide60" role="tabpanel" style="width: 562px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;" tabindex="0">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_123447"><div class="index-box"><span>1</span></div>Acompañamiento</h2>
+<div class="fsElementHeaderContent">
+<p>Vínculos reales con asesores académicos que conocen a cada estudiante y lo acompañan en su progreso.</p>
+</div>
+</header>
+<div class="fsElementContent">
+<article class="fsResource fsResourceTypeImage"><div alt="" class="image-holder" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756909427/isb/zfyqaxnr4tqgyfvdsfhp/Relationships.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="Relationships.jpg" data-resource-uuid="e53241ef-ebcc-4267-bd93-9bf36251e46e" loading="lazy" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></div></article>
+</div>
+</section><section aria-hidden="true" aria-labelledby="slick-slide-control61" class="fsElement fsResourceElement fsSingleItem learning-box fsResourcesCombined slick-slide" data-display-items="collections_and_resources" data-slick-index="1" data-source-element-id="123448" data-source-page-id="4747" data-use-new="true" id="slick-slide61" role="tabpanel" style="width: 562px; position: relative; left: -562px; top: 0px; z-index: 998; opacity: 0;" tabindex="-1">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_123448"><div class="index-box"><span>2</span></div>Metodología</h2>
+<div class="fsElementHeaderContent">
+<p>Nuestros tutores diseñan evaluación y contenido diferenciado según el perfil de cada estudiante.</p>
+</div>
+</header>
+<div class="fsElementContent">
+<article class="fsResource fsResourceTypeImage"><div alt="" class="image-holder" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756965354/isb/e8le0d9la3w93juq6sum/pedagogy.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="pedagogy.jpg" data-resource-uuid="0a02f813-9fd3-45c4-a06f-db329850171b" loading="lazy" src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></div></article>
+</div>
+</section><section aria-hidden="true" aria-labelledby="slick-slide-control62" class="fsElement fsResourceElement fsSingleItem learning-box fsResourcesCombined slick-slide" data-display-items="collections_and_resources" data-slick-index="2" data-source-element-id="123449" data-source-page-id="4747" data-use-new="true" id="slick-slide62" role="tabpanel" style="width: 562px; position: relative; left: -1124px; top: 0px; z-index: 998; opacity: 0;" tabindex="-1">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_123449"><div class="index-box"><span>3</span></div>Rutas Flexibles</h2>
+<div class="fsElementHeaderContent">
+<p>Cada estudiante avanza a su ritmo, con fechas límite claras y amplio margen de organización.</p>
+</div>
+</header>
+<div class="fsElementContent">
+<article class="fsResource fsResourceTypeImage"><div alt="" class="image-holder" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756907779/isb/jxwqqjls323hkeivkbh6/FlexibleLearningPaths.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="FlexibleLearningPaths.jpg" data-resource-uuid="0dcf16ae-1df0-4623-9d51-848eed911445" loading="lazy" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></div></article>
+</div>
+</section><section aria-hidden="true" aria-labelledby="slick-slide-control63" class="fsElement fsResourceElement fsSingleItem learning-box fsResourcesCombined slick-slide" data-display-items="collections_and_resources" data-slick-index="3" data-source-element-id="123450" data-source-page-id="4747" data-use-new="true" id="slick-slide63" role="tabpanel" style="width: 562px; position: relative; left: -1686px; top: 0px; z-index: 998; opacity: 0;" tabindex="-1">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_123450"><div class="index-box"><span>4</span></div>Plataforma</h2>
+<div class="fsElementHeaderContent">
+<p>Seguimiento determinístico de progreso — sin inteligencia artificial generativa en el aula.</p>
+</div>
+</header>
+<div class="fsElementContent">
+<article class="fsResource fsResourceTypeImage"><div alt="" class="image-holder" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756907613/isb/fuew2wwfelwdv9xr0dut/2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="2ED6047B-6691-45A1-84E1-8FE9B9F4AB24_1_201_a.jpg" data-resource-uuid="a45db26d-29d2-44fb-b712-714f38bb459d" loading="lazy" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></div></article>
+</div>
+</section></div></div></div>
+<div class="slider-controls">
+<div class="arrows-wrapper"><button aria-disabled="true" aria-label="Previous" class="slick-prev slick-arrow slick-disabled" style="" type="button">Previous</button><button aria-disabled="false" aria-label="Next" class="slick-next slick-arrow" style="" type="button">Next</button></div>
+<ul class="slick-dots" role="tablist" style=""><li class="slick-active" role="presentation"><button aria-controls="slick-slide60" aria-label="1 of 4" aria-selected="true" id="slick-slide-control60" role="tab" tabindex="0" type="button">1</button></li><li role="presentation"><button aria-controls="slick-slide61" aria-label="2 of 4" id="slick-slide-control61" role="tab" tabindex="-1" type="button">2</button></li><li role="presentation"><button aria-controls="slick-slide62" aria-label="3 of 4" id="slick-slide-control62" role="tab" tabindex="-1" type="button">3</button></li><li role="presentation"><button aria-controls="slick-slide63" aria-label="4 of 4" id="slick-slide-control63" role="tab" tabindex="-1" type="button">4</button></li></ul></div>
+</div>
+</div>
+</div><div class="svg-masks">
+<svg height="0" preserveaspectratio="none" style="position:absolute;" viewbox="0 0 1 1" width="0">
+<defs>
+<clippath clippathunits="objectBoundingBox" id="four-circles-mask">
+<circle cx="0.25" cy="0.25" r="0.25"></circle>
+<circle cx="0.75" cy="0.25" r="0.25"></circle>
+<circle cx="0.25" cy="0.75" r="0.25"></circle>
+<circle cx="0.75" cy="0.75" r="0.25"></circle>
+</clippath>
+</defs>
+</svg>
+<svg height="0" preserveaspectratio="none" style="position:absolute" viewbox="0 0 1 1" width="0">
+<defs>
+<clippath clippathunits="objectBoundingBox" id="three-pills-mask">
+<rect height="0.33" rx="0.15" width="1" x="0" y="0"></rect>
+<rect height="0.31" rx="0.15" width="1" x="0" y="0.33"></rect>
+<rect height="0.33" rx="0.15" width="1" x="0" y="0.64"></rect>
+</clippath>
+</defs>
+</svg>
+<svg height="0" preserveaspectratio="none" style="position:absolute;" viewbox="0 0 1 1" width="0" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<clippath clippathunits="objectBoundingBox" id="arch-mask">
+<!-- Semicerc de sus -->
+<path d="
+                M0 0.5
+                A0.5 0.5 0 0 1 1 0.5
+                L1 0.5
+                L0 0.5
+                Z
+            "></path>
+<!-- Semicerc de jos (identică, doar mutată mai jos) -->
+<path d="
+                M0 1
+                A0.5 0.5 0 0 1 1 1
+                L1 1
+                L0 1
+                Z
+            "></path>
+</clippath>
+</defs>
+</svg>
+</div></section>
+</div></div>
+</div>
+<section class="fsElement fsContainer homepage-grade-levels" data-use-new="true" id="fsEl_123454">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_123454">De 5° Básico a Validación de Adultos</h2>
+<div class="fsElementHeaderContent">
+<h2>Nuestro Camino de Aprendizaje</h2>
+</div>
+</header>
+<div class="fsElementContent">
+<section class="fsElement fsResourceElement fsSingleItem grade-box fsResourcesCombined" data-display-items="collections_and_resources" data-source-element-id="123455" data-source-page-id="4747" data-use-new="true" id="fsEl_123455" tabindex="0">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_123455">Enseñanza<br/>Básica</h2>
+<div class="fsElementHeaderContent">
+<p>5° a 8° Básico</p>
+</div>
+</header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756812096/isb/dytqpuxqybnxyex78sv0/HomePageECC.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756812096/isb/dytqpuxqybnxyex78sv0/HomePageECC.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756812096/isb/dytqpuxqybnxyex78sv0/HomePageECC.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756812096/isb/dytqpuxqybnxyex78sv0/HomePageECC.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756812096/isb/dytqpuxqybnxyex78sv0/HomePageECC.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756812096/isb/dytqpuxqybnxyex78sv0/HomePageECC.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756812096/isb/dytqpuxqybnxyex78sv0/HomePageECC.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="HomePageECC.jpg" data-resource-uuid="e8d81b04-537e-4d58-8d16-0d38f4c2a88a" loading="lazy" src="https://images.unsplash.com/photo-1587616211892-b1c4652f8b45?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+<div class="color-bg"></div><div class="shape-element"></div></div>
+<footer>
+<div class="fsElementFooterContent">
+<p><a data-page-name="Early Childhood Centre" href="/fs/pages/4764">Ver más</a></p>
+</div>
+</footer>
+</section>
+<section class="fsElement fsResourceElement fsSingleItem grade-box fsResourcesCombined" data-display-items="collections_and_resources" data-source-element-id="123456" data-source-page-id="4747" data-use-new="true" id="fsEl_123456" tabindex="0">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_123456">Enseñanza Media</h2>
+<div class="fsElementHeaderContent">
+<p>1° a 4° Medio</p>
+</div>
+</header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756812097/isb/pxkhbtgcynwv8oxt8zic/HomePageES.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756812097/isb/pxkhbtgcynwv8oxt8zic/HomePageES.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756812097/isb/pxkhbtgcynwv8oxt8zic/HomePageES.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756812097/isb/pxkhbtgcynwv8oxt8zic/HomePageES.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756812097/isb/pxkhbtgcynwv8oxt8zic/HomePageES.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756812097/isb/pxkhbtgcynwv8oxt8zic/HomePageES.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756812097/isb/pxkhbtgcynwv8oxt8zic/HomePageES.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="HomePageES.jpg" data-resource-uuid="fcaf6ef5-e948-421e-90ec-d13e41d9f221" loading="lazy" src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+<div class="color-bg"></div><div class="shape-element"></div></div>
+<footer>
+<div class="fsElementFooterContent">
+<p><a data-page-name="Enseñanza Media" href="/fs/pages/4766">Ver más</a></p>
+</div>
+</footer>
+</section>
+<section class="fsElement fsResourceElement fsSingleItem grade-box fsResourcesCombined" data-display-items="collections_and_resources" data-source-element-id="123457" data-source-page-id="4747" data-use-new="true" id="fsEl_123457" tabindex="0">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_123457">Validación de Adultos</h2>
+<div class="fsElementHeaderContent">
+<p>Mayores de 18 años</p>
+</div>
+</header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6667186282151208" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756812102/isb/dgqi0ue0fvyqhzd81e8p/HomepageMiddleSchool.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756812102/isb/dgqi0ue0fvyqhzd81e8p/HomepageMiddleSchool.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756812102/isb/dgqi0ue0fvyqhzd81e8p/HomepageMiddleSchool.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756812102/isb/dgqi0ue0fvyqhzd81e8p/HomepageMiddleSchool.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756812102/isb/dgqi0ue0fvyqhzd81e8p/HomepageMiddleSchool.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756812102/isb/dgqi0ue0fvyqhzd81e8p/HomepageMiddleSchool.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756812102/isb/dgqi0ue0fvyqhzd81e8p/HomepageMiddleSchool.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6667186282151208" data-permitted-user="true" data-resource-title="HomepageMiddleSchool.jpg" data-resource-uuid="649b8355-2e3b-4c55-a551-9119148c85a9" loading="lazy" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+<div class="color-bg"></div><div class="shape-element"></div></div>
+<footer>
+<div class="fsElementFooterContent">
+<p><a data-page-name="Validación de Adultos" href="/fs/pages/4767">Ver más</a></p>
+</div>
+</footer>
+</section>
+<section class="fsElement fsResourceElement fsSingleItem grade-box fsResourcesCombined" data-display-items="collections_and_resources" data-source-element-id="123458" data-source-page-id="4747" data-use-new="true" id="fsEl_123458" tabindex="0">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_123458">Exámenes Libres</h2>
+<div class="fsElementHeaderContent">
+<p>Ante el MINEDUC</p>
+</div>
+</header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756996697/isb/rlg8vqgkdvvsrlrog88d/HSHeroImage.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756996697/isb/rlg8vqgkdvvsrlrog88d/HSHeroImage.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756996697/isb/rlg8vqgkdvvsrlrog88d/HSHeroImage.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756996697/isb/rlg8vqgkdvvsrlrog88d/HSHeroImage.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756996697/isb/rlg8vqgkdvvsrlrog88d/HSHeroImage.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756996697/isb/rlg8vqgkdvvsrlrog88d/HSHeroImage.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756996697/isb/rlg8vqgkdvvsrlrog88d/HSHeroImage.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="HSHeroImage.jpg" data-resource-uuid="3efa27ff-f120-4954-9ffc-75c1b646ccf9" loading="lazy" src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+<div class="color-bg"></div><div class="shape-element"></div></div>
+<footer>
+<div class="fsElementFooterContent">
+<p><a data-page-name="High School" href="/fs/pages/4768">Ver más</a></p>
+</div>
+</footer>
+</section>
+</div>
+<div class="bottom-controls"><footer>
+<div class="fsElementFooterContent">
+<p><a data-page-name="Learning" href="/fs/pages/4763">Aprendizaje en Barkley</a></p>
+</div>
+</footer><div class="arrows-wrapper"></div></div></section>
+<section class="fsElement fsContainer enh-facts image-left" data-use-new="true" id="fsEl_123437">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_123437">Más que un colegio</h2>
+<div class="fsElementHeaderContent">
+<p>Barkley en Cifras</p>
+</div>
+</header>
+<div class="facts-slider"><div class="fsElementContent slick-initialized slick-slider">
+<div class="slick-list draggable"><div class="slick-track" style="opacity: 1; width: 4392px; transform: translate3d(-732px, 0px, 0px);"><section aria-hidden="true" class="fsElement fsResourceElement fsSingleItem fact-box fact-shape-arrow fsResourcesCombined slick-slide slick-cloned" data-display-items="collections_and_resources" data-slick-index="-2" data-source-element-id="123441" data-source-page-id="4747" data-use-new="true" id="" style="width: 351px;" tabindex="-1"><div class="color-bg"></div>
+<header style="transform: translateY(calc(100% - 190px));">
+<h2 class="fsElementTitle" id="">2027<em>+</em></h2>
+<div class="fsElementHeaderContent">
+<p>Año de apertura</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>Año académico de apertura de Barkley Online.</p>
+</div>
+</footer></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="Teachers.jpg" data-resource-uuid="7d51c985-a25e-4ac5-b38a-c5f01bdb73ea" loading="lazy" src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" class="fsElement fsResourceElement fsSingleItem fact-box fact-shape-star color-yellow fsResourcesCombined slick-slide slick-cloned" data-display-items="collections_and_resources" data-slick-index="-1" data-source-element-id="123442" data-source-page-id="4747" data-use-new="true" id="" style="width: 351px;" tabindex="-1"><div class="color-bg"></div>
+<header style="transform: translateY(calc(100% - 221.25px));">
+<h2 class="fsElementTitle" id="">MINEDUC</h2>
+<div class="fsElementHeaderContent">
+<p>Validación oficial</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>Preparación para exámenes libres ante el Ministerio de Educación de Chile.</p>
+</div>
+</footer></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666115702479339" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666115702479339" data-permitted-user="true" data-resource-title="Ratio.jpg" data-resource-uuid="eafeab6f-d8ed-4284-9a2c-6be75a23f626" loading="lazy" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="false" class="fsElement fsResourceElement fsSingleItem fact-box fact-shape-arrow color-purple fsResourcesCombined slick-slide slick-current slick-active" data-display-items="collections_and_resources" data-slick-index="0" data-source-element-id="123438" data-source-page-id="4747" data-use-new="true" id="fsEl_123438" style="width: 351px;" tabindex="0"><div class="color-bg"></div>
+<header style="transform: translateY(calc(100% - 190px));">
+<h2 class="fsElementTitle" id="fsElementTitle_123438">100<em>+</em></h2>
+<div class="fsElementHeaderContent">
+<p>Asincrónico</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>Sin Zoom, sin horario fijo — cada estudiante avanza a su propio ritmo.</p>
+</div>
+</footer></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="Morethanaschoolanguages.jpg" data-resource-uuid="4fb00d13-6ae4-4a4d-b953-a1895806397a" loading="lazy" src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="false" class="fsElement fsResourceElement fsSingleItem fact-box fact-shape-circle color-green fsResourcesCombined slick-slide slick-active" data-display-items="collections_and_resources" data-slick-index="1" data-source-element-id="123439" data-source-page-id="4747" data-use-new="true" id="fsEl_123439" style="width: 351px;" tabindex="0"><div class="color-bg"></div>
+<header style="transform: translateY(calc(100% - 190px));">
+<h2 class="fsElementTitle" id="fsElementTitle_123439">5°–4°<em>+</em></h2>
+<div class="fsElementHeaderContent">
+<p>Básico a Medio</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>5° básico a 4° medio, y validación de estudios para adultos.</p>
+</div>
+</footer></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.666606170598911" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.666606170598911" data-permitted-user="true" data-resource-title="Nationalities.jpg" data-resource-uuid="91fc0734-f77a-462b-926f-d1658eb6dc6f" loading="lazy" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" class="fsElement fsResourceElement fsSingleItem fact-box fact-shape-heart color-pink fsResourcesCombined slick-slide" data-display-items="collections_and_resources" data-slick-index="2" data-source-element-id="123440" data-source-page-id="4747" data-use-new="true" id="fsEl_123440" style="width: 351px;" tabindex="-1"><div class="color-bg"></div>
+<header style="transform: translateY(calc(100% - 190px));">
+<h2 class="fsElementTitle" id="fsElementTitle_123440">6<em>+</em></h2>
+<div class="fsElementHeaderContent">
+<p>Asignaturas evaluadas</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>Matemáticas, Lenguaje, Historia, Ciencias, Inglés y Filosofía.</p>
+</div>
+</footer></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="students.jpg" data-resource-uuid="60e9c4f0-597f-4173-a242-bae9debca114" loading="lazy" src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" class="fsElement fsResourceElement fsSingleItem fact-box fact-shape-arrow fsResourcesCombined slick-slide" data-display-items="collections_and_resources" data-slick-index="3" data-source-element-id="123441" data-source-page-id="4747" data-use-new="true" id="fsEl_123441" style="width: 351px;" tabindex="-1"><div class="color-bg"></div>
+<header style="transform: translateY(calc(100% - 190px));">
+<h2 class="fsElementTitle" id="fsElementTitle_123441">2027<em>+</em></h2>
+<div class="fsElementHeaderContent">
+<p>Año de apertura</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>Año académico de apertura de Barkley Online.</p>
+</div>
+</footer></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="Teachers.jpg" data-resource-uuid="7d51c985-a25e-4ac5-b38a-c5f01bdb73ea" loading="lazy" src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" class="fsElement fsResourceElement fsSingleItem fact-box fact-shape-star color-yellow fsResourcesCombined slick-slide" data-display-items="collections_and_resources" data-slick-index="4" data-source-element-id="123442" data-source-page-id="4747" data-use-new="true" id="fsEl_123442" style="width: 351px;" tabindex="-1"><div class="color-bg"></div>
+<header style="transform: translateY(calc(100% - 221.25px));">
+<h2 class="fsElementTitle" id="fsElementTitle_123442">MINEDUC</h2>
+<div class="fsElementHeaderContent">
+<p>Validación oficial</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>Preparación para exámenes libres ante el Ministerio de Educación de Chile.</p>
+</div>
+</footer></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666115702479339" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666115702479339" data-permitted-user="true" data-resource-title="Ratio.jpg" data-resource-uuid="eafeab6f-d8ed-4284-9a2c-6be75a23f626" loading="lazy" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" class="fsElement fsResourceElement fsSingleItem fact-box fact-shape-arrow color-purple fsResourcesCombined slick-slide slick-cloned" data-display-items="collections_and_resources" data-slick-index="5" data-source-element-id="123438" data-source-page-id="4747" data-use-new="true" id="" style="width: 351px;" tabindex="-1"><div class="color-bg"></div>
+<header style="transform: translateY(calc(100% - 190px));">
+<h2 class="fsElementTitle" id="">100<em>+</em></h2>
+<div class="fsElementHeaderContent">
+<p>Asincrónico</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>Sin Zoom, sin horario fijo — cada estudiante avanza a su propio ritmo.</p>
+</div>
+</footer></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="Morethanaschoolanguages.jpg" data-resource-uuid="4fb00d13-6ae4-4a4d-b953-a1895806397a" loading="lazy" src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" class="fsElement fsResourceElement fsSingleItem fact-box fact-shape-circle color-green fsResourcesCombined slick-slide slick-cloned" data-display-items="collections_and_resources" data-slick-index="6" data-source-element-id="123439" data-source-page-id="4747" data-use-new="true" id="" style="width: 351px;" tabindex="-1"><div class="color-bg"></div>
+<header style="transform: translateY(calc(100% - 190px));">
+<h2 class="fsElementTitle" id="">5°–4°<em>+</em></h2>
+<div class="fsElementHeaderContent">
+<p>Básico a Medio</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>5° básico a 4° medio, y validación de estudios para adultos.</p>
+</div>
+</footer></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.666606170598911" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.666606170598911" data-permitted-user="true" data-resource-title="Nationalities.jpg" data-resource-uuid="91fc0734-f77a-462b-926f-d1658eb6dc6f" loading="lazy" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" class="fsElement fsResourceElement fsSingleItem fact-box fact-shape-heart color-pink fsResourcesCombined slick-slide slick-cloned" data-display-items="collections_and_resources" data-slick-index="7" data-source-element-id="123440" data-source-page-id="4747" data-use-new="true" id="" style="width: 351px;" tabindex="-1"><div class="color-bg"></div>
+<header style="transform: translateY(calc(100% - 190px));">
+<h2 class="fsElementTitle" id="">6<em>+</em></h2>
+<div class="fsElementHeaderContent">
+<p>Asignaturas evaluadas</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>Matemáticas, Lenguaje, Historia, Ciencias, Inglés y Filosofía.</p>
+</div>
+</footer></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="students.jpg" data-resource-uuid="60e9c4f0-597f-4173-a242-bae9debca114" loading="lazy" src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" class="fsElement fsResourceElement fsSingleItem fact-box fact-shape-arrow fsResourcesCombined slick-slide slick-cloned" data-display-items="collections_and_resources" data-slick-index="8" data-source-element-id="123441" data-source-page-id="4747" data-use-new="true" id="" style="width: 351px;" tabindex="-1"><div class="color-bg"></div>
+<header style="transform: translateY(calc(100% - 190px));">
+<h2 class="fsElementTitle" id="">2027<em>+</em></h2>
+<div class="fsElementHeaderContent">
+<p>Año de apertura</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>Año académico de apertura de Barkley Online.</p>
+</div>
+</footer></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="Teachers.jpg" data-resource-uuid="7d51c985-a25e-4ac5-b38a-c5f01bdb73ea" loading="lazy" src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" class="fsElement fsResourceElement fsSingleItem fact-box fact-shape-star color-yellow fsResourcesCombined slick-slide slick-cloned" data-display-items="collections_and_resources" data-slick-index="9" data-source-element-id="123442" data-source-page-id="4747" data-use-new="true" id="" style="width: 351px;" tabindex="-1"><div class="color-bg"></div>
+<header style="transform: translateY(calc(100% - 221.25px));">
+<h2 class="fsElementTitle" id="">MINEDUC</h2>
+<div class="fsElementHeaderContent">
+<p>Validación oficial</p>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p>Preparación para exámenes libres ante el Ministerio de Educación de Chile.</p>
+</div>
+</footer></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666115702479339" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666115702479339" data-permitted-user="true" data-resource-title="Ratio.jpg" data-resource-uuid="eafeab6f-d8ed-4284-9a2c-6be75a23f626" loading="lazy" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section></div></div></div><div class="arrows-holder"><button aria-label="Previous" class="slick-prev slick-arrow" style="" type="button">Previous</button><footer>
+<div class="fsElementFooterContent">
+<p><a data-page-name="About" href="/fs/pages/4750">Discover more facts</a></p>
+</div>
+</footer><button aria-label="Next" class="slick-next slick-arrow" style="" type="button">Next</button></div></div>
+<div class="left-image-slider"><div class="fsElementContent slick-initialized slick-slider"><div class="slick-list draggable" style="height: 568px;"><div class="slick-track" style="opacity: 1; width: 2965px;"><article alt="" aria-hidden="false" class="fsResource fsResourceTypeImage slick-slide slick-current slick-active" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg%22,%22width%22:2200}]" data-slick-index="0" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756907941/isb/an4faejwbkpsuzbvuyfp/Morethanaschoolanguages.jpg"); width: 593px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;' tabindex="0"><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="Morethanaschoolanguages.jpg" data-resource-uuid="4fb00d13-6ae4-4a4d-b953-a1895806397a" loading="lazy" src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article><article alt="" aria-hidden="true" class="fsResource fsResourceTypeImage slick-slide" data-aspect-ratio="0.666606170598911" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg%22,%22width%22:2200}]" data-slick-index="1" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756966015/isb/iuroccgpn4xhwwr7lwaz/Nationalities.jpg"); width: 593px; position: relative; left: -593px; top: 0px; z-index: 998; opacity: 0;' tabindex="-1"><figure><picture><img alt="" data-aspect-ratio="0.666606170598911" data-permitted-user="true" data-resource-title="Nationalities.jpg" data-resource-uuid="91fc0734-f77a-462b-926f-d1658eb6dc6f" loading="lazy" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article><article alt="" aria-hidden="true" class="fsResource fsResourceTypeImage slick-slide" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg%22,%22width%22:2200}]" data-slick-index="2" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756966170/isb/cuyeivld8xgqvx0xdz73/students.jpg"); width: 593px; position: relative; left: -1186px; top: 0px; z-index: 998; opacity: 0;' tabindex="-1"><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="students.jpg" data-resource-uuid="60e9c4f0-597f-4173-a242-bae9debca114" loading="lazy" src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article><article alt="" aria-hidden="true" class="fsResource fsResourceTypeImage slick-slide" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg%22,%22width%22:2200}]" data-slick-index="3" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756965959/isb/yuje4xon8yrofko6etae/Teachers.jpg"); width: 593px; position: relative; left: -1779px; top: 0px; z-index: 998; opacity: 0;' tabindex="-1"><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="Teachers.jpg" data-resource-uuid="7d51c985-a25e-4ac5-b38a-c5f01bdb73ea" loading="lazy" src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article><article alt="" aria-hidden="true" class="fsResource fsResourceTypeImage slick-slide" data-aspect-ratio="0.6666115702479339" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg%22,%22width%22:2200}]" data-slick-index="4" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756965987/isb/mabomipl2tpovaiidghe/Ratio.jpg"); width: 593px; position: relative; left: -2372px; top: 0px; z-index: 998; opacity: 0;' tabindex="-1"><figure><picture><img alt="" data-aspect-ratio="0.6666115702479339" data-permitted-user="true" data-resource-title="Ratio.jpg" data-resource-uuid="eafeab6f-d8ed-4284-9a2c-6be75a23f626" loading="lazy" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article></div></div></div></div></section>
+<section class="fsElement fsContainer hp-highlights" data-use-new="true" id="fsEl_123474"><div class="wrap-inner"><div class="custom-dots"><ul class="slick-dots" role="tablist" style=""><li class="slick-active" role="presentation"><button aria-controls="slick-slide00" aria-label="1 of 6" aria-selected="true" class="dot-title" id="slick-slide-control00" role="tab" tabindex="0" type="button">Metodología</button></li><li role="presentation"><button aria-controls="slick-slide01" aria-label="2 of 6" class="dot-title" id="slick-slide-control01" role="tab" tabindex="-1" type="button">Certificación</button></li><li role="presentation"><button aria-controls="slick-slide02" aria-label="3 of 6" class="dot-title" id="slick-slide-control02" role="tab" tabindex="-1" type="button">Plataforma</button></li><li role="presentation"><button aria-controls="slick-slide03" aria-label="4 of 6" class="dot-title" id="slick-slide-control03" role="tab" tabindex="-1" type="button">Acompañamiento</button></li><li role="presentation"><button aria-controls="slick-slide04" aria-label="5 of 6" class="dot-title" id="slick-slide-control04" role="tab" tabindex="-1" type="button">Familias</button></li><li role="presentation"><button aria-controls="slick-slide05" aria-label="6 of 6" class="dot-title" id="slick-slide-control05" role="tab" tabindex="-1" type="button">Trámite</button></li></ul></div>
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_123474">La Plataforma, por Dentro</h2>
+<div class="fsElementHeaderContent">
+<h2>Descubre y Experimenta</h2>
+</div>
+</header>
+<div class="fsElementContent slick-initialized slick-slider slick-dotted">
+<div class="slick-list draggable" style="height: 779.562px;"><div class="slick-track" style="opacity: 1; width: 7770px;"><section aria-hidden="false" aria-labelledby="slick-slide-control00" class="fsElement fsResourceElement fsSingleItem program-box fsResourcesCombined slick-slide slick-current slick-active" data-display-items="collections_and_resources" data-slick-index="0" data-source-element-id="123475" data-source-page-id="4747" data-use-new="true" id="slick-slide00" role="tabpanel" style="width: 1180px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;" tabindex="0">
+<header><div class="inner-wrapper">
+<h2 class="fsElementTitle" id="fsElementTitle_123475">Metodología</h2>
+<div class="fsElementHeaderContent">
+<h3>Aprendizaje Asincrónico</h3>
+<p>Sin Zoom, sin horario fijo. Material propio diseñado para el ritmo de cada estudiante.</p>
+<p><a data-page-name="Learning" href="/fs/pages/4763" tabindex="0">Aprendizaje en Barkley</a></p>
+</div>
+</div></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.66650390625" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1750077459/isb/rmnmcrv8mjwhjttedaho/e1.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1750077459/isb/rmnmcrv8mjwhjttedaho/e1.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1750077459/isb/rmnmcrv8mjwhjttedaho/e1.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1750077459/isb/rmnmcrv8mjwhjttedaho/e1.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1750077459/isb/rmnmcrv8mjwhjttedaho/e1.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1750077459/isb/rmnmcrv8mjwhjttedaho/e1.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1750077459/isb/rmnmcrv8mjwhjttedaho/e1.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.66650390625" data-permitted-user="true" data-resource-title="e1.jpg" data-resource-uuid="5a7a7efd-2a56-41ee-8608-4e9e6398f99d" loading="lazy" src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" aria-labelledby="slick-slide-control01" class="fsElement fsResourceElement fsSingleItem program-box fsResourcesCombined slick-slide" data-display-items="collections_and_resources" data-slick-index="1" data-source-element-id="123476" data-source-page-id="4747" data-use-new="true" id="slick-slide01" role="tabpanel" style="width: 1180px; position: relative; left: -1295px; top: 0px; z-index: 998; opacity: 0;" tabindex="-1">
+<header><div class="inner-wrapper">
+<h2 class="fsElementTitle" id="fsElementTitle_123476">Certificación</h2>
+<div class="fsElementHeaderContent">
+<h3>Exámenes Libres MINEDUC</h3>
+<p>Validación oficial ante el Ministerio de Educación de Chile, desde 5° básico a 4° medio.</p>
+<p><a data-page-name="Language Learning" href="/fs/pages/4772" tabindex="-1">Language Learning</a></p>
+</div>
+</div></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756995469/isb/yac10xhyzeanq6rm4emj/languages.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756995469/isb/yac10xhyzeanq6rm4emj/languages.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756995469/isb/yac10xhyzeanq6rm4emj/languages.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756995469/isb/yac10xhyzeanq6rm4emj/languages.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756995469/isb/yac10xhyzeanq6rm4emj/languages.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756995469/isb/yac10xhyzeanq6rm4emj/languages.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756995469/isb/yac10xhyzeanq6rm4emj/languages.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="languages.jpg" data-resource-uuid="1689bee7-a501-4cfa-96f1-7204b349c05f" loading="lazy" src="https://images.unsplash.com/photo-1555212697-194d092e3b8f?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" aria-labelledby="slick-slide-control02" class="fsElement fsResourceElement fsSingleItem program-box fsResourcesCombined slick-slide" data-display-items="collections_and_resources" data-slick-index="2" data-source-element-id="123477" data-source-page-id="4747" data-use-new="true" id="slick-slide02" role="tabpanel" style="width: 1180px; position: relative; left: -2590px; top: 0px; z-index: 998; opacity: 0;" tabindex="-1">
+<header><div class="inner-wrapper">
+<h2 class="fsElementTitle" id="fsElementTitle_123477">Plataforma</h2>
+<div class="fsElementHeaderContent">
+<h3>Seguimiento Algorítmico</h3>
+<p>Un sistema determinístico mide resultados y ajusta el contenido — sin IA generativa.</p>
+<p><a data-page-name="Athletics" href="/fs/pages/4797" tabindex="-1">Barkley Raiders</a></p>
+</div>
+</div></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756995494/isb/j3uurxbrlo3twi4jlorg/athletics.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756995494/isb/j3uurxbrlo3twi4jlorg/athletics.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756995494/isb/j3uurxbrlo3twi4jlorg/athletics.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756995494/isb/j3uurxbrlo3twi4jlorg/athletics.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756995494/isb/j3uurxbrlo3twi4jlorg/athletics.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756995494/isb/j3uurxbrlo3twi4jlorg/athletics.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756995494/isb/j3uurxbrlo3twi4jlorg/athletics.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="athletics.jpg" data-resource-uuid="ecaf82d7-3985-4bce-8783-8fe257055f93" loading="lazy" src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" aria-labelledby="slick-slide-control03" class="fsElement fsResourceElement fsSingleItem program-box fsResourcesCombined slick-slide" data-display-items="collections_and_resources" data-slick-index="3" data-source-element-id="123609" data-source-page-id="4747" data-use-new="true" id="slick-slide03" role="tabpanel" style="width: 1180px; position: relative; left: -3885px; top: 0px; z-index: 998; opacity: 0;" tabindex="-1">
+<header><div class="inner-wrapper">
+<h2 class="fsElementTitle" id="fsElementTitle_123609">Acompañamiento</h2>
+<div class="fsElementHeaderContent">
+<h3>Tutores por Asignatura</h3>
+<p>Apoyo 1 a 1 en las asignaturas que más lo necesitan.</p>
+<p><a data-page-name="Arts" href="/fs/pages/4795" tabindex="-1">Arts at Barkley</a></p>
+</div>
+</div></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.625" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1754732447/isb/ez4vpzloyoqajcbjkwhq/Urinetownrehearsal-7.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1754732447/isb/ez4vpzloyoqajcbjkwhq/Urinetownrehearsal-7.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1754732447/isb/ez4vpzloyoqajcbjkwhq/Urinetownrehearsal-7.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1754732447/isb/ez4vpzloyoqajcbjkwhq/Urinetownrehearsal-7.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1754732447/isb/ez4vpzloyoqajcbjkwhq/Urinetownrehearsal-7.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1754732447/isb/ez4vpzloyoqajcbjkwhq/Urinetownrehearsal-7.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1754732447/isb/ez4vpzloyoqajcbjkwhq/Urinetownrehearsal-7.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.625" data-permitted-user="true" data-resource-title="Urinetownrehearsal-7.jpg" data-resource-uuid="11655ada-8b3a-4958-bd37-3e0fa6f33a3d" loading="lazy" src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" aria-labelledby="slick-slide-control04" class="fsElement fsResourceElement fsSingleItem program-box fsResourcesCombined slick-slide" data-display-items="collections_and_resources" data-slick-index="4" data-source-element-id="123610" data-source-page-id="4747" data-use-new="true" id="slick-slide04" role="tabpanel" style="width: 1180px; position: relative; left: -5180px; top: 0px; z-index: 998; opacity: 0;" tabindex="-1">
+<header><div class="inner-wrapper">
+<h2 class="fsElementTitle" id="fsElementTitle_123610">Familias</h2>
+<div class="fsElementHeaderContent">
+<h3>Portal de Apoderados</h3>
+<p>Transparencia total: seguimiento en tiempo real del progreso de cada estudiante.</p>
+<p><a data-page-name="Familias" href="/fs/pages/4771" tabindex="-1">Support at Barkley</a></p>
+</div>
+</div></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756907530/isb/byv7oo7o2qt3asyesenn/DSC_48061.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756907530/isb/byv7oo7o2qt3asyesenn/DSC_48061.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756907530/isb/byv7oo7o2qt3asyesenn/DSC_48061.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756907530/isb/byv7oo7o2qt3asyesenn/DSC_48061.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756907530/isb/byv7oo7o2qt3asyesenn/DSC_48061.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756907530/isb/byv7oo7o2qt3asyesenn/DSC_48061.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756907530/isb/byv7oo7o2qt3asyesenn/DSC_48061.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="DSC_48061.jpg" data-resource-uuid="594ce571-b344-4da4-91e1-1e1d6f6033f8" loading="lazy" src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section><section aria-hidden="true" aria-labelledby="slick-slide-control05" class="fsElement fsResourceElement fsSingleItem program-box fsResourcesCombined slick-slide" data-display-items="collections_and_resources" data-slick-index="5" data-source-element-id="123478" data-source-page-id="4747" data-use-new="true" id="slick-slide05" role="tabpanel" style="width: 1180px; position: relative; left: -6475px; top: 0px; z-index: 998; opacity: 0;" tabindex="-1">
+<header><div class="inner-wrapper">
+<h2 class="fsElementTitle" id="fsElementTitle_123478">Trámite</h2>
+<div class="fsElementHeaderContent">
+<h3>Validación de Estudios</h3>
+<p>Guías y asesoría personalizada para completar el trámite MINEDUC correctamente.</p>
+<p><a data-page-name="After-School Activities" href="/fs/pages/4799" tabindex="-1">After-School activities</a></p>
+</div>
+</div></header>
+<div class="fsElementContent">
+<article alt="" class="fsResource fsResourceTypeImage" data-aspect-ratio="0.6666666666666666" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1756995511/isb/idfufs3m5iognimlrdfj/AfterSchool.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1756995511/isb/idfufs3m5iognimlrdfj/AfterSchool.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_3/v1756995511/isb/idfufs3m5iognimlrdfj/AfterSchool.jpg%22,%22width%22:800},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756995511/isb/idfufs3m5iognimlrdfj/AfterSchool.jpg%22,%22width%22:1200},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_5/v1756995511/isb/idfufs3m5iognimlrdfj/AfterSchool.jpg%22,%22width%22:1600},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_6/v1756995511/isb/idfufs3m5iognimlrdfj/AfterSchool.jpg%22,%22width%22:2200}]" style='background-image: url("https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_4/v1756995511/isb/idfufs3m5iognimlrdfj/AfterSchool.jpg");'><figure><picture><img alt="" data-aspect-ratio="0.6666666666666666" data-permitted-user="true" data-resource-title="AfterSchool.jpg" data-resource-uuid="b229e9ba-1c90-473d-9a66-2e23ad46c6e5" loading="lazy" src="https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&amp;fit=crop&amp;w=900&amp;q=75" style=""/></picture></figure></article>
+</div>
+</section></div></div>
+</div>
+</div></section>
+</div>
+</div>
+</main>
+</div>
+</div></body></html>
+<html><body><footer class="fsFooter" id="fsFooter">
+<div class="fsBanner fsStyleAutoclear" data-settings-id="114965" data-use-new="true" id="fsEl_118396">
+<section class="fsElement fsContainer footer--holder" data-use-new="true" id="fsEl_118616">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118616">Footer Holder</h2>
+</header>
+<div class="fsElementContent">
+<section class="fsElement fsContainer footer--top--wrapper" data-use-new="true" id="fsEl_118617">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118617">Footer Top Wrapper</h2>
+</header>
+<div class="fsElementContent">
+<section class="fsElement fsLocationElement fsSingleItem footer--logo fsThumbnailOriginal fsThumbnailFull" data-use-new="true" id="fsEl_118619">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118619">Footer Logo</h2>
+</header>
+<div class="fsElementContent">
+<article class="fsLocationSingleItem"><div class="fsThumbnail fsThumbnailLogo"><a class="fsLocationLink" href="#"><img alt="" data-aspect-ratio="0.46564885496183206" loading="lazy" src="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' width='106' height='106' viewBox='0 0 106 106'&gt;&lt;rect x='3' y='3' width='100' height='100' fill='%23003366' stroke='%23003366' stroke-width='4'/&gt;&lt;text x='53' y='58' font-family='Poppins,sans-serif' font-size='34' font-weight='800' fill='white' text-anchor='middle'&gt;BK&lt;/text&gt;&lt;rect x='30' y='72' width='46' height='5' rx='2.5' fill='%23FF3D37'/&gt;&lt;/svg&gt;" style=""/></a></div><a class="fsLocationLink fsLocationLinkWrapper" href="#"><div class="fsTitle fsLocationTitle">The Barkley</div><div class="fsLocationSubtitle">Online School</div></a></article>
+</div>
+</section>
+<section class="fsElement fsLayout fsFourColumnLayout footer--top--layout fsStyleAutoclear" data-use-new="true" id="fsEl_118620">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118620">Footer Top Layout</h2>
+</header>
+<div class="fsDiv fsStyleColumn fsStyleColumn-1 fsStyleAutoclear" id="fsEl_118621">
+<section class="fsElement fsLocationElement fsSingleItem footer--contact--details fsThumbnailOriginal fsThumbnailSmall" data-use-new="true" id="fsEl_118625">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118625">Contacto</h2>
+</header>
+<div class="fsElementContent">
+<article class="fsLocationSingleItem"><div class="fsLocationAddress fsLocationAddress-1">Colegio 100% asincrónico Chile, Belgium</div><div class="fsLocationPhone"><a href="tel:admisiones@barkley.cl">admisiones@barkley.cl</a></div></article>
+</div>
+<footer>
+<div class="fsElementFooterContent">
+<p><a href="#" target="_blank">Find us on Google Maps</a></p>
+</div>
+</footer>
+</section>
+</div>
+<div class="fsDiv fsStyleColumn fsStyleColumn-2 fsStyleAutoclear" id="fsEl_118622">
+<section class="fsElement fsNavigation fsList footer--quicklinks--nav" data-use-new="true" id="fsEl_118626">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118626">Enlaces útiles</h2>
+</header>
+<div class="fsElementContent">
+<nav><ul class="fsNavLevel1"><li><a href="/join-isb">El método</a></li><li><a href="/admissions">Preguntas frecuentes</a></li><li><a href="/child-safeguarding">Inscripción</a></li></ul></nav>
+</div>
+</section>
+</div>
+<div class="fsDiv fsStyleColumn fsStyleColumn-3 fsStyleAutoclear" id="fsEl_118623">
+<section class="fsElement fsNavigation fsList footer--cta--nav" data-use-new="true" id="fsEl_118627">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118627">Footer CTA</h2>
+</header>
+<div class="fsElementContent">
+<nav><ul class="fsNavLevel1"><li class="icon-location-custom"><a href="/admissions/inquire">Visitar</a></li><li class="icon-apply-custom"><a href="/admissions/apply">Postular</a></li></ul></nav>
+</div>
+</section>
+</div>
+<div class="fsDiv fsStyleColumn fsStyleColumn-4 fsStyleColumn-last fsStyleAutoclear" id="fsEl_118624">
+</div>
+</section>
+<section class="fsElement fsEmbed back--to--top mobile" data-use-new="true" id="fsEl_118645">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118645">Mobile Back To Top BTN -  Footer</h2>
+</header>
+<div class="fsElementContent">
+<button aria-label="go top" class="back-top">
+<span>Back to top</span>
+</button>
+</div>
+</section>
+<section class="fsElement fsContent footer--decorative--icons" data-use-new="true" id="fsEl_118644">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118644">Decorative Icons</h2>
+</header>
+<div class="fsElementContent">
+<ul>
+
+
+
+
+
+
+</ul>
+</div>
+</section>
+</div>
+</section>
+<section class="fsElement fsContainer footer--bottom--wrapper" data-use-new="true" id="fsEl_118618">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118618">Footer Bottom Wrapper</h2>
+</header>
+<div class="fsElementContent">
+<section class="fsElement fsNavigation fsList footer--utility--nav" data-use-new="true" id="fsEl_118632">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118632">Footer Utility</h2>
+</header>
+<div class="fsElementContent">
+<nav><ul class="fsNavLevel1"><li><a href="https://isb-3-eu-west2-01.preview.finalsitecdn.com/site-map">Site Map</a></li><li><a href="https://isb-3-eu-west2-01.preview.finalsitecdn.com/accessibility-statement">Accessibility</a></li><li><a href="https://isb-3-eu-west2-01.preview.finalsitecdn.com/privacy-policy">Privacy Policy</a></li><li><a href="https://resources.finalsite.net/images/v1747216704/isb/pfdqoitzvlxpbfmctjve/ISBCookiePolicy.pdf" target="_blank">Cookie Policy<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li></ul></nav>
+</div>
+</section><section class="fsElement fsNavigation fsList nav-social" data-use-new="true" id="fsEl_118633">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118633">Socials</h2>
+</header>
+<div class="fsElementContent">
+<nav><ul class="fsNavLevel1"><li><a href="#">Instagram</a></li><li><a href="#" target="_blank">Facebook<span class="fsStyleSROnly" data-nosnippet="">(opens in new window/tab)</span></a></li><li><a href="#">LinkedIn</a></li><li><a href="#">YouTube</a></li></ul></nav>
+</div>
+</section>
+<div id="fsPoweredByFinalsite" role="complementary">
+<div>
+<a href="https://www.finalsite.com/international-schools" target="_blank" title="Powered by Finalsite opens in a new window">Powered by Finalsite</a>
+</div>
+</div></div>
+</section>
+<section class="fsElement fsEmbed back--to--top desktop" data-use-new="true" id="fsEl_118715">
+<header>
+<h2 class="fsElementTitle" id="fsElementTitle_118715">Desktop Back To Top BTN -  Footer</h2>
+</header>
+<div class="fsElementContent">
+<button aria-label="go top" class="back-top">
+<span>Back to top</span>
+</button>
+</div>
+</section>
+</div>
+</section>
+</div>
+</footer></body></html>
+</div>
+</body>
+</html>
