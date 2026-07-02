@@ -315,7 +315,7 @@ export default function Home() {
               </div>
               <div style={{ flex: "1 1 380px", minWidth: 280, background: "#fff", padding: "40px 32px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                 <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Sin clases en vivo. Sin horarios fijos.</p>
-                <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 700, color: SLATE, margin: "0 0 16px" }}>Aprende cuando puedas. Avanza a tu ritmo real.</h2>
+                <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 700, color: NAVY, margin: "0 0 16px" }}>Aprende cuando puedas. Avanza a tu ritmo real.</h2>
                 <p style={{ fontSize: 15, margin: 0 }}>Barkley es 100% asincrónico: nada de clases por Zoom ni horarios que cumplir. Cada estudiante avanza a su propio paso, con tutores y asesores disponibles cuando los necesita — pensado para quienes no tienen acceso constante a un horario fijo, y para quienes aprenden distinto.</p>
               </div>
             </div>
