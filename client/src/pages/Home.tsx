@@ -98,7 +98,7 @@ const HERO_PHOTO = "/images/hero-estudiante.jpeg";
 
 const PILARES = [
   { title: "Acompañamiento", img: "/images/acompanamiento.jpeg", text: "Vínculos reales con asesores académicos que conocen a cada estudiante y lo acompañan en su progreso." },
-  { title: "Metodología", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=700&q=75", text: "Trabajamos con Mastery Learning (Aprendizaje por Dominio), el modelo de Benjamin Bloom (Harvard, 1968): cada unidad se desbloquea solo si dominas la anterior — video corto, práctica, y si te cuesta, refuerzo antes de seguir. Sin saltos, sin huecos." },
+  { title: "Metodología", img: "/images/metodologia.jpeg", text: "Trabajamos con Mastery Learning (Aprendizaje por Dominio), el modelo de Benjamin Bloom (Harvard, 1968): cada unidad se desbloquea solo si dominas la anterior — video corto, práctica, y si te cuesta, refuerzo antes de seguir. Sin saltos, sin huecos." },
   { title: "Rutas flexibles", img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=700&q=75", text: "Cada estudiante avanza a su ritmo, con fechas límite claras y amplio margen de organización." },
   { title: "Plataforma", img: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=700&q=75", text: "Seguimiento determinístico de progreso, evaluación diferenciada y acompañamiento docente." },
 ];
