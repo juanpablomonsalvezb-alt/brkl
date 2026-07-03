@@ -104,7 +104,7 @@ const PILARES = [
 ];
 
 const NIVELES = [
-  { title: "Enseñanza Básica", sub: "5° a 8° Básico", img: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=700&q=75" },
+  { title: "Enseñanza Básica", sub: "5° a 8° Básico", img: "/images/ensenanza-basica.jpeg" },
   { title: "Enseñanza Media", sub: "1° a 4° Medio", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=700&q=75" },
   { title: "Validación de Adultos", sub: "Mayores de 18 años", img: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=700&q=75" },
 ];
