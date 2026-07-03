@@ -389,9 +389,10 @@ export default function Home() {
       </section>
       <section style={{ background: VIVID_BLUE, padding: "0 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", transform: "translateY(-24px)" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
+          {/* Con solo 2 tarjetas no deben estirarse a llenar el ancho — tamaño fijo, centradas */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 24, justifyContent: "center" }}>
             {NIVELES.map((n, i) => (
-              <Reveal key={n.title} delay={i * 0.1} style={{ flex: "1 1 280px", minWidth: 250 }}>
+              <Reveal key={n.title} delay={i * 0.1} style={{ flex: "0 1 300px", width: 300, maxWidth: 300 }}>
                 {/* Tarjetas altas tipo retrato con overlay navy denso abajo, título 26px sobre subtítulo+flecha — patrón real */}
                 <motion.a href="#inscripcion" whileHover={{ scale: 1.01 }} transition={{ duration: 0.25, ease: "easeInOut" }} style={{ textDecoration: "none", color: NAVY, position: "relative", overflow: "hidden", display: "block" }}>
                   <img src={n.img} alt={n.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/3.4", objectFit: "cover", display: "block" }} />
