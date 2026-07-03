@@ -123,8 +123,8 @@ const RAZONES = [
     text: "Sin clases en vivo ni bloques fijos que cumplir. Avanzas cuando tu día lo permite, y un asesor asignado sigue tu progreso completo de principio a fin — así nadie avanza solo por defecto.",
   },
   {
-    title: "Ayuda cuando la pides, no cuando toca",
-    text: "La tutoría no es una clase obligatoria: es apoyo por asignatura, disponible cuando realmente lo necesitas, no un horario más que administrar.",
+    title: "Ayuda que aparece cuando realmente la necesitas",
+    text: "El tutor no es una clase obligatoria ni algo que pides por capricho: el sistema detecta cuando estás con dificultad real en una asignatura y ahí aparece la ayuda — no antes, no como horario más que administrar.",
   },
   {
     title: "Pensado para quien no encaja en el molde",
