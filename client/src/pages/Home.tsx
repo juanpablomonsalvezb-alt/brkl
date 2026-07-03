@@ -103,10 +103,14 @@ const PILARES = [
   { title: "Plataforma", img: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=700&q=75", text: "Seguimiento determinístico de progreso, evaluación diferenciada y acompañamiento docente." },
 ];
 
+// Solo Básica y Media en el módulo de niveles del home — Validación de Adultos existe como
+// producto pero no se anuncia con el mismo peso: mezclarlo en primer scroll con el mismo tamaño
+// que Básica/Media puede leerse como "colegio remedial" a ojos de un apoderado buscando algo
+// aspiracional para su hijo. Los competidores (Colegio Online LAT, Instituto Virtual de Chile)
+// separan la marca de adultos de la marca K-12 por la misma razón.
 const NIVELES = [
   { title: "Enseñanza Básica", sub: "5° a 8° Básico", img: "/images/ensenanza-basica.jpeg" },
   { title: "Enseñanza Media", sub: "1° a 4° Medio", img: "/images/ensenanza-media.jpeg" },
-  { title: "Validación de Adultos", sub: "Mayores de 18 años", img: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=700&q=75" },
 ];
 
 // Cuatro pilares — cada uno inspirado en la filosofía de un referente internacional real
@@ -379,7 +383,7 @@ export default function Home() {
 
       {/* === NIVELES — panel azul sólido detrás + botón dorado debajo, como el real === */}
       <section id="metodo" style={{ padding: "64px 24px 0", textAlign: "center" }}>
-        <p style={{ fontSize: 14, fontWeight: 600, color: SLATE, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>De 5° básico a validación de adultos</p>
+        <p style={{ fontSize: 14, fontWeight: 600, color: SLATE, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>De 5° básico a 4° medio</p>
         {/* h2 slate 600 — como "Our Learning Journey" real (no navy bold) */}
         <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 600, color: SLATE, margin: "0 0 48px" }}>Nuestro camino de aprendizaje</h2>
       </section>
