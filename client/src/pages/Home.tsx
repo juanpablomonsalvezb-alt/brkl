@@ -217,15 +217,108 @@ function InscripcionForm() {
   );
 }
 
+// Tour del producto — capturas REALES del piloto (no mockups), para que el visitante
+// conozca la plataforma sin registrarse. Modal con 4 slides.
+const TOUR_SLIDES = [
+  {
+    img: "/images/tour/01-dashboard.png",
+    title: "Tu escritorio: siempre sabes qué sigue",
+    text: "Al entrar, el estudiante ve exactamente dónde quedó y qué lección viene. Su avance real, sus asignaturas y el acceso directo a su asesor — todo en un solo lugar, sin perderse.",
+  },
+  {
+    img: "/images/tour/02-curso.png",
+    title: "Avanzas por dominio, no por tiempo",
+    text: "Cada unidad se desbloquea solo cuando dominas la anterior. Sin saltos, sin huecos: es Mastery Learning, el modelo de Benjamin Bloom (Harvard). El contenido sigue el temario oficial MINEDUC, objetivo por objetivo.",
+  },
+  {
+    img: "/images/tour/03-leccion.png",
+    title: "Cada lección tiene su propio video",
+    text: "Video breve y claro por cada objetivo de aprendizaje. Se pausa, se repite, se ve cuando el día lo permite. Aprendes a tu ritmo real, sin clases en vivo ni horarios que cumplir.",
+  },
+  {
+    img: "/images/tour/04-podcast.png",
+    title: "¿Prefieres escuchar? También hay podcast",
+    text: "Cada lección viene además en versión audio, tipo podcast. Para aprender caminando, en el transporte, o si leer te cuesta. Inclusión de verdad — pensado para TDAH, dislexia y todo ritmo de vida.",
+  },
+];
+
+function TourModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [idx, setIdx] = useState(0);
+  // El modal queda montado (AnimatePresence controla la visibilidad); reinicia al paso 1 en cada apertura.
+  useEffect(() => { if (open) setIdx(0); }, [open]);
+  const slide = TOUR_SLIDES[idx];
+  const last = TOUR_SLIDES.length - 1;
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}
+          onClick={onClose}
+          style={{ position: "fixed", inset: 0, zIndex: 50, background: "rgba(0,20,45,0.82)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+          <motion.div
+            initial={{ scale: 0.96, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.97, opacity: 0 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            onClick={e => e.stopPropagation()}
+            style={{ background: "#fff", borderRadius: 18, maxWidth: 880, width: "100%", overflow: "hidden", boxShadow: "0 30px 80px rgba(0,0,0,0.4)" }}>
+            <div style={{ position: "relative", background: "#eef1f5" }}>
+              <img src={slide.img} alt={slide.title} style={{ width: "100%", display: "block", aspectRatio: "1280 / 820", objectFit: "cover" }} />
+              <button aria-label="Cerrar" onClick={onClose}
+                style={{ position: "absolute", top: 14, right: 14, width: 38, height: 38, borderRadius: "50%", background: "rgba(0,20,45,0.7)", border: "none", color: "#fff", cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <X style={{ width: 20, height: 20 }} />
+              </button>
+              <span style={{ position: "absolute", top: 16, left: 18, background: GOLD, color: NAVY, fontSize: 12, fontWeight: 700, borderRadius: 999, padding: "5px 12px", letterSpacing: "0.03em" }}>
+                Plataforma real · paso {idx + 1} de {TOUR_SLIDES.length}
+              </span>
+            </div>
+            <div style={{ padding: "28px 32px 26px" }}>
+              <h3 style={{ fontSize: "clamp(20px,3vw,28px)", fontWeight: 600, color: NAVY, margin: "0 0 10px" }}>{slide.title}</h3>
+              <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT, margin: "0 0 22px" }}>{slide.text}</p>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: 8 }}>
+                  {TOUR_SLIDES.map((_, i) => (
+                    <button key={i} aria-label={`Ir al paso ${i+1}`} onClick={() => setIdx(i)}
+                      style={{ width: i === idx ? 26 : 9, height: 9, borderRadius: 5, border: "none", background: i === idx ? NAVY : "#d5dbe3", cursor: "pointer", transition: "width 0.3s" }} />
+                  ))}
+                </div>
+                <div style={{ display: "flex", gap: 10 }}>
+                  {idx > 0 && (
+                    <button onClick={() => setIdx(i => Math.max(0, i - 1))}
+                      style={{ fontSize: 15, fontWeight: 600, color: NAVY, background: "none", border: `1.5px solid ${NAVY}`, borderRadius: 999, padding: "10px 22px", cursor: "pointer", fontFamily: FONT }}>
+                      Anterior
+                    </button>
+                  )}
+                  {idx < last ? (
+                    <button onClick={() => setIdx(i => Math.min(last, i + 1))}
+                      style={{ fontSize: 15, fontWeight: 600, color: "#fff", background: NAVY, border: "none", borderRadius: 999, padding: "10px 24px", cursor: "pointer", fontFamily: FONT }}>
+                      Siguiente →
+                    </button>
+                  ) : (
+                    <a href="#inscripcion" onClick={onClose}
+                      style={{ fontSize: 15, fontWeight: 600, color: "#fff", background: RED, border: "none", borderRadius: 999, padding: "10px 24px", cursor: "pointer", fontFamily: FONT, textDecoration: "none" }}>
+                      Quiero inscribirme →
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export default function Home() {
   const [tab, setTab] = useState<"estudiantes"|"apoderados">("estudiantes");
   const [pilarIdx, setPilarIdx] = useState(0);
   const [callOpen, setCallOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [tourOpen, setTourOpen] = useState(false);
   const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5*60*1000 });
 
   return (
     <div style={{ backgroundColor: "#fff", color: TEXT, fontFamily: FONT, fontSize: 16, lineHeight: 1.8 }}>
+
+      <TourModal open={tourOpen} onClose={() => setTourOpen(false)} />
 
       {/* === HEADER — overlay transparente sobre el hero, como el real: logo con marco blanco
           translúcido + nombre blanco sobre la foto; controles de la derecha sobre bloque blanco === */}
@@ -285,7 +378,14 @@ export default function Home() {
           {/* Un solo titular gigante real (sin eyebrow separado — la etiqueta real ES el h1), flechas prev/next circulares bottom-right junto al texto */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             style={{ position: "absolute", left: 45, right: 40, bottom: 42, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-            <h1 style={{ fontSize: "clamp(36px,5vw,69px)", fontWeight: 600, margin: 0, maxWidth: 780, lineHeight: 1.05 }}>Líderes en Educación Asincrónica Inclusiva</h1>
+            <div style={{ maxWidth: 780 }}>
+              <h1 style={{ fontSize: "clamp(36px,5vw,69px)", fontWeight: 600, margin: 0, lineHeight: 1.05 }}>Líderes en Educación Asincrónica Inclusiva</h1>
+              <button onClick={() => setTourOpen(true)}
+                style={{ marginTop: 20, display: "inline-flex", alignItems: "center", gap: 10, fontSize: 16, fontWeight: 600, color: NAVY, background: GOLD, border: "none", borderRadius: 999, padding: "13px 26px", cursor: "pointer", fontFamily: FONT }}>
+                <span style={{ display: "inline-flex", width: 22, height: 22, borderRadius: "50%", background: NAVY, color: GOLD, alignItems: "center", justifyContent: "center", fontSize: 11 }}>▶</span>
+                Ver cómo funciona
+              </button>
+            </div>
             <div style={{ display: "flex", gap: 10, flexShrink: 0 }} className="hidden md:flex">
               <button aria-label="Anterior" style={{ width: 48, height: 48, borderRadius: "50%", border: "1.5px solid #fff", background: "none", color: "#fff", cursor: "pointer", fontSize: 18 }}>‹</button>
               <button aria-label="Siguiente" style={{ width: 48, height: 48, borderRadius: "50%", border: "1.5px solid #fff", background: "none", color: "#fff", cursor: "pointer", fontSize: 18 }}>›</button>
@@ -326,6 +426,18 @@ export default function Home() {
         <a href="#inscripcion" style={{ background: SLATE, color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>VISITAR</a>
         <a href="#inscripcion" style={{ background: PINK, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>POSTULAR</a>
       </div>
+
+      {/* === TRUST BAR — sello de confianza: validación oficial MINEDUC === */}
+      <section style={{ background: NAVY, padding: "20px 24px" }}>
+        <div style={{ maxWidth: 1180, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 16, flexWrap: "wrap", textAlign: "center" }}>
+          <span style={{ display: "inline-flex", width: 40, height: 40, borderRadius: "50%", background: GOLD, color: NAVY, alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <Check style={{ width: 22, height: 22 }} strokeWidth={3} />
+          </span>
+          <p style={{ margin: 0, color: "#fff", fontSize: "clamp(15px,2vw,18px)", fontWeight: 500 }}>
+            Preparación oficial para <strong style={{ color: GOLD }}>Exámenes Libres</strong> ante el Ministerio de Educación de Chile — validación reconocida de 5° básico a 4° medio.
+          </p>
+        </div>
+      </section>
 
       {/* === INTRO — azul apagado real (no navy puro), formas literales inline (hourglass/circle/triangle/stairs/leaf/bars) === */}
       <section id="nosotros" style={{ maxWidth: 1180, margin: "0 auto", padding: "90px 24px", textAlign: "left" }}>
