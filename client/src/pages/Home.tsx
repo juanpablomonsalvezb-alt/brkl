@@ -638,8 +638,8 @@ export default function Home() {
           <Reveal>
             <p style={{ fontSize: 14, fontWeight: 600, color: RED, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>Precio transparente</p>
             <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 600, color: NAVY, margin: "0 0 12px" }}>Un solo valor, sin letra chica</h2>
-            <p style={{ fontSize: 16, color: TEXT, margin: "0 auto 40px", maxWidth: 620 }}>
-              Sin matrícula, sin costos ocultos. Todo lo que ves — video y podcast por lección, tutor cuando lo necesitas, asesor que te acompaña y portal para tu familia — incluido.
+            <p style={{ fontSize: 16, color: TEXT, margin: "0 auto 40px", maxWidth: 640 }}>
+              Sin matrícula, sin costos ocultos. El año de preparación va de <strong style={{ color: NAVY }}>marzo al 31 de octubre</strong>, cuando rindes tus exámenes libres. Todo incluido — video y podcast por lección, tutor cuando lo necesitas, asesor que te acompaña y portal para tu familia.
             </p>
           </Reveal>
           <Reveal delay={0.1}>
@@ -651,7 +651,7 @@ export default function Home() {
                   <span style={{ fontSize: 48, fontWeight: 700, color: NAVY }}>$55.000</span>
                   <span style={{ fontSize: 16, color: TEXT }}>/ mes</span>
                 </div>
-                <p style={{ fontSize: 14, color: TEXT, margin: "0 0 22px" }}>Sin matrícula. Cancela cuando quieras.</p>
+                <p style={{ fontSize: 14, color: TEXT, margin: "0 0 22px" }}>Sin matrícula. De marzo a octubre, cancela cuando quieras.</p>
                 {["Todas las asignaturas de tu nivel", "Video + podcast en cada lección", "Tutor por asignatura cuando lo necesitas", "Asesor que sigue tu progreso", "Portal para apoderados", "Preparación para exámenes libres MINEDUC"].map((f) => (
                   <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
                     <Check style={{ width: 18, height: 18, color: GREEN, flexShrink: 0, marginTop: 2 }} strokeWidth={3} />
@@ -662,20 +662,20 @@ export default function Home() {
               </div>
               {/* Card anual destacada */}
               <div style={{ flex: "1 1 320px", maxWidth: 380, background: NAVY, color: "#fff", borderRadius: 18, padding: "36px 32px", boxShadow: "0 10px 30px rgba(0,20,60,0.25)", textAlign: "left", position: "relative", overflow: "hidden" }}>
-                <span style={{ position: "absolute", top: 20, right: -34, background: GOLD, color: NAVY, fontSize: 12, fontWeight: 700, padding: "5px 40px", transform: "rotate(45deg)" }}>2 meses gratis</span>
-                <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>Plan anual</p>
+                <span style={{ position: "absolute", top: 20, right: -34, background: GOLD, color: NAVY, fontSize: 12, fontWeight: 700, padding: "5px 40px", transform: "rotate(45deg)" }}>15% dcto</span>
+                <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>Pago único del año</p>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 6, margin: "10px 0 4px" }}>
-                  <span style={{ fontSize: 48, fontWeight: 700 }}>$550.000</span>
-                  <span style={{ fontSize: 16, opacity: 0.8 }}>/ año</span>
+                  <span style={{ fontSize: 48, fontWeight: 700 }}>$374.000</span>
+                  <span style={{ fontSize: 16, opacity: 0.8, textDecoration: "line-through" }}>$440.000</span>
                 </div>
-                <p style={{ fontSize: 14, opacity: 0.85, margin: "0 0 22px" }}>Pagas 10 meses, estudias 12. Ahorras $110.000.</p>
-                {["Todo lo del plan mensual", "Dos meses sin costo", "Precio congelado todo el año", "Un solo pago, cero preocupaciones"].map((f) => (
+                <p style={{ fontSize: 14, opacity: 0.85, margin: "0 0 22px" }}>15% de descuento por pagar todo el año de una vez. Ahorras $66.000.</p>
+                {["Todo lo del plan mensual", "15% de descuento", "Precio congelado todo el año", "Un solo pago, cero preocupaciones"].map((f) => (
                   <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
                     <Check style={{ width: 18, height: 18, color: GOLD, flexShrink: 0, marginTop: 2 }} strokeWidth={3} />
                     <span style={{ fontSize: 15 }}>{f}</span>
                   </div>
                 ))}
-                <a href="#inscripcion" style={{ display: "block", textAlign: "center", marginTop: 26, background: GOLD, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 16, borderRadius: 999, padding: "14px 0" }}>Quiero el plan anual →</a>
+                <a href="#inscripcion" style={{ display: "block", textAlign: "center", marginTop: 26, background: GOLD, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 16, borderRadius: 999, padding: "14px 0" }}>Quiero el pago único →</a>
               </div>
             </div>
           </Reveal>
