@@ -13,7 +13,7 @@
  */
 import { useState, useEffect, useRef } from "react";
 import {
-  Loader2, Check, ArrowUpRight, Menu, X, Search,
+  Loader2, Check, ArrowUpRight, Menu, X, Search, Play,
   Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -695,7 +695,32 @@ export default function Home() {
       <section id="plataforma" style={{ background: "#f5f5f5", padding: "64px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Descubre y experimenta</p>
-          <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 600, color: SLATE, margin: "0 0 40px" }}>La plataforma, por dentro</h2>
+          <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 600, color: SLATE, margin: "0 0 24px" }}>La plataforma, por dentro</h2>
+
+          {/* Tour virtual narrado: recorrido real por el dashboard del alumno y el portal del apoderado */}
+          <Reveal>
+            <div style={{ margin: "0 0 48px" }}>
+              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, margin: "0 0 14px" }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 7, background: NAVY, color: "#fff", fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", padding: "6px 12px", borderRadius: 999 }}>
+                  <Play style={{ width: 13, height: 13 }} strokeWidth={3} /> Tour virtual · 1:43
+                </span>
+                <span style={{ fontSize: 14, color: TEXT }}>Un recorrido real: lo que ve tu hijo y lo que ves tú como apoderado.</span>
+              </div>
+              <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 18px 50px rgba(0,20,60,0.18)", border: `1px solid ${SLATE}22`, background: NAVY }}>
+                <video
+                  controls
+                  preload="metadata"
+                  poster="/videos/tour-poster.jpg"
+                  playsInline
+                  style={{ width: "100%", display: "block", aspectRatio: "16/9", background: NAVY }}
+                >
+                  <source src="/videos/tour-plataforma.mp4" type="video/mp4" />
+                  Tu navegador no puede reproducir el video.
+                </video>
+              </div>
+            </div>
+          </Reveal>
+
           {/* Filas horizontales alternadas imagen/texto (izq-der, der-izq), como .program-box real (flex-direction row-reverse alternado) */}
           <div style={{ display: "flex", flexDirection: "column", gap: 56 }}>
             {PROGRAMAS.map((p, i) => (
