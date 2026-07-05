@@ -162,8 +162,8 @@ export function registerFlowRoutes(app: Express) {
       }
 
       // Actualizar el estado de la reserva según el estado del pago
-      let newStatus = "pending";
-      let paymentStatusText = "pending";
+      let newStatus: "pending" | "confirmed" | "cancelled" = "pending";
+      let paymentStatusText: "pending" | "completed" | "failed" | "cancelled" = "pending";
 
       if (paymentStatus.status === 2) {
         // Pago exitoso
