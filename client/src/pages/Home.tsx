@@ -156,6 +156,7 @@ const PROGRAMAS = [
 
 const NAV_LINKS = [
   { label: "Nosotros", href: "#nosotros" },
+  { label: "El Método", href: "#metodo-barkley" },
   { label: "Admisión", href: "#inscripcion" },
   { label: "Aprendizaje", href: "#metodo" },
   { label: "Plataforma", href: "#plataforma" },
@@ -308,6 +309,88 @@ function TourModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   );
 }
 
+// EL MÉTODO — el gancho central de Barkley. Sin clases en vivo, el método las suple.
+// Módulo dedicado, muy visual, con pasos en auto-play. Nombre real (Mastery Learning),
+// fundamento (Bloom/Harvard) y quiénes lo usan en el mundo (colegios reales licenciados).
+const METODO_PASOS = [
+  { n: "01", title: "Aprendes", text: "Cada objetivo del temario oficial viene con su propio video y su podcast. Ves, escuchas, pausas y repites — a tu ritmo, cuando tu día lo permite.", color: GOLD },
+  { n: "02", title: "Practicas", text: "Ejercicios que se corrigen solos, al instante. Sabes de inmediato si entendiste, sin esperar a que un profesor revise la próxima semana.", color: GREEN },
+  { n: "03", title: "Refuerzas", text: "¿Te costó? Antes de seguir, refuerzo del mismo tema. Nadie avanza arrastrando vacíos — el error se corrige en el momento, no meses después.", color: PINK },
+  { n: "04", title: "Dominas", text: "Evaluación de la unidad. Con 70% o más, se desbloquea la siguiente. Avanzas porque de verdad dominaste, no porque pasó el calendario.", color: RED },
+];
+
+function MetodoModule() {
+  const [idx, setIdx] = useState(0);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused) return;
+    const t = setInterval(() => setIdx(i => (i + 1) % METODO_PASOS.length), 4200);
+    return () => clearInterval(t);
+  }, [paused]);
+  const paso = METODO_PASOS[idx];
+  return (
+    <section id="metodo-barkley" style={{ background: NAVY, color: "#fff", padding: "88px 24px", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", top: -40, right: -40, opacity: 0.06 }}><ShapeFastForward color="#fff" size={280} /></div>
+      <div style={{ maxWidth: 1080, margin: "0 auto", position: "relative" }}>
+        <Reveal>
+          <div style={{ textAlign: "center", marginBottom: 12 }}>
+            <p style={{ fontSize: 14, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.12em", margin: 0 }}>Nuestro método · lo que nos hace distintos</p>
+            <h2 style={{ fontSize: "clamp(34px,6vw,60px)", fontWeight: 600, margin: "10px 0 6px" }}>Aprendizaje por Dominio</h2>
+            <p style={{ fontSize: 16, opacity: 0.8, margin: 0 }}>
+              <em>Mastery Learning</em> — el modelo de <strong style={{ color: "#fff" }}>Benjamin Bloom</strong>, Universidad de Harvard, 1968.
+            </p>
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.1}>
+          <p style={{ fontSize: "clamp(17px,2.2vw,20px)", lineHeight: 1.6, textAlign: "center", maxWidth: 760, margin: "24px auto 48px", opacity: 0.92 }}>
+            No tenemos clases en vivo — y esa es una ventaja. En una clase por Zoom, todos avanzan al mismo ritmo aunque no entiendan, y el que se queda atrás, se queda atrás. Con el Aprendizaje por Dominio, <strong style={{ color: GOLD }}>cada estudiante avanza solo cuando de verdad domina el tema</strong>. Nadie arrastra vacíos.
+          </p>
+        </Reveal>
+
+        {/* Los 4 pasos en auto-play */}
+        <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}
+          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 20, padding: "clamp(28px,5vw,48px)", minHeight: 220 }}>
+          <AnimatePresence mode="wait">
+            <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              style={{ display: "flex", flexWrap: "wrap", gap: "clamp(20px,4vw,44px)", alignItems: "center" }}>
+              <span style={{ fontSize: "clamp(64px,12vw,120px)", fontWeight: 800, color: paso.color, lineHeight: 0.9, flexShrink: 0 }}>{paso.n}</span>
+              <div style={{ flex: "1 1 320px", minWidth: 260 }}>
+                <h3 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 600, margin: "0 0 12px" }}>{paso.title}</h3>
+                <p style={{ fontSize: "clamp(16px,2vw,19px)", lineHeight: 1.6, opacity: 0.9, margin: 0 }}>{paso.text}</p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+          <div style={{ display: "flex", gap: 8, marginTop: 32, justifyContent: "center" }}>
+            {METODO_PASOS.map((p, i) => (
+              <button key={p.n} aria-label={`Paso ${i+1}: ${p.title}`} onClick={() => setIdx(i)}
+                style={{ width: i === idx ? 40 : 12, height: 6, borderRadius: 3, border: "none", background: i === idx ? GOLD : "rgba(255,255,255,0.25)", cursor: "pointer", transition: "width 0.3s, background 0.3s" }} />
+            ))}
+          </div>
+        </div>
+
+        {/* Fundamento + quiénes lo usan en el mundo */}
+        <Reveal delay={0.15}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 20, marginTop: 40 }}>
+            <div style={{ flex: "1 1 300px", background: "rgba(255,255,255,0.05)", borderRadius: 14, padding: "24px 26px" }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>El respaldo científico</p>
+              <p style={{ fontSize: 15, lineHeight: 1.6, opacity: 0.9, margin: 0 }}>
+                El "Problema de las 2 Sigma" de Bloom (1984) demostró que un estudiante con dominio y apoyo personalizado rinde muy por encima del promedio de una clase tradicional. Ese es el principio que aplicamos.
+              </p>
+            </div>
+            <div style={{ flex: "1 1 300px", background: "rgba(255,255,255,0.05)", borderRadius: 14, padding: "24px 26px" }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Quiénes lo usan en el mundo</p>
+              <p style={{ fontSize: 15, lineHeight: 1.6, opacity: 0.9, margin: 0 }}>
+                Colegios online líderes de EE.UU. como <strong style={{ color: "#fff" }}>Acellus Academy</strong> y <strong style={{ color: "#fff" }}>Edmentum / Apex Learning</strong> educan con este mismo método. En Chile, somos los primeros en traerlo — con video, podcast y tutor incluidos.
+              </p>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   const [tab, setTab] = useState<"estudiantes"|"apoderados">("estudiantes");
   const [pilarIdx, setPilarIdx] = useState(0);
@@ -450,6 +533,9 @@ export default function Home() {
           </p>
         </Reveal>
       </section>
+
+      {/* === EL MÉTODO — módulo dedicado, el gancho central === */}
+      <MetodoModule />
 
       {/* === PILARES — bloque de color sólido + foto, como "An Education Designed Around You" === */}
       <section style={{ background: "#f5f5f5", padding: "64px 0" }}>
