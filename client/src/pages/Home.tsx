@@ -563,25 +563,19 @@ export default function Home() {
           {/* Registro institucional derecha */}
           <div style={{ flex: "1 1 520px", minWidth: 300 }}>
             {[
-              { sigla: "AA", variante: 0, nombre: "Acellus Academy", meta: "Estados Unidos · Acreditado WASC", dato: "Mastery Learning en más de 6.000 escuelas" },
-              { sigla: "AX", variante: 1, nombre: "Apex Learning Virtual School", meta: "Estados Unidos · Acreditado Cognia", dato: "Currículum mastery-based de secundaria" },
-              { sigla: "EO", variante: 2, nombre: "Edmentum EdOptions Academy", meta: "Estados Unidos · Acreditado Cognia", dato: "Colegio online K-12 por dominio" },
-              { sigla: "WH", variante: 3, nombre: "Wolsey Hall Oxford", meta: "Reino Unido · Fundado en 1894", dato: "Homeschooling 100% asincrónico" },
+              { logo: "/images/colegios/acellus-white.png", pad: "16px 14px", nombre: "Acellus Academy", meta: "Estados Unidos · Acreditado WASC", dato: "Mastery Learning en más de 6.000 escuelas" },
+              { logo: "/images/colegios/apex-icon.png", pad: "10px", nombre: "Apex Learning Virtual School", meta: "Estados Unidos · Acreditado Cognia", dato: "Currículum mastery-based de secundaria" },
+              { logo: "/images/colegios/edmentum-white.png", pad: "20px 14px", nombre: "Edmentum EdOptions Academy", meta: "Estados Unidos · Acreditado Cognia", dato: "Colegio online K-12 por dominio" },
+              { logo: "/images/colegios/wolsey-hall-white.svg", pad: "16px 12px", nombre: "Wolsey Hall Oxford", meta: "Reino Unido · Fundado en 1894", dato: "Homeschooling 100% asincrónico" },
             ].map((c, i) => (
-              <Reveal key={c.sigla} delay={i * 0.08}>
+              <Reveal key={c.nombre} delay={i * 0.08}>
                 <motion.div whileHover={{ x: 8 }} transition={{ duration: 0.25 }}
                   style={{ display: "flex", alignItems: "center", gap: 24, padding: "26px 8px", borderBottom: i < 3 ? "1px solid #e8edf3" : "none" }}>
                   <span style={{ fontSize: 15, fontWeight: 800, color: "#c3cdd9", minWidth: 30 }}>{String(i + 1).padStart(2, "0")}</span>
-                  {/* Escudo heráldico propio (representativo) — cada colegio con variante distinta */}
-                  <svg width="58" height="66" viewBox="0 0 58 66" style={{ flexShrink: 0 }} aria-hidden>
-                    <path d="M29 2 L54 9 V34 C54 49 43 59 29 64 C15 59 4 49 4 34 V9 Z" fill={NAVY} stroke={GOLD} strokeWidth="2.5" />
-                    {c.variante === 0 && <path d="M8 22 H50" stroke={GOLD} strokeWidth="1.5" opacity="0.85" />}
-                    {c.variante === 1 && <path d="M10 44 L29 34 L48 44" stroke={GOLD} strokeWidth="1.5" fill="none" opacity="0.85" />}
-                    {c.variante === 2 && <path d="M12 12 L46 50" stroke={GOLD} strokeWidth="1.5" opacity="0.6" />}
-                    {c.variante === 3 && <circle cx="29" cy="30" r="17" stroke={GOLD} strokeWidth="1.2" fill="none" opacity="0.7" />}
-                    <text x="29" y="36" textAnchor="middle" fill="#fff" fontSize="17" fontWeight="800" fontFamily={FONT}>{c.sigla}</text>
-                    <path d="M25 52 L29 55 L33 52" stroke={GOLD} strokeWidth="1.3" fill="none" opacity="0.9" />
-                  </svg>
+                  {/* Logotipo oficial de la institución sobre placa navy */}
+                  <div style={{ width: 128, height: 64, flexShrink: 0, background: NAVY, borderRadius: 12, border: "1px solid #d8e0ea", display: "flex", alignItems: "center", justifyContent: "center", padding: c.pad, boxSizing: "border-box" }}>
+                    <img src={c.logo} alt={`Logo ${c.nombre}`} loading="lazy" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", display: "block" }} />
+                  </div>
                   <div style={{ minWidth: 0 }}>
                     <p style={{ fontSize: "clamp(17px,2vw,21px)", fontWeight: 700, color: NAVY, margin: "0 0 3px", lineHeight: 1.25 }}>{c.nombre}</p>
                     <p style={{ fontSize: 11.5, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.09em", margin: "0 0 5px" }}>{c.meta}</p>
@@ -591,7 +585,7 @@ export default function Home() {
               </Reveal>
             ))}
             <p style={{ fontSize: 10.5, color: "#b6c1cd", margin: "16px 0 0", textAlign: "right" }}>
-              Escudos representativos — las marcas pertenecen a sus instituciones.
+              Los logotipos pertenecen a sus respectivas instituciones y se muestran solo como referencia del método.
             </p>
           </div>
         </div>
