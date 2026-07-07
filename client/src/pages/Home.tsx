@@ -702,9 +702,9 @@ export default function Home() {
             <div style={{ margin: "0 0 48px" }}>
               <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, margin: "0 0 14px" }}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 7, background: NAVY, color: "#fff", fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", padding: "6px 12px", borderRadius: 999 }}>
-                  <Play style={{ width: 13, height: 13 }} strokeWidth={3} /> Tour virtual · 1:33
+                  <Play style={{ width: 13, height: 13 }} strokeWidth={3} /> Tour en 30 segundos
                 </span>
-                <span style={{ fontSize: 14, color: TEXT }}>Un recorrido real: lo que ve tu hijo y lo que ves tú como apoderado.</span>
+                <span style={{ fontSize: 14, color: TEXT }}>Lo que ve tu hijo y lo que ves tú como apoderado — al grano.</span>
               </div>
               <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 18px 50px rgba(0,20,60,0.18)", border: `1px solid ${SLATE}22`, background: NAVY }}>
                 <video
