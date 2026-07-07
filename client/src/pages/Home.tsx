@@ -146,7 +146,7 @@ const FACTS = [
 ];
 
 const PROGRAMAS = [
-  { title: "Metodología", sub: "Aprendizaje asincrónico", text: "Sin Zoom, sin horario fijo. Material propio diseñado para el ritmo de cada estudiante, con Aprendizaje por Dominio: cada paso se desbloquea solo cuando el anterior ya está dominado.", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=700&q=75", href: "#metodo" },
+  { title: "Metodología", sub: "Aprendizaje asincrónico", text: "Sin Zoom, sin horario fijo. Material propio diseñado para el ritmo de cada estudiante, con Aprendizaje por Dominio: cada paso se desbloquea solo cuando el anterior ya está dominado.", img: "/images/metodologia-asincronica.jpeg", href: "#metodo" },
   { title: "Certificación", sub: "Exámenes libres MINEDUC", text: "Validación oficial ante el Ministerio de Educación de Chile, desde 5° básico a 4° medio.", img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=700&q=75", href: "#metodo" },
   { title: "Plataforma", sub: "Seguimiento algorítmico", text: "Un sistema determinístico mide resultados y ajusta el contenido — sin IA generativa.", img: "https://images.unsplash.com/photo-1555212697-194d092e3b8f?auto=format&fit=crop&w=700&q=75", href: "#plataforma" },
   { title: "Acompañamiento", sub: "Tutores por asignatura", text: "Apoyo 1 a 1 en las asignaturas que más lo necesitan.", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=700&q=75", href: "#plataforma" },
@@ -792,7 +792,6 @@ export default function Home() {
                     <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.03em", margin: "0 0 6px" }}>{p.title}</p>
                     <h3 style={{ fontSize: "clamp(22px,2.4vw,30px)", fontWeight: 700, color: NAVY, margin: "0 0 12px" }}>{p.sub}</h3>
                     <p style={{ fontSize: 15, margin: "0 0 16px" }}>{p.text}</p>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 14, fontWeight: 700, color: NAVY }}>Ver más <ArrowUpRight style={{ width: 16, height: 16 }} /></span>
                   </div>
                 </a>
               </Reveal>
