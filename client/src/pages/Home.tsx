@@ -699,7 +699,7 @@ export default function Home() {
 
           {/* Tour virtual narrado: recorrido real por el dashboard del alumno y el portal del apoderado */}
           <Reveal>
-            <div style={{ margin: "0 0 48px" }}>
+            <div style={{ margin: "0 auto 48px", maxWidth: 880 }}>
               <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, margin: "0 0 14px" }}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 7, background: NAVY, color: "#fff", fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", padding: "6px 12px", borderRadius: 999 }}>
                   <Play style={{ width: 13, height: 13 }} strokeWidth={3} /> Tour en 30 segundos
