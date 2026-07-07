@@ -718,6 +718,10 @@ export default function Home() {
                   Tu navegador no puede reproducir el video.
                 </video>
               </div>
+              {/* Atribución requerida por licencia CC BY 4.0 de la pista musical */}
+              <p style={{ fontSize: 11, color: "#9aa7b8", margin: "8px 2px 0", textAlign: "right" }}>
+                Música: "Wholesome" — Kevin MacLeod (incompetech.com), CC BY 4.0
+              </p>
             </div>
           </Reveal>
 
