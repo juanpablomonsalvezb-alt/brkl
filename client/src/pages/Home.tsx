@@ -15,7 +15,6 @@ import { useState, useEffect, useRef } from "react";
 import {
   Loader2, Check, ArrowUpRight, Menu, X, Search, Play,
   Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
-  FileText, MessageCircle, Calculator, Palette, Layers,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
@@ -538,38 +537,64 @@ export default function Home() {
       {/* === EL MÉTODO — módulo dedicado, el gancho central === */}
       <MetodoModule />
 
-      {/* === COLEGIOS CON EL MISMO MÉTODO — insignias de referentes internacionales === */}
-      <section id="referentes" style={{ maxWidth: 1180, margin: "0 auto", padding: "72px 24px", textAlign: "center" }}>
-        <Reveal>
-          <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>No estamos solos en esto</p>
-          <h2 style={{ fontSize: "clamp(28px,4.5vw,44px)", fontWeight: 600, color: SLATE, margin: "0 0 12px" }}>Colegios del mundo con el mismo método</h2>
-          <p style={{ fontSize: 16, color: TEXT, maxWidth: 680, margin: "0 auto 44px" }}>
-            El Aprendizaje por Dominio ya forma a miles de estudiantes en colegios online acreditados. Barkley lo trae a Chile.
-          </p>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 24 }}>
-            {[
-              { sigla: "AA", nombre: "Acellus Academy", pais: "Estados Unidos", dato: "Acreditado WASC · Mastery Learning" },
-              { sigla: "AX", nombre: "Apex Learning Virtual School", pais: "Estados Unidos", dato: "Acreditado Cognia · Mastery-based" },
-              { sigla: "EO", nombre: "Edmentum EdOptions Academy", pais: "Estados Unidos", dato: "Acreditado Cognia · Online K-12" },
-              { sigla: "WH", nombre: "Wolsey Hall Oxford", pais: "Reino Unido", dato: "100% asincrónico · Desde 1894" },
-            ].map((c) => (
-              <div key={c.sigla} style={{ background: "#fff", border: "1px solid #e8edf3", borderRadius: 16, padding: "28px 20px", boxShadow: "0 4px 18px rgba(0,20,60,0.05)" }}>
-                {/* Insignia representativa (monograma), no logotipo oficial */}
-                <div style={{ width: 76, height: 76, margin: "0 auto 14px", borderRadius: "50%", background: NAVY, border: `3px solid ${GOLD}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ color: "#fff", fontSize: 24, fontWeight: 800, letterSpacing: "0.02em" }}>{c.sigla}</span>
-                </div>
-                <p style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: "0 0 4px" }}>{c.nombre}</p>
-                <p style={{ fontSize: 13, fontWeight: 600, color: SLATE, margin: "0 0 8px" }}>{c.pais}</p>
-                <p style={{ fontSize: 13, color: TEXT, margin: 0 }}>{c.dato}</p>
+      {/* === COLEGIOS CON EL MISMO MÉTODO — registro editorial con escudos heráldicos propios === */}
+      <section id="referentes" style={{ background: "#fff", padding: "88px 24px", borderTop: `4px solid ${GOLD}` }}>
+        <div style={{ maxWidth: 1180, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 56, alignItems: "flex-start" }}>
+          {/* Columna editorial izquierda */}
+          <Reveal>
+            <div style={{ flex: "1 1 340px", minWidth: 300, maxWidth: 440 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 14px" }}>No estamos solos en esto</p>
+              <h2 style={{ fontSize: "clamp(32px,4.5vw,52px)", fontWeight: 700, color: NAVY, margin: "0 0 20px", lineHeight: 1.1 }}>
+                El mismo método,<br />en <em style={{ fontStyle: "normal", color: SLATE }}>cuatro colegios</em><br />del mundo.
+              </h2>
+              <p style={{ fontSize: 16, color: TEXT, lineHeight: 1.75, margin: "0 0 28px" }}>
+                El Aprendizaje por Dominio no es un experimento: forma a miles de estudiantes en colegios online acreditados de Estados Unidos y Reino Unido. Barkley es el primero en traerlo a Chile.
+              </p>
+              <div style={{ display: "flex", gap: 28 }}>
+                {[["4", "colegios"], ["3", "países"], ["1", "método"]].map(([n, l]) => (
+                  <div key={l}>
+                    <p style={{ fontSize: 40, fontWeight: 800, color: NAVY, margin: 0, lineHeight: 1 }}>{n}</p>
+                    <p style={{ fontSize: 12, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.08em", margin: "6px 0 0" }}>{l}</p>
+                  </div>
+                ))}
               </div>
+            </div>
+          </Reveal>
+          {/* Registro institucional derecha */}
+          <div style={{ flex: "1 1 520px", minWidth: 300 }}>
+            {[
+              { sigla: "AA", variante: 0, nombre: "Acellus Academy", meta: "Estados Unidos · Acreditado WASC", dato: "Mastery Learning en más de 6.000 escuelas" },
+              { sigla: "AX", variante: 1, nombre: "Apex Learning Virtual School", meta: "Estados Unidos · Acreditado Cognia", dato: "Currículum mastery-based de secundaria" },
+              { sigla: "EO", variante: 2, nombre: "Edmentum EdOptions Academy", meta: "Estados Unidos · Acreditado Cognia", dato: "Colegio online K-12 por dominio" },
+              { sigla: "WH", variante: 3, nombre: "Wolsey Hall Oxford", meta: "Reino Unido · Fundado en 1894", dato: "Homeschooling 100% asincrónico" },
+            ].map((c, i) => (
+              <Reveal key={c.sigla} delay={i * 0.08}>
+                <motion.div whileHover={{ x: 8 }} transition={{ duration: 0.25 }}
+                  style={{ display: "flex", alignItems: "center", gap: 24, padding: "26px 8px", borderBottom: i < 3 ? "1px solid #e8edf3" : "none" }}>
+                  <span style={{ fontSize: 15, fontWeight: 800, color: "#c3cdd9", minWidth: 30 }}>{String(i + 1).padStart(2, "0")}</span>
+                  {/* Escudo heráldico propio (representativo) — cada colegio con variante distinta */}
+                  <svg width="58" height="66" viewBox="0 0 58 66" style={{ flexShrink: 0 }} aria-hidden>
+                    <path d="M29 2 L54 9 V34 C54 49 43 59 29 64 C15 59 4 49 4 34 V9 Z" fill={NAVY} stroke={GOLD} strokeWidth="2.5" />
+                    {c.variante === 0 && <path d="M8 22 H50" stroke={GOLD} strokeWidth="1.5" opacity="0.85" />}
+                    {c.variante === 1 && <path d="M10 44 L29 34 L48 44" stroke={GOLD} strokeWidth="1.5" fill="none" opacity="0.85" />}
+                    {c.variante === 2 && <path d="M12 12 L46 50" stroke={GOLD} strokeWidth="1.5" opacity="0.6" />}
+                    {c.variante === 3 && <circle cx="29" cy="30" r="17" stroke={GOLD} strokeWidth="1.2" fill="none" opacity="0.7" />}
+                    <text x="29" y="36" textAnchor="middle" fill="#fff" fontSize="17" fontWeight="800" fontFamily={FONT}>{c.sigla}</text>
+                    <path d="M25 52 L29 55 L33 52" stroke={GOLD} strokeWidth="1.3" fill="none" opacity="0.9" />
+                  </svg>
+                  <div style={{ minWidth: 0 }}>
+                    <p style={{ fontSize: "clamp(17px,2vw,21px)", fontWeight: 700, color: NAVY, margin: "0 0 3px", lineHeight: 1.25 }}>{c.nombre}</p>
+                    <p style={{ fontSize: 11.5, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.09em", margin: "0 0 5px" }}>{c.meta}</p>
+                    <p style={{ fontSize: 14, color: TEXT, margin: 0 }}>{c.dato}</p>
+                  </div>
+                </motion.div>
+              </Reveal>
             ))}
+            <p style={{ fontSize: 10.5, color: "#b6c1cd", margin: "16px 0 0", textAlign: "right" }}>
+              Escudos representativos — las marcas pertenecen a sus instituciones.
+            </p>
           </div>
-          <p style={{ fontSize: 11, color: "#9aa7b8", margin: "18px 0 0" }}>
-            Referentes internacionales del método. Las marcas pertenecen a sus respectivas instituciones; insignias representativas, no logotipos oficiales.
-          </p>
-        </Reveal>
+        </div>
       </section>
 
       {/* === PILARES — bloque de color sólido + foto, como "An Education Designed Around You" === */}
@@ -782,32 +807,39 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === HERRAMIENTAS EXTERNAS — aplicaciones que complementan la plataforma === */}
-      <section id="herramientas" style={{ background: "#fff", padding: "72px 24px" }}>
-        <div style={{ maxWidth: 1180, margin: "0 auto", textAlign: "center" }}>
+      {/* === HERRAMIENTAS EXTERNAS — banda navy editorial con el lenguaje de formas del sitio === */}
+      <section id="herramientas" style={{ background: NAVY, padding: "76px 24px", position: "relative", overflow: "hidden" }}>
+        {/* Forma decorativa de fondo, mismo lenguaje que el footer/CTA */}
+        <div style={{ position: "absolute", top: -30, right: -30, opacity: 0.35 }}><ShapeFlower color="#ffffff14" size={180} /></div>
+        <div style={{ maxWidth: 1180, margin: "0 auto", position: "relative" }}>
           <Reveal>
-            <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Ecosistema de estudio</p>
-            <h2 style={{ fontSize: "clamp(28px,4.5vw,44px)", fontWeight: 600, color: SLATE, margin: "0 0 12px" }}>Herramientas que acompañan la plataforma</h2>
-            <p style={{ fontSize: 16, color: TEXT, maxWidth: 660, margin: "0 auto 40px" }}>
-              Además de nuestra plataforma, tu hijo trabaja con aplicaciones reales que usará toda la vida.
-            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 18, margin: "0 0 44px" }}>
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 12px" }}>Ecosistema de estudio</p>
+                <h2 style={{ fontSize: "clamp(30px,4.5vw,48px)", fontWeight: 700, color: "#fff", margin: 0, lineHeight: 1.12, maxWidth: 620 }}>
+                  Aprende con herramientas <em style={{ fontStyle: "normal", color: GOLD }}>que usará toda la vida</em>.
+                </h2>
+              </div>
+              <p style={{ fontSize: 15, color: "#b9cbe2", maxWidth: 330, margin: 0, lineHeight: 1.7 }}>
+                La plataforma Barkley se complementa con aplicaciones reales del mundo del estudio y el trabajo.
+              </p>
+            </div>
           </Reveal>
           <Reveal delay={0.1}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 18 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))" }}>
               {[
-                { Icon: FileText, nombre: "Google Workspace", uso: "Documentos, correo y entrega de ensayos" },
-                { Icon: MessageCircle, nombre: "WhatsApp", uso: "Comunicación directa con tutor y asesor" },
-                { Icon: Calculator, nombre: "GeoGebra", uso: "Matemática y geometría interactiva" },
-                { Icon: Palette, nombre: "Canva", uso: "Presentaciones y trabajos creativos" },
-                { Icon: Layers, nombre: "Quizlet", uso: "Repaso con tarjetas de memoria" },
-              ].map(({ Icon, nombre, uso }) => (
-                <div key={nombre} style={{ background: "#f7f9fc", border: "1px solid #e8edf3", borderRadius: 14, padding: "26px 18px" }}>
-                  <div style={{ width: 52, height: 52, margin: "0 auto 12px", borderRadius: 14, background: NAVY, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Icon style={{ width: 26, height: 26, color: GOLD }} strokeWidth={2.2} />
-                  </div>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: NAVY, margin: "0 0 6px" }}>{nombre}</p>
-                  <p style={{ fontSize: 13, color: TEXT, margin: 0, lineHeight: 1.5 }}>{uso}</p>
-                </div>
+                { Shape: Circle, color: GOLD, nombre: "Google Workspace", uso: "Documentos, correo y entrega de ensayos" },
+                { Shape: Heart, color: PINK, nombre: "WhatsApp", uso: "Comunicación directa con tutor y asesor" },
+                { Shape: Triangle, color: GREEN, nombre: "GeoGebra", uso: "Matemática y geometría interactiva" },
+                { Shape: Star, color: RED, nombre: "Canva", uso: "Presentaciones y trabajos creativos" },
+                { Shape: Rows3, color: "#8db4e2", nombre: "Quizlet", uso: "Repaso con tarjetas de memoria" },
+              ].map(({ Shape, color, nombre, uso }, i) => (
+                <motion.div key={nombre} whileHover={{ backgroundColor: "rgba(255,255,255,0.05)", y: -4 }} transition={{ duration: 0.25 }}
+                  style={{ borderLeft: i > 0 ? "1px solid rgba(255,255,255,0.14)" : "none", padding: "8px 22px 12px", borderRadius: 4 }}>
+                  <Shape style={{ width: 30, height: 30, color, marginBottom: 16 }} strokeWidth={2.4} fill={color === GOLD || color === RED ? color : "none"} fillOpacity={0.25} />
+                  <p style={{ fontSize: 19, fontWeight: 700, color: "#fff", margin: "0 0 8px", lineHeight: 1.25 }}>{nombre}</p>
+                  <p style={{ fontSize: 12, fontWeight: 600, color: "#9fb3cc", textTransform: "uppercase", letterSpacing: "0.07em", lineHeight: 1.7, margin: 0 }}>{uso}</p>
+                </motion.div>
               ))}
             </div>
           </Reveal>
