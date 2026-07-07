@@ -15,6 +15,7 @@ import { useState, useEffect, useRef } from "react";
 import {
   Loader2, Check, ArrowUpRight, Menu, X, Search, Play,
   Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
+  FileText, MessageCircle, Calculator, Palette, Layers,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
@@ -239,8 +240,8 @@ const TOUR_SLIDES = [
   },
   {
     img: "/images/tour/04-podcast.png",
-    title: "¿Prefieres escuchar? También hay podcast",
-    text: "Cada lección viene además en versión audio, tipo podcast. Para aprender caminando, en el transporte, o si leer te cuesta. Inclusión de verdad — pensado para TDAH, dislexia y todo ritmo de vida.",
+    title: "¿Prefieres escuchar? También hay pódcasts",
+    text: "Cada lección incluye además 2 a 3 audios tipo pódcast. Para aprender caminando, en el transporte, o si leer te cuesta. Inclusión de verdad — pensado para TDAH, dislexia y todo ritmo de vida.",
   },
 ];
 
@@ -313,7 +314,7 @@ function TourModal({ open, onClose }: { open: boolean; onClose: () => void }) {
 // Módulo dedicado, muy visual, con pasos en auto-play. Nombre real (Mastery Learning),
 // fundamento (Bloom/Harvard) y quiénes lo usan en el mundo (colegios reales licenciados).
 const METODO_PASOS = [
-  { n: "01", title: "Aprendes", text: "Cada objetivo del temario oficial viene con su propio video y su podcast. Ves, escuchas, pausas y repites — a tu ritmo, cuando tu día lo permite.", color: GOLD },
+  { n: "01", title: "Aprendes", text: "Cada objetivo del temario oficial viene con 2 a 3 videos y sus pódcasts. Ves, escuchas, pausas y repites — a tu ritmo, cuando tu día lo permite.", color: GOLD },
   { n: "02", title: "Practicas", text: "Ejercicios que se corrigen solos, al instante. Sabes de inmediato si entendiste, sin esperar a que un profesor revise la próxima semana.", color: GREEN },
   { n: "03", title: "Refuerzas", text: "¿Te costó? Antes de seguir, refuerzo del mismo tema. Nadie avanza arrastrando vacíos — el error se corrige en el momento, no meses después.", color: PINK },
   { n: "04", title: "Dominas", text: "Evaluación de la unidad. Con 70% o más, se desbloquea la siguiente. Avanzas porque de verdad dominaste, no porque pasó el calendario.", color: RED },
@@ -537,6 +538,40 @@ export default function Home() {
       {/* === EL MÉTODO — módulo dedicado, el gancho central === */}
       <MetodoModule />
 
+      {/* === COLEGIOS CON EL MISMO MÉTODO — insignias de referentes internacionales === */}
+      <section id="referentes" style={{ maxWidth: 1180, margin: "0 auto", padding: "72px 24px", textAlign: "center" }}>
+        <Reveal>
+          <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>No estamos solos en esto</p>
+          <h2 style={{ fontSize: "clamp(28px,4.5vw,44px)", fontWeight: 600, color: SLATE, margin: "0 0 12px" }}>Colegios del mundo con el mismo método</h2>
+          <p style={{ fontSize: 16, color: TEXT, maxWidth: 680, margin: "0 auto 44px" }}>
+            El Aprendizaje por Dominio ya forma a miles de estudiantes en colegios online acreditados. Barkley lo trae a Chile.
+          </p>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 24 }}>
+            {[
+              { sigla: "AA", nombre: "Acellus Academy", pais: "Estados Unidos", dato: "Acreditado WASC · Mastery Learning" },
+              { sigla: "AX", nombre: "Apex Learning Virtual School", pais: "Estados Unidos", dato: "Acreditado Cognia · Mastery-based" },
+              { sigla: "EO", nombre: "Edmentum EdOptions Academy", pais: "Estados Unidos", dato: "Acreditado Cognia · Online K-12" },
+              { sigla: "WH", nombre: "Wolsey Hall Oxford", pais: "Reino Unido", dato: "100% asincrónico · Desde 1894" },
+            ].map((c) => (
+              <div key={c.sigla} style={{ background: "#fff", border: "1px solid #e8edf3", borderRadius: 16, padding: "28px 20px", boxShadow: "0 4px 18px rgba(0,20,60,0.05)" }}>
+                {/* Insignia representativa (monograma), no logotipo oficial */}
+                <div style={{ width: 76, height: 76, margin: "0 auto 14px", borderRadius: "50%", background: NAVY, border: `3px solid ${GOLD}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ color: "#fff", fontSize: 24, fontWeight: 800, letterSpacing: "0.02em" }}>{c.sigla}</span>
+                </div>
+                <p style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: "0 0 4px" }}>{c.nombre}</p>
+                <p style={{ fontSize: 13, fontWeight: 600, color: SLATE, margin: "0 0 8px" }}>{c.pais}</p>
+                <p style={{ fontSize: 13, color: TEXT, margin: 0 }}>{c.dato}</p>
+              </div>
+            ))}
+          </div>
+          <p style={{ fontSize: 11, color: "#9aa7b8", margin: "18px 0 0" }}>
+            Referentes internacionales del método. Las marcas pertenecen a sus respectivas instituciones; insignias representativas, no logotipos oficiales.
+          </p>
+        </Reveal>
+      </section>
+
       {/* === PILARES — bloque de color sólido + foto, como "An Education Designed Around You" === */}
       <section style={{ background: "#f5f5f5", padding: "64px 0" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
@@ -747,6 +782,38 @@ export default function Home() {
         </div>
       </section>
 
+      {/* === HERRAMIENTAS EXTERNAS — aplicaciones que complementan la plataforma === */}
+      <section id="herramientas" style={{ background: "#fff", padding: "72px 24px" }}>
+        <div style={{ maxWidth: 1180, margin: "0 auto", textAlign: "center" }}>
+          <Reveal>
+            <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Ecosistema de estudio</p>
+            <h2 style={{ fontSize: "clamp(28px,4.5vw,44px)", fontWeight: 600, color: SLATE, margin: "0 0 12px" }}>Herramientas que acompañan la plataforma</h2>
+            <p style={{ fontSize: 16, color: TEXT, maxWidth: 660, margin: "0 auto 40px" }}>
+              Además de nuestra plataforma, tu hijo trabaja con aplicaciones reales que usará toda la vida.
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 18 }}>
+              {[
+                { Icon: FileText, nombre: "Google Workspace", uso: "Documentos, correo y entrega de ensayos" },
+                { Icon: MessageCircle, nombre: "WhatsApp", uso: "Comunicación directa con tutor y asesor" },
+                { Icon: Calculator, nombre: "GeoGebra", uso: "Matemática y geometría interactiva" },
+                { Icon: Palette, nombre: "Canva", uso: "Presentaciones y trabajos creativos" },
+                { Icon: Layers, nombre: "Quizlet", uso: "Repaso con tarjetas de memoria" },
+              ].map(({ Icon, nombre, uso }) => (
+                <div key={nombre} style={{ background: "#f7f9fc", border: "1px solid #e8edf3", borderRadius: 14, padding: "26px 18px" }}>
+                  <div style={{ width: 52, height: 52, margin: "0 auto 12px", borderRadius: 14, background: NAVY, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Icon style={{ width: 26, height: 26, color: GOLD }} strokeWidth={2.2} />
+                  </div>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: NAVY, margin: "0 0 6px" }}>{nombre}</p>
+                  <p style={{ fontSize: 13, color: TEXT, margin: 0, lineHeight: 1.5 }}>{uso}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* === PRECIO — un solo valor, sin matrícula, con descuento anual === */}
       <section id="precio" style={{ background: "#f5f5f5", padding: "80px 24px" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center" }}>
@@ -754,7 +821,7 @@ export default function Home() {
             <p style={{ fontSize: 14, fontWeight: 600, color: RED, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>Precio transparente</p>
             <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 600, color: NAVY, margin: "0 0 12px" }}>Un solo valor, sin letra chica</h2>
             <p style={{ fontSize: 16, color: TEXT, margin: "0 auto 40px", maxWidth: 640 }}>
-              Sin matrícula, sin costos ocultos. El año de preparación va de <strong style={{ color: NAVY }}>marzo al 31 de octubre</strong>, cuando rindes tus exámenes libres. Todo incluido — video y podcast por lección, tutor cuando lo necesitas, asesor que te acompaña y portal para tu familia.
+              Sin matrícula, sin costos ocultos. El año de preparación va de <strong style={{ color: NAVY }}>marzo al 31 de octubre</strong>, cuando rindes tus exámenes libres. Todo incluido — 2 a 3 videos y pódcasts por lección, tutor cuando lo necesitas, asesor que te acompaña y portal para tu familia.
             </p>
           </Reveal>
           <Reveal delay={0.1}>
@@ -767,7 +834,7 @@ export default function Home() {
                   <span style={{ fontSize: 16, color: TEXT }}>/ mes</span>
                 </div>
                 <p style={{ fontSize: 14, color: TEXT, margin: "0 0 22px" }}>Sin matrícula. De marzo a octubre, cancela cuando quieras.</p>
-                {["Todas las asignaturas de tu nivel", "Video + podcast en cada lección", "Tutor por asignatura cuando lo necesitas", "Asesor que sigue tu progreso", "Portal para apoderados", "Preparación para exámenes libres MINEDUC"].map((f) => (
+                {["Todas las asignaturas de tu nivel", "2 a 3 videos y pódcasts en cada lección", "Tutor por asignatura cuando lo necesitas", "Asesor que sigue tu progreso", "Portal para apoderados", "Preparación para exámenes libres MINEDUC"].map((f) => (
                   <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
                     <Check style={{ width: 18, height: 18, color: GREEN, flexShrink: 0, marginTop: 2 }} strokeWidth={3} />
                     <span style={{ fontSize: 15, color: TEXT }}>{f}</span>
@@ -794,30 +861,30 @@ export default function Home() {
               </div>
             </div>
           </Reveal>
-          <Reveal delay={0.2}>
-            <p style={{ fontSize: 15, color: SLATE, margin: "36px auto 0", maxWidth: 640 }}>
-              Un colegio particular tradicional en Chile cuesta entre <strong style={{ color: NAVY }}>$150.000 y $400.000 al mes</strong>. Barkley es hasta un 80% más económico — con contenido que ellos no tienen.
-            </p>
-          </Reveal>
         </div>
       </section>
 
       {/* === FAQ === */}
       {faqs && faqs.length > 0 && (
-        <section id="faq" style={{ maxWidth: 900, margin: "0 auto", padding: "64px 24px" }}>
-          <Reveal><h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 600, color: SLATE, margin: "0 0 32px" }}>Preguntas frecuentes</h2></Reveal>
-          <Accordion type="single" collapsible>
-            {faqs.map(f => (
-              <AccordionItem key={f.id} value={f.id} style={{ borderTop: "1px solid #eef1f5", borderBottom: "none" }}>
-                <AccordionTrigger style={{ fontSize: 17, fontWeight: 600, color: NAVY, padding: "18px 0" }} className="hover:no-underline">
-                  {f.question}
-                </AccordionTrigger>
-                <AccordionContent style={{ fontSize: 15, opacity: 0.85, paddingBottom: 18 }}>
-                  {f.answer}
-                </AccordionContent>
-              </AccordionItem>
+        <section id="faq" style={{ maxWidth: 1180, margin: "0 auto", padding: "56px 24px" }}>
+          <Reveal><h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 600, color: SLATE, margin: "0 0 24px" }}>Preguntas frecuentes</h2></Reveal>
+          {/* Dos columnas independientes para que el acordeón abierto no empuje la otra mitad */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", columnGap: 48, alignItems: "start" }}>
+            {[faqs.filter((_, i) => i % 2 === 0), faqs.filter((_, i) => i % 2 === 1)].map((col, ci) => (
+              <Accordion key={ci} type="single" collapsible>
+                {col.map(f => (
+                  <AccordionItem key={f.id} value={f.id} style={{ borderTop: "1px solid #eef1f5", borderBottom: "none" }}>
+                    <AccordionTrigger style={{ fontSize: 15, fontWeight: 600, color: NAVY, padding: "12px 0", textAlign: "left" }} className="hover:no-underline">
+                      {f.question}
+                    </AccordionTrigger>
+                    <AccordionContent style={{ fontSize: 14, opacity: 0.85, paddingBottom: 12 }}>
+                      {f.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             ))}
-          </Accordion>
+          </div>
         </section>
       )}
 
