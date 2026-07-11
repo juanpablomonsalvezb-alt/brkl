@@ -874,7 +874,7 @@ export default function Home() {
               <div style={{ flex: "1 1 320px", maxWidth: 380, background: "#fff", borderRadius: 18, padding: "36px 32px", boxShadow: "0 6px 24px rgba(0,20,60,0.08)", textAlign: "left" }}>
                 <p style={{ fontSize: 13, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>Plan mensual</p>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 6, margin: "10px 0 4px" }}>
-                  <span style={{ fontSize: 48, fontWeight: 700, color: NAVY }}>$55.000</span>
+                  <span style={{ fontSize: 48, fontWeight: 700, color: NAVY }}>$65.000</span>
                   <span style={{ fontSize: 16, color: TEXT }}>/ mes</span>
                 </div>
                 <p style={{ fontSize: 14, color: TEXT, margin: "0 0 22px" }}>Sin matrícula. De marzo a octubre, cancela cuando quieras.</p>
@@ -891,10 +891,10 @@ export default function Home() {
                 <span style={{ position: "absolute", top: 20, right: -34, background: GOLD, color: NAVY, fontSize: 12, fontWeight: 700, padding: "5px 40px", transform: "rotate(45deg)" }}>15% dcto</span>
                 <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>Pago único del año</p>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 6, margin: "10px 0 4px" }}>
-                  <span style={{ fontSize: 48, fontWeight: 700 }}>$374.000</span>
-                  <span style={{ fontSize: 16, opacity: 0.8, textDecoration: "line-through" }}>$440.000</span>
+                  <span style={{ fontSize: 48, fontWeight: 700 }}>$442.000</span>
+                  <span style={{ fontSize: 16, opacity: 0.8, textDecoration: "line-through" }}>$520.000</span>
                 </div>
-                <p style={{ fontSize: 14, opacity: 0.85, margin: "0 0 22px" }}>15% de descuento por pagar todo el año de una vez. Ahorras $66.000.</p>
+                <p style={{ fontSize: 14, opacity: 0.85, margin: "0 0 22px" }}>15% de descuento por pagar todo el año de una vez. Ahorras $78.000.</p>
                 {["Todo lo del plan mensual", "15% de descuento", "Precio congelado todo el año", "Un solo pago, cero preocupaciones"].map((f) => (
                   <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
                     <Check style={{ width: 18, height: 18, color: GOLD, flexShrink: 0, marginTop: 2 }} strokeWidth={3} />
