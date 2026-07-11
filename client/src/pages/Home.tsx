@@ -151,7 +151,6 @@ const PROGRAMAS = [
   { title: "Plataforma", sub: "Seguimiento algorítmico", text: "Un sistema determinístico mide cada resultado y ajusta el contenido — sin IA generativa. Registra avance, notas y días de estudio, refuerza lo que cuesta antes de seguir, y entrega al apoderado un panel en tiempo real con el progreso de su hijo.", img: "/images/seguimiento-algoritmico.jpeg", href: "#plataforma" },
   { title: "Acompañamiento", sub: "Un tutor, no un profesor de refuerzo", text: "Un tutor general acompaña a tu hijo — no un especialista por materia. Apoya en lo académico, pero también en organizarse, sostener la motivación y resolver dudas de cualquier asignatura, como un adulto de confianza dentro de la plataforma.", img: "/images/tutor-acompanamiento.jpeg", href: "#plataforma" },
   { title: "Familias", sub: "Portal Familia", text: "Transparencia total, sin preguntar cómo le fue: promedio general, avance por asignatura, días de estudio del mes y tutorías tomadas, en un panel que se actualiza solo. Lee los mensajes del asesor y ve qué entregas están en revisión — todo en modo observador, sin interferir en su proceso.", img: "/images/portal-familia.jpeg", href: "#inscripcion" },
-  { title: "Trámite", sub: "Validación de estudios", text: "Guías y asesoría personalizada para completar el trámite MINEDUC correctamente.", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=700&q=75", href: "#faq" },
 ];
 
 const NAV_LINKS = [
