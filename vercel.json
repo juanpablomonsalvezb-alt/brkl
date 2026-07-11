@@ -10,6 +10,10 @@
     {
       "source": "/api/(.*)",
       "destination": "/api/handler.js"
+    },
+    {
+      "source": "/((?!api/|assets/|images/|videos/|docs/|fonts/|.*\\.\\w+$).*)",
+      "destination": "/index.html"
     }
   ]
 }
