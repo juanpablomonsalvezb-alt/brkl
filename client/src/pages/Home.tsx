@@ -443,7 +443,6 @@ export default function Home() {
                   style={{ color: "#fff", textDecoration: "none", fontSize: "clamp(28px,6vw,48px)", fontWeight: 600 }}>{l.label}</motion.a>
               ))}
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.08 * NAV_LINKS.length + 0.1 }} style={{ display: "flex", gap: 14, marginTop: 20 }}>
-                <a href="#inscripcion" style={{ textDecoration: "none", border: "1.5px solid #fff", color: "#fff", borderRadius: 999, padding: "12px 24px", fontSize: 16, fontWeight: 600 }}>Visitar</a>
                 <a href="#inscripcion" style={{ textDecoration: "none", background: RED, color: "#fff", borderRadius: 999, padding: "12px 24px", fontSize: 16, fontWeight: 600 }}>Postular</a>
               </motion.div>
             </motion.div>
@@ -504,9 +503,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pestañas verticales fijas al borde derecho, siempre visibles — patrón real .sticky--cta--nav */}
+      {/* Pestaña vertical fija al borde derecho, siempre visible — patrón real .sticky--cta--nav */}
       <div style={{ position: "fixed", right: 0, top: "45%", zIndex: 25, display: "flex", flexDirection: "column" }} className="hidden md:flex">
-        <a href="#inscripcion" style={{ background: SLATE, color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>VISITAR</a>
         <a href="#inscripcion" style={{ background: PINK, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>POSTULAR</a>
       </div>
 
