@@ -836,6 +836,28 @@ export default function Home() {
         </div>
       </section>
 
+      {/* === URGENCIA — cupos limitados + primer pago en febrero 2027 === */}
+      <section style={{ background: NAVY, padding: "40px 24px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -40, left: -40, opacity: 0.3 }}><ShapeFlower color="#ffffff14" size={160} /></div>
+        <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: 24, textAlign: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 46, height: 46, borderRadius: "50%", background: GOLD, flexShrink: 0 }}>
+              <Hourglass style={{ width: 22, height: 22, color: NAVY }} strokeWidth={2.4} />
+            </span>
+            <div style={{ textAlign: "left" }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 2px" }}>Cupos limitados — proceso 2027</p>
+              <p style={{ fontSize: "clamp(17px,2.4vw,22px)", fontWeight: 700, color: "#fff", margin: 0, lineHeight: 1.3 }}>
+                Reserva tu vacante ahora. <span style={{ color: GOLD }}>Pagas recién en febrero de 2027.</span>
+              </p>
+            </div>
+          </div>
+          <motion.a whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} href="#inscripcion"
+            style={{ flexShrink: 0, fontSize: 15, fontWeight: 700, color: NAVY, background: GOLD, textDecoration: "none", borderRadius: 999, padding: "13px 28px", display: "inline-flex", alignItems: "center", gap: 8 }}>
+            Reservar mi cupo <ArrowUpRight style={{ width: 17, height: 17 }} />
+          </motion.a>
+        </div>
+      </section>
+
       {/* === PRECIO — un solo valor, sin matrícula, con descuento anual === */}
       <section id="precio" style={{ background: "#f5f5f5", padding: "80px 24px" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center" }}>
