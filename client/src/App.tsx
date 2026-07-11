@@ -23,6 +23,7 @@ import PaesAdmin from "@/pages/PaesAdmin";
 import ReservationsAdmin from "@/pages/ReservationsAdmin";
 import AcademicCopilot from "@/pages/AcademicCopilot";
 import PaymentResult from "@/pages/PaymentResult";
+import { PrivacyPolicy, TermsOfUse, RefundPolicy } from "@/pages/Legal";
 
 import Lenis from 'lenis';
 import { useEffect } from "react";
@@ -73,6 +74,9 @@ function Router() {
       <Route path="/reservations-admin" component={ReservationsAdmin} />
       <Route path="/academic-copilot" component={AcademicCopilot} />
       <Route path="/payment-result" component={PaymentResult} />
+      <Route path="/privacidad" component={PrivacyPolicy} />
+      <Route path="/terminos" component={TermsOfUse} />
+      <Route path="/reembolso" component={RefundPolicy} />
       <Route component={NotFound} />
     </Switch>
   );

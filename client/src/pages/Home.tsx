@@ -13,7 +13,7 @@
  */
 import { useState, useEffect, useRef } from "react";
 import {
-  Loader2, Check, ArrowUpRight, Menu, X, Search, Play,
+  Loader2, Check, ArrowUpRight, Menu, X, Search, Play, Download,
   Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -159,6 +159,7 @@ const NAV_LINKS = [
   { label: "Admisión", href: "#inscripcion" },
   { label: "Aprendizaje", href: "#metodo" },
   { label: "Plataforma", href: "#plataforma" },
+  { label: "Calendario", href: "#calendario" },
   { label: "Precio", href: "#precio" },
   { label: "Preguntas", href: "#faq" },
 ];
@@ -836,6 +837,47 @@ export default function Home() {
         </div>
       </section>
 
+      {/* === CALENDARIO ACADÉMICO — hitos del año de preparación === */}
+      <section id="calendario" style={{ background: "#fff", padding: "80px 24px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <Reveal>
+            <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px", textAlign: "center" }}>Fechas claras, sin letra chica</p>
+            <h2 style={{ fontSize: "clamp(30px,5vw,48px)", fontWeight: 600, color: NAVY, margin: "0 0 48px", textAlign: "center" }}>Calendario académico 2026–2027</h2>
+          </Reveal>
+          <div style={{ position: "relative" }}>
+            <div style={{ position: "absolute", left: 21, top: 8, bottom: 8, width: 2, background: "#e3e8ef" }} className="hidden md:block" />
+            {[
+              { fecha: "Ahora", titulo: "Reserva tu cupo", texto: "Sin pago, sin matrícula. Solo completas tus datos y aseguras el lugar." },
+              { fecha: "Febrero 2027", titulo: "Primer pago", texto: "Confirmas tu plan (mensual o anual con 15% dcto) y activas la cuenta." },
+              { fecha: "Marzo 2027", titulo: "Inicio del año de preparación", texto: "Acceso completo a la plataforma: video, pódcast, tutor y asesor." },
+              { fecha: "Marzo – octubre", texto: "8 meses de avance a tu ritmo con Aprendizaje por Dominio, acompañado por tu tutor y monitoreado por tu asesor.", titulo: "Año lectivo" },
+              { fecha: "31 de octubre 2027", titulo: "Exámenes libres MINEDUC", texto: "Rindes tus exámenes libres ante el Ministerio de Educación de Chile." },
+            ].map((h, i) => (
+              <Reveal key={h.titulo} delay={i * 0.06}>
+                <div style={{ display: "flex", gap: 24, marginBottom: 36, position: "relative" }}>
+                  <div style={{ flexShrink: 0, width: 44, height: 44, borderRadius: "50%", background: i === 4 ? RED : NAVY, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 15, zIndex: 1 }}>
+                    {String(i + 1).padStart(2, "0")}
+                  </div>
+                  <div>
+                    <p style={{ fontSize: 12, fontWeight: 700, color: "#b5892a", textTransform: "uppercase", letterSpacing: "0.08em", margin: "6px 0 4px" }}>{h.fecha}</p>
+                    <p style={{ fontSize: 19, fontWeight: 700, color: NAVY, margin: "0 0 4px" }}>{h.titulo}</p>
+                    <p style={{ fontSize: 15, color: TEXT, margin: 0, maxWidth: 560 }}>{h.texto}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal delay={0.3}>
+            <div style={{ textAlign: "center", marginTop: 12 }}>
+              <a href="/docs/malla-curricular-barkley.pdf" download
+                style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none", color: NAVY, border: `1.5px solid ${NAVY}`, borderRadius: 999, padding: "12px 26px", fontSize: 15, fontWeight: 700 }}>
+                <Download style={{ width: 17, height: 17 }} /> Descargar folleto y malla curricular (PDF)
+              </a>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* === URGENCIA — cupos limitados + primer pago en febrero 2027 === */}
       <section style={{ background: NAVY, padding: "40px 24px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: -40, left: -40, opacity: 0.3 }}><ShapeFlower color="#ffffff14" size={160} /></div>
@@ -978,7 +1020,7 @@ export default function Home() {
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 32, position: "relative" }}>
           <div style={{ flex: "1 1 240px" }}>
             <p style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px" }}>Barkley Online</p>
-            <p style={{ fontSize: 14, margin: 0, lineHeight: 1.8, opacity: 0.85 }}>Colegio 100% asincrónico · Chile<br /><a href="mailto:admisiones@barkley.cl" style={{ color: "#fff" }}>admisiones@barkley.cl</a></p>
+            <p style={{ fontSize: 14, margin: 0, lineHeight: 1.8, opacity: 0.85 }}>Colegio 100% asincrónico · Chile<br /><a href="mailto:admisiones@barkleyinstituto.cl" style={{ color: "#fff" }}>admisiones@barkleyinstituto.cl</a></p>
           </div>
           <div style={{ flex: "1 1 180px" }}>
             <p style={{ fontSize: 14, fontWeight: 700, margin: "0 0 10px" }}>Enlaces útiles</p>
@@ -1003,6 +1045,7 @@ export default function Home() {
           <div style={{ display: "flex", gap: 16, fontSize: 13, opacity: 0.85 }}>
             <a href="/privacidad" style={{ color: "#fff" }}>Privacidad</a>
             <a href="/terminos" style={{ color: "#fff" }}>Términos de uso</a>
+            <a href="/reembolso" style={{ color: "#fff" }}>Reembolso</a>
           </div>
         </div>
       </footer>

@@ -101,7 +101,7 @@ export async function sendReservationEmail(data: ReservationEmailData) {
   `;
 
   const mailOptions = {
-    from: process.env.EMAIL_USER || 'noreply@institutoharvard.cl',
+    from: process.env.EMAIL_USER || 'noreply@barkleyinstituto.cl',
     to: 'juanpablo.monsalvezb@gmail.com',
     subject: `Nueva Reserva de Cupo - ${data.studentFullName}`,
     html: emailContent,
