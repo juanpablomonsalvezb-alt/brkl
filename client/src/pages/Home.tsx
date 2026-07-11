@@ -847,7 +847,7 @@ export default function Home() {
             <div style={{ textAlign: "left" }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 2px" }}>Cupos limitados — proceso 2027</p>
               <p style={{ fontSize: "clamp(17px,2.4vw,22px)", fontWeight: 700, color: "#fff", margin: 0, lineHeight: 1.3 }}>
-                Reserva tu vacante ahora. <span style={{ color: GOLD }}>Pagas recién en febrero de 2027.</span>
+                Reserva tu cupo ahora. <span style={{ color: GOLD }}>Pagas recién en febrero de 2027.</span>
               </p>
             </div>
           </div>
