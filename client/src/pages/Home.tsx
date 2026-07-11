@@ -150,7 +150,7 @@ const PROGRAMAS = [
   { title: "Certificación", sub: "Exámenes libres MINEDUC", text: "Validación oficial ante el Ministerio de Educación de Chile, desde 5° básico a 4° medio.", img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=700&q=75", href: "#metodo" },
   { title: "Plataforma", sub: "Seguimiento algorítmico", text: "Un sistema determinístico mide cada resultado y ajusta el contenido — sin IA generativa. Registra avance, notas y días de estudio, refuerza lo que cuesta antes de seguir, y entrega al apoderado un panel en tiempo real con el progreso de su hijo.", img: "/images/seguimiento-algoritmico.jpeg", href: "#plataforma" },
   { title: "Acompañamiento", sub: "Un tutor, no un profesor de refuerzo", text: "Un tutor general acompaña a tu hijo — no un especialista por materia. Apoya en lo académico, pero también en organizarse, sostener la motivación y resolver dudas de cualquier asignatura, como un adulto de confianza dentro de la plataforma.", img: "/images/tutor-acompanamiento.jpeg", href: "#plataforma" },
-  { title: "Familias", sub: "Portal de apoderados", text: "Transparencia total: seguimiento en tiempo real del progreso de cada estudiante.", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=700&q=75", href: "#inscripcion" },
+  { title: "Familias", sub: "Portal Familia", text: "Transparencia total, sin preguntar cómo le fue: promedio general, avance por asignatura, días de estudio del mes y tutorías tomadas, en un panel que se actualiza solo. Lee los mensajes del asesor y ve qué entregas están en revisión — todo en modo observador, sin interferir en su proceso.", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=700&q=75", href: "#inscripcion" },
   { title: "Trámite", sub: "Validación de estudios", text: "Guías y asesoría personalizada para completar el trámite MINEDUC correctamente.", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=700&q=75", href: "#faq" },
 ];
 
@@ -719,7 +719,7 @@ export default function Home() {
             <Reveal key={r.title} delay={i * 0.08} style={{ flex: "1 1 260px", minWidth: 240 }}>
               <motion.div whileHover={{ scale: 1.01 }} transition={{ duration: 0.25, ease: "easeInOut" }} style={{ background: "#fff", borderRadius: 16, padding: 28, boxShadow: "0 4px 16px rgba(0,20,60,0.18)" }}>
                 <h3 style={{ fontSize: 18, fontWeight: 600, color: NAVY, margin: "0 0 10px" }}>{r.title}</h3>
-                <p style={{ fontSize: 15, margin: 0 }}>{r.text}{tab === "apoderados" ? " Transparencia total desde el portal de apoderados." : ""}</p>
+                <p style={{ fontSize: 15, margin: 0 }}>{r.text}{tab === "apoderados" ? " Transparencia total desde el Portal Familia." : ""}</p>
               </motion.div>
             </Reveal>
           ))}
@@ -859,7 +859,7 @@ export default function Home() {
                   <span style={{ fontSize: 16, color: TEXT }}>/ mes</span>
                 </div>
                 <p style={{ fontSize: 14, color: TEXT, margin: "0 0 22px" }}>Sin matrícula. De marzo a octubre, cancela cuando quieras.</p>
-                {["Todas las asignaturas de tu nivel", "2 a 3 videos y pódcasts en cada lección", "Un tutor general que te acompaña integralmente", "Asesor que sigue tu progreso", "Portal para apoderados", "Preparación para exámenes libres MINEDUC"].map((f) => (
+                {["Todas las asignaturas de tu nivel", "2 a 3 videos y pódcasts en cada lección", "Un tutor general que te acompaña integralmente", "Asesor que sigue tu progreso", "Portal Familia con avance en tiempo real", "Preparación para exámenes libres MINEDUC"].map((f) => (
                   <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
                     <Check style={{ width: 18, height: 18, color: GREEN, flexShrink: 0, marginTop: 2 }} strokeWidth={3} />
                     <span style={{ fontSize: 15, color: TEXT }}>{f}</span>
