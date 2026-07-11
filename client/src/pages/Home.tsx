@@ -754,7 +754,7 @@ export default function Home() {
             <div style={{ margin: "0 auto 48px", maxWidth: 880 }}>
               <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, margin: "0 0 14px" }}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 7, background: NAVY, color: "#fff", fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", padding: "6px 12px", borderRadius: 999 }}>
-                  <Play style={{ width: 13, height: 13 }} strokeWidth={3} /> Tour en 33 segundos
+                  <Play style={{ width: 13, height: 13 }} strokeWidth={3} /> Tour animado · 47 segundos
                 </span>
                 <span style={{ fontSize: 14, color: TEXT }}>Lo que ve tu hijo y lo que ves tú como apoderado — al grano.</span>
               </div>
