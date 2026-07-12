@@ -770,8 +770,21 @@ export default function Home() {
                   Tu navegador no puede reproducir el video.
                 </video>
               </div>
+              {/* CTA a la demo REAL de la plataforma — lección completa + dashboards alumno y familia */}
+              <div style={{ marginTop: 22, background: "#fff", border: `1px solid ${SLATE}22`, borderRadius: 16, padding: "22px 24px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16, boxShadow: "0 6px 24px rgba(0,20,60,0.06)" }}>
+                <div>
+                  <p style={{ fontSize: 17, fontWeight: 700, color: NAVY, margin: "0 0 3px" }}>¿Quieres verla por dentro de verdad?</p>
+                  <p style={{ fontSize: 14, color: TEXT, margin: 0 }}>Entra a una cuenta de ejemplo con una lección completa — como alumno o como familia.</p>
+                </div>
+                <div style={{ display: "flex", gap: 10, flexShrink: 0 }}>
+                  <a href="https://barkley-platform.vercel.app/login" target="_blank" rel="noopener noreferrer"
+                    style={{ textDecoration: "none", background: RED, color: "#fff", fontWeight: 700, fontSize: 15, borderRadius: 999, padding: "12px 22px", display: "inline-flex", alignItems: "center", gap: 8 }}>
+                    Entrar a la demo <ArrowUpRight style={{ width: 16, height: 16 }} />
+                  </a>
+                </div>
+              </div>
               {/* Atribución requerida por licencia CC BY 4.0 de la pista musical */}
-              <p style={{ fontSize: 11, color: "#9aa7b8", margin: "8px 2px 0", textAlign: "right" }}>
+              <p style={{ fontSize: 11, color: "#9aa7b8", margin: "10px 2px 0", textAlign: "right" }}>
                 Música: "Wholesome" — Kevin MacLeod (incompetech.com), CC BY 4.0
               </p>
             </div>
