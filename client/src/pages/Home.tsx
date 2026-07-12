@@ -485,7 +485,7 @@ export default function Home() {
               </svg>
             </motion.div>
             <div style={{ padding: "28px 26px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", color: "#fff", fontWeight: 500, fontSize: 26, lineHeight: 1.25 }}>
-              <span>Tour<br />Virtual</span> <ArrowUpRight style={{ width: 26, height: 26, marginBottom: 6 }} />
+              <span>Cómo<br />Funciona</span> <ArrowUpRight style={{ width: 26, height: 26, marginBottom: 6 }} />
             </div>
           </motion.a>
           {/* Pinwheel de 4 cuartos rosa arriba, sobre morado saturado real (#861FCE), texto blanco */}
@@ -754,7 +754,7 @@ export default function Home() {
             <div style={{ margin: "0 auto 48px", maxWidth: 880 }}>
               <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, margin: "0 0 14px" }}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 7, background: NAVY, color: "#fff", fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", padding: "6px 12px", borderRadius: 999 }}>
-                  <Play style={{ width: 13, height: 13 }} strokeWidth={3} /> Tour animado · 53 segundos
+                  <Play style={{ width: 13, height: 13 }} strokeWidth={3} /> Video resumen · 53 segundos
                 </span>
                 <span style={{ fontSize: 14, color: TEXT }}>Lo que ve tu hijo y lo que ves tú como apoderado — al grano.</span>
               </div>
