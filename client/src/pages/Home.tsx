@@ -45,42 +45,80 @@ const cardHover = { whileHover: { scale: 1.01 }, transition: { duration: 0.25, e
 // para transmitir "esto está funcionando ahora" en vez de "mira esta grabación".
 // Fiel al comportamiento real de la plataforma (AiTutorService + NVIDIA NIM): el tutor
 // IA no es un chat libre, aparece solo cuando el sistema detecta reprobación real.
-function IaBarkleyDemo() {
-  const QUESTION = "No entiendo por qué 3/4 es más grande que 2/4 🥲";
-  const ANSWER = "¡Tranquilo! Cuando el denominador es igual, gana la fracción con el numerador más grande. Piensa en una pizza cortada en 4 partes: si comes 3 pedazos (3/4) comiste más que si comes 2 (2/4). ¿Vemos otro ejemplo?";
+// Guion socrático real: la IA nunca da la respuesta de entrada — hace una pregunta
+// guía, deja que el alumno razone, y recién confirma la regla al final. Así es como
+// el system prompt de AiTutorService lo exige ("guíalo a entender, no resuelvas por él").
+export const IA_BARKLEY_SCRIPT: { role: "student" | "ia"; text: string }[] = [
+  { role: "student", text: "No entiendo por qué 3/4 es más grande que 2/4 🥲" },
+  { role: "ia", text: "Buena pregunta. Si divides una pizza en 4 partes iguales, ¿qué tan grande es cada pedazo comparado con la pizza completa?" },
+  { role: "student", text: "Es más chico, como un cuarto de toda la pizza" },
+  { role: "ia", text: "Exacto. Ahora dime: si te comes 3 de esos pedazos, ¿comiste más o menos que si te comes solo 2?" },
+  { role: "student", text: "Más, porque comí más pedazos" },
+  { role: "ia", text: "¡Ahí está! Cuando el denominador es igual, gana la fracción con más numerador — porque representa más pedazos comidos. Por eso 3/4 > 2/4. ¿Intentamos con 5/8 y 3/8?" },
+];
+
+// Widget de chat en vivo (no un video): tamaño 100% fijo — ancho y alto no cambian
+// mientras el texto se tipea; el área de mensajes tiene scroll interno propio.
+export function IaBarkleyChatWidget({ script = IA_BARKLEY_SCRIPT, width = 440 }: { script?: typeof IA_BARKLEY_SCRIPT; width?: number }) {
   const [started, setStarted] = useState(false);
-  const [qText, setQText] = useState("");
-  const [showThinking, setShowThinking] = useState(false);
-  const [aText, setAText] = useState("");
+  const [shown, setShown] = useState<{ role: "student" | "ia"; text: string }[]>([]);
+  const [typing, setTyping] = useState<{ role: "student" | "ia"; text: string } | null>(null);
+  const [thinking, setThinking] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!started) return;
-    let i = 0;
-    const qTimer = setInterval(() => {
-      i++;
-      setQText(QUESTION.slice(0, i));
-      if (i >= QUESTION.length) {
-        clearInterval(qTimer);
-        setTimeout(() => setShowThinking(true), 350);
-        setTimeout(() => {
-          setShowThinking(false);
-          let j = 0;
-          const aTimer = setInterval(() => {
-            j++;
-            setAText(ANSWER.slice(0, j));
-            if (j >= ANSWER.length) clearInterval(aTimer);
-          }, 16);
-        }, 1400);
+    let cancelled = false;
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    (async () => {
+      for (const turn of script) {
+        if (cancelled) return;
+        if (turn.role === "ia") {
+          setThinking(true);
+          await sleep(900);
+          if (cancelled) return;
+          setThinking(false);
+        } else {
+          await sleep(500);
+        }
+        setTyping({ role: turn.role, text: "" });
+        const speed = turn.role === "student" ? 30 : 14;
+        for (let i = 1; i <= turn.text.length; i++) {
+          if (cancelled) return;
+          setTyping({ role: turn.role, text: turn.text.slice(0, i) });
+          await sleep(speed);
+        }
+        if (cancelled) return;
+        setShown((prev) => [...prev, turn]);
+        setTyping(null);
+        await sleep(280);
       }
-    }, 32);
-    return () => clearInterval(qTimer);
-  }, [started]);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [started, script]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [shown, typing, thinking]);
+
+  const Bubble = ({ role, text }: { role: "student" | "ia"; text: string }) =>
+    role === "student" ? (
+      <div style={{ alignSelf: "flex-end", maxWidth: "82%", width: "fit-content", background: GOLD, color: NAVY, borderRadius: "14px 14px 3px 14px", padding: "10px 14px", fontSize: 14, fontWeight: 600, wordBreak: "break-word", whiteSpace: "pre-wrap" }}>
+        {text}
+      </div>
+    ) : (
+      <div style={{ alignSelf: "flex-start", maxWidth: "88%", width: "fit-content", background: "#fff", border: `1px solid ${SLATE}22`, color: TEXT, borderRadius: "14px 14px 14px 3px", padding: "12px 16px", fontSize: 14, lineHeight: 1.5, wordBreak: "break-word", whiteSpace: "pre-wrap" }}>
+        {text}
+      </div>
+    );
 
   return (
     <motion.div
       viewport={{ once: true, amount: 0.5 }}
       onViewportEnter={() => setStarted(true)}
-      style={{ width: "100%", maxWidth: 440, background: "#fff", borderRadius: 20, boxShadow: "0 24px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}
+      style={{ width, minWidth: width, maxWidth: width, flexShrink: 0, boxSizing: "border-box", background: "#fff", borderRadius: 20, boxShadow: "0 24px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}
     >
       <div style={{ background: NAVY, padding: "14px 18px", display: "flex", alignItems: "center", gap: 10 }}>
         <div style={{ width: 34, height: 34, borderRadius: "50%", background: GOLD, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: NAVY, fontSize: 14, flexShrink: 0 }}>IA</div>
@@ -91,25 +129,24 @@ function IaBarkleyDemo() {
           </p>
         </div>
       </div>
-      <div style={{ padding: "20px 18px", minHeight: 230, display: "flex", flexDirection: "column", gap: 12, background: "#f5f7fa" }}>
-        {qText && (
-          <div style={{ alignSelf: "flex-end", maxWidth: "85%", background: GOLD, color: NAVY, borderRadius: "14px 14px 3px 14px", padding: "10px 14px", fontSize: 14, fontWeight: 600 }}>
-            {qText}
-          </div>
-        )}
-        {showThinking && (
+      <div
+        ref={scrollRef}
+        style={{ width, maxWidth: width, boxSizing: "border-box", height: 400, maxHeight: 400, overflowY: "auto", padding: "20px 18px", display: "flex", flexDirection: "column", gap: 12, background: "#f5f7fa" }}
+      >
+        {shown.map((m, i) => <Bubble key={i} role={m.role} text={m.text} />)}
+        {thinking && (
           <div style={{ alignSelf: "flex-start", background: "#e3e8ef", borderRadius: "14px 14px 14px 3px", padding: "10px 16px", fontSize: 13, color: SLATE, fontWeight: 700 }}>
             IA Barkley está escribiendo…
           </div>
         )}
-        {aText && (
-          <div style={{ alignSelf: "flex-start", maxWidth: "88%", background: "#fff", border: `1px solid ${SLATE}22`, color: TEXT, borderRadius: "14px 14px 14px 3px", padding: "12px 16px", fontSize: 14, lineHeight: 1.5 }}>
-            {aText}
-          </div>
-        )}
+        {typing && <Bubble role={typing.role} text={typing.text} />}
       </div>
     </motion.div>
   );
+}
+
+function IaBarkleyDemo() {
+  return <IaBarkleyChatWidget />;
 }
 
 const NAVY = "#003366";
