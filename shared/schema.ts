@@ -15,6 +15,7 @@ export const waitlistSignups = sqliteTable("waitlist_signups", {
   email: text("email").notNull().unique(),
   name: text("name"),
   levelInterest: text("level_interest"),
+  notes: text("notes"),
   createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
 });
 
@@ -22,6 +23,7 @@ export const insertWaitlistSchema = z.object({
   email: z.string().trim().toLowerCase().email("Email inválido"),
   name: z.string().trim().min(2).max(120).optional(),
   levelInterest: z.string().trim().max(40).optional(),
+  notes: z.string().trim().max(1000).optional(),
 });
 
 export type WaitlistSignup = typeof waitlistSignups.$inferSelect;

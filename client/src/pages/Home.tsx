@@ -279,16 +279,45 @@ function ShapeInline({ color, shape: Shape }: { color: string; shape: typeof Sha
   return <span style={{ display: "inline-block", margin: "0 4px", verticalAlign: "middle", transform: "translateY(2px)" }}><Shape color={color} size={28} /></span>;
 }
 
+// Bloque de admisión — headline potente + formulario. Se repite dos veces en el
+// home (mitad de página y al final): solo la instancia de más abajo lleva el
+// anchorId "inscripcion" al que apunta el nav, para no duplicar el id="" en el DOM.
+function AdmisionSection({ anchorId }: { anchorId?: string }) {
+  return (
+    <section id={anchorId} style={{ background: NAVY, position: "relative", overflow: "hidden", padding: "80px 24px" }}>
+      <div style={{ position: "absolute", top: -60, right: -60, opacity: 0.12 }}><ShapeFlower color="#FFC548" size={220} /></div>
+      <div style={{ maxWidth: 1100, margin: "0 auto", position: "relative", display: "flex", flexWrap: "wrap", gap: 44, alignItems: "center" }}>
+        <div style={{ flex: "1 1 380px", minWidth: 280 }}>
+          <span style={{ display: "inline-block", background: GOLD, color: NAVY, fontSize: 13, fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase", padding: "7px 18px", borderRadius: 999, marginBottom: 20 }}>
+            Admisión 2027
+          </span>
+          <h2 style={{ fontSize: "clamp(38px,6vw,64px)", fontWeight: 800, color: "#fff", margin: "0 0 16px", lineHeight: 1.05 }}>
+            Inscríbete ahora.
+          </h2>
+          <p style={{ fontSize: "clamp(18px,2.4vw,23px)", fontWeight: 600, color: "#cfe0f5", margin: "0 0 6px", lineHeight: 1.4 }}>
+            Sin compromiso, sin costo hoy — <span style={{ color: GOLD }}>pagas recién en febrero de 2027</span>.
+          </p>
+          <p style={{ fontSize: 15, color: "#9db3cf", margin: 0 }}>Cupos limitados · año académico 2027</p>
+        </div>
+        <div style={{ flex: "1 1 380px", minWidth: 280, background: "#fff", borderRadius: 20, padding: "32px 30px", boxShadow: "0 24px 60px rgba(0,0,0,0.25)" }}>
+          <InscripcionForm />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function InscripcionForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [level, setLevel] = useState("");
+  const [notes, setNotes] = useState("");
   const [st, setSt] = useState<"idle"|"loading"|"success"|"error"|"duplicate">("idle");
   const [err, setErr] = useState("");
   const submit = async () => {
     setSt("loading"); setErr("");
     try {
-      const res = await fetch("/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, name: name||undefined, levelInterest: level||undefined }) });
+      const res = await fetch("/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, name: name||undefined, levelInterest: level||undefined, notes: notes||undefined }) });
       const d = await res.json();
       if (!res.ok) { setErr(d.message||"Error"); setSt("error"); return; }
       setSt(d.alreadySubscribed ? "duplicate" : "success");
@@ -319,11 +348,16 @@ function InscripcionForm() {
           {["5° Básico","6° Básico","7° Básico","8° Básico","1° Medio","2° Medio","3° Medio","4° Medio","Validación adulto"].map(l=><option key={l} value={l}>{l}</option>)}
         </select>
       </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <label style={{ fontSize: 14, fontWeight: 600, color: NAVY }}>Consultas <span style={{ fontWeight: 400, opacity: 0.6, textTransform: "none" }}>(opcional)</span></label>
+        <textarea value={notes} onChange={e=>setNotes(e.target.value)} placeholder="¿Tienes alguna pregunta para nuestro equipo?" rows={3}
+          style={{ ...inp, resize: "vertical", fontFamily: FONT }} data-testid="input-notes" />
+      </div>
       {st==="error" && <p style={{ color: RED, fontSize: 14, margin: 0 }}>{err}</p>}
       <button type="submit" disabled={st==="loading"} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, fontSize: 16, fontWeight: 600, background: RED, color: "#fff", border: "none", borderRadius: 999, padding: "14px 28px", cursor: "pointer", fontFamily: FONT, opacity: st==="loading"?0.6:1, width: "fit-content" }}>
         {st==="loading" ? <Loader2 style={{ width: 18, height: 18 }} className="animate-spin" /> : <>Quiero inscribirme <ArrowUpRight style={{ width: 18, height: 18 }} /></>}
       </button>
-      <p style={{ fontSize: 13, opacity: 0.6, margin: 0 }}>Sin compromiso · sin costo · cupos limitados año académico 2027</p>
+      <p style={{ fontSize: 13, opacity: 0.6, margin: 0 }}>Reserva ahora, sin costo — pagas recién en febrero de 2027</p>
     </form>
   );
 }
@@ -852,6 +886,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* === INSCRIPCIÓN (mitad de página) — misma sección, sin id repetido === */}
+      <AdmisionSection />
+
       {/* === PROGRAMAS === */}
       <section id="plataforma" style={{ background: "#f5f5f5", padding: "64px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
@@ -1139,16 +1176,7 @@ export default function Home() {
       </section>
 
       {/* === INSCRIPCIÓN === */}
-      <section id="inscripcion" style={{ maxWidth: 1100, margin: "0 auto", padding: "64px 24px", display: "flex", flexWrap: "wrap", gap: 40 }}>
-        <div style={{ flex: "1 1 320px", minWidth: 260 }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Admisión 2027</p>
-          <h2 style={{ fontSize: "clamp(24px,3.5vw,32px)", fontWeight: 600, color: NAVY, margin: 0 }}>Inscríbete.</h2>
-          <p style={{ fontSize: 15, opacity: 0.7, margin: "10px 0 0" }}>Sin compromiso · sin costo</p>
-        </div>
-        <div style={{ flex: "1 1 380px", minWidth: 280 }}>
-          <InscripcionForm />
-        </div>
-      </section>
+      <AdmisionSection anchorId="inscripcion" />
 
       {/* === FOOTER — navy sólido + formas orgánicas, como el real === */}
       <footer style={{ backgroundColor: NAVY, color: "#fff", padding: "56px 24px 24px", position: "relative", overflow: "hidden" }}>
