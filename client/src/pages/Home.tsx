@@ -777,7 +777,7 @@ export default function Home() {
                   <p style={{ fontSize: 14, color: TEXT, margin: 0 }}>Entra a una cuenta de ejemplo con una lección completa — como alumno o como familia.</p>
                 </div>
                 <div style={{ display: "flex", gap: 10, flexShrink: 0 }}>
-                  <a href="https://barkley-platform.vercel.app/login" target="_blank" rel="noopener noreferrer"
+                  <a href="https://barkley-platform.vercel.app/demo/student" target="_blank" rel="noopener noreferrer"
                     style={{ textDecoration: "none", background: RED, color: "#fff", fontWeight: 700, fontSize: 15, borderRadius: 999, padding: "12px 22px", display: "inline-flex", alignItems: "center", gap: 8 }}>
                     Entrar a la demo <ArrowUpRight style={{ width: 16, height: 16 }} />
                   </a>
