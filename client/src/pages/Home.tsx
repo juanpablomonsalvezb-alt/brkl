@@ -661,6 +661,18 @@ export default function Home() {
           <p style={{ margin: 0, color: "#fff", fontSize: "clamp(15px,2vw,18px)", fontWeight: 500 }}>
             Preparación oficial para <strong style={{ color: GOLD }}>Exámenes Libres</strong> ante el Ministerio de Educación de Chile — validación reconocida de 5° básico a 4° medio.
           </p>
+          <a
+            href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 6, flexShrink: 0,
+              background: GOLD, color: NAVY, fontWeight: 700, fontSize: 13,
+              padding: "9px 16px", borderRadius: 999, textDecoration: "none", whiteSpace: "nowrap",
+            }}
+          >
+            Ver ficha oficial MINEDUC <ArrowUpRight style={{ width: 15, height: 15 }} strokeWidth={2.5} />
+          </a>
         </div>
       </section>
 
