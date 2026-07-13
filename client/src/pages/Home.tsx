@@ -41,6 +41,77 @@ function Reveal({ children, delay = 0, style }: { children: React.ReactNode; del
 // Hover EXACTO real: .hoverEffect{transition:all ease-in-out .25s}:hover{transform:scale(1.01)} — sin lift vertical
 const cardHover = { whileHover: { scale: 1.01 }, transition: { duration: 0.25, ease: "easeInOut" as const } };
 
+// Demo del tutor IA — chat en vivo (no un video): se tipea solo al entrar en pantalla,
+// para transmitir "esto está funcionando ahora" en vez de "mira esta grabación".
+// Fiel al comportamiento real de la plataforma (AiTutorService + NVIDIA NIM): el tutor
+// IA no es un chat libre, aparece solo cuando el sistema detecta reprobación real.
+function IaBarkleyDemo() {
+  const QUESTION = "No entiendo por qué 3/4 es más grande que 2/4 🥲";
+  const ANSWER = "¡Tranquilo! Cuando el denominador es igual, gana la fracción con el numerador más grande. Piensa en una pizza cortada en 4 partes: si comes 3 pedazos (3/4) comiste más que si comes 2 (2/4). ¿Vemos otro ejemplo?";
+  const [started, setStarted] = useState(false);
+  const [qText, setQText] = useState("");
+  const [showThinking, setShowThinking] = useState(false);
+  const [aText, setAText] = useState("");
+
+  useEffect(() => {
+    if (!started) return;
+    let i = 0;
+    const qTimer = setInterval(() => {
+      i++;
+      setQText(QUESTION.slice(0, i));
+      if (i >= QUESTION.length) {
+        clearInterval(qTimer);
+        setTimeout(() => setShowThinking(true), 350);
+        setTimeout(() => {
+          setShowThinking(false);
+          let j = 0;
+          const aTimer = setInterval(() => {
+            j++;
+            setAText(ANSWER.slice(0, j));
+            if (j >= ANSWER.length) clearInterval(aTimer);
+          }, 16);
+        }, 1400);
+      }
+    }, 32);
+    return () => clearInterval(qTimer);
+  }, [started]);
+
+  return (
+    <motion.div
+      viewport={{ once: true, amount: 0.5 }}
+      onViewportEnter={() => setStarted(true)}
+      style={{ width: "100%", maxWidth: 440, background: "#fff", borderRadius: 20, boxShadow: "0 24px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}
+    >
+      <div style={{ background: NAVY, padding: "14px 18px", display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ width: 34, height: 34, borderRadius: "50%", background: GOLD, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: NAVY, fontSize: 14, flexShrink: 0 }}>IA</div>
+        <div>
+          <p style={{ color: "#fff", fontWeight: 700, fontSize: 14, margin: 0 }}>IA Barkley</p>
+          <p style={{ color: "#8fb0d9", fontSize: 11, margin: 0, display: "flex", alignItems: "center", gap: 5 }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: GREEN, display: "inline-block" }} /> Activo — detectó dificultad real
+          </p>
+        </div>
+      </div>
+      <div style={{ padding: "20px 18px", minHeight: 230, display: "flex", flexDirection: "column", gap: 12, background: "#f5f7fa" }}>
+        {qText && (
+          <div style={{ alignSelf: "flex-end", maxWidth: "85%", background: GOLD, color: NAVY, borderRadius: "14px 14px 3px 14px", padding: "10px 14px", fontSize: 14, fontWeight: 600 }}>
+            {qText}
+          </div>
+        )}
+        {showThinking && (
+          <div style={{ alignSelf: "flex-start", background: "#e3e8ef", borderRadius: "14px 14px 14px 3px", padding: "10px 16px", fontSize: 13, color: SLATE, fontWeight: 700 }}>
+            IA Barkley está escribiendo…
+          </div>
+        )}
+        {aText && (
+          <div style={{ alignSelf: "flex-start", maxWidth: "88%", background: "#fff", border: `1px solid ${SLATE}22`, color: TEXT, borderRadius: "14px 14px 14px 3px", padding: "12px 16px", fontSize: 14, lineHeight: 1.5 }}>
+            {aText}
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
 const NAVY = "#003366";
 const RED = "#FF3D37";
 const GOLD = "#FFC548";
@@ -159,6 +230,7 @@ const NAV_LINKS = [
   { label: "Admisión", href: "#inscripcion" },
   { label: "Aprendizaje", href: "#metodo" },
   { label: "Plataforma", href: "#plataforma" },
+  { label: "IA Barkley", href: "#ia-barkley" },
   { label: "Calendario", href: "#calendario" },
   { label: "Precio", href: "#precio" },
   { label: "Preguntas", href: "#faq" },
@@ -807,6 +879,34 @@ export default function Home() {
                 </a>
               </Reveal>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* === IA BARKLEY — demo en vivo del tutor IA (no un video, un chat que se tipea solo) === */}
+      <section id="ia-barkley" style={{ background: "#eef2f7", padding: "88px 24px" }}>
+        <div style={{ maxWidth: 1180, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 56, alignItems: "center" }}>
+          <Reveal>
+            <div style={{ flex: "1 1 420px", minWidth: 300, maxWidth: 520 }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 10px" }}>Cuando de verdad lo necesita</p>
+              <h2 style={{ fontSize: "clamp(30px,4.5vw,48px)", fontWeight: 700, color: NAVY, margin: "0 0 18px", lineHeight: 1.12 }}>
+                <em style={{ fontStyle: "normal", color: "#b5892a" }}>IA Barkley</em>: el tutor que aparece solo cuando toca.
+              </h2>
+              <p style={{ fontSize: 16, color: TEXT, lineHeight: 1.75, margin: "0 0 20px" }}>
+                No es un chat libre para copiar respuestas. IA Barkley se activa cuando el sistema detecta reprobación real — dos intentos fallidos y menos de 70% en una unidad — y explica el concepto con paciencia, sin resolver la evaluación por el estudiante.
+              </p>
+              <div style={{ display: "flex", gap: 28 }}>
+                {[["2", "intentos fallidos"], ["<70%", "para activarse"], ["20", "preguntas / día"]].map(([n, l]) => (
+                  <div key={l}>
+                    <p style={{ fontSize: 28, fontWeight: 800, color: NAVY, margin: 0, lineHeight: 1 }}>{n}</p>
+                    <p style={{ fontSize: 11.5, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.06em", margin: "6px 0 0" }}>{l}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+          <div style={{ flex: "1 1 380px", minWidth: 300, display: "flex", justifyContent: "center" }}>
+            <IaBarkleyDemo />
           </div>
         </div>
       </section>
