@@ -1066,8 +1066,34 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
+          <Reveal delay={0.24}>
+            <div style={{ background: "#f5f5f5", borderRadius: 20, padding: "32px 36px", marginTop: 40, marginBottom: 28 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 6px" }}>Fechas oficiales MINEDUC 2026</p>
+              <p style={{ fontSize: 20, fontWeight: 700, color: NAVY, margin: "0 0 18px" }}>Períodos de inscripción y rendición de Exámenes Libres</p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 20, marginBottom: 22 }}>
+                <div style={{ flex: "1 1 260px", background: "#fff", borderRadius: 14, padding: "20px 22px" }}>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: "#b5892a", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Primer período</p>
+                  <p style={{ fontSize: 15, color: TEXT, margin: "0 0 4px" }}><strong style={{ color: NAVY }}>Inscripción:</strong> 6 al 24 de abril de 2026</p>
+                  <p style={{ fontSize: 15, color: TEXT, margin: 0 }}><strong style={{ color: NAVY }}>Rendición:</strong> 3 al 7 de junio de 2026</p>
+                </div>
+                <div style={{ flex: "1 1 260px", background: "#fff", borderRadius: 14, padding: "20px 22px" }}>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: "#b5892a", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Segundo período</p>
+                  <p style={{ fontSize: 15, color: TEXT, margin: "0 0 4px" }}><strong style={{ color: NAVY }}>Inscripción:</strong> 1 al 22 de julio de 2026</p>
+                  <p style={{ fontSize: 15, color: TEXT, margin: 0 }}><strong style={{ color: NAVY }}>Rendición:</strong> 7 al 11 de octubre de 2026</p>
+                </div>
+              </div>
+              <p style={{ fontSize: 14, color: TEXT, margin: "0 0 18px" }}>
+                Inscripción gratuita a través del Portal de Ayuda Mineduc (mayores de edad) o la ficha de Exámenes Libres para menores de 18 años.
+              </p>
+              <a href="https://epja.mineduc.cl/wp-content/uploads/sites/43/2026/01/Periodos-de-ExaminacionCONTINUIDAD_VEADULTOS-2026.pdf"
+                target="_blank" rel="noopener noreferrer"
+                style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none", color: "#fff", background: NAVY, borderRadius: 999, padding: "12px 26px", fontSize: 15, fontWeight: 700 }}>
+                <Download style={{ width: 17, height: 17 }} /> Ver calendario oficial MINEDUC (PDF)
+              </a>
+            </div>
+          </Reveal>
           <Reveal delay={0.3}>
-            <div style={{ textAlign: "center", marginTop: 12 }}>
+            <div style={{ textAlign: "center" }}>
               <a href="/docs/malla-curricular-barkley.pdf" download
                 style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none", color: NAVY, border: `1.5px solid ${NAVY}`, borderRadius: 999, padding: "12px 26px", fontSize: 15, fontWeight: 700 }}>
                 <Download style={{ width: 17, height: 17 }} /> Descargar folleto y malla curricular (PDF)
