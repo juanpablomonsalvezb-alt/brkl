@@ -649,7 +649,7 @@ export default function Home() {
 
       {/* Pestaña vertical fija al borde derecho, siempre visible — patrón real .sticky--cta--nav */}
       <div style={{ position: "fixed", right: 0, top: "45%", zIndex: 25, display: "flex", flexDirection: "column" }} className="hidden md:flex">
-        <a href="#inscripcion" style={{ background: PINK, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>POSTULAR</a>
+        <a href="#inscripcion" style={{ background: PINK, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>INSCRIBIRSE</a>
       </div>
 
       {/* === TRUST BAR — sello de confianza: validación oficial MINEDUC === */}
