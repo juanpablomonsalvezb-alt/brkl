@@ -1255,6 +1255,15 @@ export default function Home() {
             <p style={{ fontSize: 14, fontWeight: 700, margin: "0 0 10px" }}>Validación oficial</p>
             <p style={{ fontSize: 13, margin: 0, opacity: 0.75 }}>Preparación para Exámenes Libres ante el Ministerio de Educación de Chile (MINEDUC).</p>
           </div>
+          <div style={{ flex: "1 1 100%", marginTop: 8 }}>
+            <p style={{ fontSize: 14, fontWeight: 700, margin: "0 0 10px" }}>Exámenes libres por nivel</p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 18px", fontSize: 13, opacity: 0.85 }}>
+              {["5-basico|5° Básico", "6-basico|6° Básico", "7-basico|7° Básico", "8-basico|8° Básico", "1-medio|1° Medio", "2-medio|2° Medio", "3-medio|3° Medio", "4-medio|4° Medio"].map((item) => {
+                const [slug, label] = item.split("|");
+                return <a key={slug} href={`/examenes-libres-${slug}/`} style={{ color: "#fff" }}>{label}</a>;
+              })}
+            </div>
+          </div>
         </div>
         <div style={{ maxWidth: 1280, margin: "32px auto 0", paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.15)", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, position: "relative" }}>
           <p style={{ fontSize: 13, opacity: 0.6, margin: 0 }}>© {new Date().getFullYear()} Barkley Online</p>
