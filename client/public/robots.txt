@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /course/
+Disallow: /drive-sync
+Disallow: /textbook-config
+Disallow: /reservations
+Disallow: /plan-settings
+Disallow: /level-plan-settings
+Disallow: /barkley-admin
+Disallow: /evaluation-links-admin
+Disallow: /gemini-copilots-admin
+Disallow: /faq-admin
+Disallow: /paes-admin
+Disallow: /reservations-admin
+Disallow: /academic-copilot
+Disallow: /payment-result
+Disallow: /api/
+
+Sitemap: https://www.barkleyinstituto.cl/sitemap.xml

@@ -6,6 +6,20 @@
       "maxDuration": 30
     }
   },
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "barkleyinstituto.cl" }],
+      "destination": "https://www.barkleyinstituto.cl/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "brkl.vercel.app" }],
+      "destination": "https://www.barkleyinstituto.cl/$1",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
