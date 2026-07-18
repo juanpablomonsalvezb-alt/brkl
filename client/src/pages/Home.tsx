@@ -217,7 +217,7 @@ const PILARES = [
 // aspiracional para su hijo. Los competidores (Colegio Online LAT, Instituto Virtual de Chile)
 // separan la marca de adultos de la marca K-12 por la misma razón.
 const NIVELES = [
-  { title: "Enseñanza Básica", sub: "5° a 8° Básico", img: "/images/ensenanza-basica.jpeg" },
+  { title: "Enseñanza Básica", sub: "1° a 8° Básico", img: "/images/ensenanza-basica.jpeg" },
   { title: "Enseñanza Media", sub: "1° a 4° Medio", img: "/images/ensenanza-media.jpeg" },
 ];
 
@@ -248,14 +248,14 @@ const RAZONES = [
 // Pastel real: bg claro + chevron/forma grande como marca de agua + número gigante (no negro con ícono chico)
 const FACTS = [
   { n: "100%", label: "Asincrónico", shape: ShapeFastForward, bg: "#fdeccb", numColor: NAVY, shapeColor: "#fbd98a" },
-  { n: "5°–4°", label: "Básico a Medio", shape: ShapeStairs, bg: "#d9ecff", numColor: NAVY, shapeColor: "#a9d3ff" },
+  { n: "1°–4°", label: "Básico a Medio", shape: ShapeStairs, bg: "#d9ecff", numColor: NAVY, shapeColor: "#a9d3ff" },
   { n: "6", label: "Asignaturas evaluadas", shape: ShapeHourglass, bg: "#e3d9f7", numColor: NAVY, shapeColor: "#c6b3ea" },
   { n: "2027", label: "Año académico de apertura", shape: ShapeLeaf, bg: "#d7f0e3", numColor: NAVY, shapeColor: "#a9dfc3" },
 ];
 
 const PROGRAMAS = [
   { title: "Metodología", sub: "Aprendizaje asincrónico", text: "Sin Zoom, sin horario fijo. Material propio diseñado para el ritmo de cada estudiante, con Aprendizaje por Dominio: cada paso se desbloquea solo cuando el anterior ya está dominado.", img: "/images/metodologia-asincronica.jpeg", href: "#metodo" },
-  { title: "Certificación", sub: "Exámenes libres MINEDUC", text: "Validación oficial ante el Ministerio de Educación de Chile, desde 5° básico a 4° medio.", img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=700&q=75", href: "#metodo" },
+  { title: "Certificación", sub: "Exámenes libres MINEDUC", text: "Validación oficial ante el Ministerio de Educación de Chile, desde 1° básico a 4° medio.", img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=700&q=75", href: "#metodo" },
   { title: "Plataforma", sub: "Seguimiento algorítmico", text: "Un sistema determinístico mide cada resultado y ajusta el contenido — sin IA generativa. Registra avance, notas y días de estudio, refuerza lo que cuesta antes de seguir, y entrega al apoderado un panel en tiempo real con el progreso de su hijo.", img: "/images/seguimiento-algoritmico.jpeg", href: "#plataforma" },
   { title: "Acompañamiento", sub: "Un tutor, no un profesor de refuerzo", text: "Un tutor general acompaña a tu hijo — no un especialista por materia. Apoya en lo académico, pero también en organizarse, sostener la motivación y resolver dudas de cualquier asignatura, como un adulto de confianza dentro de la plataforma.", img: "/images/tutor-acompanamiento.jpeg", href: "#plataforma" },
   { title: "Familias", sub: "Portal Familia", text: "Transparencia total, sin preguntar cómo le fue: promedio general, avance por asignatura, días de estudio del mes y tutorías tomadas, en un panel que se actualiza solo. Lee los mensajes del asesor y ve qué entregas están en revisión — todo en modo observador, sin interferir en su proceso.", img: "/images/portal-familia.jpeg", href: "#inscripcion" },
@@ -345,7 +345,7 @@ function InscripcionForm() {
         <label style={{ fontSize: 14, fontWeight: 600, color: NAVY }}>Nivel de interés</label>
         <select value={level} onChange={e=>setLevel(e.target.value)} style={{ ...inp, cursor: "pointer" }} data-testid="select-level">
           <option value="">Selecciona un nivel</option>
-          {["5° Básico","6° Básico","7° Básico","8° Básico","1° Medio","2° Medio","3° Medio","4° Medio","Validación adulto"].map(l=><option key={l} value={l}>{l}</option>)}
+          {["1° Básico","2° Básico","3° Básico","4° Básico","5° Básico","6° Básico","7° Básico","8° Básico","1° Medio","2° Medio","3° Medio","4° Medio","Validación adulto"].map(l=><option key={l} value={l}>{l}</option>)}
         </select>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -659,7 +659,7 @@ export default function Home() {
             <Check style={{ width: 22, height: 22 }} strokeWidth={3} />
           </span>
           <p style={{ margin: 0, color: "#fff", fontSize: "clamp(15px,2vw,18px)", fontWeight: 500 }}>
-            Preparación oficial para <strong style={{ color: GOLD }}>Exámenes Libres</strong> ante el Ministerio de Educación de Chile — validación reconocida de 5° básico a 4° medio.
+            Preparación oficial para <strong style={{ color: GOLD }}>Exámenes Libres</strong> ante el Ministerio de Educación de Chile — validación reconocida de 1° básico a 4° medio.
           </p>
           <a
             href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11"
@@ -681,7 +681,7 @@ export default function Home() {
         <Reveal>
           <p style={{ fontSize: "clamp(26px,3.6vw,42px)", fontWeight: 500, lineHeight: 1.35, color: SLATE, margin: 0 }}>
             Somos un colegio<ShapeInline color={BLOCK_BLUE} shape={ShapeHourglass} /> 100% asincrónico en Chile<ShapeInline color={PINK} shape={ShapeCircle} /> para
-            estudiantes<ShapeInline color={RED} shape={ShapeTriangle} /> desde 5° básico hasta 4° medio<ShapeInline color={PURPLE} shape={ShapeStairs} />, ofreciendo una
+            estudiantes<ShapeInline color={RED} shape={ShapeTriangle} /> desde 1° básico hasta 4° medio<ShapeInline color={PURPLE} shape={ShapeStairs} />, ofreciendo una
             preparación rigurosa y culturalmente cercana<ShapeInline color={GREEN} shape={ShapeLeaf} /> para rendir exámenes libres ante personas<ShapeInline color={GOLD} shape={ShapeBars} /> de todo Chile.
           </p>
         </Reveal>
@@ -748,12 +748,12 @@ export default function Home() {
       <section id="adulto-acompanante" style={{ background: "#fff", padding: "88px 24px", borderTop: "1px solid #eef1f5" }}>
         <div style={{ maxWidth: 1180, margin: "0 auto" }}>
           <Reveal>
-            <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 14px", textAlign: "center" }}>Para 5° y 6° básico</p>
+            <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 14px", textAlign: "center" }}>Para 1° a 6° básico</p>
             <h2 style={{ fontSize: "clamp(30px,4.5vw,48px)", fontWeight: 700, color: NAVY, margin: "0 auto 20px", lineHeight: 1.15, textAlign: "center", maxWidth: 780 }}>
               El <em style={{ fontStyle: "normal", color: "#b5892a" }}>Adulto Acompañante</em>: así lo hacen los colegios 100% online serios del mundo
             </h2>
             <p style={{ fontSize: 16, color: TEXT, lineHeight: 1.8, margin: "0 auto 48px", maxWidth: 720, textAlign: "center" }}>
-              Ningún colegio online acreditado del mundo le pide autonomía total a un niño de 10 años. Todos usan el mismo mecanismo: contenido autoguiado por dominio + <strong style={{ color: NAVY }}>un adulto en casa con rol formal y horas definidas</strong>. Así lo hacen tres referentes reales:
+              Ningún colegio online acreditado del mundo le pide autonomía total a un niño de 6 años. Todos usan el mismo mecanismo: contenido autoguiado por dominio + <strong style={{ color: NAVY }}>un adulto en casa con rol formal y horas definidas, que baja gradual con la edad</strong>. Así lo hacen tres referentes reales:
             </p>
           </Reveal>
 
@@ -777,15 +777,31 @@ export default function Home() {
           <Reveal delay={0.15}>
             <div style={{ background: NAVY, borderRadius: 24, padding: "44px 40px", color: "#fff" }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>Así lo hace Barkley</p>
-              <h3 style={{ fontSize: "clamp(22px,3vw,30px)", fontWeight: 700, margin: "0 0 20px" }}>Mismo mecanismo, formalizado desde el primer día</h3>
+              <h3 style={{ fontSize: "clamp(22px,3vw,30px)", fontWeight: 700, margin: "0 0 24px" }}>Mismo mecanismo, con horas que bajan gradual por ciclo</h3>
+
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginBottom: 32 }}>
+                {[
+                  { ciclo: "1° y 2° básico", horas: "4 a 5 h/día", detalle: "Adulto presente casi todo el estudio" },
+                  { ciclo: "3° y 4° básico", horas: "3 h/día", detalle: "Acompaña el inicio, luego supervisa" },
+                  { ciclo: "5° y 6° básico", horas: "2 h/día", detalle: "Revisa avances, resuelve dudas puntuales" },
+                  { ciclo: "7° a 4° medio", horas: "Autónomo", detalle: "Solo seguimiento vía Portal Familia" },
+                ].map((c) => (
+                  <div key={c.ciclo} style={{ background: "rgba(255,255,255,0.07)", borderRadius: 14, padding: "18px 20px" }}>
+                    <p style={{ fontSize: 12.5, fontWeight: 700, color: "rgba(255,255,255,0.65)", textTransform: "uppercase", letterSpacing: "0.05em", margin: "0 0 6px" }}>{c.ciclo}</p>
+                    <p style={{ fontSize: 22, fontWeight: 800, color: GOLD, margin: "0 0 4px" }}>{c.horas}</p>
+                    <p style={{ fontSize: 13, opacity: 0.8, margin: 0, lineHeight: 1.4 }}>{c.detalle}</p>
+                  </div>
+                ))}
+              </div>
+
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 28 }}>
                 <div>
                   <p style={{ fontSize: 15, fontWeight: 700, color: GOLD, margin: "0 0 6px" }}>Rol con nombre</p>
-                  <p style={{ fontSize: 14.5, opacity: 0.88, lineHeight: 1.6, margin: 0 }}>El apoderado de 5°-6° básico es el <strong>Adulto Acompañante</strong>: quien está al lado durante el estudio, no quien enseña ni corrige — eso lo hace la plataforma.</p>
+                  <p style={{ fontSize: 14.5, opacity: 0.88, lineHeight: 1.6, margin: 0 }}>Desde 1° básico, el apoderado es el <strong>Adulto Acompañante</strong>: quien está al lado durante el estudio, no quien enseña ni corrige — eso lo hace la plataforma.</p>
                 </div>
                 <div>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: GOLD, margin: "0 0 6px" }}>Horas sugeridas</p>
-                  <p style={{ fontSize: 14.5, opacity: 0.88, lineHeight: 1.6, margin: 0 }}>2 a 3 horas diarias acompañadas en 5°-6°, bajando gradual hasta la autonomía total en enseñanza media — igual que Laurel Springs.</p>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: GOLD, margin: "0 0 6px" }}>Baja gradual, no de golpe</p>
+                  <p style={{ fontSize: 14.5, opacity: 0.88, lineHeight: 1.6, margin: 0 }}>De acompañamiento casi total en 1°-2° a autonomía completa en media — igual que el tránsito que describen K12 y Laurel Springs en sus propios niveles.</p>
                 </div>
                 <div>
                   <p style={{ fontSize: 15, fontWeight: 700, color: GOLD, margin: "0 0 6px" }}>El colegio no desaparece</p>
@@ -842,7 +858,7 @@ export default function Home() {
 
       {/* === NIVELES — panel azul sólido detrás + botón dorado debajo, como el real === */}
       <section id="metodo" style={{ padding: "64px 24px 0", textAlign: "center" }}>
-        <p style={{ fontSize: 14, fontWeight: 600, color: SLATE, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>De 5° básico a 4° medio</p>
+        <p style={{ fontSize: 14, fontWeight: 600, color: SLATE, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>De 1° básico a 4° medio</p>
         {/* h2 slate 600 — como "Our Learning Journey" real (no navy bold) */}
         <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 600, color: SLATE, margin: "0 0 48px" }}>Nuestro camino de aprendizaje</h2>
       </section>
@@ -1311,7 +1327,7 @@ export default function Home() {
           <div style={{ flex: "1 1 100%", marginTop: 8 }}>
             <p style={{ fontSize: 14, fontWeight: 700, margin: "0 0 10px" }}>Exámenes libres por nivel</p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 18px", fontSize: 13, opacity: 0.85 }}>
-              {["5-basico|5° Básico", "6-basico|6° Básico", "7-basico|7° Básico", "8-basico|8° Básico", "1-medio|1° Medio", "2-medio|2° Medio", "3-medio|3° Medio", "4-medio|4° Medio"].map((item) => {
+              {["1-basico|1° Básico", "2-basico|2° Básico", "3-basico|3° Básico", "4-basico|4° Básico", "5-basico|5° Básico", "6-basico|6° Básico", "7-basico|7° Básico", "8-basico|8° Básico", "1-medio|1° Medio", "2-medio|2° Medio", "3-medio|3° Medio", "4-medio|4° Medio"].map((item) => {
                 const [slug, label] = item.split("|");
                 return <a key={slug} href={`/examenes-libres-${slug}/`} style={{ color: "#fff" }}>{label}</a>;
               })}

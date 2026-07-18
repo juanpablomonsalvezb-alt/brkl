@@ -19,11 +19,47 @@ const BASE = "https://www.barkleyinstituto.cl";
 
 const NIVELES = [
   {
+    slug: "1-basico",
+    nombre: "1° Básico",
+    titleNivel: "Exámenes Libres 1° Básico",
+    intro:
+      "Primero básico es el punto de partida de la validación de estudios en Chile. A esta edad el niño o niña necesita un Adulto Acompañante presente casi todo el estudio — Barkley entrega el contenido (video, pódcast, práctica) y guía paso a paso al adulto en casa, igual que hacen los colegios online acreditados de EE.UU. y Reino Unido con sus estudiantes más pequeños.",
+    asignaturas: ["Lenguaje y Comunicación", "Matemática", "Ciencias Naturales", "Historia, Geografía y Cs. Sociales"],
+    foco: "Lecciones muy breves (5-7 minutos), lectoescritura inicial y conteo — con el Adulto Acompañante al lado casi todo el tiempo de estudio.",
+  },
+  {
+    slug: "2-basico",
+    nombre: "2° Básico",
+    titleNivel: "Exámenes Libres 2° Básico",
+    intro:
+      "Segundo básico consolida la lectoescritura y las primeras operaciones matemáticas. Con Barkley, el Adulto Acompañante sigue muy presente, pero el niño ya empieza a reconocer su propia rutina de estudio dentro de la plataforma.",
+    asignaturas: ["Lenguaje y Comunicación", "Matemática", "Ciencias Naturales", "Historia, Geografía y Cs. Sociales"],
+    foco: "Refuerzo de lectura comprensiva y las cuatro operaciones básicas, con práctica autocorregida y repetición sin límite.",
+  },
+  {
+    slug: "3-basico",
+    nombre: "3° Básico",
+    titleNivel: "Exámenes Libres 3° Básico",
+    intro:
+      "Tercero básico da el salto a contenidos más largos y a mayor responsabilidad del estudiante sobre su propio avance. El Adulto Acompañante empieza a soltar: acompaña el inicio del estudio y supervisa el resto del día.",
+    asignaturas: ["Lenguaje y Comunicación", "Matemática", "Ciencias Naturales", "Historia, Geografía y Cs. Sociales"],
+    foco: "Comprensión lectora de textos más extensos y operatoria con números de más dígitos, siempre con video y pódcast por lección.",
+  },
+  {
+    slug: "4-basico",
+    nombre: "4° Básico",
+    titleNivel: "Exámenes Libres 4° Básico",
+    intro:
+      "Cuarto básico cierra el primer ciclo básico. Con Barkley, el estudiante ya reconoce su rutina de estudio asincrónico y el Adulto Acompañante reduce sus horas a solo el inicio de la jornada y revisión de avances.",
+    asignaturas: ["Lenguaje y Comunicación", "Matemática", "Ciencias Naturales", "Historia, Geografía y Cs. Sociales"],
+    foco: "Consolidación de las bases de 1° ciclo antes del salto a 5°-8°, con evaluación por unidad y Portal Familia en tiempo real.",
+  },
+  {
     slug: "5-basico",
     nombre: "5° Básico",
     titleNivel: "Exámenes Libres 5° Básico",
     intro:
-      "Quinto básico es la primera puerta de entrada a los exámenes libres: desde este nivel el MINEDUC permite validar estudios rindiendo una vez al año, sin asistir a un colegio presencial. En Barkley tu hijo o hija prepara todo el temario oficial a su ritmo, con video y pódcast en cada lección.",
+      "Quinto básico abre el segundo ciclo de enseñanza básica. En Barkley tu hijo o hija prepara todo el temario oficial a su ritmo, con video y pódcast en cada lección, y un Adulto Acompañante que ya supervisa más que enseña.",
     asignaturas: ["Lenguaje y Comunicación", "Matemática", "Ciencias Naturales", "Historia, Geografía y Cs. Sociales"],
     foco: "Es el año ideal para instalar hábitos de estudio autónomo: lecciones cortas, práctica inmediata y avance solo cuando el contenido está dominado.",
   },
@@ -288,4 +324,4 @@ for (const n of NIVELES) {
   writeFileSync(join(dir, "index.html"), pageHtml(n));
   console.log(`✓ examenes-libres-${n.slug}/index.html`);
 }
-console.log("Listo: 8 landings generadas.");
+console.log(`Listo: ${NIVELES.length} landings generadas.`);
