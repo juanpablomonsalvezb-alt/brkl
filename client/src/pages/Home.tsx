@@ -15,6 +15,8 @@ import { useState, useEffect, useRef } from "react";
 import {
   Loader2, Check, ArrowUpRight, Menu, X, Search, Play, Download,
   Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
+  Layers, BookOpen, Headphones, Image as ImageIcon, ListChecks, Sparkles,
+  Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
@@ -969,6 +971,111 @@ export default function Home() {
 
       {/* === INSCRIPCIÓN (mitad de página) — misma sección, sin id repetido === */}
       <AdmisionSection />
+
+      {/* === ESTRUCTURA — esquema de cómo está armado el contenido, igual para cualquier nivel === */}
+      <section id="estructura" style={{ background: NAVY, padding: "88px 24px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -60, right: -60, opacity: 0.12 }}><ShapeFlower color="#fff" size={220} /></div>
+        <div style={{ maxWidth: 1080, margin: "0 auto", position: "relative" }}>
+          <Reveal>
+            <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 14px", textAlign: "center" }}>Así está construido — igual en cualquier nivel</p>
+            <h2 style={{ fontSize: "clamp(30px,4.5vw,48px)", fontWeight: 700, color: "#fff", margin: "0 auto 16px", lineHeight: 1.15, textAlign: "center", maxWidth: 760 }}>
+              De 1° básico a 4° medio, <em style={{ fontStyle: "normal", color: GOLD }}>el mismo esquema</em>
+            </h2>
+            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.78)", lineHeight: 1.8, margin: "0 auto 56px", maxWidth: 640, textAlign: "center" }}>
+              No importa la asignatura ni el nivel: la estructura es siempre la misma. Así se ve de arriba hacia abajo.
+            </p>
+          </Reveal>
+
+          {/* Nivel 1 — Asignatura */}
+          <Reveal>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}>
+              <div style={{ background: GOLD, color: NAVY, borderRadius: 16, padding: "18px 36px", textAlign: "center", boxShadow: "0 8px 24px rgba(0,0,0,0.25)" }}>
+                <p style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 2px", opacity: 0.75 }}>Nivel 1</p>
+                <p style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>Asignatura</p>
+              </div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center", margin: "6px 0" }}><ArrowDown style={{ width: 22, height: 22, color: "rgba(255,255,255,0.4)" }} /></div>
+          </Reveal>
+
+          {/* Nivel 2 — Unidades (bloqueadas por dominio) */}
+          <Reveal delay={0.06}>
+            <p style={{ textAlign: "center", fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.55)", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>Nivel 2 · Unidades, en orden — se desbloquean solo con 70% o más</p>
+            <div style={{ display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap", marginBottom: 4 }}>
+              {[
+                { label: "Unidad 1", state: "done" },
+                { label: "Unidad 2", state: "done" },
+                { label: "Unidad 3", state: "current" },
+                { label: "Unidad 4", state: "locked" },
+                { label: "Unidad 5", state: "locked" },
+              ].map((u) => (
+                <div key={u.label} style={{
+                  display: "flex", alignItems: "center", gap: 8, borderRadius: 12, padding: "12px 16px",
+                  background: u.state === "current" ? GOLD : u.state === "done" ? "rgba(0,178,115,0.18)" : "rgba(255,255,255,0.06)",
+                  border: u.state === "current" ? "none" : "1px solid rgba(255,255,255,0.15)",
+                }}>
+                  {u.state === "done" && <CheckCircle2 style={{ width: 16, height: 16, color: GREEN }} />}
+                  {u.state === "current" && <Layers style={{ width: 16, height: 16, color: NAVY }} />}
+                  {u.state === "locked" && <Lock style={{ width: 14, height: 14, color: "rgba(255,255,255,0.4)" }} />}
+                  <span style={{ fontSize: 13.5, fontWeight: 700, color: u.state === "current" ? NAVY : u.state === "locked" ? "rgba(255,255,255,0.4)" : "#fff" }}>{u.label}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "flex", justifyContent: "center", margin: "10px 0" }}><ArrowDown style={{ width: 22, height: 22, color: "rgba(255,255,255,0.4)" }} /></div>
+          </Reveal>
+
+          {/* Nivel 3 — Lecciones dentro de la unidad */}
+          <Reveal delay={0.12}>
+            <p style={{ textAlign: "center", fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.55)", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>Nivel 3 · Cada unidad tiene varias lecciones</p>
+            <div style={{ display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap", marginBottom: 4 }}>
+              {["Lección 3.1", "Lección 3.2", "Lección 3.3"].map((l, i) => (
+                <div key={l} style={{ display: "flex", alignItems: "center", gap: 8, background: i === 0 ? "rgba(255,197,72,0.16)" : "rgba(255,255,255,0.06)", border: `1px solid ${i === 0 ? GOLD : "rgba(255,255,255,0.15)"}`, borderRadius: 12, padding: "12px 18px" }}>
+                  <BookOpen style={{ width: 16, height: 16, color: i === 0 ? GOLD : "rgba(255,255,255,0.6)" }} />
+                  <span style={{ fontSize: 13.5, fontWeight: 700, color: "#fff" }}>{l}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "flex", justifyContent: "center", margin: "10px 0" }}><ArrowDown style={{ width: 22, height: 22, color: "rgba(255,255,255,0.4)" }} /></div>
+          </Reveal>
+
+          {/* Nivel 4 — Formatos dentro de una lección */}
+          <Reveal delay={0.18}>
+            <p style={{ textAlign: "center", fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.55)", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 16px" }}>Nivel 4 · Cada lección trae todos estos formatos</p>
+            <div style={{ background: "#fff", borderRadius: 20, padding: "28px 24px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 14, marginBottom: 8 }}>
+              {[
+                { icon: Play, label: "2 videos", color: NAVY },
+                { icon: Headphones, label: "1 pódcast", color: SLATE },
+                { icon: ImageIcon, label: "Infografía", color: PINK },
+                { icon: Download, label: "Guía descargable", color: RED },
+                { icon: ListChecks, label: "Evaluación", color: "#b5892a" },
+                { icon: Sparkles, label: "IA Barkley si te trabas", color: GREEN },
+              ].map((f) => (
+                <div key={f.label} style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 8, padding: "12px 8px" }}>
+                  <span style={{ width: 44, height: 44, borderRadius: "50%", background: `${f.color}1a`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <f.icon style={{ width: 20, height: 20, color: f.color }} strokeWidth={2.2} />
+                  </span>
+                  <span style={{ fontSize: 12.5, fontWeight: 700, color: NAVY, lineHeight: 1.3 }}>{f.label}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          {/* Semiflexibilidad — organización diaria libre + fechas de evaluación fijas */}
+          <Reveal delay={0.24}>
+            <div style={{ marginTop: 56, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+              <div style={{ background: "rgba(255,255,255,0.07)", borderRadius: 18, padding: "26px 28px" }}>
+                <CalendarClock style={{ width: 26, height: 26, color: GOLD, marginBottom: 12 }} strokeWidth={2.2} />
+                <p style={{ fontSize: 17, fontWeight: 700, color: "#fff", margin: "0 0 8px" }}>Tú organizas el día</p>
+                <p style={{ fontSize: 14.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.6, margin: 0 }}>Estudias cuando tu rutina lo permite — a las 9 AM o a las 6 PM, todos los días o repartido en la semana. Sin horario fijo diario.</p>
+              </div>
+              <div style={{ background: "rgba(255,255,255,0.07)", borderRadius: 18, padding: "26px 28px" }}>
+                <CalendarCheck style={{ width: 26, height: 26, color: GOLD, marginBottom: 12 }} strokeWidth={2.2} />
+                <p style={{ fontSize: 17, fontWeight: 700, color: "#fff", margin: "0 0 8px" }}>Pero hay fechas que sí se cumplen</p>
+                <p style={{ fontSize: 14.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.6, margin: 0 }}>Las evaluaciones de unidad y los <a href="#calendario" style={{ color: GOLD, fontWeight: 600 }}>períodos oficiales MINEDUC</a> tienen plazo fijo. Es semiflexibilidad: libre en el día a día, firme en el calendario.</p>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
 
       {/* === PROGRAMAS === */}
       <section id="plataforma" style={{ background: "#f5f5f5", padding: "64px 24px" }}>
