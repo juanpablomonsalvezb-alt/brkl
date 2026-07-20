@@ -11,6 +11,7 @@ import {
   insertReservationSchema, insertWaitlistSchema, waitlistSignups
 } from "@shared/schema";
 import { db } from "./db";
+import { notifyByEmail } from "./notify";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
 import {
   getAllModulesSchedule, getModuleSchedule, getCalendarSummary,
@@ -203,6 +204,12 @@ export async function registerRoutes(
         return res.status(200).json({ message: "Ya estabas en la lista", alreadySubscribed: true });
       }
       await db.insert(waitlistSignups).values(parsed.data);
+      notifyByEmail("Nueva inscripción en Barkley", {
+        Nombre: parsed.data.name,
+        Correo: parsed.data.email,
+        Nivel: parsed.data.levelInterest,
+        Consultas: parsed.data.notes,
+      });
       res.status(201).json({ message: "Listo, te avisamos apenas abramos inscripciones" });
     } catch (error: any) {
       if (String(error?.message || "").includes("UNIQUE")) {
@@ -1706,7 +1713,16 @@ export async function registerRoutes(
       
       // Create reservation
       const reservation = await storage.createReservation(result.data);
-      
+
+      notifyByEmail("Nueva reserva/llamada en Barkley", {
+        Nombre: result.data.fullName,
+        Correo: result.data.email,
+        Teléfono: result.data.phone,
+        Programa: result.data.programType,
+        Nivel: result.data.levelInterest,
+        Comentarios: result.data.comments,
+      });
+
       res.status(201).json(reservation);
     } catch (error) {
       console.error("Error creating reservation:", error);
