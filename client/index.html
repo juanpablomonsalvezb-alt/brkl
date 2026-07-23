@@ -73,16 +73,16 @@
       
       // Personalizar nombre del agente
       Tawk_API.setAttributes({
-        'name': 'Asistente Virtual UCE'
+        'name': 'Asistente Virtual Barkley'
       }, function(error){
         if (!error) {
           console.log('Nombre del agente configurado');
         }
       });
-      
+
       // Agregar evento de bienvenida personalizado
       Tawk_API.addEvent('visit', {
-        message: '¡Hola! 👋 Bienvenido al Instituto UCE'
+        message: '¡Hola! 👋 Bienvenido a Barkley'
       }, function(error){
         if (!error) {
           console.log('Mensaje de bienvenida enviado');

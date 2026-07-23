@@ -1,6 +1,6 @@
 import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
-import { rm, readFile } from "fs/promises";
+import { rm, readFile, unlink } from "fs/promises";
 
 // server deps to bundle to reduce openat(2) syscalls
 // which helps cold start times
@@ -72,8 +72,27 @@ async function buildAll() {
     },
     minify: true,
     external: externals,
+    // El shell SPA y el snapshot prerenderizado para bots se inlinean como texto
+    // en el bundle — así la función no depende de rutas de filesystem en runtime.
+    loader: { ".html": "text" },
     logLevel: "info",
   });
+
+  // El prerender para bots (GPTBot, ClaudeBot, PerplexityBot, etc.) NO corre acá:
+  // requiere levantar Chromium + el server completo, y el contenedor de build de
+  // Vercel no lo soporta de forma confiable (sandboxing). Se genera localmente con
+  // `npm run prerender` y se versiona en client/public/prerendered/ — Vite lo copia
+  // como asset estático en cada build sin ejecutar nada adicional.
+
+  if (process.env.VERCEL) {
+    // Vercel prioriza un archivo estático que exista en la ruta exacta por sobre
+    // cualquier rewrite — con dist/public/index.html presente, "/" nunca llega a
+    // /api/handler.js aunque el rewrite lo apunte ahí, y el bot-detection en
+    // código nunca se ejecuta. Se borra acá: el shell SPA queda inlineado en el
+    // handler (api/index.ts) y se sirve idéntico desde la función.
+    await unlink("dist/public/index.html").catch(() => {});
+    console.log("dist/public/index.html eliminado (Vercel): '/' ahora la sirve api/handler.js");
+  }
 }
 
 buildAll().catch((err) => {

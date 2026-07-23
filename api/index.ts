@@ -2,9 +2,27 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import express from "express";
 import { registerRoutes } from "../server/routes";
+// Inlineados en el bundle vía esbuild (loader "text") para no depender de
+// rutas de filesystem en el runtime serverless.
+// @ts-ignore
+import spaShellHtml from "../client/index.html";
+// @ts-ignore
+import prerenderedHtml from "../client/public/prerendered/index.html";
+
+// Bots que no ejecutan JS (o cuya política prefiere HTML estático): reciben
+// el snapshot prerenderizado en vez del shell vacío <div id="root"></div>.
+// El caché estático de Vercel no reevalúa condiciones "has" por request en
+// output 100% estático, así que la decisión se hace en código, acá.
+const BOT_USER_AGENT = /(GPTBot|ChatGPT-User|OAI-SearchBot|ClaudeBot|anthropic-ai|Claude-Web|PerplexityBot|Perplexity-User|CCBot|Google-Extended|Applebot-Extended|cohere-ai|Bytespider|facebookexternalhit|Twitterbot|LinkedInBot|Slackbot|WhatsApp|Googlebot|bingbot)/i;
 
 // Create Express app for Vercel
 const app = express();
+
+app.get("/", (req, res) => {
+  const ua = req.headers["user-agent"] || "";
+  res.setHeader("Cache-Control", "public, max-age=300");
+  res.type("html").send(BOT_USER_AGENT.test(ua) ? prerenderedHtml : spaShellHtml);
+});
 
 // Middleware
 app.use(express.json());

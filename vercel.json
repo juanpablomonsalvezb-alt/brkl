@@ -26,7 +26,11 @@
       "destination": "/api/handler.js"
     },
     {
-      "source": "/((?!api/|assets/|images/|videos/|docs/|fonts/|.*\\.\\w+$).*)",
+      "source": "/",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/((?!api/|assets/|images/|videos/|docs/|fonts/|prerendered/|.*\\.\\w+$).*)",
       "destination": "/index.html"
     }
   ]

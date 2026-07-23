@@ -275,7 +275,7 @@ const NAV_LINKS = [
   { label: "Preguntas", href: "#faq" },
 ];
 
-interface Faq { id: string; question: string; answer: string; sortOrder: number; }
+interface Faq { id: string; question: string; answer: string; sortOrder: number; isActive?: boolean; }
 
 function ShapeInline({ color, shape: Shape }: { color: string; shape: typeof ShapeCircle }) {
   return <span style={{ display: "inline-block", margin: "0 4px", verticalAlign: "middle", transform: "translateY(2px)" }}><Shape color={color} size={28} /></span>;
@@ -546,6 +546,28 @@ export default function Home() {
 
   return (
     <div style={{ backgroundColor: "#fff", color: TEXT, fontFamily: FONT, fontSize: 16, lineHeight: 1.8 }}>
+
+      {faqs && faqs.length > 0 && (
+        // FAQPage schema: permite a buscadores e IA (ChatGPT, Perplexity, Google AI
+        // Overviews) extraer preguntas/respuestas directamente sin tener que
+        // interpretar el acordeón visual.
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqs
+                .filter((f) => f.isActive)
+                .map((f) => ({
+                  "@type": "Question",
+                  name: f.question,
+                  acceptedAnswer: { "@type": "Answer", text: f.answer },
+                })),
+            }),
+          }}
+        />
+      )}
 
       <TourModal open={tourOpen} onClose={() => setTourOpen(false)} />
 
