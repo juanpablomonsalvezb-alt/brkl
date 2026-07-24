@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Home from "@/pages/Home";
+import Adaptativo from "@/pages/Adaptativo";
 
 // Code-splitting: solo Home va en el bundle inicial (es la landing pública y
 // define el LCP). Todo lo demás — dashboards, admin, course player — se carga
@@ -63,6 +64,7 @@ function Router() {
     <Suspense fallback={null}>
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/adaptativo" component={Adaptativo} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/course/:id" component={CoursePlayer} />
       <Route path="/drive-sync" component={DriveSync} />

@@ -18,6 +18,11 @@
       "has": [{ "type": "host", "value": "brkl.vercel.app" }],
       "destination": "https://www.barkleyinstituto.cl/$1",
       "permanent": true
+    },
+    {
+      "source": "/adaptativo/",
+      "destination": "/adaptativo",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -27,6 +32,10 @@
     },
     {
       "source": "/",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/adaptativo",
       "destination": "/api/handler.js"
     },
     {

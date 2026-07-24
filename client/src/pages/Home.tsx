@@ -981,7 +981,7 @@ export default function Home() {
             Barkley Adaptativo no reemplaza el diagnóstico ni el tratamiento profesional de tu
             hijo — es un formato de estudio que se acomoda a cómo aprende, no una terapia.
           </p>
-          <a href="/adaptativo/" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: PURPLE, color: "#fff", fontWeight: 700, fontSize: 15, padding: "14px 28px", borderRadius: 999, textDecoration: "none" }}>
+          <a href="/adaptativo" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: PURPLE, color: "#fff", fontWeight: 700, fontSize: 15, padding: "14px 28px", borderRadius: 999, textDecoration: "none" }}>
             Quiero saber más de Barkley Adaptativo
           </a>
         </div>
@@ -1456,7 +1456,7 @@ export default function Home() {
             <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6, fontSize: 14, opacity: 0.85 }}>
               <li><a href="#metodo" style={{ color: "#fff" }}>El método</a></li>
               <li><a href="#plataforma" style={{ color: "#fff" }}>La plataforma</a></li>
-              <li><a href="/adaptativo/" style={{ color: "#fff" }}>Barkley Adaptativo</a></li>
+              <li><a href="/adaptativo" style={{ color: "#fff" }}>Barkley Adaptativo</a></li>
               <li><a href="/guia-examenes-libres/" style={{ color: "#fff" }}>Guía de Exámenes Libres</a></li>
               <li><a href="#faq" style={{ color: "#fff" }}>Preguntas frecuentes</a></li>
               <li><a href="#inscripcion" style={{ color: "#fff" }}>Inscripción</a></li>

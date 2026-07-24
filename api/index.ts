@@ -11,6 +11,8 @@ import { registerRoutes } from "../server/routes";
 import spaShellHtml from "../dist/public/index.html";
 // @ts-ignore
 import prerenderedHtml from "../client/public/prerendered/index.html";
+// @ts-ignore
+import prerenderedAdaptativoHtml from "../client/public/prerendered/adaptativo.html";
 
 // Bots que no ejecutan JS (o cuya política prefiere HTML estático): reciben
 // el snapshot prerenderizado en vez del shell vacío <div id="root"></div>.
@@ -29,6 +31,12 @@ app.get("/", (req, res) => {
   // y la servía a todos los demás sin importar su User-Agent.
   res.setHeader("Cache-Control", "no-store");
   res.type("html").send(BOT_USER_AGENT.test(ua) ? prerenderedHtml : spaShellHtml);
+});
+
+app.get("/adaptativo", (req, res) => {
+  const ua = req.headers["user-agent"] || "";
+  res.setHeader("Cache-Control", "no-store");
+  res.type("html").send(BOT_USER_AGENT.test(ua) ? prerenderedAdaptativoHtml : spaShellHtml);
 });
 
 // Middleware

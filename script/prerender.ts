@@ -11,7 +11,10 @@ import puppeteer from "puppeteer";
 // bots hacia estos archivos en vez del index.html vacío.
 
 const PORT = 4790;
-const ROUTES: { path: string; out: string }[] = [{ path: "/", out: "dist/public/prerendered/index.html" }];
+const ROUTES: { path: string; out: string }[] = [
+  { path: "/", out: "dist/public/prerendered/index.html" },
+  { path: "/adaptativo", out: "dist/public/prerendered/adaptativo.html" },
+];
 
 function waitForServer(url: string, timeoutMs = 20000): Promise<void> {
   const start = Date.now();
