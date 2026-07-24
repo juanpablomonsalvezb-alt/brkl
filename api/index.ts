@@ -20,7 +20,11 @@ const app = express();
 
 app.get("/", (req, res) => {
   const ua = req.headers["user-agent"] || "";
-  res.setHeader("Cache-Control", "public, max-age=300");
+  // Nunca cachear en el edge: la respuesta depende del User-Agent y Vercel
+  // no varía el caché por header en output estático — con cache-control
+  // cacheaba la PRIMERA respuesta (shell o snapshot, según quién pegó primero)
+  // y la servía a todos los demás sin importar su User-Agent.
+  res.setHeader("Cache-Control", "no-store");
   res.type("html").send(BOT_USER_AGENT.test(ua) ? prerenderedHtml : spaShellHtml);
 });
 

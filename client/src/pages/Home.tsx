@@ -237,8 +237,8 @@ const RAZONES = [
     text: "El tutor no es una clase obligatoria ni algo que pides por capricho: el sistema detecta cuando estás con dificultad real en una asignatura y ahí aparece la ayuda — no antes, no como horario más que administrar.",
   },
   {
-    title: "Pensado para quien no encaja en el molde",
-    text: "TDAH, dislexia, trabajo, distancia, otro ritmo de vida — el sistema se adapta al perfil de cada estudiante, no al revés. La educación tradicional no está pensada para todos; esta sí.",
+    title: "Barkley Adaptativo",
+    text: "TDAH, dislexia, otro ritmo de vida — el sistema se adapta al perfil de cada estudiante, no al revés. La educación tradicional no está pensada para todos; esta sí.",
   },
   {
     title: "Sin clases en vivo no es sin compañía",
