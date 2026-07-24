@@ -4,8 +4,11 @@ import express from "express";
 import { registerRoutes } from "../server/routes";
 // Inlineados en el bundle vía esbuild (loader "text") para no depender de
 // rutas de filesystem en el runtime serverless.
+// El HTML COMPILADO (con el bundle JS real /assets/index-HASH.js), no el
+// fuente de client/index.html (ese referencia /src/main.tsx, solo válido en
+// dev con Vite — en prod causaba pantalla en blanco, 404 del script).
 // @ts-ignore
-import spaShellHtml from "../client/index.html";
+import spaShellHtml from "../dist/public/index.html";
 // @ts-ignore
 import prerenderedHtml from "../client/public/prerendered/index.html";
 
