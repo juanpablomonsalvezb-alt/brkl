@@ -31,7 +31,7 @@
     },
     {
       "source": "/((?!api/|assets/|images/|videos/|docs/|fonts/|prerendered/|.*\\.\\w+$).*)",
-      "destination": "/index.html"
+      "destination": "/app.html"
     }
   ]
 }

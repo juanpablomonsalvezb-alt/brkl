@@ -1,6 +1,6 @@
 import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
-import { rm, readFile, unlink } from "fs/promises";
+import { rm, readFile, rename } from "fs/promises";
 
 // server deps to bundle to reduce openat(2) syscalls
 // which helps cold start times
@@ -87,11 +87,14 @@ async function buildAll() {
   if (process.env.VERCEL) {
     // Vercel prioriza un archivo estático que exista en la ruta exacta por sobre
     // cualquier rewrite — con dist/public/index.html presente, "/" nunca llega a
-    // /api/handler.js aunque el rewrite lo apunte ahí, y el bot-detection en
-    // código nunca se ejecuta. Se borra acá: el shell SPA queda inlineado en el
-    // handler (api/index.ts) y se sirve idéntico desde la función.
-    await unlink("dist/public/index.html").catch(() => {});
-    console.log("dist/public/index.html eliminado (Vercel): '/' ahora la sirve api/handler.js");
+    // /api/handler.js y el bot-detection en código nunca se ejecuta.
+    //
+    // No se borra: el resto de las rutas del SPA (/privacidad, /planes-2026,
+    // /dashboard…) dependen del rewrite fallback hacia ese archivo, y sin él
+    // devuelven 404. Se renombra a app.html — "/" queda libre para la función,
+    // y el fallback del SPA apunta a app.html en vercel.json.
+    await rename("dist/public/index.html", "dist/public/app.html");
+    console.log("dist/public/index.html → app.html (Vercel): '/' la sirve api/handler.js, el resto del SPA cae en app.html");
   }
 }
 

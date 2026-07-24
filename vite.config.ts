@@ -39,6 +39,17 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        // Vendors estables en chunks propios: cachean entre deploys aunque
+        // cambie el código de la app, y reducen el chunk inicial.
+        manualChunks: {
+          react: ["react", "react-dom"],
+          motion: ["framer-motion"],
+          icons: ["lucide-react"],
+        },
+      },
+    },
   },
   server: {
     host: "0.0.0.0",

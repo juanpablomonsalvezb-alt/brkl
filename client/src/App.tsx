@@ -4,29 +4,34 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
-import Dashboard from "@/pages/Dashboard";
-import CoursePlayer from "@/pages/CoursePlayer";
-import DriveSync from "@/pages/DriveSync";
-import TextbookConfig from "@/pages/TextbookConfig";
-// import TextbookConfigNew from "@/pages/TextbookConfigNew"; // Temporalmente deshabilitado por error
-import Reservations from "@/pages/Reservations";
-import PlanSettings from "@/pages/PlanSettings";
-import LevelPlanSettings from "@/pages/LevelPlanSettings";
-import PlanSelector2026 from "@/pages/PlanSelector2026";
-import BarkleyAdmin from "@/pages/BarkleyAdmin";
-import EvaluationLinksAdmin from "@/pages/EvaluationLinksAdmin";
-import GeminiCopilotsAdmin from "@/pages/GeminiCopilotsAdmin";
-import FaqAdmin from "@/pages/FaqAdmin";
-import PaesAdmin from "@/pages/PaesAdmin";
-import ReservationsAdmin from "@/pages/ReservationsAdmin";
-import AcademicCopilot from "@/pages/AcademicCopilot";
-import PaymentResult from "@/pages/PaymentResult";
-import { PrivacyPolicy, TermsOfUse, RefundPolicy } from "@/pages/Legal";
+
+// Code-splitting: solo Home va en el bundle inicial (es la landing pública y
+// define el LCP). Todo lo demás — dashboards, admin, course player — se carga
+// bajo demanda; un visitante que solo mira la landing no descarga nada de eso.
+const NotFound = lazy(() => import("@/pages/not-found"));
+const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const CoursePlayer = lazy(() => import("@/pages/CoursePlayer"));
+const DriveSync = lazy(() => import("@/pages/DriveSync"));
+const TextbookConfig = lazy(() => import("@/pages/TextbookConfig"));
+const Reservations = lazy(() => import("@/pages/Reservations"));
+const PlanSettings = lazy(() => import("@/pages/PlanSettings"));
+const LevelPlanSettings = lazy(() => import("@/pages/LevelPlanSettings"));
+const PlanSelector2026 = lazy(() => import("@/pages/PlanSelector2026"));
+const BarkleyAdmin = lazy(() => import("@/pages/BarkleyAdmin"));
+const EvaluationLinksAdmin = lazy(() => import("@/pages/EvaluationLinksAdmin"));
+const GeminiCopilotsAdmin = lazy(() => import("@/pages/GeminiCopilotsAdmin"));
+const FaqAdmin = lazy(() => import("@/pages/FaqAdmin"));
+const PaesAdmin = lazy(() => import("@/pages/PaesAdmin"));
+const ReservationsAdmin = lazy(() => import("@/pages/ReservationsAdmin"));
+const AcademicCopilot = lazy(() => import("@/pages/AcademicCopilot"));
+const PaymentResult = lazy(() => import("@/pages/PaymentResult"));
+const PrivacyPolicy = lazy(() => import("@/pages/Legal").then((m) => ({ default: m.PrivacyPolicy })));
+const TermsOfUse = lazy(() => import("@/pages/Legal").then((m) => ({ default: m.TermsOfUse })));
+const RefundPolicy = lazy(() => import("@/pages/Legal").then((m) => ({ default: m.RefundPolicy })));
 
 import Lenis from 'lenis';
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 
 function SmoothScroll() {
   useEffect(() => {
@@ -55,6 +60,7 @@ function SmoothScroll() {
 
 function Router() {
   return (
+    <Suspense fallback={null}>
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/dashboard" component={Dashboard} />
@@ -79,6 +85,7 @@ function Router() {
       <Route path="/reembolso" component={RefundPolicy} />
       <Route component={NotFound} />
     </Switch>
+    </Suspense>
   );
 }
 
