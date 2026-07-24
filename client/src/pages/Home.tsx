@@ -237,8 +237,8 @@ const RAZONES = [
     text: "El tutor no es una clase obligatoria ni algo que pides por capricho: el sistema detecta cuando estás con dificultad real en una asignatura y ahí aparece la ayuda — no antes, no como horario más que administrar.",
   },
   {
-    title: "Barkley Adaptativo",
-    text: "Una línea propia para TDAH, dislexia y otros ritmos de aprendizaje. Conoce cómo funciona más abajo.",
+    title: "Adaptativo",
+    text: "Nuestro programa propio para TDAH, dislexia y otros ritmos de aprendizaje. Conoce cómo funciona más abajo.",
   },
   {
     title: "Sin clases en vivo no es sin compañía",
@@ -954,7 +954,7 @@ export default function Home() {
       <section id="adaptativo" style={{ background: "#f6f1ff", padding: "90px 24px" }}>
         <div style={{ maxWidth: 980, margin: "0 auto", textAlign: "center" }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: PURPLE, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>
-            Barkley Adaptativo
+            Adaptativo · el programa de Barkley para otros ritmos de aprendizaje
           </p>
           <h2 style={{ fontSize: "clamp(30px,5vw,48px)", fontWeight: 600, color: NAVY, margin: "0 0 20px", lineHeight: 1.15 }}>
             No todos aprenden igual.<br />No todos deberían estudiar igual.
@@ -962,7 +962,7 @@ export default function Home() {
           <p style={{ fontSize: 18, color: TEXT, maxWidth: 680, margin: "0 auto 40px", lineHeight: 1.7 }}>
             Si tu hijo tiene TDAH, dislexia u otro ritmo de aprendizaje distinto, el problema
             casi nunca es él — es el formato. Una clase de 45 minutos por Zoom exige algo que
-            no todos los cerebros dan igual. Barkley Adaptativo ajusta la forma, no la exigencia:
+            no todos los cerebros dan igual. Adaptativo ajusta la forma, no la exigencia:
             mismo contenido oficial, presentado de un modo que sí puede recorrer.
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20, justifyContent: "center", marginBottom: 40 }}>
@@ -978,11 +978,11 @@ export default function Home() {
             ))}
           </div>
           <p style={{ fontSize: 13, color: SLATE, maxWidth: 600, margin: "0 auto 28px" }}>
-            Barkley Adaptativo no reemplaza el diagnóstico ni el tratamiento profesional de tu
+            Adaptativo no reemplaza el diagnóstico ni el tratamiento profesional de tu
             hijo — es un formato de estudio que se acomoda a cómo aprende, no una terapia.
           </p>
           <a href="/adaptativo" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: PURPLE, color: "#fff", fontWeight: 700, fontSize: 15, padding: "14px 28px", borderRadius: 999, textDecoration: "none" }}>
-            Quiero saber más de Barkley Adaptativo
+            Quiero saber más de Adaptativo
           </a>
         </div>
       </section>
@@ -1456,7 +1456,7 @@ export default function Home() {
             <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6, fontSize: 14, opacity: 0.85 }}>
               <li><a href="#metodo" style={{ color: "#fff" }}>El método</a></li>
               <li><a href="#plataforma" style={{ color: "#fff" }}>La plataforma</a></li>
-              <li><a href="/adaptativo" style={{ color: "#fff" }}>Barkley Adaptativo</a></li>
+              <li><a href="/adaptativo" style={{ color: "#fff" }}>Adaptativo</a></li>
               <li><a href="/guia-examenes-libres/" style={{ color: "#fff" }}>Guía de Exámenes Libres</a></li>
               <li><a href="#faq" style={{ color: "#fff" }}>Preguntas frecuentes</a></li>
               <li><a href="#inscripcion" style={{ color: "#fff" }}>Inscripción</a></li>
