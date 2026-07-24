@@ -210,7 +210,7 @@ const PILARES = [
   { title: "Acompañamiento", img: "/images/acompanamiento.jpeg", text: "Vínculos reales con asesores académicos que conocen a cada estudiante y lo acompañan en su progreso." },
   { title: "Metodología", img: "/images/metodologia.jpeg", text: "Trabajamos con Mastery Learning (Aprendizaje por Dominio), el modelo de Benjamin Bloom (Harvard, 1968): cada unidad se desbloquea solo si dominas la anterior — video corto, práctica, y si te cuesta, refuerzo antes de seguir. Sin saltos, sin huecos." },
   { title: "Rutas flexibles", img: "/images/rutas-flexibles.jpeg", text: "No hay un horario que cumplir ni una clase que no puedes recuperar: cada estudiante decide cuándo estudia, a qué hora y en qué orden dentro de su curso. Lo único fijo es la fecha de examen libre ante el Ministerio de Educación — todo lo demás, el camino hasta llegar ahí, lo organizas tú." },
-  { title: "Plataforma", img: "/images/plataforma-pilar.jpeg", text: "Tu progreso se mide con reglas claras, no con impresiones: cada intento, cada puntaje, cada unidad completada queda registrado. Si tu perfil de aprendizaje es distinto (TDAH, dislexia, u otro), el contenido se adapta a ti automáticamente — mismo curso, forma distinta de recorrerlo. Y detrás de cada número hay un asesor humano real revisando cómo vas, no solo un algoritmo mirando de lejos." },
+  { title: "Plataforma", img: "/images/plataforma-pilar.jpeg", text: "Tu progreso se mide con reglas claras, no con impresiones: cada intento, cada puntaje, cada unidad completada queda registrado. Si tu perfil de aprendizaje es TDAH o dislexia, el contenido se adapta a ti automáticamente (programa Adaptativo) — mismo curso, forma distinta de recorrerlo. Y detrás de cada número hay un asesor humano real revisando cómo vas, no solo un algoritmo mirando de lejos." },
 ];
 
 // Solo Básica y Media en el módulo de niveles del home — Validación de Adultos existe como
@@ -238,7 +238,7 @@ const RAZONES = [
   },
   {
     title: "Adaptativo",
-    text: "Nuestro programa propio para TDAH, dislexia y otros ritmos de aprendizaje. Conoce cómo funciona más abajo.",
+    text: "Nuestro programa propio para TDAH y dislexia. Conoce cómo funciona más abajo.",
   },
   {
     title: "Sin clases en vivo no es sin compañía",
@@ -385,7 +385,7 @@ const TOUR_SLIDES = [
   {
     img: "/images/tour/04-podcast.png",
     title: "¿Prefieres escuchar? También hay pódcasts",
-    text: "Cada lección incluye además 2 a 3 audios tipo pódcast. Para aprender caminando, en el transporte, o si leer te cuesta. Inclusión de verdad — pensado para TDAH, dislexia y todo ritmo de vida.",
+    text: "Cada lección incluye además 2 a 3 audios tipo pódcast. Para aprender caminando, en el transporte, o si leer te cuesta. Inclusión de verdad — pensado también para TDAH y dislexia (programa Adaptativo).",
   },
 ];
 
@@ -960,10 +960,10 @@ export default function Home() {
             No todos aprenden igual.<br />No todos deberían estudiar igual.
           </h2>
           <p style={{ fontSize: 18, color: TEXT, maxWidth: 680, margin: "0 auto 40px", lineHeight: 1.7 }}>
-            Si tu hijo tiene TDAH, dislexia u otro ritmo de aprendizaje distinto, el problema
-            casi nunca es él — es el formato. Una clase de 45 minutos por Zoom exige algo que
-            no todos los cerebros dan igual. Adaptativo ajusta la forma, no la exigencia:
-            mismo contenido oficial, presentado de un modo que sí puede recorrer.
+            Si tu hijo tiene TDAH o dislexia, el problema casi nunca es él — es el formato.
+            Una clase de 45 minutos por Zoom exige algo que no todos los cerebros dan igual.
+            Adaptativo ajusta la forma, no la exigencia: mismo contenido oficial, presentado
+            de un modo que sí puede recorrer.
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20, justifyContent: "center", marginBottom: 40 }}>
             {[

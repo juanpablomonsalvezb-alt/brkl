@@ -1,14 +1,16 @@
 /**
- * Barkley Adaptativo — página propia, interactiva, para familias con hijos
- * con TDAH, dislexia u otro ritmo de aprendizaje. Selector de perfil que
- * cambia la metodología mostrada, basada en técnicas reales documentadas
- * (UDL, Vectored Instruction de Acellus, horarios visuales para TEA) — no
- * inventadas. Mismo lenguaje visual que Home.tsx (colores isb.be).
+ * Adaptativo — programa de Barkley, página propia e interactiva para
+ * familias con hijos con TDAH o dislexia. El selector muestra las
+ * acomodaciones REALES ya implementadas en AdaptiveProfileService
+ * (barkley-platform/src/server/services/adaptive-profile.service.ts) —
+ * no conceptos genéricos. Sin perfil TEA/"otro ritmo": la plataforma no
+ * tiene esa lógica implementada todavía, listarlo sería sobre-prometer.
+ * Mismo lenguaje visual que Home.tsx (colores isb.be).
  */
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Brain, BookOpen, Compass, Check, Headphones, Video, Clock,
+  Brain, BookOpen, Check, Headphones, Video, Clock,
   ListChecks, Repeat, Shield, ArrowRight, HelpCircle,
 } from "lucide-react";
 
@@ -32,7 +34,13 @@ function Reveal({ children, delay = 0, style }: { children: React.ReactNode; del
   );
 }
 
-type ProfileKey = "tdah" | "dislexia" | "otro";
+// Perfiles reales: coinciden exactamente con AdaptiveProfileService
+// (server/services/adaptive-profile.service.ts) en barkley-platform — un motor
+// de reglas determinístico, sin LLM, que resuelve acomodaciones en render time
+// según el perfil declarado en la matrícula. No se lista un perfil TEA/"otro
+// ritmo" porque la plataforma hoy NO tiene esa lógica implementada — listarlo
+// sería prometer algo que no existe todavía.
+type ProfileKey = "tdah" | "dislexia";
 
 const PROFILES: Record<ProfileKey, {
   label: string;
@@ -44,37 +52,25 @@ const PROFILES: Record<ProfileKey, {
   tdah: {
     label: "TDAH",
     icon: Brain,
-    headline: "Bloques cortos, refuerzo dirigido, cero espera obligada",
-    intro: "El desafío real del TDAH no es la capacidad — es sostener atención en bloques largos y fijos que no eligió. Barkley elimina esa exigencia en vez de pedirle que la supere.",
+    headline: "Bloques de 7 minutos, sin timer, con reintentos",
+    intro: "El desafío real del TDAH no es la capacidad — es sostener atención en bloques largos y fijos que no eligió. Barkley elimina esa exigencia en vez de pedirle que la supere. Esto no es una promesa: es una configuración real y activa en la plataforma.",
     techniques: [
-      { icon: Clock, title: "Microaprendizaje en bloques de 3 a 6 minutos", text: "Cada objetivo se divide en videos cortos, no en clases de 45 minutos. Es la misma técnica de chunking que usan los programas de educación especial más avanzados del mundo (Acellus SPED-X): fragmentar el contenido en piezas que sí se pueden sostener." },
-      { icon: ListChecks, title: "Refuerzo dirigido al error específico, no repetición completa", text: "Si falla dos veces la misma pregunta, el sistema no lo hace repetir la unidad entera — le muestra un refuerzo puntual de 1 a 2 minutos sobre justo ese concepto. Es el mismo principio de la 'Instrucción Vectorizada' de Acellus: identificar por qué falló, no solo que falló." },
-      { icon: Repeat, title: "Avance por logro, no por reloj", text: "Cada unidad completada es un cierre real y visible — no una clase que termina porque se acabó la hora. El progreso se mide en dominio, no en tiempo sentado." },
-      { icon: Shield, title: "Sin comparación en vivo con el curso", text: "No hay 30 compañeros avanzando a la vez ni la presión de \"todos ya entendieron menos yo\". Avanza contra su propio progreso anterior." },
+      { icon: Clock, title: "Lecciones partidas en bloques de máximo 7 minutos", text: "En vez de un video largo, el sistema corta el contenido en bloques con pausa obligatoria — la misma lógica de chunking que usan los programas de educación especial más avanzados del mundo (Acellus SPED-X)." },
+      { icon: ListChecks, title: "Sin cronómetro visible en las evaluaciones", text: "El temporizador de los quiz se oculta para este perfil — la presión de un reloj corriendo es, para muchos estudiantes con TDAH, más disruptiva que la pregunta misma." },
+      { icon: Repeat, title: "Reintentos permitidos, cuenta el mejor puntaje", text: "Si el primer intento sale mal por una distracción, no queda esa nota fija — puede reintentar y el sistema se queda con el mejor resultado." },
+      { icon: Shield, title: "Check-in del asesor cada 3 días, no cada semana", text: "El asesor humano hace seguimiento más frecuente que con un estudiante estándar — detecta antes si algo se está atrasando." },
     ],
   },
   dislexia: {
     label: "Dislexia",
     icon: BookOpen,
-    headline: "Dos formatos por lección: para ver o para escuchar",
-    intro: "La dificultad de la dislexia es con el texto, no con el contenido. Si el camino de entrada es solo lectura, el problema no es lo que el estudiante sabe — es la puerta que usamos para llegar a eso.",
+    headline: "Fuente OpenDyslexic, texto a voz, fondo crema",
+    intro: "La dificultad de la dislexia es con el texto, no con el contenido. Estas no son sugerencias de diseño — son ajustes reales que la plataforma activa automáticamente para este perfil.",
     techniques: [
-      { icon: Headphones, title: "Pódcast como formato principal, no como extra", text: "Cada objetivo del temario viene también en audio narrado — la misma técnica que usan las herramientas de lectura asistida (text-to-speech) que se recomiendan para dislexia, integrada de fábrica en cada lección." },
-      { icon: Video, title: "Video con apoyo visual, nunca solo texto en pantalla", text: "Aprendizaje multisensorial: lo que se explica en palabras se refuerza con imagen y ejemplo visual — la combinación que más ayuda a fijar el concepto cuando leer cuesta." },
-      { icon: ListChecks, title: "Contenido troceado, nunca un bloque largo de texto", text: "La misma técnica de chunking que se usa en diseño de e-learning para dislexia: piezas breves y autocontenidas en vez de párrafos extensos." },
-      { icon: Repeat, title: "Pausa y repetición sin límite, sin quedar atrás", text: "Puede volver a escuchar o ver una parte tantas veces como necesite sin que el resto del curso avance sin él — porque no hay 'resto del curso avanzando' en tiempo real." },
-    ],
-  },
-  otro: {
-    label: "Otro ritmo",
-    icon: Compass,
-    headline: "Previsibilidad total: sin sorpresas, sin cambios de último minuto",
-    intro: "Para muchos estudiantes con TEA u otros perfiles sensoriales, la ansiedad no viene del contenido — viene de no saber qué sigue. Barkley resuelve eso con estructura visible, siempre igual.",
-    techniques: [
-      { icon: ListChecks, title: "La misma estructura, siempre, en todos los niveles", text: "Asignatura → Unidad → Lección → Formatos fijos (2 videos, 1 pódcast, guía, evaluación). Es el equivalente asincrónico de un horario visual: el estudiante siempre sabe exactamente qué viene después." },
-      { icon: Shield, title: "Estudia en su entorno conocido, sin sobrecarga sensorial", text: "Sin aula ruidosa, sin luces ni texturas impuestas, sin bullying — el espacio de estudio es el que la familia ya adaptó para él." },
-      { icon: Clock, title: "Sin transiciones forzadas entre actividades", text: "Nada de 'ahora cambien todos de actividad' al sonar un timbre. Cada estudiante decide cuándo termina un bloque y empieza el siguiente." },
-      { icon: Repeat, title: "Rutina propia, repetible día a día", text: "Puede construir su propio ritual de estudio — mismo horario, mismo orden, mismas señales — sin que el colegio se lo imponga distinto cada semana." },
+      { icon: BookOpen, title: "Fuente OpenDyslexic activable", text: "Tipografía diseñada específicamente para reducir la confusión de letras simétricas (b/d, p/q), disponible como opción real dentro de la plataforma." },
+      { icon: Headphones, title: "Texto a voz en el contenido de las lecciones", text: "El texto escrito de cada lección puede escucharse en vez de leerse — mismo mecanismo que usan las herramientas de lectura asistida recomendadas para dislexia." },
+      { icon: Video, title: "Interlineado 1.8 y fondo crema, no blanco puro", text: "El contraste extremo de texto negro sobre blanco cansa más a un lector con dislexia; el fondo #FFF8F0 y el espaciado ampliado reducen ese esfuerzo visual." },
+      { icon: ListChecks, title: "Vocabulario clave en español e inglés", text: "Las listas de vocabulario de cada unidad se presentan en ambos idiomas, apoyo adicional documentado para comprensión lectora en dislexia." },
     ],
   },
 };
@@ -83,7 +79,8 @@ const FAQS = [
   { q: "¿Adaptativo es una terapia o tratamiento?", a: "No. Es un formato de estudio que se acomoda a cómo aprende tu hijo — no una terapia ni un tratamiento clínico. El acompañamiento profesional (psicopedagogo, terapeuta ocupacional, neurólogo) sigue siendo el de tu confianza; Barkley no lo reemplaza." },
   { q: "¿Rinde los mismos exámenes que el resto?", a: "Sí. El contenido es el temario oficial MINEDUC completo y la validación es la misma: Exámenes Libres. Se adapta la forma de aprender, nunca la exigencia académica." },
   { q: "¿Necesito un diagnóstico o informe para matricular?", a: "No lo pedimos para matricular. La conversación inicial con el asesor es donde definimos juntos cómo adaptar el recorrido según lo que cuentes de tu hijo." },
-  { q: "¿Qué pasa si mi hijo tiene más de un perfil (por ejemplo TDAH y dislexia)?", a: "Las técnicas no son excluyentes — se combinan. El selector de arriba muestra el énfasis principal, pero el mismo contenido en video+pódcast, bloques cortos y refuerzo dirigido aplica en conjunto." },
+  { q: "¿Qué pasa si mi hijo tiene TDAH y dislexia a la vez?", a: "La plataforma tiene un tercer perfil, 'combinado', que activa todas las acomodaciones de ambos a la vez — bloques cortos y sin timer, además de fuente OpenDyslexic y texto a voz. No es necesario elegir una sola." },
+  { q: "¿Y si mi hijo tiene TEA u otro perfil que no está en esta página?", a: "Hoy la plataforma solo tiene acomodaciones automáticas para TDAH y dislexia — todavía no para TEA ni otros perfiles. Preferimos decirlo con franqueza a prometer algo que aún no está construido. Escríbenos y lo conversamos igual: puede haber acompañamiento posible aunque no sea automático en la plataforma." },
 ];
 
 export default function Adaptativo() {
@@ -92,9 +89,9 @@ export default function Adaptativo() {
   const ActiveIcon = active.icon;
 
   useEffect(() => {
-    document.title = "Adaptativo — Colegio online para niños con TDAH, dislexia y otros ritmos | Barkley Online";
+    document.title = "Adaptativo — Colegio online para niños con TDAH y dislexia | Barkley Online";
     const desc = document.querySelector('meta[name="description"]');
-    if (desc) desc.setAttribute("content", "Adaptativo, el programa de Barkley: educación online 100% asincrónica para niños con TDAH, dislexia u otro ritmo de aprendizaje. Técnicas reales: microaprendizaje, refuerzo dirigido, formato dual video+pódcast. Preparación oficial para Exámenes Libres MINEDUC en Chile.");
+    if (desc) desc.setAttribute("content", "Adaptativo, el programa de Barkley: acomodaciones reales para TDAH (bloques de 7 min, sin timer, reintentos) y dislexia (fuente OpenDyslexic, texto a voz, fondo crema). Preparación oficial para Exámenes Libres MINEDUC en Chile.");
   }, []);
 
   return (
@@ -120,8 +117,8 @@ export default function Adaptativo() {
             No todos aprenden igual.<br />No todos deberían estudiar igual.
           </h1>
           <p style={{ fontSize: 17, color: "rgba(255,255,255,0.92)", maxWidth: 680, margin: 0 }}>
-            Si tu hijo tiene TDAH, dislexia u otro ritmo de aprendizaje, el problema casi nunca es él —
-            es el formato. Elige su perfil abajo y mira exactamente cómo Barkley lo resuelve.
+            Si tu hijo tiene TDAH o dislexia, el problema casi nunca es él —
+            es el formato. Elige su perfil abajo y mira exactamente qué acomodaciones activa la plataforma.
           </p>
         </div>
       </section>
