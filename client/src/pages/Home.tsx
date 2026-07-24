@@ -238,7 +238,7 @@ const RAZONES = [
   },
   {
     title: "Barkley Adaptativo",
-    text: "TDAH, dislexia, otro ritmo de vida — el sistema se adapta al perfil de cada estudiante, no al revés. La educación tradicional no está pensada para todos; esta sí.",
+    text: "Una línea propia para TDAH, dislexia y otros ritmos de aprendizaje. Conoce cómo funciona más abajo.",
   },
   {
     title: "Sin clases en vivo no es sin compañía",
@@ -676,30 +676,6 @@ export default function Home() {
         <a href="#inscripcion" style={{ background: PINK, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>INSCRIBIRSE</a>
       </div>
 
-      {/* === TRUST BAR — sello de confianza: validación oficial MINEDUC === */}
-      <section style={{ background: NAVY, padding: "20px 24px" }}>
-        <div style={{ maxWidth: 1180, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 16, flexWrap: "wrap", textAlign: "center" }}>
-          <span style={{ display: "inline-flex", width: 40, height: 40, borderRadius: "50%", background: GOLD, color: NAVY, alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <Check style={{ width: 22, height: 22 }} strokeWidth={3} />
-          </span>
-          <p style={{ margin: 0, color: "#fff", fontSize: "clamp(15px,2vw,18px)", fontWeight: 500 }}>
-            Preparación oficial para <strong style={{ color: GOLD }}>Exámenes Libres</strong> ante el Ministerio de Educación de Chile — validación reconocida de 1° básico a 4° medio.
-          </p>
-          <a
-            href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 6, flexShrink: 0,
-              background: GOLD, color: NAVY, fontWeight: 700, fontSize: 13,
-              padding: "9px 16px", borderRadius: 999, textDecoration: "none", whiteSpace: "nowrap",
-            }}
-          >
-            Ver ficha oficial MINEDUC <ArrowUpRight style={{ width: 15, height: 15 }} strokeWidth={2.5} />
-          </a>
-        </div>
-      </section>
-
       {/* === INTRO — azul apagado real (no navy puro), formas literales inline (hourglass/circle/triangle/stairs/leaf/bars) === */}
       <section id="nosotros" style={{ maxWidth: 1180, margin: "0 auto", padding: "90px 24px", textAlign: "left" }}>
         <Reveal>
@@ -969,6 +945,45 @@ export default function Home() {
               </motion.div>
             </Reveal>
           ))}
+        </div>
+      </section>
+
+      {/* === BARKLEY ADAPTATIVO — sección propia, dirigida a familias con hijos TDAH/dislexia/
+          otro ritmo de aprendizaje. Separada del carrusel de razones a pedido: necesita su
+          propio espacio, no un ítem más dentro de una lista genérica. === */}
+      <section id="adaptativo" style={{ background: "#f6f1ff", padding: "90px 24px" }}>
+        <div style={{ maxWidth: 980, margin: "0 auto", textAlign: "center" }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: PURPLE, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>
+            Barkley Adaptativo
+          </p>
+          <h2 style={{ fontSize: "clamp(30px,5vw,48px)", fontWeight: 600, color: NAVY, margin: "0 0 20px", lineHeight: 1.15 }}>
+            No todos aprenden igual.<br />No todos deberían estudiar igual.
+          </h2>
+          <p style={{ fontSize: 18, color: TEXT, maxWidth: 680, margin: "0 auto 40px", lineHeight: 1.7 }}>
+            Si tu hijo tiene TDAH, dislexia u otro ritmo de aprendizaje distinto, el problema
+            casi nunca es él — es el formato. Una clase de 45 minutos por Zoom exige algo que
+            no todos los cerebros dan igual. Barkley Adaptativo ajusta la forma, no la exigencia:
+            mismo contenido oficial, presentado de un modo que sí puede recorrer.
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 20, justifyContent: "center", marginBottom: 40 }}>
+            {[
+              { t: "Sin exigencia de atención sostenida", d: "Video y pódcast en bloques cortos, con pausas donde tu hijo las necesite — no donde el reloj lo decide." },
+              { t: "Sin comparación con el curso", d: "Avanza contra su propio progreso anterior, no contra el ritmo de 30 compañeros en una clase en vivo." },
+              { t: "Con acompañamiento humano real", d: "Un asesor sigue su proceso — no es contenido que corre solo mientras nadie mira cómo le va." },
+            ].map((f) => (
+              <div key={f.t} style={{ background: "#fff", borderRadius: 16, padding: 26, flex: "1 1 260px", minWidth: 240, textAlign: "left", boxShadow: "0 4px 16px rgba(0,20,60,0.1)" }}>
+                <h3 style={{ fontSize: 17, fontWeight: 600, color: NAVY, margin: "0 0 8px" }}>{f.t}</h3>
+                <p style={{ fontSize: 14, margin: 0, color: TEXT }}>{f.d}</p>
+              </div>
+            ))}
+          </div>
+          <p style={{ fontSize: 13, color: SLATE, maxWidth: 600, margin: "0 auto 28px" }}>
+            Barkley Adaptativo no reemplaza el diagnóstico ni el tratamiento profesional de tu
+            hijo — es un formato de estudio que se acomoda a cómo aprende, no una terapia.
+          </p>
+          <a href="/adaptativo/" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: PURPLE, color: "#fff", fontWeight: 700, fontSize: 15, padding: "14px 28px", borderRadius: 999, textDecoration: "none" }}>
+            Quiero saber más de Barkley Adaptativo
+          </a>
         </div>
       </section>
 
@@ -1441,6 +1456,8 @@ export default function Home() {
             <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6, fontSize: 14, opacity: 0.85 }}>
               <li><a href="#metodo" style={{ color: "#fff" }}>El método</a></li>
               <li><a href="#plataforma" style={{ color: "#fff" }}>La plataforma</a></li>
+              <li><a href="/adaptativo/" style={{ color: "#fff" }}>Barkley Adaptativo</a></li>
+              <li><a href="/guia-examenes-libres/" style={{ color: "#fff" }}>Guía de Exámenes Libres</a></li>
               <li><a href="#faq" style={{ color: "#fff" }}>Preguntas frecuentes</a></li>
               <li><a href="#inscripcion" style={{ color: "#fff" }}>Inscripción</a></li>
             </ul>
