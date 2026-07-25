@@ -358,6 +358,7 @@ function InscripcionForm() {
           <option value="tdah">TDAH</option>
           <option value="dislexia">Dislexia</option>
           <option value="tea">TEA (autismo)</option>
+          <option value="motor">Dificultades motoras</option>
           <option value="ambos">TDAH y dislexia</option>
         </select>
       </div>

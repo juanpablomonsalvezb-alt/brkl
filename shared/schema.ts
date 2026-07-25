@@ -28,7 +28,7 @@ export const insertWaitlistSchema = z.object({
   email: z.string().trim().toLowerCase().email("Email inválido"),
   name: z.string().trim().min(2).max(120).optional(),
   levelInterest: z.string().trim().max(40).optional(),
-  learningProfileInterest: z.enum(["tdah", "dislexia", "tea", "ambos", "ninguno"]).optional(),
+  learningProfileInterest: z.enum(["tdah", "dislexia", "tea", "motor", "ambos", "ninguno"]).optional(),
   notes: z.string().trim().max(1000).optional(),
 });
 

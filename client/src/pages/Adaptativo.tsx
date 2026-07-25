@@ -1,5 +1,5 @@
 /**
- * Adaptativo — programa de Barkley para estudiantes con TDAH, dislexia o TEA.
+ * Adaptativo — programa de Barkley para estudiantes con TDAH, dislexia, TEA o dificultades motoras.
  *
  * PRINCIPIO DE DISEÑO: la página no describe las acomodaciones, las DEMUESTRA.
  * Cada sección es un instrumento manipulable — el apoderado cambia la fuente,
@@ -10,7 +10,7 @@
  *
  * Todo lo que se muestra existe en AdaptiveProfileService
  * (barkley-platform/src/server/services/adaptive-profile.service.ts): perfiles
- * adhd, dyslexia, combined y asd. Nada de lo que aparece acá está inventado —
+ * adhd, dyslexia, combined, asd y motor. Nada de lo que aparece acá está inventado —
  * si una acomodación no está en ese servicio, no se muestra.
  *
  * Dirección estética: editorial cálido / cuaderno de trabajo. Fraunces display +
@@ -594,6 +594,83 @@ function AgendaDemo() {
   );
 }
 
+/* ─── DEMO · Objetivos de click (motricidad) ────────────────────────────────
+   WCAG 2.2 fija 44px como mínimo para un objetivo tocable (criterio 2.5.8).
+   Se demuestra dejando que el apoderado compare el tamaño real: la diferencia
+   entre acertar y errar cuando la precisión del gesto está reducida. */
+function MotrizDemo() {
+  const [amplio, setAmplio] = useState(false);
+  const [elegida, setElegida] = useState<number | null>(null);
+  const opciones = ["En el estómago", "En la boca", "En el intestino"];
+
+  return (
+    <div style={{ display: "flex", gap: "clamp(20px,3vw,36px)", flexWrap: "wrap", alignItems: "flex-start" }}>
+      <div style={{ flex: "1 1 460px", minWidth: 300 }}>
+        <div style={{ background: "#fff", border: `1px solid ${RULE}`, borderRadius: 6, padding: "clamp(22px,3.5vw,34px)" }}>
+          <p style={{ fontSize: 12, letterSpacing: "0.13em", textTransform: "uppercase", color: INK_SOFT, margin: "0 0 16px", fontWeight: 500 }}>
+            Evaluación · Pregunta 3
+          </p>
+          <p style={{ fontSize: 16.5, color: INK, margin: "0 0 18px", lineHeight: 1.5 }}>
+            ¿En qué parte del cuerpo comienza la digestión?
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: amplio ? 12 : 4 }}>
+            {opciones.map((o, i) => (
+              <button
+                key={o}
+                onClick={() => setElegida(i)}
+                style={{
+                  textAlign: "left", width: "100%", cursor: "pointer",
+                  minHeight: amplio ? 56 : 30,
+                  padding: amplio ? "16px 18px" : "5px 10px",
+                  fontSize: amplio ? 15.5 : 13,
+                  fontFamily: BODY,
+                  borderRadius: 4,
+                  border: `1.5px solid ${elegida === i ? SAGE : RULE}`,
+                  background: elegida === i ? "#EEF3EE" : PAPER,
+                  color: INK,
+                  transition: "min-height .3s ease, padding .3s ease, font-size .3s ease",
+                }}
+              >
+                {o}
+              </button>
+            ))}
+          </div>
+        </div>
+        <p style={{ fontSize: 12.5, color: INK_SOFT, margin: "14px 2px 0", fontStyle: "italic" }}>
+          {amplio
+            ? "48 píxeles de alto y separados. Difícil errar, aunque el pulso no sea firme."
+            : "Botones chicos y pegados. Prueba tocar el del medio sin equivocarte."}
+        </p>
+      </div>
+
+      <div style={{ flex: "0 1 300px", minWidth: 260 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+          {[false, true].map((v) => (
+            <button
+              key={String(v)}
+              onClick={() => { setAmplio(v); setElegida(null); }}
+              style={{
+                background: amplio === v ? INK : "transparent",
+                color: amplio === v ? PAPER : INK,
+                border: `1.5px solid ${amplio === v ? INK : RULE}`,
+                borderRadius: 4, padding: "13px 16px", cursor: "pointer",
+                fontFamily: BODY, fontSize: 14.5, fontWeight: 600, textAlign: "left",
+              }}
+            >
+              {v ? "Con Adaptativo" : "Interfaz corriente"}
+            </button>
+          ))}
+        </div>
+        <p style={{ fontSize: 14.5, color: INK, lineHeight: 1.7, margin: 0 }}>
+          {amplio
+            ? "Todo se puede hacer también con el teclado, nada exige arrastrar y nada corre contra reloj. Y si igual se va un click, puede reintentar."
+            : "Para quien tiene precisión reducida o un temblor, este tamaño convierte cada pregunta en una prueba de puntería en vez de una de conocimiento."}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 /* ─── DEMO 4 · Ritmo de acompañamiento ──────────────────────────────────── */
 function CheckinDemo() {
   const [adaptativo, setAdaptativo] = useState(true);
@@ -662,7 +739,7 @@ const FAQS = [
   { q: "¿Rinde los mismos exámenes que el resto?", a: "Sí. El contenido es el temario oficial MINEDUC completo y la validación es la misma: Exámenes Libres. Se adapta la forma de aprender, nunca la exigencia académica ni el nivel del contenido." },
   { q: "¿Necesito un diagnóstico o un informe para matricular?", a: "No lo pedimos. En el formulario de inscripción puedes indicar si tu hijo tiene TDAH o dislexia, y la conversación con el asesor define cómo activar el perfil que corresponda." },
   { q: "¿Y si tiene TDAH y dislexia a la vez?", a: "Existe un cuarto perfil, combinado, que activa todas las acomodaciones de ambos al mismo tiempo: bloques cortos y reintentos, más fuente OpenDyslexic, texto a voz y fondo crema. No hay que elegir una sola." },
-  { q: "¿Qué pasa con el diagnóstico de mi hijo si es otro?", a: "Adaptativo cubre hoy TDAH, dislexia, TEA y la combinación de TDAH con dislexia. Si el perfil de tu hijo es otro — discapacidad intelectual, motora o sensorial — todavía no tenemos acomodaciones automáticas para eso, y preferimos decirlo antes que prometerlo. Escríbenos igual: conversamos qué es posible en su caso concreto." },
+  { q: "¿Qué pasa con el diagnóstico de mi hijo si es otro?", a: "Adaptativo cubre hoy TDAH, dislexia, TEA, dificultades motoras y la combinación de TDAH con dislexia. En lo motriz el alcance es la accesibilidad de la interfaz: no incluye comunicación aumentativa. Si el perfil de tu hijo es otro — discapacidad intelectual o sensorial — todavía no tenemos acomodaciones automáticas, y preferimos decirlo antes que prometerlo. Escríbenos igual: conversamos qué es posible en su caso concreto." },
 ];
 
 function Faq() {
@@ -709,9 +786,9 @@ function Faq() {
 /* ─── Página ────────────────────────────────────────────────────────────── */
 export default function Adaptativo() {
   useEffect(() => {
-    document.title = "Adaptativo — el programa de Barkley para TDAH, dislexia y TEA";
+    document.title = "Adaptativo — el programa de Barkley para TDAH, dislexia, TEA y dificultades motoras";
     const desc = document.querySelector('meta[name="description"]');
-    if (desc) desc.setAttribute("content", "Adaptativo, el programa de Barkley: pruébalo tú mismo. Cambia la fuente a OpenDyslexic, el fondo a crema, escucha el texto en voz alta y mira cómo cambia la lección. Acomodaciones reales para TDAH, dislexia y TEA, de 1° básico a 4° medio.");
+    if (desc) desc.setAttribute("content", "Adaptativo, el programa de Barkley: pruébalo tú mismo. Cambia la fuente a OpenDyslexic, el fondo a crema, escucha el texto en voz alta y mira cómo cambia la lección. Acomodaciones reales para TDAH, dislexia, TEA y dificultades motoras, de 1° básico a 4° medio.");
 
     const id = "adaptativo-fonts";
     if (!document.getElementById(id)) {
@@ -781,7 +858,7 @@ export default function Adaptativo() {
             style={{ display: "flex", gap: "clamp(20px,4vw,56px)", flexWrap: "wrap", alignItems: "flex-start" }}
           >
             <p style={{ flex: "1 1 420px", maxWidth: 560, fontSize: "clamp(16px,2vw,19px)", lineHeight: 1.75, color: INK_SOFT, margin: 0 }}>
-              Un colegio no puede cambiar cómo funciona el cerebro de un niño con TDAH, dislexia o TEA.
+              Un colegio no puede cambiar cómo funciona el cerebro de un niño con TDAH, dislexia, TEA o dificultades motoras.
               Pero sí puede cambiar el formato que lo deja afuera. Esta página no te lo explica:
               te deja <strong style={{ color: INK }}>probarlo tú mismo</strong>, ahora, sobre una lección real.
             </p>
@@ -826,7 +903,11 @@ export default function Adaptativo() {
         <AgendaDemo />
       </Section>
 
-      <Section num="05" kicker="Acompañamiento humano" title="Cuántas veces alguien revisa cómo va">
+      <Section num="05" kicker="Motricidad · movilidad" title="Que responder no sea una prueba de puntería">
+        <MotrizDemo />
+      </Section>
+
+      <Section num="06" kicker="Acompañamiento humano" title="Cuántas veces alguien revisa cómo va">
         <CheckinDemo />
       </Section>
 
