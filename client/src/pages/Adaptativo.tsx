@@ -1,5 +1,5 @@
 /**
- * Adaptativo — programa de Barkley para estudiantes con TDAH o dislexia.
+ * Adaptativo — programa de Barkley para estudiantes con TDAH, dislexia o TEA.
  *
  * PRINCIPIO DE DISEÑO: la página no describe las acomodaciones, las DEMUESTRA.
  * Cada sección es un instrumento manipulable — el apoderado cambia la fuente,
@@ -9,8 +9,9 @@
  * es la demostración más honesta posible.
  *
  * Todo lo que se muestra existe en AdaptiveProfileService
- * (barkley-platform/src/server/services/adaptive-profile.service.ts). Sin perfil
- * TEA: la plataforma no lo implementa todavía y prometerlo sería mentir.
+ * (barkley-platform/src/server/services/adaptive-profile.service.ts): perfiles
+ * adhd, dyslexia, combined y asd. Nada de lo que aparece acá está inventado —
+ * si una acomodación no está en ese servicio, no se muestra.
  *
  * Dirección estética: editorial cálido / cuaderno de trabajo. Fraunces display +
  * Lexend body. Paleta de marca (navy/gold/rojo) reinterpretada sobre papel.
@@ -460,6 +461,99 @@ function TimerDemo() {
   );
 }
 
+/* ─── DEMO · Agenda visual del día (TEA) ────────────────────────────────────
+   El horario visual es una de las 28 prácticas basadas en evidencia reconocidas
+   por el National Clearinghouse on Autism Evidence and Practice. Acá es su
+   equivalente asincrónico: el estudiante siempre sabe qué viene y en qué orden.
+   Se demuestra dejando que el apoderado destape la agenda paso a paso. */
+const AGENDA = [
+  { hora: "Ahora", tarea: "Video · El sistema digestivo", detalle: "7 minutos" },
+  { hora: "Después", tarea: "Práctica de la lección", detalle: "5 preguntas, se corrigen solas" },
+  { hora: "Luego", tarea: "Pausa", detalle: "El tiempo que necesites" },
+  { hora: "Al final", tarea: "Evaluación de la unidad", detalle: "Sin reloj. Puedes reintentar" },
+];
+
+function AgendaDemo() {
+  const [oculta, setOculta] = useState(true);
+  return (
+    <div style={{ display: "flex", gap: "clamp(20px,3vw,36px)", flexWrap: "wrap", alignItems: "flex-start" }}>
+      <div style={{ flex: "1 1 460px", minWidth: 300 }}>
+        <div style={{ background: "#fff", border: `1px solid ${RULE}`, borderRadius: 6, padding: "clamp(22px,3.5vw,34px)" }}>
+          <p style={{ fontSize: 12, letterSpacing: "0.13em", textTransform: "uppercase", color: INK_SOFT, margin: "0 0 20px", fontWeight: 500 }}>
+            Martes · Ciencias
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {AGENDA.map((a, i) => (
+              <div
+                key={a.tarea}
+                style={{
+                  display: "flex", gap: 14, alignItems: "flex-start",
+                  padding: "13px 15px", borderRadius: 4,
+                  background: oculta ? PAPER_DEEP : i === 0 ? "#EEF3EE" : PAPER,
+                  border: `1px solid ${oculta ? RULE : i === 0 ? SAGE : RULE}`,
+                  transition: "background .3s ease, border-color .3s ease",
+                }}
+              >
+                <span style={{
+                  fontSize: 11.5, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase",
+                  color: oculta ? "transparent" : i === 0 ? SAGE : INK_SOFT,
+                  minWidth: 62, paddingTop: 2, transition: "color .3s ease",
+                }}>
+                  {oculta ? "···" : a.hora}
+                </span>
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <span style={{
+                    display: "block", fontSize: 15, fontWeight: 600,
+                    color: oculta ? "transparent" : INK,
+                    background: oculta ? RULE : "transparent",
+                    borderRadius: 3, transition: "color .3s ease, background .3s ease",
+                  }}>
+                    {oculta ? "" : a.tarea}
+                  </span>
+                  <span style={{
+                    display: "block", fontSize: 13, marginTop: 3,
+                    color: oculta ? "transparent" : INK_SOFT,
+                    background: oculta ? PAPER_DEEP : "transparent",
+                    borderRadius: 3, width: oculta ? "60%" : "auto",
+                    transition: "color .3s ease",
+                  }}>
+                    {oculta ? "" : a.detalle}
+                  </span>
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div style={{ flex: "0 1 300px", minWidth: 260 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+          {[true, false].map((v) => (
+            <button
+              key={String(v)}
+              onClick={() => setOculta(v)}
+              style={{
+                background: oculta === v ? INK : "transparent",
+                color: oculta === v ? PAPER : INK,
+                border: `1.5px solid ${oculta === v ? INK : RULE}`,
+                borderRadius: 4, padding: "13px 16px", cursor: "pointer",
+                fontFamily: BODY, fontSize: 14.5, fontWeight: 600, textAlign: "left",
+              }}
+            >
+              {v ? "Sin saber qué viene" : "Con la agenda a la vista"}
+            </button>
+          ))}
+        </div>
+        <p style={{ fontSize: 14.5, color: INK, lineHeight: 1.7, margin: 0 }}>
+          {oculta
+            ? "Así se siente empezar el día sin saber qué sigue. Para muchos estudiantes con TEA, esa incertidumbre pesa más que la materia."
+            : "La misma jornada, escrita completa desde el principio. Y si algo cambia, se avisa con tres días de anticipación — nunca el mismo día."}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 /* ─── DEMO 4 · Ritmo de acompañamiento ──────────────────────────────────── */
 function CheckinDemo() {
   const [adaptativo, setAdaptativo] = useState(true);
@@ -527,8 +621,8 @@ const FAQS = [
   { q: "¿Adaptativo es una terapia o un tratamiento?", a: "No. Es un formato de estudio que se acomoda a cómo aprende tu hijo — no una terapia ni un tratamiento clínico. El acompañamiento profesional (psicopedagogo, terapeuta ocupacional, neurólogo) sigue siendo el de tu confianza; Barkley no lo reemplaza ni pretende hacerlo." },
   { q: "¿Rinde los mismos exámenes que el resto?", a: "Sí. El contenido es el temario oficial MINEDUC completo y la validación es la misma: Exámenes Libres. Se adapta la forma de aprender, nunca la exigencia académica ni el nivel del contenido." },
   { q: "¿Necesito un diagnóstico o un informe para matricular?", a: "No lo pedimos. En el formulario de inscripción puedes indicar si tu hijo tiene TDAH o dislexia, y la conversación con el asesor define cómo activar el perfil que corresponda." },
-  { q: "¿Y si tiene TDAH y dislexia a la vez?", a: "Existe un tercer perfil, combinado, que activa todas las acomodaciones de ambos al mismo tiempo: bloques cortos y sin cronómetro, más fuente OpenDyslexic, texto a voz y fondo crema. No hay que elegir una sola." },
-  { q: "¿Y si mi hijo tiene TEA u otro perfil que no aparece aquí?", a: "Hoy la plataforma solo tiene acomodaciones automáticas para TDAH y dislexia — todavía no para TEA ni otros perfiles. Preferimos decirlo con franqueza antes que prometer algo que aún no está construido. Escríbenos igual y lo conversamos: puede haber acompañamiento posible aunque no sea automático." },
+  { q: "¿Y si tiene TDAH y dislexia a la vez?", a: "Existe un cuarto perfil, combinado, que activa todas las acomodaciones de ambos al mismo tiempo: bloques cortos y reintentos, más fuente OpenDyslexic, texto a voz y fondo crema. No hay que elegir una sola." },
+  { q: "¿Qué pasa con el diagnóstico de mi hijo si es otro?", a: "Adaptativo cubre hoy TDAH, dislexia, TEA y la combinación de TDAH con dislexia. Si el perfil de tu hijo es otro — discapacidad intelectual, motora o sensorial — todavía no tenemos acomodaciones automáticas para eso, y preferimos decirlo antes que prometerlo. Escríbenos igual: conversamos qué es posible en su caso concreto." },
 ];
 
 function Faq() {
@@ -575,9 +669,9 @@ function Faq() {
 /* ─── Página ────────────────────────────────────────────────────────────── */
 export default function Adaptativo() {
   useEffect(() => {
-    document.title = "Adaptativo — el programa de Barkley para TDAH y dislexia";
+    document.title = "Adaptativo — el programa de Barkley para TDAH, dislexia y TEA";
     const desc = document.querySelector('meta[name="description"]');
-    if (desc) desc.setAttribute("content", "Adaptativo, el programa de Barkley: pruébalo tú mismo. Cambia la fuente a OpenDyslexic, el fondo a crema, escucha el texto en voz alta y mira cómo cambia la lección. Acomodaciones reales para TDAH y dislexia, de 1° básico a 4° medio.");
+    if (desc) desc.setAttribute("content", "Adaptativo, el programa de Barkley: pruébalo tú mismo. Cambia la fuente a OpenDyslexic, el fondo a crema, escucha el texto en voz alta y mira cómo cambia la lección. Acomodaciones reales para TDAH, dislexia y TEA, de 1° básico a 4° medio.");
 
     const id = "adaptativo-fonts";
     if (!document.getElementById(id)) {
@@ -647,7 +741,7 @@ export default function Adaptativo() {
             style={{ display: "flex", gap: "clamp(20px,4vw,56px)", flexWrap: "wrap", alignItems: "flex-start" }}
           >
             <p style={{ flex: "1 1 420px", maxWidth: 560, fontSize: "clamp(16px,2vw,19px)", lineHeight: 1.75, color: INK_SOFT, margin: 0 }}>
-              Un colegio no puede cambiar cómo funciona el cerebro de un niño con TDAH o dislexia.
+              Un colegio no puede cambiar cómo funciona el cerebro de un niño con TDAH, dislexia o TEA.
               Pero sí puede cambiar el formato que lo deja afuera. Esta página no te lo explica:
               te deja <strong style={{ color: INK }}>probarlo tú mismo</strong>, ahora, sobre una lección real.
             </p>
@@ -674,7 +768,11 @@ export default function Adaptativo() {
         <TimerDemo />
       </Section>
 
-      <Section num="04" kicker="Acompañamiento humano" title="Cuántas veces alguien revisa cómo va">
+      <Section num="04" kicker="Previsibilidad · TEA" title="Saber qué viene, siempre, antes de empezar">
+        <AgendaDemo />
+      </Section>
+
+      <Section num="05" kicker="Acompañamiento humano" title="Cuántas veces alguien revisa cómo va">
         <CheckinDemo />
       </Section>
 

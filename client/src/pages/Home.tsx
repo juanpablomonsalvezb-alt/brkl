@@ -357,7 +357,8 @@ function InscripcionForm() {
           <option value="">Prefiero no decir / no aplica</option>
           <option value="tdah">TDAH</option>
           <option value="dislexia">Dislexia</option>
-          <option value="ambos">Ambos</option>
+          <option value="tea">TEA (autismo)</option>
+          <option value="ambos">TDAH y dislexia</option>
         </select>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
