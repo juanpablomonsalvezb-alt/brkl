@@ -15,9 +15,9 @@
  * Dirección estética: editorial cálido / cuaderno de trabajo. Fraunces display +
  * Lexend body. Paleta de marca (navy/gold/rojo) reinterpretada sobre papel.
  */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { Check, X, ArrowRight, Volume2, Pause, Play } from "lucide-react";
+import { Check, X, ArrowRight, Pause, Play, Square } from "lucide-react";
 
 /* ─── Paleta: marca Barkley sobre papel cálido ─────────────────────────── */
 const PAPER = "#FBF6EC";        // papel cálido — el mismo principio del modo dislexia
@@ -41,6 +41,68 @@ function useReveal() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "0px 0px -80px 0px" });
   return { ref, inView };
+}
+
+/* Lectura en voz alta con seguimiento palabra por palabra — el mismo mecanismo
+   de las herramientas de lectura asistida reales (Immersive Reader, Bookshare):
+   no basta con narrar, hay que marcar dónde va la voz para que el ojo la siga.
+   Usa la síntesis del propio navegador: sin servicio externo, sin costo, sin
+   enviar el texto a ningún lado. */
+function useLecturaEnVoz(texto: string) {
+  const [hablando, setHablando] = useState(false);
+  const [charIndex, setCharIndex] = useState(-1);
+  const [disponible, setDisponible] = useState(false);
+  const vozEs = useRef<SpeechSynthesisVoice | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    setDisponible(true);
+
+    // getVoices() suele devolver [] en la primera llamada — Chrome las carga
+    // async y avisa por onvoiceschanged. Sin esto se perdía la voz en español
+    // y el texto quedaba leído con fonética inglesa.
+    const cargar = () => {
+      const voces = window.speechSynthesis.getVoices();
+      vozEs.current =
+        voces.find((v) => v.lang.toLowerCase().startsWith("es-cl")) ||
+        voces.find((v) => v.lang.toLowerCase().startsWith("es-")) ||
+        voces.find((v) => v.lang.toLowerCase().startsWith("es")) ||
+        null;
+    };
+    cargar();
+    window.speechSynthesis.addEventListener("voiceschanged", cargar);
+    return () => {
+      window.speechSynthesis.removeEventListener("voiceschanged", cargar);
+      window.speechSynthesis.cancel();
+    };
+  }, []);
+
+  const detener = () => {
+    window.speechSynthesis.cancel();
+    setHablando(false);
+    setCharIndex(-1);
+  };
+
+  const alternar = () => {
+    if (hablando) { detener(); return; }
+    const u = new SpeechSynthesisUtterance(texto);
+    if (!vozEs.current) {
+      // Último intento: puede que las voces hayan llegado justo antes del click.
+      const voces = window.speechSynthesis.getVoices();
+      vozEs.current = voces.find((v) => v.lang.toLowerCase().startsWith("es")) || null;
+    }
+    if (vozEs.current) u.voice = vozEs.current;
+    u.lang = vozEs.current?.lang || "es-ES";
+    u.rate = 0.92; // levemente por debajo del habla normal: también es una acomodación
+    u.onboundary = (e) => { if (typeof e.charIndex === "number") setCharIndex(e.charIndex); };
+    u.onend = () => { setHablando(false); setCharIndex(-1); };
+    u.onerror = () => { setHablando(false); setCharIndex(-1); };
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+    setHablando(true);
+  };
+
+  return { hablando, charIndex, disponible, alternar };
 }
 
 function Section({ num, kicker, title, children }: { num: string; kicker: string; title: string; children: React.ReactNode }) {
@@ -76,7 +138,20 @@ function LecturaDemo() {
   const [dyslexic, setDyslexic] = useState(false);
   const [cream, setCream] = useState(false);
   const [loose, setLoose] = useState(false);
-  const anyOn = dyslexic || cream || loose;
+  const { hablando, charIndex, disponible, alternar } = useLecturaEnVoz(LECCION_DEMO);
+  const anyOn = dyslexic || cream || loose || hablando;
+
+  /* Palabras con su offset original, para poder marcar cuál está sonando. */
+  const palabras = useMemo(() => {
+    const out: { w: string; start: number }[] = [];
+    let i = 0;
+    LECCION_DEMO.split(/(\s+)/).forEach((parte) => {
+      if (parte.trim()) out.push({ w: parte, start: i });
+      i += parte.length;
+    });
+    return out;
+  }, []);
+  const activa = charIndex < 0 ? -1 : palabras.reduce((acc, p, i) => (charIndex >= p.start ? i : acc), -1);
 
   const Toggle = ({ on, set, label, detail }: { on: boolean; set: (v: boolean) => void; label: string; detail: string }) => (
     <button
@@ -130,17 +205,78 @@ function LecturaDemo() {
             margin: 0,
             transition: "line-height .3s ease, font-size .2s ease",
           }}>
-            {LECCION_DEMO}
+            {palabras.map((p, i) => (
+              <span
+                key={i}
+                style={{
+                  background: i === activa ? GOLD : "transparent",
+                  color: i === activa ? INK : "inherit",
+                  borderRadius: 3,
+                  boxShadow: i === activa ? `0 0 0 3px ${GOLD}` : "none",
+                  transition: "background .12s ease, box-shadow .12s ease",
+                }}
+              >
+                {p.w}{i < palabras.length - 1 ? " " : ""}
+              </span>
+            ))}
           </p>
-          <div style={{ marginTop: 22, paddingTop: 16, borderTop: `1px solid ${cream ? "#EFE2D0" : "#EEE"}`, display: "flex", alignItems: "center", gap: 8 }}>
-            <Volume2 style={{ width: 15, height: 15, color: SAGE }} />
-            <span style={{ fontSize: 12.5, color: INK_SOFT }}>Este texto también se puede escuchar</span>
+
+          {/* Reproductor: no un botón de play genérico — una ficha de audio con
+              onda en vivo, coherente con el registro editorial de la página. */}
+          <div style={{
+            marginTop: 24, paddingTop: 18, borderTop: `1px solid ${cream ? "#EFE2D0" : "#EEE"}`,
+            display: "flex", alignItems: "center", gap: 14,
+          }}>
+            <button
+              onClick={alternar}
+              disabled={!disponible}
+              aria-label={hablando ? "Detener la lectura" : "Escuchar la lección en voz alta"}
+              style={{
+                width: 46, height: 46, borderRadius: "50%", flexShrink: 0,
+                border: `1.5px solid ${hablando ? SAGE : INK}`,
+                background: hablando ? SAGE : "transparent",
+                color: hablando ? "#fff" : INK,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                cursor: disponible ? "pointer" : "not-allowed",
+                opacity: disponible ? 1 : 0.4,
+                transition: "all .22s ease",
+              }}
+            >
+              {hablando ? <Square style={{ width: 15, height: 15, fill: "currentColor" }} /> : <Play style={{ width: 17, height: 17, marginLeft: 2, fill: "currentColor" }} />}
+            </button>
+
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ margin: 0, fontSize: 13.5, fontWeight: 600, color: INK }}>
+                {hablando ? "Leyendo en voz alta…" : "Escuchar esta lección"}
+              </p>
+              <p style={{ margin: "1px 0 0", fontSize: 12, color: INK_SOFT }}>
+                {disponible
+                  ? "La palabra se marca mientras suena, para no perder el hilo"
+                  : "Tu navegador no permite lectura en voz alta"}
+              </p>
+            </div>
+
+            {/* Onda de audio: solo late cuando de verdad está hablando */}
+            <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 24, flexShrink: 0 }}>
+              {[0, 1, 2, 3, 4].map((i) => (
+                <span
+                  key={i}
+                  style={{
+                    width: 3, borderRadius: 2, background: hablando ? SAGE : RULE,
+                    height: hablando ? undefined : 6,
+                    animation: hablando ? `adaptativo-wave 900ms ease-in-out ${i * 110}ms infinite` : "none",
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </div>
         <p style={{ fontSize: 12.5, color: INK_SOFT, margin: "14px 2px 0", fontStyle: "italic" }}>
-          {anyOn
-            ? "Así es como tu hijo vería esta misma lección."
-            : "Así se ve una lección estándar. Activa los ajustes de la derecha."}
+          {hablando
+            ? "Así sigue el hilo un lector que se pierde entre líneas."
+            : anyOn
+              ? "Así es como tu hijo vería esta misma lección."
+              : "Así se ve una lección estándar. Actívala o escúchala."}
         </p>
       </div>
 
@@ -300,15 +436,25 @@ function TimerDemo() {
               }}
             >
               {v ? <Play style={{ width: 15, height: 15 }} /> : <Pause style={{ width: 15, height: 15 }} />}
-              {v ? "Con cronómetro (estándar)" : "Sin cronómetro (Adaptativo)"}
+              {v ? "Como sería con reloj" : "Como es en Barkley"}
             </button>
           ))}
         </div>
-        <p style={{ fontSize: 14.5, color: INK, lineHeight: 1.7, margin: 0 }}>
+        <p style={{ fontSize: 14.5, color: INK, lineHeight: 1.7, margin: "0 0 18px" }}>
           {visible
             ? "Mira el número mientras baja. Esa presión es lo primero que ocupa la cabeza de un niño con TDAH — antes que la pregunta."
-            : "La pregunta es la misma. Lo único que sacamos fue el reloj. Y con él, la carrera contra el tiempo."}
+            : "La pregunta es la misma. Lo único que falta es el reloj. Y con él, la carrera contra el tiempo."}
         </p>
+        {/* Honestidad: esto no es exclusivo del perfil — ningún estudiante Barkley
+            rinde contra reloj. Lo que sí es propio de Adaptativo son los reintentos. */}
+        <div style={{ borderTop: `1px solid ${RULE}`, paddingTop: 16 }}>
+          <p style={{ fontSize: 13.5, color: INK_SOFT, lineHeight: 1.7, margin: 0 }}>
+            Ningún estudiante de Barkley rinde contra reloj — es una decisión del colegio, no una
+            excepción. Lo que <strong style={{ color: INK }}>sí</strong> agrega Adaptativo:
+            si un mal resultado vino de una distracción y no de no saber, el estudiante
+            <strong style={{ color: INK }}> puede reintentar</strong>, y queda su mejor puntaje.
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -431,7 +577,7 @@ export default function Adaptativo() {
   useEffect(() => {
     document.title = "Adaptativo — el programa de Barkley para TDAH y dislexia";
     const desc = document.querySelector('meta[name="description"]');
-    if (desc) desc.setAttribute("content", "Adaptativo, el programa de Barkley: pruébalo tú mismo. Cambia la fuente a OpenDyslexic, el fondo a crema, quita el cronómetro de la evaluación y mira cómo cambia la lección. Acomodaciones reales para TDAH y dislexia, de 1° básico a 4° medio.");
+    if (desc) desc.setAttribute("content", "Adaptativo, el programa de Barkley: pruébalo tú mismo. Cambia la fuente a OpenDyslexic, el fondo a crema, escucha el texto en voz alta y mira cómo cambia la lección. Acomodaciones reales para TDAH y dislexia, de 1° básico a 4° medio.");
 
     const id = "adaptativo-fonts";
     if (!document.getElementById(id)) {
@@ -448,6 +594,10 @@ export default function Adaptativo() {
           font-family: 'OpenDyslexic';
           src: url('https://cdn.jsdelivr.net/gh/antijingoist/opendyslexic@master/compiled/OpenDyslexic-Regular.otf') format('opentype');
           font-display: swap;
+        }
+        @keyframes adaptativo-wave {
+          0%, 100% { height: 5px; }
+          50%      { height: 22px; }
         }
       `;
       document.head.appendChild(s);
@@ -520,13 +670,36 @@ export default function Adaptativo() {
         <BloquesDemo />
       </Section>
 
-      <Section num="03" kicker="Evaluación sin carrera" title="El cronómetro que decidimos apagar">
+      <Section num="03" kicker="Evaluación sin carrera" title="Nadie rinde contra el reloj">
         <TimerDemo />
       </Section>
 
       <Section num="04" kicker="Acompañamiento humano" title="Cuántas veces alguien revisa cómo va">
         <CheckinDemo />
       </Section>
+
+      {/* Nota de estado — honestidad sobre en qué punto está el programa.
+          Barkley abre en marzo 2027: las acomodaciones están diseñadas y
+          definidas, y se activan cuando el estudiante entra. Decirlo evita
+          que la página afirme en presente algo que opera desde 2027. */}
+      <section style={{ padding: "0 24px clamp(48px,7vw,80px)" }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+          <div style={{
+            borderLeft: `3px solid ${GOLD}`, paddingLeft: "clamp(18px,3vw,28px)",
+            maxWidth: 720,
+          }}>
+            <p style={{ fontSize: 12.5, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: INK_SOFT, margin: "0 0 10px" }}>
+              En qué punto estamos
+            </p>
+            <p style={{ fontFamily: DISPLAY, fontSize: "clamp(17px,2.3vw,22px)", lineHeight: 1.55, color: INK, margin: 0, fontWeight: 400 }}>
+              Barkley abre su primer año académico en <strong style={{ fontWeight: 600 }}>marzo de 2027</strong>.
+              Lo que acabas de probar es cómo está diseñado el programa — las acomodaciones están
+              definidas una por una y se activan en la plataforma cuando tu hijo comience.
+              Preferimos que sepas exactamente dónde estamos parados antes de que decidas.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Lo que no cambia */}
       <section style={{ background: INK, color: PAPER, padding: "clamp(56px,9vw,96px) 24px" }}>
