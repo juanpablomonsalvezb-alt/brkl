@@ -313,13 +313,14 @@ function InscripcionForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [level, setLevel] = useState("");
+  const [learningProfile, setLearningProfile] = useState("");
   const [notes, setNotes] = useState("");
   const [st, setSt] = useState<"idle"|"loading"|"success"|"error"|"duplicate">("idle");
   const [err, setErr] = useState("");
   const submit = async () => {
     setSt("loading"); setErr("");
     try {
-      const res = await fetch("/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, name: name||undefined, levelInterest: level||undefined, notes: notes||undefined }) });
+      const res = await fetch("/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, name: name||undefined, levelInterest: level||undefined, learningProfileInterest: learningProfile||undefined, notes: notes||undefined }) });
       const d = await res.json();
       if (!res.ok) { setErr(d.message||"Error"); setSt("error"); return; }
       setSt(d.alreadySubscribed ? "duplicate" : "success");
@@ -348,6 +349,15 @@ function InscripcionForm() {
         <select value={level} onChange={e=>setLevel(e.target.value)} style={{ ...inp, cursor: "pointer" }} data-testid="select-level">
           <option value="">Selecciona un nivel</option>
           {["1° Básico","2° Básico","3° Básico","4° Básico","5° Básico","6° Básico","7° Básico","8° Básico","1° Medio","2° Medio","3° Medio","4° Medio","Validación adulto"].map(l=><option key={l} value={l}>{l}</option>)}
+        </select>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <label style={{ fontSize: 14, fontWeight: 600, color: NAVY }}>¿Tiene TDAH o dislexia? <span style={{ fontWeight: 400, opacity: 0.6, textTransform: "none" }}>(opcional — programa Adaptativo)</span></label>
+        <select value={learningProfile} onChange={e=>setLearningProfile(e.target.value)} style={{ ...inp, cursor: "pointer" }} data-testid="select-learning-profile">
+          <option value="">Prefiero no decir / no aplica</option>
+          <option value="tdah">TDAH</option>
+          <option value="dislexia">Dislexia</option>
+          <option value="ambos">Ambos</option>
         </select>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>

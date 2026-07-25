@@ -5,18 +5,22 @@
  * (barkley-platform/src/server/services/adaptive-profile.service.ts) —
  * no conceptos genéricos. Sin perfil TEA/"otro ritmo": la plataforma no
  * tiene esa lógica implementada todavía, listarlo sería sobre-prometer.
- * Mismo lenguaje visual que Home.tsx (colores isb.be).
+ * Mismo lenguaje visual que Home.tsx (colores isb.be), reusando el patrón
+ * de módulo de método (pasos numerados en auto-play) para que la
+ * metodología se explique con el mismo nivel visual que el resto del sitio.
  */
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Brain, BookOpen, Check, Headphones, Video, Clock,
-  ListChecks, Repeat, Shield, ArrowRight, HelpCircle,
+  ListChecks, Repeat, Shield, ArrowRight, HelpCircle, X,
 } from "lucide-react";
 
 const NAVY = "#003366";
 const GOLD = "#FFC548";
 const PURPLE = "#861fce";
+const RED = "#FF3D37";
+const GREEN = "#00b273";
 const TEXT = "#525252";
 const FONT = "'Poppins', sans-serif";
 
@@ -42,35 +46,52 @@ function Reveal({ children, delay = 0, style }: { children: React.ReactNode; del
 // sería prometer algo que no existe todavía.
 type ProfileKey = "tdah" | "dislexia";
 
+interface Paso { n: string; title: string; text: string; color: string; }
+interface ComparisonRow { label: string; estandar: string; adaptativo: string; }
+
 const PROFILES: Record<ProfileKey, {
   label: string;
   icon: typeof Brain;
   headline: string;
   intro: string;
-  techniques: { icon: typeof Brain; title: string; text: string }[];
+  pasos: Paso[];
+  comparison: ComparisonRow[];
 }> = {
   tdah: {
     label: "TDAH",
     icon: Brain,
     headline: "Bloques de 7 minutos, sin timer, con reintentos",
-    intro: "El desafío real del TDAH no es la capacidad — es sostener atención en bloques largos y fijos que no eligió. Barkley elimina esa exigencia en vez de pedirle que la supere. Esto no es una promesa: es una configuración real y activa en la plataforma.",
-    techniques: [
-      { icon: Clock, title: "Lecciones partidas en bloques de máximo 7 minutos", text: "En vez de un video largo, el sistema corta el contenido en bloques con pausa obligatoria — la misma lógica de chunking que usan los programas de educación especial más avanzados del mundo (Acellus SPED-X)." },
-      { icon: ListChecks, title: "Sin cronómetro visible en las evaluaciones", text: "El temporizador de los quiz se oculta para este perfil — la presión de un reloj corriendo es, para muchos estudiantes con TDAH, más disruptiva que la pregunta misma." },
-      { icon: Repeat, title: "Reintentos permitidos, cuenta el mejor puntaje", text: "Si el primer intento sale mal por una distracción, no queda esa nota fija — puede reintentar y el sistema se queda con el mejor resultado." },
-      { icon: Shield, title: "Check-in del asesor cada 3 días, no cada semana", text: "El asesor humano hace seguimiento más frecuente que con un estudiante estándar — detecta antes si algo se está atrasando." },
+    intro: "El desafío real del TDAH no es la capacidad — es sostener atención en bloques largos y fijos que no eligió. Esto no es una promesa: así queda configurada la plataforma apenas se declara el perfil en la matrícula.",
+    pasos: [
+      { n: "01", title: "El video se corta en bloques de 7 min", text: "En vez de una lección larga, el sistema la parte en bloques con pausa obligatoria entre uno y otro — la misma lógica de chunking que usan los programas de educación especial más avanzados (Acellus SPED-X).", color: GOLD },
+      { n: "02", title: "La evaluación no muestra cronómetro", text: "El temporizador del quiz se oculta para este perfil. Para muchos estudiantes con TDAH, la presión de un reloj corriendo distrae más que la pregunta misma.", color: GREEN },
+      { n: "03", title: "Si falla, puede reintentar", text: "Un mal resultado por una distracción puntual no queda fijo — el sistema permite reintentar y se queda con el mejor puntaje de los intentos.", color: PURPLE },
+      { n: "04", title: "El asesor revisa cada 3 días, no cada 7", text: "El seguimiento humano es más frecuente que el estándar — así se detecta un atraso antes de que se acumule.", color: RED },
+    ],
+    comparison: [
+      { label: "Duración del bloque de video", estandar: "Sin límite fijo", adaptativo: "Máximo 7 minutos" },
+      { label: "Cronómetro en evaluaciones", estandar: "Visible", adaptativo: "Oculto" },
+      { label: "Reintentos en evaluación", estandar: "No", adaptativo: "Sí — cuenta el mejor puntaje" },
+      { label: "Frecuencia de check-in del asesor", estandar: "Cada 7 días", adaptativo: "Cada 3 días" },
     ],
   },
   dislexia: {
     label: "Dislexia",
     icon: BookOpen,
     headline: "Fuente OpenDyslexic, texto a voz, fondo crema",
-    intro: "La dificultad de la dislexia es con el texto, no con el contenido. Estas no son sugerencias de diseño — son ajustes reales que la plataforma activa automáticamente para este perfil.",
-    techniques: [
-      { icon: BookOpen, title: "Fuente OpenDyslexic activable", text: "Tipografía diseñada específicamente para reducir la confusión de letras simétricas (b/d, p/q), disponible como opción real dentro de la plataforma." },
-      { icon: Headphones, title: "Texto a voz en el contenido de las lecciones", text: "El texto escrito de cada lección puede escucharse en vez de leerse — mismo mecanismo que usan las herramientas de lectura asistida recomendadas para dislexia." },
-      { icon: Video, title: "Interlineado 1.8 y fondo crema, no blanco puro", text: "El contraste extremo de texto negro sobre blanco cansa más a un lector con dislexia; el fondo #FFF8F0 y el espaciado ampliado reducen ese esfuerzo visual." },
-      { icon: ListChecks, title: "Vocabulario clave en español e inglés", text: "Las listas de vocabulario de cada unidad se presentan en ambos idiomas, apoyo adicional documentado para comprensión lectora en dislexia." },
+    intro: "La dificultad de la dislexia es con el texto, no con el contenido. Estos no son ajustes de diseño sugeridos — son configuraciones reales que la plataforma activa apenas se declara el perfil.",
+    pasos: [
+      { n: "01", title: "Activa la fuente OpenDyslexic", text: "Tipografía diseñada específicamente para reducir la confusión entre letras simétricas (b/d, p/q) — se activa como opción real dentro de la cuenta del estudiante.", color: GOLD },
+      { n: "02", title: "Escucha el texto en vez de leerlo", text: "El contenido escrito de cada lección puede convertirse a audio — mismo mecanismo que usan las herramientas de lectura asistida recomendadas para dislexia.", color: GREEN },
+      { n: "03", title: "Lee sobre fondo crema, con más espacio", text: "El contraste extremo de texto negro sobre blanco puro cansa más a un lector con dislexia. El fondo #FFF8F0 y el interlineado 1.8 (vs. 1.6 estándar) reducen ese esfuerzo visual.", color: PURPLE },
+      { n: "04", title: "Repasa vocabulario en dos idiomas", text: "Las listas de vocabulario clave de cada unidad aparecen en español e inglés — apoyo adicional documentado para comprensión lectora en dislexia.", color: RED },
+    ],
+    comparison: [
+      { label: "Tipografía", estandar: "Estándar de la plataforma", adaptativo: "OpenDyslexic (activable)" },
+      { label: "Texto a voz", estandar: "No disponible", adaptativo: "Sí, en toda lección" },
+      { label: "Fondo de lectura", estandar: "Blanco", adaptativo: "Crema #FFF8F0" },
+      { label: "Interlineado", estandar: "1.6", adaptativo: "1.8" },
+      { label: "Vocabulario de la unidad", estandar: "Solo español", adaptativo: "Español + inglés" },
     ],
   },
 };
@@ -78,10 +99,57 @@ const PROFILES: Record<ProfileKey, {
 const FAQS = [
   { q: "¿Adaptativo es una terapia o tratamiento?", a: "No. Es un formato de estudio que se acomoda a cómo aprende tu hijo — no una terapia ni un tratamiento clínico. El acompañamiento profesional (psicopedagogo, terapeuta ocupacional, neurólogo) sigue siendo el de tu confianza; Barkley no lo reemplaza." },
   { q: "¿Rinde los mismos exámenes que el resto?", a: "Sí. El contenido es el temario oficial MINEDUC completo y la validación es la misma: Exámenes Libres. Se adapta la forma de aprender, nunca la exigencia académica." },
-  { q: "¿Necesito un diagnóstico o informe para matricular?", a: "No lo pedimos para matricular. La conversación inicial con el asesor es donde definimos juntos cómo adaptar el recorrido según lo que cuentes de tu hijo." },
+  { q: "¿Necesito un diagnóstico o informe para matricular?", a: "No lo pedimos para matricular. En el formulario de inscripción puedes indicar si tu hijo tiene TDAH o dislexia, y la conversación con el asesor define cómo activar el perfil correcto." },
   { q: "¿Qué pasa si mi hijo tiene TDAH y dislexia a la vez?", a: "La plataforma tiene un tercer perfil, 'combinado', que activa todas las acomodaciones de ambos a la vez — bloques cortos y sin timer, además de fuente OpenDyslexic y texto a voz. No es necesario elegir una sola." },
   { q: "¿Y si mi hijo tiene TEA u otro perfil que no está en esta página?", a: "Hoy la plataforma solo tiene acomodaciones automáticas para TDAH y dislexia — todavía no para TEA ni otros perfiles. Preferimos decirlo con franqueza a prometer algo que aún no está construido. Escríbenos y lo conversamos igual: puede haber acompañamiento posible aunque no sea automático en la plataforma." },
 ];
+
+function PasosModule({ pasos }: { pasos: Paso[] }) {
+  const [idx, setIdx] = useState(0);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    setIdx(0);
+    if (paused) return;
+    const t = setInterval(() => setIdx((i) => (i + 1) % pasos.length), 4200);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pasos, paused]);
+  const paso = pasos[idx];
+  return (
+    <div
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 20, padding: "clamp(24px,5vw,44px)", minHeight: 200 }}
+    >
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`${paso.n}-${paso.title}`}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -16 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          style={{ display: "flex", flexWrap: "wrap", gap: "clamp(18px,4vw,40px)", alignItems: "center" }}
+        >
+          <span style={{ fontSize: "clamp(52px,10vw,96px)", fontWeight: 800, color: paso.color, lineHeight: 0.9, flexShrink: 0 }}>{paso.n}</span>
+          <div style={{ flex: "1 1 300px", minWidth: 240 }}>
+            <h3 style={{ fontSize: "clamp(20px,3.2vw,28px)", fontWeight: 600, color: "#fff", margin: "0 0 10px" }}>{paso.title}</h3>
+            <p style={{ fontSize: "clamp(15px,1.8vw,17px)", lineHeight: 1.6, color: "rgba(255,255,255,0.88)", margin: 0 }}>{paso.text}</p>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+      <div style={{ display: "flex", gap: 8, marginTop: 28, justifyContent: "center" }}>
+        {pasos.map((p, i) => (
+          <button
+            key={p.n}
+            aria-label={`Paso ${i + 1}: ${p.title}`}
+            onClick={() => setIdx(i)}
+            style={{ width: i === idx ? 36 : 10, height: 6, borderRadius: 3, border: "none", background: i === idx ? GOLD : "rgba(255,255,255,0.25)", cursor: "pointer", transition: "width 0.3s, background 0.3s" }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Adaptativo() {
   const [profile, setProfile] = useState<ProfileKey>("tdah");
@@ -103,7 +171,7 @@ export default function Adaptativo() {
             <div style={{ width: 42, height: 42, background: NAVY, border: `2px solid ${GOLD}`, borderRadius: 8, color: "#fff", fontWeight: 800, fontSize: 17, display: "flex", alignItems: "center", justifyContent: "center" }}>BK</div>
             <span style={{ fontWeight: 700, color: NAVY, fontSize: 15, lineHeight: 1.2 }}>The Barkley<br />Online School</span>
           </a>
-          <a href="/#inscripcion" style={{ background: "#FF3D37", color: "#fff", textDecoration: "none", fontWeight: 600, fontSize: 14, padding: "10px 22px", borderRadius: 999 }}>Inscribirse</a>
+          <a href="/#inscripcion" style={{ background: RED, color: "#fff", textDecoration: "none", fontWeight: 600, fontSize: 14, padding: "10px 22px", borderRadius: 999 }}>Inscribirse</a>
         </div>
       </header>
 
@@ -118,13 +186,13 @@ export default function Adaptativo() {
           </h1>
           <p style={{ fontSize: 17, color: "rgba(255,255,255,0.92)", maxWidth: 680, margin: 0 }}>
             Si tu hijo tiene TDAH o dislexia, el problema casi nunca es él —
-            es el formato. Elige su perfil abajo y mira exactamente qué acomodaciones activa la plataforma.
+            es el formato. Elige su perfil abajo y mira, paso a paso, cómo funciona de verdad.
           </p>
         </div>
       </section>
 
       {/* === SELECTOR DE PERFIL === */}
-      <section style={{ padding: "48px 24px 8px" }}>
+      <section style={{ padding: "48px 24px 0" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
             {(Object.keys(PROFILES) as ProfileKey[]).map((key) => {
@@ -154,67 +222,88 @@ export default function Adaptativo() {
         </div>
       </section>
 
-      {/* === CONTENIDO POR PERFIL (animado al cambiar) === */}
-      <section style={{ padding: "40px 24px 64px" }}>
+      {/* === MÓDULO DE METODOLOGÍA — pasos numerados en auto-play, mismo patrón
+          visual que "Aprendizaje por Dominio" en el home. Explica el MECANISMO
+          real paso a paso, no una lista plana de bullets. === */}
+      <section style={{ background: NAVY, padding: "48px 24px 56px", marginTop: 40 }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          {/* Sin motion/AnimatePresence acá a propósito: el snapshot prerenderizado
-              (Puppeteer) captura los estilos inline de framer-motion ya resueltos
-              (opacity:1) mientras el primer render del cliente parte en su estado
-              `initial` (opacity:0) — el mismatch de hidratación resultante hacía que
-              React dejara de reconciliar este subárbol en cambios de estado
-              posteriores (el botón cambiaba de estilo, el contenido no). Div plano,
-              sin animación de entrada/salida, evita la clase de bug entera. */}
-          <div key={profile}>
-            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
-              <div style={{ width: 52, height: 52, borderRadius: 14, background: "#f6f1ff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <ActiveIcon style={{ width: 26, height: 26, color: PURPLE }} />
-              </div>
-              <h2 style={{ fontSize: "clamp(22px,3.4vw,30px)", fontWeight: 700, color: NAVY, margin: 0, lineHeight: 1.2 }}>{active.headline}</h2>
+          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 22 }}>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <ActiveIcon style={{ width: 24, height: 24, color: GOLD }} />
             </div>
-            <p style={{ fontSize: 16.5, color: TEXT, maxWidth: 700, margin: "0 0 32px" }}>{active.intro}</p>
+            <div>
+              <p style={{ fontSize: 12, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 4px" }}>Cómo funciona · {active.label}</p>
+              <h2 style={{ fontSize: "clamp(20px,3vw,26px)", fontWeight: 700, color: "#fff", margin: 0, lineHeight: 1.25 }}>{active.headline}</h2>
+            </div>
+          </div>
+          <p style={{ fontSize: 15.5, color: "rgba(255,255,255,0.82)", maxWidth: 700, margin: "0 0 28px" }}>{active.intro}</p>
+          <PasosModule pasos={active.pasos} />
+        </div>
+      </section>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18 }}>
-              {active.techniques.map((t) => {
-                const TIcon = t.icon;
-                return (
-                  <div key={t.title} style={{ background: "#f8f8f8", borderRadius: 16, padding: 24 }}>
-                    <TIcon style={{ width: 22, height: 22, color: PURPLE, marginBottom: 10 }} />
-                    <h3 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: "0 0 8px" }}>{t.title}</h3>
-                    <p style={{ fontSize: 14.5, margin: 0 }}>{t.text}</p>
-                  </div>
-                );
-              })}
-            </div>
+      {/* === TABLA COMPARATIVA — estándar vs. Adaptativo, fila por fila === */}
+      <section style={{ padding: "56px 24px" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <h2 style={{ fontSize: "clamp(20px,3vw,26px)", fontWeight: 700, color: NAVY, margin: "0 0 20px", textAlign: "center" }}>
+            Qué cambia exactamente frente al estándar
+          </h2>
+          <div style={{ overflowX: "auto", borderRadius: 16, border: "1px solid #eee" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14.5, minWidth: 560 }}>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: "left", padding: "14px 18px", background: "#f8f8f8", color: NAVY, fontWeight: 700 }}></th>
+                  <th style={{ textAlign: "left", padding: "14px 18px", background: "#f8f8f8", color: TEXT, fontWeight: 600 }}>Estándar</th>
+                  <th style={{ textAlign: "left", padding: "14px 18px", background: "#f6f1ff", color: PURPLE, fontWeight: 700 }}>Adaptativo · {active.label}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {active.comparison.map((row, i) => (
+                  <tr key={row.label} style={{ background: i % 2 === 0 ? "#fff" : "#fbfbfb" }}>
+                    <td style={{ padding: "14px 18px", fontWeight: 600, color: NAVY, borderTop: "1px solid #eee" }}>{row.label}</td>
+                    <td style={{ padding: "14px 18px", color: "#8a8a8a", borderTop: "1px solid #eee" }}>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                        <X style={{ width: 14, height: 14, opacity: 0.5 }} />{row.estandar}
+                      </span>
+                    </td>
+                    <td style={{ padding: "14px 18px", color: NAVY, fontWeight: 600, borderTop: "1px solid #eee" }}>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                        <Check style={{ width: 14, height: 14, color: GREEN }} />{row.adaptativo}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
 
       {/* === LO QUE NO CAMBIA, sea cual sea el perfil === */}
-      <section style={{ background: NAVY, color: "#fff", padding: "64px 24px" }}>
+      <section style={{ background: "#f6f1ff", padding: "64px 24px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <h2 style={{ color: "#fff", fontSize: "clamp(22px,3.4vw,30px)", fontWeight: 700, margin: "0 0 28px", textAlign: "center" }}>
+          <h2 style={{ color: NAVY, fontSize: "clamp(22px,3.4vw,30px)", fontWeight: 700, margin: "0 0 28px", textAlign: "center" }}>
             Lo que nunca cambia, sea cual sea su perfil
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 18 }}>
             <Reveal>
-              <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: 16, padding: 24 }}>
-                <Check style={{ width: 22, height: 22, color: GOLD, marginBottom: 10 }} />
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: GOLD, margin: "0 0 8px" }}>Mismo temario oficial</h3>
-                <p style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", margin: 0 }}>Currículo MINEDUC completo, sin recorte ni versión simplificada.</p>
+              <div style={{ background: "#fff", borderRadius: 16, padding: 24, boxShadow: "0 4px 16px rgba(0,20,60,0.08)" }}>
+                <Check style={{ width: 22, height: 22, color: PURPLE, marginBottom: 10 }} />
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: "0 0 8px" }}>Mismo temario oficial</h3>
+                <p style={{ fontSize: 14.5, color: TEXT, margin: 0 }}>Currículo MINEDUC completo, sin recorte ni versión simplificada.</p>
               </div>
             </Reveal>
             <Reveal delay={0.06}>
-              <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: 16, padding: 24 }}>
-                <Check style={{ width: 22, height: 22, color: GOLD, marginBottom: 10 }} />
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: GOLD, margin: "0 0 8px" }}>Misma validación oficial</h3>
-                <p style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", margin: 0 }}>Exámenes Libres MINEDUC, igual que cualquier estudiante Barkley.</p>
+              <div style={{ background: "#fff", borderRadius: 16, padding: 24, boxShadow: "0 4px 16px rgba(0,20,60,0.08)" }}>
+                <Check style={{ width: 22, height: 22, color: PURPLE, marginBottom: 10 }} />
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: "0 0 8px" }}>Misma validación oficial</h3>
+                <p style={{ fontSize: 14.5, color: TEXT, margin: 0 }}>Exámenes Libres MINEDUC, igual que cualquier estudiante Barkley.</p>
               </div>
             </Reveal>
             <Reveal delay={0.12}>
-              <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: 16, padding: 24 }}>
-                <Check style={{ width: 22, height: 22, color: GOLD, marginBottom: 10 }} />
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: GOLD, margin: "0 0 8px" }}>Acompañamiento humano real</h3>
-                <p style={{ fontSize: 14.5, color: "rgba(255,255,255,0.85)", margin: 0 }}>Un asesor sigue su proceso — no es contenido que corre solo.</p>
+              <div style={{ background: "#fff", borderRadius: 16, padding: 24, boxShadow: "0 4px 16px rgba(0,20,60,0.08)" }}>
+                <Check style={{ width: 22, height: 22, color: PURPLE, marginBottom: 10 }} />
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: NAVY, margin: "0 0 8px" }}>Acompañamiento humano real</h3>
+                <p style={{ fontSize: 14.5, color: TEXT, margin: 0 }}>Un asesor sigue su proceso — no es contenido que corre solo.</p>
               </div>
             </Reveal>
           </div>
@@ -248,8 +337,8 @@ export default function Adaptativo() {
             Mismo valor que todo Barkley, sin recargo
           </h2>
           <p style={{ fontSize: 32, fontWeight: 800, color: NAVY, margin: "0 0 6px" }}>$65.000 <span style={{ fontSize: 15, fontWeight: 500, color: TEXT }}>/ mes</span></p>
-          <p style={{ fontSize: 14.5, margin: "0 0 26px" }}>O pago anual de $442.000 (15% dcto). Reserva ahora sin costo — pagas recién en febrero de 2027.</p>
-          <a href="/#inscripcion" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#FF3D37", color: "#fff", fontWeight: 700, fontSize: 15, padding: "14px 30px", borderRadius: 999, textDecoration: "none" }}>
+          <p style={{ fontSize: 14.5, margin: "0 0 26px" }}>O pago anual de $442.000 (15% dcto). Reserva ahora sin costo — pagas recién en febrero de 2027. En el formulario puedes indicar el perfil de tu hijo.</p>
+          <a href="/#inscripcion" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: RED, color: "#fff", fontWeight: 700, fontSize: 15, padding: "14px 30px", borderRadius: 999, textDecoration: "none" }}>
             Reservar cupo en Adaptativo <ArrowRight style={{ width: 16, height: 16 }} />
           </a>
         </div>

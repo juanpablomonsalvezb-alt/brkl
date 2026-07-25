@@ -15,6 +15,11 @@ export const waitlistSignups = sqliteTable("waitlist_signups", {
   email: text("email").notNull().unique(),
   name: text("name"),
   levelInterest: text("level_interest"),
+  // Declaración de interés en el programa Adaptativo (TDAH/dislexia/ambos).
+  // NO activa nada automático: barkley-platform (el LMS) es un sistema
+  // separado con su propia base de datos — esto solo le avisa al equipo
+  // humano para conversarlo en la matrícula real.
+  learningProfileInterest: text("learning_profile_interest"),
   notes: text("notes"),
   createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
 });
@@ -23,6 +28,7 @@ export const insertWaitlistSchema = z.object({
   email: z.string().trim().toLowerCase().email("Email inválido"),
   name: z.string().trim().min(2).max(120).optional(),
   levelInterest: z.string().trim().max(40).optional(),
+  learningProfileInterest: z.enum(["tdah", "dislexia", "ambos", "ninguno"]).optional(),
   notes: z.string().trim().max(1000).optional(),
 });
 

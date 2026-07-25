@@ -208,6 +208,7 @@ export async function registerRoutes(
         Nombre: parsed.data.name,
         Correo: parsed.data.email,
         Nivel: parsed.data.levelInterest,
+        "Perfil Adaptativo": parsed.data.learningProfileInterest,
         Consultas: parsed.data.notes,
       });
       res.status(201).json({ message: "Listo, te avisamos apenas abramos inscripciones" });
