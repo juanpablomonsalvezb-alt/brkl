@@ -106,6 +106,46 @@ function useLecturaEnVoz(texto: string) {
   return { hablando, charIndex, disponible, alternar };
 }
 
+/* Espacio de imagen: si el archivo existe en /images/, se muestra; si no,
+   queda una guía discreta con la ruta y la proporción esperada. Así basta con
+   subir el archivo con ese nombre para que aparezca — sin tocar código. */
+function SlotImagen({
+  src, alt, ratio, nota, style,
+}: { src: string; alt: string; ratio: string; nota: string; style?: React.CSSProperties }) {
+  const [falla, setFalla] = useState(false);
+  return (
+    <div style={{
+      aspectRatio: ratio, borderRadius: 6, overflow: "hidden", position: "relative",
+      background: PAPER_DEEP,
+      border: falla ? `1.5px dashed ${RULE}` : `1px solid ${RULE}`,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      ...style,
+    }}>
+      {!falla ? (
+        <img
+          src={src}
+          alt={alt}
+          onError={() => setFalla(true)}
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        />
+      ) : (
+        <div style={{ textAlign: "center", padding: 24, maxWidth: 300 }}>
+          <div style={{
+            width: 38, height: 38, borderRadius: "50%", border: `1.5px solid ${RULE}`,
+            margin: "0 auto 12px", display: "flex", alignItems: "center", justifyContent: "center",
+            color: INK_SOFT, fontSize: 17, fontFamily: DISPLAY,
+          }}>+</div>
+          <p style={{ margin: "0 0 6px", fontSize: 13, fontWeight: 600, color: INK_SOFT, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+            Espacio para imagen
+          </p>
+          <p style={{ margin: 0, fontSize: 12.5, color: INK_SOFT, lineHeight: 1.6 }}>{nota}</p>
+          <code style={{ display: "block", marginTop: 10, fontSize: 11.5, color: INK_SOFT, opacity: 0.75 }}>{src}</code>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Section({ num, kicker, title, children }: { num: string; kicker: string; title: string; children: React.ReactNode }) {
   const { ref, inView } = useReveal();
   return (
@@ -753,6 +793,20 @@ export default function Adaptativo() {
               </p>
             </div>
           </motion.div>
+
+          {/* ESPACIO 1 — imagen ancha de apertura. Un rostro real acá pesa más
+              que cualquier argumento: la familia está evaluando en quién confiar. */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.36 }}
+            style={{ marginTop: "clamp(40px,6vw,64px)" }}
+          >
+            <SlotImagen
+              src="/images/adaptativo-hero.jpg"
+              alt="Estudiante de Barkley trabajando a su ritmo en casa"
+              ratio="16 / 7"
+              nota="Panorámica de apertura. Un niño estudiando tranquilo en casa, con luz natural. Sin uniformes, sin aula."
+            />
+          </motion.div>
         </div>
       </section>
 
@@ -835,6 +889,19 @@ export default function Adaptativo() {
             Adaptativo no reemplaza el diagnóstico ni el tratamiento profesional de tu hijo. Es un formato de
             estudio que se acomoda a cómo aprende — no una terapia.
           </p>
+        </div>
+      </section>
+
+      {/* ESPACIO 2 — imagen de cierre, antes de pedir la decisión. Idealmente
+          el equipo o el asesor que va a acompañar: pone cara a la promesa. */}
+      <section style={{ padding: "0 24px clamp(48px,7vw,80px)" }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+          <SlotImagen
+            src="/images/adaptativo-cierre.jpg"
+            alt="El equipo que acompaña a los estudiantes de Barkley Adaptativo"
+            ratio="21 / 9"
+            nota="Cierre antes del CTA. Idealmente el asesor o el equipo real que acompaña — ponerle cara a quien va a estar del otro lado."
+          />
         </div>
       </section>
 
