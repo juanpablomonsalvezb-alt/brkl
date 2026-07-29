@@ -559,6 +559,22 @@ export default function Home() {
   return (
     <div style={{ backgroundColor: "#fff", color: TEXT, fontFamily: FONT, fontSize: 16, lineHeight: 1.8 }}>
 
+      {/* Organization schema: le da a buscadores e IA una entidad de marca clara
+          (nombre, logo) en vez de solo texto — mejora que te citen por nombre. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Barkley Online",
+            url: "https://www.barkleyinstituto.cl/",
+            logo: "https://www.barkleyinstituto.cl/og-image.jpg",
+            description: "Colegio 100% online y asíncrono en Chile, de 1° básico a 4° medio, con validación oficial MINEDUC.",
+          }),
+        }}
+      />
+
       {faqs && faqs.length > 0 && (
         // FAQPage schema: permite a buscadores e IA (ChatGPT, Perplexity, Google AI
         // Overviews) extraer preguntas/respuestas directamente sin tener que
