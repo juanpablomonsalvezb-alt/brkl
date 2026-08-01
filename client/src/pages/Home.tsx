@@ -1526,6 +1526,7 @@ export default function Home() {
               <li><a href="#plataforma" style={{ color: "#fff" }}>La plataforma</a></li>
               <li><a href="/adaptativo" style={{ color: "#fff" }}>Adaptativo</a></li>
               <li><a href="/guia-examenes-libres/" style={{ color: "#fff" }}>Guía de Exámenes Libres</a></li>
+              <li><a href="/blog/" style={{ color: "#fff" }}>Blog</a></li>
               <li><a href="#faq" style={{ color: "#fff" }}>Preguntas frecuentes</a></li>
               <li><a href="#inscripcion" style={{ color: "#fff" }}>Inscripción</a></li>
             </ul>
