@@ -16,8 +16,20 @@ import {
   Loader2, Check, ArrowUpRight, Menu, X, Search, Play, Download,
   Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
   Layers, BookOpen, Headphones, Image as ImageIcon, ListChecks, Sparkles,
-  Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock,
+  Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock, Instagram,
 } from "lucide-react";
+
+const INSTAGRAM_URL = "https://www.instagram.com/ibarkley.cl";
+const TIKTOK_URL = "https://www.tiktok.com/@barkleyonline";
+
+// Ícono TikTok — lucide-react no lo incluye, SVG del logotipo oficial simplificado.
+function TikTokIcon({ style }: { style?: React.CSSProperties }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" style={style}>
+      <path d="M16.6 5.82a4.28 4.28 0 0 1-3.14-1.4 4.29 4.29 0 0 1-1-2.7h-3.06v13.5a2.6 2.6 0 1 1-1.83-2.48v-3.1a5.66 5.66 0 1 0 4.89 5.6V9.17a7.3 7.3 0 0 0 4.14 1.29z"/>
+    </svg>
+  );
+}
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -571,6 +583,26 @@ export default function Home() {
             url: "https://www.barkleyinstituto.cl/",
             logo: "https://www.barkleyinstituto.cl/og-image.jpg",
             description: "Colegio 100% online y asíncrono en Chile, de 1° básico a 4° medio, con validación oficial MINEDUC.",
+            sameAs: [INSTAGRAM_URL, TIKTOK_URL],
+          }),
+        }}
+      />
+
+      {/* VideoObject schema del tour real de la plataforma — permite aparecer en
+          Google Video y que la IA cite directamente qué muestra el video. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "VideoObject",
+            name: "Tour de la plataforma Barkley Online — alumno y apoderado",
+            description: "Recorrido narrado por el dashboard del alumno y el portal del apoderado de Barkley Online, colegio 100% asincrónico en Chile.",
+            thumbnailUrl: "https://www.barkleyinstituto.cl/videos/tour-poster.jpg",
+            uploadDate: "2026-07-11",
+            duration: "PT53S",
+            contentUrl: "https://www.barkleyinstituto.cl/videos/tour-plataforma.mp4",
+            embedUrl: "https://www.barkleyinstituto.cl/#plataforma",
           }),
         }}
       />
@@ -1478,6 +1510,14 @@ export default function Home() {
           <div style={{ flex: "1 1 240px" }}>
             <p style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px" }}>Barkley Online</p>
             <p style={{ fontSize: 14, margin: 0, lineHeight: 1.8, opacity: 0.85 }}>Colegio 100% asincrónico · Chile<br /><a href="mailto:admisiones@barkleyinstituto.cl" style={{ color: "#fff" }}>admisiones@barkleyinstituto.cl</a></p>
+            <div style={{ display: "flex", gap: 14, marginTop: 14 }}>
+              <a href={INSTAGRAM_URL} target="_blank" rel="me noreferrer" aria-label="Instagram de Barkley Online" style={{ color: "#fff", opacity: 0.85, display: "flex" }}>
+                <Instagram style={{ width: 20, height: 20 }} />
+              </a>
+              <a href={TIKTOK_URL} target="_blank" rel="me noreferrer" aria-label="TikTok de Barkley Online" style={{ color: "#fff", opacity: 0.85, display: "flex" }}>
+                <TikTokIcon style={{ width: 20, height: 20 }} />
+              </a>
+            </div>
           </div>
           <div style={{ flex: "1 1 180px" }}>
             <p style={{ fontSize: 14, fontWeight: 700, margin: "0 0 10px" }}>Enlaces útiles</p>

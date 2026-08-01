@@ -133,10 +133,41 @@ const GOLD = "#FFC548";
 const RED = "#FF3D37";
 const TEXT = "#525252";
 
+function faqsFor(n) {
+  return [
+    {
+      q: `¿Cuánto dura la preparación de ${n.nombre} en Barkley?`,
+      a: `Se estudia a tu propio ritmo durante el año lectivo (marzo a octubre). Las fechas de rendición oficial MINEDUC 2026 son el 3-7 de junio (1er período) y 7-11 de octubre (2do período).`,
+    },
+    {
+      q: `¿Qué asignaturas se rinden en ${n.nombre}?`,
+      a: `${n.asignaturas.join(", ")}.`,
+    },
+    {
+      q: `¿Hay que conectarse a una hora fija para estudiar ${n.nombre}?`,
+      a: `No. Barkley es 100% asincrónico: sin clases en vivo ni horario fijo, cada lección con video y pódcast disponible cuando el estudiante quiera verla.`,
+    },
+    {
+      q: `¿Qué distingue la preparación de ${n.nombre}?`,
+      a: n.foco,
+    },
+  ];
+}
+
 function pageHtml(n) {
   const url = `${BASE}/examenes-libres-${n.slug}/`;
   const title = `${n.titleNivel} — Preparación online | Barkley Online`;
   const desc = `Prepara los exámenes libres MINEDUC de ${n.nombre} 100% online y a tu ritmo. Sin clases en vivo, con video y pódcast en cada lección. Validación oficial en Chile.`;
+  const faqs = faqsFor(n);
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
 
   const otros = NIVELES.filter((x) => x.slug !== n.slug)
     .map((x) => `<a href="/examenes-libres-${x.slug}/">${x.nombre}</a>`)
@@ -191,6 +222,7 @@ function pageHtml(n) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script type="application/ld+json">${JSON.stringify(schema)}</script>
+  <script type="application/ld+json">${JSON.stringify(faqSchema)}</script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Poppins', system-ui, sans-serif; color: ${TEXT}; background: #fff; line-height: 1.65; }
@@ -233,6 +265,9 @@ function pageHtml(n) {
     .niveles .inner { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
     .niveles a { font-size: 13.5px; font-weight: 600; color: ${NAVY}; text-decoration: none; background: #f5f5f5; border-radius: 999px; padding: 8px 16px; }
     .niveles .lbl { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: ${TEXT}; margin-right: 6px; }
+    .faq-item { border-bottom: 1px solid #e8e8e8; padding: 18px 0; }
+    .faq-item b { display: block; color: ${NAVY}; font-size: 15.5px; margin-bottom: 6px; }
+    .faq-item p { font-size: 14.5px; }
     footer { background: ${NAVY}; color: rgba(255,255,255,0.75); font-size: 13px; text-align: center; padding: 26px 24px; }
     footer a { color: ${GOLD}; text-decoration: none; }
   </style>
@@ -291,6 +326,13 @@ function pageHtml(n) {
         <div class="card"><b>Segundo período</b><p>Inscripción: 1 al 22 de julio de 2026<br>Rendición: 7 al 11 de octubre de 2026</p></div>
         <div class="card"><b>Inscripción gratuita</b><p>Se realiza en el Portal de Ayuda MINEDUC. Para menores de 18 años, revisa la <a class="mineduc" href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11" target="_blank" rel="noopener noreferrer">ficha oficial</a>.</p></div>
       </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="inner">
+      <h2>Preguntas frecuentes — ${n.nombre}</h2>
+      ${faqs.map((f) => `<div class="faq-item"><b>${f.q}</b><p>${f.a}</p></div>`).join("")}
     </div>
   </section>
 
