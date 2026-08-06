@@ -16,6 +16,67 @@ const GOLD = "#FFC548";
 const RED = "#FF3D37";
 const TEXT = "#525252";
 
+// Destinos de conversión enlazables desde los artículos. Sin esto el blog queda
+// como isla: recibe enlace del home pero no pasa autoridad a las landings ni le
+// da al lector una ruta hacia el nivel que le corresponde.
+const DESTINOS = {
+  guia: { href: "/guia-examenes-libres/", label: "Guía completa de exámenes libres en Chile" },
+  adaptativo: { href: "/adaptativo", label: "Barkley Adaptativo — apoyo para TDAH, dislexia y TEA" },
+  "1-basico": { href: "/examenes-libres-1-basico/", label: "Exámenes libres 1° Básico" },
+  "2-basico": { href: "/examenes-libres-2-basico/", label: "Exámenes libres 2° Básico" },
+  "3-basico": { href: "/examenes-libres-3-basico/", label: "Exámenes libres 3° Básico" },
+  "5-basico": { href: "/examenes-libres-5-basico/", label: "Exámenes libres 5° Básico" },
+  "6-basico": { href: "/examenes-libres-6-basico/", label: "Exámenes libres 6° Básico" },
+  "7-basico": { href: "/examenes-libres-7-basico/", label: "Exámenes libres 7° Básico" },
+  "8-basico": { href: "/examenes-libres-8-basico/", label: "Exámenes libres 8° Básico" },
+  "1-medio": { href: "/examenes-libres-1-medio/", label: "Exámenes libres 1° Medio" },
+  "2-medio": { href: "/examenes-libres-2-medio/", label: "Exámenes libres 2° Medio" },
+  "3-medio": { href: "/examenes-libres-3-medio/", label: "Exámenes libres 3° Medio" },
+  "4-medio": { href: "/examenes-libres-4-medio/", label: "Exámenes libres 4° Medio" },
+};
+
+// Qué destinos enlaza cada artículo, por pertinencia temática.
+const RELACIONADOS = {
+  "diferencia-examen-libre-colegio-online": ["guia", "8-basico", "4-medio"],
+  "tdah-y-colegio-presencial": ["adaptativo", "guia", "7-basico"],
+  "dislexia-estudiar-en-casa": ["adaptativo", "guia", "3-basico"],
+  "aprendizaje-por-dominio-que-es": ["guia", "5-basico", "1-medio"],
+  "colegio-para-deportistas-alto-rendimiento": ["guia", "2-medio", "8-basico"],
+  "terminar-el-colegio-siendo-adulto": ["4-medio", "3-medio", "guia"],
+  "como-inscribirse-examenes-libres-mineduc": ["guia", "8-basico", "4-medio"],
+  "ansiedad-escolar-y-aula-tradicional": ["adaptativo", "guia", "6-basico"],
+  "paes-despues-de-cuarto-medio": ["4-medio", "3-medio", "guia"],
+  "adulto-acompanante-examenes-libres-basica": ["1-basico", "2-basico", "3-basico"],
+  "educacion-asincronica-que-es": ["guia", "1-medio", "5-basico"],
+};
+
+// Meta compartida por todas las páginas estáticas. Sin max-image-preview:large
+// Google recorta la miniatura en resultados y en Discover.
+const ROBOTS = `<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />`;
+
+function ogExtra(title, desc) {
+  return `<meta property="og:site_name" content="Barkley Online" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Barkley Online — colegio 100% asincrónico en Chile" />
+  <meta name="twitter:title" content="${title}" />
+  <meta name="twitter:description" content="${desc}" />
+  <meta name="twitter:image" content="${BASE}/og-image.jpg" />`;
+}
+
+function breadcrumbSchema(items) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((it, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: it.name,
+      item: `${BASE}${it.path}`,
+    })),
+  };
+}
+
 const POSTS = [
   {
     slug: "diferencia-examen-libre-colegio-online",
@@ -47,7 +108,7 @@ const POSTS = [
       <h2>Qué cambia con un formato sin horario fijo</h2>
       <p>Cuando no hay una hora de clase que empieza y termina para todos igual, el estudiante puede estudiar en bloques más cortos, repetir la parte que no entendió sin sentir que "atrasa al curso", y avanzar en el momento del día en que realmente rinde mejor — que no siempre es a las 8 de la mañana.</p>
       <h2>Lo que un formato online no resuelve por sí solo</h2>
-      <p>Ser online no es magia: si las clases igual duran 40 minutos seguidos y hay que verlas completas de corrido, el problema sigue ahí. Lo que realmente ayuda es la posibilidad de pausar, repetir y avanzar en bloques cortos — que es justamente lo que estamos construyendo en el programa Adaptativo de Barkley.</p>
+      <p>Ser online no es magia: si las clases igual duran 40 minutos seguidos y hay que verlas completas de corrido, el problema sigue ahí. Lo que realmente ayuda es la posibilidad de pausar, repetir y avanzar en bloques cortos — que es justamente lo que estamos construyendo en el <a href="/adaptativo">programa Adaptativo de Barkley</a>.</p>
     `,
     faqs: [
       { q: "¿Un colegio online resuelve el TDAH por sí solo?", a: "No. Ayuda a remover la fricción de tiempo y exposición, pero no reemplaza apoyo profesional cuando corresponde." },
@@ -65,7 +126,7 @@ const POSTS = [
       <h2>Qué ayuda de verdad en casa</h2>
       <p>Dar la misma información en más de un formato (audio además de texto), usar tipografías pensadas para dislexia, aumentar el interlineado, y quitar la presión de "leer en voz alta frente a otros" — que en un aula es casi inevitable y en casa se puede evitar por completo.</p>
       <h2>Lo que no hay que hacer</h2>
-      <p>Bajar la exigencia del contenido no es la solución — la materia sigue siendo la misma. Lo que cambia es el canal por el que llega. Ese es exactamente el principio detrás de las adaptaciones de lectura del programa Adaptativo de Barkley.</p>
+      <p>Bajar la exigencia del contenido no es la solución — la materia sigue siendo la misma. Lo que cambia es el canal por el que llega. Ese es exactamente el principio detrás de las adaptaciones de lectura del <a href="/adaptativo">programa Adaptativo de Barkley</a>.</p>
     `,
     faqs: [
       { q: "¿La dislexia significa que hay que exigir menos contenido?", a: "No. La dificultad es con el texto, no con la comprensión del contenido — se puede mantener el mismo nivel cambiando el formato." },
@@ -244,8 +305,20 @@ function articleHtml(p) {
     mainEntity: p.faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
   };
 
+  const crumbs = breadcrumbSchema([
+    { name: "Inicio", path: "/" },
+    { name: "Blog", path: "/blog/" },
+    { name: p.title, path: `/blog/${p.slug}/` },
+  ]);
+
   const otros = POSTS.filter((x) => x.slug !== p.slug).slice(0, 4)
     .map((x) => `<a href="/blog/${x.slug}/">${x.title}</a>`).join("");
+
+  const destinos = (RELACIONADOS[p.slug] || ["guia"])
+    .map((k) => DESTINOS[k])
+    .filter(Boolean)
+    .map((d) => `<a href="${d.href}">${d.label}</a>`)
+    .join("");
 
   return `<!DOCTYPE html>
 <html lang="es-CL">
@@ -254,6 +327,7 @@ function articleHtml(p) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${title}</title>
   <meta name="description" content="${p.desc}" />
+  ${ROBOTS}
   <link rel="canonical" href="${url}" />
   <meta property="og:title" content="${title}" />
   <meta property="og:description" content="${p.desc}" />
@@ -261,13 +335,16 @@ function articleHtml(p) {
   <meta property="og:locale" content="es_CL" />
   <meta property="og:url" content="${url}" />
   <meta property="og:image" content="${BASE}/og-image.jpg" />
+  <meta property="article:published_time" content="${p.date}" />
   <meta name="twitter:card" content="summary_large_image" />
+  ${ogExtra(title, p.desc)}
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script type="application/ld+json">${JSON.stringify(articleSchema)}</script>
   ${faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>` : ""}
+  <script type="application/ld+json">${JSON.stringify(crumbs)}</script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Poppins', system-ui, sans-serif; color: ${TEXT}; background: #fff; line-height: 1.7; }
@@ -293,6 +370,12 @@ function articleHtml(p) {
     .otros { border-top: 1px solid #e8e8e8; padding-top: 30px; margin-top: 40px; }
     .otros .lbl { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: ${TEXT}; margin-bottom: 12px; display: block; }
     .otros a { display: block; font-size: 14.5px; font-weight: 600; color: ${NAVY}; text-decoration: none; padding: 8px 0; }
+    .crumbs { font-size: 13px; color: #8a8a8a; margin-bottom: 18px; }
+    .crumbs a { color: ${NAVY}; text-decoration: none; font-weight: 600; }
+    .crumbs span { margin: 0 7px; }
+    .rutas { background: #fff8ea; border-radius: 16px; padding: 24px 26px; margin-top: 40px; }
+    .rutas .lbl { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: ${NAVY}; margin-bottom: 10px; display: block; }
+    .rutas a { display: block; font-size: 15px; font-weight: 600; color: ${NAVY}; text-decoration: underline; padding: 7px 0; }
     footer { background: ${NAVY}; color: rgba(255,255,255,0.75); font-size: 13px; text-align: center; padding: 26px 24px; }
     footer a { color: ${GOLD}; text-decoration: none; }
   </style>
@@ -309,6 +392,9 @@ function articleHtml(p) {
   </nav>
 
   <article>
+    <nav class="crumbs" aria-label="Ruta de navegación">
+      <a href="/">Inicio</a><span>›</span><a href="/blog/">Blog</a><span>›</span>${p.title}
+    </nav>
     <p class="kicker">Blog Barkley Online</p>
     <h1>${p.title}</h1>
     <p class="meta">Publicado el ${new Date(p.date + "T12:00:00").toLocaleDateString("es-CL", { day: "numeric", month: "long", year: "numeric" })}</p>
@@ -318,6 +404,11 @@ function articleHtml(p) {
     <h2>Preguntas frecuentes</h2>
     ${p.faqs.map((f) => `<div class="faq-item"><b>${f.q}</b><p>${f.a}</p></div>`).join("")}
     ` : ""}
+
+    <nav class="rutas" aria-label="Páginas relacionadas">
+      <span class="lbl">Si esto te sirvió, sigue por acá</span>
+      ${destinos}
+    </nav>
 
     <div class="cta-box">
       <p><strong>¿Quieres ver cómo funciona Barkley por dentro?</strong><br>Prueba la demo real de la plataforma, sin costo.</p>
@@ -349,6 +440,29 @@ function indexHtml() {
     </a>
   `).join("");
 
+  const crumbs = breadcrumbSchema([
+    { name: "Inicio", path: "/" },
+    { name: "Blog", path: "/blog/" },
+  ]);
+
+  // ItemList explícito: le dice a Google qué artículos componen el hub y en qué
+  // orden, en vez de dejarlo inferir desde los <a> del grid.
+  const listSchema = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "Blog Barkley Online",
+    url,
+    inLanguage: "es-CL",
+    publisher: { "@type": "Organization", name: "Barkley Online", url: `${BASE}/` },
+    blogPost: POSTS.map((p) => ({
+      "@type": "BlogPosting",
+      headline: p.title,
+      description: p.desc,
+      datePublished: p.date,
+      url: `${BASE}/blog/${p.slug}/`,
+    })),
+  };
+
   return `<!DOCTYPE html>
 <html lang="es-CL">
 <head>
@@ -356,6 +470,7 @@ function indexHtml() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${title}</title>
   <meta name="description" content="${desc}" />
+  ${ROBOTS}
   <link rel="canonical" href="${url}" />
   <meta property="og:title" content="${title}" />
   <meta property="og:description" content="${desc}" />
@@ -364,6 +479,9 @@ function indexHtml() {
   <meta property="og:url" content="${url}" />
   <meta property="og:image" content="${BASE}/og-image.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
+  ${ogExtra(title, desc)}
+  <script type="application/ld+json">${JSON.stringify(listSchema)}</script>
+  <script type="application/ld+json">${JSON.stringify(crumbs)}</script>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -386,6 +504,10 @@ function indexHtml() {
     .card:hover { background: #eee; }
     .card b { display: block; color: ${NAVY}; font-size: 16.5px; margin-bottom: 8px; line-height: 1.35; }
     .card p { font-size: 14px; color: ${TEXT}; }
+    .niveles { border-top: 1px solid #e8e8e8; padding: 34px 24px 48px; }
+    .niveles .inner { max-width: 1000px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .niveles a { font-size: 13.5px; font-weight: 600; color: ${NAVY}; text-decoration: none; background: #f5f5f5; border-radius: 999px; padding: 8px 16px; }
+    .niveles .lbl { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: ${TEXT}; margin-right: 6px; width: 100%; }
     footer { background: ${NAVY}; color: rgba(255,255,255,0.75); font-size: 13px; text-align: center; padding: 26px 24px; }
     footer a { color: ${GOLD}; text-decoration: none; }
   </style>
@@ -407,6 +529,17 @@ function indexHtml() {
   </header>
 
   <div class="grid">${cards}</div>
+
+  <nav class="niveles" aria-label="Preparación por nivel">
+    <div class="inner">
+      <span class="lbl">Prepara tu nivel:</span>
+      <a href="/guia-examenes-libres/">Guía completa</a>
+      <a href="/adaptativo">Adaptativo</a>
+      ${["1-basico","2-basico","3-basico","4-basico","5-basico","6-basico","7-basico","8-basico","1-medio","2-medio","3-medio","4-medio"]
+        .map((s) => `<a href="/examenes-libres-${s}/">${s.replace("-basico", "° Básico").replace("-medio", "° Medio")}</a>`)
+        .join("")}
+    </div>
+  </nav>
 
   <footer>
     <p>Barkley Online — Colegio 100% asincrónico e inclusivo en Chile · Preparación para Exámenes Libres ante el MINEDUC · <a href="/">barkleyinstituto.cl</a></p>

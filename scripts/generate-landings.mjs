@@ -173,6 +173,28 @@ function pageHtml(n) {
     .map((x) => `<a href="/examenes-libres-${x.slug}/">${x.nombre}</a>`)
     .join("");
 
+  const crumbs = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Inicio", item: `${BASE}/` },
+      { "@type": "ListItem", position: 2, name: "Exámenes libres", item: `${BASE}/guia-examenes-libres/` },
+      { "@type": "ListItem", position: 3, name: n.nombre, item: url },
+    ],
+  };
+
+  // Enlaces al blog: cierran el circuito con el cluster informacional, que hasta
+  // ahora solo recibía enlaces y no devolvía ninguno hacia estas páginas.
+  const esMedia = n.slug.endsWith("-medio");
+  const lecturas = [
+    { href: "/guia-examenes-libres/", label: "Guía completa: cómo funcionan los exámenes libres en Chile" },
+    { href: "/blog/como-inscribirse-examenes-libres-mineduc/", label: "Cómo inscribirse a exámenes libres MINEDUC paso a paso" },
+    esMedia
+      ? { href: "/blog/paes-despues-de-cuarto-medio/", label: "PAES después de 4° medio: qué necesitas y cuándo empezar" }
+      : { href: "/blog/adulto-acompanante-examenes-libres-basica/", label: "Adulto Acompañante en exámenes de básica: qué implica" },
+    { href: "/blog/aprendizaje-por-dominio-que-es/", label: "Aprendizaje por Dominio: por qué nadie avanza con vacíos" },
+  ].map((l) => `<a href="${l.href}">${l.label}</a>`).join("");
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "Course",
@@ -209,6 +231,7 @@ function pageHtml(n) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${title}</title>
   <meta name="description" content="${desc}" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <link rel="canonical" href="${url}" />
   <meta property="og:title" content="${title}" />
   <meta property="og:description" content="${desc}" />
@@ -216,13 +239,21 @@ function pageHtml(n) {
   <meta property="og:locale" content="es_CL" />
   <meta property="og:url" content="${url}" />
   <meta property="og:image" content="${BASE}/og-image.jpg" />
+  <meta property="og:site_name" content="Barkley Online" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Barkley Online — colegio 100% asincrónico en Chile" />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${title}" />
+  <meta name="twitter:description" content="${desc}" />
+  <meta name="twitter:image" content="${BASE}/og-image.jpg" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script type="application/ld+json">${JSON.stringify(schema)}</script>
   <script type="application/ld+json">${JSON.stringify(faqSchema)}</script>
+  <script type="application/ld+json">${JSON.stringify(crumbs)}</script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Poppins', system-ui, sans-serif; color: ${TEXT}; background: #fff; line-height: 1.65; }
