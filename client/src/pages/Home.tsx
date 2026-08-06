@@ -132,7 +132,9 @@ export function IaBarkleyChatWidget({ script = IA_BARKLEY_SCRIPT, width = 440 }:
     <motion.div
       viewport={{ once: true, amount: 0.5 }}
       onViewportEnter={() => setStarted(true)}
-      style={{ width, minWidth: width, maxWidth: width, flexShrink: 0, boxSizing: "border-box", background: "#fff", borderRadius: 20, boxShadow: "0 24px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}
+      // `minWidth: width` forzaba 440px incluso en pantallas de 390: el widget
+      // desbordaba y la página se deslizaba de lado. Ahora se encoge y 440 es el tope.
+      style={{ width: "100%", maxWidth: width, minWidth: 0, boxSizing: "border-box", background: "#fff", borderRadius: 20, boxShadow: "0 24px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}
     >
       <div style={{ background: NAVY, padding: "14px 18px", display: "flex", alignItems: "center", gap: 10 }}>
         <div style={{ width: 34, height: 34, borderRadius: "50%", background: GOLD, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: NAVY, fontSize: 14, flexShrink: 0 }}>IA</div>
@@ -145,7 +147,7 @@ export function IaBarkleyChatWidget({ script = IA_BARKLEY_SCRIPT, width = 440 }:
       </div>
       <div
         ref={scrollRef}
-        style={{ width, maxWidth: width, boxSizing: "border-box", height: 400, maxHeight: 400, overflowY: "auto", padding: "20px 18px", display: "flex", flexDirection: "column", gap: 12, background: "#f5f7fa" }}
+        style={{ width: "100%", maxWidth: "100%", boxSizing: "border-box", height: 400, maxHeight: 400, overflowY: "auto", padding: "20px 18px", display: "flex", flexDirection: "column", gap: 12, background: "#f5f7fa" }}
       >
         {shown.map((m, i) => <Bubble key={i} role={m.role} text={m.text} />)}
         {thinking && (
@@ -704,23 +706,39 @@ export default function Home() {
       {/* === HEADER — overlay transparente sobre el hero, como el real: logo con marco blanco
           translúcido + nombre blanco sobre la foto; controles de la derecha sobre bloque blanco === */}
       <header style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 30 }}>
+        {/* El header se compone con estilos inline, así que la variante móvil va en un
+            media query con !important (única forma de ganarle a un style inline).
+            Sin esto, el logo (~253px) más el bloque blanco de 344px fijo suman ~600px
+            y desbordan la pantalla: el viewport se ensancha y la página se desliza
+            de lado en celular. */}
+        <style>{`
+          @media (max-width: 760px) {
+            [data-hdr="controls"] { width: auto !important; padding: 14px 16px !important; gap: 10px !important; }
+            [data-hdr="logo"] { padding: 16px 0 0 16px !important; gap: 10px !important; }
+            [data-hdr="logo-box"] { width: 56px !important; height: 56px !important; }
+            [data-hdr="logo-box"] span:first-child { font-size: 21px !important; }
+            [data-hdr="logo-box"] span:last-child { width: 26px !important; }
+            [data-hdr="logo-text"] { font-size: 14px !important; }
+            [data-hdr="solo-desktop"] { display: none !important; }
+          }
+        `}</style>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-          <a href="/" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none", padding: "30px 0 0 45px" }}>
-            <div style={{ width: 84, height: 84, background: "rgba(0,32,61,0.45)", border: "2px solid #fff", borderRadius: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 4 }}>
+          <a href="/" data-hdr="logo" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none", padding: "30px 0 0 45px" }}>
+            <div data-hdr="logo-box" style={{ width: 84, height: 84, background: "rgba(0,32,61,0.45)", border: "2px solid #fff", borderRadius: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 4 }}>
               <span style={{ color: "#fff", fontWeight: 800, fontSize: 30, letterSpacing: "-0.5px", lineHeight: 1 }}>BK</span>
               <span style={{ width: 40, height: 3, background: RED, marginTop: 5, borderRadius: 2 }} />
             </div>
-            <span style={{ color: "#fff", fontWeight: 600, fontSize: 19, lineHeight: 1.35 }}>The Barkley<br />Online School</span>
+            <span data-hdr="logo-text" style={{ color: "#fff", fontWeight: 600, fontSize: 19, lineHeight: 1.35 }}>The Barkley<br />Online School</span>
           </a>
           {/* Ancho fijo = gap 15 + columna de paneles 314 + padding 15 → el bloque blanco
               calza exacto con la columna derecha y nunca tapa la foto */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 14, background: "#fff", padding: "26px 30px 26px 20px", width: 344, boxSizing: "border-box", flexShrink: 0 }}>
-            <button aria-label="Buscar" style={{ width: 40, height: 40, borderRadius: "50%", background: "#f1f4f8", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+          <div data-hdr="controls" style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 14, background: "#fff", padding: "26px 30px 26px 20px", width: 344, boxSizing: "border-box", flexShrink: 0 }}>
+            <button aria-label="Buscar" data-hdr="solo-desktop" style={{ width: 40, height: 40, borderRadius: "50%", background: "#f1f4f8", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
               <Search style={{ width: 17, height: 17, color: NAVY }} />
             </button>
-            <span style={{ width: 1, height: 22, background: "#d8dee6" }} />
-            <a href="#inscripcion" style={{ fontSize: 14, fontWeight: 600, color: NAVY, textDecoration: "none", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}>MI BARKLEY</a>
-            <span style={{ width: 1, height: 22, background: "#d8dee6" }} />
+            <span data-hdr="solo-desktop" style={{ width: 1, height: 22, background: "#d8dee6" }} />
+            <a href="#inscripcion" data-hdr="solo-desktop" style={{ fontSize: 14, fontWeight: 600, color: NAVY, textDecoration: "none", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}>MI BARKLEY</a>
+            <span data-hdr="solo-desktop" style={{ width: 1, height: 22, background: "#d8dee6" }} />
             <button aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"} onClick={() => setMenuOpen(o => !o)}
               style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: NAVY, fontFamily: FONT, fontSize: 14, fontWeight: 600, letterSpacing: "0.05em" }}>
               {menuOpen ? <X style={{ width: 22, height: 22 }} /> : <Menu style={{ width: 22, height: 22 }} />}
@@ -802,7 +820,10 @@ export default function Home() {
       </section>
 
       {/* Pestaña vertical fija al borde derecho, siempre visible — patrón real .sticky--cta--nav */}
-      <div style={{ position: "fixed", right: 0, top: "45%", zIndex: 25, display: "flex", flexDirection: "column" }} className="hidden md:flex">
+      {/* Sin `display` inline: lo define la clase (hidden md:flex). Con el inline
+          puesto, `hidden` nunca ganaba y la pestaña asomaba en móvil, sobresaliendo
+          25px del borde y provocando scroll horizontal. */}
+      <div style={{ position: "fixed", right: 0, top: "45%", zIndex: 25, flexDirection: "column" }} className="hidden md:flex">
         <a href="#inscripcion" style={{ background: PINK, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>INSCRIBIRSE</a>
       </div>
 
@@ -825,7 +846,7 @@ export default function Home() {
         <div style={{ maxWidth: 1180, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 56, alignItems: "flex-start" }}>
           {/* Columna editorial izquierda */}
           <Reveal>
-            <div style={{ flex: "1 1 340px", minWidth: 300, maxWidth: 440 }}>
+            <div style={{ flex: "1 1 340px", minWidth: "min(300px, 100%)", maxWidth: 440 }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 14px" }}>No estamos solos en esto</p>
               <h2 style={{ fontSize: "clamp(32px,4.5vw,52px)", fontWeight: 700, color: NAVY, margin: "0 0 20px", lineHeight: 1.1 }}>
                 El mismo método,<br />en <em style={{ fontStyle: "normal", color: SLATE }}>cuatro colegios</em><br />del mundo.
@@ -844,7 +865,7 @@ export default function Home() {
             </div>
           </Reveal>
           {/* Registro institucional derecha */}
-          <div style={{ flex: "1 1 520px", minWidth: 300 }}>
+          <div style={{ flex: "1 1 520px", minWidth: "min(300px, 100%)" }}>
             {[
               { logo: "/images/colegios/acellus-white.png", pad: "16px 14px", nombre: "Acellus Academy", meta: "Estados Unidos · Acreditado WASC", dato: "Mastery Learning en más de 6.000 escuelas" },
               { logo: "/images/colegios/apex-icon.png", pad: "10px", nombre: "Apex Learning Virtual School", meta: "Estados Unidos · Acreditado Cognia", dato: "Currículum mastery-based de secundaria" },
@@ -853,7 +874,9 @@ export default function Home() {
             ].map((c, i) => (
               <Reveal key={c.nombre} delay={i * 0.08}>
                 <motion.div whileHover={{ x: 8 }} transition={{ duration: 0.25 }}
-                  style={{ display: "flex", alignItems: "center", gap: 24, padding: "26px 8px", borderBottom: i < 3 ? "1px solid #e8edf3" : "none" }}>
+                  /* flexWrap: la placa del logo mide 128px y no encoge; en pantallas de
+                     ~320px el texto ya no cabe en la misma línea y desbordaba. */
+                  style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 24, padding: "26px 8px", borderBottom: i < 3 ? "1px solid #e8edf3" : "none" }}>
                   <span style={{ fontSize: 15, fontWeight: 800, color: "#c3cdd9", minWidth: 30 }}>{String(i + 1).padStart(2, "0")}</span>
                   {/* Logotipo oficial de la institución sobre placa navy */}
                   <div style={{ width: 128, height: 64, flexShrink: 0, background: NAVY, borderRadius: 12, border: "1px solid #d8e0ea", display: "flex", alignItems: "center", justifyContent: "center", padding: c.pad, boxSizing: "border-box" }}>
@@ -887,7 +910,7 @@ export default function Home() {
             </p>
           </Reveal>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24, marginBottom: 56 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))", gap: 24, marginBottom: 56 }}>
             {[
               { nombre: "K12 / Stride", pais: "Estados Unidos", rol: "“Learning Coach”", detalle: "3 a 6 horas diarias en K-5: facilita lecciones, maneja materiales, registra avance.", color: BLOCK_BLUE },
               { nombre: "Laurel Springs", pais: "Estados Unidos · 100% asincrónico", rol: "“Learning Coach”", detalle: "2 a 3 horas diarias en K-5: da estructura, lee en voz alta, revisa y acompaña.", color: GREEN },
@@ -909,7 +932,7 @@ export default function Home() {
               <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>Así lo hace Barkley</p>
               <h3 style={{ fontSize: "clamp(22px,3vw,30px)", fontWeight: 700, margin: "0 0 24px" }}>Mismo mecanismo, con horas que bajan gradual por ciclo</h3>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginBottom: 32 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: 16, marginBottom: 32 }}>
                 {[
                   { ciclo: "1° y 2° básico", horas: "4 a 5 h/día", detalle: "Adulto presente casi todo el estudio" },
                   { ciclo: "3° y 4° básico", horas: "3 h/día", detalle: "Acompaña el inicio, luego supervisa" },
@@ -924,7 +947,7 @@ export default function Home() {
                 ))}
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 28 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(240px, 100%), 1fr))", gap: 28 }}>
                 <div>
                   <p style={{ fontSize: 15, fontWeight: 700, color: GOLD, margin: "0 0 6px" }}>Rol con nombre</p>
                   <p style={{ fontSize: 14.5, opacity: 0.88, lineHeight: 1.6, margin: 0 }}>Desde 1° básico, el apoderado es el <strong>Adulto Acompañante</strong>: quien está al lado durante el estudio, no quien enseña ni corrige — eso lo hace la plataforma.</p>
@@ -1207,7 +1230,7 @@ export default function Home() {
           {/* Nivel 4 — Formatos dentro de una lección */}
           <Reveal delay={0.18}>
             <p style={{ textAlign: "center", fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.55)", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 16px" }}>Nivel 4 · Cada lección trae todos estos formatos</p>
-            <div style={{ background: "#fff", borderRadius: 20, padding: "28px 24px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 14, marginBottom: 8 }}>
+            <div style={{ background: "#fff", borderRadius: 20, padding: "28px 24px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(140px, 100%), 1fr))", gap: 14, marginBottom: 8 }}>
               {[
                 { icon: Play, label: "2 videos", color: NAVY },
                 { icon: Headphones, label: "1 pódcast", color: SLATE },
@@ -1228,7 +1251,7 @@ export default function Home() {
 
           {/* Semiflexibilidad — organización diaria libre + fechas de evaluación fijas */}
           <Reveal delay={0.24}>
-            <div style={{ marginTop: 56, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+            <div style={{ marginTop: 56, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))", gap: 20 }}>
               <div style={{ background: "rgba(255,255,255,0.07)", borderRadius: 18, padding: "26px 28px" }}>
                 <CalendarClock style={{ width: 26, height: 26, color: GOLD, marginBottom: 12 }} strokeWidth={2.2} />
                 <p style={{ fontSize: 17, fontWeight: 700, color: "#fff", margin: "0 0 8px" }}>Tú organizas el día</p>
@@ -1316,7 +1339,7 @@ export default function Home() {
       <section id="ia-barkley" style={{ background: "#eef2f7", padding: "88px 24px" }}>
         <div style={{ maxWidth: 1180, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 56, alignItems: "center" }}>
           <Reveal>
-            <div style={{ flex: "1 1 420px", minWidth: 300, maxWidth: 520 }}>
+            <div style={{ flex: "1 1 420px", minWidth: "min(300px, 100%)", maxWidth: 520 }}>
               <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 10px" }}>Cuando de verdad lo necesita</p>
               <h2 style={{ fontSize: "clamp(30px,4.5vw,48px)", fontWeight: 700, color: NAVY, margin: "0 0 18px", lineHeight: 1.12 }}>
                 <em style={{ fontStyle: "normal", color: "#b5892a" }}>IA Barkley</em>: el tutor que aparece solo cuando toca.
@@ -1334,7 +1357,7 @@ export default function Home() {
               </div>
             </div>
           </Reveal>
-          <div style={{ flex: "1 1 380px", minWidth: 300, display: "flex", justifyContent: "center" }}>
+          <div style={{ flex: "1 1 380px", minWidth: "min(300px, 100%)", display: "flex", justifyContent: "center" }}>
             <IaBarkleyDemo />
           </div>
         </div>
@@ -1359,7 +1382,7 @@ export default function Home() {
             </div>
           </Reveal>
           <Reveal delay={0.1}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(190px, 100%), 1fr))" }}>
               {[
                 { Shape: Circle, color: GOLD, nombre: "Google Workspace", uso: "Documentos, correo y entrega de ensayos" },
                 { Shape: Heart, color: PINK, nombre: "WhatsApp", uso: "Comunicación directa con tutor y asesor" },
@@ -1405,7 +1428,7 @@ export default function Home() {
           {/* Grilla editorial: numeral grande como elemento gráfico, regla superior por tarjeta.
               Los seis primeros van en grilla de 3; el séptimo cierra a ancho completo en
               horizontal, para que la última fila no quede con dos huecos vacíos. */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: "0 44px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(290px, 100%), 1fr))", gap: "0 44px" }}>
             {SERVICIOS.slice(0, 6).map((s, i) => (
               <Reveal key={s.n} delay={Math.min(i, 3) * 0.06}>
                 <motion.div
@@ -1641,7 +1664,7 @@ export default function Home() {
         <section id="faq" style={{ maxWidth: 1180, margin: "0 auto", padding: "56px 24px" }}>
           <Reveal><h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 600, color: SLATE, margin: "0 0 24px" }}>Preguntas frecuentes</h2></Reveal>
           {/* Dos columnas independientes para que el acordeón abierto no empuje la otra mitad */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", columnGap: 48, alignItems: "start" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", columnGap: 48, alignItems: "start" }}>
             {[faqs.filter((_, i) => i % 2 === 0), faqs.filter((_, i) => i % 2 === 1)].map((col, ci) => (
               <Accordion key={ci} type="single" collapsible>
                 {col.map(f => (
