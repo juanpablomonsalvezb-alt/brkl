@@ -275,6 +275,75 @@ const PROGRAMAS = [
   { title: "Familias", sub: "Portal Familia", text: "Transparencia total, sin preguntar cómo le fue: promedio general, avance por asignatura, días de estudio del mes y tutorías tomadas, en un panel que se actualiza solo. Lee los mensajes del asesor y ve qué entregas están en revisión — todo en modo observador, sin interferir en su proceso.", img: "/images/portal-familia.jpeg", href: "#inscripcion" },
 ];
 
+// Servicios que vienen incluidos en la matrícula, más allá de las clases. Se
+// presentan en presente porque forman parte del programa 2027 al que la familia
+// se está inscribiendo — el acceso a la plataforma abre en enero de 2027.
+const SERVICIOS = [
+  {
+    n: "01",
+    titulo: "Diagnóstico de Partida",
+    lead: "Antes de avanzar, sabemos exactamente dónde está.",
+    texto: "Al matricularse, cada estudiante rinde un diagnóstico por asignatura que detecta vacíos de años anteriores. Si algo quedó débil en el pasado, la plataforma agrega nivelación antes de partir. Nadie construye sobre lagunas.",
+    color: GOLD,
+    Icon: Search,
+  },
+  {
+    n: "02",
+    titulo: "Corrección Humana de Escritura",
+    lead: "Sus ensayos los lee una persona, no un algoritmo.",
+    texto: "Los trabajos escritos se envían por la plataforma y un profesor los devuelve corregidos, con comentarios personalizados y en pocos días. Escribir bien no se aprende con alternativas.",
+    color: PINK,
+    Icon: BookOpen,
+  },
+  {
+    n: "03",
+    titulo: "Orientación a Educación Superior",
+    lead: "El egreso no es el final. Es el puente.",
+    texto: "En 3° y 4° medio hay un orientador que acompaña la elección de carrera, el calendario PAES y la postulación centralizada. Hasta que la universidad diga que sí.",
+    color: GREEN,
+    Icon: ArrowUpRight,
+  },
+  {
+    n: "04",
+    titulo: "Certificados de Avance",
+    lead: "El progreso, en un documento formal, cuando lo necesites.",
+    texto: "Desde el Portal Familia se descarga en cualquier momento un certificado con notas y avance, con código de verificación. Para trámites, viajes o lo que la vida pida.",
+    color: BLOCK_BLUE,
+    Icon: Download,
+  },
+  {
+    n: "05",
+    titulo: "Barkley En Vivo",
+    lead: "Sin horarios… salvo el que vas a querer tener.",
+    texto: "Una transmisión periódica y opcional: ciencia entretenida, actualidad, invitados. Queda grabada, nadie está obligado, todos son bienvenidos. Cada uno estudia a su ritmo, pero hay momentos para encontrarse.",
+    color: RED,
+    Icon: Play,
+  },
+  {
+    n: "06",
+    titulo: "Verano Barkley",
+    lead: "El año escolar tiene segunda oportunidad.",
+    texto: "En enero y febrero, programas cortos de nivelación y reforzamiento. Para quien llega atrasado, para quien quiere rendir antes, para quien no está dispuesto a perder el año.",
+    color: PURPLE,
+    Icon: CalendarCheck,
+  },
+  {
+    n: "07",
+    titulo: "Electivos Barkley",
+    lead: "El currículum es el piso, no el techo.",
+    texto: "Además del temario oficial: programación, inglés avanzado, educación financiera, arte. Mismo formato de video y práctica, con certificado propio. Cumplir con el colegio es el comienzo.",
+    color: SLATE,
+    Icon: Sparkles,
+  },
+];
+
+const PREU_PLANES = [
+  { plan: "Estudiante de 4° medio Barkley", precio: "Incluido", nota: "en tu mensualidad", destacado: true },
+  { plan: "Externo · mensual", precio: "$39.900", nota: "por mes" },
+  { plan: "Externo · anual (mar–nov)", precio: "$299.000", nota: "≈15% de descuento" },
+  { plan: "Externo · intensivo final (ago–nov)", precio: "$179.000", nota: "recta final PAES" },
+];
+
 const NAV_LINKS = [
   { label: "Nosotros", href: "#nosotros" },
   { label: "El Método", href: "#metodo-barkley" },
@@ -282,6 +351,7 @@ const NAV_LINKS = [
   { label: "Aprendizaje", href: "#metodo" },
   { label: "Plataforma", href: "#plataforma" },
   { label: "IA Barkley", href: "#ia-barkley" },
+  { label: "Servicios", href: "#servicios" },
   { label: "Calendario", href: "#calendario" },
   { label: "Precio", href: "#precio" },
   { label: "Preguntas", href: "#faq" },
@@ -1304,6 +1374,124 @@ export default function Home() {
                   <p style={{ fontSize: 12, fontWeight: 600, color: "#9fb3cc", textTransform: "uppercase", letterSpacing: "0.07em", lineHeight: 1.7, margin: 0 }}>{uso}</p>
                 </motion.div>
               ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* === SERVICIOS INCLUIDOS — banda papel cálido, numeración editorial y
+          bloque destacado del preuniversitario con su tabla de planes === */}
+      <section id="servicios" style={{ background: "#fdf7ee", padding: "92px 24px", position: "relative", overflow: "hidden" }}>
+        {/* Formas de fondo, mismo lenguaje decorativo del resto del sitio */}
+        <div style={{ position: "absolute", top: 60, left: -50, opacity: 0.5 }}><ShapeFlower color="#f2d9b0" size={200} /></div>
+        <div style={{ position: "absolute", bottom: 120, right: -40, opacity: 0.45 }}><ShapeCircle color="#f7e3c4" size={150} /></div>
+
+        <div style={{ maxWidth: 1180, margin: "0 auto", position: "relative" }}>
+          <Reveal>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 24, margin: "0 0 56px" }}>
+              <div style={{ maxWidth: 660 }}>
+                <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.09em", margin: "0 0 12px" }}>Todo esto viene incluido</p>
+                <h2 style={{ fontSize: "clamp(32px,5vw,54px)", fontWeight: 700, color: NAVY, margin: 0, lineHeight: 1.1 }}>
+                  Un colegio completo,<br />
+                  <em style={{ fontStyle: "normal", color: "#b5892a" }}>no solo clases grabadas</em>.
+                </h2>
+              </div>
+              <p style={{ fontSize: 15.5, color: TEXT, maxWidth: 330, margin: 0, lineHeight: 1.75 }}>
+                Siete servicios que acompañan el año completo — más el preuniversitario para 4° medio. Sin cobros sorpresa, sin módulos aparte.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Grilla editorial: numeral grande como elemento gráfico, regla superior por tarjeta.
+              Los seis primeros van en grilla de 3; el séptimo cierra a ancho completo en
+              horizontal, para que la última fila no quede con dos huecos vacíos. */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: "0 44px" }}>
+            {SERVICIOS.slice(0, 6).map((s, i) => (
+              <Reveal key={s.n} delay={Math.min(i, 3) * 0.06}>
+                <motion.div
+                  whileHover={{ y: -5 }}
+                  transition={{ duration: 0.28, ease: "easeOut" }}
+                  style={{ borderTop: `3px solid ${s.color}`, padding: "26px 0 38px", height: "100%" }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                    <span style={{ fontSize: 42, fontWeight: 800, lineHeight: 1, color: s.color, letterSpacing: "-0.03em" }}>{s.n}</span>
+                    <s.Icon style={{ width: 26, height: 26, color: s.color }} strokeWidth={2.2} />
+                  </div>
+                  <h3 style={{ fontSize: 20.5, fontWeight: 700, color: NAVY, margin: "0 0 10px", lineHeight: 1.25 }}>{s.titulo}</h3>
+                  <p style={{ fontSize: 15, fontWeight: 600, color: "#7a6033", margin: "0 0 12px", lineHeight: 1.5 }}>{s.lead}</p>
+                  <p style={{ fontSize: 14.5, color: TEXT, margin: 0, lineHeight: 1.75 }}>{s.texto}</p>
+                </motion.div>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Séptimo servicio a ancho completo — cierra la grilla y da ritmo editorial */}
+          {SERVICIOS.slice(6).map((s) => (
+            <Reveal key={s.n} delay={0.08}>
+              <motion.div
+                whileHover={{ y: -4 }}
+                transition={{ duration: 0.28, ease: "easeOut" }}
+                style={{ borderTop: `3px solid ${s.color}`, padding: "26px 0 8px", display: "flex", flexWrap: "wrap", gap: 40 }}
+              >
+                <div style={{ flex: "0 0 auto", minWidth: 250, maxWidth: 420 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
+                    <span style={{ fontSize: 42, fontWeight: 800, lineHeight: 1, color: s.color, letterSpacing: "-0.03em" }}>{s.n}</span>
+                    <s.Icon style={{ width: 26, height: 26, color: s.color }} strokeWidth={2.2} />
+                  </div>
+                  <h3 style={{ fontSize: 20.5, fontWeight: 700, color: NAVY, margin: "0 0 8px", lineHeight: 1.25 }}>{s.titulo}</h3>
+                  <p style={{ fontSize: 15, fontWeight: 600, color: "#7a6033", margin: 0, lineHeight: 1.5 }}>{s.lead}</p>
+                </div>
+                <p style={{ flex: "1 1 320px", fontSize: 14.5, color: TEXT, margin: 0, lineHeight: 1.75, alignSelf: "center", maxWidth: 620 }}>{s.texto}</p>
+              </motion.div>
+            </Reveal>
+          ))}
+
+          {/* Preuniversitario — bloque navy destacado con tabla de planes */}
+          <Reveal delay={0.1}>
+            <div style={{ marginTop: 56, background: NAVY, borderRadius: 22, padding: "clamp(32px,5vw,54px)", position: "relative", overflow: "hidden", boxShadow: "0 24px 60px rgba(0,20,60,0.22)" }}>
+              <div style={{ position: "absolute", top: -40, right: -30, opacity: 0.5 }}><ShapeStar color="#ffffff12" size={190} /></div>
+              <div style={{ position: "relative", display: "flex", flexWrap: "wrap", gap: 48 }}>
+                <div style={{ flex: "1 1 380px", minWidth: 290 }}>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 14px" }}>Preuniversitario Barkley · PAES</p>
+                  <h3 style={{ fontSize: "clamp(26px,3.6vw,40px)", fontWeight: 700, color: "#fff", margin: "0 0 18px", lineHeight: 1.15 }}>
+                    En 4° medio, el preuniversitario <em style={{ fontStyle: "normal", color: GOLD }}>va incluido</em>.
+                  </h3>
+                  <p style={{ fontSize: 15.5, color: "#b9cbe2", lineHeight: 1.8, margin: "0 0 18px" }}>
+                    Contenido PAES, ejercitación y ensayos, en el mismo formato de video y práctica del colegio. Un beneficio valorado sobre los $350.000 al año, dentro de la misma mensualidad.
+                  </p>
+                  <p style={{ fontSize: 15.5, color: "#b9cbe2", lineHeight: 1.8, margin: 0 }}>
+                    Otros cobran el colegio y el preuniversitario por separado. Aquí son dos cuentas en una — y también está disponible para estudiantes de otros colegios.
+                  </p>
+                </div>
+
+                <div style={{ flex: "1 1 340px", minWidth: 290 }}>
+                  {PREU_PLANES.map((p) => (
+                    <div
+                      key={p.plan}
+                      style={{
+                        display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 16,
+                        padding: "16px 18px",
+                        borderRadius: 12,
+                        marginBottom: 8,
+                        background: p.destacado ? GOLD : "rgba(255,255,255,0.06)",
+                        border: p.destacado ? "none" : "1px solid rgba(255,255,255,0.12)",
+                      }}
+                    >
+                      <span style={{ fontSize: 13.5, fontWeight: p.destacado ? 700 : 600, color: p.destacado ? NAVY : "#cfe0f2", lineHeight: 1.4 }}>{p.plan}</span>
+                      <span style={{ textAlign: "right", flexShrink: 0 }}>
+                        <span style={{ display: "block", fontSize: p.destacado ? 20 : 18, fontWeight: 800, color: p.destacado ? NAVY : "#fff", lineHeight: 1.1 }}>{p.precio}</span>
+                        <span style={{ display: "block", fontSize: 11, fontWeight: 600, color: p.destacado ? "#6b5211" : "#8fa9c4", marginTop: 3 }}>{p.nota}</span>
+                      </span>
+                    </div>
+                  ))}
+                  <a
+                    href="#inscripcion"
+                    style={{ display: "block", textAlign: "center", marginTop: 18, background: RED, color: "#fff", fontWeight: 700, fontSize: 15, padding: "14px 24px", borderRadius: 999, textDecoration: "none" }}
+                  >
+                    Reservar cupo 2027 →
+                  </a>
+                </div>
+              </div>
             </div>
           </Reveal>
         </div>
