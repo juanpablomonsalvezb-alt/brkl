@@ -769,31 +769,50 @@ export default function Home() {
       {/* === HERO — como el real: marco blanco de 15px alrededor, foto a la izquierda,
           columna derecha con bloque azul (doble triángulo dorado cortado por el borde)
           y bloque morado saturado (pinwheel rosa), texto de paneles abajo-izquierda === */}
-      <section style={{ position: "relative", display: "flex", gap: 15, padding: 15, background: "#fff", height: "min(885px,88vh)", boxSizing: "border-box" }}>
-        <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
+      <section data-hero="sec" style={{ position: "relative", display: "flex", gap: 15, padding: 15, background: "#fff", height: "min(885px,88vh)", boxSizing: "border-box" }}>
+        {/* Variante móvil del hero. En desktop es foto a la izquierda + columna de
+            paneles de 314px a la derecha; bajo 760px eso deja la foto como una
+            franja inservible, así que se apila: foto vertical grande arriba y los
+            dos accesos como banda horizontal compacta abajo. Va en media query con
+            !important porque el hero está compuesto con estilos inline. */}
+        <style>{`
+          @media (max-width: 760px) {
+            [data-hero="sec"] { flex-direction: column !important; height: auto !important; padding: 10px !important; gap: 10px !important; }
+            [data-hero="foto"] { min-height: 68vh !important; border-radius: 4px; }
+            [data-hero="texto"] { left: 22px !important; right: 22px !important; bottom: 26px !important; }
+            [data-hero="titulo"] { font-size: 37px !important; line-height: 1.08 !important; }
+            [data-hero="panels"] { width: auto !important; flex-direction: row !important; gap: 10px !important; }
+            [data-hero="panel"] { flex: 1 1 0 !important; min-height: 152px !important; }
+            /* position:relative — el adorno va en absolute y, sin esto, se pinta
+               por encima del texto y lo vuelve ilegible en el panel angosto. */
+            [data-hero="panel"] > div:last-child { position: relative; padding: 14px 14px !important; font-size: 17px !important; }
+            [data-hero="deco"] { transform: scale(0.42); transform-origin: top right; }
+          }
+        `}</style>
+        <div data-hero="foto" style={{ flex: 1, position: "relative", overflow: "hidden" }}>
           <img src={HERO_PHOTO} alt="" style={{ width: "100%", height: "100%", position: "absolute", inset: 0, objectFit: "cover", filter: "saturate(0.85)" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,51,102,0) 45%, rgba(20,35,55,0.6) 100%)" }} />
           {/* Un solo titular gigante real (sin eyebrow separado — la etiqueta real ES el h1), flechas prev/next circulares bottom-right junto al texto */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            style={{ position: "absolute", left: 45, right: 40, bottom: 42, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+            data-hero="texto" style={{ position: "absolute", left: 45, right: 40, bottom: 42, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
             <div style={{ maxWidth: 780 }}>
-              <h1 style={{ fontSize: "clamp(36px,5vw,69px)", fontWeight: 600, margin: 0, lineHeight: 1.05 }}>Líderes en Educación Asincrónica Inclusiva</h1>
+              <h1 data-hero="titulo" style={{ fontSize: "clamp(36px,5vw,69px)", fontWeight: 600, margin: 0, lineHeight: 1.05 }}>Líderes en Educación Asincrónica Inclusiva</h1>
               <button onClick={() => setTourOpen(true)}
                 style={{ marginTop: 20, display: "inline-flex", alignItems: "center", gap: 10, fontSize: 16, fontWeight: 600, color: NAVY, background: GOLD, border: "none", borderRadius: 999, padding: "13px 26px", cursor: "pointer", fontFamily: FONT }}>
                 <span style={{ display: "inline-flex", width: 22, height: 22, borderRadius: "50%", background: NAVY, color: GOLD, alignItems: "center", justifyContent: "center", fontSize: 11 }}>▶</span>
                 Ver cómo funciona
               </button>
             </div>
-            <div style={{ display: "flex", gap: 10, flexShrink: 0 }} className="hidden md:flex">
+            <div style={{ gap: 10, flexShrink: 0 }} className="hidden md:flex">
               <button aria-label="Anterior" style={{ width: 48, height: 48, borderRadius: "50%", border: "1.5px solid #fff", background: "none", color: "#fff", cursor: "pointer", fontSize: 18 }}>‹</button>
               <button aria-label="Siguiente" style={{ width: 48, height: 48, borderRadius: "50%", border: "1.5px solid #fff", background: "none", color: "#fff", cursor: "pointer", fontSize: 18 }}>›</button>
             </div>
           </motion.div>
         </div>
-        <div style={{ width: 314, display: "flex", flexDirection: "column", gap: 0 }} className="hidden md:flex">
-          <motion.a href="#plataforma" whileHover={{ opacity: 0.9 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: BLOCK_BLUE, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+        <div data-hero="panels" style={{ width: 314, display: "flex", flexDirection: "column", gap: 0 }}>
+          <motion.a href="#plataforma" data-hero="panel" whileHover={{ opacity: 0.9 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: BLOCK_BLUE, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
             {/* Doble triángulo SÓLIDO dorado gigante, cortado por el borde derecho — patrón real (▶▶, no chevrón) */}
-            <motion.div whileHover={{ x: 6 }} transition={{ duration: 0.3 }} style={{ position: "absolute", top: "6%", right: -40 }}>
+            <motion.div data-hero="deco" whileHover={{ x: 6 }} transition={{ duration: 0.3 }} style={{ position: "absolute", top: "6%", right: -40 }}>
               <svg width="230" height="190" viewBox="0 0 230 190">
                 <polygon points="10,20 105,95 10,170" fill={GOLD} />
                 <polygon points="115,20 210,95 115,170" fill={GOLD} />
@@ -804,8 +823,8 @@ export default function Home() {
             </div>
           </motion.a>
           {/* Pinwheel de 4 cuartos rosa arriba, sobre morado saturado real (#861FCE), texto blanco */}
-          <motion.a href="#faq" whileHover={{ opacity: 0.9 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: PURPLE_PANEL, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
-            <motion.div whileHover={{ rotate: 8 }} transition={{ duration: 0.4 }} style={{ position: "absolute", top: 12, right: -26, width: 190, height: 190, display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr", gap: 8 }}>
+          <motion.a href="#faq" data-hero="panel" whileHover={{ opacity: 0.9 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: PURPLE_PANEL, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+            <motion.div data-hero="deco" whileHover={{ rotate: 8 }} transition={{ duration: 0.4 }} style={{ position: "absolute", top: 12, right: -26, width: 190, height: 190, display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr", gap: 8 }}>
               {/* Un solo path (cuarto de disco, pivote en la esquina interior) espejado en las 4 celdas → pinwheel */}
               <svg viewBox="0 0 50 50"><path d="M50,50 L50,0 A50,50 0 0,0 0,50 Z" fill={PINK} /></svg>
               <svg viewBox="0 0 50 50" style={{ transform: "scaleX(-1)" }}><path d="M50,50 L50,0 A50,50 0 0,0 0,50 Z" fill={PINK} /></svg>
