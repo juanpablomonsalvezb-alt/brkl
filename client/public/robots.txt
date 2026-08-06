@@ -17,4 +17,20 @@ Disallow: /academic-copilot
 Disallow: /payment-result
 Disallow: /api/
 
+# Asistentes de IA: acceso explícito. Con "User-agent: *" ya estaban permitidos,
+# pero declararlos evita quedar fuera si algún día cambia el criterio por defecto.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
 Sitemap: https://www.barkleyinstituto.cl/sitemap.xml
+# Mapa curado para asistentes de IA (estándar llms.txt)
+# https://www.barkleyinstituto.cl/llms.txt

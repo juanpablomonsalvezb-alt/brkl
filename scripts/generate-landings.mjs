@@ -159,6 +159,17 @@ function pageHtml(n) {
   const title = `${n.titleNivel} — Preparación online | Barkley Online`;
   const desc = `Prepara los exámenes libres MINEDUC de ${n.nombre} 100% online y a tu ritmo. Sin clases en vivo, con video y pódcast en cada lección. Validación oficial en Chile.`;
   const faqs = faqsFor(n);
+  // BreadcrumbList: Google lo usa para mostrar la ruta en el resultado en vez de
+  // la URL cruda. El blog ya lo tenía; las landings de nivel no.
+  const crumbs = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Inicio", item: `${BASE}/` },
+      { "@type": "ListItem", position: 2, name: "Exámenes libres", item: `${BASE}/guia-examenes-libres/` },
+      { "@type": "ListItem", position: 3, name: n.nombre, item: url },
+    ],
+  };
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -173,15 +184,6 @@ function pageHtml(n) {
     .map((x) => `<a href="/examenes-libres-${x.slug}/">${x.nombre}</a>`)
     .join("");
 
-  const crumbs = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Inicio", item: `${BASE}/` },
-      { "@type": "ListItem", position: 2, name: "Exámenes libres", item: `${BASE}/guia-examenes-libres/` },
-      { "@type": "ListItem", position: 3, name: n.nombre, item: url },
-    ],
-  };
 
   // Enlaces al blog: cierran el circuito con el cluster informacional, que hasta
   // ahora solo recibía enlaces y no devolvía ninguno hacia estas páginas.

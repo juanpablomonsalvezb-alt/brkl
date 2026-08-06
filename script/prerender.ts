@@ -16,6 +16,19 @@ const ROUTES: { path: string; out: string }[] = [
   { path: "/adaptativo", out: "dist/public/prerendered/adaptativo.html" },
 ];
 
+/**
+ * El snapshot se versiona en git, pero Vercel recompila los assets al desplegar y
+ * les cambia el hash: el HTML quedaba apuntando a un /assets/index-XXXX.js que da
+ * 404 en producción. Los bots no necesitan el JS —reciben el HTML ya renderizado—
+ * así que se quitan todos los scripts salvo los JSON-LD, que son datos SEO.
+ * De paso el snapshot queda más liviano y no intenta hidratar.
+ */
+function limpiarParaBots(html: string): string {
+  return html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, (tag) =>
+    /type\s*=\s*["']application\/ld\+json["']/i.test(tag) ? tag : "",
+  );
+}
+
 function waitForServer(url: string, timeoutMs = 20000): Promise<void> {
   const start = Date.now();
   return new Promise((resolvePromise, reject) => {
@@ -52,7 +65,7 @@ async function main() {
         });
         // Deja que React termine de hidratar/renderizar contenido async (FAQ, etc.)
         await new Promise((r) => setTimeout(r, 1500));
-        const html = await page.content();
+        const html = limpiarParaBots(await page.content());
         await page.close();
 
         const outPath = resolve(process.cwd(), route.out);

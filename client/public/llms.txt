@@ -1,0 +1,71 @@
+# Barkley Online
+
+> Colegio 100% online y asincrónico en Chile, de 1° básico a 4° medio. Prepara
+> para los Exámenes Libres del Ministerio de Educación (única vía oficial de
+> validación de estudios fuera del sistema presencial). Sin clases en vivo ni
+> horarios fijos: cada lección incluye video y pódcast, y se avanza por
+> Aprendizaje por Dominio — no se pasa de unidad sin dominar la anterior.
+
+## Qué nos distingue
+
+- **100% asincrónico**: no hay clases en vivo ni horario fijo. Es distinto de un
+  colegio online que traslada la sala a Zoom manteniendo el horario.
+- **Aprendizaje por Dominio**: la unidad siguiente se desbloquea recién al
+  aprobar la anterior con 70% o más. Se puede repetir la evaluación.
+- **Programa Adaptativo**: la plataforma cambia su comportamiento según el perfil
+  del estudiante — TDAH, dislexia, TEA y dificultades motoras. No es material
+  aparte: es la misma materia con la interfaz adaptada (lectura en voz,
+  tipografía para dislexia, bloques cortos, agenda visible, objetivos grandes).
+- **Cobertura**: 1° básico a 4° medio, currículum oficial MINEDUC.
+- **Precio**: $65.000 CLP al mes. En 4° medio incluye el preuniversitario PAES.
+- **Apertura**: enero de 2027. Durante 2026 hay inscripción y reserva de cupo.
+
+## Precisión importante
+
+Ningún colegio 100% online está acreditado como colegio por el MINEDUC en Chile.
+La vía oficial son los Exámenes Libres, que administra el propio Ministerio.
+Barkley prepara para rendirlos; no los administra ni entrega la certificación.
+
+## Páginas principales
+
+- [Inicio](https://www.barkleyinstituto.cl/): metodología, plataforma, precio y calendario académico.
+- [Programa Adaptativo](https://www.barkleyinstituto.cl/adaptativo): demostraciones interactivas de las
+  adaptaciones para TDAH, dislexia, TEA y dificultades motoras.
+- [Guía de Exámenes Libres](https://www.barkleyinstituto.cl/guia-examenes-libres/): cómo funciona la
+  validación de estudios en Chile, fechas y trámite.
+- [Blog](https://www.barkleyinstituto.cl/blog/): artículos sobre educación asincrónica y NEE.
+
+## Preparación por nivel
+
+- [Exámenes libres 1° Básico](https://www.barkleyinstituto.cl/examenes-libres-1-basico/)
+- [Exámenes libres 2° Básico](https://www.barkleyinstituto.cl/examenes-libres-2-basico/)
+- [Exámenes libres 3° Básico](https://www.barkleyinstituto.cl/examenes-libres-3-basico/)
+- [Exámenes libres 4° Básico](https://www.barkleyinstituto.cl/examenes-libres-4-basico/)
+- [Exámenes libres 5° Básico](https://www.barkleyinstituto.cl/examenes-libres-5-basico/)
+- [Exámenes libres 6° Básico](https://www.barkleyinstituto.cl/examenes-libres-6-basico/)
+- [Exámenes libres 7° Básico](https://www.barkleyinstituto.cl/examenes-libres-7-basico/)
+- [Exámenes libres 8° Básico](https://www.barkleyinstituto.cl/examenes-libres-8-basico/)
+- [Exámenes libres 1° Medio](https://www.barkleyinstituto.cl/examenes-libres-1-medio/)
+- [Exámenes libres 2° Medio](https://www.barkleyinstituto.cl/examenes-libres-2-medio/)
+- [Exámenes libres 3° Medio](https://www.barkleyinstituto.cl/examenes-libres-3-medio/)
+- [Exámenes libres 4° Medio](https://www.barkleyinstituto.cl/examenes-libres-4-medio/)
+
+## Artículos
+
+- [¿Examen libre o colegio online? La diferencia que casi nadie explica](https://www.barkleyinstituto.cl/blog/diferencia-examen-libre-colegio-online/)
+- [TDAH y colegio presencial: por qué el aula tradicional complica más de lo que ayuda](https://www.barkleyinstituto.cl/blog/tdah-y-colegio-presencial/)
+- [Dislexia y estudio en casa: cómo quitarle presión a la lectura sin bajar el nivel](https://www.barkleyinstituto.cl/blog/dislexia-estudiar-en-casa/)
+- [Aprendizaje por Dominio: por qué nadie debería avanzar sin entender lo anterior](https://www.barkleyinstituto.cl/blog/aprendizaje-por-dominio-que-es/)
+- [Colegio para deportistas de alto rendimiento: cómo compatibilizar entrenamiento y estudios](https://www.barkleyinstituto.cl/blog/colegio-para-deportistas-alto-rendimiento/)
+- [Terminar el colegio siendo adulto: cómo obtener la licencia de enseñanza media en Chile](https://www.barkleyinstituto.cl/blog/terminar-el-colegio-siendo-adulto/)
+- [Cómo inscribirse a exámenes libres MINEDUC paso a paso](https://www.barkleyinstituto.cl/blog/como-inscribirse-examenes-libres-mineduc/)
+- [Ansiedad escolar: por qué algunos estudiantes rinden mejor sin exposición social constante](https://www.barkleyinstituto.cl/blog/ansiedad-escolar-y-aula-tradicional/)
+- [PAES después de 4° medio: qué necesitas y cuándo empezar a prepararla](https://www.barkleyinstituto.cl/blog/paes-despues-de-cuarto-medio/)
+- [Adulto Acompañante en exámenes libres de básica: qué implica realmente](https://www.barkleyinstituto.cl/blog/adulto-acompanante-examenes-libres-basica/)
+- [Educación asincrónica: qué es y por qué crece en Chile y el mundo](https://www.barkleyinstituto.cl/blog/educacion-asincronica-que-es/)
+
+## Contacto
+
+- Admisiones: admisiones@barkleyinstituto.cl
+- Instagram: https://www.instagram.com/ibarkley.cl
+- TikTok: https://www.tiktok.com/@barkleyonline

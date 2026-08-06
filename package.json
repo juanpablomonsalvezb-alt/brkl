@@ -14,7 +14,9 @@
     "db:push": "drizzle-kit push",
     "migrate:prod": "tsx scripts/migrate-production.ts",
     "seed:prod": "tsx scripts/seed-production.ts",
-    "deploy:db": "npm run migrate:prod && npm run seed:prod"
+    "deploy:db": "npm run migrate:prod && npm run seed:prod",
+    "seo:llms": "node scripts/generate-llms.mjs",
+    "seo:ping": "node scripts/ping-indexnow.mjs"
   },
   "dependencies": {
     "@google/genai": "^1.38.0",
