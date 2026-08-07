@@ -80,7 +80,7 @@ function breadcrumbSchema(items) {
 const POSTS = [
   {
     slug: "diferencia-examen-libre-colegio-online",
-    title: "¿Examen libre o colegio online? La diferencia que casi nadie explica",
+    title: "Examen libre o colegio online: la diferencia real",
     desc: "Examen libre y colegio online no son lo mismo en Chile. Te explicamos la diferencia real y cómo Barkley combina ambos.",
     date: "2026-06-02",
     body: `
@@ -99,7 +99,7 @@ const POSTS = [
   },
   {
     slug: "tdah-y-colegio-presencial",
-    title: "TDAH y colegio presencial: por qué el aula tradicional complica más de lo que ayuda",
+    title: "TDAH y colegio presencial: por qué el aula complica más",
     desc: "El horario fijo y el aula ruidosa no son neutros para un estudiante con TDAH. Explicamos por qué, y qué cambia con un formato asincrónico.",
     date: "2026-06-05",
     body: `
@@ -117,7 +117,7 @@ const POSTS = [
   },
   {
     slug: "dislexia-estudiar-en-casa",
-    title: "Dislexia y estudio en casa: cómo quitarle presión a la lectura sin bajar el nivel",
+    title: "Dislexia y estudio en casa: menos presión, mismo nivel",
     desc: "Cómo adaptar el estudio en casa cuando leer cuesta más, sin reducir la exigencia académica ni la comprensión del contenido.",
     date: "2026-06-09",
     body: `
@@ -135,7 +135,7 @@ const POSTS = [
   },
   {
     slug: "aprendizaje-por-dominio-que-es",
-    title: "Aprendizaje por Dominio: por qué nadie debería avanzar sin entender lo anterior",
+    title: "Aprendizaje por Dominio: nadie avanza sin entender",
     desc: "Qué es el Aprendizaje por Dominio (Mastery Learning), el método detrás de Barkley, y por qué evita que un estudiante arrastre vacíos hasta el examen.",
     date: "2026-06-13",
     body: `
@@ -153,7 +153,7 @@ const POSTS = [
   },
   {
     slug: "colegio-para-deportistas-alto-rendimiento",
-    title: "Colegio para deportistas de alto rendimiento: cómo compatibilizar entrenamiento y estudios",
+    title: "Colegio para deportistas de alto rendimiento",
     desc: "Giras, entrenamientos y competencias no calzan con un horario escolar fijo. Cómo un formato asincrónico resuelve ese conflicto real.",
     date: "2026-06-17",
     body: `
@@ -171,7 +171,7 @@ const POSTS = [
   },
   {
     slug: "terminar-el-colegio-siendo-adulto",
-    title: "Terminar el colegio siendo adulto: cómo obtener la licencia de enseñanza media en Chile",
+    title: "Terminar el colegio siendo adulto, en Chile",
     desc: "Guía práctica para adultos que quieren completar su escolaridad y obtener la licencia de enseñanza media a través de exámenes libres.",
     date: "2026-06-21",
     body: `
@@ -209,7 +209,7 @@ const POSTS = [
   },
   {
     slug: "ansiedad-escolar-y-aula-tradicional",
-    title: "Ansiedad escolar: por qué algunos estudiantes rinden mejor sin exposición social constante",
+    title: "Ansiedad escolar: rendir mejor sin exposición constante",
     desc: "Para algunos estudiantes, la exposición social permanente del aula es un costo diario que no tiene relación con cuánto saben. Qué cambia en un formato sin esa exposición.",
     date: "2026-06-30",
     body: `
@@ -227,7 +227,7 @@ const POSTS = [
   },
   {
     slug: "paes-despues-de-cuarto-medio",
-    title: "PAES después de 4° medio: qué necesitas y cuándo empezar a prepararla",
+    title: "PAES después de 4° medio: qué necesitas y cuándo",
     desc: "Con la licencia de enseñanza media en mano, la PAES es el siguiente paso. Qué se necesita y cuándo conviene empezar a prepararla.",
     date: "2026-07-03",
     body: `
@@ -245,7 +245,7 @@ const POSTS = [
   },
   {
     slug: "adulto-acompanante-examenes-libres-basica",
-    title: "Adulto Acompañante en exámenes libres de básica: qué implica realmente",
+    title: "Adulto Acompañante en exámenes libres de básica",
     desc: "En los primeros niveles de básica, el Adulto Acompañante cumple un rol clave. Qué se espera de esa persona y cómo cambia con los años.",
     date: "2026-07-07",
     body: `
@@ -263,7 +263,7 @@ const POSTS = [
   },
   {
     slug: "educacion-asincronica-que-es",
-    title: "Educación asincrónica: qué es y por qué crece en Chile y el mundo",
+    title: "Educación asincrónica: qué es y por qué crece",
     desc: "La educación asincrónica separa el aprendizaje del horario fijo. Qué es exactamente, y por qué colegios en EE.UU. y Reino Unido ya la usan hace años.",
     date: "2026-07-11",
     body: `
@@ -285,7 +285,10 @@ const POSTS = [
 
 function articleHtml(p) {
   const url = `${BASE}/blog/${p.slug}/`;
-  const title = `${p.title} | Blog Barkley Online`;
+  // Google corta el title alrededor de los 65 caracteres. El sufijo de marca solo
+  // se agrega si cabe; si no, el titular del artículo vale más que repetir la marca.
+  const conMarca = `${p.title} | Barkley Online`;
+  const title = conMarca.length <= 65 ? conMarca : p.title;
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -431,7 +434,7 @@ function articleHtml(p) {
 
 function indexHtml() {
   const url = `${BASE}/blog/`;
-  const title = "Blog Barkley Online — Exámenes libres, TDAH, dislexia y educación asincrónica";
+  const title = "Blog — Exámenes libres, TDAH y dislexia | Barkley";
   const desc = "Artículos sobre exámenes libres MINEDUC, TDAH, dislexia, Aprendizaje por Dominio y educación asincrónica en Chile.";
   const cards = POSTS.map((p) => `
     <a class="card" href="/blog/${p.slug}/">

@@ -786,9 +786,9 @@ function Faq() {
 /* ─── Página ────────────────────────────────────────────────────────────── */
 export default function Adaptativo() {
   useEffect(() => {
-    document.title = "Adaptativo — el programa de Barkley para TDAH, dislexia, TEA y dificultades motoras";
+    document.title = "Adaptativo — TDAH, dislexia, TEA y motricidad | Barkley";
     const desc = document.querySelector('meta[name="description"]');
-    if (desc) desc.setAttribute("content", "Adaptativo, el programa de Barkley: pruébalo tú mismo. Cambia la fuente a OpenDyslexic, el fondo a crema, escucha el texto en voz alta y mira cómo cambia la lección. Acomodaciones reales para TDAH, dislexia, TEA y dificultades motoras, de 1° básico a 4° medio.");
+    if (desc) desc.setAttribute("content", "Pruébalo tú mismo: cambia la tipografía, el fondo y escucha el texto en voz alta. Adaptaciones reales para TDAH, dislexia, TEA y dificultades motoras.");
     // El index.html estático trae canonical/og:url del home; sin esto, el snapshot
     // prerenderizado le dice a Google que /adaptativo es un duplicado del home
     // y lo excluye del índice.
@@ -797,7 +797,7 @@ export default function Adaptativo() {
     const ogUrl = document.querySelector('meta[property="og:url"]');
     if (ogUrl) ogUrl.setAttribute("content", "https://www.barkleyinstituto.cl/adaptativo");
     const ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle) ogTitle.setAttribute("content", "Adaptativo — el programa de Barkley para TDAH, dislexia, TEA y dificultades motoras");
+    if (ogTitle) ogTitle.setAttribute("content", "Adaptativo — TDAH, dislexia, TEA y motricidad | Barkley");
 
     const id = "adaptativo-fonts";
     if (!document.getElementById(id)) {
