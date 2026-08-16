@@ -10,12 +10,98 @@
  *
  * Uso: node scripts/generate-landings.mjs
  */
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const BASE = "https://www.barkleyinstituto.cl";
+
+/* Temario oficial MINEDUC (391 OA, 12 niveles). Se publica en cada landing porque
+   los datos de Search Console muestran que la consulta dominante hacia estas
+   páginas es exactamente esa: "temario <nivel> examenes libres", con ~10 de
+   posición media y cero clics. Estábamos rankeando por algo que teníamos y no
+   mostrábamos. No es contenido inventado: es el temario público del Ministerio. */
+const MANIFEST = JSON.parse(readFileSync(join(ROOT, "scripts", "data", "mineduc-temarios-manifest.json"), "utf8"));
+
+/** "4-medio" → "4_medio", la clave del manifiesto. */
+const claveNivel = (slug) => slug.replace("-", "_");
+
+function temarioDe(slug) {
+  const grado = MANIFEST.grades[claveNivel(slug)];
+  if (!grado) return [];
+  return Object.values(grado.subjects)
+    .filter((s) => (s.objetivos_aprendizaje ?? []).length > 0)
+    .map((s) => ({
+      asignatura: s.subject_name,
+      ejes: s.ejes ?? [],
+      oas: s.objetivos_aprendizaje.map((oa) => ({
+        codigo: oa.oa_code,
+        logros: (oa.indicadores ?? []).filter(indicadorUtilizable).slice(0, 4),
+      })),
+    }));
+}
+
+/**
+ * Los temarios se parsearon de PDFs a dos columnas y el texto de las
+ * DESCRIPCIONES quedó entrelazado ("Identificar (conciencia combinando sus
+ * fonemas y sílabas. fonológica), las palabras..."). Publicarlas sería mostrar
+ * el temario oficial deformado, así que no se usan.
+ *
+ * Los INDICADORES sobrevivieron mucho mejor —son frases cortas de una línea—
+ * pero algunos quedaron truncados. Este filtro deja pasar solo los que son una
+ * oración completa y autoexplicativa.
+ */
+function indicadorUtilizable(texto) {
+  const t = String(texto).replace(/\s+/g, " ").trim();
+  if (t.length < 25 || t.length > 220) return false;
+  if (!/[.]$/.test(t)) return false;                 // truncado a media frase
+  if (/(^|\s)(el|la|los|las|su|de|del|y|o|con|para|por|un|una)\.$/i.test(t)) return false;
+  if (/(por ejemplo|ejemplo:|:)$/i.test(t)) return false;
+  if (/•/.test(t)) return false;                     // viñeta partida
+  return /^[A-ZÁÉÍÓÚÑ]/.test(t);                     // empieza como oración
+}
+
+const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+function temarioHtml(slug, nombre) {
+  const bloques = temarioDe(slug);
+  if (bloques.length === 0) return "";
+  const totalOA = bloques.reduce((n, b) => n + b.oas.length, 0);
+  return `
+  <section id="temario" style="background:#fff;">
+    <div class="inner">
+      <h2>Temario oficial de ${nombre}</h2>
+      <p>El Ministerio de Educación evalúa <strong>${totalOA} Objetivos de Aprendizaje</strong> en los exámenes libres de ${nombre}, repartidos en ${bloques.length} asignaturas. Abajo está el detalle por asignatura, con los ejes temáticos y ejemplos concretos de lo que el estudiante debe ser capaz de hacer.</p>
+      <p>En Barkley cada uno de esos ${totalOA} objetivos es una lección, con su video, su pódcast y su evaluación.</p>
+      ${bloques
+        .map(
+          (b) => `
+      <div class="asig-bloque">
+        <h3>${esc(b.asignatura)}<span class="oa-count">${b.oas.length} objetivos</span></h3>
+        ${b.ejes.length ? `<p class="ejes"><strong>Ejes:</strong> ${b.ejes.map(esc).join(" · ")}</p>` : ""}
+        ${(() => {
+          const conLogros = b.oas.filter((o) => o.logros.length > 0);
+          if (conLogros.length === 0) return "";
+          return `<p class="logros-intro">Algunos de los desempeños evaluados:</p>
+        <ul class="oa-lista">
+          ${conLogros
+            .slice(0, 6)
+            .flatMap((o) => o.logros.slice(0, 2).map((l) => `<li><code>${esc(o.codigo)}</code> ${esc(l)}</li>`))
+            .join("")}
+        </ul>`;
+        })()}
+      </div>`,
+        )
+        .join("")}
+      <p class="fuente">
+        Ejes y cantidad de objetivos según el Temario Oficial MINEDUC para Exámenes de Validación de Estudios.
+        El texto completo de cada objetivo está en el temario que publica el Ministerio:
+        <a href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11" target="_blank" rel="noopener noreferrer">ficha oficial de exámenes libres</a>.
+      </p>
+    </div>
+  </section>`;
+}
 
 const NIVELES = [
   {
@@ -156,8 +242,9 @@ function faqsFor(n) {
 
 function pageHtml(n) {
   const url = `${BASE}/examenes-libres-${n.slug}/`;
-  const title = `${n.titleNivel} — Preparación online | Barkley Online`;
-  const desc = `Prepara los exámenes libres MINEDUC de ${n.nombre} 100% online y a tu ritmo. Sin clases en vivo, con video y pódcast en cada lección. Validación oficial en Chile.`;
+  // Los datos mandan: "temario <nivel> examenes libres" es la consulta dominante.
+  const title = `Temario Exámenes Libres ${n.nombre} — Oficial MINEDUC`;
+  const desc = `Temario oficial completo de ${n.nombre} para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.`;
   const faqs = faqsFor(n);
   // BreadcrumbList: Google lo usa para mostrar la ruta en el resultado en vez de
   // la URL cruda. El blog ya lo tenía; las landings de nivel no.
@@ -301,6 +388,15 @@ function pageHtml(n) {
     .faq-item { border-bottom: 1px solid #e8e8e8; padding: 18px 0; }
     .faq-item b { display: block; color: ${NAVY}; font-size: 15.5px; margin-bottom: 6px; }
     .faq-item p { font-size: 14.5px; }
+    .asig-bloque { margin-top: 30px; }
+    .asig-bloque h3 { color: ${NAVY}; font-size: 19px; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+    .oa-count { font-size: 12.5px; font-weight: 600; color: ${TEXT}; background: #f5f5f5; border-radius: 999px; padding: 3px 11px; }
+    .ejes { font-size: 13px; color: ${TEXT}; margin-top: 5px; }
+    .oa-lista { margin: 12px 0 0; padding-left: 0; list-style: none; }
+    .oa-lista li { font-size: 14.5px; line-height: 1.65; padding: 9px 0 9px 14px; border-left: 3px solid #ececec; margin-bottom: 5px; }
+    .oa-lista code { font-size: 12px; font-weight: 700; color: ${NAVY}; background: #fff8ea; border-radius: 4px; padding: 2px 7px; margin-right: 7px; white-space: nowrap; }
+    .logros-intro { font-size: 13.5px; font-weight: 600; color: ${TEXT}; margin-top: 14px; }
+    .fuente { font-size: 12.5px; color: #9aa4b0; margin-top: 26px; border-top: 1px solid #ececec; padding-top: 14px; }
     footer { background: ${NAVY}; color: rgba(255,255,255,0.75); font-size: 13px; text-align: center; padding: 26px 24px; }
     footer a { color: ${GOLD}; text-decoration: none; }
   </style>
@@ -323,7 +419,7 @@ function pageHtml(n) {
       <p>${n.intro}</p>
       <div class="hero-ctas">
         <a class="btn-gold" href="/#inscripcion">Reservar cupo 2027 →</a>
-        <a class="btn-ghost" href="https://barkley-platform.vercel.app/demo/student">Probar la demo gratis</a>
+        <a class="btn-ghost" href="#temario">Ver el temario oficial ↓</a>
       </div>
     </div>
   </header>
@@ -336,6 +432,8 @@ function pageHtml(n) {
       <div class="foco">${n.foco}</div>
     </div>
   </section>
+
+  ${temarioHtml(n.slug, n.nombre)}
 
   <section style="background:#f5f5f5;">
     <div class="inner">
