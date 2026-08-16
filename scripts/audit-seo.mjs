@@ -246,7 +246,9 @@ if (JSON_OUT) {
       esto la auditoría es una foto y no se puede saber si vamos mejorando. ── */
 function corridasPrevias() {
   try {
-    return readdirSync(HIST).filter((f) => f.endsWith(".json")).sort();
+    // Solo las corridas de esta auditoría: el mismo directorio guarda también los
+    // reportes de Search Console (gsc-*.json), que tienen otra forma.
+    return readdirSync(HIST).filter((f) => f.endsWith(".json") && !f.startsWith("gsc-")).sort();
   } catch {
     return [];
   }
@@ -267,6 +269,10 @@ function comparar() {
     return;
   }
   const anterior = JSON.parse(readFileSync(join(HIST, previas[previas.length - 1]), "utf8"));
+  if (!Array.isArray(anterior.resultados)) {
+    console.log("\nLa corrida anterior no tiene el formato esperado; no se compara.");
+    return 0;
+  }
   const clave = (r) => `${r.area}|${r.ctrl}`;
   const antes = new Map(anterior.resultados.map((r) => [clave(r), r.estado]));
   const ahora = new Map(resultados.map((r) => [clave(r), r.estado]));

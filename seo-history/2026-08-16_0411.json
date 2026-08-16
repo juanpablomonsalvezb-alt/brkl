@@ -1,0 +1,275 @@
+{
+  "fecha": "2026-08-16T04:11:04.149Z",
+  "resultados": [
+    {
+      "area": "Sitemap",
+      "ctrl": "accesible y con URLs",
+      "estado": "ok",
+      "detalle": "27 URLs"
+    },
+    {
+      "area": "Sitemap",
+      "ctrl": "todas las URLs responden",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Sitemap",
+      "ctrl": "ninguna URL redirige",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Prerender",
+      "ctrl": "/ entrega contenido renderizado",
+      "estado": "ok",
+      "detalle": "21035 caracteres"
+    },
+    {
+      "area": "Prerender",
+      "ctrl": "/ distingue bot de humano",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Prerender",
+      "ctrl": "/ sin scripts rotos",
+      "estado": "ok",
+      "detalle": "sin scripts (correcto)"
+    },
+    {
+      "area": "Prerender",
+      "ctrl": "/adaptativo entrega contenido renderizado",
+      "estado": "ok",
+      "detalle": "6816 caracteres"
+    },
+    {
+      "area": "Prerender",
+      "ctrl": "/adaptativo distingue bot de humano",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Prerender",
+      "ctrl": "/adaptativo sin scripts rotos",
+      "estado": "ok",
+      "detalle": "sin scripts (correcto)"
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/ title",
+      "estado": "ok",
+      "detalle": "62 caracteres"
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/ description",
+      "estado": "ok",
+      "detalle": "156 caracteres"
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/ canonical propio",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/adaptativo title",
+      "estado": "ok",
+      "detalle": "55 caracteres"
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/adaptativo description",
+      "estado": "ok",
+      "detalle": "150 caracteres"
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/adaptativo canonical propio",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/blog/ title",
+      "estado": "ok",
+      "detalle": "49 caracteres"
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/blog/ description",
+      "estado": "ok",
+      "detalle": "114 caracteres"
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/blog/ canonical propio",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/guia-examenes-libres/ title",
+      "estado": "ok",
+      "detalle": "51 caracteres"
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/guia-examenes-libres/ description",
+      "estado": "ok",
+      "detalle": "138 caracteres"
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/guia-examenes-libres/ canonical propio",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/examenes-libres-4-medio/ title",
+      "estado": "ok",
+      "detalle": "50 caracteres"
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/examenes-libres-4-medio/ description",
+      "estado": "ok",
+      "detalle": "159 caracteres"
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/examenes-libres-4-medio/ canonical propio",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/blog/tdah-y-colegio-presencial/ title",
+      "estado": "ok",
+      "detalle": "55 caracteres"
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/blog/tdah-y-colegio-presencial/ description",
+      "estado": "ok",
+      "detalle": "138 caracteres"
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "/blog/tdah-y-colegio-presencial/ canonical propio",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "títulos únicos",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Metadatos",
+      "ctrl": "descripciones únicas",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Datos estructurados",
+      "ctrl": "/ schemas",
+      "estado": "ok",
+      "detalle": "EducationalOrganization, Country, Organization, VideoObject, FAQPage, Question, Answer"
+    },
+    {
+      "area": "Datos estructurados",
+      "ctrl": "/adaptativo schemas",
+      "estado": "ok",
+      "detalle": "EducationalOrganization, Country"
+    },
+    {
+      "area": "Datos estructurados",
+      "ctrl": "/examenes-libres-4-medio/ schemas",
+      "estado": "ok",
+      "detalle": "Course, EducationalOrganization, Country, CourseInstance, Offer, FAQPage, Question, Answer, BreadcrumbList, ListItem"
+    },
+    {
+      "area": "Datos estructurados",
+      "ctrl": "/blog/tdah-y-colegio-presencial/ schemas",
+      "estado": "ok",
+      "detalle": "Article, Organization, ImageObject, FAQPage, Question, Answer, BreadcrumbList, ListItem"
+    },
+    {
+      "area": "Social",
+      "ctrl": "og:image accesible",
+      "estado": "ok",
+      "detalle": "og-image.jpg"
+    },
+    {
+      "area": "Social",
+      "ctrl": "og:image por página",
+      "estado": "no cubierto",
+      "detalle": "6 páginas comparten la misma imagen (no rompe nada, baja el CTR al compartir)"
+    },
+    {
+      "area": "Rastreo",
+      "ctrl": "robots.txt accesible",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Rastreo",
+      "ctrl": "robots referencia sitemap",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Rastreo",
+      "ctrl": "robots no bloquea el sitio",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "Rastreo",
+      "ctrl": "llms.txt",
+      "estado": "ok",
+      "detalle": "4807 caracteres"
+    },
+    {
+      "area": "Rastreo",
+      "ctrl": "clave IndexNow accesible",
+      "estado": "ok",
+      "detalle": ""
+    },
+    {
+      "area": "No cubierto",
+      "ctrl": "Core Web Vitals",
+      "estado": "no cubierto",
+      "detalle": "requiere datos de campo reales (Search Console / CrUX)"
+    },
+    {
+      "area": "No cubierto",
+      "ctrl": "posiciones y clics",
+      "estado": "no cubierto",
+      "detalle": "requiere Search Console; esta auditoría solo mira el sitio"
+    },
+    {
+      "area": "No cubierto",
+      "ctrl": "backlinks",
+      "estado": "no cubierto",
+      "detalle": "requiere herramienta externa"
+    },
+    {
+      "area": "No cubierto",
+      "ctrl": "desborde horizontal en móvil",
+      "estado": "no cubierto",
+      "detalle": "requiere navegador; se revisa con el script de responsive"
+    },
+    {
+      "area": "No cubierto",
+      "ctrl": "calidad del contenido",
+      "estado": "no cubierto",
+      "detalle": "juicio humano"
+    }
+  ]
+}
