@@ -10,3 +10,6 @@ vite.config.ts.*
 .env.local
 .env.*.local
 .vercel
+
+# Credencial de la API de Search Console — NUNCA debe subirse
+.gsc-key.json

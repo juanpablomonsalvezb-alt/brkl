@@ -37,17 +37,28 @@ manda el sitemap ya enviado en Search Console.
 - **Semanal, aunque no se toque nada**: `npm run seo:audit` — detecta lo que se
   rompe solo (un enlace externo que muere, un certificado, un cambio de Vercel)
 
+## Datos de demanda (Search Console)
+
+`npm run seo:gsc` — clics, impresiones, CTR, posición media, qué consultas
+traen gente y qué páginas tienen impresiones. Compara contra el período
+anterior de la misma duración.
+
+Usa una cuenta de servicio de Google Cloud (`barkley-seo@patagonia-focus`) con
+acceso de lectura a la propiedad. La credencial vive en `.gsc-key.json`, está en
+`.gitignore` y nunca se sube.
+
+Search Console tiene ~2 días de rezago: el reporte pide hasta hace 3 días para
+no devolver ceros.
+
 ## Lo que este bucle NO mide
 
 Importante, porque es la mitad que decide si el SEO sirve:
 
 | No cubierto | Por qué | Dónde se ve |
 |---|---|---|
-| Clics, impresiones y posiciones | Requiere la API de Search Console | Search Console, a mano |
-| Consultas que traen visitas | Ídem | Search Console → Rendimiento |
 | Backlinks | Requiere herramienta externa | Ahrefs / Search Console → Enlaces |
 | Core Web Vitals reales | Requiere datos de campo | Search Console → Experiencia |
 
-El bucle automatiza la **mitad técnica**: que el sitio esté bien construido y
-rastreable. La **mitad de demanda** —si alguien efectivamente llega— se sigue
-revisando a mano en Search Console hasta conectar su API.
+El bucle cubre ahora la mitad técnica (sitio bien construido) y la de demanda
+(si alguien llega). Quedan fuera backlinks y Core Web Vitals de campo, que
+requieren herramientas externas.
