@@ -393,6 +393,34 @@ function AdmisionSection({ anchorId }: { anchorId?: string }) {
   );
 }
 
+/**
+ * Medición del embudo. Anónima: el id vive en sessionStorage (se borra al cerrar
+ * la pestaña), no hay cookies ni datos personales, así que no requiere banner de
+ * consentimiento. Si la medición falla, no pasa nada — nunca debe romper el
+ * formulario, que es lo único que de verdad importa acá.
+ */
+function medir(step: "llega_pagina" | "ve_formulario" | "empieza_formulario" | "envia_formulario") {
+  try {
+    let sid = sessionStorage.getItem("bk_sid");
+    if (!sid) {
+      sid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      sessionStorage.setItem("bk_sid", sid);
+    }
+    // Solo el dominio de origen, nunca la URL completa de donde viene.
+    let source = "directo";
+    if (document.referrer) {
+      try {
+        const h = new URL(document.referrer).hostname;
+        source = h.includes(location.hostname) ? "interno" : h;
+      } catch { /* referrer malformado: queda como directo */ }
+    }
+    const body = JSON.stringify({ step, path: location.pathname, source, sessionId: sid });
+    // sendBeacon sobrevive a que el usuario cierre la pestaña justo después.
+    if (navigator.sendBeacon) navigator.sendBeacon("/api/track", new Blob([body], { type: "application/json" }));
+    else fetch("/api/track", { method: "POST", headers: { "Content-Type": "application/json" }, body, keepalive: true });
+  } catch { /* la medición jamás debe interrumpir la página */ }
+}
+
 function InscripcionForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -401,6 +429,32 @@ function InscripcionForm() {
   const [notes, setNotes] = useState("");
   const [st, setSt] = useState<"idle"|"loading"|"success"|"error"|"duplicate">("idle");
   const [err, setErr] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
+  const empezado = useRef(false);
+
+  // "Vio el formulario": entró al viewport. Distingue a quien llegó a la página
+  // de quien de verdad bajó hasta la inscripción.
+  useEffect(() => {
+    const el = formRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(
+      (entradas) => {
+        if (entradas.some((e) => e.isIntersecting)) {
+          medir("ve_formulario");
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const marcarInicio = () => {
+    if (empezado.current) return;
+    empezado.current = true;
+    medir("empieza_formulario");
+  };
   const submit = async () => {
     setSt("loading"); setErr("");
     try {
@@ -408,6 +462,7 @@ function InscripcionForm() {
       const d = await res.json();
       if (!res.ok) { setErr(d.message||"Error"); setSt("error"); return; }
       setSt(d.alreadySubscribed ? "duplicate" : "success");
+      medir("envia_formulario");
     } catch { setErr("Sin conexión"); setSt("error"); }
   };
   if (st === "success" || st === "duplicate") return (
@@ -419,7 +474,7 @@ function InscripcionForm() {
   );
   const inp: React.CSSProperties = { border: "1px solid #d5dbe3", borderRadius: 8, background: "#fff", fontSize: 16, padding: "12px 14px", outline: "none", width: "100%", fontFamily: FONT, color: TEXT };
   return (
-    <form onSubmit={e => { e.preventDefault(); submit(); }} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+    <form ref={formRef} onInput={marcarInicio} onSubmit={e => { e.preventDefault(); submit(); }} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
         <label style={{ fontSize: 14, fontWeight: 600, color: NAVY }}>Nombre del apoderado o estudiante *</label>
         <input required value={name} onChange={e=>setName(e.target.value)} placeholder="Nombre completo" style={inp} data-testid="input-name" />
@@ -639,6 +694,13 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [tourOpen, setTourOpen] = useState(false);
   const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5*60*1000 });
+
+  // Primer escalón del embudo. Una sola vez por sesión, no por render.
+  useEffect(() => {
+    if (sessionStorage.getItem("bk_llegada")) return;
+    sessionStorage.setItem("bk_llegada", "1");
+    medir("llega_pagina");
+  }, []);
 
   return (
     <div style={{ backgroundColor: "#fff", color: TEXT, fontFamily: FONT, fontSize: 16, lineHeight: 1.8 }}>

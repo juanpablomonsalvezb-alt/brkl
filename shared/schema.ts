@@ -24,6 +24,33 @@ export const waitlistSignups = sqliteTable("waitlist_signups", {
   createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
 });
 
+/**
+ * Embudo de inscripción: dónde se pierde la gente entre que llega y se inscribe.
+ * Sin esto, un formulario que no convierte se ve igual que no tener visitas.
+ *
+ * Deliberadamente anónimo: un id de sesión aleatorio que vive solo en la pestaña,
+ * sin cookies, sin IP, sin datos personales. Así no requiere banner de consentimiento
+ * ni queda sujeto a la normativa de datos personales.
+ */
+export const funnelEvents = sqliteTable("funnel_events", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  // llega_pagina → ve_formulario → empieza_formulario → envia_formulario
+  step: text("step").notNull(),
+  path: text("path"),
+  // Origen: buscador, redes, directo. Solo el dominio, nunca la URL completa.
+  source: text("source"),
+  // Aleatorio por pestaña: permite contar personas distintas sin identificar a nadie.
+  sessionId: text("session_id"),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+});
+
+export const insertFunnelEventSchema = z.object({
+  step: z.enum(["llega_pagina", "ve_formulario", "empieza_formulario", "envia_formulario"]),
+  path: z.string().trim().max(200).optional(),
+  source: z.string().trim().max(120).optional(),
+  sessionId: z.string().trim().max(40).optional(),
+});
+
 export const insertWaitlistSchema = z.object({
   email: z.string().trim().toLowerCase().email("Email inválido"),
   name: z.string().trim().min(2).max(120).optional(),

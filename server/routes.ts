@@ -8,7 +8,8 @@ import {
   insertLevelSchema, insertSubjectSchema, insertLevelSubjectSchema,
   insertLearningObjectiveSchema, insertWeeklyResourceSchema, insertStudentProgressSchema,
   insertEvaluationProgressSchema, updateLevelSubjectTextbookSchema, updateLearningObjectivePagesSchema,
-  insertReservationSchema, insertWaitlistSchema, waitlistSignups
+  insertReservationSchema, insertWaitlistSchema, waitlistSignups,
+  insertFunnelEventSchema, funnelEvents
 } from "@shared/schema";
 import { db } from "./db";
 import { notifyByEmail } from "./notify";
@@ -189,6 +190,20 @@ export async function registerRoutes(
   });
 
   // Waitlist — captación de correos en etapa pre-lanzamiento
+  /* Embudo de inscripción. Anónimo por diseño: sin cookies, sin IP, sin datos
+     personales — solo un id aleatorio de pestaña. Nunca falla hacia el cliente:
+     si la medición se cae, la página sigue funcionando igual. */
+  app.post("/api/track", async (req, res) => {
+    try {
+      const parsed = insertFunnelEventSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(204).end();
+      await db.insert(funnelEvents).values({ ...parsed.data, createdAt: new Date() });
+      res.status(204).end();
+    } catch {
+      res.status(204).end();
+    }
+  });
+
   app.post("/api/waitlist", async (req, res) => {
     try {
       const parsed = insertWaitlistSchema.safeParse(req.body);

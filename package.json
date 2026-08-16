@@ -21,7 +21,8 @@
     "seo:loop": "npm run seo:audit && npm run seo:gsc && npm run seo:ping",
     "seo:build": "node scripts/generate-landings.mjs && node scripts/generate-blog.mjs && node scripts/generate-llms.mjs",
     "publicar": "npm run seo:build && npm run prerender && vercel --prod && sleep 20 && npm run seo:loop",
-    "seo:gsc": "node scripts/gsc-report.mjs --save"
+    "seo:gsc": "node scripts/gsc-report.mjs --save",
+    "embudo": "node scripts/embudo.mjs"
   },
   "dependencies": {
     "@google/genai": "^1.38.0",
