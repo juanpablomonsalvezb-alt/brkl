@@ -11,10 +11,19 @@
  *
  * Uso: node scripts/audit-seo.mjs [--json]
  */
+import { mkdirSync, writeFileSync, readdirSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const HIST = join(ROOT, "seo-history");
+
 const BASE = "https://www.barkleyinstituto.cl";
 const BOT = "Mozilla/5.0 (compatible; GPTBot/1.0; +https://openai.com/gptbot)";
 const HUM = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120 Safari/537.36";
 const JSON_OUT = process.argv.includes("--json");
+const GUARDAR = process.argv.includes("--save");
+const DIFF = process.argv.includes("--diff");
 
 const resultados = [];
 const ok = (area, ctrl, detalle = "") => resultados.push({ area, ctrl, estado: "ok", detalle });
@@ -233,6 +242,52 @@ if (JSON_OUT) {
   }
 }
 
+/* ── Historial: cada corrida se guarda para poder comparar en el tiempo. Sin
+      esto la auditoría es una foto y no se puede saber si vamos mejorando. ── */
+function corridasPrevias() {
+  try {
+    return readdirSync(HIST).filter((f) => f.endsWith(".json")).sort();
+  } catch {
+    return [];
+  }
+}
+
+function guardar() {
+  mkdirSync(HIST, { recursive: true });
+  const sello = new Date().toISOString().slice(0, 16).replace("T", "_").replace(":", "");
+  const archivo = join(HIST, `${sello}.json`);
+  writeFileSync(archivo, JSON.stringify({ fecha: new Date().toISOString(), resultados }, null, 2));
+  return archivo;
+}
+
+function comparar() {
+  const previas = corridasPrevias();
+  if (previas.length === 0) {
+    console.log("\nSin corridas anteriores: esta queda como línea base.");
+    return;
+  }
+  const anterior = JSON.parse(readFileSync(join(HIST, previas[previas.length - 1]), "utf8"));
+  const clave = (r) => `${r.area}|${r.ctrl}`;
+  const antes = new Map(anterior.resultados.map((r) => [clave(r), r.estado]));
+  const ahora = new Map(resultados.map((r) => [clave(r), r.estado]));
+
+  const arreglados = [...ahora].filter(([k, e]) => e === "ok" && antes.get(k) === "FALLA").map(([k]) => k);
+  const rotos = [...ahora].filter(([k, e]) => e === "FALLA" && antes.get(k) === "ok").map(([k]) => k);
+  const nuevos = [...ahora.keys()].filter((k) => !antes.has(k));
+  const idos = [...antes.keys()].filter((k) => !ahora.has(k));
+
+  console.log(`\nComparado con ${previas[previas.length - 1].replace(".json", "")}:`);
+  if (!arreglados.length && !rotos.length && !nuevos.length && !idos.length) {
+    console.log("  sin cambios");
+  }
+  for (const k of arreglados) console.log(`  ARREGLADO  ${k.replace("|", " · ")}`);
+  // Una regresión es lo más grave: algo que funcionaba dejó de funcionar.
+  for (const k of rotos) console.log(`  REGRESIÓN  ${k.replace("|", " · ")}`);
+  for (const k of nuevos) console.log(`  nuevo      ${k.replace("|", " · ")}`);
+  for (const k of idos) console.log(`  ya no está ${k.replace("|", " · ")}`);
+  return rotos.length;
+}
+
 const fallas = resultados.filter((r) => r.estado === "FALLA");
 const oks = resultados.filter((r) => r.estado === "ok");
 const nocub = resultados.filter((r) => r.estado === "no cubierto");
@@ -242,4 +297,9 @@ if (fallas.length) {
   console.log("\nFallas:");
   for (const f of fallas) console.log(`  · [${f.area}] ${f.ctrl} — ${f.detalle}`);
 }
+
+let regresiones = 0;
+if (DIFF) regresiones = comparar() ?? 0;
+if (GUARDAR) console.log(`\nGuardado: ${guardar().replace(ROOT + "/", "")}`);
+
 process.exit(fallas.length ? 1 : 0);

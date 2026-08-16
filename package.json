@@ -16,7 +16,11 @@
     "seed:prod": "tsx scripts/seed-production.ts",
     "deploy:db": "npm run migrate:prod && npm run seed:prod",
     "seo:llms": "node scripts/generate-llms.mjs",
-    "seo:ping": "node scripts/ping-indexnow.mjs"
+    "seo:ping": "node scripts/ping-indexnow.mjs",
+    "seo:audit": "node scripts/audit-seo.mjs --diff --save",
+    "seo:loop": "npm run seo:audit && npm run seo:ping",
+    "seo:build": "node scripts/generate-landings.mjs && node scripts/generate-blog.mjs && node scripts/generate-llms.mjs",
+    "publicar": "npm run seo:build && npm run prerender && vercel --prod && sleep 20 && npm run seo:loop"
   },
   "dependencies": {
     "@google/genai": "^1.38.0",
