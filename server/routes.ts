@@ -1710,23 +1710,47 @@ export async function registerRoutes(
   });
 
   // ========== RESERVATIONS API ==========
-  
+
+  // Multer para el documento adjunto del formulario de inscripción (memoria, no disco)
+  const ALLOWED_ATTACHMENT_TYPES = [
+    "application/pdf", "image/jpeg", "image/png", "image/webp",
+    "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
+  const uploadAttachment = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 4 * 1024 * 1024 }, // 4MB (límite de body en funciones serverless)
+    fileFilter: (req, file, cb) => {
+      if (ALLOWED_ATTACHMENT_TYPES.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(new Error("Formato de archivo no permitido. Usa PDF, Word o imagen (JPG/PNG/WEBP)."));
+      }
+    },
+  });
+
   // Create a new reservation (Public endpoint - no auth required)
-  app.post("/api/reservations", async (req, res) => {
+  app.post("/api/reservations", uploadAttachment.single("attachment"), async (req, res) => {
     try {
+      const body: Record<string, unknown> = { ...req.body };
+      if (req.file) {
+        body.attachmentName = req.file.originalname;
+        body.attachmentMimeType = req.file.mimetype;
+        body.attachmentData = req.file.buffer.toString("base64");
+      }
+
       // Validate request body
-      const result = insertReservationSchema.safeParse(req.body);
-      
+      const result = insertReservationSchema.safeParse(body);
+
       if (!result.success) {
-        return res.status(400).json({ 
-          message: "Datos de reserva inválidos", 
-          errors: result.error.errors.map(e => ({ 
-            field: e.path.join('.'), 
-            message: e.message 
+        return res.status(400).json({
+          message: "Datos de reserva inválidos",
+          errors: result.error.errors.map(e => ({
+            field: e.path.join('.'),
+            message: e.message
           }))
         });
       }
-      
+
       // Create reservation
       const reservation = await storage.createReservation(result.data);
 
@@ -1743,6 +1767,23 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error creating reservation:", error);
       res.status(400).json({ message: error instanceof Error ? error.message : "Failed to create reservation" });
+    }
+  });
+
+  // Download reservation attachment (Admin only)
+  app.get("/api/reservations/:id/attachment", isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const reservation = await storage.getReservationById(getStringParam(req.params.id));
+      if (!reservation || !reservation.attachmentData) {
+        return res.status(404).json({ message: "Adjunto no encontrado" });
+      }
+      const safeName = (reservation.attachmentName || "documento").replace(/[\r\n"]/g, "_");
+      res.setHeader("Content-Type", reservation.attachmentMimeType || "application/octet-stream");
+      res.setHeader("Content-Disposition", `attachment; filename="${safeName}"; filename*=UTF-8''${encodeURIComponent(safeName)}`);
+      res.send(Buffer.from(reservation.attachmentData, "base64"));
+    } catch (error) {
+      console.error("Error downloading attachment:", error);
+      res.status(500).json({ message: "Failed to download attachment" });
     }
   });
 

@@ -27,6 +27,7 @@ interface Reservation {
   phone: string;
   courseOfInterest: string;
   selectedPlan: string;
+  attachmentName?: string | null;
   createdAt: string;
 }
 
@@ -209,6 +210,7 @@ export default function ReservationsAdmin() {
                     <TableHead className="text-white">Contacto</TableHead>
                     <TableHead className="text-white">Curso</TableHead>
                     <TableHead className="text-white">Plan</TableHead>
+                    <TableHead className="text-white">Adjunto</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -265,6 +267,19 @@ export default function ReservationsAdmin() {
                         <span className="font-medium text-[#A51C30]">
                           {reservation.selectedPlan}
                         </span>
+                      </TableCell>
+                      <TableCell>
+                        {reservation.attachmentName ? (
+                          <a
+                            href={`/api/reservations/${reservation.id}/attachment`}
+                            className="inline-flex items-center gap-1 text-xs text-[#002147] hover:text-[#A51C30] underline"
+                          >
+                            <Download className="w-3 h-3" />
+                            {reservation.attachmentName}
+                          </a>
+                        ) : (
+                          <span className="text-xs text-[#002147]/40">—</span>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}

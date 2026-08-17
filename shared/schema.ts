@@ -420,7 +420,12 @@ export const reservations = sqliteTable("reservations", {
   age: text("age"),
   courseOfInterest: text("course_of_interest"),
   selectedPlan: text("selected_plan"),
-  
+
+  // Documento adjunto (certificado, cédula, etc.), guardado en base64
+  attachmentName: text("attachment_name"),
+  attachmentMimeType: text("attachment_mime_type"),
+  attachmentData: text("attachment_data"),
+
   // Flow.cl Payment Integration
   paymentStatus: text("payment_status", { enum: ["pending", "completed", "failed", "cancelled"] }),
   flowOrder: text("flow_order"), // Flow order number
@@ -465,7 +470,12 @@ export const insertReservationSchema = z.object({
   age: z.string().optional(),
   courseOfInterest: z.string().optional(),
   selectedPlan: z.string().optional(),
-  
+
+  // Documento adjunto
+  attachmentName: z.string().max(255).optional(),
+  attachmentMimeType: z.string().max(100).optional(),
+  attachmentData: z.string().optional(),
+
   // Campos de pago (Flow.cl)
   paymentStatus: z.enum(["pending", "completed", "failed", "cancelled"]).optional(),
   flowOrder: z.string().optional(),

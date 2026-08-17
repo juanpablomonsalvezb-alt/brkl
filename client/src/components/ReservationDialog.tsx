@@ -193,16 +193,49 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
 
   const [reservationId, setReservationId] = useState<string | null>(null);
   const [showPaymentOption, setShowPaymentOption] = useState(false);
+  const [attachment, setAttachment] = useState<File | null>(null);
+  const [attachmentError, setAttachmentError] = useState<string | null>(null);
+
+  const MAX_ATTACHMENT_SIZE = 4 * 1024 * 1024; // 4MB
+  const ALLOWED_ATTACHMENT_TYPES = [
+    "application/pdf", "image/jpeg", "image/png", "image/webp",
+    "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
+
+  const handleAttachmentChange = (file: File | null) => {
+    if (!file) {
+      setAttachment(null);
+      setAttachmentError(null);
+      return;
+    }
+    if (!ALLOWED_ATTACHMENT_TYPES.includes(file.type)) {
+      setAttachment(null);
+      setAttachmentError("Formato no permitido. Usa PDF, Word o imagen (JPG/PNG/WEBP).");
+      return;
+    }
+    if (file.size > MAX_ATTACHMENT_SIZE) {
+      setAttachment(null);
+      setAttachmentError("El archivo supera el máximo de 4MB.");
+      return;
+    }
+    setAttachment(file);
+    setAttachmentError(null);
+  };
 
   const mutation = useMutation({
     mutationFn: async (data: ReservationFormData) => {
+      const formData = new FormData();
+      Object.entries({
+        ...data,
+        age: `${age.years} años, ${age.months} meses`,
+      }).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) formData.append(key, String(value));
+      });
+      if (attachment) formData.append("attachment", attachment);
+
       const response = await fetch("/api/reservations", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...data,
-          age: `${age.years} años, ${age.months} meses`,
-        }),
+        body: formData,
         credentials: "include",
       });
 
@@ -274,8 +307,16 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
     mutation.mutate(data);
   };
 
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      setAttachment(null);
+      setAttachmentError(null);
+    }
+    onOpenChange(nextOpen);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-[#002147]">
@@ -303,7 +344,7 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
                       setShowPaymentOption(false);
                       setReservationId(null);
                       form.reset();
-                      onOpenChange(false);
+                      handleOpenChange(false);
                     }}
                     variant="outline"
                   >
@@ -457,6 +498,25 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
                     <p className="text-sm text-red-600 mt-1">
                       {form.formState.errors.phone.message}
                     </p>
+                  )}
+                </div>
+
+                {/* Documento adjunto (opcional) */}
+                <div className="md:col-span-2">
+                  <Label htmlFor="attachment">Adjuntar documento (certificado, cédula, etc.)</Label>
+                  <Input
+                    id="attachment"
+                    key={open ? "open" : "closed"}
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx"
+                    onChange={(e) => handleAttachmentChange(e.target.files?.[0] ?? null)}
+                  />
+                  <p className="text-xs text-[#002147]/60 mt-1">PDF, Word o imagen · máximo 4MB</p>
+                  {attachment && !attachmentError && (
+                    <p className="text-sm text-green-700 mt-1">{attachment.name}</p>
+                  )}
+                  {attachmentError && (
+                    <p className="text-sm text-red-600 mt-1">{attachmentError}</p>
                   )}
                 </div>
               </div>
@@ -641,7 +701,7 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
+                onClick={() => handleOpenChange(false)}
                 disabled={mutation.isPending}
               >
                 Cancelar

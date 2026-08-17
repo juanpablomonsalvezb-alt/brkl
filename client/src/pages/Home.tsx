@@ -1801,7 +1801,7 @@ export default function Home() {
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 32, position: "relative" }}>
           <div style={{ flex: "1 1 240px" }}>
             <p style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px" }}>Barkley Online</p>
-            <p style={{ fontSize: 14, margin: 0, lineHeight: 1.8, opacity: 0.85 }}>Colegio 100% asincrónico · Chile<br /><a href="mailto:admisiones@barkleyinstituto.cl" style={{ color: "#fff" }}>admisiones@barkleyinstituto.cl</a></p>
+            <p style={{ fontSize: 14, margin: 0, lineHeight: 1.8, opacity: 0.85 }}>Colegio 100% asincrónico · Chile</p>
             <div style={{ display: "flex", gap: 14, marginTop: 14 }}>
               <a href={INSTAGRAM_URL} target="_blank" rel="me noreferrer" aria-label="Instagram de Barkley Online" style={{ color: "#fff", opacity: 0.85, display: "flex" }}>
                 <Instagram style={{ width: 20, height: 20 }} />
@@ -1822,10 +1822,6 @@ export default function Home() {
               <li><a href="#faq" style={{ color: "#fff" }}>Preguntas frecuentes</a></li>
               <li><a href="#inscripcion" style={{ color: "#fff" }}>Inscripción</a></li>
             </ul>
-          </div>
-          <div style={{ flex: "1 1 180px" }}>
-            <p style={{ fontSize: 14, fontWeight: 700, margin: "0 0 10px" }}>Contacto directo</p>
-            <button onClick={() => setCallOpen(true)} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: FONT, fontSize: 14, color: "#fff", opacity: 0.85 }}>Agendar llamada</button>
           </div>
           <div style={{ flex: "1 1 220px" }}>
             <p style={{ fontSize: 14, fontWeight: 700, margin: "0 0 10px" }}>Validación oficial</p>

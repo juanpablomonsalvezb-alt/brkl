@@ -15,7 +15,7 @@ import {
   insertLevelPlanConfigurationSchema
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, inArray, desc } from "drizzle-orm";
+import { eq, and, inArray, desc, getTableColumns } from "drizzle-orm";
 
 export interface IStorage {
   // Levels
@@ -574,7 +574,9 @@ export class DatabaseStorage implements IStorage {
 
   // Reservations
   async getAllReservations(): Promise<Reservation[]> {
-    return db.select().from(reservations).orderBy(reservations.createdAt);
+    // Excluye attachmentData (base64) del listado; usar getReservationById para descargarlo
+    const { attachmentData, ...columns } = getTableColumns(reservations);
+    return db.select(columns).from(reservations).orderBy(reservations.createdAt) as unknown as Promise<Reservation[]>;
   }
 
   async getReservationById(id: string): Promise<Reservation | undefined> {
