@@ -733,7 +733,10 @@ export default function Home() {
             name: "Tour de la plataforma Barkley Online — alumno y apoderado",
             description: "Recorrido narrado por el dashboard del alumno y el portal del apoderado de Barkley Online, colegio 100% asincrónico en Chile.",
             thumbnailUrl: "https://www.barkleyinstituto.cl/videos/tour-poster.jpg",
-            uploadDate: "2026-07-11",
+            // ISO 8601 con zona horaria obligatoria: Google Search Console marca
+            // como "no válido" una fecha sin hora/offset, aunque el resto del
+            // schema esté correcto. -04:00 es horario de Chile (CLT).
+            uploadDate: "2026-07-11T12:00:00-04:00",
             duration: "PT53S",
             contentUrl: "https://www.barkleyinstituto.cl/videos/tour-plataforma.mp4",
             embedUrl: "https://www.barkleyinstituto.cl/#plataforma",

@@ -263,20 +263,29 @@ const POSTS = [
   },
   {
     slug: "educacion-asincronica-que-es",
-    title: "Educación asincrónica: qué es y por qué crece",
-    desc: "La educación asincrónica separa el aprendizaje del horario fijo. Qué es exactamente, y por qué colegios en EE.UU. y Reino Unido ya la usan hace años.",
+    // Título y cuerpo reescritos sobre datos reales de Search Console: la consulta
+    // dominante no es "educación asincrónica" (el concepto) sino "qué SIGNIFICA
+    // clase asincrónica" / "horas asincrónicas significado" — alguien que escuchó
+    // el término y no lo entiende, no alguien investigando el modelo educativo.
+    // >250 impresiones acumuladas en variantes de "significado/significa", 0 clics:
+    // la intención es definición literal, así que el artículo abre respondiéndola
+    // en la primera oración, sin rodeos.
+    title: "Qué significa clase asincrónica (explicado simple)",
+    desc: "Clase asincrónica significa que no hay horario fijo: el contenido está grabado y lo ves cuando puedas. Te explicamos la diferencia con las clases en vivo.",
     date: "2026-07-11",
     body: `
-      <h2>La definición simple</h2>
-      <p>Educación asincrónica significa que el contenido no se entrega en tiempo real (como una clase de Zoom a la que hay que conectarse a una hora fija), sino en formatos que el estudiante consume cuando puede: video grabado, pódcast, lectura, práctica autocorregida.</p>
-      <h2>No es lo mismo que "clases online"</h2>
+      <h2>Qué significa "asincrónico", en una frase</h2>
+      <p><strong>Asincrónico significa que no todos están conectados al mismo tiempo.</strong> En una clase sincrónica (como Zoom), el profesor y los estudiantes coinciden en la misma hora. En una clase asincrónica, el contenido queda grabado — video, pódcast, guía — y cada quien lo ve cuando puede: a las 8 de la mañana o a las 11 de la noche, da lo mismo.</p>
+      <h2>Entonces, ¿"horas asincrónicas" qué son?</h2>
+      <p>Son las horas de estudio que el estudiante hace por su cuenta, con material ya preparado, sin que nadie esté "en vivo" al otro lado. Se contraponen a las horas sincrónicas (clase en vivo, con horario fijo). Un colegio 100% asincrónico, como Barkley, no tiene horas sincrónicas: todo el contenido está disponible para verse cuando cada estudiante esté listo.</p>
+      <h2>No es lo mismo que "clases online" a secas</h2>
       <p>Muchos colegios online en Chile simplemente trasladaron la sala de clases a Zoom, manteniendo el horario fijo. Eso sigue siendo síncrono — solo cambió la ubicación, no el problema del tiempo compartido obligatorio.</p>
       <h2>Por qué ya existe en otros países</h2>
       <p>Colegios online acreditados de EE.UU. como Acellus Academy, y plataformas como Edmentum o Apex Learning en EE.UU. y Reino Unido, llevan años operando bajo este modelo con estudiantes de todas las edades — incluyendo a los más pequeños, con el adulto acompañante cumpliendo un rol similar al que describimos en Barkley.</p>
-      <h2>Por qué crece ahora en Chile</h2>
-      <p>La necesidad de flexibilidad real —para deportistas, adultos que retoman estudios, familias que se mudan seguido, o estudiantes para quienes el aula tradicional no calza— no es nueva, pero recién ahora hay infraestructura (video, evaluación autocorregida, seguimiento en tiempo real) para ofrecerla bien.</p>
     `,
     faqs: [
+      { q: "¿Qué significa clase asincrónica?", a: "Que no hay horario fijo de conexión: el contenido queda grabado (video, pódcast, guía) y el estudiante lo ve cuando puede, en vez de todos coincidiendo en la misma hora como en una clase por Zoom." },
+      { q: "¿Qué son las horas asincrónicas?", a: "Las horas de estudio que el estudiante hace por su cuenta con material ya preparado, sin una clase en vivo al otro lado. Se contraponen a las horas sincrónicas (con horario fijo)." },
       { q: "¿Educación asincrónica es lo mismo que clases grabadas nada más?", a: "Incluye clases grabadas, pero también evaluación con reintento, seguimiento de avance y apoyo cuando se necesita — no es solo un video subido." },
       { q: "¿Qué colegios en el mundo usan este modelo?", a: "Acellus Academy en EE.UU. y plataformas como Edmentum/Apex Learning en EE.UU. y Reino Unido son referentes reales de este método con estudiantes de todas las edades." },
     ],
