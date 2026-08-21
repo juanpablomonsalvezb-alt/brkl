@@ -103,6 +103,58 @@ function temarioHtml(slug, nombre) {
   </section>`;
 }
 
+// Artículo del blog más pertinente por nivel (no genérico: por edad/etapa real)
+// + si conviene destacar Adaptativo. Las 13 landings de nivel no enlazaban a
+// NADA fuera de sí mismas — Google reparte autoridad por enlaces internos, y
+// esas dos secciones (blog, Adaptativo) quedaban aisladas del tráfico que ya
+// llega ahí (ej. 8° básico: 266 impresiones/mes).
+const RELACIONADO_POR_NIVEL = {
+  "1-basico": { post: "adulto-acompanante-examenes-libres-basica", adaptativo: true },
+  "2-basico": { post: "adulto-acompanante-examenes-libres-basica", adaptativo: true },
+  "3-basico": { post: "adulto-acompanante-examenes-libres-basica", adaptativo: true },
+  "4-basico": { post: "diferencia-examen-libre-colegio-online", adaptativo: true },
+  "5-basico": { post: "aprendizaje-por-dominio-que-es", adaptativo: true },
+  "6-basico": { post: "educacion-asincronica-que-es", adaptativo: true },
+  "7-basico": { post: "tdah-y-colegio-presencial", adaptativo: true },
+  "8-basico": { post: "dislexia-estudiar-en-casa", adaptativo: true },
+  "1-medio": { post: "ansiedad-escolar-y-aula-tradicional", adaptativo: true },
+  "2-medio": { post: "colegio-para-deportistas-alto-rendimiento", adaptativo: false },
+  "3-medio": { post: "paes-despues-de-cuarto-medio", adaptativo: false },
+  "4-medio": { post: "paes-despues-de-cuarto-medio", adaptativo: false },
+};
+
+// Títulos reales del blog (deben calzar con scripts/generate-blog.mjs — están
+// duplicados a propósito para no acoplar los dos generadores por import).
+const TITULO_POST = {
+  "diferencia-examen-libre-colegio-online": "Examen libre o colegio online: la diferencia real",
+  "tdah-y-colegio-presencial": "TDAH y colegio presencial: por qué el aula complica más",
+  "dislexia-estudiar-en-casa": "Dislexia y estudio en casa: menos presión, mismo nivel",
+  "aprendizaje-por-dominio-que-es": "Aprendizaje por Dominio: nadie avanza sin entender",
+  "colegio-para-deportistas-alto-rendimiento": "Colegio para deportistas de alto rendimiento",
+  "terminar-el-colegio-siendo-adulto": "Terminar el colegio siendo adulto, en Chile",
+  "como-inscribirse-examenes-libres-mineduc": "Cómo inscribirse a exámenes libres MINEDUC paso a paso",
+  "ansiedad-escolar-y-aula-tradicional": "Ansiedad escolar: rendir mejor sin exposición constante",
+  "paes-despues-de-cuarto-medio": "PAES después de 4° medio: qué necesitas y cuándo",
+  "adulto-acompanante-examenes-libres-basica": "Adulto Acompañante en exámenes libres de básica",
+  "educacion-asincronica-que-es": "Qué significa clase asincrónica (explicado simple)",
+};
+
+function relacionadosHtml(slug) {
+  const r = RELACIONADO_POR_NIVEL[slug];
+  if (!r) return "";
+  const items = [
+    `<a href="/blog/${r.post}/">${TITULO_POST[r.post]}</a>`,
+    r.adaptativo ? `<a href="/adaptativo">Programa Adaptativo — TDAH, dislexia, TEA y motricidad</a>` : "",
+  ].filter(Boolean);
+  return `
+  <section style="background:#fff;">
+    <div class="inner">
+      <h2>Sigue leyendo</h2>
+      <div class="relacionados">${items.join("")}</div>
+    </div>
+  </section>`;
+}
+
 const NIVELES = [
   {
     slug: "1-basico",
@@ -385,6 +437,8 @@ function pageHtml(n) {
     .niveles .inner { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
     .niveles a { font-size: 13.5px; font-weight: 600; color: ${NAVY}; text-decoration: none; background: #f5f5f5; border-radius: 999px; padding: 8px 16px; }
     .niveles .lbl { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: ${TEXT}; margin-right: 6px; }
+    .relacionados { display: flex; flex-wrap: wrap; gap: 12px; }
+    .relacionados a { font-size: 14.5px; font-weight: 600; color: ${NAVY}; text-decoration: none; background: #fff8ea; border: 1px solid #f0e2bd; border-radius: 10px; padding: 12px 18px; }
     .faq-item { border-bottom: 1px solid #e8e8e8; padding: 18px 0; }
     .faq-item b { display: block; color: ${NAVY}; font-size: 15.5px; margin-bottom: 6px; }
     .faq-item p { font-size: 14.5px; }
@@ -448,6 +502,8 @@ function pageHtml(n) {
       </div>
     </div>
   </section>
+
+  ${relacionadosHtml(n.slug)}
 
   <section class="fechas">
     <div class="inner">
