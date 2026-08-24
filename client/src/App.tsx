@@ -6,6 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Home from "@/pages/Home";
 import Adaptativo from "@/pages/Adaptativo";
+import Lenis from 'lenis';
+import { useEffect, lazy, Suspense } from "react";
 
 // Code-splitting: solo Home va en el bundle inicial (es la landing pública y
 // define el LCP). Todo lo demás — dashboards, admin, course player — se carga
@@ -30,9 +32,6 @@ const PaymentResult = lazy(() => import("@/pages/PaymentResult"));
 const PrivacyPolicy = lazy(() => import("@/pages/Legal").then((m) => ({ default: m.PrivacyPolicy })));
 const TermsOfUse = lazy(() => import("@/pages/Legal").then((m) => ({ default: m.TermsOfUse })));
 const RefundPolicy = lazy(() => import("@/pages/Legal").then((m) => ({ default: m.RefundPolicy })));
-
-import Lenis from 'lenis';
-import { useEffect, lazy, Suspense } from "react";
 
 function SmoothScroll() {
   useEffect(() => {
