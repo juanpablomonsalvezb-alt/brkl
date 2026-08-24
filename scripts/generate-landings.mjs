@@ -379,15 +379,15 @@ function pageHtml(n) {
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="es_CL" />
   <meta property="og:url" content="${url}" />
-  <meta property="og:image" content="${BASE}/og-image.jpg" />
+  <meta property="og:image" content="${BASE}/og/${n.slug}.jpg" />
   <meta property="og:site_name" content="Barkley Online" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Barkley Online — colegio 100% asincrónico en Chile" />
+  <meta property="og:image:alt" content="Barkley Online — ${n.nombre}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${title}" />
   <meta name="twitter:description" content="${desc}" />
-  <meta name="twitter:image" content="${BASE}/og-image.jpg" />
+  <meta name="twitter:image" content="${BASE}/og/${n.slug}.jpg" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
