@@ -13,3 +13,5 @@ vite.config.ts.*
 
 # Credencial de la API de Search Console — NUNCA debe subirse
 .gsc-key.json
+.env.bak
+.env*
