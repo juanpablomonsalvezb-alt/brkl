@@ -218,13 +218,13 @@ function ShapeFastForward({ color, size = 40 }: { color: string; size?: number }
 }
 const SHAPES = [ShapeCircle, ShapeTriangle, ShapeStar, ShapeHeart, ShapeFlower, ShapeArrow];
 
-const HERO_PHOTO = "/images/hero-estudiante.jpeg";
+const HERO_PHOTO = "/images/hero-estudiante.webp";
 
 const PILARES = [
-  { title: "Acompañamiento", img: "/images/acompanamiento.jpeg", text: "Vínculos reales con asesores académicos que conocen a cada estudiante y lo acompañan en su progreso." },
-  { title: "Metodología", img: "/images/metodologia.jpeg", text: "Trabajamos con Mastery Learning (Aprendizaje por Dominio), el modelo de Benjamin Bloom (Harvard, 1968): cada unidad se desbloquea solo si dominas la anterior — video corto, práctica, y si te cuesta, refuerzo antes de seguir. Sin saltos, sin huecos." },
-  { title: "Rutas flexibles", img: "/images/rutas-flexibles.jpeg", text: "No hay un horario que cumplir ni una clase que no puedes recuperar: cada estudiante decide cuándo estudia, a qué hora y en qué orden dentro de su curso. Lo único fijo es la fecha de examen libre ante el Ministerio de Educación — todo lo demás, el camino hasta llegar ahí, lo organizas tú." },
-  { title: "Plataforma", img: "/images/plataforma-pilar.jpeg", text: "Tu progreso se mide con reglas claras, no con impresiones: cada intento, cada puntaje, cada unidad completada queda registrado. Si tu perfil de aprendizaje es TDAH o dislexia, el contenido se adapta a ti automáticamente (programa Adaptativo) — mismo curso, forma distinta de recorrerlo. Y detrás de cada número hay un asesor humano real revisando cómo vas, no solo un algoritmo mirando de lejos." },
+  { title: "Acompañamiento", img: "/images/acompanamiento.webp", text: "Vínculos reales con asesores académicos que conocen a cada estudiante y lo acompañan en su progreso." },
+  { title: "Metodología", img: "/images/metodologia.webp", text: "Trabajamos con Mastery Learning (Aprendizaje por Dominio), el modelo de Benjamin Bloom (Harvard, 1968): cada unidad se desbloquea solo si dominas la anterior — video corto, práctica, y si te cuesta, refuerzo antes de seguir. Sin saltos, sin huecos." },
+  { title: "Rutas flexibles", img: "/images/rutas-flexibles.webp", text: "No hay un horario que cumplir ni una clase que no puedes recuperar: cada estudiante decide cuándo estudia, a qué hora y en qué orden dentro de su curso. Lo único fijo es la fecha de examen libre ante el Ministerio de Educación — todo lo demás, el camino hasta llegar ahí, lo organizas tú." },
+  { title: "Plataforma", img: "/images/plataforma-pilar.webp", text: "Tu progreso se mide con reglas claras, no con impresiones: cada intento, cada puntaje, cada unidad completada queda registrado. Si tu perfil de aprendizaje es TDAH o dislexia, el contenido se adapta a ti automáticamente (programa Adaptativo) — mismo curso, forma distinta de recorrerlo. Y detrás de cada número hay un asesor humano real revisando cómo vas, no solo un algoritmo mirando de lejos." },
 ];
 
 // Solo Básica y Media en el módulo de niveles del home — Validación de Adultos existe como
@@ -233,8 +233,8 @@ const PILARES = [
 // aspiracional para su hijo. Los competidores (Colegio Online LAT, Instituto Virtual de Chile)
 // separan la marca de adultos de la marca K-12 por la misma razón.
 const NIVELES = [
-  { title: "Enseñanza Básica", sub: "1° a 8° Básico", img: "/images/ensenanza-basica.jpeg" },
-  { title: "Enseñanza Media", sub: "1° a 4° Medio", img: "/images/ensenanza-media.jpeg" },
+  { title: "Enseñanza Básica", sub: "1° a 8° Básico", img: "/images/ensenanza-basica.webp" },
+  { title: "Enseñanza Media", sub: "1° a 4° Medio", img: "/images/ensenanza-media.webp" },
 ];
 
 // Inclusión: el mismo colegio, adaptado a necesidades específicas (sin ser "especializado")
@@ -278,11 +278,11 @@ const FACTS = [
 ];
 
 const PROGRAMAS = [
-  { title: "Metodología", sub: "Aprendizaje asincrónico", text: "Sin Zoom, sin horario fijo. Material propio diseñado para el ritmo de cada estudiante, con Aprendizaje por Dominio: cada paso se desbloquea solo cuando el anterior ya está dominado.", img: "/images/metodologia-asincronica.jpeg", href: "#metodo" },
+  { title: "Metodología", sub: "Aprendizaje asincrónico", text: "Sin Zoom, sin horario fijo. Material propio diseñado para el ritmo de cada estudiante, con Aprendizaje por Dominio: cada paso se desbloquea solo cuando el anterior ya está dominado.", img: "/images/metodologia-asincronica.webp", href: "#metodo" },
   { title: "Certificación", sub: "Exámenes libres MINEDUC", text: "Validación oficial ante el Ministerio de Educación de Chile, desde 1° básico a 4° medio.", img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=700&q=75", href: "#metodo" },
-  { title: "Plataforma", sub: "Seguimiento algorítmico", text: "Un sistema determinístico mide cada resultado y ajusta el contenido — sin IA generativa. Registra avance, notas y días de estudio, refuerza lo que cuesta antes de seguir, y entrega al apoderado un panel en tiempo real con el progreso de su hijo.", img: "/images/seguimiento-algoritmico.jpeg", href: "#plataforma" },
-  { title: "Acompañamiento", sub: "Un tutor, no un profesor de refuerzo", text: "Un tutor general acompaña a tu hijo — no un especialista por materia. Apoya en lo académico, pero también en organizarse, sostener la motivación y resolver dudas de cualquier asignatura, como un adulto de confianza dentro de la plataforma.", img: "/images/tutor-acompanamiento.jpeg", href: "#plataforma" },
-  { title: "Familias", sub: "Portal Familia", text: "Transparencia total, sin preguntar cómo le fue: promedio general, avance por asignatura, días de estudio del mes y tutorías tomadas, en un panel que se actualiza solo. Lee los mensajes del asesor y ve qué entregas están en revisión — todo en modo observador, sin interferir en su proceso.", img: "/images/portal-familia.jpeg", href: "#inscripcion" },
+  { title: "Plataforma", sub: "Seguimiento algorítmico", text: "Un sistema determinístico mide cada resultado y ajusta el contenido — sin IA generativa. Registra avance, notas y días de estudio, refuerza lo que cuesta antes de seguir, y entrega al apoderado un panel en tiempo real con el progreso de su hijo.", img: "/images/seguimiento-algoritmico.webp", href: "#plataforma" },
+  { title: "Acompañamiento", sub: "Un tutor, no un profesor de refuerzo", text: "Un tutor general acompaña a tu hijo — no un especialista por materia. Apoya en lo académico, pero también en organizarse, sostener la motivación y resolver dudas de cualquier asignatura, como un adulto de confianza dentro de la plataforma.", img: "/images/tutor-acompanamiento.webp", href: "#plataforma" },
+  { title: "Familias", sub: "Portal Familia", text: "Transparencia total, sin preguntar cómo le fue: promedio general, avance por asignatura, días de estudio del mes y tutorías tomadas, en un panel que se actualiza solo. Lee los mensajes del asesor y ve qué entregas están en revisión — todo en modo observador, sin interferir en su proceso.", img: "/images/portal-familia.webp", href: "#inscripcion" },
 ];
 
 // Servicios que vienen incluidos en la matrícula, más allá de las clases. Se
@@ -527,22 +527,22 @@ function InscripcionForm() {
 // conozca la plataforma sin registrarse. Modal con 4 slides.
 const TOUR_SLIDES = [
   {
-    img: "/images/tour/01-dashboard.png",
+    img: "/images/tour/01-dashboard.webp",
     title: "Tu escritorio: siempre sabes qué sigue",
     text: "Al entrar, el estudiante ve exactamente dónde quedó y qué lección viene. Su avance real, sus asignaturas y el acceso directo a su asesor — todo en un solo lugar, sin perderse.",
   },
   {
-    img: "/images/tour/02-curso.png",
+    img: "/images/tour/02-curso.webp",
     title: "Avanzas por dominio, no por tiempo",
     text: "Cada unidad se desbloquea solo cuando dominas la anterior. Sin saltos, sin huecos: es Mastery Learning, el modelo de Benjamin Bloom (Harvard). El contenido sigue el temario oficial MINEDUC, objetivo por objetivo.",
   },
   {
-    img: "/images/tour/03-leccion.png",
+    img: "/images/tour/03-leccion.webp",
     title: "Cada lección tiene su propio video",
     text: "Video breve y claro por cada objetivo de aprendizaje. Se pausa, se repite, se ve cuando el día lo permite. Aprendes a tu ritmo real, sin clases en vivo ni horarios que cumplir.",
   },
   {
-    img: "/images/tour/04-podcast.png",
+    img: "/images/tour/04-podcast.webp",
     title: "¿Prefieres escuchar? También hay pódcasts",
     text: "Cada lección incluye además 2 a 3 audios tipo pódcast. Para aprender caminando, en el transporte, o si leer te cuesta. Inclusión de verdad — pensado también para TDAH y dislexia (programa Adaptativo).",
   },
@@ -566,7 +566,7 @@ function TourModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             onClick={e => e.stopPropagation()}
             style={{ background: "#fff", borderRadius: 18, maxWidth: 880, width: "100%", overflow: "hidden", boxShadow: "0 30px 80px rgba(0,0,0,0.4)" }}>
             <div style={{ position: "relative", background: "#eef1f5" }}>
-              <img src={slide.img} alt={slide.title} style={{ width: "100%", display: "block", aspectRatio: "1280 / 820", objectFit: "cover" }} />
+              <img src={slide.img} alt={slide.title} loading="lazy" style={{ width: "100%", display: "block", aspectRatio: "1280 / 820", objectFit: "cover" }} />
               <button aria-label="Cerrar" onClick={onClose}
                 style={{ position: "absolute", top: 14, right: 14, width: 38, height: 38, borderRadius: "50%", background: "rgba(0,20,45,0.7)", border: "none", color: "#fff", cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <X style={{ width: 20, height: 20 }} />
@@ -959,9 +959,9 @@ export default function Home() {
           {/* Registro institucional derecha */}
           <div style={{ flex: "1 1 520px", minWidth: "min(300px, 100%)" }}>
             {[
-              { logo: "/images/colegios/acellus-white.png", pad: "16px 14px", nombre: "Acellus Academy", meta: "Estados Unidos · Acreditado WASC", dato: "Mastery Learning en más de 6.000 escuelas" },
-              { logo: "/images/colegios/apex-icon.png", pad: "10px", nombre: "Apex Learning Virtual School", meta: "Estados Unidos · Acreditado Cognia", dato: "Currículum mastery-based de secundaria" },
-              { logo: "/images/colegios/edmentum-white.png", pad: "20px 14px", nombre: "Edmentum EdOptions Academy", meta: "Estados Unidos · Acreditado Cognia", dato: "Colegio online K-12 por dominio" },
+              { logo: "/images/colegios/acellus-white.webp", pad: "16px 14px", nombre: "Acellus Academy", meta: "Estados Unidos · Acreditado WASC", dato: "Mastery Learning en más de 6.000 escuelas" },
+              { logo: "/images/colegios/apex-icon.webp", pad: "10px", nombre: "Apex Learning Virtual School", meta: "Estados Unidos · Acreditado Cognia", dato: "Currículum mastery-based de secundaria" },
+              { logo: "/images/colegios/edmentum-white.webp", pad: "20px 14px", nombre: "Edmentum EdOptions Academy", meta: "Estados Unidos · Acreditado Cognia", dato: "Colegio online K-12 por dominio" },
               { logo: "/images/colegios/wolsey-hall-white.svg", pad: "16px 12px", nombre: "Wolsey Hall Oxford", meta: "Reino Unido · Fundado en 1894", dato: "Homeschooling 100% asincrónico" },
             ].map((c, i) => (
               <Reveal key={c.nombre} delay={i * 0.08}>
@@ -1064,7 +1064,7 @@ export default function Home() {
           <Reveal>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 0, marginBottom: 48, alignItems: "stretch" }}>
               <div style={{ flex: "1 1 320px", minWidth: 260, position: "relative", minHeight: 340, overflow: "hidden" }}>
-                <img src="/images/asincronico-tablet.jpeg" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src="/images/asincronico-tablet.webp" alt="" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
               <div style={{ flex: "1 1 380px", minWidth: 280, background: "#fff", padding: "40px 32px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                 <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Sin clases en vivo. Sin horarios fijos.</p>
@@ -1081,7 +1081,7 @@ export default function Home() {
               <AnimatePresence mode="wait">
                 <motion.div key={pilarIdx} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.4 }}
                   style={{ display: "flex", flexWrap: "wrap", gap: 32, alignItems: "center" }}>
-                  <img src={PILARES[pilarIdx].img} alt={PILARES[pilarIdx].title} style={{ flex: "1 1 320px", minWidth: 260, aspectRatio: "3/2", objectFit: "cover", borderRadius: 12, display: "block" }} />
+                  <img src={PILARES[pilarIdx].img} alt={PILARES[pilarIdx].title} loading="lazy" style={{ flex: "1 1 320px", minWidth: 260, aspectRatio: "3/2", objectFit: "cover", borderRadius: 12, display: "block" }} />
                   <div style={{ flex: "1 1 320px", minWidth: 260 }}>
                     <h3 style={{ fontSize: "clamp(22px,2.6vw,32px)", fontWeight: 700, color: NAVY, margin: "0 0 12px" }}>{PILARES[pilarIdx].title}</h3>
                     <p style={{ fontSize: 16, margin: 0, color: TEXT }}>{PILARES[pilarIdx].text}</p>
