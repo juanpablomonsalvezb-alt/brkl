@@ -16,7 +16,7 @@ import {
   Loader2, Check, ArrowUpRight, Menu, X, Search, Play, Download,
   Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
   Layers, BookOpen, Headphones, Image as ImageIcon, ListChecks, Sparkles,
-  Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock, Instagram,
+  Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock, Instagram, Zap,
 } from "lucide-react";
 
 const INSTAGRAM_URL = "https://www.instagram.com/ibarkley.cl";
