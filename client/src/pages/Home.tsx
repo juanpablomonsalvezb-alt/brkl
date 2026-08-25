@@ -1700,7 +1700,7 @@ export default function Home() {
             <p style={{ fontSize: 14, fontWeight: 600, color: RED, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>Precio transparente</p>
             <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 600, color: NAVY, margin: "0 0 12px" }}>Un solo valor, sin letra chica</h2>
             <p style={{ fontSize: 16, color: TEXT, margin: "0 auto 40px", maxWidth: 640 }}>
-              Sin matrícula, sin costos ocultos. El año de preparación va de <strong style={{ color: NAVY }}>marzo al 31 de octubre</strong>, cuando rindes tus exámenes libres. Todo incluido — 2 a 3 videos y pódcasts por lección, un tutor general que te acompaña en todo (no solo lo académico), asesor que sigue tu progreso y portal para tu familia.
+              Matrícula gratis, sin costos ocultos. El año de preparación va de <strong style={{ color: NAVY }}>marzo al 31 de octubre</strong>, cuando rindes tus exámenes libres. Todo incluido — 2 a 3 videos y pódcasts por lección, un tutor general que te acompaña en todo (no solo lo académico), asesor que sigue tu progreso y portal para tu familia.
             </p>
           </Reveal>
           <Reveal delay={0.1}>
@@ -1712,7 +1712,7 @@ export default function Home() {
                   <span style={{ fontSize: 48, fontWeight: 700, color: NAVY }}>$65.000</span>
                   <span style={{ fontSize: 16, color: TEXT }}>/ mes</span>
                 </div>
-                <p style={{ fontSize: 14, color: TEXT, margin: "0 0 22px" }}>Sin matrícula. De marzo a octubre, cancela cuando quieras.</p>
+                <p style={{ fontSize: 14, color: TEXT, margin: "0 0 22px" }}>Matrícula gratis. De marzo a octubre, cancela cuando quieras.</p>
                 {["Todas las asignaturas de tu nivel", "2 a 3 videos y pódcasts en cada lección", "Un tutor general que te acompaña integralmente", "Asesor que sigue tu progreso", "Portal Familia con avance en tiempo real", "Preparación para exámenes libres MINEDUC"].map((f) => (
                   <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
                     <Check style={{ width: 18, height: 18, color: GREEN, flexShrink: 0, marginTop: 2 }} strokeWidth={3} />
