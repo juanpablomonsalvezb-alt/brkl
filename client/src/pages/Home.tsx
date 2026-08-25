@@ -237,6 +237,14 @@ const NIVELES = [
   { title: "Enseñanza Media", sub: "1° a 4° Medio", img: "/images/ensenanza-media.jpeg" },
 ];
 
+// Inclusión: el mismo colegio, adaptado a necesidades específicas (sin ser "especializado")
+const INCLUSIVOS = [
+  { title: "TDAH", desc: "Flexibilidad real: sin hora fija, con ritmo propio y tutor dedicado.", url: "https://claude.ai/code/artifact/c655e492-30b2-44ba-9230-2797ccda2b52", icon: Sparkles },
+  { title: "Deportistas", desc: "Para atletas de alto rendimiento: exámenes flexibles, sin asistencia obligatoria.", url: "https://claude.ai/code/artifact/18187b86-35ea-4533-8ea9-54184740f45e", icon: Zap },
+  { title: "NEE", desc: "Inclusión real: dislexia, autismo, discapacidad. Adaptaciones desde el diseño.", url: "https://claude.ai/code/artifact/bcdd2509-10cf-4aac-a7d6-b682a9761954", icon: Heart },
+  { title: "Exámenes Libres", desc: "Preparación completa para validación oficial MINEDUC, a tu ritmo.", url: "https://claude.ai/code/artifact/32af95e8-9524-4d39-9601-1df2af66463f", icon: CheckCircle2 },
+];
+
 // Cuatro pilares — cada uno inspirado en la filosofía de un referente internacional real
 // (Wolsey Hall Oxford, Oxford Home Schooling, NEC, ICS Learn), aterrizado en features
 // que Barkley ya tiene construidas (AdvisorService, TutoringService, AdaptiveProfileService,
@@ -1122,6 +1130,58 @@ export default function Home() {
           </div>
           <div style={{ textAlign: "center", marginTop: 56 }}>
             <motion.a href="#plataforma" whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} style={{ display: "inline-flex", alignItems: "center", gap: 8, background: GOLD, color: NAVY, textDecoration: "none", fontWeight: 600, fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase", borderRadius: 999, padding: "18px 36px" }}>Aprendizaje en Barkley <ArrowUpRight style={{ width: 16, height: 16 }} /></motion.a>
+          </div>
+        </div>
+      </section>
+
+      {/* === INCLUSIVO — Para todos, adaptado a cada uno === */}
+      <section style={{ padding: "64px 24px", background: "#f5f5f5" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <Reveal>
+            <div style={{ textAlign: "center", marginBottom: 56 }}>
+              <p style={{ fontSize: 14, fontWeight: 600, color: SLATE, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>Inclusión real</p>
+              <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 600, color: NAVY, margin: "0 0 24px" }}>Para todos. Adaptado a cada uno.</h2>
+              <p style={{ fontSize: 16, color: TEXT, maxWidth: 600, margin: "0 auto", lineHeight: 1.6 }}>Barkley es un colegio para todos. Si tienes TDAH, eres deportista de alto rendimiento, tienes una necesidad educativa especial o necesitas flexibilidad para exámenes libres, la tecnología y metodología ya están diseñadas para ti.</p>
+            </div>
+          </Reveal>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 20 }}>
+            {INCLUSIVOS.map((inc, i) => {
+              const Icon = inc.icon;
+              return (
+                <Reveal key={inc.title} delay={i * 0.1}>
+                  <motion.a
+                    href={inc.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    style={{
+                      display: "block",
+                      padding: 28,
+                      background: "#fff",
+                      border: `1px solid #e5e5e5`,
+                      borderRadius: 12,
+                      textDecoration: "none",
+                      color: "inherit",
+                      transition: "all 0.25s ease-in-out",
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+                      <Icon size={28} color={GOLD} strokeWidth={2} />
+                      <h3 style={{ fontSize: 18, fontWeight: 700, color: NAVY, margin: 0 }}>{inc.title}</h3>
+                    </div>
+                    <p style={{ fontSize: 14, color: TEXT, margin: 0, lineHeight: 1.5, flex: 1 }}>{inc.desc}</p>
+                    <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 8, color: SLATE, fontSize: 13, fontWeight: 600 }}>
+                      Leer más <ArrowUpRight size={14} />
+                    </div>
+                  </motion.a>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
