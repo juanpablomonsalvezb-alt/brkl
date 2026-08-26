@@ -39,6 +39,10 @@
       "destination": "/api/handler.js"
     },
     {
+      "source": "/sin-limites",
+      "destination": "/api/handler.js"
+    },
+    {
       "source": "/((?!api/|assets/|images/|videos/|docs/|fonts/|prerendered/|.*\\.\\w+$).*)",
       "destination": "/app.html"
     }
