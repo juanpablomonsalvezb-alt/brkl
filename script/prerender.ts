@@ -14,6 +14,7 @@ const PORT = 4790;
 const ROUTES: { path: string; out: string }[] = [
   { path: "/", out: "dist/public/prerendered/index.html" },
   { path: "/adaptativo", out: "dist/public/prerendered/adaptativo.html" },
+  { path: "/sin-limites", out: "dist/public/prerendered/sin-limites.html" },
 ];
 
 /**

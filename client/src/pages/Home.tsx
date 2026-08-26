@@ -1263,6 +1263,27 @@ export default function Home() {
         </div>
       </section>
 
+      {/* === SIN LÍMITES — módulo condensado del fundamento "por qué no hay Zoom",
+          con CTA a la página dedicada /sin-limites para el desarrollo completo === */}
+      <section style={{ background: NAVY, padding: "72px 24px", position: "relative", overflow: "hidden" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+          <Reveal>
+            <span style={{ display: "inline-block", background: "rgba(255,197,72,0.15)", color: GOLD, fontSize: 13, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "7px 18px", borderRadius: 999, marginBottom: 20 }}>
+              Por qué somos distintos
+            </span>
+            <h2 style={{ fontSize: "clamp(30px,5vw,48px)", fontWeight: 800, color: "#fff", margin: "0 0 20px", lineHeight: 1.15 }}>
+              Aprende sin estar atrapado.
+            </h2>
+            <p style={{ fontSize: 17, color: "#cfe0f5", margin: "0 auto 36px", maxWidth: 620, lineHeight: 1.7 }}>
+              Muchos colegios online solo trasladaron la sala de clases a Zoom: mismo horario fijo, mismo profesor exponiendo, misma sala llena. Eso no es libertad — es la misma jaula, con wifi. En Barkley el tutor da feedback, no dirige una clase a 40 personas a la vez.
+            </p>
+            <a href="/sin-limites" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: GOLD, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 15, letterSpacing: "0.02em", borderRadius: 999, padding: "16px 32px" }}>
+              Ver el fundamento completo <ArrowUpRight size={16} />
+            </a>
+          </Reveal>
+        </div>
+      </section>
+
       {/* === RAZONES / HISTORIAS — sobre el MISMO azul vivo continuo del real (Stories That Connect Us),
           texto blanco, sin testimonios fabricados con nombre === */}
       <section style={{ background: VIVID_BLUE, padding: "72px 24px 64px" }}>

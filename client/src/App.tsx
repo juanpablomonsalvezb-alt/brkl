@@ -13,6 +13,7 @@ import { useEffect, lazy, Suspense } from "react";
 // define el LCP). Todo lo demás — dashboards, admin, course player — se carga
 // bajo demanda; un visitante que solo mira la landing no descarga nada de eso.
 const NotFound = lazy(() => import("@/pages/not-found"));
+const SinLimites = lazy(() => import("@/pages/SinLimites"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const CoursePlayer = lazy(() => import("@/pages/CoursePlayer"));
 const DriveSync = lazy(() => import("@/pages/DriveSync"));
@@ -64,6 +65,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/adaptativo" component={Adaptativo} />
+      <Route path="/sin-limites" component={SinLimites} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/course/:id" component={CoursePlayer} />
       <Route path="/drive-sync" component={DriveSync} />

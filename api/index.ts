@@ -13,6 +13,8 @@ import spaShellHtml from "../dist/public/index.html";
 import prerenderedHtml from "../client/public/prerendered/index.html";
 // @ts-ignore
 import prerenderedAdaptativoHtml from "../client/public/prerendered/adaptativo.html";
+// @ts-ignore
+import prerenderedSinLimitesHtml from "../client/public/prerendered/sin-limites.html";
 
 // Bots que no ejecutan JS (o cuya política prefiere HTML estático): reciben
 // el snapshot prerenderizado en vez del shell vacío <div id="root"></div>.
@@ -37,6 +39,12 @@ app.get("/adaptativo", (req, res) => {
   const ua = req.headers["user-agent"] || "";
   res.setHeader("Cache-Control", "no-store");
   res.type("html").send(BOT_USER_AGENT.test(ua) ? prerenderedAdaptativoHtml : spaShellHtml);
+});
+
+app.get("/sin-limites", (req, res) => {
+  const ua = req.headers["user-agent"] || "";
+  res.setHeader("Cache-Control", "no-store");
+  res.type("html").send(BOT_USER_AGENT.test(ua) ? prerenderedSinLimitesHtml : spaShellHtml);
 });
 
 // Middleware
