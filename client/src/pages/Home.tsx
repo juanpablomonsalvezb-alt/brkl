@@ -797,11 +797,10 @@ export default function Home() {
         `}</style>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
           <a href="/" data-hdr="logo" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none", padding: "30px 0 0 45px" }}>
-            <div data-hdr="logo-box" style={{ width: 84, height: 84, background: "rgba(0,32,61,0.45)", border: "2px solid #fff", borderRadius: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 4 }}>
-              <span style={{ color: "#fff", fontWeight: 800, fontSize: 30, letterSpacing: "-0.5px", lineHeight: 1 }}>BK</span>
-              <span style={{ width: 40, height: 3, background: RED, marginTop: 5, borderRadius: 2 }} />
+            <div data-hdr="logo-box" style={{ width: 84, height: 84, background: "rgba(0,32,61,0.45)", border: "2px solid #fff", borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 12 }}>
+              <img src="/logos/barkley_isotipo_B_navy.svg" alt="Barkley" style={{ width: "100%", height: "100%", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
             </div>
-            <span data-hdr="logo-text" style={{ color: "#fff", fontWeight: 600, fontSize: 19, lineHeight: 1.35 }}>The Barkley<br />Online School</span>
+            <span data-hdr="logo-text" style={{ color: "#fff", fontWeight: 600, fontSize: 19, lineHeight: 1.35 }}>Barkley<br />Colegio Online</span>
           </a>
           {/* Ancho fijo = gap 15 + columna de paneles 314 + padding 15 → el bloque blanco
               calza exacto con la columna derecha y nunca tapa la foto */}
