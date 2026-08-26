@@ -215,11 +215,15 @@ export async function registerRoutes(
         .from(waitlistSignups)
         .where(eq(waitlistSignups.email, parsed.data.email))
         .limit(1);
-      if (existing.length > 0) {
-        return res.status(200).json({ message: "Ya estabas en la lista", alreadySubscribed: true });
+      // Reinscripción con el mismo correo: no se duplica la fila, pero sí se
+      // avisa igual. Antes esta rama cortaba antes de los envíos, así que quien
+      // volvía a postular (o probaba el formulario) no recibía nada y el equipo
+      // tampoco se enteraba — con la pantalla de éxito igual mostrándose.
+      const yaInscrito = existing.length > 0;
+      if (!yaInscrito) {
+        await db.insert(waitlistSignups).values(parsed.data);
       }
-      await db.insert(waitlistSignups).values(parsed.data);
-      notifyByEmail("Nueva inscripción en Barkley", {
+      notifyByEmail(yaInscrito ? "Reinscripción en Barkley (correo ya registrado)" : "Nueva inscripción en Barkley", {
         Nombre: parsed.data.name,
         Correo: parsed.data.email,
         Nivel: parsed.data.levelInterest,
@@ -227,6 +231,9 @@ export async function registerRoutes(
         Consultas: parsed.data.notes,
       });
       sendConfirmationEmail(parsed.data.email, parsed.data.name || "");
+      if (yaInscrito) {
+        return res.status(200).json({ message: "Ya estabas en la lista", alreadySubscribed: true });
+      }
       res.status(201).json({ message: "Listo, te avisamos apenas abramos inscripciones" });
     } catch (error: any) {
       if (String(error?.message || "").includes("UNIQUE")) {

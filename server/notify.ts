@@ -1,8 +1,11 @@
 // Aviso por correo cuando alguien completa un formulario del sitio (inscripción o reserva).
 // No bloquea la respuesta al usuario: se dispara y se ignoran errores de envío.
 export async function notifyByEmail(subject: string, rows: Record<string, string | undefined>) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.NOTIFY_EMAIL;
+  // .trim(): un salto de línea invisible al final de la variable de entorno
+  // (típico de `echo` al cargarlas en Vercel) rompe el header Authorization y
+  // la dirección del destinatario — Resend rechaza el envío sin explicación.
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const to = process.env.NOTIFY_EMAIL?.trim();
   if (!apiKey || !to) return;
 
   const html = `
@@ -43,7 +46,7 @@ export async function notifyByEmail(subject: string, rows: Record<string, string
 // del aviso interno de arriba (que va al admin). Sin esto, el usuario no tiene
 // ninguna señal de que su inscripción se recibió salvo la pantalla de éxito.
 export async function sendConfirmationEmail(to: string, name: string) {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = process.env.RESEND_API_KEY?.trim();
   if (!apiKey || !to) return;
 
   const html = `
