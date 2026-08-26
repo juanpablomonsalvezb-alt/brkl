@@ -9,6 +9,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Check, X, Lock, Unlock } from "lucide-react";
+import { SiteHeader } from "@/components/SiteHeader";
 
 const NAVY = "#003366";
 const RED = "#FF3D37";
@@ -147,9 +148,10 @@ export default function SinLimites() {
   useDocumentMeta();
   return (
     <div style={{ backgroundColor: "#fff", color: TEXT, fontFamily: FONT, fontSize: 16, lineHeight: 1.8, overflowX: "hidden" }}>
+      <SiteHeader overlay={false} />
 
       {/* === HERO === */}
-      <section style={{ background: `linear-gradient(180deg, ${NAVY} 0%, #001d3d 100%)`, padding: "100px 24px 80px", position: "relative", overflow: "hidden" }}>
+      <section style={{ background: `linear-gradient(180deg, ${NAVY} 0%, #001d3d 100%)`, padding: "60px 24px 80px", position: "relative", overflow: "hidden" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 48, alignItems: "center" }}>
           <div style={{ flex: "1 1 420px", minWidth: 300 }}>
             <Reveal>

@@ -34,6 +34,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ReservationDialog } from "@/components/ReservationDialog";
+import { SiteHeader } from "@/components/SiteHeader";
 
 // Réplica de .fade-in-on-scroll / .animatedElement reales de isb.be (opacity+translateY al entrar en viewport)
 // IMPORTANTE: acepta `style` y lo aplica al propio wrapper — si no, el flex-basis del hijo
@@ -354,18 +355,6 @@ const PREU_PLANES = [
   { plan: "Externo · intensivo final (ago–nov)", precio: "$179.000", nota: "recta final PAES" },
 ];
 
-const NAV_LINKS = [
-  { label: "Nosotros", href: "#nosotros" },
-  { label: "El Método", href: "#metodo-barkley" },
-  { label: "Admisión", href: "#inscripcion" },
-  { label: "Aprendizaje", href: "#metodo" },
-  { label: "Plataforma", href: "#plataforma" },
-  { label: "IA Barkley", href: "#ia-barkley" },
-  { label: "Servicios", href: "#servicios" },
-  { label: "Calendario", href: "#calendario" },
-  { label: "Precio", href: "#precio" },
-  { label: "Preguntas", href: "#faq" },
-];
 
 interface Faq { id: string; question: string; answer: string; sortOrder: number; isActive?: boolean; }
 
@@ -777,7 +766,6 @@ export default function Home() {
   const [tab, setTab] = useState<"estudiantes"|"apoderados">("estudiantes");
   const [pilarIdx, setPilarIdx] = useState(0);
   const [callOpen, setCallOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [tourOpen, setTourOpen] = useState(false);
   const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5*60*1000 });
 
@@ -854,67 +842,7 @@ export default function Home() {
 
       <TourModal open={tourOpen} onClose={() => setTourOpen(false)} />
 
-      {/* === HEADER — overlay transparente sobre el hero, como el real: logo con marco blanco
-          translúcido + nombre blanco sobre la foto; controles de la derecha sobre bloque blanco === */}
-      <header style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 30 }}>
-        {/* El header se compone con estilos inline, así que la variante móvil va en un
-            media query con !important (única forma de ganarle a un style inline).
-            Sin esto, el logo (~253px) más el bloque blanco de 344px fijo suman ~600px
-            y desbordan la pantalla: el viewport se ensancha y la página se desliza
-            de lado en celular. */}
-        <style>{`
-          @media (max-width: 760px) {
-            [data-hdr="controls"] { width: auto !important; padding: 14px 16px !important; gap: 10px !important; }
-            [data-hdr="logo"] { padding: 16px 0 0 16px !important; gap: 10px !important; }
-            [data-hdr="logo-box"] { width: 56px !important; height: 56px !important; }
-            [data-hdr="logo-box"] span:first-child { font-size: 21px !important; }
-            [data-hdr="logo-box"] span:last-child { width: 26px !important; }
-            [data-hdr="logo-text"] { font-size: 14px !important; }
-            [data-hdr="solo-desktop"] { display: none !important; }
-          }
-        `}</style>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-          <a href="/" data-hdr="logo" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none", padding: "30px 0 0 45px" }}>
-            <div data-hdr="logo-box" style={{ width: 84, height: 84, background: "rgba(0,32,61,0.45)", border: "2px solid #fff", borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 12 }}>
-              <img src="/logos/barkley_isotipo_B_navy.svg" alt="Barkley" style={{ width: "100%", height: "100%", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
-            </div>
-            <span data-hdr="logo-text" style={{ color: "#fff", fontWeight: 600, fontSize: 19, lineHeight: 1.35 }}>Barkley<br />Colegio Online</span>
-          </a>
-          {/* Ancho fijo = gap 15 + columna de paneles 314 + padding 15 → el bloque blanco
-              calza exacto con la columna derecha y nunca tapa la foto */}
-          <div data-hdr="controls" style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 14, background: "#fff", padding: "26px 30px 26px 20px", width: 344, boxSizing: "border-box", flexShrink: 0 }}>
-            <button aria-label="Buscar" data-hdr="solo-desktop" style={{ width: 40, height: 40, borderRadius: "50%", background: "#f1f4f8", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-              <Search style={{ width: 17, height: 17, color: NAVY }} />
-            </button>
-            <span data-hdr="solo-desktop" style={{ width: 1, height: 22, background: "#d8dee6" }} />
-            <a href="#inscripcion" data-hdr="solo-desktop" style={{ fontSize: 14, fontWeight: 600, color: NAVY, textDecoration: "none", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}>MI BARKLEY</a>
-            <span data-hdr="solo-desktop" style={{ width: 1, height: 22, background: "#d8dee6" }} />
-            <button aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"} onClick={() => setMenuOpen(o => !o)}
-              style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: NAVY, fontFamily: FONT, fontSize: 14, fontWeight: 600, letterSpacing: "0.05em" }}>
-              {menuOpen ? <X style={{ width: 22, height: 22 }} /> : <Menu style={{ width: 22, height: 22 }} />}
-              MENÚ
-            </button>
-          </div>
-        </div>
-        {/* Overlay pantalla completa navy, links 48px blancos — transición real: fondo fade + links deslizan hacia arriba en cascada */}
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}
-              style={{ position: "fixed", inset: 0, background: NAVY, zIndex: 40, padding: "60px 40px", display: "flex", flexDirection: "column", gap: 28, overflowY: "auto" }}>
-              <button aria-label="Cerrar menú" onClick={() => setMenuOpen(false)} style={{ alignSelf: "flex-end", background: "none", border: "none", color: "#fff", cursor: "pointer" }}><X style={{ width: 32, height: 32 }} /></button>
-              {NAV_LINKS.map((l, i) => (
-                <motion.a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}
-                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.08 * i }}
-                  style={{ color: "#fff", textDecoration: "none", fontSize: "clamp(28px,6vw,48px)", fontWeight: 600 }}>{l.label}</motion.a>
-              ))}
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.08 * NAV_LINKS.length + 0.1 }} style={{ display: "flex", gap: 14, marginTop: 20 }}>
-                <a href="#inscripcion" style={{ textDecoration: "none", background: RED, color: "#fff", borderRadius: 999, padding: "12px 24px", fontSize: 16, fontWeight: 600 }}>Postular</a>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </header>
+      <SiteHeader />
 
       {/* === HERO — como el real: marco blanco de 15px alrededor, foto a la izquierda,
           columna derecha con bloque azul (doble triángulo dorado cortado por el borde)
