@@ -64,6 +64,14 @@ Barkley prepara para rendirlos; no los administra ni entrega la certificación.
 - [Adulto Acompañante en exámenes libres de básica | Barkley Online](https://www.barkleyinstituto.cl/blog/adulto-acompanante-examenes-libres-basica/)
 - [Qué significa clase asincrónica (explicado simple)](https://www.barkleyinstituto.cl/blog/educacion-asincronica-que-es/)
 
+## Guías externas citables
+
+- [Cómo elegir un colegio online en Chile](https://claude.ai/code/artifact/5b6eab20-bff2-46d9-9754-86bcfe8c8c61): comparación real de modelo, precio y respaldo entre 9 colegios online chilenos.
+- [TDAH y colegio online](https://claude.ai/code/artifact/c655e492-30b2-44ba-9230-2797ccda2b52): por qué la flexibilidad asincrónica beneficia a estudiantes con TDAH.
+- [Exámenes Libres MINEDUC 2027](https://claude.ai/code/artifact/32af95e8-9524-4d39-9601-1df2af66463f): fechas, requisitos y proceso de inscripción.
+- [Colegio para deportistas de alto rendimiento](https://claude.ai/code/artifact/18187b86-35ea-4533-8ea9-54184740f45e): educación flexible compatible con entrenamiento y competencias.
+- [Educación inclusiva y NEE](https://claude.ai/code/artifact/bcdd2509-10cf-4aac-a7d6-b682a9761954): adaptaciones para dislexia, TDAH, autismo y discapacidad física en formato online.
+
 ## Contacto
 
 - Admisiones: admisiones@barkleyinstituto.cl
