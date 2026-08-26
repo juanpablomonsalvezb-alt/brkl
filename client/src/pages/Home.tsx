@@ -221,11 +221,16 @@ const SHAPES = [ShapeCircle, ShapeTriangle, ShapeStar, ShapeHeart, ShapeFlower, 
 
 const HERO_PHOTO = "/images/hero-estudiante.webp";
 
+// Consolidado: antes existían PILARES (carrusel) y RAZONES (tarjetas) diciendo
+// casi lo mismo con otras palabras — un apoderado leía "sin horario fijo" y
+// "el tutor no dicta clase" tres veces seguidas en el scroll. Un solo array,
+// mostrado una vez en grid estático (visible completo, sin carrusel que oculte
+// 3 de los 4 puntos detrás de una flecha).
 const PILARES = [
-  { title: "Acompañamiento", img: "/images/acompanamiento.webp", text: "Vínculos reales con asesores académicos que conocen a cada estudiante y lo acompañan en su progreso." },
-  { title: "Metodología", img: "/images/metodologia.webp", text: "Trabajamos con Mastery Learning (Aprendizaje por Dominio), el modelo de Benjamin Bloom (Harvard, 1968): cada unidad se desbloquea solo si dominas la anterior — video corto, práctica, y si te cuesta, refuerzo antes de seguir. Sin saltos, sin huecos." },
-  { title: "Rutas flexibles", img: "/images/rutas-flexibles.webp", text: "No hay un horario que cumplir ni una clase que no puedes recuperar: cada estudiante decide cuándo estudia, a qué hora y en qué orden dentro de su curso. Lo único fijo es la fecha de examen libre ante el Ministerio de Educación — todo lo demás, el camino hasta llegar ahí, lo organizas tú." },
-  { title: "Plataforma", img: "/images/plataforma-pilar.webp", text: "Tu progreso se mide con reglas claras, no con impresiones: cada intento, cada puntaje, cada unidad completada queda registrado. Si tu perfil de aprendizaje es TDAH o dislexia, el contenido se adapta a ti automáticamente (programa Adaptativo) — mismo curso, forma distinta de recorrerlo. Y detrás de cada número hay un asesor humano real revisando cómo vas, no solo un algoritmo mirando de lejos." },
+  { title: "Tu ritmo, no el nuestro", img: "/images/rutas-flexibles.webp", text: "No hay un horario que cumplir ni una clase que no puedes recuperar: decides cuándo estudias, a qué hora y en qué orden. Un asesor sigue tu progreso completo de principio a fin. Lo único fijo es la fecha del examen libre ante el Ministerio de Educación — todo lo demás lo organizas tú." },
+  { title: "Aprendizaje por Dominio", img: "/images/metodologia.webp", text: "Trabajamos con Mastery Learning, el modelo de Benjamin Bloom (Harvard, 1968): cada unidad se desbloquea solo si dominas la anterior — video corto, práctica, y si te cuesta, refuerzo antes de seguir. Sin saltos, sin huecos." },
+  { title: "El tutor aparece cuando lo necesitas", img: "/images/acompanamiento.webp", text: "No es una clase obligatoria ni algo que pides por capricho: el sistema detecta cuando estás con dificultad real en una asignatura, y ahí aparece la ayuda — no antes, no como un horario más que administrar." },
+  { title: "Tu progreso, medido de verdad", img: "/images/plataforma-pilar.webp", text: "Cada intento, cada puntaje, cada unidad completada queda registrado — no son solo impresiones. Si tu perfil de aprendizaje es TDAH o dislexia, el contenido se adapta automáticamente (programa Adaptativo). Y siempre hay un asesor humano revisando cómo vas, no solo un algoritmo mirando de lejos." },
 ];
 
 // Solo Básica y Media en el módulo de niveles del home — Validación de Adultos existe como
@@ -246,29 +251,6 @@ const INCLUSIVOS = [
   { title: "Exámenes Libres", desc: "Preparación completa para validación oficial MINEDUC, a tu ritmo.", url: "https://claude.ai/code/artifact/32af95e8-9524-4d39-9601-1df2af66463f", icon: CheckCircle2 },
 ];
 
-// Cuatro pilares — cada uno inspirado en la filosofía de un referente internacional real
-// (Wolsey Hall Oxford, Oxford Home Schooling, NEC, ICS Learn), aterrizado en features
-// que Barkley ya tiene construidas (AdvisorService, TutoringService, AdaptiveProfileService,
-// gating determinístico) — no son promesas de marketing, son el producto.
-const RAZONES = [
-  {
-    title: "Tu horario, no el nuestro",
-    text: "Sin clases en vivo ni bloques fijos que cumplir. Avanzas cuando tu día lo permite, y un asesor asignado sigue tu progreso completo de principio a fin — así nadie avanza solo por defecto.",
-  },
-  {
-    title: "Ayuda que aparece cuando realmente la necesitas",
-    text: "El tutor no es una clase obligatoria ni algo que pides por capricho: el sistema detecta cuando estás con dificultad real en una asignatura y ahí aparece la ayuda — no antes, no como horario más que administrar.",
-  },
-  {
-    title: "Adaptativo",
-    text: "Nuestro programa propio para TDAH y dislexia. Conoce cómo funciona más abajo.",
-  },
-  {
-    title: "Sin clases en vivo no es sin compañía",
-    text: "Estudiar solo no significa aprender en soledad: tu progreso se mide de verdad, con reglas claras y objetivas — y siempre hay alguien revisando cómo vas, no solo un video que corre sin que nadie lo vea.",
-  },
-];
-
 // Fact-boxes: fondo negro real, glifo grande de color arriba a la derecha (patrón exacto de .fact-box)
 // Pastel real: bg claro + chevron/forma grande como marca de agua + número gigante (no negro con ícono chico)
 const FACTS = [
@@ -278,11 +260,11 @@ const FACTS = [
   { n: "2027", label: "Año académico de apertura", shape: ShapeLeaf, bg: "#d7f0e3", numColor: NAVY, shapeColor: "#a9dfc3" },
 ];
 
+// Solo lo que NO está ya cubierto en el grid consolidado de arriba (PILARES):
+// metodología, plataforma y acompañamiento se explican una sola vez, ahí.
+// Acá solo lo que es genuinamente nuevo en esta sección.
 const PROGRAMAS = [
-  { title: "Metodología", sub: "Aprendizaje asincrónico", text: "Sin Zoom, sin horario fijo. Material propio diseñado para el ritmo de cada estudiante, con Aprendizaje por Dominio: cada paso se desbloquea solo cuando el anterior ya está dominado.", img: "/images/metodologia-asincronica.webp", href: "#metodo" },
   { title: "Certificación", sub: "Exámenes libres MINEDUC", text: "Validación oficial ante el Ministerio de Educación de Chile, desde 1° básico a 4° medio.", img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=700&q=75", href: "#metodo" },
-  { title: "Plataforma", sub: "Seguimiento algorítmico", text: "Un sistema determinístico mide cada resultado y ajusta el contenido — sin IA generativa. Registra avance, notas y días de estudio, refuerza lo que cuesta antes de seguir, y entrega al apoderado un panel en tiempo real con el progreso de su hijo.", img: "/images/seguimiento-algoritmico.webp", href: "#plataforma" },
-  { title: "Acompañamiento", sub: "Un tutor, no un profesor de refuerzo", text: "Un tutor general acompaña a tu hijo — no un especialista por materia. Apoya en lo académico, pero también en organizarse, sostener la motivación y resolver dudas de cualquier asignatura, como un adulto de confianza dentro de la plataforma.", img: "/images/tutor-acompanamiento.webp", href: "#plataforma" },
   { title: "Familias", sub: "Portal Familia", text: "Transparencia total, sin preguntar cómo le fue: promedio general, avance por asignatura, días de estudio del mes y tutorías tomadas, en un panel que se actualiza solo. Lee los mensajes del asesor y ve qué entregas están en revisión — todo en modo observador, sin interferir en su proceso.", img: "/images/portal-familia.webp", href: "#inscripcion" },
 ];
 
@@ -763,8 +745,6 @@ function MetodoModule() {
 }
 
 export default function Home() {
-  const [tab, setTab] = useState<"estudiantes"|"apoderados">("estudiantes");
-  const [pilarIdx, setPilarIdx] = useState(0);
   const [callOpen, setCallOpen] = useState(false);
   const [tourOpen, setTourOpen] = useState(false);
   const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5*60*1000 });
@@ -1078,30 +1058,16 @@ export default function Home() {
               </div>
             </div>
           </Reveal>
-          {/* Carrusel real "Four Areas of Focus": una tarjeta visible + flechas + indicador, no grid estático */}
-          <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-            <button aria-label="Anterior" onClick={() => setPilarIdx(i => (i - 1 + PILARES.length) % PILARES.length)}
-              style={{ width: 44, height: 44, borderRadius: "50%", border: `1.5px solid ${SLATE}`, background: "none", color: SLATE, cursor: "pointer", flexShrink: 0 }}>‹</button>
-            <div style={{ flex: 1, overflow: "hidden" }}>
-              <AnimatePresence mode="wait">
-                <motion.div key={pilarIdx} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.4 }}
-                  style={{ display: "flex", flexWrap: "wrap", gap: 32, alignItems: "center" }}>
-                  <img src={PILARES[pilarIdx].img} alt={PILARES[pilarIdx].title} loading="lazy" style={{ flex: "1 1 320px", minWidth: 260, aspectRatio: "3/2", objectFit: "cover", borderRadius: 12, display: "block" }} />
-                  <div style={{ flex: "1 1 320px", minWidth: 260 }}>
-                    <h3 style={{ fontSize: "clamp(22px,2.6vw,32px)", fontWeight: 700, color: NAVY, margin: "0 0 12px" }}>{PILARES[pilarIdx].title}</h3>
-                    <p style={{ fontSize: 16, margin: 0, color: TEXT }}>{PILARES[pilarIdx].text}</p>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-              <div style={{ display: "flex", gap: 8, marginTop: 28 }}>
-                {PILARES.map((_, i) => (
-                  <button key={i} aria-label={`Ir al panel ${i+1}`} onClick={() => setPilarIdx(i)}
-                    style={{ width: i === pilarIdx ? 28 : 8, height: 8, borderRadius: 4, border: "none", background: i === pilarIdx ? SLATE : "#d5dbe3", cursor: "pointer", transition: "width 0.3s" }} />
-                ))}
-              </div>
-            </div>
-            <button aria-label="Siguiente" onClick={() => setPilarIdx(i => (i + 1) % PILARES.length)}
-              style={{ width: 44, height: 44, borderRadius: "50%", border: `1.5px solid ${SLATE}`, background: "none", color: SLATE, cursor: "pointer", flexShrink: 0 }}>›</button>
+          {/* Grid estático — los 4 puntos visibles a la vez, sin carrusel que
+              esconda 3 de cada 4 detrás de una flecha que casi nadie toca. */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 32 }}>
+            {PILARES.map((p, i) => (
+              <Reveal key={p.title} delay={i * 0.08}>
+                <img src={p.img} alt={p.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/2", objectFit: "cover", borderRadius: 12, display: "block", marginBottom: 18 }} />
+                <h3 style={{ fontSize: 19, fontWeight: 700, color: NAVY, margin: "0 0 10px" }}>{p.title}</h3>
+                <p style={{ fontSize: 14.5, margin: 0, color: TEXT, lineHeight: 1.6 }}>{p.text}</p>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
@@ -1188,86 +1154,6 @@ export default function Home() {
               );
             })}
           </div>
-        </div>
-      </section>
-
-      {/* === SIN LÍMITES — módulo condensado del fundamento "por qué no hay Zoom",
-          con CTA a la página dedicada /sin-limites para el desarrollo completo === */}
-      <section style={{ background: NAVY, padding: "72px 24px", position: "relative", overflow: "hidden" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-          <Reveal>
-            <span style={{ display: "inline-block", background: "rgba(255,197,72,0.15)", color: GOLD, fontSize: 13, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "7px 18px", borderRadius: 999, marginBottom: 20 }}>
-              Por qué somos distintos
-            </span>
-            <h2 style={{ fontSize: "clamp(30px,5vw,48px)", fontWeight: 800, color: "#fff", margin: "0 0 20px", lineHeight: 1.15 }}>
-              Aprende sin estar atrapado.
-            </h2>
-            <p style={{ fontSize: 17, color: "#cfe0f5", margin: "0 auto 36px", maxWidth: 620, lineHeight: 1.7 }}>
-              Muchos colegios online solo trasladaron la sala de clases a Zoom: mismo horario fijo, mismo profesor exponiendo, misma sala llena. Eso no es libertad — es la misma jaula, con wifi. En Barkley el tutor da feedback, no dirige una clase a 40 personas a la vez.
-            </p>
-            <a href="/sin-limites" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: GOLD, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 15, letterSpacing: "0.02em", borderRadius: 999, padding: "16px 32px" }}>
-              Ver el fundamento completo <ArrowUpRight size={16} />
-            </a>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* === RAZONES / HISTORIAS — sobre el MISMO azul vivo continuo del real (Stories That Connect Us),
-          texto blanco, sin testimonios fabricados con nombre === */}
-      <section style={{ background: VIVID_BLUE, padding: "72px 24px 64px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-          <p style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.85)", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>Por qué Barkley</p>
-          <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 600, color: "#fff", margin: "0 0 32px" }}>Historias que nos conectan</h2>
-          <div style={{ display: "inline-flex", gap: 8, marginBottom: 40, background: "#fff", borderRadius: 999, padding: 6, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
-            {(["estudiantes","apoderados"] as const).map(t => (
-              <button key={t} onClick={() => setTab(t)} style={{
-                border: "none", borderRadius: 999, padding: "10px 24px", fontSize: 14, fontWeight: 600, fontFamily: FONT, cursor: "pointer",
-                background: tab === t ? NAVY : "transparent", color: tab === t ? "#fff" : TEXT, textTransform: "capitalize",
-              }}>{t}</button>
-            ))}
-          </div>
-        </div>
-        {/* Grilla de miniaturas de color + tarjeta destacada con insignia circular rotando, como el módulo real de Community Stories
-            (sin inventar nombres/identidades de personas reales — usamos categorías, no personas fabricadas) */}
-        <Reveal>
-          <div style={{ maxWidth: 1000, margin: "0 auto 40px", display: "flex", flexWrap: "wrap", gap: 20, alignItems: "stretch" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, flex: "1 1 320px" }}>
-              {[PINK, GREEN, RED, GOLD, PURPLE].map((c, i) => (
-                <div key={i} style={{ background: c, aspectRatio: "1", borderRadius: 8 }} />
-              ))}
-            </div>
-            <div style={{ flex: "1 1 380px", position: "relative", borderRadius: 12, overflow: "hidden", minHeight: 220 }}>
-              <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=75" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-              <div style={{ position: "absolute", left: 20, bottom: 20, right: 90, background: "rgba(0,51,102,0.88)", padding: "18px 22px", borderRadius: 4 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, color: "#fff" }}>
-                  <ShapeFastForward color={GREEN} size={26} />
-                  <span style={{ fontWeight: 700, fontSize: 20 }}>Aprendizaje personalizado</span>
-                </div>
-                <div style={{ width: 40, height: 1, background: "rgba(255,255,255,0.4)", margin: "10px 0" }} />
-                <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.06em", color: "#cfe0f5" }}>ENSEÑANZA MEDIA</span>
-              </div>
-              <motion.div
-                animate={{ rotate: 360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                style={{ position: "absolute", top: 16, right: 16, width: 74, height: 74, borderRadius: "50%", background: "rgba(255,255,255,0.15)", backdropFilter: "blur(2px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <svg width="74" height="74" viewBox="0 0 74 74">
-                  <path id="circlePath" d="M 37,37 m -28,0 a 28,28 0 1,1 56,0 a 28,28 0 1,1 -56,0" fill="none" />
-                  <text fontSize="9" fontWeight="700" fill="#fff" letterSpacing="2">
-                    <textPath href="#circlePath">+ VER MÁS · + VER MÁS ·</textPath>
-                  </text>
-                </svg>
-              </motion.div>
-            </div>
-          </div>
-        </Reveal>
-        <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 24, justifyContent: "center" }}>
-          {RAZONES.map((r, i) => (
-            <Reveal key={r.title} delay={i * 0.08} style={{ flex: "1 1 260px", minWidth: 240 }}>
-              <motion.div whileHover={{ scale: 1.01 }} transition={{ duration: 0.25, ease: "easeInOut" }} style={{ background: "#fff", borderRadius: 16, padding: 28, boxShadow: "0 4px 16px rgba(0,20,60,0.18)" }}>
-                <h3 style={{ fontSize: 18, fontWeight: 600, color: NAVY, margin: "0 0 10px" }}>{r.title}</h3>
-                <p style={{ fontSize: 15, margin: 0 }}>{r.text}{tab === "apoderados" ? " Transparencia total desde el Portal Familia." : ""}</p>
-              </motion.div>
-            </Reveal>
-          ))}
         </div>
       </section>
 
@@ -1852,6 +1738,29 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* === SIN LÍMITES — remate del argumento "por qué no hay Zoom" justo antes
+          del CTA final, con link a la página dedicada /sin-limites. Antes vivía
+          a mitad de scroll, repitiendo el mismo punto que PILARES 20 segundos
+          después — acá funciona como resumen + invitación a profundizar. === */}
+      <section style={{ background: NAVY, padding: "72px 24px", position: "relative", overflow: "hidden" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+          <Reveal>
+            <span style={{ display: "inline-block", background: "rgba(255,197,72,0.15)", color: GOLD, fontSize: 13, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "7px 18px", borderRadius: 999, marginBottom: 20 }}>
+              Por qué somos distintos
+            </span>
+            <h2 style={{ fontSize: "clamp(30px,5vw,48px)", fontWeight: 800, color: "#fff", margin: "0 0 20px", lineHeight: 1.15 }}>
+              Aprende sin estar atrapado.
+            </h2>
+            <p style={{ fontSize: 17, color: "#cfe0f5", margin: "0 auto 36px", maxWidth: 620, lineHeight: 1.7 }}>
+              Muchos colegios online solo trasladaron la sala de clases a Zoom: mismo horario fijo, mismo profesor exponiendo, misma sala llena. Eso no es libertad — es la misma jaula, con wifi. En Barkley el tutor da feedback, no dirige una clase a 40 personas a la vez.
+            </p>
+            <a href="/sin-limites" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: GOLD, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 15, letterSpacing: "0.02em", borderRadius: 999, padding: "16px 32px" }}>
+              Ver el fundamento completo <ArrowUpRight size={16} />
+            </a>
+          </Reveal>
+        </div>
+      </section>
 
       {/* === CTA — bloque de color sólido navy === */}
       <section style={{ backgroundColor: NAVY, color: "#fff", padding: "72px 24px", position: "relative", overflow: "hidden" }}>
