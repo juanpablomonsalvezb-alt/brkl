@@ -429,7 +429,15 @@ function medir(step: "llega_pagina" | "ve_formulario" | "empieza_formulario" | "
   } catch { /* la medición jamás debe interrumpir la página */ }
 }
 
+// Pasos del formulario tipo wizard: una pregunta a la vez, menos fricción que
+// un formulario largo tradicional. El apoderado/estudiante avanza con Enter o
+// clic, ve su progreso, y puede volver atrás. Los campos opcionales (perfil de
+// aprendizaje, consultas) se agrupan al final para no interrumpir el impulso inicial.
+type StepId = "name" | "email" | "level" | "learningProfile" | "notes";
+const STEPS: StepId[] = ["name", "email", "level", "learningProfile", "notes"];
+
 function InscripcionForm() {
+  const [step, setStep] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [level, setLevel] = useState("");
@@ -437,13 +445,13 @@ function InscripcionForm() {
   const [notes, setNotes] = useState("");
   const [st, setSt] = useState<"idle"|"loading"|"success"|"error"|"duplicate">("idle");
   const [err, setErr] = useState("");
-  const formRef = useRef<HTMLFormElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const empezado = useRef(false);
 
   // "Vio el formulario": entró al viewport. Distingue a quien llegó a la página
   // de quien de verdad bajó hasta la inscripción.
   useEffect(() => {
-    const el = formRef.current;
+    const el = wrapRef.current;
     if (!el || typeof IntersectionObserver === "undefined") return;
     const obs = new IntersectionObserver(
       (entradas) => {
@@ -463,6 +471,7 @@ function InscripcionForm() {
     empezado.current = true;
     medir("empieza_formulario");
   };
+
   const submit = async () => {
     setSt("loading"); setErr("");
     try {
@@ -473,6 +482,7 @@ function InscripcionForm() {
       medir("envia_formulario");
     } catch { setErr("Sin conexión"); setSt("error"); }
   };
+
   if (st === "success" || st === "duplicate") return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: "40px 0" }}>
       <Check style={{ width: 32, height: 32, color: NAVY }} />
@@ -480,46 +490,106 @@ function InscripcionForm() {
       <p style={{ fontSize: 16, opacity: 0.7, margin: 0 }}>Un asesor te contactará a la brevedad.</p>
     </div>
   );
-  const inp: React.CSSProperties = { border: "1px solid #d5dbe3", borderRadius: 8, background: "#fff", fontSize: 16, padding: "12px 14px", outline: "none", width: "100%", fontFamily: FONT, color: TEXT };
+
+  const inp: React.CSSProperties = { border: "1px solid #d5dbe3", borderRadius: 8, background: "#fff", fontSize: 18, padding: "14px 16px", outline: "none", width: "100%", fontFamily: FONT, color: TEXT };
+  const stepId = STEPS[step];
+  const isLast = step === STEPS.length - 1;
+  const requiredOk = stepId === "name" ? name.trim().length > 0 : stepId === "email" ? /\S+@\S+\.\S+/.test(email) : true;
+
+  const goNext = () => {
+    marcarInicio();
+    if (!requiredOk) return;
+    if (isLast) { submit(); return; }
+    setStep((s) => s + 1);
+  };
+  const goBack = () => step > 0 && setStep((s) => s - 1);
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && stepId !== "notes") { e.preventDefault(); goNext(); }
+  };
+
+  const QUESTION: Record<StepId, string> = {
+    name: "¿Cómo te llamas?",
+    email: "¿Cuál es tu correo electrónico?",
+    level: "¿Qué nivel te interesa?",
+    learningProfile: "¿Tiene TDAH o dislexia?",
+    notes: "¿Alguna pregunta para nuestro equipo?",
+  };
+
   return (
-    <form ref={formRef} onInput={marcarInicio} onSubmit={e => { e.preventDefault(); submit(); }} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        <label style={{ fontSize: 14, fontWeight: 600, color: NAVY }}>Nombre del apoderado o estudiante *</label>
-        <input required value={name} onChange={e=>setName(e.target.value)} placeholder="Nombre completo" style={inp} data-testid="input-name" />
+    <div ref={wrapRef} onKeyDown={onKeyDown} style={{ display: "flex", flexDirection: "column", gap: 24, minHeight: 320 }}>
+      {/* Barra de progreso — señal de avance, clave en formularios multi-paso */}
+      <div style={{ display: "flex", gap: 6 }}>
+        {STEPS.map((s, i) => (
+          <div key={s} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= step ? RED : "#e5e5e5", transition: "background 0.3s" }} />
+        ))}
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        <label style={{ fontSize: 14, fontWeight: 600, color: NAVY }}>Correo electrónico *</label>
-        <input type="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@correo.com" style={inp} data-testid="input-email" />
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        <label style={{ fontSize: 14, fontWeight: 600, color: NAVY }}>Nivel de interés</label>
-        <select value={level} onChange={e=>setLevel(e.target.value)} style={{ ...inp, cursor: "pointer" }} data-testid="select-level">
-          <option value="">Selecciona un nivel</option>
-          {["1° Básico","2° Básico","3° Básico","4° Básico","5° Básico","6° Básico","7° Básico","8° Básico","1° Medio","2° Medio","3° Medio","4° Medio","Validación adulto"].map(l=><option key={l} value={l}>{l}</option>)}
-        </select>
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        <label style={{ fontSize: 14, fontWeight: 600, color: NAVY }}>¿Tiene TDAH o dislexia? <span style={{ fontWeight: 400, opacity: 0.6, textTransform: "none" }}>(opcional — programa Adaptativo)</span></label>
-        <select value={learningProfile} onChange={e=>setLearningProfile(e.target.value)} style={{ ...inp, cursor: "pointer" }} data-testid="select-learning-profile">
-          <option value="">Prefiero no decir / no aplica</option>
-          <option value="tdah">TDAH</option>
-          <option value="dislexia">Dislexia</option>
-          <option value="tea">TEA (autismo)</option>
-          <option value="motor">Dificultades motoras</option>
-          <option value="ambos">TDAH y dislexia</option>
-        </select>
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        <label style={{ fontSize: 14, fontWeight: 600, color: NAVY }}>Consultas <span style={{ fontWeight: 400, opacity: 0.6, textTransform: "none" }}>(opcional)</span></label>
-        <textarea value={notes} onChange={e=>setNotes(e.target.value)} placeholder="¿Tienes alguna pregunta para nuestro equipo?" rows={3}
-          style={{ ...inp, resize: "vertical", fontFamily: FONT }} data-testid="input-notes" />
-      </div>
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={stepId}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.25, ease: "easeInOut" }}
+          style={{ display: "flex", flexDirection: "column", gap: 14, flex: 1 }}
+        >
+          <label style={{ fontSize: 22, fontWeight: 700, color: NAVY, lineHeight: 1.3 }}>
+            {QUESTION[stepId]}
+            {(stepId === "learningProfile" || stepId === "notes") && (
+              <span style={{ display: "block", fontSize: 14, fontWeight: 400, opacity: 0.6, marginTop: 4 }}>
+                {stepId === "learningProfile" ? "Opcional — programa Adaptativo" : "Opcional"}
+              </span>
+            )}
+          </label>
+
+          {stepId === "name" && (
+            <input autoFocus value={name} onChange={e=>setName(e.target.value)} placeholder="Nombre completo" style={inp} data-testid="input-name" />
+          )}
+          {stepId === "email" && (
+            <input autoFocus type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@correo.com" style={inp} data-testid="input-email" />
+          )}
+          {stepId === "level" && (
+            <select autoFocus value={level} onChange={e=>setLevel(e.target.value)} style={{ ...inp, cursor: "pointer" }} data-testid="select-level">
+              <option value="">Selecciona un nivel</option>
+              {["1° Básico","2° Básico","3° Básico","4° Básico","5° Básico","6° Básico","7° Básico","8° Básico","1° Medio","2° Medio","3° Medio","4° Medio","Validación adulto"].map(l=><option key={l} value={l}>{l}</option>)}
+            </select>
+          )}
+          {stepId === "learningProfile" && (
+            <select autoFocus value={learningProfile} onChange={e=>setLearningProfile(e.target.value)} style={{ ...inp, cursor: "pointer" }} data-testid="select-learning-profile">
+              <option value="">Prefiero no decir / no aplica</option>
+              <option value="tdah">TDAH</option>
+              <option value="dislexia">Dislexia</option>
+              <option value="tea">TEA (autismo)</option>
+              <option value="motor">Dificultades motoras</option>
+              <option value="ambos">TDAH y dislexia</option>
+            </select>
+          )}
+          {stepId === "notes" && (
+            <textarea autoFocus value={notes} onChange={e=>setNotes(e.target.value)} placeholder="¿Tienes alguna pregunta para nuestro equipo?" rows={3}
+              style={{ ...inp, resize: "vertical", fontFamily: FONT }} data-testid="input-notes" />
+          )}
+        </motion.div>
+      </AnimatePresence>
+
       {st==="error" && <p style={{ color: RED, fontSize: 14, margin: 0 }}>{err}</p>}
-      <button type="submit" disabled={st==="loading"} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, fontSize: 16, fontWeight: 600, background: RED, color: "#fff", border: "none", borderRadius: 999, padding: "14px 28px", cursor: "pointer", fontFamily: FONT, opacity: st==="loading"?0.6:1, width: "fit-content" }}>
-        {st==="loading" ? <Loader2 style={{ width: 18, height: 18 }} className="animate-spin" /> : <>Quiero inscribirme <ArrowUpRight style={{ width: 18, height: 18 }} /></>}
-      </button>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        {step > 0 && (
+          <button type="button" onClick={goBack} style={{ background: "none", border: "none", color: SLATE, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: FONT, padding: "10px 4px" }}>
+            ← Atrás
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={goNext}
+          disabled={st==="loading" || !requiredOk}
+          style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, fontSize: 16, fontWeight: 600, background: RED, color: "#fff", border: "none", borderRadius: 999, padding: "14px 28px", cursor: requiredOk ? "pointer" : "not-allowed", fontFamily: FONT, opacity: (st==="loading" || !requiredOk) ? 0.5 : 1 }}
+        >
+          {st==="loading" ? <Loader2 style={{ width: 18, height: 18 }} className="animate-spin" /> : isLast ? <>Quiero inscribirme <ArrowUpRight style={{ width: 18, height: 18 }} /></> : <>Siguiente <ArrowUpRight style={{ width: 18, height: 18 }} /></>}
+        </button>
+      </div>
       <p style={{ fontSize: 13, opacity: 0.6, margin: 0 }}>Reserva ahora, sin costo — pagas recién en febrero de 2027</p>
-    </form>
+    </div>
   );
 }
 
