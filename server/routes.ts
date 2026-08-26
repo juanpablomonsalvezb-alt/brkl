@@ -12,7 +12,7 @@ import {
   insertFunnelEventSchema, funnelEvents
 } from "@shared/schema";
 import { db } from "./db";
-import { notifyByEmail } from "./notify";
+import { notifyByEmail, sendConfirmationEmail } from "./notify";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
 import {
   getAllModulesSchedule, getModuleSchedule, getCalendarSummary,
@@ -226,6 +226,7 @@ export async function registerRoutes(
         "Perfil Adaptativo": parsed.data.learningProfileInterest,
         Consultas: parsed.data.notes,
       });
+      sendConfirmationEmail(parsed.data.email, parsed.data.name || "");
       res.status(201).json({ message: "Listo, te avisamos apenas abramos inscripciones" });
     } catch (error: any) {
       if (String(error?.message || "").includes("UNIQUE")) {

@@ -393,7 +393,7 @@ function AdmisionSection({ anchorId }: { anchorId?: string }) {
           </p>
           <p style={{ fontSize: 15, color: "#9db3cf", margin: 0 }}>Cupos limitados · año académico 2027</p>
         </div>
-        <div style={{ flex: "1 1 380px", minWidth: 280, background: "#fff", borderRadius: 20, padding: "32px 30px", boxShadow: "0 24px 60px rgba(0,0,0,0.25)" }}>
+        <div style={{ flex: "1 1 460px", minWidth: 300, maxWidth: 560, background: "#fff", borderRadius: 24, padding: "44px 40px", boxShadow: "0 32px 80px rgba(0,0,0,0.35)", border: `1px solid rgba(255,255,255,0.08)` }}>
           <InscripcionForm />
         </div>
       </div>
@@ -516,11 +516,19 @@ function InscripcionForm() {
   };
 
   return (
-    <div ref={wrapRef} onKeyDown={onKeyDown} style={{ display: "flex", flexDirection: "column", gap: 24, minHeight: 320 }}>
+    <div ref={wrapRef} onKeyDown={onKeyDown} style={{ display: "flex", flexDirection: "column", gap: 28, minHeight: 360 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <span style={{ fontSize: 13, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          Postulación 2027
+        </span>
+        <span style={{ fontSize: 13, fontWeight: 600, color: SLATE, fontVariantNumeric: "tabular-nums" }}>
+          {step + 1} / {STEPS.length}
+        </span>
+      </div>
       {/* Barra de progreso — señal de avance, clave en formularios multi-paso */}
-      <div style={{ display: "flex", gap: 6 }}>
+      <div style={{ display: "flex", gap: 6, marginTop: -16 }}>
         {STEPS.map((s, i) => (
-          <div key={s} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= step ? RED : "#e5e5e5", transition: "background 0.3s" }} />
+          <div key={s} style={{ flex: 1, height: 5, borderRadius: 3, background: i <= step ? RED : "#e5e5e5", transition: "background 0.3s" }} />
         ))}
       </div>
 
@@ -531,12 +539,12 @@ function InscripcionForm() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.25, ease: "easeInOut" }}
-          style={{ display: "flex", flexDirection: "column", gap: 14, flex: 1 }}
+          style={{ display: "flex", flexDirection: "column", gap: 18, flex: 1 }}
         >
-          <label style={{ fontSize: 22, fontWeight: 700, color: NAVY, lineHeight: 1.3 }}>
+          <label style={{ fontSize: 30, fontWeight: 800, color: NAVY, lineHeight: 1.2, letterSpacing: "-0.01em" }}>
             {QUESTION[stepId]}
             {(stepId === "learningProfile" || stepId === "notes") && (
-              <span style={{ display: "block", fontSize: 14, fontWeight: 400, opacity: 0.6, marginTop: 4 }}>
+              <span style={{ display: "block", fontSize: 15, fontWeight: 400, opacity: 0.6, marginTop: 6 }}>
                 {stepId === "learningProfile" ? "Opcional — programa Adaptativo" : "Opcional"}
               </span>
             )}
