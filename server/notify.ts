@@ -25,7 +25,7 @@ export async function notifyByEmail(subject: string, rows: Record<string, string
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: "Barkley Online <notificaciones@nebbuler.com>",
+        from: "Barkley Online <notificaciones@barkleyinstituto.cl>",
         to: [to],
         subject,
         html,
@@ -59,7 +59,7 @@ export async function sendConfirmationEmail(to: string, name: string) {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: "Barkley Online <notificaciones@nebbuler.com>",
+        from: "Barkley Online <notificaciones@barkleyinstituto.cl>",
         to: [to],
         subject: "Recibimos tu inscripción — Barkley Online",
         html,
