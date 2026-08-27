@@ -168,9 +168,7 @@ export default function SinLimites() {
           </div>
           <div style={{ flex: "1 1 360px", minWidth: 280 }}>
             <Reveal delay={0.15}>
-              <div style={{ aspectRatio: IMG_SPECS[0].ratio, borderRadius: 20, background: "rgba(255,255,255,0.06)", border: "1px dashed rgba(255,255,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, textAlign: "center" }}>
-                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, margin: 0 }}>[Imagen: {IMG_SPECS[0].desc}]</p>
-              </div>
+              <img src="/images/sin-limites/hero.webp" alt="Puerta abierta, liberación de un sistema rígido" style={{ width: "100%", aspectRatio: IMG_SPECS[0].ratio, objectFit: "cover", borderRadius: 20, display: "block" }} />
             </Reveal>
           </div>
         </div>
@@ -196,9 +194,7 @@ export default function SinLimites() {
                 </p>
               </div>
               <div style={{ flex: "1 1 280px", minWidth: 240 }}>
-                <div style={{ aspectRatio: IMG_SPECS[1].ratio, borderRadius: 16, background: "#eee", border: "1px dashed #ccc", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, textAlign: "center" }}>
-                  <p style={{ color: "#999", fontSize: 12, margin: 0 }}>[Imagen: {IMG_SPECS[1].desc}]</p>
-                </div>
+                <img src="/images/sin-limites/problema.webp" alt="Estudiante aburrido en videollamada de clase" loading="lazy" style={{ width: "100%", aspectRatio: IMG_SPECS[1].ratio, objectFit: "cover", borderRadius: 16, display: "block" }} />
               </div>
             </div>
           </Reveal>
@@ -226,9 +222,7 @@ export default function SinLimites() {
       <section style={{ padding: "90px 24px", background: NAVY, position: "relative", overflow: "hidden" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", flexWrap: "wrap-reverse", gap: 48, alignItems: "center" }}>
           <div style={{ flex: "1 1 320px", minWidth: 260 }}>
-            <div style={{ aspectRatio: IMG_SPECS[2].ratio, borderRadius: 16, background: "rgba(255,255,255,0.06)", border: "1px dashed rgba(255,255,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, textAlign: "center" }}>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, margin: 0 }}>[Imagen: {IMG_SPECS[2].desc}]</p>
-            </div>
+            <img src="/images/sin-limites/libertad.webp" alt="Estudiante estudiando relajado en un jardín" loading="lazy" style={{ width: "100%", aspectRatio: IMG_SPECS[2].ratio, objectFit: "cover", borderRadius: 16, display: "block" }} />
           </div>
           <div style={{ flex: "1 1 380px", minWidth: 280 }}>
             <Reveal>
@@ -287,9 +281,7 @@ export default function SinLimites() {
             </Reveal>
           </div>
           <div style={{ flex: "1 1 320px", minWidth: 260 }}>
-            <div style={{ aspectRatio: IMG_SPECS[3].ratio, borderRadius: 16, background: "#eee", border: "1px dashed #ccc", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, textAlign: "center" }}>
-              <p style={{ color: "#999", fontSize: 12, margin: 0 }}>[Imagen: {IMG_SPECS[3].desc}]</p>
-            </div>
+            <img src="/images/sin-limites/tutor.webp" alt="Tutor revisando y corrigiendo trabajo de un estudiante" loading="lazy" style={{ width: "100%", aspectRatio: IMG_SPECS[3].ratio, objectFit: "cover", borderRadius: 16, display: "block" }} />
           </div>
         </div>
       </section>
@@ -307,9 +299,7 @@ export default function SinLimites() {
             </p>
           </Reveal>
           <Reveal delay={0.1}>
-            <div style={{ aspectRatio: IMG_SPECS[4].ratio, borderRadius: 20, background: "#eee", border: "1px dashed #ccc", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, maxWidth: 700, margin: "0 auto" }}>
-              <p style={{ color: "#999", fontSize: 13, margin: 0 }}>[Imagen: {IMG_SPECS[4].desc}]</p>
-            </div>
+            <img src="/images/sin-limites/comunidad.webp" alt="Collage de estudiantes distintos conectados a su manera" loading="lazy" style={{ width: "100%", aspectRatio: IMG_SPECS[4].ratio, objectFit: "cover", borderRadius: 20, display: "block", maxWidth: 700, margin: "0 auto" }} />
           </Reveal>
         </div>
       </section>
