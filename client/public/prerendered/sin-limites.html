@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="es-CL"><head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Aprende sin estar atrapado — Por qué Barkley no tiene clases en vivo</title>
     <meta name="description" content="Por qué Barkley es 100% asincrónico: sin Zoom, sin horario fijo. El fundamento completo, comparado con colegios sincrónicos, y cómo funciona el rol del tutor.">
@@ -40,12 +40,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet">
+    <!-- Precarga la foto del hero: es el elemento LCP y sin esto solo empieza
+         a descargarse cuando React monta, ya con el JS descargado y ejecutado. -->
+    <link rel="preload" as="image" href="/images/hero-estudiante.webp" fetchpriority="high">
     
     <link rel="modulepreload" crossorigin="" href="/assets/icons-DQJnJbIT.js">
     <link rel="modulepreload" crossorigin="" href="/assets/motion-Bw9fai4n.js">
     <link rel="modulepreload" crossorigin="" href="/assets/react-BpkZ3iUt.js">
     <link rel="stylesheet" crossorigin="" href="/assets/index-DtgiZELZ.css">
-  <link rel="modulepreload" as="script" crossorigin="" href="/assets/SinLimites-fJAMpfDA.js"></head>
+  <link rel="modulepreload" as="script" crossorigin="" href="/assets/SinLimites-DUOYfU2B.js"></head>
   <body>
     <div id="root"><div role="region" aria-label="Notifications (F8)" tabindex="-1" style="pointer-events: none;"><ol tabindex="-1" class="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"></ol></div><div style="background-color: rgb(255, 255, 255); color: rgb(82, 82, 82); font-family: Poppins, sans-serif; font-size: 16px; line-height: 1.8; overflow-x: hidden;"><header style="position: relative; top: 0px; left: 0px; right: 0px; z-index: 30;"><style>
         @media (max-width: 760px) {

@@ -848,7 +848,7 @@ export default function Home() {
           }
         `}</style>
         <div data-hero="foto" style={{ flex: 1, position: "relative", overflow: "hidden" }}>
-          <img src={HERO_PHOTO} alt="" style={{ width: "100%", height: "100%", position: "absolute", inset: 0, objectFit: "cover", filter: "saturate(0.85)" }} />
+          <img src={HERO_PHOTO} alt="" fetchPriority="high" decoding="async" style={{ width: "100%", height: "100%", position: "absolute", inset: 0, objectFit: "cover", filter: "saturate(0.85)" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,51,102,0) 45%, rgba(20,35,55,0.6) 100%)" }} />
           {/* Un solo titular gigante real (sin eyebrow separado — la etiqueta real ES el h1), flechas prev/next circulares bottom-right junto al texto */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
