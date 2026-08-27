@@ -6,7 +6,7 @@
  * la sección. Sin esto, una página secundaria queda sin forma de volver.
  */
 import { useState } from "react";
-import { Search, Menu, X } from "lucide-react";
+import { Search, Menu, X, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const NAVY = "#003366";
@@ -27,10 +27,31 @@ const NAV_LINKS = [
   { label: "Por qué somos distintos", href: "/sin-limites" },
 ];
 
+// Barra de acceso a portales — TODAVÍA sin backend real detrás (no hay Canvas
+// ni portal de apoderados construido), pero visualmente comunica lo que todo
+// colegio serio muestra: un acceso diferenciado para alumno y familia. Lleva
+// a la sección de inscripción en vez de a un link muerto, así el clic nunca
+// se siente roto aunque el portal real no exista todavía.
+function PortalBar() {
+  return (
+    <div style={{ background: "#0a2e52", display: "flex", justifyContent: "center", alignItems: "center", gap: 0, padding: "10px 0", fontSize: 13, fontWeight: 700, letterSpacing: "0.04em" }}>
+      <a href="/#inscripcion" style={{ display: "flex", alignItems: "center", gap: 8, color: "#fff", textDecoration: "none", padding: "0 20px" }}>
+        <User size={15} /> PORTAL ALUMNO
+      </a>
+      <span style={{ width: 1, height: 16, background: "rgba(255,255,255,0.25)" }} />
+      <a href="/#inscripcion" style={{ display: "flex", alignItems: "center", gap: 8, color: "#fff", textDecoration: "none", padding: "0 20px" }}>
+        <User size={15} /> PORTAL FAMILIA
+      </a>
+    </div>
+  );
+}
+
 export function SiteHeader({ overlay = true }: { overlay?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
-    <header style={{ position: overlay ? "absolute" : "relative", top: 0, left: 0, right: 0, zIndex: 30 }}>
+    <div style={{ position: overlay ? "absolute" : "relative", top: 0, left: 0, right: 0, zIndex: 30 }}>
+      <PortalBar />
+      <header style={{ position: "relative" }}>
       <style>{`
         @media (max-width: 760px) {
           [data-hdr="controls"] { width: auto !important; padding: 14px 16px !important; gap: 10px !important; }
@@ -78,6 +99,7 @@ export function SiteHeader({ overlay = true }: { overlay?: boolean }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+      </header>
+    </div>
   );
 }
