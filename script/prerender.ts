@@ -62,6 +62,10 @@ async function main() {
       // sandbox restringido (contenedores, CI, algunas shells con permisos
       // limitados) — necesita renunciar a su propio sandbox y a /dev/shm.
       args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+      // page.content() tardó justo 180s (el default) antes de fallar — sospecha
+      // de que simplemente es lento en este entorno, no un cuelgue infinito.
+      // Se sube el techo para confirmar/descartar antes de seguir investigando.
+      protocolTimeout: 300000,
     });
     try {
       for (const route of ROUTES) {

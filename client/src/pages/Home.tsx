@@ -16,7 +16,7 @@ import {
   Loader2, Check, ArrowUpRight, Menu, X, Search, Play, Download,
   Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
   Layers, BookOpen, Headphones, Image as ImageIcon, ListChecks, Sparkles,
-  Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock, Instagram, Zap, Home,
+  Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock, Instagram, Zap, Home as HomeIcon,
 } from "lucide-react";
 
 const INSTAGRAM_URL = "https://www.instagram.com/ibarkley.cl";
@@ -249,7 +249,7 @@ const INCLUSIVOS = [
   { title: "Deportistas", desc: "Para atletas de alto rendimiento: exámenes flexibles, sin asistencia obligatoria.", url: "https://claude.ai/code/artifact/18187b86-35ea-4533-8ea9-54184740f45e", icon: Zap },
   { title: "NEE", desc: "Inclusión real: dislexia, autismo, discapacidad. Adaptaciones desde el diseño.", url: "https://claude.ai/code/artifact/bcdd2509-10cf-4aac-a7d6-b682a9761954", icon: Heart },
   { title: "Exámenes Libres", desc: "Preparación completa para validación oficial MINEDUC, a tu ritmo.", url: "https://claude.ai/code/artifact/32af95e8-9524-4d39-9601-1df2af66463f", icon: CheckCircle2 },
-  { title: "Homeschool", desc: "Currículum oficial ya armado, sin diseñar el plan de estudio desde cero.", url: "https://claude.ai/code/artifact/ac137c4e-2002-41f0-9802-ce1f0de6f372", icon: Home },
+  { title: "Homeschool", desc: "Currículum oficial ya armado, sin diseñar el plan de estudio desde cero.", url: "https://claude.ai/code/artifact/ac137c4e-2002-41f0-9802-ce1f0de6f372", icon: HomeIcon },
 ];
 
 // Fact-boxes: fondo negro real, glifo grande de color arriba a la derecha (patrón exacto de .fact-box)
@@ -1141,7 +1141,6 @@ export default function Home() {
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.25, ease: "easeInOut" }}
                     style={{
-                      display: "block",
                       padding: 28,
                       background: "#fff",
                       border: `1px solid #e5e5e5`,
