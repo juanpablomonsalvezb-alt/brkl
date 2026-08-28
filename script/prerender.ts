@@ -56,7 +56,13 @@ async function main() {
   try {
     await waitForServer(`http://127.0.0.1:${PORT}/`);
 
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({
+      headless: true,
+      // Sin esto, Chrome se cuelga o crashea ("Target closed") en entornos con
+      // sandbox restringido (contenedores, CI, algunas shells con permisos
+      // limitados) — necesita renunciar a su propio sandbox y a /dev/shm.
+      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+    });
     try {
       for (const route of ROUTES) {
         const page = await browser.newPage();
