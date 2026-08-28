@@ -1,0 +1,64 @@
+name: Prerender para bots + deploy
+
+# Corre en máquinas de GitHub (soportan Chrome sin problema, a diferencia del
+# contenedor de build de Vercel — ver comentario en script/build.ts). Regenera
+# el HTML congelado que ven GPTBot/ClaudeBot/Googlebot, lo commitea de vuelta
+# al repo, y dispara el deploy a Vercel — sin depender de ninguna máquina local
+# ni de que alguien esté corriendo el script a mano.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "client/public/prerendered/**"
+  workflow_dispatch: {}
+
+# Evita que el commit automático de este mismo workflow dispare otra corrida.
+concurrency:
+  group: prerender-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prerender:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Build + prerender
+        env:
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+        run: |
+          npm run build
+          npx tsx script/prerender.ts
+          cp dist/public/prerendered/index.html client/public/prerendered/index.html
+          cp dist/public/prerendered/adaptativo.html client/public/prerendered/adaptativo.html
+          cp dist/public/prerendered/sin-limites.html client/public/prerendered/sin-limites.html
+
+      - name: Commitear snapshot actualizado
+        run: |
+          git config user.name "barkley-bot"
+          git config user.email "actions@github.com"
+          git add client/public/prerendered/
+          if git diff --cached --quiet; then
+            echo "Sin cambios en el snapshot — nada que commitear."
+          else
+            git commit -m "chore: actualizar snapshot prerenderizado [skip ci]"
+            git push
+          fi
+
+      - name: Deploy a Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: npx vercel --prod --token "$VERCEL_TOKEN" --yes
