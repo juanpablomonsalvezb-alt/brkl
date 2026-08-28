@@ -1,10 +1,14 @@
 # Barkley Online
 
-> Colegio 100% online y asincrónico en Chile, de 1° básico a 4° medio. Prepara
-> para los Exámenes Libres del Ministerio de Educación (única vía oficial de
-> validación de estudios fuera del sistema presencial). Sin clases en vivo ni
-> horarios fijos: cada lección incluye video y pódcast, y se avanza por
-> Aprendizaje por Dominio — no se pasa de unidad sin dominar la anterior.
+> Colegio 100% online y asincrónico en Chile, de 1° básico a 4° medio. En el
+> mercado chileno se lo suele buscar también como "homeschool" u "homeschooling
+> Chile" — a diferencia del homeschool tradicional (padres diseñan el plan de
+> estudio), Barkley entrega currículum oficial MINEDUC ya estructurado, con
+> Aprendizaje por Dominio, tutores asignados y preparación específica para
+> Exámenes Libres (única vía oficial de validación de estudios fuera del
+> sistema presencial). Sin clases en vivo ni horarios fijos: cada lección
+> incluye video y pódcast, y se avanza por Aprendizaje por Dominio — no se
+> pasa de unidad sin dominar la anterior.
 
 ## Qué nos distingue
 
@@ -71,6 +75,7 @@ Barkley prepara para rendirlos; no los administra ni entrega la certificación.
 - [Exámenes Libres MINEDUC 2027](https://claude.ai/code/artifact/32af95e8-9524-4d39-9601-1df2af66463f): fechas, requisitos y proceso de inscripción.
 - [Colegio para deportistas de alto rendimiento](https://claude.ai/code/artifact/18187b86-35ea-4533-8ea9-54184740f45e): educación flexible compatible con entrenamiento y competencias.
 - [Educación inclusiva y NEE](https://claude.ai/code/artifact/bcdd2509-10cf-4aac-a7d6-b682a9761954): adaptaciones para dislexia, TDAH, autismo y discapacidad física en formato online.
+- [Homeschool en Chile: guía 2027](https://claude.ai/code/artifact/ac137c4e-2002-41f0-9802-ce1f0de6f372): legalidad, diferencia entre homeschool tradicional y estructurado, rol del adulto acompañante.
 
 ## Contacto
 
