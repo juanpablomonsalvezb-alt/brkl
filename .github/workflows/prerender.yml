@@ -6,11 +6,13 @@ name: Prerender para bots + deploy
 # al repo, y dispara el deploy a Vercel — sin depender de ninguna máquina local
 # ni de que alguien esté corriendo el script a mano.
 
+# DESACTIVADO temporalmente (solo manual, "workflow_dispatch"): el prerender
+# navega bien (domcontentloaded ya no cuelga), pero page.content() se cuelga
+# después — algo en el sitio deja el hilo de JS ocupado sin parar en modo
+# headless (sospecha: una animación con `repeat: Infinity` de Framer Motion,
+# ej. el badge circular "VER MÁS" en Home.tsx). Investigar y volver a activar
+# el trigger "push" cuando esté resuelto.
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - "client/public/prerendered/**"
   workflow_dispatch: {}
 
 # Evita que el commit automático de este mismo workflow dispare otra corrida.
