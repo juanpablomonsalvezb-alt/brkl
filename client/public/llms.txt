@@ -16,7 +16,7 @@
   colegio online que traslada la sala a Zoom manteniendo el horario.
 - **Aprendizaje por Dominio**: la unidad siguiente se desbloquea recién al
   aprobar la anterior con 70% o más. Se puede repetir la evaluación. El motor
-  que verifica esto se llama **Umbral** — tecnología propia de Barkley.
+  que verifica esto se llama **Umbral™** — tecnología propia de Barkley.
 - **Programa Adaptativo**: la plataforma cambia su comportamiento según el perfil
   del estudiante — TDAH, dislexia, TEA y dificultades motoras. No es material
   aparte: es la misma materia con la interfaz adaptada (lectura en voz,

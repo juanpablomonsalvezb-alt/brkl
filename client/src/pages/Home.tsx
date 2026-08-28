@@ -230,7 +230,7 @@ const PILARES = [
   { title: "Tu ritmo, no el nuestro", img: "/images/rutas-flexibles.webp", text: "No hay un horario que cumplir ni una clase que no puedes recuperar: decides cuándo estudias, a qué hora y en qué orden. Un asesor sigue tu progreso completo de principio a fin. Lo único fijo es la fecha del examen libre ante el Ministerio de Educación — todo lo demás lo organizas tú." },
   { title: "Aprendizaje por Dominio", img: "/images/metodologia.webp", text: "Trabajamos con Mastery Learning, el modelo de Benjamin Bloom (Harvard, 1968): cada unidad se desbloquea solo si dominas la anterior — video corto, práctica, y si te cuesta, refuerzo antes de seguir. Sin saltos, sin huecos." },
   { title: "El tutor aparece cuando lo necesitas", img: "/images/acompanamiento.webp", text: "No es una clase obligatoria ni algo que pides por capricho: el sistema detecta cuando estás con dificultad real en una asignatura, y ahí aparece la ayuda — no antes, no como un horario más que administrar." },
-  { title: "Tu progreso, medido de verdad", img: "/images/plataforma-pilar.webp", text: "Cada intento, cada puntaje, cada unidad completada queda registrado por Umbral, nuestro motor de progreso — no son solo impresiones. Si tu perfil de aprendizaje es TDAH o dislexia, el contenido se adapta automáticamente (programa Adaptativo). Y siempre hay un asesor humano revisando cómo vas, no solo un algoritmo mirando de lejos." },
+  { title: "Tu progreso, medido de verdad", img: "/images/plataforma-pilar.webp", text: "Cada intento, cada puntaje, cada unidad completada queda registrado por Umbral™, nuestro motor de progreso — no son solo impresiones. Si tu perfil de aprendizaje es TDAH o dislexia, el contenido se adapta automáticamente (programa Adaptativo). Y siempre hay un asesor humano revisando cómo vas, no solo un algoritmo mirando de lejos." },
 ];
 
 // Solo Básica y Media en el módulo de niveles del home — Validación de Adultos existe como
@@ -670,7 +670,7 @@ const METODO_PASOS = [
   { n: "01", title: "Aprendes", text: "Cada objetivo del temario oficial viene con 2 a 3 videos y sus pódcasts. Ves, escuchas, pausas y repites — a tu ritmo, cuando tu día lo permite.", color: GOLD },
   { n: "02", title: "Practicas", text: "Ejercicios que se corrigen solos, al instante. Sabes de inmediato si entendiste, sin esperar a que un profesor revise la próxima semana.", color: GREEN },
   { n: "03", title: "Refuerzas", text: "¿Te costó? Antes de seguir, refuerzo del mismo tema. Nadie avanza arrastrando vacíos — el error se corrige en el momento, no meses después.", color: PINK },
-  { n: "04", title: "Dominas", text: "Evaluación de la unidad. Umbral verifica que tengas 70% o más antes de desbloquear la siguiente. Avanzas porque de verdad dominaste, no porque pasó el calendario.", color: RED },
+  { n: "04", title: "Dominas", text: "Evaluación de la unidad. Umbral™ verifica que tengas 70% o más antes de desbloquear la siguiente. Avanzas porque de verdad dominaste, no porque pasó el calendario.", color: RED },
 ];
 
 function MetodoModule() {
@@ -694,7 +694,7 @@ function MetodoModule() {
         <Reveal>
           <div style={{ textAlign: "center", marginBottom: 12 }}>
             <p style={{ fontSize: 14, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.12em", margin: 0 }}>Nuestro método · lo que nos hace distintos</p>
-            <h2 style={{ fontSize: "clamp(34px,6vw,60px)", fontWeight: 600, margin: "10px 0 6px" }}>Umbral</h2>
+            <h2 style={{ fontSize: "clamp(34px,6vw,60px)", fontWeight: 600, margin: "10px 0 6px" }}>Umbral<sup style={{ fontSize: "0.35em", fontWeight: 600, marginLeft: 2 }}>™</sup></h2>
             <p style={{ fontSize: 16, opacity: 0.8, margin: 0 }}>
               El motor que decide cuándo estás listo para avanzar — basado en <em>Mastery Learning</em>, el modelo de <strong style={{ color: "#fff" }}>Benjamin Bloom</strong>, Universidad de Harvard, 1968.
             </p>
@@ -703,7 +703,7 @@ function MetodoModule() {
 
         <Reveal delay={0.1}>
           <p style={{ fontSize: "clamp(17px,2.2vw,20px)", lineHeight: 1.6, textAlign: "center", maxWidth: 760, margin: "24px auto 48px", opacity: 0.92 }}>
-            No tenemos clases en vivo — y esa es una ventaja. En una clase por Zoom, todos avanzan al mismo ritmo aunque no entiendan, y el que se queda atrás, se queda atrás. Con Umbral, <strong style={{ color: GOLD }}>cada estudiante avanza solo cuando de verdad domina el tema</strong>. Nadie arrastra vacíos.
+            No tenemos clases en vivo — y esa es una ventaja. En una clase por Zoom, todos avanzan al mismo ritmo aunque no entiendan, y el que se queda atrás, se queda atrás. Con Umbral<sup style={{ fontSize: "0.6em" }}>™</sup>, <strong style={{ color: GOLD }}>cada estudiante avanza solo cuando de verdad domina el tema</strong>. Nadie arrastra vacíos.
           </p>
         </Reveal>
 
