@@ -686,33 +686,25 @@ function MetodoModule() {
     <section id="metodo-barkley" style={{ background: NAVY, color: "#fff", padding: "88px 24px", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: -40, right: -40, opacity: 0.06 }}><ShapeFastForward color="#fff" size={280} /></div>
       <div style={{ maxWidth: 1080, margin: "0 auto", position: "relative" }}>
+        {/* Orden pensado como AIDA: primero el nombre propio y memorable (Umbral)
+            que engancha, después la autoridad científica (Bloom/Harvard) que
+            cierra la confianza — un apoderado scrolleando responde primero a un
+            concepto pegajoso, la ciencia detrás es lo que sostiene esa primera
+            impresión, no lo que la genera. */}
         <Reveal>
           <div style={{ textAlign: "center", marginBottom: 12 }}>
             <p style={{ fontSize: 14, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.12em", margin: 0 }}>Nuestro método · lo que nos hace distintos</p>
-            <h2 style={{ fontSize: "clamp(34px,6vw,60px)", fontWeight: 600, margin: "10px 0 6px" }}>Aprendizaje por Dominio</h2>
+            <h2 style={{ fontSize: "clamp(34px,6vw,60px)", fontWeight: 600, margin: "10px 0 6px" }}>Umbral</h2>
             <p style={{ fontSize: 16, opacity: 0.8, margin: 0 }}>
-              <em>Mastery Learning</em> — el modelo de <strong style={{ color: "#fff" }}>Benjamin Bloom</strong>, Universidad de Harvard, 1968.
+              El motor que decide cuándo estás listo para avanzar — basado en <em>Mastery Learning</em>, el modelo de <strong style={{ color: "#fff" }}>Benjamin Bloom</strong>, Universidad de Harvard, 1968.
             </p>
           </div>
         </Reveal>
 
         <Reveal delay={0.1}>
-          <p style={{ fontSize: "clamp(17px,2.2vw,20px)", lineHeight: 1.6, textAlign: "center", maxWidth: 760, margin: "24px auto 24px", opacity: 0.92 }}>
-            No tenemos clases en vivo — y esa es una ventaja. En una clase por Zoom, todos avanzan al mismo ritmo aunque no entiendan, y el que se queda atrás, se queda atrás. Con el Aprendizaje por Dominio, <strong style={{ color: GOLD }}>cada estudiante avanza solo cuando de verdad domina el tema</strong>. Nadie arrastra vacíos.
+          <p style={{ fontSize: "clamp(17px,2.2vw,20px)", lineHeight: 1.6, textAlign: "center", maxWidth: 760, margin: "24px auto 48px", opacity: 0.92 }}>
+            No tenemos clases en vivo — y esa es una ventaja. En una clase por Zoom, todos avanzan al mismo ritmo aunque no entiendan, y el que se queda atrás, se queda atrás. Con Umbral, <strong style={{ color: GOLD }}>cada estudiante avanza solo cuando de verdad domina el tema</strong>. Nadie arrastra vacíos.
           </p>
-        </Reveal>
-
-        {/* Umbral: nombre propio del motor que decide cuándo el estudiante está listo
-            para avanzar. Antes esto vivía disperso como "sistema determinístico" /
-            "seguimiento algorítmico" en distintas secciones — un nombre único le da
-            identidad de tecnología propia, como "Vectored Instruction" de Acellus. */}
-        <Reveal delay={0.15}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, maxWidth: 640, margin: "0 auto 48px", padding: "14px 24px", background: "rgba(255,197,72,0.08)", border: `1px solid rgba(255,197,72,0.25)`, borderRadius: 999, flexWrap: "wrap", textAlign: "center" }}>
-            <Lock size={16} color={GOLD} />
-            <p style={{ fontSize: 14.5, margin: 0, opacity: 0.9 }}>
-              El motor detrás de esto se llama <strong style={{ color: GOLD }}>Umbral</strong> — decide, unidad por unidad, cuándo estás listo para avanzar.
-            </p>
-          </div>
         </Reveal>
 
         {/* Los 4 pasos en auto-play */}
