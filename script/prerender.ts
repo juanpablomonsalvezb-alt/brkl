@@ -66,12 +66,19 @@ async function main() {
     try {
       for (const route of ROUTES) {
         const page = await browser.newPage();
+        // networkidle0/networkidle2 nunca se cumplían — algo en la página deja
+        // conexiones activas indefinidamente (más de 2 a la vez), así que el
+        // timeout se agotaba siempre, hasta en una máquina limpia de CI sin
+        // problemas de sandbox. domcontentloaded no depende del estado de red;
+        // el sleep de abajo ya cubre la hidratación de React y el fetch del FAQ.
         await page.goto(`http://127.0.0.1:${PORT}${route.path}`, {
-          waitUntil: "networkidle0",
+          waitUntil: "domcontentloaded",
           timeout: 30000,
         });
         // Deja que React termine de hidratar/renderizar contenido async (FAQ, etc.)
-        await new Promise((r) => setTimeout(r, 1500));
+        // — antes esto se apoyaba en networkidle0/2 para "saber cuándo terminó",
+        // ahora es la única señal de espera, así que va con más margen.
+        await new Promise((r) => setTimeout(r, 3000));
         const html = limpiarParaBots(await page.content());
         await page.close();
 
