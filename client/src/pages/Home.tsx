@@ -772,11 +772,14 @@ export default function Home() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "Organization",
+            "@type": "EducationalOrganization",
             name: "Barkley Online",
+            alternateName: "Barkley",
             url: "https://www.barkleyinstituto.cl/",
             logo: "https://www.barkleyinstituto.cl/og-image.jpg",
             description: "Colegio 100% online y asíncrono en Chile, de 1° básico a 4° medio, con validación oficial MINEDUC.",
+            address: { "@type": "PostalAddress", addressCountry: "CL" },
+            areaServed: { "@type": "Country", name: "Chile" },
             sameAs: [INSTAGRAM_URL, TIKTOK_URL],
           }),
         }}
