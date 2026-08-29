@@ -1639,7 +1639,7 @@ export default function Home() {
                 </div>
               </div>
               <p style={{ fontSize: 14, color: TEXT, margin: "0 0 18px" }}>
-                Inscripción gratuita a través del Portal de Ayuda Mineduc. Quien necesite validar 4° medio o presente NEE solo puede inscribirse en el primer o segundo período (junio o septiembre) para asegurar la certificación a tiempo.
+                Inscripción gratuita a través del Portal de Ayuda Mineduc. Quien necesite validar 4° medio o presente NEE solo puede inscribirse en el primer o segundo período (junio o septiembre) para asegurar la certificación a tiempo. <a href="/blog/como-inscribirse-examenes-libres-mineduc/" style={{ color: NAVY, fontWeight: 700 }}>Ver guía paso a paso →</a>
               </p>
               <a href="https://epja.mineduc.cl/wp-content/uploads/sites/43/2026/03/plazos-oficiales-2026-menores.pdf"
                 target="_blank" rel="noopener noreferrer"
