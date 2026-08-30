@@ -223,6 +223,24 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.barkleyinstituto.cl/colegio-online-movilidad-reducida/</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.barkleyinstituto.cl/colegio-online-portal-padres/</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.barkleyinstituto.cl/colegio-online-expatriados-fijos/</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.barkleyinstituto.cl/blog/mitos-vs-realidad-colegio-online/</loc>
     <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
@@ -355,3 +373,21 @@
     <priority>0.6</priority>
   </url>
 </urlset>
+  <url>
+    <loc>https://www.barkleyinstituto.cl/colegio-online-movilidad-reducida/</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.barkleyinstituto.cl/colegio-online-portal-padres/</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.barkleyinstituto.cl/colegio-online-expatriados-fijos/</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
