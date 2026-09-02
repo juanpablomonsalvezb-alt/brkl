@@ -205,6 +205,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.barkleyinstituto.cl/blog/mitos-vs-realidad-colegio-online/</loc>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.barkleyinstituto.cl/colegio-online-salud-cronica/</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
@@ -236,19 +242,19 @@
   </url>
   <url>
     <loc>https://www.barkleyinstituto.cl/colegio-online-expatriados-fijos/</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <url>
     <loc>https://www.barkleyinstituto.cl/colegio-presencial-vs-online/</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-    <lastmod>2026-08-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
   <url>
-    <loc>https://www.barkleyinstituto.cl/blog/mitos-vs-realidad-colegio-online/</loc>
-    <lastmod>2026-08-29</lastmod>
+    <loc>https://www.barkleyinstituto.cl/colegio-online-miedos-frecuentes/</loc>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -379,27 +385,3 @@
     <priority>0.6</priority>
   </url>
 </urlset>
-  <url>
-    <loc>https://www.barkleyinstituto.cl/colegio-online-movilidad-reducida/</loc>
-    <lastmod>2026-08-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.barkleyinstituto.cl/colegio-online-portal-padres/</loc>
-    <lastmod>2026-08-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.barkleyinstituto.cl/colegio-online-expatriados-fijos/</loc>
-  <url>
-    <loc>https://www.barkleyinstituto.cl/colegio-presencial-vs-online/</loc>
-    <lastmod>2026-08-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-    <lastmod>2026-08-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
