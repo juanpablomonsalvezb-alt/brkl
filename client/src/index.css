@@ -209,3 +209,12 @@
   background-size: 400% 400%;
   animation: gradient-xy 3s ease infinite;
 }
+
+/* Carrusel de videos: scroll horizontal sin scrollbar visible, gesto nativo en mobile */
+.bk-carousel {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.bk-carousel::-webkit-scrollbar {
+  display: none;
+}

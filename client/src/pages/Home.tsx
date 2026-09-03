@@ -17,6 +17,7 @@ import {
   Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
   Layers, BookOpen, Headphones, Image as ImageIcon, ListChecks, Sparkles,
   Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock, Instagram, Zap, Home as HomeIcon,
+  ChevronLeft, ChevronRight,
 } from "lucide-react";
 
 const INSTAGRAM_URL = "https://www.instagram.com/ibarkley.cl";
@@ -335,6 +336,80 @@ interface Faq { id: string; question: string; answer: string; sortOrder: number;
 
 function ShapeInline({ color, shape: Shape }: { color: string; shape: typeof ShapeCircle }) {
   return <span style={{ display: "inline-block", margin: "0 4px", verticalAlign: "middle", transform: "translateY(2px)" }}><Shape color={color} size={28} /></span>;
+}
+
+const VIDEOS = [
+  { title: "Umbral™: el motor que exige entender", img: "/videos/umbral-v2.jpg", href: "https://youtube.com/shorts/0FluOs2d630" },
+  { title: "Por qué huyen del colegio", img: "/videos/por-que-huyen-v2.jpg", href: "https://youtube.com/shorts/GT0xJVWNJMw" },
+  { title: "Cómo funciona el Aprendizaje por Dominio", img: "/videos/aprendizaje-dominio-v2.jpg", href: "https://youtube.com/shorts/MTUOhlcNSsc" },
+  { title: "Cómo frenamos el bullying", img: "/videos/bullying-v2.jpg", href: "https://youtube.com/shorts/z5cGm-3VVG0" },
+  { title: "Cómo funciona el Programa Adaptativo", img: "/videos/programa-adaptativo-v2.jpg", href: "https://youtube.com/shorts/h9PYF9BhxeQ" },
+  { title: "Por qué el aula complica el TDAH", img: "/videos/tdah.jpg", href: "https://youtube.com/shorts/WJPiW52VBlo" },
+  { title: "Cómo funciona una lección en Barkley", img: "/videos/leccion.jpg", href: "https://youtube.com/shorts/vT4he6V59hU" },
+  { title: "Barkley vs enseñanza tradicional", img: "/videos/vs-tradicional.jpg", href: "https://youtube.com/shorts/0-zzHQm-OKA" },
+  { title: "Por qué el colegio causa ansiedad", img: "/videos/ansiedad.jpg", href: "https://youtube.com/shorts/ADGbDql7yYc" },
+  { title: "Por qué el ritmo fijo frena las altas capacidades", img: "/videos/altas-capacidades.jpg", href: "https://youtube.com/shorts/LFNbO1vu4D8" },
+  { title: "Cómo validar el temario oficial del MINEDUC", img: "/videos/curriculum.jpg", href: "https://youtube.com/shorts/BQVCCh29py0" },
+  { title: "Cómo funciona la autogestión escolar", img: "/videos/autogestion.jpg", href: "https://youtube.com/shorts/m_mrIOgDrw4" },
+  { title: "Entorno adaptativo para dislexia", img: "/videos/dislexia.jpg", href: "https://youtube.com/shorts/wtljV6t5UA4" },
+];
+
+// Carrusel horizontal en vez de grid: con 13 videos, un grid ocupaba 3-4 filas
+// completas de la página. El scroll horizontal con snap mantiene la altura de
+// una sola fila sin importar cuántos videos se agreguen después.
+function VideosCarousel() {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const scrollByCards = (dir: 1 | -1) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: "smooth" });
+  };
+  return (
+    <section id="videos" style={{ background: "#f5f5f5", padding: "80px 0" }}>
+      <div style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px" }}>
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 20, marginBottom: 28 }}>
+          <div>
+            <Reveal><h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 600, color: SLATE, margin: "0 0 8px" }}>Conócenos en video</h2></Reveal>
+            <Reveal delay={0.05}><p style={{ fontSize: 16, color: TEXT, margin: 0 }}>Explicaciones cortas, directo al punto. Se abren en YouTube.</p></Reveal>
+          </div>
+          <div className="hidden md:flex" style={{ gap: 8, flexShrink: 0 }}>
+            <button aria-label="Anterior" onClick={() => scrollByCards(-1)} style={{ width: 40, height: 40, borderRadius: "50%", border: `1px solid #d5dbe3`, background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <ChevronLeft style={{ width: 18, height: 18, color: NAVY }} />
+            </button>
+            <button aria-label="Siguiente" onClick={() => scrollByCards(1)} style={{ width: 40, height: 40, borderRadius: "50%", border: `1px solid #d5dbe3`, background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <ChevronRight style={{ width: 18, height: 18, color: NAVY }} />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        ref={scrollerRef}
+        className="bk-carousel"
+        style={{ display: "flex", gap: 16, overflowX: "auto", scrollSnapType: "x mandatory", paddingBottom: 4, paddingLeft: "max(24px, calc((100vw - 1180px) / 2 + 24px))", paddingRight: 24, WebkitOverflowScrolling: "touch" }}
+      >
+        {VIDEOS.map((v, i) => (
+          <Reveal key={v.href} delay={Math.min(i, 4) * 0.05} style={{ flex: "0 0 auto", width: "clamp(140px, 22vw, 172px)", scrollSnapAlign: "start" }}>
+            <a
+              href={v.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: "flex", flexDirection: "column", height: "100%", textDecoration: "none", borderRadius: 14, overflow: "hidden", background: "#fff", boxShadow: "0 4px 18px rgba(0,0,0,0.08)" }}
+            >
+              <div style={{ position: "relative", aspectRatio: "9/16", background: NAVY }}>
+                <img src={v.img} alt={v.title} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,51,102,0.15)" }}>
+                  <div style={{ width: 48, height: 48, borderRadius: "50%", background: "rgba(255,255,255,0.92)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.25)" }}>
+                    <div style={{ width: 0, height: 0, borderTop: "9px solid transparent", borderBottom: "9px solid transparent", borderLeft: `15px solid ${NAVY}`, marginLeft: 3 }} />
+                  </div>
+                </div>
+              </div>
+              <p style={{ flex: 1, display: "flex", alignItems: "center", fontSize: 12.5, fontWeight: 600, color: NAVY, lineHeight: 1.35, margin: 0, padding: "10px 12px", minHeight: 58 }}>{v.title}</p>
+            </a>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 // Bloque de admisión — headline potente + formulario. Se repite dos veces en el
@@ -983,48 +1058,7 @@ export default function Home() {
       <MetodoModule />
 
       {/* === VIDEOS === */}
-      <section id="videos" style={{ background: "#f5f5f5", padding: "80px 24px" }}>
-        <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-          <Reveal><h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 600, color: SLATE, margin: "0 0 8px", textAlign: "center" }}>Conócenos en video</h2></Reveal>
-          <Reveal delay={0.05}><p style={{ fontSize: 16, color: TEXT, textAlign: "center", margin: "0 0 40px" }}>Explicaciones cortas, directo al punto. Se abren en YouTube.</p></Reveal>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(187px, 1fr))", gap: 20 }}>
-            {[
-              { title: "Umbral™: el motor que exige entender", img: "/videos/umbral-v2.jpg", href: "https://youtube.com/shorts/0FluOs2d630" },
-              { title: "Por qué huyen del colegio", img: "/videos/por-que-huyen-v2.jpg", href: "https://youtube.com/shorts/GT0xJVWNJMw" },
-              { title: "Cómo funciona el Aprendizaje por Dominio", img: "/videos/aprendizaje-dominio-v2.jpg", href: "https://youtube.com/shorts/MTUOhlcNSsc" },
-              { title: "Cómo frenamos el bullying", img: "/videos/bullying-v2.jpg", href: "https://youtube.com/shorts/z5cGm-3VVG0" },
-              { title: "Cómo funciona el Programa Adaptativo", img: "/videos/programa-adaptativo-v2.jpg", href: "https://youtube.com/shorts/h9PYF9BhxeQ" },
-              { title: "Por qué el aula complica el TDAH", img: "/videos/tdah.jpg", href: "https://youtube.com/shorts/WJPiW52VBlo" },
-              { title: "Cómo funciona una lección en Barkley", img: "/videos/leccion.jpg", href: "https://youtube.com/shorts/vT4he6V59hU" },
-              { title: "Barkley vs enseñanza tradicional", img: "/videos/vs-tradicional.jpg", href: "https://youtube.com/shorts/0-zzHQm-OKA" },
-              { title: "Por qué el colegio causa ansiedad", img: "/videos/ansiedad.jpg", href: "https://youtube.com/shorts/ADGbDql7yYc" },
-              { title: "Por qué el ritmo fijo frena las altas capacidades", img: "/videos/altas-capacidades.jpg", href: "https://youtube.com/shorts/LFNbO1vu4D8" },
-              { title: "Cómo validar el temario oficial del MINEDUC", img: "/videos/curriculum.jpg", href: "https://youtube.com/shorts/BQVCCh29py0" },
-              { title: "Cómo funciona la autogestión escolar", img: "/videos/autogestion.jpg", href: "https://youtube.com/shorts/m_mrIOgDrw4" },
-              { title: "Entorno adaptativo para dislexia", img: "/videos/dislexia.jpg", href: "https://youtube.com/shorts/wtljV6t5UA4" },
-            ].map((v, i) => (
-              <Reveal key={v.href} delay={0.05 * i}>
-                <a
-                  href={v.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ display: "flex", flexDirection: "column", height: "100%", textDecoration: "none", borderRadius: 14, overflow: "hidden", background: "#fff", boxShadow: "0 4px 18px rgba(0,0,0,0.08)" }}
-                >
-                  <div style={{ position: "relative", aspectRatio: "9/16", background: NAVY }}>
-                    <img src={v.img} alt={v.title} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,51,102,0.15)" }}>
-                      <div style={{ width: 48, height: 48, borderRadius: "50%", background: "rgba(255,255,255,0.92)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.25)" }}>
-                        <div style={{ width: 0, height: 0, borderTop: "9px solid transparent", borderBottom: "9px solid transparent", borderLeft: `15px solid ${NAVY}`, marginLeft: 3 }} />
-                      </div>
-                    </div>
-                  </div>
-                  <p style={{ flex: 1, display: "flex", alignItems: "center", fontSize: 12.5, fontWeight: 600, color: NAVY, lineHeight: 1.35, margin: 0, padding: "10px 12px", minHeight: 58 }}>{v.title}</p>
-                </a>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <VideosCarousel />
 
       {/* === COLEGIOS CON EL MISMO MÉTODO — registro editorial con escudos heráldicos propios === */}
       <section id="referentes" style={{ background: "#fff", padding: "88px 24px", borderTop: `4px solid ${GOLD}` }}>
