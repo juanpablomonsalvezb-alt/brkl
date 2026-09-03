@@ -997,11 +997,11 @@ export default function Home() {
           <Reveal delay={0.05}><p style={{ fontSize: 16, color: TEXT, textAlign: "center", margin: "0 0 40px" }}>Explicaciones cortas, directo al punto. Se abren en YouTube.</p></Reveal>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24 }}>
             {[
-              { title: "Umbral™: el motor que exige entender", img: "/videos/umbral.jpg", href: "https://youtube.com/shorts/0FluOs2d630" },
-              { title: "Por qué huyen del colegio", img: "/videos/por-que-huyen.jpg", href: "https://youtube.com/shorts/GT0xJVWNJMw" },
-              { title: "Cómo funciona el Aprendizaje por Dominio", img: "/videos/aprendizaje-dominio.jpg", href: "https://youtube.com/shorts/MTUOhlcNSsc" },
-              { title: "Cómo frenamos el bullying", img: "/videos/bullying.jpg", href: "https://youtube.com/shorts/z5cGm-3VVG0" },
-              { title: "Cómo funciona el Programa Adaptativo", img: "/videos/programa-adaptativo.jpg", href: "https://youtube.com/shorts/h9PYF9BhxeQ" },
+              { title: "Umbral™: el motor que exige entender", img: "/videos/umbral-v2.jpg", href: "https://youtube.com/shorts/0FluOs2d630" },
+              { title: "Por qué huyen del colegio", img: "/videos/por-que-huyen-v2.jpg", href: "https://youtube.com/shorts/GT0xJVWNJMw" },
+              { title: "Cómo funciona el Aprendizaje por Dominio", img: "/videos/aprendizaje-dominio-v2.jpg", href: "https://youtube.com/shorts/MTUOhlcNSsc" },
+              { title: "Cómo frenamos el bullying", img: "/videos/bullying-v2.jpg", href: "https://youtube.com/shorts/z5cGm-3VVG0" },
+              { title: "Cómo funciona el Programa Adaptativo", img: "/videos/programa-adaptativo-v2.jpg", href: "https://youtube.com/shorts/h9PYF9BhxeQ" },
               { title: "Por qué el aula complica el TDAH", img: "/videos/tdah.jpg", href: "https://youtube.com/shorts/WJPiW52VBlo" },
               { title: "Cómo funciona una lección en Barkley", img: "/videos/leccion.jpg", href: "https://youtube.com/shorts/vT4he6V59hU" },
               { title: "Barkley vs enseñanza tradicional", img: "/videos/vs-tradicional.jpg", href: "https://youtube.com/shorts/0-zzHQm-OKA" },
