@@ -363,7 +363,7 @@ function AdmisionSection({ anchorId }: { anchorId?: string }) {
           <p style={{ fontSize: "clamp(18px,2.4vw,23px)", fontWeight: 600, color: "#cfe0f5", margin: "0 0 6px", lineHeight: 1.4 }}>
             Sin compromiso, sin costo hoy — <span style={{ color: GOLD }}>pagas recién en febrero de 2027</span>.
           </p>
-          <p style={{ fontSize: 15, color: "#9db3cf", margin: 0 }}>Cupos limitados · año académico 2027</p>
+          <p style={{ fontSize: 15, color: "#9db3cf", margin: 0 }}>Cupos limitados para el año académico 2027. No hay matrícula disponible para el año en curso.</p>
         </div>
         <div style={{ flex: "1 1 460px", minWidth: 300, maxWidth: 560, background: "#fff", borderRadius: 24, padding: "44px 40px", boxShadow: "0 32px 80px rgba(0,0,0,0.35)", border: `1px solid rgba(255,255,255,0.08)` }}>
           <InscripcionForm />
@@ -405,8 +405,8 @@ function medir(step: "llega_pagina" | "ve_formulario" | "empieza_formulario" | "
 // un formulario largo tradicional. El apoderado/estudiante avanza con Enter o
 // clic, ve su progreso, y puede volver atrás. Los campos opcionales (perfil de
 // aprendizaje, consultas) se agrupan al final para no interrumpir el impulso inicial.
-type StepId = "name" | "email" | "level" | "learningProfile" | "notes";
-const STEPS: StepId[] = ["name", "email", "level", "learningProfile", "notes"];
+type StepId = "name" | "email" | "level" | "learningProfile" | "confirmYear" | "notes";
+const STEPS: StepId[] = ["name", "email", "level", "learningProfile", "confirmYear", "notes"];
 
 function InscripcionForm() {
   const [step, setStep] = useState(0);
@@ -414,6 +414,7 @@ function InscripcionForm() {
   const [email, setEmail] = useState("");
   const [level, setLevel] = useState("");
   const [learningProfile, setLearningProfile] = useState("");
+  const [confirmedYear, setConfirmedYear] = useState(false);
   const [notes, setNotes] = useState("");
   const [st, setSt] = useState<"idle"|"loading"|"success"|"error"|"duplicate">("idle");
   const [err, setErr] = useState("");
@@ -447,7 +448,7 @@ function InscripcionForm() {
   const submit = async () => {
     setSt("loading"); setErr("");
     try {
-      const res = await fetch("/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, name: name||undefined, levelInterest: level||undefined, learningProfileInterest: learningProfile||undefined, notes: notes||undefined }) });
+      const res = await fetch("/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, name: name||undefined, levelInterest: level||undefined, learningProfileInterest: learningProfile||undefined, notes: notes||undefined, cohortYear: "2027" }) });
       const d = await res.json();
       if (!res.ok) { setErr(d.message||"Error"); setSt("error"); return; }
       setSt(d.alreadySubscribed ? "duplicate" : "success");
@@ -466,7 +467,7 @@ function InscripcionForm() {
   const inp: React.CSSProperties = { border: "1px solid #d5dbe3", borderRadius: 8, background: "#fff", fontSize: 18, padding: "14px 16px", outline: "none", width: "100%", fontFamily: FONT, color: TEXT };
   const stepId = STEPS[step];
   const isLast = step === STEPS.length - 1;
-  const requiredOk = stepId === "name" ? name.trim().length > 0 : stepId === "email" ? /\S+@\S+\.\S+/.test(email) : true;
+  const requiredOk = stepId === "name" ? name.trim().length > 0 : stepId === "email" ? /\S+@\S+\.\S+/.test(email) : stepId === "confirmYear" ? confirmedYear : true;
 
   const goNext = () => {
     marcarInicio();
@@ -484,6 +485,7 @@ function InscripcionForm() {
     email: "¿Cuál es tu correo electrónico?",
     level: "¿Qué nivel te interesa?",
     learningProfile: "¿Tiene TDAH o dislexia?",
+    confirmYear: "Antes de continuar",
     notes: "¿Alguna pregunta para nuestro equipo?",
   };
 
@@ -543,6 +545,25 @@ function InscripcionForm() {
               <option value="motor">Dificultades motoras</option>
               <option value="ambos">TDAH y dislexia</option>
             </select>
+          )}
+          {stepId === "confirmYear" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div style={{ background: "#fff8ea", border: `1px solid ${GOLD}`, borderRadius: 10, padding: "16px 18px" }}>
+                <p style={{ margin: 0, fontSize: 15, fontWeight: 700, color: NAVY }}>Cupos disponibles solo para Admisión 2027.</p>
+                <p style={{ margin: "6px 0 0", fontSize: 14, color: TEXT }}>No hay matrícula disponible para el año en curso (2026). Esta postulación reserva un cupo para el ciclo académico que comienza en 2027.</p>
+              </div>
+              <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer", fontSize: 15 }}>
+                <input
+                  autoFocus
+                  type="checkbox"
+                  checked={confirmedYear}
+                  onChange={e => setConfirmedYear(e.target.checked)}
+                  style={{ width: 20, height: 20, marginTop: 2, cursor: "pointer", flexShrink: 0 }}
+                  data-testid="checkbox-confirm-year"
+                />
+                <span>Entiendo y confirmo que esta postulación es para <strong>Admisión 2027</strong>, no para el año en curso.</span>
+              </label>
+            </div>
           )}
           {stepId === "notes" && (
             <textarea autoFocus value={notes} onChange={e=>setNotes(e.target.value)} placeholder="¿Tienes alguna pregunta para nuestro equipo?" rows={3}
@@ -1768,8 +1789,11 @@ export default function Home() {
           <Reveal>
             <p style={{ fontSize: 14, fontWeight: 600, color: RED, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>Precio transparente</p>
             <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 600, color: NAVY, margin: "0 0 12px" }}>Un solo valor, sin letra chica</h2>
-            <p style={{ fontSize: 16, color: TEXT, margin: "0 auto 40px", maxWidth: 640 }}>
-              Matrícula gratis, sin costos ocultos. El año de preparación va de <strong style={{ color: NAVY }}>marzo al 31 de octubre</strong>, cuando rindes tus exámenes libres. Todo incluido — 2 a 3 videos y pódcasts por lección, un tutor general que te acompaña en todo (no solo lo académico), asesor que sigue tu progreso y portal para tu familia.
+            <p style={{ fontSize: 16, color: TEXT, margin: "0 auto 20px", maxWidth: 640 }}>
+              Sin costos ocultos. El año de preparación va de <strong style={{ color: NAVY }}>marzo al 31 de octubre</strong>, cuando rindes tus exámenes libres. Todo incluido — 2 a 3 videos y pódcasts por lección, un tutor general que te acompaña en todo (no solo lo académico), asesor que sigue tu progreso y portal para tu familia.
+            </p>
+            <p style={{ display: "inline-block", background: "#fff8ea", border: `1px solid ${GOLD}`, borderRadius: 999, padding: "8px 20px", fontSize: 14.5, fontWeight: 700, color: NAVY, margin: "0 0 40px" }}>
+              🎁 Matrícula gratis para quienes se inscriban antes del 30 de noviembre
             </p>
           </Reveal>
           <Reveal delay={0.1}>
@@ -1781,7 +1805,7 @@ export default function Home() {
                   <span style={{ fontSize: 48, fontWeight: 700, color: NAVY }}>$65.000</span>
                   <span style={{ fontSize: 16, color: TEXT }}>/ mes</span>
                 </div>
-                <p style={{ fontSize: 14, color: TEXT, margin: "0 0 22px" }}>Matrícula gratis. De marzo a octubre, cancela cuando quieras.</p>
+                <p style={{ fontSize: 14, color: TEXT, margin: "0 0 22px" }}>Matrícula gratis si te inscribes antes del 30 de noviembre. De marzo a octubre, cancela cuando quieras.</p>
                 {["Todas las asignaturas de tu nivel", "2 a 3 videos y pódcasts en cada lección", "Un tutor general que te acompaña integralmente", "Asesor que sigue tu progreso", "Portal Familia con avance en tiempo real", "Preparación para exámenes libres MINEDUC"].map((f) => (
                   <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
                     <Check style={{ width: 18, height: 18, color: GREEN, flexShrink: 0, marginTop: 2 }} strokeWidth={3} />
