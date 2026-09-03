@@ -753,13 +753,36 @@ function MetodoModule() {
 export default function Home() {
   const [callOpen, setCallOpen] = useState(false);
   const [tourOpen, setTourOpen] = useState(false);
+  const [showBackTop, setShowBackTop] = useState(false);
   const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5*60*1000 });
+
+  // Botón flotante de volver arriba: aparece tras pasar una pantalla de scroll,
+  // visible en toda la página (no solo al llegar al footer) y en cualquier dispositivo.
+  useEffect(() => {
+    const onScroll = () => setShowBackTop(window.scrollY > window.innerHeight * 0.6);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Primer escalón del embudo. Una sola vez por sesión, no por render.
   useEffect(() => {
     if (sessionStorage.getItem("bk_llegada")) return;
     sessionStorage.setItem("bk_llegada", "1");
     medir("llega_pagina");
+  }, []);
+
+  // Chrome restaura la posición de scroll de la pestaña al recargar una SPA,
+  // lo que hace parecer que la página siempre abre "al final". Forzamos el
+  // comportamiento estándar de sitio nuevo: arriba, salvo que la URL apunte
+  // a un ancla específica (#inscripcion, #faq, etc.).
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   return (
@@ -912,6 +935,25 @@ export default function Home() {
       <div style={{ position: "fixed", right: 0, top: "45%", zIndex: 25, flexDirection: "column" }} className="hidden md:flex">
         <a href="#inscripcion" style={{ background: PINK, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", padding: "18px 10px", writingMode: "vertical-rl", textOrientation: "mixed" }}>INSCRIBIRSE</a>
       </div>
+
+      {/* Botón flotante "volver arriba" — aparece tras pasar una pantalla de scroll,
+          visible en cualquier dispositivo (a diferencia de la insignia del footer,
+          que solo se ve en desktop y solo al llegar hasta abajo). */}
+      <AnimatePresence>
+        {showBackTop && (
+          <motion.button
+            aria-label="Volver arriba"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.2 }}
+            style={{ position: "fixed", right: 20, bottom: 20, zIndex: 30, width: 48, height: 48, borderRadius: "50%", background: NAVY, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 14px rgba(0,51,102,0.35)" }}
+          >
+            <ArrowUpRight style={{ width: 20, height: 20, color: "#fff", transform: "rotate(-45deg)" }} />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* === INTRO — azul apagado real (no navy puro), formas literales inline (hourglass/circle/triangle/stairs/leaf/bars) === */}
       <section id="nosotros" style={{ maxWidth: 1180, margin: "0 auto", padding: "90px 24px", textAlign: "left" }}>
