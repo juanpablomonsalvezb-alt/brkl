@@ -997,6 +997,11 @@ export default function Home() {
               { title: "Por qué el aula complica el TDAH", img: "/videos/tdah.jpg", href: "https://youtube.com/shorts/WJPiW52VBlo" },
               { title: "Cómo funciona una lección en Barkley", img: "/videos/leccion.jpg", href: "https://youtube.com/shorts/vT4he6V59hU" },
               { title: "Barkley vs enseñanza tradicional", img: "/videos/vs-tradicional.jpg", href: "https://youtube.com/shorts/0-zzHQm-OKA" },
+              { title: "Por qué el colegio causa ansiedad", img: "/videos/ansiedad.jpg", href: "https://youtube.com/shorts/ADGbDql7yYc" },
+              { title: "Por qué el ritmo fijo frena las altas capacidades", img: "/videos/altas-capacidades.jpg", href: "https://youtube.com/shorts/LFNbO1vu4D8" },
+              { title: "Cómo validar el temario oficial del MINEDUC", img: "/videos/curriculum.jpg", href: "https://youtube.com/shorts/BQVCCh29py0" },
+              { title: "Cómo funciona la autogestión escolar", img: "/videos/autogestion.jpg", href: "https://youtube.com/shorts/m_mrIOgDrw4" },
+              { title: "Entorno adaptativo para dislexia", img: "/videos/dislexia.jpg", href: "https://youtube.com/shorts/wtljV6t5UA4" },
             ].map((v, i) => (
               <Reveal key={v.href} delay={0.05 * i}>
                 <a
