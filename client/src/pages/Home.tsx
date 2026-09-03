@@ -365,29 +365,42 @@ function VideosCarousel() {
     el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: "smooth" });
   };
   return (
-    <section id="videos" style={{ background: "#f5f5f5", padding: "80px 0" }}>
-      <div style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px" }}>
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 20, marginBottom: 28 }}>
-          <div>
-            <Reveal><h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 600, color: SLATE, margin: "0 0 8px" }}>Conócenos en video</h2></Reveal>
-            <Reveal delay={0.05}><p style={{ fontSize: 16, color: TEXT, margin: 0 }}>Explicaciones cortas, directo al punto. Se abren en YouTube.</p></Reveal>
-          </div>
-          <div className="hidden md:flex" style={{ gap: 8, flexShrink: 0 }}>
-            <button aria-label="Anterior" onClick={() => scrollByCards(-1)} style={{ width: 40, height: 40, borderRadius: "50%", border: `1px solid #d5dbe3`, background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <ChevronLeft style={{ width: 18, height: 18, color: NAVY }} />
-            </button>
-            <button aria-label="Siguiente" onClick={() => scrollByCards(1)} style={{ width: 40, height: 40, borderRadius: "50%", border: `1px solid #d5dbe3`, background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <ChevronRight style={{ width: 18, height: 18, color: NAVY }} />
-            </button>
-          </div>
-        </div>
-      </div>
-      <div
-        ref={scrollerRef}
-        className="bk-carousel"
-        style={{ display: "flex", gap: 16, overflowX: "auto", scrollSnapType: "x mandatory", paddingBottom: 4, paddingLeft: "max(24px, calc((100vw - 1180px) / 2 + 24px))", paddingRight: 24, WebkitOverflowScrolling: "touch" }}
-      >
-        {VIDEOS.map((v, i) => (
+    <section id="videos" style={{ background: "#f5f5f5", padding: "80px 24px" }}>
+      <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+        <Reveal><h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 600, color: SLATE, margin: "0 0 8px" }}>Conócenos en video</h2></Reveal>
+        <Reveal delay={0.05}><p style={{ fontSize: 16, color: TEXT, margin: "0 0 32px" }}>Explicaciones cortas, directo al punto. Se abren en YouTube.</p></Reveal>
+
+        <div style={{ position: "relative" }}>
+          {/* Fundido en los bordes: convierte el corte de la última tarjeta en un
+              gesto de diseño ("hay más, desliza") en vez de un borde roto. */}
+          <div style={{ position: "absolute", left: 0, top: 0, bottom: 4, width: 48, background: "linear-gradient(to right, #f5f5f5, rgba(245,245,245,0))", zIndex: 2, pointerEvents: "none" }} />
+          <div style={{ position: "absolute", right: 0, top: 0, bottom: 4, width: 48, background: "linear-gradient(to left, #f5f5f5, rgba(245,245,245,0))", zIndex: 2, pointerEvents: "none" }} />
+
+          {/* Flechas flotantes sobre el carril, patrón Netflix — más reconocibles
+              como "esto es un carrusel" que flechas sueltas junto al título. */}
+          <button
+            aria-label="Anterior"
+            onClick={() => scrollByCards(-1)}
+            className="hidden md:flex"
+            style={{ position: "absolute", left: 4, top: "calc(50% - 29px)", zIndex: 3, width: 40, height: 40, borderRadius: "50%", border: "none", background: "#fff", cursor: "pointer", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.18)" }}
+          >
+            <ChevronLeft style={{ width: 20, height: 20, color: NAVY }} />
+          </button>
+          <button
+            aria-label="Siguiente"
+            onClick={() => scrollByCards(1)}
+            className="hidden md:flex"
+            style={{ position: "absolute", right: 4, top: "calc(50% - 29px)", zIndex: 3, width: 40, height: 40, borderRadius: "50%", border: "none", background: "#fff", cursor: "pointer", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.18)" }}
+          >
+            <ChevronRight style={{ width: 20, height: 20, color: NAVY }} />
+          </button>
+
+          <div
+            ref={scrollerRef}
+            className="bk-carousel"
+            style={{ display: "flex", gap: 16, overflowX: "auto", scrollSnapType: "x mandatory", paddingBottom: 4, WebkitOverflowScrolling: "touch" }}
+          >
+            {VIDEOS.map((v, i) => (
           <Reveal key={v.href} delay={Math.min(i, 4) * 0.05} style={{ flex: "0 0 auto", width: "clamp(140px, 22vw, 172px)", scrollSnapAlign: "start" }}>
             <a
               href={v.href}
@@ -406,7 +419,9 @@ function VideosCarousel() {
               <p style={{ flex: 1, display: "flex", alignItems: "center", fontSize: 12.5, fontWeight: 600, color: NAVY, lineHeight: 1.35, margin: 0, padding: "10px 12px", minHeight: 58 }}>{v.title}</p>
             </a>
           </Reveal>
-        ))}
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
