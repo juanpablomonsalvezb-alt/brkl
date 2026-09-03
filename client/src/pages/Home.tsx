@@ -331,14 +331,6 @@ const SERVICIOS = [
   },
 ];
 
-const PREU_PLANES = [
-  { plan: "Estudiante de 4° medio Barkley", precio: "Incluido", nota: "en tu mensualidad", destacado: true },
-  { plan: "Externo · mensual", precio: "$39.900", nota: "por mes" },
-  { plan: "Externo · anual (mar–nov)", precio: "$299.000", nota: "≈15% de descuento" },
-  { plan: "Externo · intensivo final (ago–nov)", precio: "$179.000", nota: "recta final PAES" },
-];
-
-
 interface Faq { id: string; question: string; answer: string; sortOrder: number; isActive?: boolean; }
 
 function ShapeInline({ color, shape: Shape }: { color: string; shape: typeof ShapeCircle }) {
@@ -1569,7 +1561,7 @@ export default function Home() {
       </section>
 
       {/* === SERVICIOS INCLUIDOS — banda papel cálido, numeración editorial y
-          bloque destacado del preuniversitario con su tabla de planes === */}
+          bloque destacado de ensayos PAES mensuales para 4° medio === */}
       <section id="servicios" style={{ background: "#fdf7ee", padding: "92px 24px", position: "relative", overflow: "hidden" }}>
         {/* Formas de fondo, mismo lenguaje decorativo del resto del sitio */}
         <div style={{ position: "absolute", top: 60, left: -50, opacity: 0.5 }}><ShapeFlower color="#f2d9b0" size={200} /></div>
@@ -1586,7 +1578,7 @@ export default function Home() {
                 </h2>
               </div>
               <p style={{ fontSize: 15.5, color: TEXT, maxWidth: 330, margin: 0, lineHeight: 1.75 }}>
-                Siete servicios que acompañan el año completo — más el preuniversitario para 4° medio. Sin cobros sorpresa, sin módulos aparte.
+                Siete servicios que acompañan el año completo — más ensayos PAES mensuales para 4° medio. Sin cobros sorpresa, sin módulos aparte.
               </p>
             </div>
           </Reveal>
@@ -1635,51 +1627,24 @@ export default function Home() {
             </Reveal>
           ))}
 
-          {/* Preuniversitario — bloque navy destacado con tabla de planes */}
+          {/* Ensayos PAES mensuales — bloque navy destacado, incluido para 4° medio */}
           <Reveal delay={0.1}>
             <div style={{ marginTop: 56, background: NAVY, borderRadius: 22, padding: "clamp(32px,5vw,54px)", position: "relative", overflow: "hidden", boxShadow: "0 24px 60px rgba(0,20,60,0.22)" }}>
               <div style={{ position: "absolute", top: -40, right: -30, opacity: 0.5 }}><ShapeStar color="#ffffff12" size={190} /></div>
-              <div style={{ position: "relative", display: "flex", flexWrap: "wrap", gap: 48 }}>
-                <div style={{ flex: "1 1 380px", minWidth: 290 }}>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 14px" }}>Preuniversitario Barkley · PAES</p>
-                  <h3 style={{ fontSize: "clamp(26px,3.6vw,40px)", fontWeight: 700, color: "#fff", margin: "0 0 18px", lineHeight: 1.15 }}>
-                    En 4° medio, el preuniversitario <em style={{ fontStyle: "normal", color: GOLD }}>va incluido</em>.
-                  </h3>
-                  <p style={{ fontSize: 15.5, color: "#b9cbe2", lineHeight: 1.8, margin: "0 0 18px" }}>
-                    Contenido PAES, ejercitación y ensayos, en el mismo formato de video y práctica del colegio. Un beneficio valorado sobre los $350.000 al año, dentro de la misma mensualidad.
-                  </p>
-                  <p style={{ fontSize: 15.5, color: "#b9cbe2", lineHeight: 1.8, margin: 0 }}>
-                    Otros cobran el colegio y el preuniversitario por separado. Aquí son dos cuentas en una — y también está disponible para estudiantes de otros colegios.
-                  </p>
-                </div>
-
-                <div style={{ flex: "1 1 340px", minWidth: 290 }}>
-                  {PREU_PLANES.map((p) => (
-                    <div
-                      key={p.plan}
-                      style={{
-                        display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 16,
-                        padding: "16px 18px",
-                        borderRadius: 12,
-                        marginBottom: 8,
-                        background: p.destacado ? GOLD : "rgba(255,255,255,0.06)",
-                        border: p.destacado ? "none" : "1px solid rgba(255,255,255,0.12)",
-                      }}
-                    >
-                      <span style={{ fontSize: 13.5, fontWeight: p.destacado ? 700 : 600, color: p.destacado ? NAVY : "#cfe0f2", lineHeight: 1.4 }}>{p.plan}</span>
-                      <span style={{ textAlign: "right", flexShrink: 0 }}>
-                        <span style={{ display: "block", fontSize: p.destacado ? 20 : 18, fontWeight: 800, color: p.destacado ? NAVY : "#fff", lineHeight: 1.1 }}>{p.precio}</span>
-                        <span style={{ display: "block", fontSize: 11, fontWeight: 600, color: p.destacado ? "#6b5211" : "#8fa9c4", marginTop: 3 }}>{p.nota}</span>
-                      </span>
-                    </div>
-                  ))}
-                  <a
-                    href="#inscripcion"
-                    style={{ display: "block", textAlign: "center", marginTop: 18, background: RED, color: "#fff", fontWeight: 700, fontSize: 15, padding: "14px 24px", borderRadius: 999, textDecoration: "none" }}
-                  >
-                    Reservar cupo 2027 →
-                  </a>
-                </div>
+              <div style={{ position: "relative" }}>
+                <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 14px" }}>4° medio · Preparación PAES</p>
+                <h3 style={{ fontSize: "clamp(26px,3.6vw,40px)", fontWeight: 700, color: "#fff", margin: "0 0 18px", lineHeight: 1.15, maxWidth: 640 }}>
+                  Ensayos PAES mensuales, <em style={{ fontStyle: "normal", color: GOLD }}>incluidos en tu mensualidad</em>.
+                </h3>
+                <p style={{ fontSize: 15.5, color: "#b9cbe2", lineHeight: 1.8, margin: "0 0 18px", maxWidth: 640 }}>
+                  No es un preuniversitario aparte. Si estás en 4° medio, cada mes rindes un ensayo con formato oficial PAES, para que llegues a la prueba real sabiendo exactamente cómo te está yendo — sin pagar un servicio adicional.
+                </p>
+                <a
+                  href="#inscripcion"
+                  style={{ display: "inline-block", marginTop: 4, background: RED, color: "#fff", fontWeight: 700, fontSize: 15, padding: "14px 28px", borderRadius: 999, textDecoration: "none" }}
+                >
+                  Reservar cupo 2027 →
+                </a>
               </div>
             </div>
           </Reveal>

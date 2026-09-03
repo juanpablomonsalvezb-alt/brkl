@@ -302,7 +302,7 @@ Responde de manera amigable, concisa y profesional. Si es apropiado, incluye sug
     <!-- Precarga la foto del hero: es el elemento LCP y sin esto solo empieza
          a descargarse cuando React monta, ya con el JS descargado y ejecutado. -->
     <link rel="preload" as="image" href="/images/hero-estudiante.webp" fetchpriority="high">
-    <script type="module" crossorigin src="/assets/index-ObR5DQ0A.js"></script>
+    <script type="module" crossorigin src="/assets/index-QCXnuuzz.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/icons-DrvfeeyP.js">
     <link rel="modulepreload" crossorigin href="/assets/motion-BMk40CUf.js">
     <link rel="modulepreload" crossorigin href="/assets/react-BhhQp37P.js">
