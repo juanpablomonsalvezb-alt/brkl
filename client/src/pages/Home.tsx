@@ -987,7 +987,7 @@ export default function Home() {
         <div style={{ maxWidth: 1180, margin: "0 auto" }}>
           <Reveal><h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 600, color: SLATE, margin: "0 0 8px", textAlign: "center" }}>Conócenos en video</h2></Reveal>
           <Reveal delay={0.05}><p style={{ fontSize: 16, color: TEXT, textAlign: "center", margin: "0 0 40px" }}>Explicaciones cortas, directo al punto. Se abren en YouTube.</p></Reveal>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(187px, 1fr))", gap: 20 }}>
             {[
               { title: "Umbral™: el motor que exige entender", img: "/videos/umbral-v2.jpg", href: "https://youtube.com/shorts/0FluOs2d630" },
               { title: "Por qué huyen del colegio", img: "/videos/por-que-huyen-v2.jpg", href: "https://youtube.com/shorts/GT0xJVWNJMw" },
@@ -1003,17 +1003,17 @@ export default function Home() {
                   href={v.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ display: "block", textDecoration: "none", borderRadius: 16, overflow: "hidden", background: "#fff", boxShadow: "0 4px 18px rgba(0,0,0,0.08)" }}
+                  style={{ display: "flex", flexDirection: "column", height: "100%", textDecoration: "none", borderRadius: 14, overflow: "hidden", background: "#fff", boxShadow: "0 4px 18px rgba(0,0,0,0.08)" }}
                 >
                   <div style={{ position: "relative", aspectRatio: "9/16", background: NAVY }}>
                     <img src={v.img} alt={v.title} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                     <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,51,102,0.15)" }}>
-                      <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(255,255,255,0.92)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.25)" }}>
-                        <div style={{ width: 0, height: 0, borderTop: "11px solid transparent", borderBottom: "11px solid transparent", borderLeft: `18px solid ${NAVY}`, marginLeft: 4 }} />
+                      <div style={{ width: 48, height: 48, borderRadius: "50%", background: "rgba(255,255,255,0.92)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.25)" }}>
+                        <div style={{ width: 0, height: 0, borderTop: "9px solid transparent", borderBottom: "9px solid transparent", borderLeft: `15px solid ${NAVY}`, marginLeft: 3 }} />
                       </div>
                     </div>
                   </div>
-                  <p style={{ fontSize: 13.5, fontWeight: 600, color: NAVY, margin: 0, padding: "12px 14px" }}>{v.title}</p>
+                  <p style={{ flex: 1, display: "flex", alignItems: "center", fontSize: 12.5, fontWeight: 600, color: NAVY, lineHeight: 1.35, margin: 0, padding: "10px 12px", minHeight: 58 }}>{v.title}</p>
                 </a>
               </Reveal>
             ))}
