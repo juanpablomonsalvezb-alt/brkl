@@ -927,6 +927,42 @@ export default function Home() {
       {/* === EL MÉTODO — módulo dedicado, el gancho central === */}
       <MetodoModule />
 
+      {/* === VIDEOS === */}
+      <section id="videos" style={{ background: "#f5f5f5", padding: "80px 24px" }}>
+        <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+          <Reveal><h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 600, color: SLATE, margin: "0 0 8px", textAlign: "center" }}>Conócenos en video</h2></Reveal>
+          <Reveal delay={0.05}><p style={{ fontSize: 16, color: TEXT, textAlign: "center", margin: "0 0 40px" }}>Explicaciones cortas, directo al punto. Se abren en YouTube.</p></Reveal>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24 }}>
+            {[
+              { title: "Umbral™: el motor que exige entender", img: "/videos/umbral.jpg", href: "https://youtube.com/shorts/0FluOs2d630" },
+              { title: "Por qué huyen del colegio", img: "/videos/por-que-huyen.jpg", href: "https://youtube.com/shorts/GT0xJVWNJMw" },
+              { title: "Cómo funciona el Aprendizaje por Dominio", img: "/videos/aprendizaje-dominio.jpg", href: "https://youtube.com/shorts/MTUOhlcNSsc" },
+              { title: "Cómo frenamos el bullying", img: "/videos/bullying.jpg", href: "https://youtube.com/shorts/z5cGm-3VVG0" },
+              { title: "Cómo funciona el Programa Adaptativo", img: "/videos/programa-adaptativo.jpg", href: "https://youtube.com/shorts/h9PYF9BhxeQ" },
+            ].map((v, i) => (
+              <Reveal key={v.href} delay={0.05 * i}>
+                <a
+                  href={v.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: "block", textDecoration: "none", borderRadius: 16, overflow: "hidden", background: "#fff", boxShadow: "0 4px 18px rgba(0,0,0,0.08)" }}
+                >
+                  <div style={{ position: "relative", aspectRatio: "9/16", background: NAVY }}>
+                    <img src={v.img} alt={v.title} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,51,102,0.15)" }}>
+                      <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(255,255,255,0.92)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.25)" }}>
+                        <div style={{ width: 0, height: 0, borderTop: "11px solid transparent", borderBottom: "11px solid transparent", borderLeft: `18px solid ${NAVY}`, marginLeft: 4 }} />
+                      </div>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: 13.5, fontWeight: 600, color: NAVY, margin: 0, padding: "12px 14px" }}>{v.title}</p>
+                </a>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* === COLEGIOS CON EL MISMO MÉTODO — registro editorial con escudos heráldicos propios === */}
       <section id="referentes" style={{ background: "#fff", padding: "88px 24px", borderTop: `4px solid ${GOLD}` }}>
         <div style={{ maxWidth: 1180, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 56, alignItems: "flex-start" }}>
@@ -1728,42 +1764,6 @@ export default function Home() {
               </div>
             </div>
           </Reveal>
-        </div>
-      </section>
-
-      {/* === VIDEOS === */}
-      <section id="videos" style={{ background: "#f5f5f5", padding: "80px 24px" }}>
-        <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-          <Reveal><h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 600, color: SLATE, margin: "0 0 8px", textAlign: "center" }}>Conócenos en video</h2></Reveal>
-          <Reveal delay={0.05}><p style={{ fontSize: 16, color: TEXT, textAlign: "center", margin: "0 0 40px" }}>Explicaciones cortas, directo al punto. Se abren en YouTube.</p></Reveal>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24 }}>
-            {[
-              { title: "Umbral™: el motor que exige entender", img: "/videos/umbral.jpg", href: "https://youtube.com/shorts/0FluOs2d630" },
-              { title: "Por qué huyen del colegio", img: "/videos/por-que-huyen.jpg", href: "https://youtube.com/shorts/GT0xJVWNJMw" },
-              { title: "Cómo funciona el Aprendizaje por Dominio", img: "/videos/aprendizaje-dominio.jpg", href: "https://youtube.com/shorts/MTUOhlcNSsc" },
-              { title: "Cómo frenamos el bullying", img: "/videos/bullying.jpg", href: "https://youtube.com/shorts/z5cGm-3VVG0" },
-              { title: "Cómo funciona el Programa Adaptativo", img: "/videos/programa-adaptativo.jpg", href: "https://youtube.com/shorts/h9PYF9BhxeQ" },
-            ].map((v, i) => (
-              <Reveal key={v.href} delay={0.05 * i}>
-                <a
-                  href={v.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ display: "block", textDecoration: "none", borderRadius: 16, overflow: "hidden", background: "#fff", boxShadow: "0 4px 18px rgba(0,0,0,0.08)" }}
-                >
-                  <div style={{ position: "relative", aspectRatio: "9/16", background: NAVY }}>
-                    <img src={v.img} alt={v.title} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,51,102,0.15)" }}>
-                      <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(255,255,255,0.92)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.25)" }}>
-                        <div style={{ width: 0, height: 0, borderTop: "11px solid transparent", borderBottom: "11px solid transparent", borderLeft: `18px solid ${NAVY}`, marginLeft: 4 }} />
-                      </div>
-                    </div>
-                  </div>
-                  <p style={{ fontSize: 13.5, fontWeight: 600, color: NAVY, margin: 0, padding: "12px 14px" }}>{v.title}</p>
-                </a>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
 
