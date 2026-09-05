@@ -45,7 +45,7 @@ export const funnelEvents = sqliteTable("funnel_events", {
 });
 
 export const insertFunnelEventSchema = z.object({
-  step: z.enum(["llega_pagina", "ve_formulario", "empieza_formulario", "envia_formulario"]),
+  step: z.enum(["llega_pagina", "ve_formulario", "empieza_formulario", "envia_formulario", "reaccion_like", "reaccion_dislike"]),
   path: z.string().trim().max(200).optional(),
   source: z.string().trim().max(120).optional(),
   sessionId: z.string().trim().max(40).optional(),

@@ -461,7 +461,7 @@ function AdmisionSection({ anchorId }: { anchorId?: string }) {
  * consentimiento. Si la medición falla, no pasa nada — nunca debe romper el
  * formulario, que es lo único que de verdad importa acá.
  */
-function medir(step: "llega_pagina" | "ve_formulario" | "empieza_formulario" | "envia_formulario") {
+function medir(step: "llega_pagina" | "ve_formulario" | "empieza_formulario" | "envia_formulario" | "reaccion_like" | "reaccion_dislike") {
   try {
     let sid = sessionStorage.getItem("bk_sid");
     if (!sid) {
@@ -766,6 +766,88 @@ function TourModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   );
 }
 
+// Micro-feedback lúdico de un clic: la única señal de interés real que teníamos
+// antes eran las visitas (número frío, sin decir si a la gente le sirvió lo que
+// vio). Aparece tras un tiempo en página o al detectar intención de salida
+// (mouse hacia la barra del navegador) — nunca modal invasivo, se puede
+// ignorar sin fricción, y no vuelve a aparecer en la misma sesión.
+function ReactionWidget() {
+  const [visible, setVisible] = useState(false);
+  const [answered, setAnswered] = useState(false);
+  const shownRef = useRef(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("bk_reaccion_shown")) return;
+
+    const show = () => {
+      if (shownRef.current) return;
+      shownRef.current = true;
+      setVisible(true);
+    };
+
+    const timer = setTimeout(show, 25000);
+
+    const onExitIntent = (e: MouseEvent) => {
+      if (e.clientY <= 0) show();
+    };
+    document.addEventListener("mouseleave", onExitIntent);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("mouseleave", onExitIntent);
+    };
+  }, []);
+
+  const react = (liked: boolean) => {
+    medir(liked ? "reaccion_like" : "reaccion_dislike");
+    setAnswered(true);
+    sessionStorage.setItem("bk_reaccion_shown", "1");
+    setTimeout(() => setVisible(false), 1400);
+  };
+
+  const dismiss = () => {
+    sessionStorage.setItem("bk_reaccion_shown", "1");
+    setVisible(false);
+  };
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 20, scale: 0.95 }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          style={{ position: "fixed", left: 20, bottom: 20, zIndex: 30, background: "#fff", borderRadius: 18, padding: "18px 20px", boxShadow: "0 12px 40px rgba(0,20,60,0.18)", maxWidth: 280, border: "1px solid #eef0f3" }}
+        >
+          {!answered ? (
+            <>
+              <button aria-label="Cerrar" onClick={dismiss} style={{ position: "absolute", top: 8, right: 10, background: "none", border: "none", cursor: "pointer", fontSize: 15, color: "#c5c5c5", lineHeight: 1 }}>✕</button>
+              <p style={{ fontSize: 14.5, fontWeight: 600, color: NAVY, margin: "0 0 14px", paddingRight: 14 }}>¿Te sirvió lo que viste?</p>
+              <div style={{ display: "flex", gap: 10 }}>
+                <button onClick={() => react(true)} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, background: "#f5f5f5", border: "none", borderRadius: 12, padding: "12px 8px", cursor: "pointer", fontFamily: FONT, transition: "transform 0.15s ease, background 0.15s ease" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "#eafaf0"; e.currentTarget.style.transform = "scale(1.05)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "#f5f5f5"; e.currentTarget.style.transform = "scale(1)"; }}>
+                  <span style={{ fontSize: 26 }}>😊</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#3a3a3a" }}>Sí, me sirvió</span>
+                </button>
+                <button onClick={() => react(false)} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, background: "#f5f5f5", border: "none", borderRadius: 12, padding: "12px 8px", cursor: "pointer", fontFamily: FONT, transition: "transform 0.15s ease, background 0.15s ease" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "#fdf0ef"; e.currentTarget.style.transform = "scale(1.05)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "#f5f5f5"; e.currentTarget.style.transform = "scale(1)"; }}>
+                  <span style={{ fontSize: 26 }}>😐</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#3a3a3a" }}>No mucho</span>
+                </button>
+              </div>
+            </>
+          ) : (
+            <p style={{ fontSize: 14, fontWeight: 600, color: NAVY, margin: 0, textAlign: "center", padding: "6px 0" }}>Gracias 💛</p>
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 // EL MÉTODO — el gancho central de Barkley. Sin clases en vivo, el método las suple.
 // Módulo dedicado, muy visual, con pasos en auto-play. Nombre real (Mastery Learning),
 // fundamento (Bloom/Harvard) y quiénes lo usan en el mundo (colegios reales licenciados).
@@ -890,6 +972,8 @@ export default function Home() {
 
   return (
     <div style={{ backgroundColor: "#fff", color: TEXT, fontFamily: FONT, fontSize: 16, lineHeight: 1.8 }}>
+
+      <ReactionWidget />
 
       {/* Organization schema: le da a buscadores e IA una entidad de marca clara
           (nombre, logo) en vez de solo texto — mejora que te citen por nombre. */}
