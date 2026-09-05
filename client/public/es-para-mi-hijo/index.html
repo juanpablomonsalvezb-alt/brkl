@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¿Es Barkley para tu Hijo? Test de 3 Minutos | Barkley</title>
+  <meta name="description" content="Responde 5 preguntas y descubre si el colegio online asincrónico es la opción correcta para tu hijo, con recomendación personalizada según su situación real." />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <link rel="canonical" href="https://www.barkleyinstituto.cl/es-para-mi-hijo/" />
+  <meta property="og:title" content="¿Es Barkley para tu Hijo? Test de 3 Minutos" />
+  <meta property="og:description" content="Responde 5 preguntas y descubre si el colegio online asincrónico es la opción correcta para tu hijo." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_CL" />
+  <meta property="og:url" content="https://www.barkleyinstituto.cl/es-para-mi-hijo/" />
+  <meta property="og:image" content="https://www.barkleyinstituto.cl/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:site_name" content="Barkley Online" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; color: #525252; background: #f7f7f8; line-height: 1.6; min-height: 100vh; }
+    a { color: inherit; }
+    .nav { background: #fff; border-bottom: 1px solid #e8e8e8; padding: 14px 24px; }
+    .nav-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .brand-badge { width: 42px; height: 42px; background: #003366; border: 2px solid #FFC548; border-radius: 8px; color: #fff; font-weight: 800; font-size: 17px; display: flex; align-items: center; justify-content: center; }
+    .brand-name { font-weight: 700; color: #003366; font-size: 15px; line-height: 1.2; }
+    .nav-cta { background: #FF3D37; color: #fff; text-decoration: none; font-weight: 600; font-size: 14px; padding: 10px 22px; border-radius: 999px; white-space: nowrap; }
+
+    .stage { max-width: 620px; margin: 0 auto; padding: 48px 24px 80px; min-height: calc(100vh - 200px); display: flex; flex-direction: column; justify-content: center; }
+
+    .intro { text-align: center; }
+    .intro .kicker { color: #FF3D37; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; }
+    .intro h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; color: #003366; line-height: 1.15; margin-bottom: 18px; }
+    .intro p { font-size: 16.5px; color: #6b6b6b; max-width: 480px; margin: 0 auto 34px; }
+    .btn-start { background: #003366; color: #fff; border: none; font-weight: 700; font-size: 17px; padding: 17px 40px; border-radius: 999px; cursor: pointer; font-family: inherit; box-shadow: 0 10px 30px rgba(0,51,102,0.25); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .btn-start:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(0,51,102,0.32); }
+    .intro .meta-row { display: flex; justify-content: center; gap: 28px; margin-top: 30px; }
+    .intro .meta-item { text-align: center; }
+    .intro .meta-item strong { display: block; color: #003366; font-size: 20px; font-weight: 800; }
+    .intro .meta-item span { font-size: 12px; color: #9a9a9a; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .card { background: #fff; border-radius: 24px; padding: clamp(28px, 5vw, 52px); box-shadow: 0 20px 60px rgba(0,20,60,0.08); }
+
+    .progress-wrap { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
+    .progress-bar { flex: 1; height: 6px; background: #eef0f3; border-radius: 999px; overflow: hidden; margin-right: 16px; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #FFC548, #FF3D37); border-radius: 999px; transition: width 0.5s cubic-bezier(.22,1,.36,1); }
+    .progress-label { font-size: 13px; font-weight: 700; color: #8a8a8a; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+    .q-title { font-size: clamp(22px, 3.4vw, 28px); font-weight: 700; color: #003366; line-height: 1.3; margin-bottom: 28px; }
+
+    .options { display: flex; flex-direction: column; gap: 12px; }
+    .option { display: flex; align-items: center; gap: 14px; padding: 18px 20px; border: 2px solid #eceef1; border-radius: 14px; cursor: pointer; background: #fff; transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease; text-align: left; font-family: inherit; font-size: 15.5px; color: #3a3a3a; font-weight: 500; }
+    .option:hover { border-color: #FFC548; background: #fffdf5; transform: translateX(3px); }
+    .option .emoji { font-size: 22px; flex-shrink: 0; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 24px; font-size: 14px; font-weight: 600; color: #9a9a9a; background: none; border: none; cursor: pointer; font-family: inherit; padding: 4px; }
+    .back-link:hover { color: #003366; }
+
+    .result .r-badge { display: inline-block; background: #fff8ea; border: 1px solid #FFC548; color: #003366; font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 6px 16px; border-radius: 999px; margin-bottom: 18px; }
+    .result h2 { font-size: clamp(24px, 4vw, 34px); font-weight: 800; color: #003366; line-height: 1.25; margin-bottom: 16px; }
+    .result p.desc { font-size: 16px; color: #5a5a5a; margin-bottom: 26px; }
+    .result .btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn-primary { background: #FF3D37; color: #fff; text-decoration: none; font-weight: 700; font-size: 15.5px; padding: 15px 28px; border-radius: 999px; display: inline-block; }
+    .btn-secondary { background: #f0f1f3; color: #003366; text-decoration: none; font-weight: 600; font-size: 14.5px; padding: 15px 24px; border-radius: 999px; display: inline-block; }
+    .restart { display: inline-flex; align-items: center; gap: 6px; margin-top: 22px; font-size: 13.5px; color: #9a9a9a; background: none; border: none; cursor: pointer; font-family: inherit; }
+    .restart:hover { color: #003366; }
+
+    .honest-note { background: #f5f5f5; border-radius: 12px; padding: 14px 18px; margin-top: 24px; font-size: 13.5px; color: #767676; line-height: 1.6; }
+
+    footer { background: #003366; color: rgba(255,255,255,0.75); font-size: 13px; text-align: center; padding: 26px 24px; }
+    footer a { color: #FFC548; text-decoration: none; }
+
+    [hidden] { display: none !important; }
+
+    @keyframes fadeSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-in { animation: fadeSlide 0.4s cubic-bezier(.22,1,.36,1); }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="/">
+        <span class="brand-badge">BK</span>
+        <span class="brand-name">The Barkley<br>Online School</span>
+      </a>
+      <a class="nav-cta" href="/#inscripcion">Inscribirse</a>
+    </div>
+  </nav>
+
+  <div class="stage" id="stage">
+
+    <!-- INTRO -->
+    <div id="screen-intro" class="animate-in">
+      <div class="intro">
+        <p class="kicker">Test gratuito · 3 minutos</p>
+        <h1>¿Es Barkley la opción correcta para tu hijo?</h1>
+        <p>5 preguntas sobre su situación real. Al final, una recomendación honesta — sin vender humo, incluso si la respuesta es "todavía no".</p>
+        <button class="btn-start" onclick="startQuiz()">Empezar test →</button>
+        <div class="meta-row">
+          <div class="meta-item"><strong>5</strong><span>preguntas</span></div>
+          <div class="meta-item"><strong>3 min</strong><span>duración</span></div>
+          <div class="meta-item"><strong>0</strong><span>costo</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ CARD -->
+    <div id="screen-quiz" class="card" hidden>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <span class="progress-label" id="progressLabel">1 / 5</span>
+      </div>
+      <div id="questionArea"></div>
+      <button class="back-link" id="backBtn" onclick="goBack()" style="display:none">← Atrás</button>
+    </div>
+
+    <!-- RESULT -->
+    <div id="screen-result" class="card result" hidden>
+      <div id="resultContent"></div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>Barkley Online — Colegio 100% asincrónico e inclusivo en Chile · Preparación para Exámenes Libres ante el MINEDUC · <a href="/">barkleyinstituto.cl</a></p>
+  </footer>
+
+  <script>
+    const QUESTIONS = [
+      {
+        id: "motivo",
+        title: "¿Cuál es el motivo principal por el que evalúas un cambio?",
+        options: [
+          { emoji: "😟", label: "Bullying o rechazo a ir al colegio", value: "bullying" },
+          { emoji: "🧠", label: "TDAH, dislexia u otra necesidad de aprendizaje", value: "nee" },
+          { emoji: "✈️", label: "Viajamos o nos mudamos seguido", value: "viajeros" },
+          { emoji: "🏃", label: "Es deportista de alto rendimiento", value: "deportista" },
+          { emoji: "💛", label: "Solo busca más flexibilidad, sin un problema puntual", value: "flexibilidad" },
+        ],
+      },
+      {
+        id: "animo",
+        title: "¿Cómo describes su ánimo respecto al colegio actual?",
+        options: [
+          { emoji: "😞", label: "Le cuesta mucho, se resiste a ir", value: "alto" },
+          { emoji: "😐", label: "Va, pero sin entusiasmo", value: "medio" },
+          { emoji: "🙂", label: "Está bien, solo buscamos otra estructura", value: "bajo" },
+        ],
+      },
+      {
+        id: "ritmo",
+        title: "Académicamente, ¿cómo va con el ritmo del curso?",
+        options: [
+          { emoji: "🐢", label: "Necesita más tiempo del que el curso le da", value: "lento" },
+          { emoji: "🚀", label: "Se aburre porque el curso avanza muy lento para él", value: "rapido" },
+          { emoji: "⚖️", label: "Va parejo con el curso", value: "parejo" },
+        ],
+      },
+      {
+        id: "acompanamiento",
+        title: "¿Cuánto tiempo puedes dedicar a acompañar su estudio diario?",
+        options: [
+          { emoji: "🕐", label: "Poco — trabajo jornada completa", value: "poco" },
+          { emoji: "🕒", label: "Algo, en las tardes", value: "medio" },
+          { emoji: "🕓", label: "Bastante, puedo estar muy presente", value: "mucho" },
+        ],
+      },
+      {
+        id: "decision",
+        title: "¿Qué tan cerca estás de tomar una decisión?",
+        options: [
+          { emoji: "🔥", label: "Necesito resolver esto ahora", value: "urgente" },
+          { emoji: "🔎", label: "Estoy investigando opciones para 2027", value: "explorando" },
+          { emoji: "💭", label: "Es solo curiosidad por ahora", value: "curioso" },
+        ],
+      },
+    ];
+
+    const RESULTS = {
+      bullying: {
+        badge: "Tu resultado",
+        title: "El bullying no se resuelve solo con paciencia — Barkley elimina la exposición diaria",
+        desc: "Sin aula física, tu hijo deja de estar expuesto a la dinámica de acoso ocho horas al día. No reemplaza apoyo psicológico si ya hay daño instalado, pero sí quita el gatillante diario.",
+        href: "/bullying-y-colegio-online/",
+        cta: "Ver cómo funciona esto en detalle",
+      },
+      nee: {
+        badge: "Tu resultado",
+        title: "El Programa Adaptativo está diseñado exactamente para este caso",
+        desc: "Misma materia oficial MINEDUC, con la interfaz cambiada según su perfil — lectura en voz, tipografía para dislexia, bloques cortos para TDAH. No reemplaza terapia, pero adapta el entorno de aprendizaje.",
+        href: "/adaptativo",
+        cta: "Conocer el Programa Adaptativo",
+      },
+      viajeros: {
+        badge: "Tu resultado",
+        title: "Barkley viaja con tu familia, sin perder el año",
+        desc: "Currícula oficial chilena accesible desde cualquier lugar del mundo, sin depender de matrícula en cada ciudad nueva.",
+        href: "/colegio-online-familias-viajeras/",
+        cta: "Ver el caso de familias viajeras",
+      },
+      deportista: {
+        badge: "Tu resultado",
+        title: "Sin horario fijo, el entrenamiento no compite con el colegio",
+        desc: "Tu hijo estudia entre sesiones de entrenamiento o competencias, sin faltar a clases que no puede recuperar.",
+        href: "/blog/colegio-para-deportistas-alto-rendimiento/",
+        cta: "Ver el caso de deportistas",
+      },
+      flexibilidad: {
+        badge: "Tu resultado",
+        title: "Puede que sí — pero merece una comparación honesta primero",
+        desc: "Sin un problema puntual, vale la pena comparar qué gana y qué pierde tu hijo cambiando de modalidad, sin idealizar ninguna de las dos.",
+        href: "/colegio-presencial-vs-online/",
+        cta: "Ver la comparación honesta",
+      },
+    };
+
+    let current = 0;
+    const answers = {};
+
+    function startQuiz() {
+      document.getElementById("screen-intro").hidden = true;
+      const quiz = document.getElementById("screen-quiz");
+      quiz.hidden = false;
+      quiz.classList.add("animate-in");
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = QUESTIONS[current];
+      document.getElementById("progressFill").style.width = ((current) / QUESTIONS.length * 100) + "%";
+      document.getElementById("progressLabel").textContent = (current + 1) + " / " + QUESTIONS.length;
+      document.getElementById("backBtn").style.display = current > 0 ? "inline-flex" : "none";
+
+      const area = document.getElementById("questionArea");
+      area.innerHTML = "";
+      area.classList.remove("animate-in");
+      void area.offsetWidth;
+      area.classList.add("animate-in");
+
+      const title = document.createElement("p");
+      title.className = "q-title";
+      title.textContent = q.title;
+      area.appendChild(title);
+
+      const opts = document.createElement("div");
+      opts.className = "options";
+      q.options.forEach((opt) => {
+        const btn = document.createElement("button");
+        btn.className = "option";
+        btn.innerHTML = '<span class="emoji">' + opt.emoji + '</span><span>' + opt.label + '</span>';
+        btn.onclick = () => selectAnswer(q.id, opt.value);
+        opts.appendChild(btn);
+      });
+      area.appendChild(opts);
+    }
+
+    function selectAnswer(qid, value) {
+      answers[qid] = value;
+      if (current < QUESTIONS.length - 1) {
+        current++;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function goBack() {
+      if (current > 0) {
+        current--;
+        renderQuestion();
+      }
+    }
+
+    function showResult() {
+      document.getElementById("progressFill").style.width = "100%";
+      const key = answers.motivo || "flexibilidad";
+      const r = RESULTS[key];
+
+      document.getElementById("screen-quiz").hidden = true;
+      const screen = document.getElementById("screen-result");
+      screen.hidden = false;
+      screen.classList.add("animate-in");
+
+      let urgentNote = "";
+      if (answers.decision === "urgente") {
+        urgentNote = '<div class="honest-note">📌 Marcaste que necesitas resolver esto ahora. Te recomendamos conversar directo con admisiones en vez de solo leer más — a veces la mejor respuesta viene de una conversación de 10 minutos.</div>';
+      }
+
+      document.getElementById("resultContent").innerHTML =
+        '<span class="r-badge">' + r.badge + '</span>' +
+        '<h2>' + r.title + '</h2>' +
+        '<p class="desc">' + r.desc + '</p>' +
+        '<div class="btn-row">' +
+          '<a class="btn-primary" href="' + r.href + '">' + r.cta + ' →</a>' +
+          '<a class="btn-secondary" href="/#inscripcion">Hablar con admisiones</a>' +
+        '</div>' +
+        urgentNote +
+        '<button class="restart" onclick="restart()">↺ Volver a hacer el test</button>';
+    }
+
+    function restart() {
+      current = 0;
+      Object.keys(answers).forEach(k => delete answers[k]);
+      document.getElementById("screen-result").hidden = true;
+      document.getElementById("screen-intro").hidden = false;
+      document.getElementById("screen-intro").classList.add("animate-in");
+    }
+  </script>
+</body>
+</html>

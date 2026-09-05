@@ -990,11 +990,17 @@ export default function Home() {
             data-hero="texto" style={{ position: "absolute", left: 45, right: 40, bottom: 42, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
             <div style={{ maxWidth: 780 }}>
               <h1 data-hero="titulo" style={{ fontSize: "clamp(36px,5vw,69px)", fontWeight: 600, margin: 0, lineHeight: 1.05 }}>Líderes en Educación Asincrónica Inclusiva</h1>
-              <button onClick={() => setTourOpen(true)}
-                style={{ marginTop: 20, display: "inline-flex", alignItems: "center", gap: 10, fontSize: 16, fontWeight: 600, color: NAVY, background: GOLD, border: "none", borderRadius: 999, padding: "13px 26px", cursor: "pointer", fontFamily: FONT }}>
-                <span style={{ display: "inline-flex", width: 22, height: 22, borderRadius: "50%", background: NAVY, color: GOLD, alignItems: "center", justifyContent: "center", fontSize: 11 }}>▶</span>
-                Ver cómo funciona
-              </button>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 20 }}>
+                <button onClick={() => setTourOpen(true)}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 10, fontSize: 16, fontWeight: 600, color: NAVY, background: GOLD, border: "none", borderRadius: 999, padding: "13px 26px", cursor: "pointer", fontFamily: FONT }}>
+                  <span style={{ display: "inline-flex", width: 22, height: 22, borderRadius: "50%", background: NAVY, color: GOLD, alignItems: "center", justifyContent: "center", fontSize: 11 }}>▶</span>
+                  Ver cómo funciona
+                </button>
+                <a href="/es-para-mi-hijo/"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 10, fontSize: 16, fontWeight: 600, color: "#fff", background: "rgba(255,255,255,0.12)", border: "1.5px solid rgba(255,255,255,0.5)", borderRadius: 999, padding: "13px 26px", textDecoration: "none", fontFamily: FONT, backdropFilter: "blur(4px)" }}>
+                  ¿Es para mi hijo? Haz el test →
+                </a>
+              </div>
             </div>
             <div style={{ gap: 10, flexShrink: 0 }} className="hidden md:flex">
               <button aria-label="Anterior" style={{ width: 48, height: 48, borderRadius: "50%", border: "1.5px solid #fff", background: "none", color: "#fff", cursor: "pointer", fontSize: 18 }}>‹</button>
