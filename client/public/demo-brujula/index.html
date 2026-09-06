@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prueba Brújula™: Simulación Interactiva | Barkley</title>
+  <meta name="description" content="Simulación interactiva de cómo funciona Brújula™: ve el programa completo, calcula tu calendario de ritmo, simula un imprevisto y recalcula. Datos de ejemplo, no tu cuenta real." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.barkleyinstituto.cl/demo-brujula/" />
+  <meta property="og:title" content="Prueba Brújula™: Simulación Interactiva" />
+  <meta property="og:description" content="Ve cómo Brújula™ calcula y recalcula tu ritmo, con un ejemplo interactivo." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_CL" />
+  <meta property="og:url" content="https://www.barkleyinstituto.cl/demo-brujula/" />
+  <meta property="og:image" content="https://www.barkleyinstituto.cl/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:site_name" content="Barkley Online" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', system-ui, sans-serif; color: #525252; background: #f7f7f8; line-height: 1.6; }
+    a { color: inherit; }
+    .nav { background: #fff; border-bottom: 1px solid #e8e8e8; padding: 14px 24px; }
+    .nav-inner { max-width: 820px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .brand-badge { width: 42px; height: 42px; background: #003366; border: 2px solid #FFC548; border-radius: 8px; color: #fff; font-weight: 800; font-size: 17px; display: flex; align-items: center; justify-content: center; }
+    .brand-name { font-weight: 700; color: #003366; font-size: 15px; line-height: 1.2; }
+    .nav-cta { background: #FF3D37; color: #fff; text-decoration: none; font-weight: 600; font-size: 14px; padding: 10px 22px; border-radius: 999px; white-space: nowrap; }
+
+    .wrap { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+    .crumbs { font-size: 13px; color: #8a8a8a; margin-bottom: 22px; }
+    .crumbs a { color: #003366; text-decoration: none; font-weight: 600; }
+    .crumbs span { margin: 0 7px; }
+
+    h1 { font-size: clamp(26px, 4.2vw, 38px); font-weight: 800; color: #003366; line-height: 1.2; margin-bottom: 10px; }
+    .disclaimer { background: #fff8ea; border-left: 4px solid #FFC548; border-radius: 8px; padding: 14px 18px; margin: 18px 0 30px; font-size: 14.5px; }
+
+    .card { background: #fff; border-radius: 20px; padding: clamp(24px, 4vw, 34px); box-shadow: 0 10px 40px rgba(0,20,60,0.06); margin-bottom: 20px; }
+    .card h2 { font-size: 19px; font-weight: 700; color: #003366; margin-bottom: 4px; }
+    .card .sub { font-size: 13.5px; color: #9a9a9a; margin-bottom: 18px; }
+
+    .subject-group { margin-bottom: 18px; }
+    .subject-group:last-child { margin-bottom: 0; }
+    .subject-name { font-size: 13px; font-weight: 700; color: #b5892a; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .unit-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 14.5px; }
+    .unit-check { width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; }
+    .unit-check.done { background: #2f9e44; color: #fff; }
+    .unit-check.pending { background: #eceef1; color: #c5c5c5; border: 1px solid #d5dbe3; }
+    .unit-label.done { color: #9a9a9a; text-decoration: line-through; }
+    .unit-label.pending { color: #3a3a3a; font-weight: 500; }
+
+    .stat-row { display: flex; gap: 24px; margin: 20px 0 4px; flex-wrap: wrap; }
+    .stat { }
+    .stat .n { font-size: 26px; font-weight: 800; color: #003366; line-height: 1; }
+    .stat .l { font-size: 11.5px; color: #9a9a9a; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; }
+
+    .btn-brujula { display: inline-flex; align-items: center; gap: 10px; background: #003366; color: #fff; border: none; font-weight: 700; font-size: 16px; padding: 16px 30px; border-radius: 999px; cursor: pointer; font-family: inherit; margin-top: 10px; box-shadow: 0 10px 26px rgba(0,51,102,0.28); transition: transform 0.15s ease; }
+    .btn-brujula:hover { transform: translateY(-2px); }
+    .btn-brujula:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: #f0f1f3; color: #003366; border: none; font-weight: 600; font-size: 14.5px; padding: 13px 24px; border-radius: 999px; cursor: pointer; font-family: inherit; margin-top: 10px; }
+    .btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .result-box { background: linear-gradient(135deg, #003366, #002548); color: #fff; border-radius: 16px; padding: 24px 26px; margin-top: 20px; }
+    .result-box .headline { font-size: 15px; font-weight: 700; color: #FFC548; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+    .result-box .big { font-size: 30px; font-weight: 800; margin-bottom: 6px; }
+    .result-box .desc { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+    .week-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 8px; margin-top: 18px; }
+    .week-box { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 10px 6px; text-align: center; }
+    .week-box .wl { font-size: 10px; color: rgba(255,255,255,0.6); text-transform: uppercase; }
+    .week-box .wn { font-size: 18px; font-weight: 800; color: #FFC548; margin-top: 2px; }
+
+    .imprevisto-box { border: 2px dashed #d5dbe3; border-radius: 16px; padding: 22px; text-align: center; }
+    .imprevisto-box p { font-size: 14.5px; color: #6b6b6b; margin-bottom: 4px; }
+
+    .alert-box { background: #fdf0ef; border-left: 4px solid #FF3D37; border-radius: 8px; padding: 14px 18px; margin-top: 16px; font-size: 14px; color: #a83a34; }
+
+    [hidden] { display: none !important; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.4s ease; }
+
+    .cta-box { background: #fff; border-radius: 16px; padding: 26px 24px; margin-top: 24px; text-align: center; box-shadow: 0 10px 40px rgba(0,20,60,0.06); }
+    .cta-box p { font-size: 15px; margin-bottom: 14px; color: #525252; }
+    .btn-gold { background: #FFC548; color: #003366; text-decoration: none; font-weight: 700; font-size: 15px; padding: 13px 28px; border-radius: 999px; display: inline-block; }
+
+    footer { background: #003366; color: rgba(255,255,255,0.75); font-size: 13px; text-align: center; padding: 26px 24px; margin-top: 40px; }
+    footer a { color: #FFC548; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="/">
+        <span class="brand-badge">BK</span>
+        <span class="brand-name">The Barkley<br>Online School</span>
+      </a>
+      <a class="nav-cta" href="/#inscripcion">Inscribirse</a>
+    </div>
+  </nav>
+
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Ruta de navegación">
+      <a href="/">Inicio</a><span>›</span><a href="/como-funciona-brujula/">Brújula™</a><span>›</span>Simulación
+    </nav>
+
+    <h1>Prueba Brújula™ con un Ejemplo</h1>
+    <div class="disclaimer">
+      <strong>Esto es una simulación con datos de ejemplo</strong> — no es tu cuenta real ni la plataforma real de Barkley. Sirve para que veas, con un caso ficticio, exactamente cómo se calcula y recalcula el ritmo.
+    </div>
+
+    <div class="card">
+      <h2>El programa de ejemplo (7° Básico)</h2>
+      <p class="sub">Estudiante ficticio, avance a la fecha de hoy simulada</p>
+      <div id="programa"></div>
+      <div class="stat-row">
+        <div class="stat"><div class="n" id="stat-completadas">0</div><div class="l">Unidades completadas</div></div>
+        <div class="stat"><div class="n" id="stat-pendientes">0</div><div class="l">Unidades pendientes</div></div>
+        <div class="stat"><div class="n" id="stat-fecha">—</div><div class="l">Fecha de hoy (simulada)</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Paso 1 — Calcula tu Brújula</h2>
+      <p class="sub">Reparte las unidades pendientes entre hoy y el 31 de octubre</p>
+      <button class="btn-brujula" id="btnCalcular" onclick="calcularBrujula()">🧭 Calcular Brújula</button>
+      <div id="resultado1" hidden></div>
+    </div>
+
+    <div class="card" id="cardImprevisto" hidden>
+      <h2>Paso 2 — Simula un imprevisto</h2>
+      <p class="sub">Pasan tres semanas. Una enfermedad de una semana te dejó con menos avance del que Brújula sugería.</p>
+      <div class="imprevisto-box">
+        <p>🤒 Simular: pasan 3 semanas, solo completaste 2 unidades (Brújula esperaba 5)</p>
+        <button class="btn-secondary" id="btnImprevisto" onclick="simularImprevisto()">⏭️ Simular imprevisto</button>
+      </div>
+    </div>
+
+    <div class="card" id="cardRecalculo" hidden>
+      <h2>Paso 3 — Recalcula tu Brújula</h2>
+      <p class="sub">Con el atraso real y el tiempo que queda hasta el 31 de octubre</p>
+      <button class="btn-brujula" onclick="recalcularBrujula()">🧭 Recalcular Brújula</button>
+      <div id="resultado2" hidden></div>
+    </div>
+
+    <div class="cta-box">
+      <p><strong>Esto es una simulación — en tu cuenta real, funciona con tu avance real.</strong></p>
+      <a class="btn-gold" href="/como-funciona-brujula/">Volver a cómo funciona Brújula™ →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>Barkley Online — Colegio 100% asincrónico e inclusivo en Chile · Preparación para Exámenes Libres ante el MINEDUC · <a href="/">barkleyinstituto.cl</a></p>
+  </footer>
+
+  <script>
+    // ── Datos de ejemplo (ficticios) ──
+    const PROGRAMA = {
+      "Matemáticas": ["Unidad 1: Fracciones", "Unidad 2: Proporciones", "Unidad 3: Álgebra básica", "Unidad 4: Geometría"],
+      "Lenguaje": ["Unidad 1: Comprensión lectora", "Unidad 2: Gramática", "Unidad 3: Ensayo argumentativo", "Unidad 4: Literatura"],
+      "Ciencias": ["Unidad 1: Célula", "Unidad 2: Ecosistemas", "Unidad 3: Energía"],
+      "Historia": ["Unidad 1: Civilizaciones antiguas", "Unidad 2: Edad Media", "Unidad 3: Chile independiente"],
+    };
+    // Avance inicial simulado: primeras 5 unidades completadas
+    let completadas = 5;
+    const totalUnidades = Object.values(PROGRAMA).flat().length;
+    let hoy = new Date(2026, 8, 4); // 4 de septiembre 2026 (simulado)
+    const fechaLimite = new Date(2026, 9, 31); // 31 de octubre 2026
+
+    function semanasEntre(a, b) {
+      return Math.max(1, Math.ceil((b - a) / (1000 * 60 * 60 * 24 * 7)));
+    }
+    function fmtFecha(d) {
+      return d.toLocaleDateString("es-CL", { day: "numeric", month: "short" });
+    }
+
+    function renderPrograma() {
+      const cont = document.getElementById("programa");
+      cont.innerHTML = "";
+      let idx = 0;
+      for (const [materia, unidades] of Object.entries(PROGRAMA)) {
+        const group = document.createElement("div");
+        group.className = "subject-group";
+        const title = document.createElement("div");
+        title.className = "subject-name";
+        title.textContent = materia;
+        group.appendChild(title);
+        unidades.forEach((u) => {
+          const done = idx < completadas;
+          idx++;
+          const row = document.createElement("div");
+          row.className = "unit-row";
+          row.innerHTML = `<span class="unit-check ${done ? "done" : "pending"}">${done ? "✓" : ""}</span><span class="unit-label ${done ? "done" : "pending"}">${u}</span>`;
+          group.appendChild(row);
+        });
+        cont.appendChild(group);
+      }
+      document.getElementById("stat-completadas").textContent = completadas;
+      document.getElementById("stat-pendientes").textContent = totalUnidades - completadas;
+      document.getElementById("stat-fecha").textContent = fmtFecha(hoy);
+    }
+
+    function calcularBrujula() {
+      const pendientes = totalUnidades - completadas;
+      const semanas = semanasEntre(hoy, fechaLimite);
+      const ritmo = Math.ceil((pendientes / semanas) * 10) / 10;
+
+      const box = document.getElementById("resultado1");
+      box.hidden = false;
+      box.className = "fade-in";
+      box.innerHTML = `
+        <div class="result-box">
+          <div class="headline">Tu ritmo sugerido</div>
+          <div class="big">${ritmo} unidades por semana</div>
+          <div class="desc">Te quedan ${pendientes} unidades y ${semanas} semanas hasta el 31 de octubre. A este ritmo, llegas justo a tiempo para tu Examen Libre.</div>
+        </div>
+      `;
+      document.getElementById("btnCalcular").disabled = true;
+      document.getElementById("cardImprevisto").hidden = false;
+      document.getElementById("cardImprevisto").classList.add("fade-in");
+    }
+
+    function simularImprevisto() {
+      // Avanza 3 semanas, pero solo se completan 2 unidades (menos de lo esperado)
+      hoy = new Date(hoy.getTime() + 21 * 24 * 60 * 60 * 1000);
+      completadas += 2;
+      renderPrograma();
+      document.getElementById("btnImprevisto").disabled = true;
+      document.getElementById("cardRecalculo").hidden = false;
+      document.getElementById("cardRecalculo").classList.add("fade-in");
+
+      const cont = document.getElementById("cardImprevisto");
+      const alert = document.createElement("div");
+      alert.className = "alert-box fade-in";
+      alert.innerHTML = "🤒 Pasaron 3 semanas. Solo se completaron 2 unidades (Brújula esperaba 5). Vas atrasado respecto al ritmo sugerido.";
+      cont.appendChild(alert);
+    }
+
+    function recalcularBrujula() {
+      const pendientes = totalUnidades - completadas;
+      const semanas = semanasEntre(hoy, fechaLimite);
+      const ritmo = Math.ceil((pendientes / semanas) * 10) / 10;
+
+      const box = document.getElementById("resultado2");
+      box.hidden = false;
+      box.className = "fade-in";
+      box.innerHTML = `
+        <div class="result-box">
+          <div class="headline">Brújula recalculada</div>
+          <div class="big">${ritmo} unidades por semana</div>
+          <div class="desc">Ahora te quedan ${pendientes} unidades y solo ${semanas} semanas hasta el 31 de octubre. El ritmo subió porque hubo que compensar el atraso del imprevisto — pero sigue siendo posible llegar a tiempo.</div>
+        </div>
+      `;
+    }
+
+    renderPrograma();
+  </script>
+</body>
+</html>
