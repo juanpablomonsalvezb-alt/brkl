@@ -930,6 +930,14 @@ function MetodoModule() {
             </div>
           </div>
         </Reveal>
+
+        <Reveal delay={0.2}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", marginTop: 32 }}>
+            <a href="/como-funciona-umbral/" style={{ color: GOLD, fontWeight: 700, fontSize: 15, textDecoration: "underline", textUnderlineOffset: 3 }}>Cómo funciona Umbral™ en detalle →</a>
+            <span style={{ opacity: 0.35 }}>·</span>
+            <a href="/como-funciona-brujula/" style={{ color: GOLD, fontWeight: 700, fontSize: 15, textDecoration: "underline", textUnderlineOffset: 3 }}>Conoce Brújula™, tu calendario de ritmo →</a>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -2053,6 +2061,9 @@ export default function Home() {
               <li><a href="#metodo" style={{ color: "#fff" }}>El método</a></li>
               <li><a href="#plataforma" style={{ color: "#fff" }}>La plataforma</a></li>
               <li><a href="/adaptativo" style={{ color: "#fff" }}>Adaptativo</a></li>
+              <li><a href="/como-funciona-umbral/" style={{ color: "#fff" }}>Cómo funciona Umbral™</a></li>
+              <li><a href="/como-funciona-brujula/" style={{ color: "#fff" }}>Cómo funciona Brújula™</a></li>
+              <li><a href="/demo-brujula/" style={{ color: "#fff" }}>Prueba Brújula™ (demo)</a></li>
               <li><a href="/guia-examenes-libres/" style={{ color: "#fff" }}>Guía de Exámenes Libres</a></li>
               <li><a href="/blog/" style={{ color: "#fff" }}>Blog</a></li>
               <li><a href="#faq" style={{ color: "#fff" }}>Preguntas frecuentes</a></li>
