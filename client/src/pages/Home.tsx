@@ -1157,6 +1157,11 @@ export default function Home() {
             preparación rigurosa y culturalmente cercana<ShapeInline color={GREEN} shape={ShapeLeaf} /> para rendir exámenes libres ante personas<ShapeInline color={GOLD} shape={ShapeBars} /> de todo Chile.
           </p>
         </Reveal>
+        <Reveal delay={0.08}>
+          <p style={{ fontSize: 16, color: TEXT, marginTop: 22, maxWidth: 620 }}>
+            Con un <a href="/adaptativo" style={{ color: NAVY, fontWeight: 700, textDecoration: "underline", textDecorationColor: GOLD, textUnderlineOffset: 3 }}>Programa Adaptativo</a> que cambia según el perfil de cada estudiante — TDAH, dislexia, TEA o dificultad motora — sin ser un curso aparte: es la misma materia, con la puerta de entrada que cada uno necesita.
+          </p>
+        </Reveal>
       </section>
 
       {/* === EL MÉTODO — módulo dedicado, el gancho central === */}
@@ -1646,8 +1651,11 @@ export default function Home() {
               <h2 style={{ fontSize: "clamp(30px,4.5vw,48px)", fontWeight: 700, color: NAVY, margin: "0 0 18px", lineHeight: 1.12 }}>
                 <em style={{ fontStyle: "normal", color: "#b5892a" }}>IA Barkley</em>: el tutor que aparece solo cuando toca.
               </h2>
-              <p style={{ fontSize: 16, color: TEXT, lineHeight: 1.75, margin: "0 0 20px" }}>
+              <p style={{ fontSize: 16, color: TEXT, lineHeight: 1.75, margin: "0 0 16px" }}>
                 No es un chat libre para copiar respuestas. IA Barkley se activa cuando el sistema detecta reprobación real — dos intentos fallidos y menos de 70% en una unidad — y explica el concepto con paciencia, sin resolver la evaluación por el estudiante.
+              </p>
+              <p style={{ fontSize: 15, color: SLATE, fontWeight: 600, lineHeight: 1.7, margin: "0 0 20px" }}>
+                El resto del acompañamiento — corrección de ensayos, seguimiento de avance, orientación vocacional — lo hacen personas reales, no algoritmos.
               </p>
               <div style={{ display: "flex", gap: 28 }}>
                 {[["2", "intentos fallidos"], ["<70%", "para activarse"], ["20", "preguntas / día"]].map(([n, l]) => (
@@ -1899,7 +1907,7 @@ export default function Home() {
             <p style={{ fontSize: 14, fontWeight: 600, color: RED, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>Precio transparente</p>
             <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 600, color: NAVY, margin: "0 0 12px" }}>Un solo valor, sin letra chica</h2>
             <p style={{ fontSize: 16, color: TEXT, margin: "0 auto 20px", maxWidth: 640 }}>
-              Sin costos ocultos. El año de preparación va de <strong style={{ color: NAVY }}>marzo al 31 de octubre</strong>, cuando rindes tus exámenes libres. Todo incluido — 2 a 3 videos y pódcasts por lección, un tutor general que te acompaña en todo (no solo lo académico), asesor que sigue tu progreso y portal para tu familia.
+              Sin costos ocultos. El año de preparación va de <strong style={{ color: NAVY }}>marzo al 31 de octubre</strong>, cuando rindes tus exámenes libres. Todo incluido — 2 a 3 videos y pódcasts por lección, un tutor asignado a tu hijo (no un pool genérico de soporte) que te acompaña en todo, no solo lo académico, asesor que sigue tu progreso y portal para tu familia.
             </p>
             <p style={{ display: "inline-block", background: "#fff8ea", border: `1px solid ${GOLD}`, borderRadius: 999, padding: "8px 20px", fontSize: 14.5, fontWeight: 700, color: NAVY, margin: "0 0 40px" }}>
               🎁 Matrícula gratis para quienes se inscriban antes del 30 de noviembre
