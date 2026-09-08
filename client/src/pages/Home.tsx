@@ -1099,7 +1099,7 @@ export default function Home() {
           <Reveal delay={0.1}>
             {/* Marco tipo teléfono — el contenido es 100% vertical (Shorts), un
                 iframe horizontal genérico dejaba franjas negras enormes. */}
-            <div style={{ position: "relative", width: "min(368px, 88vw)", margin: "0 auto" }}>
+            <div style={{ position: "relative", width: "min(350px, 88vw)", margin: "0 auto" }}>
               <div style={{
                 position: "absolute", inset: "-14px -14px -14px -14px",
                 borderRadius: 44,
@@ -1114,7 +1114,7 @@ export default function Home() {
               }}>
                 <div style={{ position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)", width: 60, height: 5, borderRadius: 999, background: "rgba(255,255,255,0.25)", zIndex: 2 }} />
                 <iframe
-                  src="https://www.youtube.com/embed/videoseries?list=PLazs9LUNPmco&loop=1&autoplay=0&mute=1&modestbranding=1&rel=0&cc_load_policy=0"
+                  src="https://www.youtube-nocookie.com/embed/videoseries?list=PLazs9LUNPmco&loop=1&autoplay=1&mute=1&playsinline=1&modestbranding=1&rel=0&cc_load_policy=0"
                   title="Barkley TV"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
