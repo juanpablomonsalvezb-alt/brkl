@@ -3,7 +3,7 @@
   "outputDirectory": "dist/public",
   "functions": {
     "api/handler.js": {
-      "maxDuration": 30
+      "maxDuration": 60
     }
   },
   "redirects": [

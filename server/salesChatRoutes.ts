@@ -116,23 +116,41 @@ export function registerSalesChatRoutes(app: Express) {
             .slice(-10)
         : [];
 
-      const nvidiaRes = await fetch(NVIDIA_API_URL, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: MODEL,
-          messages: [
-            { role: "system", content: BARKLEY_CONTEXT },
-            ...priorTurns,
-            { role: "user", content: message.trim() },
-          ],
-          temperature: 0.3,
-          max_tokens: 400,
-        }),
-      });
+      // El tier gratuito de NVIDIA a veces tarda mucho en cold start (visto hasta
+      // 14s). Sin límite propio, Vercel puede matar la función a mitad de camino
+      // y el cliente ve un fetch() reventado en vez de un mensaje claro — por eso
+      // el timeout acá, bien por debajo del maxDuration de la función.
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 25_000);
+      let nvidiaRes: globalThis.Response;
+      try {
+        nvidiaRes = await fetch(NVIDIA_API_URL, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: MODEL,
+            messages: [
+              { role: "system", content: BARKLEY_CONTEXT },
+              ...priorTurns,
+              { role: "user", content: message.trim() },
+            ],
+            temperature: 0.3,
+            max_tokens: 400,
+          }),
+          signal: controller.signal,
+        });
+      } catch (fetchError) {
+        console.error("NVIDIA API no respondió a tiempo:", fetchError);
+        return res.json({
+          response:
+            "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a notificaciones@barkleyinstituto.cl y te respondemos apenas podamos.",
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
 
       if (!nvidiaRes.ok) {
         console.error("NVIDIA API error:", nvidiaRes.status, await nvidiaRes.text().catch(() => ""));
