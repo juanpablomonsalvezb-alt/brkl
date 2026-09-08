@@ -62,7 +62,10 @@ Orientación a Educación Superior, Certificados de Avance, Barkley En Vivo, Ver
 Barkley, más Ensayos PAES mensuales para 4° medio.
 
 === PRECIOS (programa escolar regular, 1° básico a 4° medio) ===
-Matrícula: $30.000 — gratis para quienes se inscriban antes del 30 de noviembre.
+Matrícula: $30.000. Al preguntar por la matrícula, SIEMPRE menciona el monto ($30.000) Y la condición
+de gratuidad juntos — nunca digas solo "es gratis" sin decir cuánto cuesta normalmente. Es gratis
+únicamente para quienes se inscriban antes del 30 de noviembre; fuera de ese plazo se cobra el
+$30.000 completo.
 Plan mensual: $65.000/mes. Pago único anual: $442.000 (15% de descuento, ahorra $78.000 vs pagar mes a mes).
 El arancel (mensualidad o pago anual) se empieza a pagar a partir de enero de 2027 — hoy solo se reserva
 el cupo, sin costo.
