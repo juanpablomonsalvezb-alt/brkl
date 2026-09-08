@@ -444,7 +444,7 @@ function AdmisionSection({ anchorId }: { anchorId?: string }) {
             Inscríbete ahora.
           </h2>
           <p style={{ fontSize: "clamp(18px,2.4vw,23px)", fontWeight: 600, color: "#cfe0f5", margin: "0 0 6px", lineHeight: 1.4 }}>
-            Sin compromiso, sin costo hoy — <span style={{ color: GOLD }}>pagas recién en febrero de 2027</span>.
+            Sin compromiso, sin costo hoy — <span style={{ color: GOLD }}>pagas recién en enero de 2027</span>.
           </p>
           <p style={{ fontSize: 15, color: "#9db3cf", margin: 0 }}>Cupos limitados para el año académico 2027. No hay matrícula disponible para el año en curso.</p>
         </div>
@@ -672,7 +672,7 @@ function InscripcionForm() {
           {st==="loading" ? <Loader2 style={{ width: 18, height: 18 }} className="animate-spin" /> : isLast ? <>Quiero inscribirme <ArrowUpRight style={{ width: 18, height: 18 }} /></> : <>Siguiente <ArrowUpRight style={{ width: 18, height: 18 }} /></>}
         </button>
       </div>
-      <p style={{ fontSize: 13, opacity: 0.6, margin: 0 }}>Reserva ahora, sin costo — pagas recién en febrero de 2027</p>
+      <p style={{ fontSize: 13, opacity: 0.6, margin: 0 }}>Reserva ahora, sin costo — pagas recién en enero de 2027</p>
     </div>
   );
 }
@@ -1178,6 +1178,30 @@ export default function Home() {
 
       {/* === VIDEOS === */}
       <VideosCarousel />
+
+      {/* === BARKLEY TV — playlist en loop, siempre corriendo === */}
+      <section id="barkley-tv" style={{ background: "#0a0e14", padding: "72px 24px" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+          <Reveal>
+            <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 10px" }}>Barkley TV</p>
+            <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 600, color: "#fff", margin: "0 0 14px" }}>Todo sobre Barkley, sin pausa.</h2>
+            <p style={{ fontSize: 15.5, color: "rgba(255,255,255,0.7)", maxWidth: 560, margin: "0 auto 32px" }}>
+              Umbral™, Brújula™, el Programa Adaptativo y más — reproduciendo en loop. Déjalo corriendo de fondo.
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div style={{ position: "relative", width: "100%", paddingBottom: "56.25%", borderRadius: 16, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.5)" }}>
+              <iframe
+                src="https://www.youtube.com/embed/videoseries?list=PLazs9LUNPmco&loop=1&autoplay=0&mute=1"
+                title="Barkley TV"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+              />
+            </div>
+          </Reveal>
+        </div>
+      </section>
 
       {/* === COLEGIOS CON EL MISMO MÉTODO — registro editorial con escudos heráldicos propios === */}
       <section id="referentes" style={{ background: "#fff", padding: "88px 24px", borderTop: `4px solid ${GOLD}` }}>
@@ -1898,7 +1922,7 @@ export default function Home() {
             <div style={{ textAlign: "left" }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 2px" }}>Cupos limitados — proceso 2027</p>
               <p style={{ fontSize: "clamp(17px,2.4vw,22px)", fontWeight: 700, color: "#fff", margin: 0, lineHeight: 1.3 }}>
-                Reserva tu cupo ahora. <span style={{ color: GOLD }}>Pagas recién en febrero de 2027.</span>
+                Reserva tu cupo ahora. <span style={{ color: GOLD }}>Pagas recién en enero de 2027.</span>
               </p>
             </div>
           </div>
