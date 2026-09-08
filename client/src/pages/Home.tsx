@@ -1099,7 +1099,7 @@ export default function Home() {
           <Reveal delay={0.1}>
             {/* Marco tipo teléfono — el contenido es 100% vertical (Shorts), un
                 iframe horizontal genérico dejaba franjas negras enormes. */}
-            <div style={{ position: "relative", width: "min(460px, 88vw)", margin: "0 auto" }}>
+            <div style={{ position: "relative", width: "min(368px, 88vw)", margin: "0 auto" }}>
               <div style={{
                 position: "absolute", inset: "-14px -14px -14px -14px",
                 borderRadius: 44,
