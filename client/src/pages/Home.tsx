@@ -35,6 +35,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ReservationDialog } from "@/components/ReservationDialog";
+import SalesChatbot from "@/components/SalesChatbot";
 import { SiteHeader } from "@/components/SiteHeader";
 
 // Réplica de .fade-in-on-scroll / .animatedElement reales de isb.be (opacity+translateY al entrar en viewport)
@@ -2095,6 +2096,7 @@ export default function Home() {
       </footer>
 
       <ReservationDialog open={callOpen} onOpenChange={setCallOpen} />
+      <SalesChatbot />
     </div>
   );
 }

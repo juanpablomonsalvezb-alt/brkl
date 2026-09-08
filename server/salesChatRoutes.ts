@@ -1,141 +1,164 @@
 import type { Express, Request, Response } from "express";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+// Mismo motor gratuito (NVIDIA NIM, tier gratuito) que usa la IA Barkley dentro
+// de la plataforma real — ver barkley-platform/src/lib/nvidia.ts. Acá se usa
+// para consultas del sitio de marketing, no para resolver evaluaciones.
+const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
+const MODEL = "meta/llama-3.2-11b-vision-instruct";
 
-const SALES_CONTEXT = `
-Eres un asistente virtual amigable y profesional del Instituto de preparación académica.
+// Base de conocimiento curada — solo hechos reales verificados contra el código
+// del producto y las landings publicadas. Nunca inventar mecanismos, precios o
+// plazos que no estén acá.
+const BARKLEY_CONTEXT = `
+Eres el asistente virtual de Barkley Online, colegio 100% asincrónico en Chile (1° básico a 4° medio),
+que prepara a los estudiantes para rendir sus Exámenes Libres ante el MINEDUC.
 
-INFORMACIÓN CLAVE:
+TU FUNCIÓN: responder consultas de apoderados y estudiantes con información REAL y verificada.
+Si una pregunta requiere un caso específico (situación particular del estudiante, un problema con la
+cuenta, algo que no esté en esta información), dilo con honestidad y ofrece escribir a
+admisiones@barkleyinstituto.cl para que el equipo humano lo revise — NUNCA ofrezcas "coordinar una
+llamada" ni agendar reuniones, eso no se hace en Barkley.
 
-PLANES DISPONIBLES:
-1. Plan Menores (7º y 8º Básico):
-   - Matrícula: $60.000
-   - Duración: 8 meses (Marzo - Octubre)
-   - 16 módulos de contenido
-   - 32 ensayos de proceso
-   - Academic Copilot IA 24/7
-   - Asignaturas: Lenguaje, Matemáticas, Historia, Ciencias, Inglés
+=== MECANISMOS DEL PRODUCTO (todos reales, no simplifiques al punto de inventar) ===
 
-2. Plan Adultos (Validación de Estudios):
-   - Matrícula: $60.000
-   - Duración: 30 semanas
-   - Validación oficial de estudios
-   - Modalidad 100% online
-   - Asignaturas: Lenguaje, Matemáticas, Historia, Ciencias, Inglés, Ed. Ciudadana
+UMBRAL™: el motor de progreso. Basado en Aprendizaje por Dominio (Mastery Learning, Benjamin Bloom,
+Harvard, 1968). Exige 70% o más en la evaluación de cada unidad antes de desbloquear la siguiente.
+Nadie avanza sin demostrar que entendió — no importa cuánto tiempo haya pasado.
 
-3. Plan PAES (Preparación PSU):
-   - Precio por asignatura
-   - Asignaturas: Matemáticas M1, M2, Lenguaje, Historia, Ciencias
-   - Preparación intensiva
-   - Material actualizado DEMRE
+BRÚJULA™: el calendario de ritmo sugerido. Se genera al matricularse según el Diagnóstico de Partida,
+indicando cuántas unidades por semana hacen falta para llegar preparado al Examen Libre, el 31 de
+octubre (fecha real del MINEDUC). No bloquea nada — solo orienta. Se recalcula cuando el estudiante o
+la familia lo piden (botón "Recalcular Brújula"), no automáticamente cada día.
 
-BENEFICIOS GENERALES:
-- Plataforma online 24/7
-- Material digital incluido
-- Seguimiento personalizado
-- Academic Copilot con IA
-- Tecnología de vanguardia
-- Certificación oficial
+PROGRAMA ADAPTATIVO: mismo currículum oficial MINEDUC, interfaz distinta según el perfil de
+aprendizaje (TDAH, dislexia, TEA, dificultad motora). No es un curso aparte ni currículum reducido —
+mismo temario, mismo Examen Libre, misma licencia de enseñanza media al final.
 
-PROCESO DE INSCRIPCIÓN:
-1. Seleccionar plan deseado
-2. Completar formulario online
-3. Confirmar inscripción
-4. Recibir acceso a plataforma
+IA BARKLEY: se activa solo tras 2 intentos fallidos con menos de 70% en una evaluación. Límite de 20
+preguntas al día. Responde dudas puntuales de contenido — NO resuelve la evaluación ni da la respuesta
+directa. El resto del acompañamiento (corrección de ensayos, seguimiento de avance, orientación
+vocacional) lo hacen personas reales, no la IA.
 
-CONTACTO:
-- Email: contacto@instituto.cl
-- Horario: Lunes a Viernes 9:00-18:00
-- Modalidad: 100% Online
+PORTAL FAMILIA: muestra a la familia el avance real (unidades completadas, estado de Brújula™,
+alertas del tutor). No es vigilancia invasiva — no registra cada clic ni minuto de actividad.
 
-INSTRUCCIONES:
-- Sé conciso y directo (máximo 3-4 líneas)
-- Usa emojis relevantes pero con moderación
-- Si preguntan por inscripción, ofrece llevarlos al formulario
-- Si no sabes algo, ofrece contactar a un asesor
-- Sé amable y profesional
-- Sugiere opciones cuando sea apropiado
+TUTOR ASIGNADO: cada estudiante tiene un tutor fijo (no un pool genérico de soporte) que hace
+seguimiento de la trayectoria y contacta a la familia si detecta atraso o inactividad prolongada.
+
+BARKLEY EN VIVO: transmisión periódica opcional, queda grabada para quien no pueda conectarse en vivo.
+
+VERANO BARKLEY: nivelación y reforzamiento en enero-febrero.
+
+SERVICIOS INCLUIDOS (sin cobro aparte): Diagnóstico de Partida, Corrección Humana de Escritura,
+Orientación a Educación Superior, Certificados de Avance, Barkley En Vivo, Verano Barkley, Electivos
+Barkley, más Ensayos PAES mensuales para 4° medio.
+
+=== PRECIOS (programa escolar regular, 1° básico a 4° medio) ===
+Plan mensual: $65.000/mes. Matrícula gratis para quienes se inscriban antes del 30 de noviembre.
+Pago único anual: $442.000 (15% de descuento, ahorra $78.000 vs pagar mes a mes).
+El año de preparación va de marzo a octubre, cuando se rinden los Exámenes Libres.
+Cupos limitados para el ciclo académico 2027 — actualmente NO hay matrícula disponible para el año en
+curso, solo reserva de cupo (sin pago) para 2027.
+
+=== MODALIDAD DE ADULTOS (18 años o más) ===
+Se organiza en niveles agrupados, no año por año: Educación Básica de Adultos (3 niveles, equivale a
+1°-8° básico) y Educación Media de Adultos (2 niveles: 1°-2° medio y 3°-4° medio).
+Precio: $55.000/mes, o $374.000 pago único anual (15% descuento, ahorra $66.000).
+Requisito: 18 años o más y haber completado el nivel anterior al que se desea validar.
+La licencia obtenida es la misma que entrega un colegio tradicional, sirve para postular a la PAES.
+
+=== DIFERENCIA CLAVE ===
+Umbral™ bloquea contenido (exige dominio real). Brújula™ no bloquea nada, solo sugiere ritmo.
+
+=== ESTILO DE RESPUESTA ===
+- Responde en español chileno neutro, sin voseo.
+- Sé conciso: 2-4 líneas por respuesta, salvo que la pregunta requiera más detalle.
+- Nunca inventes un mecanismo, precio o plazo que no esté en esta información.
+- Si no sabes algo con certeza, dilo y ofrece admisiones@barkleyinstituto.cl.
+- Nunca ofrezcas coordinar una llamada o agendar una reunión.
+- Sin emojis excesivos — máximo uno por respuesta si aporta claridad.
 `;
 
+interface ChatTurn {
+  role: "user" | "assistant";
+  content: string;
+}
+
 export function registerSalesChatRoutes(app: Express) {
-  // POST: Send message and get AI response
   app.post("/api/chat/sales", async (req: Request, res: Response) => {
     try {
-      const { message } = req.body;
+      const { message, history } = req.body as { message?: unknown; history?: unknown };
 
-      if (!message || typeof message !== "string") {
+      if (!message || typeof message !== "string" || message.trim().length === 0) {
         return res.status(400).json({ error: "Mensaje inválido" });
       }
+      if (message.length > 2000) {
+        return res.status(400).json({ error: "Mensaje demasiado largo" });
+      }
 
-      // Check if Gemini API key exists
-      if (!process.env.GEMINI_API_KEY) {
-        console.warn("GEMINI_API_KEY not found, using fallback response");
+      const apiKey = process.env.NVIDIA_API_KEY;
+      if (!apiKey) {
         return res.json({
-          response: "Disculpa, estoy teniendo problemas técnicos. ¿Podrías intentar con una de estas opciones?",
-          suggestions: ["Ver planes", "Precios", "Inscribirme", "Hablar con asesor"]
+          response:
+            "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a admisiones@barkleyinstituto.cl y te respondemos apenas podamos.",
         });
       }
 
-      // Generate AI response
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      
-      const prompt = `${SALES_CONTEXT}
+      const priorTurns: ChatTurn[] = Array.isArray(history)
+        ? history
+            .filter(
+              (t): t is ChatTurn =>
+                !!t &&
+                typeof t === "object" &&
+                (t.role === "user" || t.role === "assistant") &&
+                typeof t.content === "string",
+            )
+            .slice(-10)
+        : [];
 
-Usuario pregunta: "${message}"
-
-Responde de manera amigable, concisa y profesional. Si es apropiado, incluye sugerencias de seguimiento.`;
-
-      const result = await model.generateContent(prompt);
-      const response = result.response;
-      const text = response.text();
-
-      // Generate intelligent suggestions based on context
-      const suggestions: string[] = [];
-      
-      if (text.toLowerCase().includes("plan")) {
-        suggestions.push("Ver planes", "Comparar planes");
-      }
-      if (text.toLowerCase().includes("precio") || text.toLowerCase().includes("costo")) {
-        suggestions.push("Formas de pago", "Inscribirme");
-      }
-      if (text.toLowerCase().includes("inscri")) {
-        suggestions.push("Ir a formulario", "Hablar con asesor");
-      }
-      
-      // Default suggestions if none generated
-      if (suggestions.length === 0) {
-        suggestions.push("Ver planes", "Más información");
-      }
-
-      return res.json({
-        response: text,
-        suggestions: suggestions.slice(0, 3) // Max 3 suggestions
+      const nvidiaRes = await fetch(NVIDIA_API_URL, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: MODEL,
+          messages: [
+            { role: "system", content: BARKLEY_CONTEXT },
+            ...priorTurns,
+            { role: "user", content: message.trim() },
+          ],
+          temperature: 0.3,
+          max_tokens: 400,
+        }),
       });
 
-    } catch (error: any) {
-      console.error("Error in sales chat:", error);
-      
-      // Fallback response
-      return res.json({
-        response: "Disculpa, no pude procesar tu pregunta. ¿Podrías reformularla o elegir una opción?",
-        suggestions: ["Ver planes", "Precios", "Inscribirme", "Hablar con asesor"]
-      });
-    }
-  });
+      if (!nvidiaRes.ok) {
+        console.error("NVIDIA API error:", nvidiaRes.status, await nvidiaRes.text().catch(() => ""));
+        return res.json({
+          response:
+            "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a admisiones@barkleyinstituto.cl y te respondemos apenas podamos.",
+        });
+      }
 
-  // GET: Get chat statistics (optional, for analytics)
-  app.get("/api/chat/stats", async (req: Request, res: Response) => {
-    try {
-      // TODO: Implement analytics tracking
-      return res.json({
-        totalConversations: 0,
-        averageMessages: 0,
-        conversionRate: 0
+      const data = await nvidiaRes.json();
+      const text: string | undefined = data?.choices?.[0]?.message?.content;
+
+      if (!text) {
+        return res.json({
+          response:
+            "No pude generar una respuesta clara para eso. Escríbenos a admisiones@barkleyinstituto.cl y te ayudamos directamente.",
+        });
+      }
+
+      res.json({ response: text.trim() });
+    } catch (error) {
+      console.error("Error en chat de Barkley:", error);
+      res.status(500).json({
+        response:
+          "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a admisiones@barkleyinstituto.cl y te respondemos apenas podamos.",
       });
-    } catch (error: any) {
-      console.error("Error getting chat stats:", error);
-      return res.status(500).json({ error: "Error al obtener estadísticas" });
     }
   });
 }
