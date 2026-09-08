@@ -69,7 +69,7 @@ export default function SalesChatbot() {
       const data = await response.json();
       const botMessage: Message = {
         id: `${Date.now()}-b`,
-        text: data.response || "No pude responder eso. Escríbenos a admisiones@barkleyinstituto.cl.",
+        text: data.response || "No pude responder eso. Escríbenos a notificaciones@barkleyinstituto.cl.",
         sender: "bot",
       };
       setMessages((prev) => [...prev, botMessage]);
@@ -78,7 +78,7 @@ export default function SalesChatbot() {
         ...prev,
         {
           id: `${Date.now()}-err`,
-          text: "Tuve un problema para responder. Escríbenos a admisiones@barkleyinstituto.cl y te ayudamos directo.",
+          text: "Tuve un problema para responder. Escríbenos a notificaciones@barkleyinstituto.cl y te ayudamos directo.",
           sender: "bot",
         },
       ]);
@@ -233,8 +233,8 @@ export default function SalesChatbot() {
               </div>
               <p className="text-[11px] text-slate-400 mt-2 text-center">
                 Respuestas basadas en información real de Barkley — para casos específicos, escribe a{" "}
-                <a href="mailto:admisiones@barkleyinstituto.cl" style={{ color: NAVY }} className="underline">
-                  admisiones@barkleyinstituto.cl
+                <a href="mailto:notificaciones@barkleyinstituto.cl" style={{ color: NAVY }} className="underline">
+                  notificaciones@barkleyinstituto.cl
                 </a>
               </p>
             </div>

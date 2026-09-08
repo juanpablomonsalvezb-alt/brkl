@@ -16,7 +16,7 @@ que prepara a los estudiantes para rendir sus Exámenes Libres ante el MINEDUC.
 TU FUNCIÓN: responder consultas de apoderados y estudiantes con información REAL y verificada.
 Si una pregunta requiere un caso específico (situación particular del estudiante, un problema con la
 cuenta, algo que no esté en esta información), dilo con honestidad y ofrece escribir a
-admisiones@barkleyinstituto.cl para que el equipo humano lo revise — NUNCA ofrezcas "coordinar una
+notificaciones@barkleyinstituto.cl para que el equipo humano lo revise — NUNCA ofrezcas "coordinar una
 llamada" ni agendar reuniones, eso no se hace en Barkley.
 
 === MECANISMOS DEL PRODUCTO (todos reales, no simplifiques al punto de inventar) ===
@@ -74,7 +74,7 @@ Umbral™ bloquea contenido (exige dominio real). Brújula™ no bloquea nada, s
 - Responde en español chileno neutro, sin voseo.
 - Sé conciso: 2-4 líneas por respuesta, salvo que la pregunta requiera más detalle.
 - Nunca inventes un mecanismo, precio o plazo que no esté en esta información.
-- Si no sabes algo con certeza, dilo y ofrece admisiones@barkleyinstituto.cl.
+- Si no sabes algo con certeza, dilo y ofrece notificaciones@barkleyinstituto.cl.
 - Nunca ofrezcas coordinar una llamada o agendar una reunión.
 - Sin emojis excesivos — máximo uno por respuesta si aporta claridad.
 `;
@@ -100,7 +100,7 @@ export function registerSalesChatRoutes(app: Express) {
       if (!apiKey) {
         return res.json({
           response:
-            "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a admisiones@barkleyinstituto.cl y te respondemos apenas podamos.",
+            "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a notificaciones@barkleyinstituto.cl y te respondemos apenas podamos.",
         });
       }
 
@@ -138,7 +138,7 @@ export function registerSalesChatRoutes(app: Express) {
         console.error("NVIDIA API error:", nvidiaRes.status, await nvidiaRes.text().catch(() => ""));
         return res.json({
           response:
-            "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a admisiones@barkleyinstituto.cl y te respondemos apenas podamos.",
+            "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a notificaciones@barkleyinstituto.cl y te respondemos apenas podamos.",
         });
       }
 
@@ -148,7 +148,7 @@ export function registerSalesChatRoutes(app: Express) {
       if (!text) {
         return res.json({
           response:
-            "No pude generar una respuesta clara para eso. Escríbenos a admisiones@barkleyinstituto.cl y te ayudamos directamente.",
+            "No pude generar una respuesta clara para eso. Escríbenos a notificaciones@barkleyinstituto.cl y te ayudamos directamente.",
         });
       }
 
@@ -157,7 +157,7 @@ export function registerSalesChatRoutes(app: Express) {
       console.error("Error en chat de Barkley:", error);
       res.status(500).json({
         response:
-          "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a admisiones@barkleyinstituto.cl y te respondemos apenas podamos.",
+          "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a notificaciones@barkleyinstituto.cl y te respondemos apenas podamos.",
       });
     }
   });
