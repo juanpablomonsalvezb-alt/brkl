@@ -1190,14 +1190,30 @@ export default function Home() {
             </p>
           </Reveal>
           <Reveal delay={0.1}>
-            <div style={{ position: "relative", width: "100%", paddingBottom: "56.25%", borderRadius: 16, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.5)" }}>
-              <iframe
-                src="https://www.youtube.com/embed/videoseries?list=PLazs9LUNPmco&loop=1&autoplay=0&mute=1"
-                title="Barkley TV"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
-              />
+            {/* Marco tipo teléfono — el contenido es 100% vertical (Shorts), un
+                iframe horizontal genérico dejaba franjas negras enormes. */}
+            <div style={{ position: "relative", width: "min(300px, 78vw)", margin: "0 auto" }}>
+              <div style={{
+                position: "absolute", inset: "-14px -14px -14px -14px",
+                borderRadius: 44,
+                background: "linear-gradient(155deg, #0e1a2e, #060a12)",
+                boxShadow: `0 0 0 1px rgba(255,197,72,0.25), 0 30px 70px rgba(0,0,0,0.6)`,
+              }} />
+              <div style={{
+                position: "relative", width: "100%", aspectRatio: "9 / 16",
+                borderRadius: 32, overflow: "hidden",
+                border: `2px solid rgba(255,197,72,0.4)`,
+                background: "#000",
+              }}>
+                <div style={{ position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)", width: 60, height: 5, borderRadius: 999, background: "rgba(255,255,255,0.25)", zIndex: 2 }} />
+                <iframe
+                  src="https://www.youtube.com/embed/videoseries?list=PLazs9LUNPmco&loop=1&autoplay=0&mute=1&modestbranding=1&rel=0"
+                  title="Barkley TV"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+                />
+              </div>
             </div>
           </Reveal>
         </div>
