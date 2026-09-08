@@ -338,6 +338,99 @@ function ShapeInline({ color, shape: Shape }: { color: string; shape: typeof Sha
   return <span style={{ display: "inline-block", margin: "0 4px", verticalAlign: "middle", transform: "translateY(2px)" }}><Shape color={color} size={28} /></span>;
 }
 
+// Videos reales del canal, ordenados por rendimiento (vistas/día) — mismo
+// orden que la playlist "Barkley TV" en YouTube. Lista acotada a 16 para no
+// alargar demasiado el panel lateral; el resto vive en la playlist completa.
+const BARKLEY_TV_VIDEOS = [
+  { id: "SxwA62_4Pjg", title: "Cómo el Portal Familia Mide el Avance" },
+  { id: "MTUOhlcNSsc", title: "Cómo funciona el Aprendizaje por Dominio" },
+  { id: "203Gb9e1QDU", title: "Por Qué un Algoritmo No Puede Evaluar Tu Escritura" },
+  { id: "ADGbDql7yYc", title: "Por Qué el Colegio Causa Ansiedad" },
+  { id: "9SCe3u3F7II", title: "Lleva tu espacio de aprendizaje contigo" },
+  { id: "3P8hpSXmATY", title: "Cómo Barkley Crea Comunidad Digital" },
+  { id: "P7mCpI0uuyg", title: "Tu tiempo, tu forma de aprender" },
+  { id: "3uBjSabr9us", title: "Aprender a tu propio ritmo" },
+  { id: "qzuxVhVSd1w", title: "Tu ritmo cambia" },
+  { id: "MmD-L_09bZ0", title: "Hay niños y jóvenes que ya no quieren ir al colegio" },
+  { id: "AFBsYSeANZg", title: "Cuando el aprendizaje cobra vida" },
+  { id: "RfOgaloyfSw", title: "Cómo funciona la orientación vocacional online" },
+  { id: "-n6z6AEuvGc", title: "Cómo Funciona un Tutor Asignado" },
+  { id: "GT0xJVWNJMw", title: "Por Qué Huyen del Colegio" },
+  { id: "z5cGm-3VVG0", title: "Cómo el Colegio Online Frena el Bullying" },
+  { id: "0FluOs2d630", title: "Umbral™: el motor que exige entender" },
+];
+
+function BarkleyTVSection() {
+  const [activeId, setActiveId] = useState(BARKLEY_TV_VIDEOS[0].id);
+  const activeTitle = BARKLEY_TV_VIDEOS.find((v) => v.id === activeId)?.title ?? "";
+
+  return (
+    <section id="barkley-tv" style={{ background: "#0a0e14", padding: "72px 24px" }}>
+      <div style={{ maxWidth: 1040, margin: "0 auto", textAlign: "center" }}>
+        <Reveal>
+          <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 10px" }}>Barkley TV</p>
+          <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 600, color: "#fff", margin: "0 0 14px" }}>Todo sobre Barkley, sin pausa.</h2>
+          <p style={{ fontSize: 15.5, color: "rgba(255,255,255,0.7)", maxWidth: 560, margin: "0 auto 32px" }}>
+            Umbral™, Brújula™, el Programa Adaptativo y más. Elige un video de la lista o déjalo corriendo solo.
+          </p>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <div style={{ display: "flex", gap: 28, justifyContent: "center", alignItems: "flex-start", flexWrap: "wrap-reverse" }}>
+            {/* Lista de reproducción */}
+            <div style={{ flex: "1 1 280px", maxWidth: 360, textAlign: "left", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "8px", maxHeight: 560, overflowY: "auto" }}>
+              {BARKLEY_TV_VIDEOS.map((v) => {
+                const active = v.id === activeId;
+                return (
+                  <button
+                    key={v.id}
+                    onClick={() => setActiveId(v.id)}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
+                      background: active ? "rgba(255,197,72,0.14)" : "transparent",
+                      border: "none", borderRadius: 10, padding: "10px 12px", marginBottom: 2,
+                      cursor: "pointer", fontFamily: "inherit",
+                    }}
+                  >
+                    <span style={{ flexShrink: 0, width: 8, height: 8, borderRadius: "50%", background: active ? GOLD : "rgba(255,255,255,0.25)" }} />
+                    <span style={{ fontSize: 13.5, fontWeight: active ? 700 : 500, color: active ? GOLD : "rgba(255,255,255,0.75)", lineHeight: 1.4 }}>{v.title}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Marco tipo teléfono — el contenido es 100% vertical (Shorts), un
+                iframe horizontal genérico dejaba franjas negras enormes. */}
+            <div style={{ position: "relative", width: "min(340px, 88vw)", flexShrink: 0 }}>
+              <div style={{
+                position: "absolute", inset: "-14px",
+                borderRadius: 44,
+                background: "linear-gradient(155deg, #0e1a2e, #060a12)",
+                boxShadow: `0 0 0 1px rgba(255,197,72,0.25), 0 30px 70px rgba(0,0,0,0.6)`,
+              }} />
+              <div style={{
+                position: "relative", width: "100%", aspectRatio: "9 / 16",
+                borderRadius: 32, overflow: "hidden",
+                border: `2px solid rgba(255,197,72,0.4)`,
+                background: "#000",
+              }}>
+                <div style={{ position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)", width: 60, height: 5, borderRadius: 999, background: "rgba(255,255,255,0.25)", zIndex: 2 }} />
+                <iframe
+                  key={activeId}
+                  src={`https://www.youtube-nocookie.com/embed/${activeId}?autoplay=1&mute=1&loop=1&playlist=${activeId}&playsinline=1&modestbranding=1&rel=0&cc_load_policy=0`}
+                  title={activeTitle || "Barkley TV"}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+                />
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 // Bloque de admisión — headline potente + formulario. Se repite dos veces en el
 // home (mitad de página y al final): solo la instancia de más abajo lleva el
 // anchorId "inscripcion" al que apunta el nav, para no duplicar el id="" en el DOM.
@@ -1087,44 +1180,7 @@ export default function Home() {
       <MetodoModule />
 
       {/* === BARKLEY TV — playlist en loop, siempre corriendo === */}
-      <section id="barkley-tv" style={{ background: "#0a0e14", padding: "72px 24px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-          <Reveal>
-            <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 10px" }}>Barkley TV</p>
-            <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 600, color: "#fff", margin: "0 0 14px" }}>Todo sobre Barkley, sin pausa.</h2>
-            <p style={{ fontSize: 15.5, color: "rgba(255,255,255,0.7)", maxWidth: 560, margin: "0 auto 32px" }}>
-              Umbral™, Brújula™, el Programa Adaptativo y más — reproduciendo en loop. Déjalo corriendo de fondo.
-            </p>
-          </Reveal>
-          <Reveal delay={0.1}>
-            {/* Marco tipo teléfono — el contenido es 100% vertical (Shorts), un
-                iframe horizontal genérico dejaba franjas negras enormes. */}
-            <div style={{ position: "relative", width: "min(350px, 88vw)", margin: "0 auto" }}>
-              <div style={{
-                position: "absolute", inset: "-14px -14px -14px -14px",
-                borderRadius: 44,
-                background: "linear-gradient(155deg, #0e1a2e, #060a12)",
-                boxShadow: `0 0 0 1px rgba(255,197,72,0.25), 0 30px 70px rgba(0,0,0,0.6)`,
-              }} />
-              <div style={{
-                position: "relative", width: "100%", aspectRatio: "9 / 16",
-                borderRadius: 32, overflow: "hidden",
-                border: `2px solid rgba(255,197,72,0.4)`,
-                background: "#000",
-              }}>
-                <div style={{ position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)", width: 60, height: 5, borderRadius: 999, background: "rgba(255,255,255,0.25)", zIndex: 2 }} />
-                <iframe
-                  src="https://www.youtube-nocookie.com/embed/videoseries?list=PLazs9LUNPmco&loop=1&autoplay=1&mute=1&playsinline=1&modestbranding=1&rel=0&cc_load_policy=0"
-                  title="Barkley TV"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
-                />
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      <BarkleyTVSection />
 
       {/* === COLEGIOS CON EL MISMO MÉTODO — registro editorial con escudos heráldicos propios === */}
       <section id="referentes" style={{ background: "#fff", padding: "88px 24px", borderTop: `4px solid ${GOLD}` }}>
