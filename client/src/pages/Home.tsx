@@ -375,29 +375,7 @@ function BarkleyTVSection() {
           </p>
         </Reveal>
         <Reveal delay={0.1}>
-          <div style={{ display: "flex", gap: 28, justifyContent: "center", alignItems: "flex-start", flexWrap: "wrap-reverse" }}>
-            {/* Lista de reproducción */}
-            <div style={{ flex: "1 1 280px", maxWidth: 360, textAlign: "left", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "8px", maxHeight: 560, overflowY: "auto" }}>
-              {BARKLEY_TV_VIDEOS.map((v) => {
-                const active = v.id === activeId;
-                return (
-                  <button
-                    key={v.id}
-                    onClick={() => setActiveId(v.id)}
-                    style={{
-                      display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
-                      background: active ? "rgba(255,197,72,0.14)" : "transparent",
-                      border: "none", borderRadius: 10, padding: "10px 12px", marginBottom: 2,
-                      cursor: "pointer", fontFamily: "inherit",
-                    }}
-                  >
-                    <span style={{ flexShrink: 0, width: 8, height: 8, borderRadius: "50%", background: active ? GOLD : "rgba(255,255,255,0.25)" }} />
-                    <span style={{ fontSize: 13.5, fontWeight: active ? 700 : 500, color: active ? GOLD : "rgba(255,255,255,0.75)", lineHeight: 1.4 }}>{v.title}</span>
-                  </button>
-                );
-              })}
-            </div>
-
+          <div style={{ display: "flex", gap: 28, justifyContent: "center", alignItems: "flex-start", flexWrap: "wrap" }}>
             {/* Marco tipo teléfono — el contenido es 100% vertical (Shorts), un
                 iframe horizontal genérico dejaba franjas negras enormes. */}
             <div style={{ position: "relative", width: "min(340px, 88vw)", flexShrink: 0 }}>
@@ -423,6 +401,28 @@ function BarkleyTVSection() {
                   style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
                 />
               </div>
+            </div>
+
+            {/* Lista de reproducción */}
+            <div style={{ flex: "1 1 280px", maxWidth: 360, textAlign: "left", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "8px", maxHeight: 560, overflowY: "auto" }}>
+              {BARKLEY_TV_VIDEOS.map((v) => {
+                const active = v.id === activeId;
+                return (
+                  <button
+                    key={v.id}
+                    onClick={() => setActiveId(v.id)}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
+                      background: active ? "rgba(255,197,72,0.14)" : "transparent",
+                      border: "none", borderRadius: 10, padding: "10px 12px", marginBottom: 2,
+                      cursor: "pointer", fontFamily: "inherit",
+                    }}
+                  >
+                    <span style={{ flexShrink: 0, width: 8, height: 8, borderRadius: "50%", background: active ? GOLD : "rgba(255,255,255,0.25)" }} />
+                    <span style={{ fontSize: 13.5, fontWeight: active ? 700 : 500, color: active ? GOLD : "rgba(255,255,255,0.75)", lineHeight: 1.4 }}>{v.title}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </Reveal>
