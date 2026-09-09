@@ -246,11 +246,11 @@ const NIVELES = [
 
 // Inclusión: el mismo colegio, adaptado a necesidades específicas (sin ser "especializado")
 const INCLUSIVOS = [
-  { title: "TDAH", desc: "Flexibilidad real: sin hora fija, con ritmo propio y tutor dedicado.", url: "https://claude.ai/code/artifact/c655e492-30b2-44ba-9230-2797ccda2b52", icon: Sparkles },
-  { title: "Deportistas", desc: "Para atletas de alto rendimiento: exámenes flexibles, sin asistencia obligatoria.", url: "https://claude.ai/code/artifact/18187b86-35ea-4533-8ea9-54184740f45e", icon: Zap },
-  { title: "NEE", desc: "Inclusión real: dislexia, autismo, discapacidad. Adaptaciones desde el diseño.", url: "https://claude.ai/code/artifact/bcdd2509-10cf-4aac-a7d6-b682a9761954", icon: Heart },
-  { title: "Exámenes Libres", desc: "Preparación completa para validación oficial MINEDUC, a tu ritmo.", url: "https://claude.ai/code/artifact/32af95e8-9524-4d39-9601-1df2af66463f", icon: CheckCircle2 },
-  { title: "Homeschool", desc: "Currículum oficial ya armado, sin diseñar el plan de estudio desde cero.", url: "https://claude.ai/code/artifact/ac137c4e-2002-41f0-9802-ce1f0de6f372", icon: HomeIcon },
+  { title: "TDAH", desc: "Flexibilidad real: sin hora fija, con ritmo propio y tutor dedicado.", url: "/blog/tdah-y-colegio-presencial/", icon: Sparkles },
+  { title: "Deportistas", desc: "Para atletas de alto rendimiento: exámenes flexibles, sin asistencia obligatoria.", url: "/blog/colegio-para-deportistas-alto-rendimiento/", icon: Zap },
+  { title: "NEE", desc: "Inclusión real: dislexia, autismo, discapacidad. Adaptaciones desde el diseño.", url: "/adaptativo", icon: Heart },
+  { title: "Exámenes Libres", desc: "Preparación completa para validación oficial MINEDUC, a tu ritmo.", url: "/guia-examenes-libres/", icon: CheckCircle2 },
+  { title: "Homeschool", desc: "Currículum oficial ya armado, sin diseñar el plan de estudio desde cero.", url: "/colegio-online-homeschool/", icon: HomeIcon },
 ];
 
 // Fact-boxes: fondo negro real, glifo grande de color arriba a la derecha (patrón exacto de .fact-box)
@@ -1452,8 +1452,6 @@ export default function Home() {
                 <Reveal key={inc.title} delay={i * 0.1}>
                   <motion.a
                     href={inc.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.25, ease: "easeInOut" }}
                     style={{
