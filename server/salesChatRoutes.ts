@@ -1,10 +1,14 @@
 import type { Express, Request, Response } from "express";
+import { eq } from "drizzle-orm";
+import { db } from "./db";
+import { insertWaitlistSchema, waitlistSignups } from "@shared/schema";
+import { notifyByEmail, sendConfirmationEmail } from "./notify";
 
-// Mismo motor gratuito (NVIDIA NIM, tier gratuito) que usa la IA Barkley dentro
-// de la plataforma real — ver barkley-platform/src/lib/nvidia.ts. Acá se usa
-// para consultas del sitio de marketing, no para resolver evaluaciones.
-const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
-const MODEL = "meta/llama-3.2-11b-vision-instruct";
+// Groq (LPU): ~10-40x más rápido que el tier gratuito de NVIDIA (que probamos
+// primero — cold starts de hasta 14s) y soporta tool calling de forma nativa
+// y confiable, que NVIDIA no maneja bien con este modelo. Tier gratuito real.
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
+const MODEL = "openai/gpt-oss-20b";
 
 // Base de conocimiento curada — solo hechos reales verificados contra el código
 // del producto y las landings publicadas. Nunca inventar mecanismos, precios o
@@ -21,11 +25,25 @@ texto" o cualquier variante que suene a que estás citando una fuente externa. S
 como lo diría una persona del equipo ("no tengo ese dato a mano"), nunca como un motor de búsqueda
 ("no se encontró información al respecto").
 
-TU FUNCIÓN: responder consultas de apoderados y estudiantes con información REAL y verificada.
+TU FUNCIÓN: responder consultas de apoderados y estudiantes con información REAL y verificada, y
+cuando la conversación lo amerite, invitar a dejar sus datos para reservar cupo — no de forma insistente
+ni en cada respuesta, pero sí cuando la persona muestra interés real (pregunta por precio, por cómo
+inscribirse, dice "me interesa", "cómo empiezo", "quiero matricular a mi hijo", etc.).
+
 Si una pregunta requiere un caso específico (situación particular del estudiante, un problema con la
 cuenta, algo que no esté en esta información), dilo con honestidad y ofrece escribir a
 notificaciones@barkleyinstituto.cl para que el equipo humano lo revise — NUNCA ofrezcas "coordinar una
 llamada" ni agendar reuniones, eso no se hace en Barkley.
+
+=== CÓMO USAR LA HERRAMIENTA registrar_interesado ===
+Cuando la persona exprese intención clara de inscribirse o reservar su cupo, pídele su nombre y correo
+(uno a la vez si hace falta, de forma natural dentro de la conversación, no como un formulario robótico).
+Una vez que tengas AMBOS datos, y la persona los haya confirmado o los haya dado voluntariamente,
+llama a la herramienta registrar_interesado con esos datos. Después de llamarla, confirma en tu propia
+respuesta que quedó registrado y que el equipo de admisiones se pondrá en contacto — nunca inventes que
+"ya está matriculado" ni prometas fechas de contacto específicas.
+No llames la herramienta sin tener nombre Y correo reales dados por la persona. No la llames dos veces
+en la misma conversación si ya se registró antes (revisa el historial).
 
 === MECANISMOS DEL PRODUCTO (todos reales, no simplifiques al punto de inventar) ===
 
@@ -94,9 +112,87 @@ Umbral™ bloquea contenido (exige dominio real). Brújula™ no bloquea nada, s
 - Sin emojis excesivos — máximo uno por respuesta si aporta claridad.
 `;
 
+const TOOLS = [
+  {
+    type: "function" as const,
+    function: {
+      name: "registrar_interesado",
+      description:
+        "Registra a un interesado que confirmó su nombre y correo para reservar cupo en Barkley. Solo llamar cuando ambos datos son reales y confirmados por la persona en la conversación.",
+      parameters: {
+        type: "object",
+        properties: {
+          nombre: { type: "string", description: "Nombre de la persona interesada" },
+          email: { type: "string", description: "Correo electrónico de la persona interesada" },
+          nivel: { type: "string", description: "Nivel o modalidad de interés si se mencionó (ej: '7° básico', 'adultos', 'no especificado')" },
+        },
+        required: ["nombre", "email"],
+      },
+    },
+  },
+];
+
 interface ChatTurn {
   role: "user" | "assistant";
   content: string;
+}
+
+const FALLBACK_MESSAGE =
+  "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a notificaciones@barkleyinstituto.cl y te respondemos apenas podamos.";
+
+async function callGroq(apiKey: string, messages: unknown[], includeTools: boolean) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 20_000);
+  try {
+    const res = await fetch(GROQ_API_URL, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: MODEL,
+        messages,
+        ...(includeTools ? { tools: TOOLS, tool_choice: "auto" } : {}),
+        temperature: 0.3,
+        max_tokens: 500,
+      }),
+      signal: controller.signal,
+    });
+    return res;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+// Misma lógica que /api/waitlist en routes.ts — reutilizada acá para que el
+// chatbot pueda registrar un interesado sin duplicar la tabla ni el flujo de
+// notificación por correo.
+async function registrarInteresadoDesdeChat(args: { nombre?: string; email?: string; nivel?: string }) {
+  const parsed = insertWaitlistSchema.safeParse({
+    name: args.nombre,
+    email: args.email,
+    levelInterest: args.nivel || "No especificado (vía chatbot)",
+    notes: "Registrado por el chatbot del sitio",
+  });
+  if (!parsed.success) {
+    return { ok: false, message: "Datos inválidos" };
+  }
+
+  const existing = await db
+    .select({ id: waitlistSignups.id })
+    .from(waitlistSignups)
+    .where(eq(waitlistSignups.email, parsed.data.email))
+    .limit(1);
+  const yaInscrito = existing.length > 0;
+  if (!yaInscrito) {
+    await db.insert(waitlistSignups).values(parsed.data);
+  }
+  notifyByEmail(yaInscrito ? "Reinscripción vía chatbot (correo ya registrado)" : "Nuevo interesado vía chatbot", {
+    Nombre: parsed.data.name,
+    Correo: parsed.data.email,
+    Nivel: parsed.data.levelInterest,
+    Origen: "Chatbot del sitio",
+  });
+  sendConfirmationEmail(parsed.data.email, parsed.data.name || "");
+  return { ok: true, alreadySubscribed: yaInscrito };
 }
 
 export function registerSalesChatRoutes(app: Express) {
@@ -111,12 +207,9 @@ export function registerSalesChatRoutes(app: Express) {
         return res.status(400).json({ error: "Mensaje demasiado largo" });
       }
 
-      const apiKey = process.env.NVIDIA_API_KEY;
+      const apiKey = process.env.GROQ_API_KEY;
       if (!apiKey) {
-        return res.json({
-          response:
-            "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a notificaciones@barkleyinstituto.cl y te respondemos apenas podamos.",
-        });
+        return res.json({ response: FALLBACK_MESSAGE });
       }
 
       const priorTurns: ChatTurn[] = Array.isArray(history)
@@ -131,67 +224,86 @@ export function registerSalesChatRoutes(app: Express) {
             .slice(-10)
         : [];
 
-      // El tier gratuito de NVIDIA a veces tarda mucho en cold start (visto hasta
-      // 14s). Sin límite propio, Vercel puede matar la función a mitad de camino
-      // y el cliente ve un fetch() reventado en vez de un mensaje claro — por eso
-      // el timeout acá, bien por debajo del maxDuration de la función.
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 25_000);
-      let nvidiaRes: globalThis.Response;
+      const conversation: unknown[] = [
+        { role: "system", content: BARKLEY_CONTEXT },
+        ...priorTurns,
+        { role: "user", content: message.trim() },
+      ];
+
+      let groqRes: globalThis.Response;
       try {
-        nvidiaRes = await fetch(NVIDIA_API_URL, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: MODEL,
-            messages: [
-              { role: "system", content: BARKLEY_CONTEXT },
-              ...priorTurns,
-              { role: "user", content: message.trim() },
-            ],
-            temperature: 0.3,
-            max_tokens: 400,
-          }),
-          signal: controller.signal,
-        });
+        groqRes = await callGroq(apiKey, conversation, true);
       } catch (fetchError) {
-        console.error("NVIDIA API no respondió a tiempo:", fetchError);
-        return res.json({
-          response:
-            "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a notificaciones@barkleyinstituto.cl y te respondemos apenas podamos.",
-        });
-      } finally {
-        clearTimeout(timeout);
+        console.error("Groq no respondió a tiempo:", fetchError);
+        return res.json({ response: FALLBACK_MESSAGE });
       }
 
-      if (!nvidiaRes.ok) {
-        console.error("NVIDIA API error:", nvidiaRes.status, await nvidiaRes.text().catch(() => ""));
+      if (!groqRes.ok) {
+        console.error("Groq API error:", groqRes.status, await groqRes.text().catch(() => ""));
+        return res.json({ response: FALLBACK_MESSAGE });
+      }
+
+      const data = await groqRes.json();
+      const choice = data?.choices?.[0]?.message;
+      const toolCalls: Array<{ id: string; function: { name: string; arguments: string } }> =
+        choice?.tool_calls || [];
+
+      if (toolCalls.length > 0) {
+        // El modelo decidió registrar al interesado — ejecutamos la herramienta
+        // y le devolvemos el resultado para que redacte la confirmación final.
+        conversation.push({ role: "assistant", content: choice.content || null, tool_calls: toolCalls });
+
+        for (const call of toolCalls) {
+          if (call.function.name === "registrar_interesado") {
+            let args: { nombre?: string; email?: string; nivel?: string } = {};
+            try {
+              args = JSON.parse(call.function.arguments);
+            } catch {
+              // argumentos mal formados, se maneja como fallo abajo
+            }
+            const result = await registrarInteresadoDesdeChat(args);
+            conversation.push({
+              role: "tool",
+              tool_call_id: call.id,
+              content: JSON.stringify(result),
+            });
+          }
+        }
+
+        let followUpRes: globalThis.Response;
+        try {
+          followUpRes = await callGroq(apiKey, conversation, false);
+        } catch (fetchError) {
+          console.error("Groq (follow-up) no respondió a tiempo:", fetchError);
+          return res.json({
+            response: "Listo, quedaste registrado. El equipo de admisiones te va a contactar.",
+          });
+        }
+
+        if (!followUpRes.ok) {
+          return res.json({
+            response: "Listo, quedaste registrado. El equipo de admisiones te va a contactar.",
+          });
+        }
+
+        const followUpData = await followUpRes.json();
+        const followUpText: string | undefined = followUpData?.choices?.[0]?.message?.content;
         return res.json({
-          response:
-            "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a notificaciones@barkleyinstituto.cl y te respondemos apenas podamos.",
+          response: followUpText?.trim() || "Listo, quedaste registrado. El equipo de admisiones te va a contactar.",
         });
       }
 
-      const data = await nvidiaRes.json();
-      const text: string | undefined = data?.choices?.[0]?.message?.content;
-
+      const text: string | undefined = choice?.content;
       if (!text) {
         return res.json({
-          response:
-            "No pude generar una respuesta clara para eso. Escríbenos a notificaciones@barkleyinstituto.cl y te ayudamos directamente.",
+          response: "No pude generar una respuesta clara para eso. Escríbenos a notificaciones@barkleyinstituto.cl y te ayudamos directamente.",
         });
       }
 
       res.json({ response: text.trim() });
     } catch (error) {
       console.error("Error en chat de Barkley:", error);
-      res.status(500).json({
-        response:
-          "Estoy teniendo problemas técnicos en este momento. Escríbenos directo a notificaciones@barkleyinstituto.cl y te respondemos apenas podamos.",
-      });
+      res.status(500).json({ response: FALLBACK_MESSAGE });
     }
   });
 }
