@@ -2132,6 +2132,7 @@ export default function Home() {
               <li><a href="/como-funciona-umbral/" style={{ color: "#fff" }}>Cómo funciona Umbral™</a></li>
               <li><a href="/como-funciona-brujula/" style={{ color: "#fff" }}>Cómo funciona Brújula™</a></li>
               <li><a href="/demo-brujula/" style={{ color: "#fff" }}>Prueba Brújula™ (demo)</a></li>
+              <li><a href="/diagnostico/" style={{ color: "#fff" }}>¿Barkley es para ti? (diagnóstico)</a></li>
               <li><a href="/guia-examenes-libres/" style={{ color: "#fff" }}>Guía de Exámenes Libres</a></li>
               <li><a href="/blog/" style={{ color: "#fff" }}>Blog</a></li>
               <li><a href="#faq" style={{ color: "#fff" }}>Preguntas frecuentes</a></li>
