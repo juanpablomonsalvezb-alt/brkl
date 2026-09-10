@@ -139,6 +139,7 @@
           { emoji: "🧠", label: "TDAH, dislexia u otra necesidad de aprendizaje", value: "nee" },
           { emoji: "✈️", label: "Viajamos o nos mudamos seguido", value: "viajeros" },
           { emoji: "🏃", label: "Es deportista de alto rendimiento", value: "deportista" },
+          { emoji: "🎓", label: "Ya salió del colegio y quiere terminarlo siendo adulto", value: "adulto" },
           { emoji: "💛", label: "Solo busca más flexibilidad, sin un problema puntual", value: "flexibilidad" },
         ],
       },
@@ -216,6 +217,13 @@
         href: "/colegio-presencial-vs-online/",
         cta: "Ver la comparación honesta",
       },
+      adulto: {
+        badge: "Tu resultado",
+        title: "Terminar el colegio sin volver a una sala con adolescentes",
+        desc: "Mismo currículum de Enseñanza Media, a tu ritmo, con acompañamiento real y preparación completa para el Examen Libre ante el MINEDUC.",
+        href: "/blog/terminar-el-colegio-siendo-adulto/",
+        cta: "Ver el caso de educación de adultos",
+      },
     };
 
     let current = 0;
@@ -287,7 +295,7 @@
 
       let urgentNote = "";
       if (answers.decision === "urgente") {
-        urgentNote = '<div class="honest-note">📌 Marcaste que necesitas resolver esto ahora. Te recomendamos conversar directo con admisiones en vez de solo leer más — a veces la mejor respuesta viene de una conversación de 10 minutos.</div>';
+        urgentNote = '<div class="honest-note">📌 Marcaste que necesitas resolver esto ahora. El formulario de inscripción está abajo — no hace falta esperar a leer más para partir el proceso.</div>';
       }
 
       document.getElementById("resultContent").innerHTML =
@@ -296,7 +304,7 @@
         '<p class="desc">' + r.desc + '</p>' +
         '<div class="btn-row">' +
           '<a class="btn-primary" href="' + r.href + '">' + r.cta + ' →</a>' +
-          '<a class="btn-secondary" href="/#inscripcion">Hablar con admisiones</a>' +
+          '<a class="btn-secondary" href="/#inscripcion">Ir al formulario de inscripción</a>' +
         '</div>' +
         urgentNote +
         '<button class="restart" onclick="restart()">↺ Volver a hacer el test</button>';

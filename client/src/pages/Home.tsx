@@ -2029,6 +2029,21 @@ export default function Home() {
         </div>
       </section>
 
+      {/* === Banner test "¿Es para mi hijo?" — segundo punto de acceso, entre precios y FAQ === */}
+      <section style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px 56px" }}>
+        <Reveal>
+          <a href="/es-para-mi-hijo/" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 20, background: NAVY, borderRadius: 20, padding: "30px 36px", textDecoration: "none" }}>
+            <div>
+              <p style={{ color: GOLD, fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Test gratuito · 3 minutos</p>
+              <p style={{ color: "#fff", fontSize: "clamp(19px,2.6vw,26px)", fontWeight: 700, margin: 0 }}>¿Es Barkley la opción correcta para tu hijo?</p>
+            </div>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 10, background: GOLD, color: NAVY, fontWeight: 700, fontSize: 15, padding: "13px 26px", borderRadius: 999, whiteSpace: "nowrap" }}>
+              Hacer el test →
+            </span>
+          </a>
+        </Reveal>
+      </section>
+
       {/* === FAQ === */}
       {faqs && faqs.length > 0 && (
         <section id="faq" style={{ maxWidth: 1180, margin: "0 auto", padding: "56px 24px" }}>
@@ -2132,7 +2147,7 @@ export default function Home() {
               <li><a href="/como-funciona-umbral/" style={{ color: "#fff" }}>Cómo funciona Umbral™</a></li>
               <li><a href="/como-funciona-brujula/" style={{ color: "#fff" }}>Cómo funciona Brújula™</a></li>
               <li><a href="/demo-brujula/" style={{ color: "#fff" }}>Prueba Brújula™ (demo)</a></li>
-              <li><a href="/diagnostico/" style={{ color: "#fff" }}>¿Barkley es para ti? (diagnóstico)</a></li>
+              <li><a href="/es-para-mi-hijo/" style={{ color: "#fff" }}>¿Es Barkley para tu hijo? (test)</a></li>
               <li><a href="/guia-examenes-libres/" style={{ color: "#fff" }}>Guía de Exámenes Libres</a></li>
               <li><a href="/blog/" style={{ color: "#fff" }}>Blog</a></li>
               <li><a href="#faq" style={{ color: "#fff" }}>Preguntas frecuentes</a></li>
