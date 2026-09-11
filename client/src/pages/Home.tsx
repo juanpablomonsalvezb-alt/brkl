@@ -2029,6 +2029,56 @@ export default function Home() {
         </div>
       </section>
 
+      {/* === Reseñas reales de Google Business — actualizar a mano cuando lleguen nuevas ===
+          Fuente: https://g.page/r/CU_3TsueqIXYEBM (Barkley Online, Google Maps).
+          Última revisión: 11-sep-2026, 5.0★ · 3 reseñas. */}
+      <section style={{ maxWidth: 1180, margin: "0 auto", padding: "56px 24px 0" }}>
+        <Reveal>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 16, marginBottom: 28 }}>
+            <div>
+              <h2 style={{ fontSize: "clamp(26px,4vw,36px)", fontWeight: 600, color: SLATE, margin: "0 0 6px" }}>Lo que dicen en Google</h2>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 15 }}>
+                <span style={{ color: GOLD, letterSpacing: 2, fontSize: 17 }}>★★★★★</span>
+                <span style={{ fontWeight: 700, color: NAVY }}>5.0</span>
+                <span style={{ opacity: 0.6 }}>· reseñas verificadas de Google Business</span>
+              </div>
+            </div>
+            <a href="https://g.page/r/CU_3TsueqIXYEBM" target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, fontWeight: 700, color: NAVY, textDecoration: "underline", textDecorationColor: GOLD, whiteSpace: "nowrap" }}>
+              Ver todas en Google →
+            </a>
+          </div>
+        </Reveal>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: 20 }}>
+          {[
+            {
+              nombre: "Maria Ignacia",
+              texto: "Estamos profundamente agradecidos con Barkley Instituto. Su enfoque inclusivo y el acompañamiento personalizado marcan una diferencia abismal respecto a la educación convencional. Es un espacio seguro donde los chicos neurodivergentes pueden desarrollarse académicamente sin la presión de moldes rígidos. Altamente recomendado para familias que buscan una alternativa verdaderamente empática.",
+            },
+            {
+              nombre: "Andrés Astaburuaga",
+              texto: "Para un estudiante neurodivergente, encontrar el espacio educativo correcto suele ser un desafío enorme. En Barkley Instituto entendieron perfectamente las necesidades de mi hijo; la flexibilidad de los tiempos, la ausencia de la sobrecarga sensorial del aula tradicional y el respeto por sus propios ritmos de aprendizaje han hecho que por fin recupere la motivación por estudiar. Un 10/10 en empatía y profesionalismo.",
+            },
+            {
+              nombre: "Carlos Castellón",
+              texto: "Excelente alternativa de educación online. Barkley Instituto combina un enfoque pedagógico muy riguroso con una flexibilidad que se adapta perfectamente a los tiempos actuales. La plataforma es intuitiva y el equipo docente siempre está dispuesto a guiar al estudiante. ¡100% recomendado!",
+            },
+          ].map((r) => (
+            <Reveal key={r.nombre}>
+              <div style={{ background: "#fff", border: "1px solid #eef1f5", borderRadius: 16, padding: 24, height: "100%", display: "flex", flexDirection: "column", gap: 12 }}>
+                <span style={{ color: GOLD, letterSpacing: 2, fontSize: 15 }}>★★★★★</span>
+                <p style={{ fontSize: 14.5, lineHeight: 1.65, color: SLATE, opacity: 0.9, flex: 1, margin: 0 }}>{r.texto}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, paddingTop: 8, borderTop: "1px solid #f0f1f3" }}>
+                  <span style={{ width: 32, height: 32, borderRadius: "50%", background: NAVY, color: "#fff", fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    {r.nombre.charAt(0)}
+                  </span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: NAVY }}>{r.nombre}</span>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
       {/* === Banner test "¿Es para mi hijo?" — segundo punto de acceso, entre precios y FAQ === */}
       <section style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px 56px" }}>
         <Reveal>
