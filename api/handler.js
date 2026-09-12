@@ -342,7 +342,7 @@ Umbral\u2122 bloquea contenido (exige dominio real). Br\xFAjula\u2122 no bloquea
     <!-- Precarga la foto del hero: es el elemento LCP y sin esto solo empieza
          a descargarse cuando React monta, ya con el JS descargado y ejecutado. -->
     <link rel="preload" as="image" href="/images/hero-estudiante.webp" fetchpriority="high">
-    <script type="module" crossorigin src="/assets/index-CznUrFQL.js"></script>
+    <script type="module" crossorigin src="/assets/index-C2z7OlA6.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/icons-DNM98969.js">
     <link rel="modulepreload" crossorigin href="/assets/motion-CEMy9Axc.js">
     <link rel="modulepreload" crossorigin href="/assets/react-DGjTXJM8.js">
