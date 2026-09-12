@@ -13,7 +13,7 @@
  */
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import {
-  Loader2, Check, ArrowUpRight, Menu, X, Search, Play, Download,
+  Loader2, Check, ArrowUpRight, Menu, Search, Play, Download,
   Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
   Layers, BookOpen, Headphones, Image as ImageIcon, ListChecks, Sparkles,
   Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock, Instagram, Zap, Home as HomeIcon,
@@ -32,7 +32,6 @@ function TikTokIcon({ style }: { style?: React.CSSProperties }) {
 }
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ReservationDialog } from "@/components/ReservationDialog";
 import SalesChatbot from "@/components/SalesChatbot";
 // Code-splitting: sección debajo del hero, no aporta al LCP, sacada del
@@ -587,96 +586,6 @@ function InscripcionForm() {
   );
 }
 
-// Tour del producto — capturas REALES del piloto (no mockups), para que el visitante
-// conozca la plataforma sin registrarse. Modal con 4 slides.
-const TOUR_SLIDES = [
-  {
-    img: "/images/tour/01-dashboard.webp",
-    title: "Tu escritorio: siempre sabes qué sigue",
-    text: "Al entrar, el estudiante ve exactamente dónde quedó y qué lección viene. Su avance real, sus asignaturas y el acceso directo a su asesor — todo en un solo lugar, sin perderse.",
-  },
-  {
-    img: "/images/tour/02-curso.webp",
-    title: "Avanzas por dominio, no por tiempo",
-    text: "Cada unidad se desbloquea solo cuando dominas la anterior. Sin saltos, sin huecos: es Mastery Learning, el modelo de Benjamin Bloom (Harvard). El contenido sigue el temario oficial MINEDUC, objetivo por objetivo.",
-  },
-  {
-    img: "/images/tour/03-leccion.webp",
-    title: "Cada lección tiene su propio video",
-    text: "Video breve y claro por cada objetivo de aprendizaje. Se pausa, se repite, se ve cuando el día lo permite. Aprendes a tu ritmo real, sin clases en vivo ni horarios que cumplir.",
-  },
-  {
-    img: "/images/tour/04-podcast.webp",
-    title: "¿Prefieres escuchar? También hay pódcasts",
-    text: "Cada lección incluye además 2 a 3 audios tipo pódcast. Para aprender caminando, en el transporte, o si leer te cuesta. Inclusión de verdad — pensado también para TDAH y dislexia (programa Adaptativo).",
-  },
-];
-
-function TourModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [idx, setIdx] = useState(0);
-  // El modal queda montado (AnimatePresence controla la visibilidad); reinicia al paso 1 en cada apertura.
-  useEffect(() => { if (open) setIdx(0); }, [open]);
-  const slide = TOUR_SLIDES[idx];
-  const last = TOUR_SLIDES.length - 1;
-  return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}
-          onClick={onClose}
-          style={{ position: "fixed", inset: 0, zIndex: 50, background: "rgba(0,20,45,0.82)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-          <motion.div
-            initial={{ scale: 0.96, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.97, opacity: 0 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            onClick={e => e.stopPropagation()}
-            style={{ background: "#fff", borderRadius: 18, maxWidth: 880, width: "100%", overflow: "hidden", boxShadow: "0 30px 80px rgba(0,0,0,0.4)" }}>
-            <div style={{ position: "relative", background: "#eef1f5" }}>
-              <img src={slide.img} alt={slide.title} loading="lazy" style={{ width: "100%", display: "block", aspectRatio: "1280 / 820", objectFit: "cover" }} />
-              <button aria-label="Cerrar" onClick={onClose}
-                style={{ position: "absolute", top: 14, right: 14, width: 38, height: 38, borderRadius: "50%", background: "rgba(0,20,45,0.7)", border: "none", color: "#fff", cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <X style={{ width: 20, height: 20 }} />
-              </button>
-              <span style={{ position: "absolute", top: 16, left: 18, background: GOLD, color: NAVY, fontSize: 12, fontWeight: 700, borderRadius: 999, padding: "5px 12px", letterSpacing: "0.03em" }}>
-                Plataforma real · paso {idx + 1} de {TOUR_SLIDES.length}
-              </span>
-            </div>
-            <div style={{ padding: "28px 32px 26px" }}>
-              <h3 style={{ fontSize: "clamp(20px,3vw,28px)", fontWeight: 600, color: NAVY, margin: "0 0 10px" }}>{slide.title}</h3>
-              <p style={{ fontSize: 16, lineHeight: 1.6, color: TEXT, margin: "0 0 22px" }}>{slide.text}</p>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
-                <div style={{ display: "flex", gap: 8 }}>
-                  {TOUR_SLIDES.map((_, i) => (
-                    <button key={i} aria-label={`Ir al paso ${i+1}`} onClick={() => setIdx(i)}
-                      style={{ width: i === idx ? 26 : 9, height: 9, borderRadius: 5, border: "none", background: i === idx ? NAVY : "#d5dbe3", cursor: "pointer", transition: "width 0.3s" }} />
-                  ))}
-                </div>
-                <div style={{ display: "flex", gap: 10 }}>
-                  {idx > 0 && (
-                    <button onClick={() => setIdx(i => Math.max(0, i - 1))}
-                      style={{ fontSize: 15, fontWeight: 600, color: NAVY, background: "none", border: `1.5px solid ${NAVY}`, borderRadius: 999, padding: "10px 22px", cursor: "pointer", fontFamily: FONT }}>
-                      Anterior
-                    </button>
-                  )}
-                  {idx < last ? (
-                    <button onClick={() => setIdx(i => Math.min(last, i + 1))}
-                      style={{ fontSize: 15, fontWeight: 600, color: "#fff", background: NAVY, border: "none", borderRadius: 999, padding: "10px 24px", cursor: "pointer", fontFamily: FONT }}>
-                      Siguiente →
-                    </button>
-                  ) : (
-                    <a href="#inscripcion" onClick={onClose}
-                      style={{ fontSize: 15, fontWeight: 600, color: "#fff", background: RED, border: "none", borderRadius: 999, padding: "10px 24px", cursor: "pointer", fontFamily: FONT, textDecoration: "none" }}>
-                      Quiero inscribirme →
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
-
 // Micro-feedback lúdico de un clic: la única señal de interés real que teníamos
 // antes eran las visitas (número frío, sin decir si a la gente le sirvió lo que
 // vio). Aparece tras un tiempo en página o al detectar intención de salida
@@ -856,7 +765,6 @@ function MetodoModule() {
 
 export default function Home() {
   const [callOpen, setCallOpen] = useState(false);
-  const [tourOpen, setTourOpen] = useState(false);
   const [showBackTop, setShowBackTop] = useState(false);
   const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5*60*1000 });
 
@@ -958,8 +866,6 @@ export default function Home() {
         />
       )}
 
-      <TourModal open={tourOpen} onClose={() => setTourOpen(false)} />
-
       <SiteHeader />
 
       {/* === HERO — como el real: marco blanco de 15px alrededor, foto a la izquierda,
@@ -994,11 +900,11 @@ export default function Home() {
             <div style={{ maxWidth: 780 }}>
               <h1 data-hero="titulo" style={{ fontSize: "clamp(36px,5vw,69px)", fontWeight: 600, margin: 0, lineHeight: 1.05 }}>Líderes en Educación Asincrónica Inclusiva</h1>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 20 }}>
-                <button onClick={() => setTourOpen(true)}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 10, fontSize: 16, fontWeight: 600, color: NAVY, background: GOLD, border: "none", borderRadius: 999, padding: "13px 26px", cursor: "pointer", fontFamily: FONT }}>
+                <a href="/tour-plataforma"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 10, fontSize: 16, fontWeight: 600, color: NAVY, background: GOLD, border: "none", borderRadius: 999, padding: "13px 26px", cursor: "pointer", fontFamily: FONT, textDecoration: "none" }}>
                   <span style={{ display: "inline-flex", width: 22, height: 22, borderRadius: "50%", background: NAVY, color: GOLD, alignItems: "center", justifyContent: "center", fontSize: 11 }}>▶</span>
                   Ver cómo funciona
-                </button>
+                </a>
                 <a href="/es-para-mi-hijo/"
                   style={{ display: "inline-flex", alignItems: "center", gap: 10, fontSize: 16, fontWeight: 600, color: "#fff", background: "rgba(255,255,255,0.12)", border: "1.5px solid rgba(255,255,255,0.5)", borderRadius: 999, padding: "13px 26px", textDecoration: "none", fontFamily: FONT, backdropFilter: "blur(4px)" }}>
                   ¿Es para mi hijo? Haz el test →
@@ -1025,7 +931,7 @@ export default function Home() {
             </div>
           </motion.a>
           {/* Pinwheel de 4 cuartos rosa arriba, sobre morado saturado real (#861FCE), texto blanco */}
-          <motion.a href="#faq" data-hero="panel" whileHover={{ opacity: 0.9 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: PURPLE_PANEL, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+          <motion.a href="/preguntas-frecuentes" data-hero="panel" whileHover={{ opacity: 0.9 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: PURPLE_PANEL, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
             <motion.div data-hero="deco" whileHover={{ rotate: 8 }} transition={{ duration: 0.4 }} style={{ position: "absolute", top: 12, right: -26, width: 190, height: 190, display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr", gap: 8 }}>
               {/* Un solo path (cuarto de disco, pivote en la esquina interior) espejado en las 4 celdas → pinwheel */}
               <svg viewBox="0 0 50 50"><path d="M50,50 L50,0 A50,50 0 0,0 0,50 Z" fill={PINK} /></svg>
@@ -1937,27 +1843,23 @@ export default function Home() {
         </Reveal>
       </section>
 
-      {/* === FAQ === */}
+      {/* === FAQ — banner a la página dedicada /preguntas-frecuentes ===
+          El acordeón completo se movió a su propia ruta (perf: no aportaba
+          al LCP y pesaba el bundle inicial). El FAQPage JSON-LD arriba en
+          este archivo se mantiene para SEO/IA, no depende de este banner. === */}
       {faqs && faqs.length > 0 && (
-        <section id="faq" style={{ maxWidth: 1180, margin: "0 auto", padding: "56px 24px" }}>
-          <Reveal><h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 600, color: SLATE, margin: "0 0 24px" }}>Preguntas frecuentes</h2></Reveal>
-          {/* Dos columnas independientes para que el acordeón abierto no empuje la otra mitad */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", columnGap: 48, alignItems: "start" }}>
-            {[faqs.filter((_, i) => i % 2 === 0), faqs.filter((_, i) => i % 2 === 1)].map((col, ci) => (
-              <Accordion key={ci} type="single" collapsible>
-                {col.map(f => (
-                  <AccordionItem key={f.id} value={f.id} style={{ borderTop: "1px solid #eef1f5", borderBottom: "none" }}>
-                    <AccordionTrigger style={{ fontSize: 15, fontWeight: 600, color: NAVY, padding: "12px 0", textAlign: "left" }} className="hover:no-underline">
-                      {f.question}
-                    </AccordionTrigger>
-                    <AccordionContent style={{ fontSize: 14, opacity: 0.85, paddingBottom: 12 }}>
-                      {f.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            ))}
-          </div>
+        <section style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px 56px" }}>
+          <Reveal>
+            <a href="/preguntas-frecuentes" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 20, background: "#f5f5f5", borderRadius: 20, padding: "30px 36px", textDecoration: "none" }}>
+              <div>
+                <p style={{ color: SLATE, fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>{faqs.length} preguntas resueltas</p>
+                <p style={{ color: NAVY, fontSize: "clamp(19px,2.6vw,26px)", fontWeight: 700, margin: 0 }}>Preguntas frecuentes</p>
+              </div>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 10, background: NAVY, color: "#fff", fontWeight: 700, fontSize: 15, padding: "13px 26px", borderRadius: 999, whiteSpace: "nowrap" }}>
+                Ver todas →
+              </span>
+            </a>
+          </Reveal>
         </section>
       )}
 
@@ -2043,7 +1945,7 @@ export default function Home() {
               <li><a href="/es-para-mi-hijo/" style={{ color: "#fff" }}>¿Es Barkley para tu hijo? (test)</a></li>
               <li><a href="/guia-examenes-libres/" style={{ color: "#fff" }}>Guía de Exámenes Libres</a></li>
               <li><a href="/blog/" style={{ color: "#fff" }}>Blog</a></li>
-              <li><a href="#faq" style={{ color: "#fff" }}>Preguntas frecuentes</a></li>
+              <li><a href="/preguntas-frecuentes" style={{ color: "#fff" }}>Preguntas frecuentes</a></li>
               <li><a href="#inscripcion" style={{ color: "#fff" }}>Inscripción</a></li>
             </ul>
           </div>

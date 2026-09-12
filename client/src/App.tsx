@@ -14,6 +14,8 @@ import { useEffect, lazy, Suspense } from "react";
 // bajo demanda; un visitante que solo mira la landing no descarga nada de eso.
 const NotFound = lazy(() => import("@/pages/not-found"));
 const SinLimites = lazy(() => import("@/pages/SinLimites"));
+const TourPlataforma = lazy(() => import("@/pages/TourPlataforma"));
+const PreguntasFrecuentes = lazy(() => import("@/pages/PreguntasFrecuentes"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const CoursePlayer = lazy(() => import("@/pages/CoursePlayer"));
 const DriveSync = lazy(() => import("@/pages/DriveSync"));
@@ -66,6 +68,8 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/adaptativo" component={Adaptativo} />
       <Route path="/sin-limites" component={SinLimites} />
+      <Route path="/tour-plataforma" component={TourPlataforma} />
+      <Route path="/preguntas-frecuentes" component={PreguntasFrecuentes} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/course/:id" component={CoursePlayer} />
       <Route path="/drive-sync" component={DriveSync} />

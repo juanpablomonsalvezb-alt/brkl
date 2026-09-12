@@ -23,7 +23,8 @@ const NAV_LINKS = [
   { label: "Servicios", href: "/#servicios" },
   { label: "Calendario", href: "/#calendario" },
   { label: "Precio", href: "/#precio" },
-  { label: "Preguntas", href: "/#faq" },
+  { label: "Cómo Funciona (Tour)", href: "/tour-plataforma" },
+  { label: "Preguntas", href: "/preguntas-frecuentes" },
   { label: "Por qué somos distintos", href: "/sin-limites" },
 ];
 
