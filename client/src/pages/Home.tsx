@@ -893,7 +893,18 @@ export default function Home() {
           }
         `}</style>
         <div data-hero="foto" style={{ flex: 1, position: "relative", overflow: "hidden" }}>
-          <img src={HERO_PHOTO} alt="" fetchPriority="high" decoding="async" style={{ width: "100%", height: "100%", position: "absolute", inset: 0, objectFit: "cover", filter: "saturate(0.85)" }} />
+          {/* srcSet: el original es 1800px y en móvil se bajaba entero (86KB)
+              compitiendo con el bundle JS por ancho de banda — es el elemento
+              que define el LCP, así que el móvil ahora recibe 29KB. */}
+          <img
+            src={HERO_PHOTO}
+            srcSet="/images/hero-estudiante-900.webp 900w, /images/hero-estudiante-1400.webp 1400w, /images/hero-estudiante.webp 1800w"
+            sizes="(max-width: 760px) 100vw, 70vw"
+            alt=""
+            fetchPriority="high"
+            decoding="async"
+            style={{ width: "100%", height: "100%", position: "absolute", inset: 0, objectFit: "cover", filter: "saturate(0.85)" }}
+          />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,51,102,0) 45%, rgba(20,35,55,0.6) 100%)" }} />
           {/* Un solo titular gigante real (sin eyebrow separado — la etiqueta real ES el h1), flechas prev/next circulares bottom-right junto al texto */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}

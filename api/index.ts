@@ -22,17 +22,71 @@ import prerenderedSinLimitesHtml from "../client/public/prerendered/sin-limites.
 // output 100% estático, así que la decisión se hace en código, acá.
 const BOT_USER_AGENT = /(GPTBot|ChatGPT-User|OAI-SearchBot|ClaudeBot|anthropic-ai|Claude-Web|PerplexityBot|Perplexity-User|CCBot|Google-Extended|Applebot-Extended|cohere-ai|Bytespider|facebookexternalhit|Twitterbot|LinkedInBot|Slackbot|WhatsApp|Googlebot|bingbot)/i;
 
+/**
+ * Antes la home servía a las personas el shell vacío <div id="root"></div>:
+ * el navegador no pintaba NADA hasta descargar, parsear y ejecutar ~600KB de
+ * JS. Medido con Lighthouse, eso dejaba el LCP en 8.2s.
+ *
+ * Ahora se sirve el shell compilado (que trae los hashes vigentes de
+ * /assets/index-HASH.js y .css) con el contenido real del snapshot inyectado
+ * dentro del div#root. El navegador pinta de inmediato y, cuando el bundle
+ * termina de cargar, createRoot() de client/src/main.tsx reemplaza ese DOM.
+ * Sin riesgo de hydration mismatch: createRoot limpia el contenedor y
+ * renderiza de cero (no es hydrateRoot).
+ *
+ * Por qué fusionar y no servir el snapshot tal cual: script/prerender.ts le
+ * quita todos los <script> a propósito, porque los hashes de assets cambian
+ * en cada deploy y quedarían en 404.
+ *
+ * Solo aplica a "/": el <head> viene del shell, que es el de la home. Usarlo
+ * en /adaptativo o /sin-limites les pisaría su title/description/canonical
+ * propios — esas rutas siguen con el esquema anterior (bot: snapshot con su
+ * meta correcta; persona: shell + React, que fija la meta al montar).
+ */
+function fusionarHome(shell: string, snapshot: string): string {
+  const marcadorVacio = '<div id="root"></div>';
+  const marcadorInicio = '<div id="root">';
+
+  const inicio = snapshot.indexOf(marcadorInicio);
+  if (inicio === -1 || !shell.includes(marcadorVacio)) return shell;
+
+  // Recorre balanceando <div>/</div> para encontrar el cierre real del root
+  // (indexOf del primer </div> cortaría en el primer hijo anidado).
+  const desde = inicio + marcadorInicio.length;
+  let profundidad = 1;
+  let i = desde;
+  while (i < snapshot.length) {
+    const abre = snapshot.indexOf("<div", i);
+    const cierra = snapshot.indexOf("</div>", i);
+    if (cierra === -1) return shell;
+    if (abre !== -1 && abre < cierra) {
+      profundidad++;
+      i = abre + 4;
+    } else {
+      profundidad--;
+      if (profundidad === 0) {
+        const contenido = snapshot.slice(desde, cierra);
+        // Función replacer, no string: el HTML renderizado puede contener
+        // "$&", "$'" o "$$", que en un string de reemplazo se expanden como
+        // patrones y corromperían la salida.
+        return shell.replace(marcadorVacio, () => `<div id="root">${contenido}</div>`);
+      }
+      i = cierra + 6;
+    }
+  }
+  // Snapshot malformado: se sirve el shell, que siempre funciona.
+  return shell;
+}
+
+// Se calcula una sola vez por instancia (cold start), no por request.
+const homeHtml = fusionarHome(spaShellHtml, prerenderedHtml);
+
 // Create Express app for Vercel
 const app = express();
 
-app.get("/", (req, res) => {
-  const ua = req.headers["user-agent"] || "";
-  // Nunca cachear en el edge: la respuesta depende del User-Agent y Vercel
-  // no varía el caché por header en output estático — con cache-control
-  // cacheaba la PRIMERA respuesta (shell o snapshot, según quién pegó primero)
-  // y la servía a todos los demás sin importar su User-Agent.
+app.get("/", (_req, res) => {
   res.setHeader("Cache-Control", "no-store");
-  res.type("html").send(BOT_USER_AGENT.test(ua) ? prerenderedHtml : spaShellHtml);
+  res.type("html").send(homeHtml);
 });
 
 app.get("/adaptativo", (req, res) => {
