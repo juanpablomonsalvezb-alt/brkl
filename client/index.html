@@ -152,13 +152,36 @@
       console.log('Chat maximizado');
     };
     
+    // El widget completo pesa ~120KB de JS y consumía tiempo de bloqueo del
+    // hilo principal justo cuando el usuario recién puede ver e interactuar
+    // con la página (confirmado con Lighthouse: 84KB de ese bundle sin usar
+    // en la carga inicial). Nadie abre el chat en el primer segundo, así que
+    // se difiere: primera interacción real (scroll/mouse/touch) o, si no hay
+    // ninguna, a los 4s igual — nunca deja de cargar, solo deja de competir
+    // por el hilo principal con el contenido que sí importa al abrir.
+    function cargarTawk(){
+      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/697ac2c6111a7519800fd43a/1jgie78i8?v=' + new Date().getTime();
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    }
     (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/697ac2c6111a7519800fd43a/1jgie78i8?v=' + new Date().getTime();
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
+      var cargado = false;
+      function iniciar(){
+        if (cargado) return;
+        cargado = true;
+        ['scroll','mousemove','touchstart','keydown'].forEach(function(ev){
+          window.removeEventListener(ev, iniciar);
+        });
+        clearTimeout(temporizador);
+        cargarTawk();
+      }
+      ['scroll','mousemove','touchstart','keydown'].forEach(function(ev){
+        window.addEventListener(ev, iniciar, { once: true, passive: true });
+      });
+      var temporizador = setTimeout(iniciar, 4000);
     })();
     </script>
     <!--End of Tawk.to Script-->

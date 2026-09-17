@@ -833,7 +833,7 @@ export default function Home() {
             "@type": "VideoObject",
             name: "Tour de la plataforma Barkley Online — alumno y apoderado",
             description: "Recorrido narrado por el dashboard del alumno y el portal del apoderado de Barkley Online, colegio 100% asincrónico en Chile.",
-            thumbnailUrl: "https://www.barkleyinstituto.cl/videos/tour-poster.jpg",
+            thumbnailUrl: "https://www.barkleyinstituto.cl/videos/tour-poster.webp",
             // ISO 8601 con zona horaria obligatoria: Google Search Console marca
             // como "no válido" una fecha sin hora/offset, aunque el resto del
             // schema esté correcto. -04:00 es horario de Chile (CLT).
@@ -1365,7 +1365,7 @@ export default function Home() {
                 <video
                   controls
                   preload="metadata"
-                  poster="/videos/tour-poster.jpg"
+                  poster="/videos/tour-poster.webp"
                   playsInline
                   style={{ width: "100%", display: "block", aspectRatio: "16/9", background: NAVY }}
                 >

@@ -85,19 +85,31 @@ const homeHtml = fusionarHome(spaShellHtml, prerenderedHtml);
 const app = express();
 
 app.get("/", (_req, res) => {
-  res.setHeader("Cache-Control", "no-store");
+  // no-cache (no no-store): fuerza revalidar en cada visita normal, así que
+  // nunca sirve un build viejo — pero a diferencia de no-store, no bloquea el
+  // back/forward cache del navegador (confirmado con Lighthouse: no-store
+  // impedía la navegación atrás/adelante instantánea).
+  res.setHeader("Cache-Control", "no-cache");
   res.type("html").send(homeHtml);
 });
 
 app.get("/adaptativo", (req, res) => {
   const ua = req.headers["user-agent"] || "";
-  res.setHeader("Cache-Control", "no-store");
+  // no-cache (no no-store): fuerza revalidar en cada visita normal, así que
+  // nunca sirve un build viejo — pero a diferencia de no-store, no bloquea el
+  // back/forward cache del navegador (confirmado con Lighthouse: no-store
+  // impedía la navegación atrás/adelante instantánea).
+  res.setHeader("Cache-Control", "no-cache");
   res.type("html").send(BOT_USER_AGENT.test(ua) ? prerenderedAdaptativoHtml : spaShellHtml);
 });
 
 app.get("/sin-limites", (req, res) => {
   const ua = req.headers["user-agent"] || "";
-  res.setHeader("Cache-Control", "no-store");
+  // no-cache (no no-store): fuerza revalidar en cada visita normal, así que
+  // nunca sirve un build viejo — pero a diferencia de no-store, no bloquea el
+  // back/forward cache del navegador (confirmado con Lighthouse: no-store
+  // impedía la navegación atrás/adelante instantánea).
+  res.setHeader("Cache-Control", "no-cache");
   res.type("html").send(BOT_USER_AGENT.test(ua) ? prerenderedSinLimitesHtml : spaShellHtml);
 });
 
