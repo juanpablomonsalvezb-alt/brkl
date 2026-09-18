@@ -1727,7 +1727,9 @@ export default function Home() {
 
       {/* === Reseñas reales de Google Business — actualizar a mano cuando lleguen nuevas ===
           Fuente: https://g.page/r/CU_3TsueqIXYEBM (Barkley Online, Google Maps).
-          Última revisión: 11-sep-2026, 5.0★ · 3 reseñas. */}
+          Última revisión: 17-sep-2026, 5.0★ · 5 reseñas. La reseña de Carlos
+          Castellón (visible el 11-sep) ya no aparece en el listado público —
+          se quitó de acá sin especular por qué. */}
       <section style={{ maxWidth: 1180, margin: "0 auto", padding: "56px 24px 0" }}>
         <Reveal>
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 16, marginBottom: 28 }}>
@@ -1755,8 +1757,16 @@ export default function Home() {
               texto: "Para un estudiante neurodivergente, encontrar el espacio educativo correcto suele ser un desafío enorme. En Barkley Instituto entendieron perfectamente las necesidades de mi hijo; la flexibilidad de los tiempos, la ausencia de la sobrecarga sensorial del aula tradicional y el respeto por sus propios ritmos de aprendizaje han hecho que por fin recupere la motivación por estudiar. Un 10/10 en empatía y profesionalismo.",
             },
             {
-              nombre: "Carlos Castellón",
-              texto: "Excelente alternativa de educación online. Barkley Instituto combina un enfoque pedagógico muy riguroso con una flexibilidad que se adapta perfectamente a los tiempos actuales. La plataforma es intuitiva y el equipo docente siempre está dispuesto a guiar al estudiante. ¡100% recomendado!",
+              nombre: "Marlene Solange Lamerain Barra",
+              texto: "Hasta ahora ha sido una muy buena experiencia. Destaco principalmente la flexibilidad de los horarios y que el estudiante pueda avanzar a su propio ritmo. La atención también ha sido buena y siempre han respondido cuando hemos tenido alguna duda. Muy conforme.",
+            },
+            {
+              nombre: "Macarena Monsalvez",
+              texto: "Muy buena experiencia con Barkley Online. Hemos recibido un excelente apoyo, con mucha preocupación, paciencia y dedicación. Se agradece mucho contar con profesionales que realmente se preocupan por las necesidades de cada estudiante. 100% recomendable.",
+            },
+            {
+              nombre: "Maria Barra",
+              texto: "Excelente experiencia. Muy buena atención, responsables y comprometidos con el aprendizaje. Se nota la preocupación por entregar una buena enseñanza y acompañar durante el proceso. Todo fue claro y fácil de realizar. Sin duda, un lugar que recomiendo para quienes buscan estudiar de manera online.",
             },
           ].map((r) => (
             <Reveal key={r.nombre}>
