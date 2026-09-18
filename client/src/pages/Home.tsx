@@ -329,7 +329,7 @@ const SERVICIOS = [
     n: "07",
     titulo: "Electivos Barkley",
     lead: "El currículum es el piso, no el techo.",
-    texto: "Además del temario oficial: programación, inglés avanzado, educación financiera, arte. Mismo formato de video y práctica, con certificado propio. Cumplir con el colegio es el comienzo.",
+    texto: "Además del temario oficial: programación, IA, ajedrez, historia del arte, educación financiera y más — distinto según el ciclo. Mismo formato de video y práctica. Cumplir con el colegio es el comienzo.",
     color: SLATE,
     Icon: Sparkles,
   },
@@ -1546,7 +1546,12 @@ export default function Home() {
                   <h3 style={{ fontSize: 20.5, fontWeight: 700, color: NAVY, margin: "0 0 8px", lineHeight: 1.25 }}>{s.titulo}</h3>
                   <p style={{ fontSize: 15, fontWeight: 600, color: "#7a6033", margin: 0, lineHeight: 1.5 }}>{s.lead}</p>
                 </div>
-                <p style={{ flex: "1 1 320px", fontSize: 14.5, color: TEXT, margin: 0, lineHeight: 1.75, alignSelf: "center", maxWidth: 620 }}>{s.texto}</p>
+                <div style={{ flex: "1 1 320px", alignSelf: "center", maxWidth: 620 }}>
+                  <p style={{ fontSize: 14.5, color: TEXT, margin: "0 0 12px", lineHeight: 1.75 }}>{s.texto}</p>
+                  <a href="/electivos" style={{ fontSize: 14.5, fontWeight: 700, color: NAVY, textDecoration: "underline", textDecorationColor: s.color }}>
+                    Ver todos los electivos →
+                  </a>
+                </div>
               </motion.div>
             </Reveal>
           ))}

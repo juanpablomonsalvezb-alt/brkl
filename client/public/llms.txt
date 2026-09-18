@@ -41,6 +41,9 @@ Barkley prepara para rendirlos; no los administra ni entrega la certificación.
 - [Blog](https://www.barkleyinstituto.cl/blog/): artículos sobre educación asincrónica y NEE.
 - [¿Es Barkley para tu hijo? Test de 3 minutos](https://www.barkleyinstituto.cl/es-para-mi-hijo/): 5
   preguntas sobre la situación real de la familia, con recomendación honesta al final.
+- [Electivos Barkley](https://www.barkleyinstituto.cl/electivos): oferta adicional al temario oficial,
+  separada por ciclo — creatividad digital, programación y animación (5° a 8° básico); educación
+  financiera, introducción a la IA, ajedrez e historia del arte (1° a 4° medio).
 
 ## Preparación por nivel
 

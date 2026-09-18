@@ -21,6 +21,7 @@ const NAV_LINKS = [
   { label: "Plataforma", href: "/#plataforma" },
   { label: "IA Barkley", href: "/#ia-barkley" },
   { label: "Servicios", href: "/#servicios" },
+  { label: "Electivos", href: "/electivos" },
   { label: "Calendario", href: "/#calendario" },
   { label: "Precio", href: "/#precio" },
   { label: "Cómo Funciona (Tour)", href: "/tour-plataforma" },

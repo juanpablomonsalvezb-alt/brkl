@@ -16,6 +16,7 @@ const NotFound = lazy(() => import("@/pages/not-found"));
 const SinLimites = lazy(() => import("@/pages/SinLimites"));
 const TourPlataforma = lazy(() => import("@/pages/TourPlataforma"));
 const PreguntasFrecuentes = lazy(() => import("@/pages/PreguntasFrecuentes"));
+const Electivos = lazy(() => import("@/pages/Electivos"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const CoursePlayer = lazy(() => import("@/pages/CoursePlayer"));
 const DriveSync = lazy(() => import("@/pages/DriveSync"));
@@ -70,6 +71,7 @@ function Router() {
       <Route path="/sin-limites" component={SinLimites} />
       <Route path="/tour-plataforma" component={TourPlataforma} />
       <Route path="/preguntas-frecuentes" component={PreguntasFrecuentes} />
+      <Route path="/electivos" component={Electivos} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/course/:id" component={CoursePlayer} />
       <Route path="/drive-sync" component={DriveSync} />
