@@ -43,17 +43,46 @@ import { SiteHeader } from "@/components/SiteHeader";
 // Réplica de .fade-in-on-scroll / .animatedElement reales de isb.be (opacity+translateY al entrar en viewport)
 // IMPORTANTE: acepta `style` y lo aplica al propio wrapper — si no, el flex-basis del hijo
 // no tiene efecto porque el flex-item real dentro del contenedor padre es este div, no el hijo.
+// Antes usaba motion.div + whileInView de Framer Motion. Con 41 instancias en
+// esta sola página, cada una montaba su propio IntersectionObserver y
+// reconciliación interna de Framer — medido con Lighthouse: 3.6s de CPU en
+// bootup-time, más que toda la app junta. Este reemplazo hace lo mismo
+// (fade-in + slide al entrar en pantalla, una sola vez) con un
+// IntersectionObserver nativo y una transición CSS — mismos valores exactos
+// de easing/duración/distancia que la versión anterior, cero dependencia de
+// Framer para este caso. Firma idéntica: ningún call site cambia.
 function Reveal({ children, delay = 0, style }: { children: React.ReactNode; delay?: number; style?: React.CSSProperties }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -80px 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1, margin: "0px 0px -80px 0px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-      style={style}
+    <div
+      ref={ref}
+      style={{
+        ...style,
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(28px)",
+        transition: `opacity 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}s`,
+      }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
