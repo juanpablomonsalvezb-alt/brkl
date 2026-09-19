@@ -734,12 +734,80 @@ function CheckinDemo() {
 }
 
 /* ─── FAQ ───────────────────────────────────────────────────────────────── */
+/* ─── DEMO 7 · Evaluación multimodal — mismo aprendizaje, distinta forma de mostrarlo.
+   No mide qué tan bien escribe el estudiante, mide qué tan bien entendió. ────── */
+function EvaluacionMultimodalDemo() {
+  const [modo, setModo] = useState<"audio" | "mapa" | "quiz" | "texto">("audio");
+  const opciones = [
+    { id: "audio" as const, label: "Audio explicativo", desc: "Grabas explicando el concepto con tus palabras — sin que la letra o la ortografía sean la barrera." },
+    { id: "mapa" as const, label: "Mapa conceptual", desc: "Dibujas o conectas ideas en un esquema visual — para quien piensa en relaciones, no en párrafos." },
+    { id: "quiz" as const, label: "Cuestionario interactivo", desc: "Preguntas cortas con retroalimentación inmediata — el formato más liviano de función ejecutiva." },
+    { id: "texto" as const, label: "Redacción escrita", desc: "El formato tradicional, sigue disponible para quien lo prefiere." },
+  ];
+  const activo = opciones.find((o) => o.id === modo)!;
+  return (
+    <div>
+      <p style={{ fontSize: 15, color: INK_SOFT, margin: "0 0 24px", maxWidth: 640, lineHeight: 1.7 }}>
+        La misma evaluación, cuatro formas de entregarla. El estudiante elige cómo demostrar lo que sabe —
+        la nota mide comprensión, no la habilidad de escribir bajo presión.
+      </p>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
+        {opciones.map((o) => (
+          <button
+            key={o.id}
+            onClick={() => setModo(o.id)}
+            style={{
+              padding: "9px 16px", borderRadius: 999, fontSize: 13.5, fontWeight: 600,
+              background: modo === o.id ? INK : "transparent",
+              color: modo === o.id ? PAPER : INK,
+              border: `1.5px solid ${modo === o.id ? INK : RULE}`,
+              cursor: "pointer", fontFamily: BODY,
+            }}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+      <div style={{ background: PAPER_DEEP, borderRadius: 10, padding: "22px 24px", border: `1px solid ${RULE}` }}>
+        <p style={{ fontSize: 15, color: INK, margin: 0, lineHeight: 1.7 }}>{activo.desc}</p>
+      </div>
+    </div>
+  );
+}
+
+/* ─── DEMO 8 · Jornada sugerida — bloques con foco y pausa sensorial, no un
+   horario rígido. Referencia: propuesta metodológica asincrónica neuroinclusiva. ── */
+function JornadaDemo() {
+  const bloques = [
+    ["Inicio", "15-20 min", "Revisar la agenda visual del día — qué viene, en qué orden."],
+    ["Foco principal", "30-45 min", "1 o 2 microlecciones de la materia núcleo, con actividad breve al cierre de cada una."],
+    ["Pausa sensorial", "20-30 min", "Sin pantallas. Movimiento, colación o silencio — el cerebro necesita el corte, no es tiempo perdido."],
+    ["Aplicación", "30-40 min", "Lectura, proyecto o evaluación multimodal — audio, mapa o escrita, a elección."],
+    ["Cierre libre", "20-30 min", "Módulos opcionales o clubes por interés. Termina el día desde lo que le gusta, no desde la obligación."],
+  ];
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 1, background: RULE, border: `1px solid ${RULE}`, borderRadius: 10, overflow: "hidden" }}>
+      {bloques.map(([nombre, dur, desc]) => (
+        <div key={nombre} style={{ background: PAPER, padding: "18px 22px", display: "flex", gap: 18, alignItems: "baseline", flexWrap: "wrap" }}>
+          <span style={{ fontFamily: DISPLAY, fontSize: 15, fontWeight: 600, color: INK, minWidth: 150 }}>{nombre}</span>
+          <span style={{ fontSize: 12.5, fontWeight: 700, color: GOLD, letterSpacing: "0.04em", minWidth: 70 }}>{dur}</span>
+          <span style={{ fontSize: 14, color: INK_SOFT, lineHeight: 1.6, flex: "1 1 300px" }}>{desc}</span>
+        </div>
+      ))}
+      <p style={{ background: PAPER, margin: 0, padding: "16px 22px 20px", fontSize: 13, color: INK_SOFT, fontStyle: "italic" }}>
+        No es un horario impuesto — es una estructura sugerida para que el día tenga forma sin volverse rígido.
+      </p>
+    </div>
+  );
+}
+
 const FAQS = [
   { q: "¿Adaptativo es una terapia o un tratamiento?", a: "No. Es un formato de estudio que se acomoda a cómo aprende tu hijo — no una terapia ni un tratamiento clínico. El acompañamiento profesional (psicopedagogo, terapeuta ocupacional, neurólogo) sigue siendo el de tu confianza; Barkley no lo reemplaza ni pretende hacerlo." },
   { q: "¿Rinde los mismos exámenes que el resto?", a: "Sí. El contenido es el temario oficial MINEDUC completo y la validación es la misma: Exámenes Libres. Se adapta la forma de aprender, nunca la exigencia académica ni el nivel del contenido." },
   { q: "¿Necesito un diagnóstico o un informe para matricular?", a: "No lo pedimos. En el formulario de inscripción puedes indicar si tu hijo tiene TDAH o dislexia, y la conversación con el asesor define cómo activar el perfil que corresponda." },
   { q: "¿Y si tiene TDAH y dislexia a la vez?", a: "Existe un cuarto perfil, combinado, que activa todas las acomodaciones de ambos al mismo tiempo: bloques cortos y reintentos, más fuente OpenDyslexic, texto a voz y fondo crema. No hay que elegir una sola." },
   { q: "¿Qué pasa con el diagnóstico de mi hijo si es otro?", a: "Adaptativo cubre hoy TDAH, dislexia, TEA, dificultades motoras y la combinación de TDAH con dislexia. En lo motriz el alcance es la accesibilidad de la interfaz: no incluye comunicación aumentativa. Si el perfil de tu hijo es otro — discapacidad intelectual o sensorial — todavía no tenemos acomodaciones automáticas, y preferimos decirlo antes que prometerlo. Escríbenos igual: conversamos qué es posible en su caso concreto." },
+  { q: "¿Tengo que hacer de profesor en la casa?", a: "No. Tu rol es del entorno, no del contenido: armar un espacio de estudio cómodo, sostener las pausas y acompañar el checklist diario. Diseñar el material, adaptarlo y corregir es trabajo del equipo pedagógico de Barkley — nunca se traspasa a la familia." },
 ];
 
 function Faq() {
@@ -918,6 +986,14 @@ export default function Adaptativo() {
 
       <Section num="06" kicker="Acompañamiento humano" title="Cuántas veces alguien revisa cómo va">
         <CheckinDemo />
+      </Section>
+
+      <Section num="07" kicker="Evaluación · DUA" title="Demostrar lo que sabes, no lo que cuesta escribir">
+        <EvaluacionMultimodalDemo />
+      </Section>
+
+      <Section num="08" kicker="Rutina en casa" title="Un día con pausas, no una maratón">
+        <JornadaDemo />
       </Section>
 
       {/* Nota de estado — honestidad sobre en qué punto está el programa.
