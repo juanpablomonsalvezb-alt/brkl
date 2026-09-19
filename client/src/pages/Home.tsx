@@ -752,6 +752,15 @@ function MetodoModule() {
           </div>
         </Reveal>
 
+        <Reveal delay={0.18}>
+          <div style={{ marginTop: 32, background: "rgba(255,255,255,0.05)", borderRadius: 14, padding: "24px 26px", textAlign: "center" }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Por dentro</p>
+            <p style={{ fontSize: 15, lineHeight: 1.7, opacity: 0.9, margin: 0, maxWidth: 640, marginLeft: "auto", marginRight: "auto" }}>
+              Umbral™, Brújula™ y el Programa Adaptativo corren sobre <strong style={{ color: "#fff" }}>Vórtice™</strong>, nuestra plataforma propia — arquitectura headless / API-first, la misma línea de nueva generación hacia la que hoy migran las plataformas educativas líderes, en vez del modelo monolítico de Moodle o Canvas de hace 15 años.
+            </p>
+          </div>
+        </Reveal>
+
         <Reveal delay={0.2}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", marginTop: 32 }}>
             <a href="/como-funciona-umbral/" style={{ color: GOLD, fontWeight: 700, fontSize: 15, textDecoration: "underline", textUnderlineOffset: 3 }}>Cómo funciona Umbral™ en detalle →</a>
