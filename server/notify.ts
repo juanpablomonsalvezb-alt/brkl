@@ -50,10 +50,14 @@ export async function sendConfirmationEmail(to: string, name: string) {
   if (!apiKey || !to) return;
 
   const html = `
-    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #3a3a3a; line-height: 1.6;">
       <h2 style="color: #003366;">¡Hola${name ? `, ${name}` : ""}!</h2>
-      <p>Recibimos tu inscripción a Barkley Online. Un asesor te contactará a la brevedad.</p>
-      <p style="color: #5f6156; font-size: 14px;">Barkley Online — Colegio 100% asincrónico en Chile</p>
+      <p>Qué alegría tenerte con nosotros. Tu inscripción a Barkley Online quedó <strong>confirmada</strong> — diste el primer paso hacia un año escolar distinto, a tu propio ritmo, sin clases en vivo, sin horarios que te aprieten.</p>
+      <p>Y tenemos una buena noticia: como te inscribiste antes del 30 de noviembre, <strong>tu matrícula es completamente gratuita</strong>. No necesitas pagar nada hoy — el arancel recién comienza en <strong>enero o febrero de 2027</strong>, con tiempo de sobra para organizarte.</p>
+      <p>Mientras se acerca el inicio, queremos que estés cerca de nosotros. Síguenos en <a href="https://www.instagram.com/ibarkley.cl" style="color: #003366;">Instagram</a> y <a href="https://www.tiktok.com/@barkleyonline" style="color: #003366;">TikTok</a> — ahí vamos a ir compartiendo novedades, contenido y todo lo que necesitas saber antes de que arranque el año. Revísalas seguido, así no te pierdes nada.</p>
+      <p>Si tienes cualquier duda o consulta en el camino, escríbenos directo a <a href="mailto:admisiones@barkleyinstituto.cl" style="color: #003366;">admisiones@barkleyinstituto.cl</a> — estamos para ayudarte.</p>
+      <p><strong>Bienvenido a Barkley. Esto recién empieza.</strong></p>
+      <p style="color: #5f6156; font-size: 14px;">— El equipo de Barkley Online</p>
     </div>
   `;
 
@@ -64,7 +68,7 @@ export async function sendConfirmationEmail(to: string, name: string) {
       body: JSON.stringify({
         from: "Barkley Online <notificaciones@barkleyinstituto.cl>",
         to: [to],
-        subject: "Recibimos tu inscripción — Barkley Online",
+        subject: "¡Bienvenido a Barkley! Tu inscripción está confirmada 🎉",
         html,
       }),
     });
