@@ -206,6 +206,11 @@ export default function Together() {
     else audioRef.current.pause();
   }, [musica]);
 
+  const portadaRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    if (!unido) portadaRef.current?.play().catch(() => {});
+  }, [unido]);
+
   const emailValido = /^[^\s@]+@gmail\.com$/i.test(email.trim());
   const puedeUnirse = nombre.trim().length > 0 && emailValido;
 
@@ -282,9 +287,17 @@ export default function Together() {
           opacity: unido && videoVisible ? 1 : 0, transition: "opacity 1.4s ease",
         }}
       />
-      {/* Imagen de portada para la pantalla de ingreso — pendiente: usuario la provee */}
+      {/* Video de portada para la pantalla de ingreso — se detiene al unirse
+          para no competir con el fade-in del video de la sala. autoPlay solo
+          no siempre dispara el play() real, por eso se fuerza en el ref. */}
       {!unido && (
-        <div style={{ position: "fixed", inset: 0, backgroundImage: "url(/together/portada.jpg)", backgroundSize: "cover", backgroundPosition: "center", zIndex: 0 }} />
+        <video
+          ref={portadaRef}
+          src="/together/portada.mp4"
+          autoPlay loop muted playsInline
+          onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
+          style={{ position: "fixed", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
+        />
       )}
       <div style={{ position: "fixed", inset: 0, background: "linear-gradient(180deg, rgba(11,21,38,.55) 0%, rgba(11,21,38,.3) 45%, rgba(11,21,38,.8) 100%)", zIndex: 1 }} />
 
