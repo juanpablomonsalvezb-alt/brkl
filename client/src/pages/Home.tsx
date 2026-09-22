@@ -17,6 +17,7 @@ import {
   Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
   Layers, BookOpen, Headphones, Image as ImageIcon, ListChecks, Sparkles,
   Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock, Instagram, Zap, Home as HomeIcon,
+  Users2,
 } from "lucide-react";
 
 const INSTAGRAM_URL = "https://www.instagram.com/ibarkley.cl";
@@ -254,6 +255,7 @@ const INCLUSIVOS = [
   { title: "NEE", desc: "Inclusión real: dislexia, autismo, discapacidad. Adaptaciones desde el diseño.", url: "/adaptativo", icon: Heart },
   { title: "Exámenes Libres", desc: "Preparación completa para validación oficial MINEDUC, a tu ritmo.", url: "/guia-examenes-libres/", icon: CheckCircle2 },
   { title: "PAES y pruebas globales", desc: "Cuenta regresiva a fechas oficiales, plan de estudio interactivo y técnicas con evidencia real.", url: "/prepara-tus-examenes", icon: CalendarClock },
+  { title: "Together™", desc: "Sala de estudio en silencio: aunque estudies solo, no estás solo. Sin cámara, sin chat.", url: "/together", icon: Users2 },
   { title: "Homeschool", desc: "Currículum oficial ya armado, sin diseñar el plan de estudio desde cero.", url: "/colegio-online-homeschool/", icon: HomeIcon },
 ];
 
