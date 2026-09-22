@@ -1,40 +1,35 @@
 /**
- * Together — sala de estudio en silencio (body doubling). No es un
- * formulario con un timer al lado: es una escena nocturna de estudio —
- * lámpara cálida, estantería, polvo flotando en la luz — con el cronómetro
- * como anillo de progreso al centro y la presencia de otros como luces
- * suaves alrededor. Música lofi real (YouTube, embed estándar) de fondo,
- * opcional. El punto no es la lista de nombres: es la sensación de cuarto
- * compartido, silencioso, sin cámara ni chat.
+ * Together — sala de estudio en silencio (body doubling). Video real en loop
+ * de fondo (generado, sin audio) + música lofi opcional aparte, con los
+ * widgets que los sitios reales del género traen (StudyStream, StudyClock,
+ * LofiSpace): timer Pomodoro, presencia de otros estudiantes y lista de
+ * tareas. Nada de esto es original — es lo que ya existe afuera, adaptado.
  *
  * Correo @gmail.com obligatorio para entrar (sin contraseña, no es login):
  * es la captación de lead de la campaña hasta marzo 2027. El clientId sigue
  * siendo el único identificador anónimo en localStorage frente al servidor.
  *
  * Nivel 1 del prototipo: heartbeat cada 15s a /api/together/heartbeat,
- * presencia leída cada 5s desde /api/together/presence. Sin websockets,
- * sin infraestructura nueva — corre sobre la misma DB Turso del resto del
- * sitio.
+ * presencia leída cada 5s desde /api/together/presence. Lista de tareas
+ * es puramente local (localStorage) — no hay backend de tareas todavía.
  */
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Play, Pause, RotateCcw, Music, Music as MusicOff, ArrowLeft } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Play, Pause, RotateCcw, Music, VolumeX, ArrowLeft, Plus, X, Check } from "lucide-react";
 
-const NIGHT_TOP = "#0B1526";
-const NIGHT_BOTTOM = "#152A42";
 const LAMP = "#F2B84B";
 const LAMP_SOFT = "#E0A02E";
 const PAPER = "#FBF6EC";
-const INK_SOFT_LIGHT = "rgba(251,246,236,.62)";
+const INK_SOFT_LIGHT = "rgba(251,246,236,.7)";
 const RED = "#C8402F";
 const SAGE = "#7FCB9E";
-const RULE_DARK = "rgba(251,246,236,.14)";
+const RULE_DARK = "rgba(251,246,236,.18)";
+const GLASS = "rgba(11,21,38,.55)";
 
 const DISPLAY = "'Fraunces', Georgia, serif";
 const BODY = "'Lexend', system-ui, sans-serif";
 
 const FOCUS_MIN = 25;
 const BREAK_MIN = 5;
-const LOFI_VIDEO_ID = "X4VbdwhkE10"; // lofi hip hop radio 📚 — beats to relax/study to
 
 function getClientId() {
   const key = "together_client_id";
@@ -47,83 +42,103 @@ function getClientId() {
 }
 
 type Presencia = { displayName: string; subject?: string };
+type Tarea = { id: string; texto: string; hecha: boolean };
 
-/* Estantería de libros dibujada en CSS — lomos de distinto ancho y alto,
-   paleta muda para no competir con la lámpara. Puramente decorativa. */
-function Estanteria() {
-  const lomos = useMemo(() => {
-    const colores = ["#3A5068", "#4A3B4E", "#5A4632", "#2E4A44", "#4E3630", "#354A5E"];
-    return Array.from({ length: 22 }, (_, i) => ({
-      w: 10 + ((i * 7) % 18),
-      h: 60 + ((i * 13) % 40),
-      c: colores[i % colores.length],
-    }));
-  }, []);
-  return (
-    <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 120, display: "flex", alignItems: "flex-end", gap: 3, padding: "0 24px", opacity: 0.55, pointerEvents: "none" }}>
-      {lomos.map((l, i) => (
-        <div key={i} style={{ width: l.w, height: l.h, background: l.c, borderRadius: "2px 2px 0 0", flexShrink: 0 }} />
-      ))}
-    </div>
-  );
-}
-
-/* Polvo flotando en la luz de la lámpara — unos pocos puntos, no una lluvia. */
-function Polvo() {
-  const motas = useMemo(
-    () => Array.from({ length: 14 }, (_, i) => ({
-      left: 30 + Math.random() * 40,
-      delay: Math.random() * 8,
-      duration: 7 + Math.random() * 6,
-      size: 2 + Math.random() * 2,
-    })),
-    []
-  );
-  return (
-    <>
-      <style>{`
-        @keyframes together-float {
-          0%   { transform: translateY(0) translateX(0); opacity: 0; }
-          10%  { opacity: .55; }
-          90%  { opacity: .3; }
-          100% { transform: translateY(-160px) translateX(14px); opacity: 0; }
-        }
-      `}</style>
-      {motas.map((m, i) => (
-        <div
-          key={i}
-          style={{
-            position: "absolute", bottom: "30%", left: `${m.left}%`, width: m.size, height: m.size,
-            borderRadius: "50%", background: LAMP, pointerEvents: "none",
-            animation: `together-float ${m.duration}s ease-in ${m.delay}s infinite`,
-          }}
-        />
-      ))}
-    </>
-  );
+function useTareas() {
+  const [tareas, setTareas] = useState<Tarea[]>(() => {
+    try {
+      const raw = localStorage.getItem("together_tareas");
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  });
+  useEffect(() => {
+    localStorage.setItem("together_tareas", JSON.stringify(tareas));
+  }, [tareas]);
+  return { tareas, setTareas };
 }
 
 function Anillo({ segundos, total, enFoco }: { segundos: number; total: number; enFoco: boolean }) {
-  const r = 92;
+  const r = 78;
   const c = 2 * Math.PI * r;
   const pct = 1 - segundos / total;
   const color = enFoco ? LAMP : SAGE;
   const mm = String(Math.floor(segundos / 60)).padStart(2, "0");
   const ss = String(segundos % 60).padStart(2, "0");
   return (
-    <svg width={220} height={220} viewBox="0 0 220 220" style={{ filter: `drop-shadow(0 0 24px ${color}55)` }}>
-      <circle cx={110} cy={110} r={r} fill="none" stroke="rgba(251,246,236,.1)" strokeWidth={8} />
+    <svg width={190} height={190} viewBox="0 0 190 190" style={{ filter: `drop-shadow(0 0 20px ${color}55)` }}>
+      <circle cx={95} cy={95} r={r} fill="none" stroke="rgba(251,246,236,.12)" strokeWidth={7} />
       <circle
-        cx={110} cy={110} r={r} fill="none" stroke={color} strokeWidth={8} strokeLinecap="round"
+        cx={95} cy={95} r={r} fill="none" stroke={color} strokeWidth={7} strokeLinecap="round"
         strokeDasharray={c} strokeDashoffset={c * (1 - pct)}
-        transform="rotate(-90 110 110)"
+        transform="rotate(-90 95 95)"
         style={{ transition: "stroke-dashoffset 1s linear" }}
       />
-      <text x="110" y="102" textAnchor="middle" fontFamily={DISPLAY} fontSize={40} fontWeight={500} fill={PAPER}>{mm}:{ss}</text>
-      <text x="110" y="128" textAnchor="middle" fontFamily={BODY} fontSize={11} letterSpacing="2" fill={color} style={{ textTransform: "uppercase" }}>
+      <text x="95" y="88" textAnchor="middle" fontFamily={DISPLAY} fontSize={34} fontWeight={500} fill={PAPER}>{mm}:{ss}</text>
+      <text x="95" y="112" textAnchor="middle" fontFamily={BODY} fontSize={10} letterSpacing="2" fill={color} style={{ textTransform: "uppercase" }}>
         {enFoco ? "Foco" : "Pausa"}
       </text>
     </svg>
+  );
+}
+
+function ListaTareas() {
+  const { tareas, setTareas } = useTareas();
+  const [nueva, setNueva] = useState("");
+
+  const agregar = () => {
+    const texto = nueva.trim();
+    if (!texto) return;
+    setTareas((t) => [...t, { id: crypto.randomUUID(), texto, hecha: false }]);
+    setNueva("");
+  };
+
+  return (
+    <div style={{ background: GLASS, backdropFilter: "blur(8px)", border: `1px solid ${RULE_DARK}`, borderRadius: 14, padding: "18px 20px", width: 280 }}>
+      <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: LAMP, margin: "0 0 12px" }}>
+        Lo que voy a hacer
+      </p>
+      <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
+        <input
+          value={nueva}
+          onChange={(e) => setNueva(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && agregar()}
+          placeholder="Agregar tarea…"
+          maxLength={80}
+          style={{ flex: 1, padding: "8px 10px", borderRadius: 8, border: `1px solid ${RULE_DARK}`, background: "rgba(0,0,0,.25)", color: PAPER, fontFamily: BODY, fontSize: 13 }}
+        />
+        <button onClick={agregar} style={{ background: LAMP, border: "none", borderRadius: 8, width: 32, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+          <Plus style={{ width: 16, height: 16, color: "#0B1526" }} />
+        </button>
+      </div>
+      {tareas.length === 0 ? (
+        <p style={{ fontSize: 12.5, color: INK_SOFT_LIGHT, margin: 0, fontStyle: "italic" }}>Sin tareas todavía.</p>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 160, overflowY: "auto" }}>
+          {tareas.map((t) => (
+            <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <button
+                onClick={() => setTareas((ts) => ts.map((x) => (x.id === t.id ? { ...x, hecha: !x.hecha } : x)))}
+                style={{
+                  width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${t.hecha ? SAGE : RULE_DARK}`,
+                  background: t.hecha ? SAGE : "transparent", display: "flex", alignItems: "center", justifyContent: "center",
+                  cursor: "pointer", flexShrink: 0,
+                }}
+              >
+                {t.hecha && <Check style={{ width: 12, height: 12, color: "#0B1526" }} />}
+              </button>
+              <span style={{ fontSize: 13, flex: 1, color: t.hecha ? INK_SOFT_LIGHT : PAPER, textDecoration: t.hecha ? "line-through" : "none" }}>
+                {t.texto}
+              </span>
+              <button onClick={() => setTareas((ts) => ts.filter((x) => x.id !== t.id))} style={{ background: "none", border: "none", cursor: "pointer", opacity: 0.5, display: "flex" }}>
+                <X style={{ width: 13, height: 13, color: PAPER }} />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -131,7 +146,7 @@ export default function Together() {
   useEffect(() => {
     document.title = "Together — Sala de estudio en silencio | Barkley";
     const desc = document.querySelector('meta[name="description"]');
-    if (desc) desc.setAttribute("content", "Estudia acompañado sin clases en vivo. Escena nocturna, cronómetro y presencia real de otros estudiantes — el mismo principio de body doubling que ayuda a sostener el foco en TDAH.");
+    if (desc) desc.setAttribute("content", "Estudia acompañado sin clases en vivo. Video ambiental, cronómetro, lista de tareas y presencia real de otros estudiantes — el mismo principio de body doubling que ayuda a sostener el foco en TDAH.");
     const canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) canonical.setAttribute("href", "https://www.barkleyinstituto.cl/together");
     const id = "together-fonts";
@@ -149,6 +164,13 @@ export default function Together() {
   const [unido, setUnido] = useState(false);
   const [presentes, setPresentes] = useState<Presencia[]>([]);
   const [musica, setMusica] = useState(false);
+
+  const audioRef = useRef<HTMLAudioElement>(null);
+  useEffect(() => {
+    if (!audioRef.current) return;
+    if (musica) audioRef.current.play().catch(() => {});
+    else audioRef.current.pause();
+  }, [musica]);
 
   const emailValido = /^[^\s@]+@gmail\.com$/i.test(email.trim());
   const puedeUnirse = nombre.trim().length > 0 && emailValido;
@@ -204,42 +226,31 @@ export default function Together() {
     };
   }, [unido, nombre, email, materia]);
 
-  const sceneStyle: React.CSSProperties = {
-    position: "relative", minHeight: "100vh", overflow: "hidden",
-    background: `radial-gradient(ellipse 800px 500px at 50% 30%, ${LAMP}22 0%, transparent 60%), linear-gradient(180deg, ${NIGHT_TOP} 0%, ${NIGHT_BOTTOM} 100%)`,
-    color: PAPER, fontFamily: BODY,
-  };
-
   return (
-    <div style={sceneStyle}>
-      {/* Ambiente lofi real, opcional — visual + audio, apagado por defecto */}
-      {musica && (
-        <iframe
-          title="Música ambiental — lofi"
-          src={`https://www.youtube-nocookie.com/embed/${LOFI_VIDEO_ID}?autoplay=1&controls=0&modestbranding=1`}
-          allow="autoplay"
-          style={{
-            position: "fixed", inset: 0, width: "100%", height: "100%", border: "none",
-            opacity: 0.14, filter: "blur(2px)", pointerEvents: "none", zIndex: 0,
-          }}
-        />
-      )}
+    <div style={{ position: "relative", minHeight: "100vh", overflow: "hidden", background: "#0B1526", color: PAPER, fontFamily: BODY }}>
+      {/* Video ambiental en loop, de fondo, sin audio */}
+      <video
+        src="/together/man-studying.mp4"
+        autoPlay loop muted playsInline
+        style={{ position: "fixed", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
+      />
+      <div style={{ position: "fixed", inset: 0, background: "linear-gradient(180deg, rgba(11,21,38,.55) 0%, rgba(11,21,38,.35) 40%, rgba(11,21,38,.75) 100%)", zIndex: 1 }} />
 
-      <Polvo />
-      <Estanteria />
+      {/* Música lofi real, separada del video — apagada por defecto */}
+      <audio ref={audioRef} src="/together/lofi-ambiente.mp3" loop />
 
       <div style={{ position: "relative", zIndex: 2, minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <header style={{ padding: "20px 24px" }}>
-          <div style={{ maxWidth: 1080, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
             <a href="/" style={{ display: "flex", alignItems: "center", gap: 11, textDecoration: "none" }}>
-              <div style={{ width: 40, height: 40, background: PAPER, borderRadius: 5, color: NIGHT_TOP, fontWeight: 700, fontSize: 15, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: DISPLAY }}>BK</div>
-              <span style={{ fontWeight: 500, color: PAPER, fontSize: 14, lineHeight: 1.25 }}>The Barkley<br />Online School</span>
+              <div style={{ width: 40, height: 40, background: PAPER, borderRadius: 5, color: "#0B1526", fontWeight: 700, fontSize: 15, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: DISPLAY }}>BK</div>
+              <span style={{ fontWeight: 500, color: PAPER, fontSize: 14, lineHeight: 1.25, textShadow: "0 1px 4px rgba(0,0,0,.5)" }}>The Barkley<br />Online School</span>
             </a>
             <button
               onClick={() => setMusica((m) => !m)}
-              style={{ display: "flex", alignItems: "center", gap: 7, background: "rgba(251,246,236,.08)", color: PAPER, border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "9px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+              style={{ display: "flex", alignItems: "center", gap: 7, background: GLASS, backdropFilter: "blur(6px)", color: PAPER, border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "9px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
             >
-              {musica ? <MusicOff style={{ width: 14, height: 14 }} /> : <Music style={{ width: 14, height: 14 }} />}
+              {musica ? <Music style={{ width: 14, height: 14 }} /> : <VolumeX style={{ width: 14, height: 14 }} />}
               {musica ? "Música: on" : "Música ambiental"}
             </button>
           </div>
@@ -248,24 +259,24 @@ export default function Together() {
         {!unido ? (
           <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
             <div style={{ maxWidth: 460, width: "100%", textAlign: "center" }}>
-              <p style={{ fontSize: 12.5, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase", color: LAMP, margin: "0 0 14px" }}>
+              <p style={{ fontSize: 12.5, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase", color: LAMP, margin: "0 0 14px", textShadow: "0 1px 6px rgba(0,0,0,.5)" }}>
                 Together™ · sala de estudio en silencio
               </p>
-              <h1 style={{ fontFamily: DISPLAY, fontSize: "clamp(28px,5vw,40px)", fontWeight: 500, margin: "0 0 14px", lineHeight: 1.15, fontVariationSettings: "'SOFT' 30" }}>
+              <h1 style={{ fontFamily: DISPLAY, fontSize: "clamp(28px,5vw,40px)", fontWeight: 500, margin: "0 0 14px", lineHeight: 1.15, fontVariationSettings: "'SOFT' 30", textShadow: "0 2px 12px rgba(0,0,0,.6)" }}>
                 Aunque estudies solo,<br />no estás solo
               </h1>
-              <p style={{ fontSize: 14.5, color: INK_SOFT_LIGHT, margin: "0 0 30px", lineHeight: 1.7 }}>
+              <p style={{ fontSize: 14.5, color: INK_SOFT_LIGHT, margin: "0 0 30px", lineHeight: 1.7, textShadow: "0 1px 6px rgba(0,0,0,.5)" }}>
                 Sin cámara, sin chat, sin clase. Un cuarto compartido en silencio —
                 el mismo efecto de estudiar en la biblioteca, sin salir de tu pieza.
               </p>
 
-              <div style={{ background: "rgba(251,246,236,.06)", borderRadius: 16, padding: "clamp(24px,5vw,32px)", border: `1px solid ${RULE_DARK}`, textAlign: "left", backdropFilter: "blur(6px)" }}>
+              <div style={{ background: GLASS, borderRadius: 16, padding: "clamp(24px,5vw,32px)", border: `1px solid ${RULE_DARK}`, textAlign: "left", backdropFilter: "blur(10px)" }}>
                 <input
                   value={nombre}
                   onChange={(e) => setNombre(e.target.value)}
                   placeholder="Tu nombre o apodo"
                   maxLength={40}
-                  style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${RULE_DARK}`, fontFamily: BODY, fontSize: 15, marginBottom: 10, background: "rgba(0,0,0,.2)", color: PAPER }}
+                  style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${RULE_DARK}`, fontFamily: BODY, fontSize: 15, marginBottom: 10, background: "rgba(0,0,0,.3)", color: PAPER }}
                 />
                 <input
                   value={email}
@@ -273,7 +284,7 @@ export default function Together() {
                   placeholder="tu.correo@gmail.com"
                   type="email"
                   maxLength={80}
-                  style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${email.length > 0 && !emailValido ? RED : RULE_DARK}`, fontFamily: BODY, fontSize: 15, marginBottom: 6, background: "rgba(0,0,0,.2)", color: PAPER }}
+                  style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${email.length > 0 && !emailValido ? RED : RULE_DARK}`, fontFamily: BODY, fontSize: 15, marginBottom: 6, background: "rgba(0,0,0,.3)", color: PAPER }}
                 />
                 <p style={{ fontSize: 12, color: email.length > 0 && !emailValido ? "#FF8A73" : INK_SOFT_LIGHT, margin: "0 0 10px" }}>
                   {email.length > 0 && !emailValido ? "Debe ser un correo @gmail.com" : "Solo para entrar a la sala — no se comparte con nadie más."}
@@ -283,13 +294,13 @@ export default function Together() {
                   onChange={(e) => setMateria(e.target.value)}
                   placeholder="¿Qué vas a estudiar? (opcional)"
                   maxLength={60}
-                  style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${RULE_DARK}`, fontFamily: BODY, fontSize: 15, marginBottom: 18, background: "rgba(0,0,0,.2)", color: PAPER }}
+                  style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${RULE_DARK}`, fontFamily: BODY, fontSize: 15, marginBottom: 18, background: "rgba(0,0,0,.3)", color: PAPER }}
                 />
                 <button
                   onClick={() => puedeUnirse && setUnido(true)}
                   disabled={!puedeUnirse}
                   style={{
-                    width: "100%", background: puedeUnirse ? LAMP : "rgba(251,246,236,.15)", color: puedeUnirse ? NIGHT_TOP : INK_SOFT_LIGHT,
+                    width: "100%", background: puedeUnirse ? LAMP : "rgba(251,246,236,.15)", color: puedeUnirse ? "#0B1526" : INK_SOFT_LIGHT,
                     border: "none", borderRadius: 999, padding: "13px 20px", fontSize: 15, fontWeight: 700,
                     cursor: puedeUnirse ? "pointer" : "not-allowed",
                   }}
@@ -300,70 +311,69 @@ export default function Together() {
             </div>
           </div>
         ) : (
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", gap: 32 }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: "24px" }}>
             <button
               onClick={() => setUnido(false)}
-              style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: INK_SOFT_LIGHT, fontSize: 13, cursor: "pointer", position: "absolute", top: 90 }}
+              style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: PAPER, fontSize: 13, cursor: "pointer", alignSelf: "flex-start", textShadow: "0 1px 4px rgba(0,0,0,.5)" }}
             >
               <ArrowLeft style={{ width: 14, height: 14 }} /> Salir de la sala
             </button>
 
-            <Anillo segundos={segundos} total={totalActual} enFoco={enFoco} />
+            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "clamp(20px,4vw,48px)", flexWrap: "wrap" }}>
+              {/* Timer */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+                <Anillo segundos={segundos} total={totalActual} enFoco={enFoco} />
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button
+                    onClick={() => setCorriendo((c) => !c)}
+                    style={{ display: "flex", alignItems: "center", gap: 8, background: LAMP, color: "#0B1526", border: "none", borderRadius: 999, padding: "10px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}
+                  >
+                    {corriendo ? <Pause style={{ width: 15, height: 15 }} /> : <Play style={{ width: 15, height: 15 }} />}
+                    {corriendo ? "Pausar" : "Empezar"}
+                  </button>
+                  <button
+                    onClick={() => { setCorriendo(false); setEnFoco(true); setSegundos(FOCUS_MIN * 60); }}
+                    style={{ display: "flex", alignItems: "center", gap: 8, background: GLASS, color: PAPER, border: `1.5px solid ${RULE_DARK}`, borderRadius: 999, padding: "10px 18px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+                  >
+                    <RotateCcw style={{ width: 14, height: 14 }} />
+                    Reiniciar
+                  </button>
+                </div>
+              </div>
 
-            <div style={{ display: "flex", gap: 10 }}>
-              <button
-                onClick={() => setCorriendo((c) => !c)}
-                style={{ display: "flex", alignItems: "center", gap: 8, background: LAMP, color: NIGHT_TOP, border: "none", borderRadius: 999, padding: "11px 24px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}
-              >
-                {corriendo ? <Pause style={{ width: 15, height: 15 }} /> : <Play style={{ width: 15, height: 15 }} />}
-                {corriendo ? "Pausar" : "Empezar"}
-              </button>
-              <button
-                onClick={() => { setCorriendo(false); setEnFoco(true); setSegundos(FOCUS_MIN * 60); }}
-                style={{ display: "flex", alignItems: "center", gap: 8, background: "transparent", color: PAPER, border: `1.5px solid ${RULE_DARK}`, borderRadius: 999, padding: "11px 18px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
-              >
-                <RotateCcw style={{ width: 14, height: 14 }} />
-                Reiniciar
-              </button>
-            </div>
+              {/* Tareas */}
+              <ListaTareas />
 
-            {/* Presencia — luces suaves, no una lista de formulario */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, maxWidth: 560 }}>
-              <p style={{ fontSize: 12.5, letterSpacing: "0.1em", textTransform: "uppercase", color: INK_SOFT_LIGHT, margin: 0 }}>
-                {presentes.length} {presentes.length === 1 ? "estudiando ahora" : "estudiando ahora contigo"}
-              </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center" }}>
+              {/* Presencia */}
+              <div style={{ background: GLASS, backdropFilter: "blur(8px)", border: `1px solid ${RULE_DARK}`, borderRadius: 14, padding: "18px 20px", width: 240 }}>
+                <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: LAMP, margin: "0 0 12px" }}>
+                  {presentes.length} estudiando ahora
+                </p>
                 {presentes.length === 0 ? (
-                  <span style={{ fontSize: 13, color: INK_SOFT_LIGHT, fontStyle: "italic" }}>Eres el primero en esta sala — igual cuenta.</span>
+                  <p style={{ fontSize: 12.5, color: INK_SOFT_LIGHT, margin: 0, fontStyle: "italic" }}>Eres el primero — igual cuenta.</p>
                 ) : (
-                  presentes.map((p, i) => (
-                    <div
-                      key={i}
-                      title={p.subject || p.displayName}
-                      style={{
-                        display: "flex", alignItems: "center", gap: 8, background: "rgba(251,246,236,.07)",
-                        border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "7px 14px 7px 8px",
-                      }}
-                    >
-                      <span style={{
-                        width: 22, height: 22, borderRadius: "50%", background: LAMP_SOFT, color: NIGHT_TOP,
-                        fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center",
-                        boxShadow: `0 0 10px ${LAMP}88`,
-                      }}>
-                        {p.displayName.trim().charAt(0).toUpperCase() || "?"}
-                      </span>
-                      <span style={{ fontSize: 13, fontWeight: 600 }}>{p.displayName}</span>
-                      {p.subject && <span style={{ fontSize: 12, color: INK_SOFT_LIGHT }}>· {p.subject}</span>}
-                    </div>
-                  ))
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 160, overflowY: "auto" }}>
+                    {presentes.map((p, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <span style={{
+                          width: 20, height: 20, borderRadius: "50%", background: LAMP_SOFT, color: "#0B1526",
+                          fontSize: 10, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                          boxShadow: `0 0 8px ${LAMP}88`,
+                        }}>
+                          {p.displayName.trim().charAt(0).toUpperCase() || "?"}
+                        </span>
+                        <span style={{ fontSize: 13, fontWeight: 600, flex: 1 }}>{p.displayName}</span>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
           </div>
         )}
 
-        <footer style={{ padding: "20px 24px", textAlign: "center" }}>
-          <p style={{ fontSize: 12, color: INK_SOFT_LIGHT, margin: 0 }}>Barkley Online · The Barkley Online School</p>
+        <footer style={{ padding: "16px 24px", textAlign: "center" }}>
+          <p style={{ fontSize: 11.5, color: INK_SOFT_LIGHT, margin: 0, textShadow: "0 1px 4px rgba(0,0,0,.5)" }}>Barkley Online · The Barkley Online School</p>
         </footer>
       </div>
     </div>
