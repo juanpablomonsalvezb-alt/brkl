@@ -207,8 +207,10 @@ export default function Together() {
   }, [musica]);
 
   const portadaRef = useRef<HTMLVideoElement>(null);
+  const salaVideoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
-    if (!unido) portadaRef.current?.play().catch(() => {});
+    if (unido) salaVideoRef.current?.play().catch(() => {});
+    else portadaRef.current?.play().catch(() => {});
   }, [unido]);
 
   const emailValido = /^[^\s@]+@gmail\.com$/i.test(email.trim());
@@ -278,10 +280,14 @@ export default function Together() {
 
   return (
     <div style={{ position: "relative", minHeight: "100vh", overflow: "hidden", background: "#0B1526", color: PAPER, fontFamily: BODY }}>
-      {/* Video ambiental en loop, de fondo, sin audio — hace fade-in al entrar a la sala */}
+      {/* Video ambiental en loop, de fondo, sin audio — hace fade-in al entrar a la sala.
+          autoPlay solo no dispara el play() de forma confiable en todos los
+          navegadores (visto en móvil), por eso se fuerza vía ref + onCanPlay. */}
       <video
+        ref={salaVideoRef}
         src="/together/man-studying.mp4"
         autoPlay loop muted playsInline
+        onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
         style={{
           position: "fixed", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0,
           opacity: unido && videoVisible ? 1 : 0, transition: "opacity 1.4s ease",
@@ -305,27 +311,27 @@ export default function Together() {
       <audio ref={audioRef} src="/together/lofi-ambiente.mp3" loop />
 
       <div style={{ position: "relative", zIndex: 2, minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-        <header style={{ padding: "20px 24px" }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
-            <a href="/" style={{ display: "flex", alignItems: "center", gap: 11, textDecoration: "none" }}>
-              <div style={{ width: 40, height: 40, background: PAPER, borderRadius: 5, color: "#0B1526", fontWeight: 700, fontSize: 15, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: DISPLAY }}>BK</div>
-              <span style={{ fontWeight: 500, color: PAPER, fontSize: 14, lineHeight: 1.25, textShadow: "0 1px 4px rgba(0,0,0,.5)" }}>The Barkley<br />Online School</span>
+        <header style={{ padding: "clamp(14px,3vw,20px) clamp(16px,4vw,24px)" }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+            <a href="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
+              <div style={{ width: 34, height: 34, background: PAPER, borderRadius: 5, color: "#0B1526", fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: DISPLAY, flexShrink: 0 }}>BK</div>
+              <span style={{ fontWeight: 500, color: PAPER, fontSize: 13, whiteSpace: "nowrap", textShadow: "0 1px 4px rgba(0,0,0,.5)" }}>Barkley Online</span>
             </a>
-            <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ display: "flex", gap: 8 }}>
               {unido && (
                 <button
                   onClick={() => setUnido(false)}
-                  style={{ display: "flex", alignItems: "center", gap: 7, background: GLASS, backdropFilter: "blur(6px)", color: PAPER, border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "9px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+                  style={{ display: "flex", alignItems: "center", gap: 6, background: GLASS, backdropFilter: "blur(6px)", color: PAPER, border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "8px 13px", fontSize: 12.5, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
                 >
-                  <ArrowLeft style={{ width: 14, height: 14 }} /> Salir
+                  <ArrowLeft style={{ width: 13, height: 13 }} /> Salir
                 </button>
               )}
               <button
                 onClick={() => setMusica((m) => !m)}
-                style={{ display: "flex", alignItems: "center", gap: 7, background: GLASS, backdropFilter: "blur(6px)", color: PAPER, border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "9px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+                style={{ display: "flex", alignItems: "center", gap: 6, background: GLASS, backdropFilter: "blur(6px)", color: PAPER, border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "8px 13px", fontSize: 12.5, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
               >
-                {musica ? <Music style={{ width: 14, height: 14 }} /> : <VolumeX style={{ width: 14, height: 14 }} />}
-                {musica ? "Música: on" : "Música ambiental"}
+                {musica ? <Music style={{ width: 13, height: 13 }} /> : <VolumeX style={{ width: 13, height: 13 }} />}
+                {musica ? "Música: on" : "Música"}
               </button>
             </div>
           </div>
