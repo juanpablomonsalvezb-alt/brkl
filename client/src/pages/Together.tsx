@@ -21,7 +21,7 @@
  * Marcado explícito acá para que quede claro qué es real y qué no.
  */
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Play, Pause, RotateCcw, Music, VolumeX, ArrowLeft, Plus, X, Check, Users, Volume2 } from "lucide-react";
+import { Play, Pause, RotateCcw, Music, VolumeX, ArrowLeft, Plus, X, Check, Users, Volume2, Image } from "lucide-react";
 
 const LAMP = "#F2B84B";
 const LAMP_SOFT = "#E0A02E";
@@ -240,6 +240,17 @@ export default function Together() {
   useEffect(() => localStorage.setItem("together_escena", escenaId), [escenaId]);
   const escena = ESCENAS.find((e) => e.id === escenaId)!;
 
+  const [escenaAbierta, setEscenaAbierta] = useState(false);
+  const escenaMenuRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!escenaAbierta) return;
+    const cerrar = (e: MouseEvent) => {
+      if (escenaMenuRef.current && !escenaMenuRef.current.contains(e.target as Node)) setEscenaAbierta(false);
+    };
+    document.addEventListener("mousedown", cerrar);
+    return () => document.removeEventListener("mousedown", cerrar);
+  }, [escenaAbierta]);
+
   // Mezclador — cada sonido se prende/apaga independiente, varios a la vez
   const [sonidosActivos, setSonidosActivos] = useState<Set<SonidoId>>(new Set());
   const [mezcladorAbierto, setMezcladorAbierto] = useState(false);
@@ -398,6 +409,35 @@ export default function Together() {
                   <ArrowLeft style={{ width: 13, height: 13 }} /> Salir
                 </button>
               )}
+              {unido && (
+                <div ref={escenaMenuRef} style={{ position: "relative" }}>
+                  <button
+                    onClick={() => setEscenaAbierta((m) => !m)}
+                    style={{ display: "flex", alignItems: "center", gap: 6, background: GLASS, backdropFilter: "blur(6px)", color: PAPER, border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "8px 13px", fontSize: 12.5, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
+                  >
+                    <Image style={{ width: 13, height: 13 }} /> {escena.nombre}
+                  </button>
+                  {escenaAbierta && (
+                    <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, background: GLASS, backdropFilter: "blur(12px)", border: `1px solid ${RULE_DARK}`, borderRadius: 12, padding: 10, display: "flex", gap: 8, zIndex: 10 }}>
+                      {ESCENAS.map((e) => (
+                        <button
+                          key={e.id}
+                          onClick={() => { setEscenaId(e.id); setEscenaAbierta(false); }}
+                          style={{
+                            padding: 0, borderRadius: 8, overflow: "hidden", cursor: "pointer", width: 68,
+                            border: `2px solid ${escenaId === e.id ? LAMP : "transparent"}`, background: "none",
+                          }}
+                        >
+                          <img src={e.thumb} alt={e.nombre} style={{ width: "100%", height: 40, objectFit: "cover", display: "block" }} />
+                          <span style={{ display: "block", fontSize: 10, fontWeight: 600, color: escenaId === e.id ? LAMP : INK_SOFT_LIGHT, padding: "3px 0", background: "rgba(0,0,0,.35)" }}>
+                            {e.nombre}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
               <div ref={mezcladorRef} style={{ position: "relative" }}>
                 <button
                   onClick={() => setMezcladorAbierto((m) => !m)}
@@ -480,29 +520,8 @@ export default function Together() {
                   onChange={(e) => setMateria(e.target.value)}
                   placeholder="¿Qué vas a estudiar? (opcional)"
                   maxLength={60}
-                  style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${RULE_DARK}`, fontFamily: BODY, fontSize: 15, marginBottom: 14, background: "rgba(0,0,0,.3)", color: PAPER }}
+                  style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${RULE_DARK}`, fontFamily: BODY, fontSize: 15, marginBottom: 18, background: "rgba(0,0,0,.3)", color: PAPER }}
                 />
-
-                <p style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: INK_SOFT_LIGHT, margin: "0 0 8px" }}>
-                  Elige tu escritorio
-                </p>
-                <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
-                  {ESCENAS.map((e) => (
-                    <button
-                      key={e.id}
-                      onClick={() => setEscenaId(e.id)}
-                      style={{
-                        flex: 1, padding: 0, borderRadius: 10, overflow: "hidden", cursor: "pointer",
-                        border: `2px solid ${escenaId === e.id ? LAMP : "transparent"}`, background: "none",
-                      }}
-                    >
-                      <img src={e.thumb} alt={e.nombre} style={{ width: "100%", height: 44, objectFit: "cover", display: "block" }} />
-                      <span style={{ display: "block", fontSize: 10.5, fontWeight: 600, color: escenaId === e.id ? LAMP : INK_SOFT_LIGHT, padding: "3px 0", background: "rgba(0,0,0,.35)" }}>
-                        {e.nombre}
-                      </span>
-                    </button>
-                  ))}
-                </div>
 
                 <button
                   onClick={() => puedeUnirse && setUnido(true)}
