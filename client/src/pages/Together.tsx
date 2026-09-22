@@ -253,6 +253,11 @@ export default function Together() {
     });
   };
 
+  const detenerTodo = () => {
+    SONIDOS.forEach((s) => audioRefs.current[s.id]?.pause());
+    setSonidosActivos(new Set());
+  };
+
   const portadaRef = useRef<HTMLVideoElement>(null);
   const salaVideoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
@@ -381,10 +386,12 @@ export default function Together() {
                   style={{ display: "flex", alignItems: "center", gap: 6, background: GLASS, backdropFilter: "blur(6px)", color: PAPER, border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "8px 13px", fontSize: 12.5, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
                 >
                   {sonidosActivos.size > 0 ? <Music style={{ width: 13, height: 13 }} /> : <VolumeX style={{ width: 13, height: 13 }} />}
-                  {sonidosActivos.size > 0 ? `Sonido: ${sonidosActivos.size}` : "Sonido"}
+                  {sonidosActivos.size > 0
+                    ? SONIDOS.filter((s) => sonidosActivos.has(s.id)).map((s) => s.label).join(" + ")
+                    : "Sonido"}
                 </button>
                 {mezcladorAbierto && (
-                  <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, background: GLASS, backdropFilter: "blur(12px)", border: `1px solid ${RULE_DARK}`, borderRadius: 12, padding: 10, display: "flex", flexDirection: "column", gap: 4, minWidth: 160, zIndex: 10 }}>
+                  <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, background: GLASS, backdropFilter: "blur(12px)", border: `1px solid ${RULE_DARK}`, borderRadius: 12, padding: 10, display: "flex", flexDirection: "column", gap: 4, minWidth: 170, zIndex: 10 }}>
                     <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: LAMP, margin: "2px 6px 6px" }}>Mezclador</p>
                     {SONIDOS.map((s) => {
                       const activo = sonidosActivos.has(s.id);
@@ -402,6 +409,14 @@ export default function Together() {
                         </button>
                       );
                     })}
+                    {sonidosActivos.size > 0 && (
+                      <button
+                        onClick={detenerTodo}
+                        style={{ marginTop: 4, background: "none", border: `1px solid ${RULE_DARK}`, borderRadius: 8, padding: "6px 8px", fontSize: 12, color: INK_SOFT_LIGHT, cursor: "pointer" }}
+                      >
+                        Detener todo
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
