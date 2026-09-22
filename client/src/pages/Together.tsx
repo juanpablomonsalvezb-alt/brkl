@@ -1,20 +1,27 @@
 /**
  * Together — sala de estudio en silencio (body doubling). Video real en loop
- * de fondo (generado, sin audio) + música lofi opcional aparte, con los
- * widgets que los sitios reales del género traen (StudyStream, StudyClock,
- * LofiSpace): timer Pomodoro, presencia de otros estudiantes y lista de
- * tareas. Nada de esto es original — es lo que ya existe afuera, adaptado.
+ * de fondo (generado, sin audio) + música lofi opcional aparte. Widgets en
+ * un dock inferior compacto para dejar el centro de la pantalla despejado
+ * (el video es el protagonista, no el UI). Al entrar, el video hace fade-in
+ * detrás de los widgets — nunca aparece de golpe.
  *
  * Correo @gmail.com obligatorio para entrar (sin contraseña, no es login):
  * es la captación de lead de la campaña hasta marzo 2027. El clientId sigue
  * siendo el único identificador anónimo en localStorage frente al servidor.
  *
- * Nivel 1 del prototipo: heartbeat cada 15s a /api/together/heartbeat,
- * presencia leída cada 5s desde /api/together/presence. Lista de tareas
- * es puramente local (localStorage) — no hay backend de tareas todavía.
+ * Duración: 30/60/90/120 min, sin ciclo de pausa automática — sesión única
+ * que cuenta hacia atrás, coherente con "cuánto voy a estudiar hoy" en vez
+ * de forzar el ritmo Pomodoro de 25/5 a todo el mundo.
+ *
+ * Presencia: la real (heartbeat/DB) se completa con nombres y materias
+ * FICTICIOS cuando hay poca gente real conectada, para que la sala nunca
+ * se sienta vacía — mismo patrón de "actividad ambiental" que usan varias
+ * plataformas de este tipo. Se regenera cada ~40s con una semilla por
+ * bloque de tiempo (no random puro), así no cambia de golpe en cada poll.
+ * Marcado explícito acá para que quede claro qué es real y qué no.
  */
-import { useEffect, useRef, useState } from "react";
-import { Play, Pause, RotateCcw, Music, VolumeX, ArrowLeft, Plus, X, Check } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Play, Pause, RotateCcw, Music, VolumeX, ArrowLeft, Plus, X, Check, Users } from "lucide-react";
 
 const LAMP = "#F2B84B";
 const LAMP_SOFT = "#E0A02E";
@@ -23,13 +30,12 @@ const INK_SOFT_LIGHT = "rgba(251,246,236,.7)";
 const RED = "#C8402F";
 const SAGE = "#7FCB9E";
 const RULE_DARK = "rgba(251,246,236,.18)";
-const GLASS = "rgba(11,21,38,.55)";
+const GLASS = "rgba(11,21,38,.6)";
 
 const DISPLAY = "'Fraunces', Georgia, serif";
 const BODY = "'Lexend', system-ui, sans-serif";
 
-const FOCUS_MIN = 25;
-const BREAK_MIN = 5;
+const DURACIONES = [30, 60, 90, 120]; // minutos
 
 function getClientId() {
   const key = "together_client_id";
@@ -59,26 +65,52 @@ function useTareas() {
   return { tareas, setTareas };
 }
 
-function Anillo({ segundos, total, enFoco }: { segundos: number; total: number; enFoco: boolean }) {
-  const r = 78;
+/* Presencia simulada — nombres y materias ficticios para que la sala nunca
+   se sienta vacía. PRNG con semilla (LCG simple) en vez de Math.random()
+   puro: así la composición solo cambia cada ~40s, no en cada re-render. */
+const NOMBRES_FICTICIOS = [
+  "Martina", "Benjamín", "Antonia", "Vicente", "Isidora", "Matías", "Florencia",
+  "Joaquín", "Catalina", "Agustín", "Josefa", "Tomás", "Constanza", "Diego",
+  "Valentina", "Cristóbal", "Emilia", "Sebastián", "Amanda", "Nicolás",
+];
+const MATERIAS_FICTICIAS = [
+  "Matemáticas", "Lenguaje", "Historia", "Ciencias", "Inglés", "PAES",
+  "Física", "Química", "Biología", "Filosofía",
+];
+
+function seedRandom(seed: number) {
+  let s = seed % 2147483647;
+  if (s <= 0) s += 2147483646;
+  return () => (s = (s * 16807) % 2147483647) / 2147483647;
+}
+
+function presenciaSimulada(): Presencia[] {
+  const bloque = Math.floor(Date.now() / 40_000); // cambia cada ~40s
+  const rand = seedRandom(bloque);
+  const cantidad = 2 + Math.floor(rand() * 4); // 2 a 5
+  const nombres = [...NOMBRES_FICTICIOS].sort(() => rand() - 0.5).slice(0, cantidad);
+  return nombres.map((n) => ({
+    displayName: n,
+    subject: rand() > 0.15 ? MATERIAS_FICTICIAS[Math.floor(rand() * MATERIAS_FICTICIAS.length)] : undefined,
+  }));
+}
+
+function Anillo({ segundos, total }: { segundos: number; total: number }) {
+  const r = 46;
   const c = 2 * Math.PI * r;
-  const pct = 1 - segundos / total;
-  const color = enFoco ? LAMP : SAGE;
+  const pct = total > 0 ? 1 - segundos / total : 0;
   const mm = String(Math.floor(segundos / 60)).padStart(2, "0");
   const ss = String(segundos % 60).padStart(2, "0");
   return (
-    <svg width={190} height={190} viewBox="0 0 190 190" style={{ filter: `drop-shadow(0 0 20px ${color}55)` }}>
-      <circle cx={95} cy={95} r={r} fill="none" stroke="rgba(251,246,236,.12)" strokeWidth={7} />
+    <svg width={110} height={110} viewBox="0 0 110 110" style={{ filter: `drop-shadow(0 0 14px ${LAMP}55)`, flexShrink: 0 }}>
+      <circle cx={55} cy={55} r={r} fill="none" stroke="rgba(251,246,236,.12)" strokeWidth={6} />
       <circle
-        cx={95} cy={95} r={r} fill="none" stroke={color} strokeWidth={7} strokeLinecap="round"
+        cx={55} cy={55} r={r} fill="none" stroke={LAMP} strokeWidth={6} strokeLinecap="round"
         strokeDasharray={c} strokeDashoffset={c * (1 - pct)}
-        transform="rotate(-90 95 95)"
+        transform="rotate(-90 55 55)"
         style={{ transition: "stroke-dashoffset 1s linear" }}
       />
-      <text x="95" y="88" textAnchor="middle" fontFamily={DISPLAY} fontSize={34} fontWeight={500} fill={PAPER}>{mm}:{ss}</text>
-      <text x="95" y="112" textAnchor="middle" fontFamily={BODY} fontSize={10} letterSpacing="2" fill={color} style={{ textTransform: "uppercase" }}>
-        {enFoco ? "Foco" : "Pausa"}
-      </text>
+      <text x="55" y="60" textAnchor="middle" fontFamily={DISPLAY} fontSize={19} fontWeight={500} fill={PAPER}>{mm}:{ss}</text>
     </svg>
   );
 }
@@ -95,44 +127,44 @@ function ListaTareas() {
   };
 
   return (
-    <div style={{ background: GLASS, backdropFilter: "blur(8px)", border: `1px solid ${RULE_DARK}`, borderRadius: 14, padding: "18px 20px", width: 280 }}>
-      <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: LAMP, margin: "0 0 12px" }}>
+    <div style={{ background: GLASS, backdropFilter: "blur(10px)", border: `1px solid ${RULE_DARK}`, borderRadius: 14, padding: "14px 16px", width: 260 }}>
+      <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: LAMP, margin: "0 0 10px" }}>
         Lo que voy a hacer
       </p>
-      <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
+      <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
         <input
           value={nueva}
           onChange={(e) => setNueva(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && agregar()}
           placeholder="Agregar tarea…"
           maxLength={80}
-          style={{ flex: 1, padding: "8px 10px", borderRadius: 8, border: `1px solid ${RULE_DARK}`, background: "rgba(0,0,0,.25)", color: PAPER, fontFamily: BODY, fontSize: 13 }}
+          style={{ flex: 1, padding: "7px 10px", borderRadius: 8, border: `1px solid ${RULE_DARK}`, background: "rgba(0,0,0,.25)", color: PAPER, fontFamily: BODY, fontSize: 12.5 }}
         />
-        <button onClick={agregar} style={{ background: LAMP, border: "none", borderRadius: 8, width: 32, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-          <Plus style={{ width: 16, height: 16, color: "#0B1526" }} />
+        <button onClick={agregar} style={{ background: LAMP, border: "none", borderRadius: 8, width: 30, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+          <Plus style={{ width: 15, height: 15, color: "#0B1526" }} />
         </button>
       </div>
       {tareas.length === 0 ? (
-        <p style={{ fontSize: 12.5, color: INK_SOFT_LIGHT, margin: 0, fontStyle: "italic" }}>Sin tareas todavía.</p>
+        <p style={{ fontSize: 12, color: INK_SOFT_LIGHT, margin: 0, fontStyle: "italic" }}>Sin tareas todavía.</p>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 160, overflowY: "auto" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 110, overflowY: "auto" }}>
           {tareas.map((t) => (
-            <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 7 }}>
               <button
                 onClick={() => setTareas((ts) => ts.map((x) => (x.id === t.id ? { ...x, hecha: !x.hecha } : x)))}
                 style={{
-                  width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${t.hecha ? SAGE : RULE_DARK}`,
+                  width: 16, height: 16, borderRadius: 5, border: `1.5px solid ${t.hecha ? SAGE : RULE_DARK}`,
                   background: t.hecha ? SAGE : "transparent", display: "flex", alignItems: "center", justifyContent: "center",
                   cursor: "pointer", flexShrink: 0,
                 }}
               >
-                {t.hecha && <Check style={{ width: 12, height: 12, color: "#0B1526" }} />}
+                {t.hecha && <Check style={{ width: 10, height: 10, color: "#0B1526" }} />}
               </button>
-              <span style={{ fontSize: 13, flex: 1, color: t.hecha ? INK_SOFT_LIGHT : PAPER, textDecoration: t.hecha ? "line-through" : "none" }}>
+              <span style={{ fontSize: 12.5, flex: 1, color: t.hecha ? INK_SOFT_LIGHT : PAPER, textDecoration: t.hecha ? "line-through" : "none" }}>
                 {t.texto}
               </span>
               <button onClick={() => setTareas((ts) => ts.filter((x) => x.id !== t.id))} style={{ background: "none", border: "none", cursor: "pointer", opacity: 0.5, display: "flex" }}>
-                <X style={{ width: 13, height: 13, color: PAPER }} />
+                <X style={{ width: 12, height: 12, color: PAPER }} />
               </button>
             </div>
           ))}
@@ -162,7 +194,9 @@ export default function Together() {
   const [email, setEmail] = useState("");
   const [materia, setMateria] = useState("");
   const [unido, setUnido] = useState(false);
-  const [presentes, setPresentes] = useState<Presencia[]>([]);
+  const [videoVisible, setVideoVisible] = useState(false);
+  const [presentesReal, setPresentesReal] = useState<Presencia[]>([]);
+  const [presentesFicticios, setPresentesFicticios] = useState<Presencia[]>(presenciaSimulada());
   const [musica, setMusica] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -175,27 +209,33 @@ export default function Together() {
   const emailValido = /^[^\s@]+@gmail\.com$/i.test(email.trim());
   const puedeUnirse = nombre.trim().length > 0 && emailValido;
 
-  const [enFoco, setEnFoco] = useState(true);
-  const totalActual = (enFoco ? FOCUS_MIN : BREAK_MIN) * 60;
-  const [segundos, setSegundos] = useState(FOCUS_MIN * 60);
+  const [duracionMin, setDuracionMin] = useState(30);
+  const total = duracionMin * 60;
+  const [segundos, setSegundos] = useState(30 * 60);
   const [corriendo, setCorriendo] = useState(false);
 
   const heartbeatRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const ficticiosRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (!corriendo) return;
     const t = setInterval(() => {
-      setSegundos((s) => {
-        if (s <= 1) {
-          setEnFoco((f) => !f);
-          return (enFoco ? BREAK_MIN : FOCUS_MIN) * 60;
-        }
-        return s - 1;
-      });
+      setSegundos((s) => (s <= 1 ? 0 : s - 1));
     }, 1000);
     return () => clearInterval(t);
-  }, [corriendo, enFoco]);
+  }, [corriendo]);
+
+  useEffect(() => {
+    if (segundos === 0) setCorriendo(false);
+  }, [segundos]);
+
+  // Fade-in del video al entrar a la sala
+  useEffect(() => {
+    if (!unido) { setVideoVisible(false); return; }
+    const t = setTimeout(() => setVideoVisible(true), 60);
+    return () => clearTimeout(t);
+  }, [unido]);
 
   useEffect(() => {
     if (!unido) return;
@@ -211,30 +251,42 @@ export default function Together() {
     const consultar = () => {
       fetch("/api/together/presence")
         .then((r) => r.json())
-        .then(setPresentes)
+        .then(setPresentesReal)
         .catch(() => {});
     };
 
     latir();
     consultar();
+    setPresentesFicticios(presenciaSimulada());
     heartbeatRef.current = setInterval(latir, 15_000);
     pollRef.current = setInterval(consultar, 5_000);
+    ficticiosRef.current = setInterval(() => setPresentesFicticios(presenciaSimulada()), 40_000);
 
     return () => {
       if (heartbeatRef.current) clearInterval(heartbeatRef.current);
       if (pollRef.current) clearInterval(pollRef.current);
+      if (ficticiosRef.current) clearInterval(ficticiosRef.current);
     };
   }, [unido, nombre, email, materia]);
 
+  const presentes = useMemo(() => [...presentesReal, ...presentesFicticios], [presentesReal, presentesFicticios]);
+
   return (
     <div style={{ position: "relative", minHeight: "100vh", overflow: "hidden", background: "#0B1526", color: PAPER, fontFamily: BODY }}>
-      {/* Video ambiental en loop, de fondo, sin audio */}
+      {/* Video ambiental en loop, de fondo, sin audio — hace fade-in al entrar a la sala */}
       <video
         src="/together/man-studying.mp4"
         autoPlay loop muted playsInline
-        style={{ position: "fixed", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
+        style={{
+          position: "fixed", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0,
+          opacity: unido && videoVisible ? 1 : 0, transition: "opacity 1.4s ease",
+        }}
       />
-      <div style={{ position: "fixed", inset: 0, background: "linear-gradient(180deg, rgba(11,21,38,.55) 0%, rgba(11,21,38,.35) 40%, rgba(11,21,38,.75) 100%)", zIndex: 1 }} />
+      {/* Imagen de portada para la pantalla de ingreso — pendiente: usuario la provee */}
+      {!unido && (
+        <div style={{ position: "fixed", inset: 0, backgroundImage: "url(/together/portada.jpg)", backgroundSize: "cover", backgroundPosition: "center", zIndex: 0 }} />
+      )}
+      <div style={{ position: "fixed", inset: 0, background: "linear-gradient(180deg, rgba(11,21,38,.55) 0%, rgba(11,21,38,.3) 45%, rgba(11,21,38,.8) 100%)", zIndex: 1 }} />
 
       {/* Música lofi real, separada del video — apagada por defecto */}
       <audio ref={audioRef} src="/together/lofi-ambiente.mp3" loop />
@@ -246,13 +298,23 @@ export default function Together() {
               <div style={{ width: 40, height: 40, background: PAPER, borderRadius: 5, color: "#0B1526", fontWeight: 700, fontSize: 15, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: DISPLAY }}>BK</div>
               <span style={{ fontWeight: 500, color: PAPER, fontSize: 14, lineHeight: 1.25, textShadow: "0 1px 4px rgba(0,0,0,.5)" }}>The Barkley<br />Online School</span>
             </a>
-            <button
-              onClick={() => setMusica((m) => !m)}
-              style={{ display: "flex", alignItems: "center", gap: 7, background: GLASS, backdropFilter: "blur(6px)", color: PAPER, border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "9px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
-            >
-              {musica ? <Music style={{ width: 14, height: 14 }} /> : <VolumeX style={{ width: 14, height: 14 }} />}
-              {musica ? "Música: on" : "Música ambiental"}
-            </button>
+            <div style={{ display: "flex", gap: 10 }}>
+              {unido && (
+                <button
+                  onClick={() => setUnido(false)}
+                  style={{ display: "flex", alignItems: "center", gap: 7, background: GLASS, backdropFilter: "blur(6px)", color: PAPER, border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "9px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+                >
+                  <ArrowLeft style={{ width: 14, height: 14 }} /> Salir
+                </button>
+              )}
+              <button
+                onClick={() => setMusica((m) => !m)}
+                style={{ display: "flex", alignItems: "center", gap: 7, background: GLASS, backdropFilter: "blur(6px)", color: PAPER, border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "9px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+              >
+                {musica ? <Music style={{ width: 14, height: 14 }} /> : <VolumeX style={{ width: 14, height: 14 }} />}
+                {musica ? "Música: on" : "Música ambiental"}
+              </button>
+            </div>
           </div>
         </header>
 
@@ -311,70 +373,84 @@ export default function Together() {
             </div>
           </div>
         ) : (
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: "24px" }}>
-            <button
-              onClick={() => setUnido(false)}
-              style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: PAPER, fontSize: 13, cursor: "pointer", alignSelf: "flex-start", textShadow: "0 1px 4px rgba(0,0,0,.5)" }}
-            >
-              <ArrowLeft style={{ width: 14, height: 14 }} /> Salir de la sala
-            </button>
+          <>
+            {/* Centro completamente despejado — el video es el protagonista */}
+            <div style={{ flex: 1 }} />
 
-            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "clamp(20px,4vw,48px)", flexWrap: "wrap" }}>
-              {/* Timer */}
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-                <Anillo segundos={segundos} total={totalActual} enFoco={enFoco} />
-                <div style={{ display: "flex", gap: 10 }}>
-                  <button
-                    onClick={() => setCorriendo((c) => !c)}
-                    style={{ display: "flex", alignItems: "center", gap: 8, background: LAMP, color: "#0B1526", border: "none", borderRadius: 999, padding: "10px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}
-                  >
-                    {corriendo ? <Pause style={{ width: 15, height: 15 }} /> : <Play style={{ width: 15, height: 15 }} />}
-                    {corriendo ? "Pausar" : "Empezar"}
-                  </button>
-                  <button
-                    onClick={() => { setCorriendo(false); setEnFoco(true); setSegundos(FOCUS_MIN * 60); }}
-                    style={{ display: "flex", alignItems: "center", gap: 8, background: GLASS, color: PAPER, border: `1.5px solid ${RULE_DARK}`, borderRadius: 999, padding: "10px 18px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
-                  >
-                    <RotateCcw style={{ width: 14, height: 14 }} />
-                    Reiniciar
-                  </button>
+            {/* Dock inferior con los 3 widgets, compacto */}
+            <div style={{ padding: "16px 24px 20px", display: "flex", justifyContent: "center" }}>
+              <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "flex-end", justifyContent: "center", maxWidth: 900 }}>
+                {/* Timer */}
+                <div style={{ background: GLASS, backdropFilter: "blur(10px)", border: `1px solid ${RULE_DARK}`, borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", gap: 14 }}>
+                  <Anillo segundos={segundos} total={total} />
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    <div style={{ display: "flex", gap: 4 }}>
+                      {DURACIONES.map((d) => (
+                        <button
+                          key={d}
+                          onClick={() => { if (corriendo) return; setDuracionMin(d); setSegundos(d * 60); }}
+                          disabled={corriendo}
+                          style={{
+                            padding: "4px 8px", borderRadius: 6, fontSize: 11, fontWeight: 700,
+                            background: duracionMin === d ? LAMP : "rgba(251,246,236,.1)",
+                            color: duracionMin === d ? "#0B1526" : PAPER,
+                            border: "none", cursor: corriendo ? "default" : "pointer", opacity: corriendo && duracionMin !== d ? 0.4 : 1,
+                          }}
+                        >
+                          {d < 60 ? `${d}m` : `${Math.floor(d / 60)}h${d % 60 ? "30" : ""}`}
+                        </button>
+                      ))}
+                    </div>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <button
+                        onClick={() => setCorriendo((c) => !c)}
+                        style={{ display: "flex", alignItems: "center", gap: 6, background: LAMP, color: "#0B1526", border: "none", borderRadius: 999, padding: "6px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
+                      >
+                        {corriendo ? <Pause style={{ width: 12, height: 12 }} /> : <Play style={{ width: 12, height: 12 }} />}
+                        {corriendo ? "Pausar" : "Empezar"}
+                      </button>
+                      <button
+                        onClick={() => { setCorriendo(false); setSegundos(duracionMin * 60); }}
+                        style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(251,246,236,.1)", color: PAPER, border: "none", borderRadius: 999, padding: "6px 10px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}
+                      >
+                        <RotateCcw style={{ width: 12, height: 12 }} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Tareas */}
-              <ListaTareas />
+                {/* Tareas */}
+                <ListaTareas />
 
-              {/* Presencia */}
-              <div style={{ background: GLASS, backdropFilter: "blur(8px)", border: `1px solid ${RULE_DARK}`, borderRadius: 14, padding: "18px 20px", width: 240 }}>
-                <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: LAMP, margin: "0 0 12px" }}>
-                  {presentes.length} estudiando ahora
-                </p>
-                {presentes.length === 0 ? (
-                  <p style={{ fontSize: 12.5, color: INK_SOFT_LIGHT, margin: 0, fontStyle: "italic" }}>Eres el primero — igual cuenta.</p>
-                ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 160, overflowY: "auto" }}>
+                {/* Presencia */}
+                <div style={{ background: GLASS, backdropFilter: "blur(10px)", border: `1px solid ${RULE_DARK}`, borderRadius: 14, padding: "12px 16px", width: 200 }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: LAMP, margin: "0 0 8px", display: "flex", alignItems: "center", gap: 6 }}>
+                    <Users style={{ width: 12, height: 12 }} /> {presentes.length} estudiando
+                  </p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 90, overflowY: "auto" }}>
                     {presentes.map((p, i) => (
-                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 7 }}>
                         <span style={{
-                          width: 20, height: 20, borderRadius: "50%", background: LAMP_SOFT, color: "#0B1526",
-                          fontSize: 10, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-                          boxShadow: `0 0 8px ${LAMP}88`,
+                          width: 16, height: 16, borderRadius: "50%", background: LAMP_SOFT, color: "#0B1526",
+                          fontSize: 9, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                         }}>
                           {p.displayName.trim().charAt(0).toUpperCase() || "?"}
                         </span>
-                        <span style={{ fontSize: 13, fontWeight: 600, flex: 1 }}>{p.displayName}</span>
+                        <span style={{ fontSize: 12, fontWeight: 600, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.displayName}</span>
                       </div>
                     ))}
                   </div>
-                )}
+                </div>
               </div>
             </div>
-          </div>
+          </>
         )}
 
-        <footer style={{ padding: "16px 24px", textAlign: "center" }}>
-          <p style={{ fontSize: 11.5, color: INK_SOFT_LIGHT, margin: 0, textShadow: "0 1px 4px rgba(0,0,0,.5)" }}>Barkley Online · The Barkley Online School</p>
-        </footer>
+        {!unido && (
+          <footer style={{ padding: "16px 24px", textAlign: "center" }}>
+            <p style={{ fontSize: 11.5, color: INK_SOFT_LIGHT, margin: 0, textShadow: "0 1px 4px rgba(0,0,0,.5)" }}>Barkley Online · The Barkley Online School</p>
+          </footer>
+        )}
       </div>
     </div>
   );
