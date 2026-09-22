@@ -1,9 +1,9 @@
 /**
  * Together — sala de estudio en silencio (body doubling). Video real en loop
- * de fondo (generado, sin audio) + música lofi opcional aparte. Widgets en
- * un dock inferior compacto para dejar el centro de la pantalla despejado
- * (el video es el protagonista, no el UI). Al entrar, el video hace fade-in
- * detrás de los widgets — nunca aparece de golpe.
+ * de fondo (generado, sin audio) — el usuario elige entre 4 escritorios
+ * (ESCENAS) antes de entrar, guardado en localStorage. Widgets a los
+ * costados para dejar el centro despejado (el video es el protagonista, no
+ * el UI). Al entrar, el video hace fade-in — nunca aparece de golpe.
  *
  * Correo @gmail.com obligatorio para entrar (sin contraseña, no es login):
  * es la captación de lead de la campaña hasta marzo 2027. El clientId sigue
@@ -45,6 +45,16 @@ const SONIDOS = [
   { id: "chimenea", label: "Chimenea", src: "/together/sonidos/chimenea.mp3" },
 ] as const;
 type SonidoId = (typeof SONIDOS)[number]["id"];
+
+// Escritorios — cada video con su nombre. "Atardecer" es la única escena sin
+// personaje (escritorio vacío), el resto son personas estudiando.
+const ESCENAS = [
+  { id: "diego", nombre: "Diego", src: "/together/man-studying.mp4", thumb: "/together/escenas/thumbs/diego.jpg" },
+  { id: "sofia", nombre: "Sofía", src: "/together/escenas/sofia.mp4", thumb: "/together/escenas/thumbs/sofia.jpg" },
+  { id: "valentina", nombre: "Valentina", src: "/together/escenas/valentina.mp4", thumb: "/together/escenas/thumbs/valentina.jpg" },
+  { id: "atardecer", nombre: "Atardecer", src: "/together/escenas/atardecer.mp4", thumb: "/together/escenas/thumbs/atardecer.jpg" },
+] as const;
+type EscenaId = (typeof ESCENAS)[number]["id"];
 
 function getClientId() {
   const key = "together_client_id";
@@ -223,6 +233,13 @@ export default function Together() {
   const [presentesFicticios, setPresentesFicticios] = useState<Presencia[]>(presenciaSimulada());
   const [frase] = useState(() => FRASES_MOTIVACIONALES[Math.floor(Math.random() * FRASES_MOTIVACIONALES.length)]);
 
+  const [escenaId, setEscenaId] = useState<EscenaId>(() => {
+    const guardada = localStorage.getItem("together_escena") as EscenaId | null;
+    return ESCENAS.some((e) => e.id === guardada) ? (guardada as EscenaId) : "atardecer";
+  });
+  useEffect(() => localStorage.setItem("together_escena", escenaId), [escenaId]);
+  const escena = ESCENAS.find((e) => e.id === escenaId)!;
+
   // Mezclador — cada sonido se prende/apaga independiente, varios a la vez
   const [sonidosActivos, setSonidosActivos] = useState<Set<SonidoId>>(new Set());
   const [mezcladorAbierto, setMezcladorAbierto] = useState(false);
@@ -336,8 +353,9 @@ export default function Together() {
           autoPlay solo no dispara el play() de forma confiable en todos los
           navegadores (visto en móvil), por eso se fuerza vía ref + onCanPlay. */}
       <video
+        key={escenaId}
         ref={salaVideoRef}
-        src="/together/man-studying.mp4"
+        src={escena.src}
         autoPlay loop muted playsInline
         onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
         style={{
@@ -462,8 +480,30 @@ export default function Together() {
                   onChange={(e) => setMateria(e.target.value)}
                   placeholder="¿Qué vas a estudiar? (opcional)"
                   maxLength={60}
-                  style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${RULE_DARK}`, fontFamily: BODY, fontSize: 15, marginBottom: 18, background: "rgba(0,0,0,.3)", color: PAPER }}
+                  style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${RULE_DARK}`, fontFamily: BODY, fontSize: 15, marginBottom: 14, background: "rgba(0,0,0,.3)", color: PAPER }}
                 />
+
+                <p style={{ fontSize: 11.5, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: INK_SOFT_LIGHT, margin: "0 0 8px" }}>
+                  Elige tu escritorio
+                </p>
+                <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
+                  {ESCENAS.map((e) => (
+                    <button
+                      key={e.id}
+                      onClick={() => setEscenaId(e.id)}
+                      style={{
+                        flex: 1, padding: 0, borderRadius: 10, overflow: "hidden", cursor: "pointer",
+                        border: `2px solid ${escenaId === e.id ? LAMP : "transparent"}`, background: "none",
+                      }}
+                    >
+                      <img src={e.thumb} alt={e.nombre} style={{ width: "100%", height: 44, objectFit: "cover", display: "block" }} />
+                      <span style={{ display: "block", fontSize: 10.5, fontWeight: 600, color: escenaId === e.id ? LAMP : INK_SOFT_LIGHT, padding: "3px 0", background: "rgba(0,0,0,.35)" }}>
+                        {e.nombre}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+
                 <button
                   onClick={() => puedeUnirse && setUnido(true)}
                   disabled={!puedeUnirse}
