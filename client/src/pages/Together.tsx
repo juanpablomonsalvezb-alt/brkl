@@ -21,7 +21,7 @@
  * Marcado explícito acá para que quede claro qué es real y qué no.
  */
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Play, Pause, RotateCcw, Music, VolumeX, ArrowLeft, Plus, X, Check, Users } from "lucide-react";
+import { Play, Pause, RotateCcw, Music, VolumeX, ArrowLeft, Plus, X, Check, Users, Volume2 } from "lucide-react";
 
 const LAMP = "#F2B84B";
 const LAMP_SOFT = "#E0A02E";
@@ -36,6 +36,15 @@ const DISPLAY = "'Fraunces', Georgia, serif";
 const BODY = "'Lexend', system-ui, sans-serif";
 
 const DURACIONES = [30, 60, 90, 120]; // minutos
+
+const SONIDOS = [
+  { id: "lofi", label: "Lofi", src: "/together/lofi-ambiente.mp3" },
+  { id: "lluvia", label: "Lluvia", src: "/together/sonidos/lluvia.mp3" },
+  { id: "cafe", label: "Café", src: "/together/sonidos/cafe.mp3" },
+  { id: "mar", label: "Mar", src: "/together/sonidos/mar.mp3" },
+  { id: "chimenea", label: "Chimenea", src: "/together/sonidos/chimenea.mp3" },
+] as const;
+type SonidoId = (typeof SONIDOS)[number]["id"];
 
 function getClientId() {
   const key = "together_client_id";
@@ -212,15 +221,37 @@ export default function Together() {
   const [videoVisible, setVideoVisible] = useState(false);
   const [presentesReal, setPresentesReal] = useState<Presencia[]>([]);
   const [presentesFicticios, setPresentesFicticios] = useState<Presencia[]>(presenciaSimulada());
-  const [musica, setMusica] = useState(false);
   const [frase] = useState(() => FRASES_MOTIVACIONALES[Math.floor(Math.random() * FRASES_MOTIVACIONALES.length)]);
 
-  const audioRef = useRef<HTMLAudioElement>(null);
+  // Mezclador — cada sonido se prende/apaga independiente, varios a la vez
+  const [sonidosActivos, setSonidosActivos] = useState<Set<SonidoId>>(new Set());
+  const [mezcladorAbierto, setMezcladorAbierto] = useState(false);
+  const audioRefs = useRef<Record<SonidoId, HTMLAudioElement | null>>({} as Record<SonidoId, HTMLAudioElement | null>);
+  const mezcladorRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    if (!audioRef.current) return;
-    if (musica) audioRef.current.play().catch(() => {});
-    else audioRef.current.pause();
-  }, [musica]);
+    if (!mezcladorAbierto) return;
+    const cerrar = (e: MouseEvent) => {
+      if (mezcladorRef.current && !mezcladorRef.current.contains(e.target as Node)) setMezcladorAbierto(false);
+    };
+    document.addEventListener("mousedown", cerrar);
+    return () => document.removeEventListener("mousedown", cerrar);
+  }, [mezcladorAbierto]);
+
+  const toggleSonido = (id: SonidoId) => {
+    setSonidosActivos((prev) => {
+      const next = new Set(prev);
+      const el = audioRefs.current[id];
+      if (next.has(id)) {
+        next.delete(id);
+        el?.pause();
+      } else {
+        next.add(id);
+        el?.play().catch(() => {});
+      }
+      return next;
+    });
+  };
 
   const portadaRef = useRef<HTMLVideoElement>(null);
   const salaVideoRef = useRef<HTMLVideoElement>(null);
@@ -323,8 +354,10 @@ export default function Together() {
       )}
       <div style={{ position: "fixed", inset: 0, background: "linear-gradient(180deg, rgba(11,21,38,.55) 0%, rgba(11,21,38,.3) 45%, rgba(11,21,38,.8) 100%)", zIndex: 1 }} />
 
-      {/* Música lofi real, separada del video — apagada por defecto */}
-      <audio ref={audioRef} src="/together/lofi-ambiente.mp3" loop />
+      {/* Mezclador de sonido — cada pista independiente, todas apagadas por defecto */}
+      {SONIDOS.map((s) => (
+        <audio key={s.id} ref={(el) => { audioRefs.current[s.id] = el; }} src={s.src} loop />
+      ))}
 
       <div style={{ position: "relative", zIndex: 2, minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <header style={{ padding: "clamp(14px,3vw,20px) clamp(16px,4vw,24px)" }}>
@@ -342,13 +375,36 @@ export default function Together() {
                   <ArrowLeft style={{ width: 13, height: 13 }} /> Salir
                 </button>
               )}
-              <button
-                onClick={() => setMusica((m) => !m)}
-                style={{ display: "flex", alignItems: "center", gap: 6, background: GLASS, backdropFilter: "blur(6px)", color: PAPER, border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "8px 13px", fontSize: 12.5, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
-              >
-                {musica ? <Music style={{ width: 13, height: 13 }} /> : <VolumeX style={{ width: 13, height: 13 }} />}
-                {musica ? "Música: on" : "Música"}
-              </button>
+              <div ref={mezcladorRef} style={{ position: "relative" }}>
+                <button
+                  onClick={() => setMezcladorAbierto((m) => !m)}
+                  style={{ display: "flex", alignItems: "center", gap: 6, background: GLASS, backdropFilter: "blur(6px)", color: PAPER, border: `1px solid ${RULE_DARK}`, borderRadius: 999, padding: "8px 13px", fontSize: 12.5, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
+                >
+                  {sonidosActivos.size > 0 ? <Music style={{ width: 13, height: 13 }} /> : <VolumeX style={{ width: 13, height: 13 }} />}
+                  {sonidosActivos.size > 0 ? `Sonido: ${sonidosActivos.size}` : "Sonido"}
+                </button>
+                {mezcladorAbierto && (
+                  <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, background: GLASS, backdropFilter: "blur(12px)", border: `1px solid ${RULE_DARK}`, borderRadius: 12, padding: 10, display: "flex", flexDirection: "column", gap: 4, minWidth: 160, zIndex: 10 }}>
+                    <p style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: LAMP, margin: "2px 6px 6px" }}>Mezclador</p>
+                    {SONIDOS.map((s) => {
+                      const activo = sonidosActivos.has(s.id);
+                      return (
+                        <button
+                          key={s.id}
+                          onClick={() => toggleSonido(s.id)}
+                          style={{
+                            display: "flex", alignItems: "center", gap: 8, background: activo ? "rgba(242,184,75,.18)" : "transparent",
+                            border: "none", borderRadius: 8, padding: "7px 8px", cursor: "pointer", textAlign: "left",
+                          }}
+                        >
+                          {activo ? <Volume2 style={{ width: 14, height: 14, color: LAMP }} /> : <VolumeX style={{ width: 14, height: 14, color: INK_SOFT_LIGHT }} />}
+                          <span style={{ fontSize: 13, color: activo ? PAPER : INK_SOFT_LIGHT, fontWeight: activo ? 600 : 400 }}>{s.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </header>
