@@ -250,16 +250,18 @@ export async function registerRoutes(
   // a quien haya latido en los últimos 30s. Sin login: clientId vive solo en
   // localStorage del navegador.
   app.post("/api/together/heartbeat", async (req, res) => {
+    const parsed = insertTogetherHeartbeatSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ message: "Correo Gmail requerido para entrar a la sala" });
+    }
     try {
-      const parsed = insertTogetherHeartbeatSchema.safeParse(req.body);
-      if (!parsed.success) return res.status(204).end();
       const now = new Date();
       await db
         .insert(togetherPresence)
         .values({ ...parsed.data, lastSeen: now })
         .onConflictDoUpdate({
           target: togetherPresence.clientId,
-          set: { displayName: parsed.data.displayName, subject: parsed.data.subject, lastSeen: now },
+          set: { displayName: parsed.data.displayName, email: parsed.data.email, subject: parsed.data.subject, lastSeen: now },
         });
       res.status(204).end();
     } catch {

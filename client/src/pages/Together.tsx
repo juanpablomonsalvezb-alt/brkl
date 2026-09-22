@@ -1,14 +1,18 @@
 /**
  * Together — sala de estudio en silencio (body doubling). Sin video, sin
- * chat, sin cuentas: un timer Pomodoro compartido y una lista de quién más
- * está estudiando ahora. La compañía es la lista, no la conversación —
+ * chat: un timer Pomodoro compartido y una lista de quién más está
+ * estudiando ahora. La compañía es la lista, no la conversación —
  * exactamente el mecanismo detrás de "body doubling" para TDAH: la sola
  * presencia de otro ayuda a empezar y sostener la tarea, sin interacción.
+ *
+ * Correo @gmail.com obligatorio para entrar (sin contraseña, no es login):
+ * es la captación de lead de la campaña hasta marzo 2027. El clientId sigue
+ * siendo el único identificador anónimo en localStorage frente al servidor.
  *
  * Nivel 1 del prototipo: heartbeat cada 15s a /api/together/heartbeat,
  * presencia leída cada 5s desde /api/together/presence. Sin websockets,
  * sin infraestructura nueva — corre sobre la misma DB Turso del resto del
- * sitio. clientId anónimo en localStorage, nunca un dato personal.
+ * sitio.
  */
 import { useEffect, useRef, useState } from "react";
 import { Users, Play, Pause, RotateCcw } from "lucide-react";
@@ -56,9 +60,13 @@ export default function Together() {
   }, []);
 
   const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
   const [materia, setMateria] = useState("");
   const [unido, setUnido] = useState(false);
   const [presentes, setPresentes] = useState<Presencia[]>([]);
+
+  const emailValido = /^[^\s@]+@gmail\.com$/i.test(email.trim());
+  const puedeUnirse = nombre.trim().length > 0 && emailValido;
 
   const [enFoco, setEnFoco] = useState(true);
   const [segundos, setSegundos] = useState(FOCUS_MIN * 60);
@@ -93,7 +101,7 @@ export default function Together() {
       fetch("/api/together/heartbeat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ clientId, displayName: nombre || "Anónimo", subject: materia || undefined }),
+        body: JSON.stringify({ clientId, displayName: nombre || "Anónimo", email, subject: materia || undefined }),
       }).catch(() => {});
     };
     const consultar = () => {
@@ -112,7 +120,7 @@ export default function Together() {
       if (heartbeatRef.current) clearInterval(heartbeatRef.current);
       if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, [unido, nombre, materia]);
+  }, [unido, nombre, email, materia]);
 
   const mm = String(Math.floor(segundos / 60)).padStart(2, "0");
   const ss = String(segundos % 60).padStart(2, "0");
@@ -158,6 +166,17 @@ export default function Together() {
                 style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${RULE}`, fontFamily: BODY, fontSize: 15, marginBottom: 10, background: PAPER, color: INK }}
               />
               <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="tu.correo@gmail.com"
+                type="email"
+                maxLength={80}
+                style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${email.length > 0 && !emailValido ? RED : RULE}`, fontFamily: BODY, fontSize: 15, marginBottom: 6, background: PAPER, color: INK }}
+              />
+              <p style={{ fontSize: 12.5, color: email.length > 0 && !emailValido ? RED : INK_SOFT, margin: "0 0 10px" }}>
+                {email.length > 0 && !emailValido ? "Debe ser un correo @gmail.com" : "Solo para entrar a la sala — no se comparte con nadie más."}
+              </p>
+              <input
                 value={materia}
                 onChange={(e) => setMateria(e.target.value)}
                 placeholder="¿Qué vas a estudiar? (opcional)"
@@ -165,12 +184,12 @@ export default function Together() {
                 style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${RULE}`, fontFamily: BODY, fontSize: 15, marginBottom: 18, background: PAPER, color: INK }}
               />
               <button
-                onClick={() => nombre.trim() && setUnido(true)}
-                disabled={!nombre.trim()}
+                onClick={() => puedeUnirse && setUnido(true)}
+                disabled={!puedeUnirse}
                 style={{
-                  width: "100%", background: nombre.trim() ? RED : RULE, color: "#fff", border: "none",
+                  width: "100%", background: puedeUnirse ? RED : RULE, color: "#fff", border: "none",
                   borderRadius: 999, padding: "13px 20px", fontSize: 15, fontWeight: 700,
-                  cursor: nombre.trim() ? "pointer" : "not-allowed",
+                  cursor: puedeUnirse ? "pointer" : "not-allowed",
                 }}
               >
                 Entrar a la sala
