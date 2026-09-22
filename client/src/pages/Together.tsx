@@ -46,18 +46,11 @@ const SONIDOS = [
 ] as const;
 type SonidoId = (typeof SONIDOS)[number]["id"];
 
-// Escritorios — cada video con su nombre. "Cabaña" y "Atardecer" son las
-// únicas escenas sin personaje (ambiente vacío), el resto son personas
-// estudiando. "Cabaña" es la misma escena que se ve en la intro, y queda
-// como predeterminada al entrar a la sala.
+// Escritorios — "Cabaña" es la misma escena de la intro y queda como
+// predeterminada al entrar a la sala.
 const ESCENAS = [
   { id: "cabana", nombre: "Cabaña", src: "/together/portada.mp4", thumb: "/together/escenas/thumbs/cabana.jpg" },
-  { id: "diego", nombre: "Hank", src: "/together/man-studying.mp4", thumb: "/together/escenas/thumbs/diego.jpg" },
-  { id: "sofia", nombre: "Mei", src: "/together/escenas/sofia.mp4", thumb: "/together/escenas/thumbs/sofia.jpg" },
   { id: "valentina", nombre: "Valentina", src: "/together/escenas/valentina.mp4", thumb: "/together/escenas/thumbs/valentina.jpg" },
-  { id: "atardecer", nombre: "Atardecer", src: "/together/escenas/atardecer.mp4", thumb: "/together/escenas/thumbs/atardecer.jpg" },
-  { id: "ren", nombre: "Ren", src: "/together/escenas/ren.mp4", thumb: "/together/escenas/thumbs/ren.jpg" },
-  { id: "yui", nombre: "Yui", src: "/together/escenas/yui.mp4", thumb: "/together/escenas/thumbs/yui.jpg" },
 ] as const;
 type EscenaId = (typeof ESCENAS)[number]["id"];
 
