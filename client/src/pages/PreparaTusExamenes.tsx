@@ -428,9 +428,14 @@ export default function PreparaTusExamenes() {
             Umbral™, nuestro motor de progreso, no deja avanzar sin dominar de verdad — el mismo principio de
             repetición y recuperación activa, aplicado a todo el año, no solo a la semana del examen.
           </p>
-          <a href="/#inscripcion" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: RED, color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 15, padding: "14px 30px", borderRadius: 999 }}>
-            Conocer Barkley <ArrowRight style={{ width: 16, height: 16 }} />
-          </a>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <a href="/together" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: INK, color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 15, padding: "14px 26px", borderRadius: 999 }}>
+              Estudiar acompañado ahora <ArrowRight style={{ width: 16, height: 16 }} />
+            </a>
+            <a href="/#inscripcion" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: RED, color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 15, padding: "14px 30px", borderRadius: 999 }}>
+              Conocer Barkley <ArrowRight style={{ width: 16, height: 16 }} />
+            </a>
+          </div>
         </div>
       </section>
 

@@ -818,3 +818,24 @@ export const insertPaesSubscriptionSchema = createInsertSchema(paesSubscriptions
 
 export type PaesSubscription = typeof paesSubscriptions.$inferSelect;
 export type InsertPaesSubscription = z.infer<typeof insertPaesSubscriptionSchema>;
+
+// ============================================
+// Together — sala de estudio en silencio (body doubling).
+// Presencia anónima: sin login, sin cuenta. Un clientId aleatorio guardado
+// solo en localStorage identifica la pestaña, nunca a la persona. Filas con
+// lastSeen viejo (>30s) se tratan como desconectadas y se limpian solas.
+// ============================================
+export const togetherPresence = sqliteTable("together_presence", {
+  clientId: text("client_id").primaryKey(),
+  displayName: text("display_name").notNull(),
+  subject: text("subject"),
+  lastSeen: integer("last_seen", { mode: "timestamp" }).notNull(),
+});
+
+export const insertTogetherHeartbeatSchema = z.object({
+  clientId: z.string().trim().min(6).max(60),
+  displayName: z.string().trim().min(1).max(40),
+  subject: z.string().trim().max(60).optional(),
+});
+
+export type TogetherPresence = typeof togetherPresence.$inferSelect;

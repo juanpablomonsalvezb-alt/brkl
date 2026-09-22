@@ -9,7 +9,8 @@ import {
   insertLearningObjectiveSchema, insertWeeklyResourceSchema, insertStudentProgressSchema,
   insertEvaluationProgressSchema, updateLevelSubjectTextbookSchema, updateLearningObjectivePagesSchema,
   insertReservationSchema, insertWaitlistSchema, waitlistSignups,
-  insertFunnelEventSchema, funnelEvents
+  insertFunnelEventSchema, funnelEvents,
+  insertTogetherHeartbeatSchema, togetherPresence
 } from "@shared/schema";
 import { db } from "./db";
 import { notifyByEmail, sendConfirmationEmail } from "./notify";
@@ -241,6 +242,39 @@ export async function registerRoutes(
       }
       console.error("Error en waitlist signup:", error);
       res.status(500).json({ message: "No se pudo registrar, intenta de nuevo" });
+    }
+  });
+
+  // Together — presencia anónima para la sala de estudio en silencio (body
+  // doubling). Heartbeat cada ~15s desde el cliente; se considera "conectado"
+  // a quien haya latido en los últimos 30s. Sin login: clientId vive solo en
+  // localStorage del navegador.
+  app.post("/api/together/heartbeat", async (req, res) => {
+    try {
+      const parsed = insertTogetherHeartbeatSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(204).end();
+      const now = new Date();
+      await db
+        .insert(togetherPresence)
+        .values({ ...parsed.data, lastSeen: now })
+        .onConflictDoUpdate({
+          target: togetherPresence.clientId,
+          set: { displayName: parsed.data.displayName, subject: parsed.data.subject, lastSeen: now },
+        });
+      res.status(204).end();
+    } catch {
+      res.status(204).end();
+    }
+  });
+
+  app.get("/api/together/presence", async (req, res) => {
+    try {
+      const cutoff = new Date(Date.now() - 30_000);
+      const rows = await db.select().from(togetherPresence);
+      const activos = rows.filter((r) => r.lastSeen >= cutoff);
+      res.json(activos.map((r) => ({ displayName: r.displayName, subject: r.subject })));
+    } catch {
+      res.json([]);
     }
   });
 
