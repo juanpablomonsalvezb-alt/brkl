@@ -359,7 +359,7 @@ export default function Together() {
   const presentes = useMemo(() => [...presentesReal, ...presentesFicticios], [presentesReal, presentesFicticios]);
 
   return (
-    <div style={{ position: "relative", minHeight: "100vh", overflow: "hidden", background: "#0B1526", color: PAPER, fontFamily: BODY }}>
+    <div style={{ position: "relative", height: "100vh", overflow: "hidden", background: "#0B1526", color: PAPER, fontFamily: BODY }}>
       {/* Video ambiental en loop, de fondo, sin audio — hace fade-in al entrar a la sala.
           autoPlay solo no dispara el play() de forma confiable en todos los
           navegadores (visto en móvil), por eso se fuerza vía ref + onCanPlay. */}
@@ -370,7 +370,7 @@ export default function Together() {
         autoPlay loop muted playsInline
         onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
         style={{
-          position: "fixed", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0,
+          position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0,
           opacity: unido && videoVisible ? 1 : 0, transition: "opacity 1.4s ease",
         }}
       />
@@ -383,17 +383,17 @@ export default function Together() {
           src="/together/portada.mp4"
           autoPlay loop muted playsInline
           onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
-          style={{ position: "fixed", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
         />
       )}
-      <div style={{ position: "fixed", inset: 0, background: "linear-gradient(180deg, rgba(11,21,38,.55) 0%, rgba(11,21,38,.3) 45%, rgba(11,21,38,.8) 100%)", zIndex: 1 }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(11,21,38,.55) 0%, rgba(11,21,38,.3) 45%, rgba(11,21,38,.8) 100%)", zIndex: 1 }} />
 
       {/* Mezclador de sonido — cada pista independiente, todas apagadas por defecto */}
       {SONIDOS.map((s) => (
         <audio key={s.id} ref={(el) => { audioRefs.current[s.id] = el; }} src={s.src} loop />
       ))}
 
-      <div style={{ position: "relative", zIndex: 2, minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <div style={{ position: "relative", zIndex: 2, height: "100%", display: "flex", flexDirection: "column", overflowY: "auto" }}>
         <header style={{ padding: "clamp(14px,3vw,20px) clamp(16px,4vw,24px)" }}>
           <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
             <a href="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
