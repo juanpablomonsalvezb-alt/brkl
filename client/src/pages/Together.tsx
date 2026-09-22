@@ -78,6 +78,21 @@ const MATERIAS_FICTICIAS = [
   "Física", "Química", "Biología", "Filosofía",
 ];
 
+const FRASES_MOTIVACIONALES = [
+  "El progreso no se nota día a día, se nota mes a mes.",
+  "No necesitas motivación, necesitas un plan y 25 minutos.",
+  "Cada bloque terminado es una prueba de que puedes seguir.",
+  "La constancia le gana a la intensidad, casi siempre.",
+  "Nadie te está mirando. Eso es lo que lo hace más difícil, y más tuyo.",
+  "Empezar mal es mejor que no empezar.",
+  "Hoy no tienes que sentir ganas. Solo tienes que empezar.",
+  "El cansancio de estudiar se olvida. El de no haber empezado, no.",
+  "Una hora de foco real vale más que tres horas distraído.",
+  "No compitas con nadie de esta sala. Compite con el de ayer.",
+  "El primer minuto es el único difícil.",
+  "Lo que haces en silencio, hoy, se nota después.",
+];
+
 function seedRandom(seed: number) {
   let s = seed % 2147483647;
   if (s <= 0) s += 2147483646;
@@ -198,6 +213,7 @@ export default function Together() {
   const [presentesReal, setPresentesReal] = useState<Presencia[]>([]);
   const [presentesFicticios, setPresentesFicticios] = useState<Presencia[]>(presenciaSimulada());
   const [musica, setMusica] = useState(false);
+  const [frase] = useState(() => FRASES_MOTIVACIONALES[Math.floor(Math.random() * FRASES_MOTIVACIONALES.length)]);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   useEffect(() => {
@@ -393,56 +409,49 @@ export default function Together() {
           </div>
         ) : (
           <>
-            {/* Centro completamente despejado — el video es el protagonista */}
-            <div style={{ flex: 1 }} />
-
-            {/* Dock inferior con los 3 widgets, compacto */}
-            <div style={{ padding: "16px 24px 20px", display: "flex", justifyContent: "center" }}>
-              <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "flex-end", justifyContent: "center", maxWidth: 900 }}>
-                {/* Timer */}
-                <div style={{ background: GLASS, backdropFilter: "blur(10px)", border: `1px solid ${RULE_DARK}`, borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", gap: 14 }}>
-                  <Anillo segundos={segundos} total={total} />
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <div style={{ display: "flex", gap: 4 }}>
-                      {DURACIONES.map((d) => (
-                        <button
-                          key={d}
-                          onClick={() => { if (corriendo) return; setDuracionMin(d); setSegundos(d * 60); }}
-                          disabled={corriendo}
-                          style={{
-                            padding: "4px 8px", borderRadius: 6, fontSize: 11, fontWeight: 700,
-                            background: duracionMin === d ? LAMP : "rgba(251,246,236,.1)",
-                            color: duracionMin === d ? "#0B1526" : PAPER,
-                            border: "none", cursor: corriendo ? "default" : "pointer", opacity: corriendo && duracionMin !== d ? 0.4 : 1,
-                          }}
-                        >
-                          {d < 60 ? `${d}m` : `${Math.floor(d / 60)}h${d % 60 ? "30" : ""}`}
-                        </button>
-                      ))}
-                    </div>
-                    <div style={{ display: "flex", gap: 6 }}>
-                      <button
-                        onClick={() => setCorriendo((c) => !c)}
-                        style={{ display: "flex", alignItems: "center", gap: 6, background: LAMP, color: "#0B1526", border: "none", borderRadius: 999, padding: "6px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
-                      >
-                        {corriendo ? <Pause style={{ width: 12, height: 12 }} /> : <Play style={{ width: 12, height: 12 }} />}
-                        {corriendo ? "Pausar" : "Empezar"}
-                      </button>
-                      <button
-                        onClick={() => { setCorriendo(false); setSegundos(duracionMin * 60); }}
-                        style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(251,246,236,.1)", color: PAPER, border: "none", borderRadius: 999, padding: "6px 10px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}
-                      >
-                        <RotateCcw style={{ width: 12, height: 12 }} />
-                      </button>
-                    </div>
-                  </div>
+            {/* Widgets por los costados — el centro del video queda libre */}
+            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 clamp(16px,4vw,40px)", gap: 16 }}>
+              {/* Izquierda: timer */}
+              <div style={{ background: GLASS, backdropFilter: "blur(10px)", border: `1px solid ${RULE_DARK}`, borderRadius: 14, padding: "16px 18px", display: "flex", flexDirection: "column", alignItems: "center", gap: 12, flexShrink: 0 }}>
+                <Anillo segundos={segundos} total={total} />
+                <div style={{ display: "flex", gap: 4 }}>
+                  {DURACIONES.map((d) => (
+                    <button
+                      key={d}
+                      onClick={() => { if (corriendo) return; setDuracionMin(d); setSegundos(d * 60); }}
+                      disabled={corriendo}
+                      style={{
+                        padding: "4px 8px", borderRadius: 6, fontSize: 11, fontWeight: 700,
+                        background: duracionMin === d ? LAMP : "rgba(251,246,236,.1)",
+                        color: duracionMin === d ? "#0B1526" : PAPER,
+                        border: "none", cursor: corriendo ? "default" : "pointer", opacity: corriendo && duracionMin !== d ? 0.4 : 1,
+                      }}
+                    >
+                      {d < 60 ? `${d}m` : `${Math.floor(d / 60)}h${d % 60 ? "30" : ""}`}
+                    </button>
+                  ))}
                 </div>
+                <div style={{ display: "flex", gap: 6 }}>
+                  <button
+                    onClick={() => setCorriendo((c) => !c)}
+                    style={{ display: "flex", alignItems: "center", gap: 6, background: LAMP, color: "#0B1526", border: "none", borderRadius: 999, padding: "6px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
+                  >
+                    {corriendo ? <Pause style={{ width: 12, height: 12 }} /> : <Play style={{ width: 12, height: 12 }} />}
+                    {corriendo ? "Pausar" : "Empezar"}
+                  </button>
+                  <button
+                    onClick={() => { setCorriendo(false); setSegundos(duracionMin * 60); }}
+                    style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(251,246,236,.1)", color: PAPER, border: "none", borderRadius: 999, padding: "6px 10px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}
+                  >
+                    <RotateCcw style={{ width: 12, height: 12 }} />
+                  </button>
+                </div>
+              </div>
 
-                {/* Tareas */}
+              {/* Derecha: tareas + presencia apiladas */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 12, flexShrink: 0 }}>
                 <ListaTareas />
-
-                {/* Presencia */}
-                <div style={{ background: GLASS, backdropFilter: "blur(10px)", border: `1px solid ${RULE_DARK}`, borderRadius: 14, padding: "12px 16px", width: 200 }}>
+                <div style={{ background: GLASS, backdropFilter: "blur(10px)", border: `1px solid ${RULE_DARK}`, borderRadius: 14, padding: "12px 16px", width: 260 }}>
                   <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: LAMP, margin: "0 0 8px", display: "flex", alignItems: "center", gap: 6 }}>
                     <Users style={{ width: 12, height: 12 }} /> {presentes.length} estudiando
                   </p>
@@ -461,6 +470,13 @@ export default function Together() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Frase motivacional — abajo al centro, discreta */}
+            <div style={{ padding: "0 24px 24px", textAlign: "center" }}>
+              <p style={{ fontFamily: DISPLAY, fontSize: "clamp(14px,2vw,17px)", fontStyle: "italic", color: "rgba(251,246,236,.75)", margin: 0, textShadow: "0 1px 8px rgba(0,0,0,.6)" }}>
+                "{frase}"
+              </p>
             </div>
           </>
         )}
