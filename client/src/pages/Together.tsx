@@ -49,8 +49,8 @@ type SonidoId = (typeof SONIDOS)[number]["id"];
 // Escritorios — cada video con su nombre. "Atardecer" es la única escena sin
 // personaje (escritorio vacío), el resto son personas estudiando.
 const ESCENAS = [
-  { id: "diego", nombre: "Diego", src: "/together/man-studying.mp4", thumb: "/together/escenas/thumbs/diego.jpg" },
-  { id: "sofia", nombre: "Sofía", src: "/together/escenas/sofia.mp4", thumb: "/together/escenas/thumbs/sofia.jpg" },
+  { id: "diego", nombre: "Hank", src: "/together/man-studying.mp4", thumb: "/together/escenas/thumbs/diego.jpg" },
+  { id: "sofia", nombre: "Mei", src: "/together/escenas/sofia.mp4", thumb: "/together/escenas/thumbs/sofia.jpg" },
   { id: "valentina", nombre: "Valentina", src: "/together/escenas/valentina.mp4", thumb: "/together/escenas/thumbs/valentina.jpg" },
   { id: "atardecer", nombre: "Atardecer", src: "/together/escenas/atardecer.mp4", thumb: "/together/escenas/thumbs/atardecer.jpg" },
 ] as const;
