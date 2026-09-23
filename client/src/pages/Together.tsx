@@ -51,6 +51,8 @@ type SonidoId = (typeof SONIDOS)[number]["id"];
 const ESCENAS = [
   { id: "cabana", nombre: "Cabaña", src: "/together/portada.mp4", thumb: "/together/escenas/thumbs/cabana.jpg" },
   { id: "valentina", nombre: "Valentina", src: "/together/escenas/valentina.mp4", thumb: "/together/escenas/thumbs/valentina.jpg" },
+  { id: "cafeteria", nombre: "Cafetería", src: "/together/escenas/cafeteria.mp4", thumb: "/together/escenas/thumbs/cafeteria.jpg" },
+  { id: "nocturno", nombre: "Nocturno", src: "/together/escenas/nocturno.mp4", thumb: "/together/escenas/thumbs/nocturno.jpg" },
 ] as const;
 type EscenaId = (typeof ESCENAS)[number]["id"];
 
