@@ -252,16 +252,16 @@ export async function registerRoutes(
   app.post("/api/together/heartbeat", async (req, res) => {
     const parsed = insertTogetherHeartbeatSchema.safeParse(req.body);
     if (!parsed.success) {
-      return res.status(400).json({ message: "Correo Gmail requerido para entrar a la sala" });
+      return res.status(400).json({ message: "Nombre requerido para entrar a la sala" });
     }
     try {
       const now = new Date();
       await db
         .insert(togetherPresence)
-        .values({ ...parsed.data, lastSeen: now })
+        .values({ ...parsed.data, email: "", lastSeen: now })
         .onConflictDoUpdate({
           target: togetherPresence.clientId,
-          set: { displayName: parsed.data.displayName, email: parsed.data.email, subject: parsed.data.subject, lastSeen: now },
+          set: { displayName: parsed.data.displayName, email: "", subject: parsed.data.subject, lastSeen: now },
         });
       res.status(204).end();
     } catch {

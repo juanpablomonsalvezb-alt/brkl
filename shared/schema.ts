@@ -821,11 +821,12 @@ export type InsertPaesSubscription = z.infer<typeof insertPaesSubscriptionSchema
 
 // ============================================
 // Together — sala de estudio en silencio (body doubling).
-// Acceso con nombre + correo Gmail obligatorio (captación de lead real para
-// la campaña previa a marzo 2027) — no hay login ni contraseña, solo ese
-// correo queda guardado. El clientId sigue siendo anónimo en localStorage
-// y es lo único que identifica la pestaña frente al servidor. Filas con
-// lastSeen viejo (>30s) se tratan como desconectadas y se limpian solas.
+// Acceso solo con nombre — sin correo, sin login, sin contraseña. El campo
+// email se mantiene NOT NULL por compatibilidad con filas existentes, pero
+// ya no se pide ni se usa (siempre se guarda como cadena vacía). El clientId
+// sigue siendo anónimo en localStorage y es lo único que identifica la
+// pestaña frente al servidor. Filas con lastSeen viejo (>30s) se tratan
+// como desconectadas y se limpian solas.
 // ============================================
 export const togetherPresence = sqliteTable("together_presence", {
   clientId: text("client_id").primaryKey(),
@@ -835,18 +836,9 @@ export const togetherPresence = sqliteTable("together_presence", {
   lastSeen: integer("last_seen", { mode: "timestamp" }).notNull(),
 });
 
-// Solo @gmail.com — pedido explícito: exigir Gmail para entrar a la sala.
-const gmailSchema = z
-  .string()
-  .trim()
-  .toLowerCase()
-  .email("Correo inválido")
-  .refine((v) => v.endsWith("@gmail.com"), "Debe ser un correo @gmail.com");
-
 export const insertTogetherHeartbeatSchema = z.object({
   clientId: z.string().trim().min(6).max(60),
   displayName: z.string().trim().min(1).max(40),
-  email: gmailSchema,
   subject: z.string().trim().max(60).optional(),
 });
 

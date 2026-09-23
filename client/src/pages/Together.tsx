@@ -5,9 +5,9 @@
  * costados para dejar el centro despejado (el video es el protagonista, no
  * el UI). Al entrar, el video hace fade-in — nunca aparece de golpe.
  *
- * Correo @gmail.com obligatorio para entrar (sin contraseña, no es login):
- * es la captación de lead de la campaña hasta marzo 2027. El clientId sigue
- * siendo el único identificador anónimo en localStorage frente al servidor.
+ * Solo nombre para entrar, sin correo ni login (se quitó el correo obligatorio
+ * a pedido — ya no hay captación de lead acá). El clientId sigue siendo el
+ * único identificador anónimo en localStorage frente al servidor.
  *
  * Duración: 30/60/90/120 min, sin ciclo de pausa automática — sesión única
  * que cuenta hacia atrás, coherente con "cuánto voy a estudiar hoy" en vez
@@ -27,7 +27,6 @@ const LAMP = "#F2B84B";
 const LAMP_SOFT = "#E0A02E";
 const PAPER = "#FBF6EC";
 const INK_SOFT_LIGHT = "rgba(251,246,236,.7)";
-const RED = "#C8402F";
 const SAGE = "#7FCB9E";
 const RULE_DARK = "rgba(251,246,236,.18)";
 const GLASS = "rgba(11,21,38,.6)";
@@ -225,7 +224,6 @@ export default function Together() {
   }, []);
 
   const [nombre, setNombre] = useState("");
-  const [email, setEmail] = useState("");
   const [materia, setMateria] = useState("");
   const [unido, setUnido] = useState(false);
   const [videoVisible, setVideoVisible] = useState(false);
@@ -293,8 +291,7 @@ export default function Together() {
     else portadaRef.current?.play().catch(() => {});
   }, [unido]);
 
-  const emailValido = /^[^\s@]+@gmail\.com$/i.test(email.trim());
-  const puedeUnirse = nombre.trim().length > 0 && emailValido;
+  const puedeUnirse = nombre.trim().length > 0;
 
   const [duracionMin, setDuracionMin] = useState(30);
   const total = duracionMin * 60;
@@ -332,7 +329,7 @@ export default function Together() {
       fetch("/api/together/heartbeat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ clientId, displayName: nombre || "Anónimo", email, subject: materia || undefined }),
+        body: JSON.stringify({ clientId, displayName: nombre || "Anónimo", subject: materia || undefined }),
       }).catch(() => {});
     };
     const consultar = () => {
@@ -354,7 +351,7 @@ export default function Together() {
       if (pollRef.current) clearInterval(pollRef.current);
       if (ficticiosRef.current) clearInterval(ficticiosRef.current);
     };
-  }, [unido, nombre, email, materia]);
+  }, [unido, nombre, materia]);
 
   const presentes = useMemo(() => [...presentesReal, ...presentesFicticios], [presentesReal, presentesFicticios]);
 
@@ -502,19 +499,8 @@ export default function Together() {
                   onChange={(e) => setNombre(e.target.value)}
                   placeholder="Tu nombre o apodo"
                   maxLength={40}
-                  style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${RULE_DARK}`, fontFamily: BODY, fontSize: 15, marginBottom: 10, background: "rgba(0,0,0,.3)", color: PAPER }}
+                  style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${RULE_DARK}`, fontFamily: BODY, fontSize: 15, marginBottom: 18, background: "rgba(0,0,0,.3)", color: PAPER }}
                 />
-                <input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="tu.correo@gmail.com"
-                  type="email"
-                  maxLength={80}
-                  style={{ width: "100%", padding: "12px 14px", borderRadius: 8, border: `1.5px solid ${email.length > 0 && !emailValido ? RED : RULE_DARK}`, fontFamily: BODY, fontSize: 15, marginBottom: 6, background: "rgba(0,0,0,.3)", color: PAPER }}
-                />
-                <p style={{ fontSize: 12, color: email.length > 0 && !emailValido ? "#FF8A73" : INK_SOFT_LIGHT, margin: "0 0 10px" }}>
-                  {email.length > 0 && !emailValido ? "Debe ser un correo @gmail.com" : "Solo para entrar a la sala — no se comparte con nadie más."}
-                </p>
                 <input
                   value={materia}
                   onChange={(e) => setMateria(e.target.value)}
