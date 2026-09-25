@@ -1499,63 +1499,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === Reseñas reales de Google Business — actualizar a mano cuando lleguen nuevas ===
-          Fuente: https://g.page/r/CU_3TsueqIXYEBM (Barkley Online, Google Maps).
-          Son de familias que ya usaron Barkley; el encabezado lo dice explícito
-          porque la matrícula regular abre en 2027 y sin ese contexto las reseñas
-          parecerían contradecir la página. Se omite la de un familiar directo
-          del fundador (conflicto de interés según la política de Google).
-          Sin aggregateRating en el JSON-LD: Google no admite estrellas
-          autoasignadas para organizaciones. */}
-      <section style={{ maxWidth: 1180, margin: "0 auto", padding: "56px 24px 0" }}>
-        <Reveal>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 16, marginBottom: 28 }}>
-            <div>
-              <h2 style={{ fontSize: "clamp(26px,4vw,36px)", fontWeight: 600, color: SLATE, margin: "0 0 6px" }}>Familias que ya usaron Barkley</h2>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 15, flexWrap: "wrap" }}>
-                <span style={{ color: GOLD, letterSpacing: 2, fontSize: 17 }}>★★★★★</span>
-                <span style={{ fontWeight: 700, color: NAVY }}>5,0 en Google</span>
-                <span style={{ opacity: 0.6 }}>· reseñas publicadas en nuestro perfil de Google</span>
-              </div>
-            </div>
-            <a href="https://g.page/r/CU_3TsueqIXYEBM" target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, fontWeight: 700, color: NAVY, textDecoration: "underline", textDecorationColor: GOLD, whiteSpace: "nowrap" }}>
-              Ver todas en Google →
-            </a>
-          </div>
-        </Reveal>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: 20 }}>
-          {[
-            {
-              nombre: "Maria Ignacia",
-              texto: "Estamos profundamente agradecidos con Barkley Instituto. Su enfoque inclusivo y el acompañamiento personalizado marcan una diferencia abismal respecto a la educación convencional. Es un espacio seguro donde los chicos neurodivergentes pueden desarrollarse académicamente sin la presión de moldes rígidos. Altamente recomendado para familias que buscan una alternativa verdaderamente empática.",
-            },
-            {
-              nombre: "Andrés Astaburuaga",
-              texto: "Para un estudiante neurodivergente, encontrar el espacio educativo correcto suele ser un desafío enorme. En Barkley Instituto entendieron perfectamente las necesidades de mi hijo; la flexibilidad de los tiempos, la ausencia de la sobrecarga sensorial del aula tradicional y el respeto por sus propios ritmos de aprendizaje han hecho que por fin recupere la motivación por estudiar. Un 10/10 en empatía y profesionalismo.",
-            },
-            {
-              nombre: "Marlene Solange Lamerain Barra",
-              texto: "Hasta ahora ha sido una muy buena experiencia. Destaco principalmente la flexibilidad de los horarios y que el estudiante pueda avanzar a su propio ritmo. La atención también ha sido buena y siempre han respondido cuando hemos tenido alguna duda. Muy conforme.",
-            },
-            {
-              nombre: "Maria Barra",
-              texto: "Excelente experiencia. Muy buena atención, responsables y comprometidos con el aprendizaje. Se nota la preocupación por entregar una buena enseñanza y acompañar durante el proceso. Todo fue claro y fácil de realizar. Sin duda, un lugar que recomiendo para quienes buscan estudiar de manera online.",
-            },
-          ].map((r) => (
-            <Reveal key={r.nombre}>
-              <div style={{ background: "#fff", border: "1px solid #eef1f5", borderRadius: 16, padding: 24, height: "100%", display: "flex", flexDirection: "column", gap: 12 }}>
-                <span style={{ color: GOLD, letterSpacing: 2, fontSize: 15 }}>★★★★★</span>
-                <p style={{ fontSize: 14.5, lineHeight: 1.65, color: SLATE, opacity: 0.9, flex: 1, margin: 0 }}>{r.texto}</p>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, paddingTop: 8, borderTop: "1px solid #f0f1f3" }}>
-                  <span style={{ width: 32, height: 32, borderRadius: "50%", background: NAVY, color: "#fff", fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    {r.nombre.charAt(0)}
-                  </span>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: NAVY }}>{r.nombre}</span>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+      {/* === Reseñas de Google — solo remite al perfil, sin citar textos ===
+          Decisión del usuario (24-sep-2026): no mostrar reseñas en el sitio,
+          solo el enlace al perfil de Google. Sin aggregateRating en el JSON-LD:
+          Google no admite estrellas autoasignadas para organizaciones. */}
+      <section style={{ maxWidth: 1180, margin: "0 auto", padding: "40px 24px 0" }}>
+        <a href="https://g.page/r/CU_3TsueqIXYEBM" target="_blank" rel="noopener noreferrer"
+          style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "8px 14px", textDecoration: "none", border: "1px solid #e6ebf2", borderRadius: 999, padding: "14px 24px", maxWidth: 520, margin: "0 auto" }}>
+          <span style={{ fontSize: 15, fontWeight: 600, color: SLATE }}>¿Qué opinan las familias?</span>
+          <span style={{ fontSize: 15, fontWeight: 700, color: NAVY, textDecoration: "underline", textDecorationColor: GOLD, textUnderlineOffset: 4 }}>
+            Lee nuestras reseñas en Google →
+          </span>
+        </a>
       </section>
 
       {/* === Banner test "¿Es para mi hijo?" — segundo punto de acceso, entre precios y FAQ === */}
