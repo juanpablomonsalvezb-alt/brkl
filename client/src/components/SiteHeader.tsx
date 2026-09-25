@@ -6,7 +6,7 @@
  * la sección. Sin esto, una página secundaria queda sin forma de volver.
  */
 import { useState } from "react";
-import { Search, Menu, X, Instagram, Youtube } from "lucide-react";
+import { Search, Menu, X, User, Instagram, Youtube } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const NAVY = "#003366";
@@ -30,9 +30,11 @@ const NAV_LINKS = [
   { label: "Por qué somos distintos", href: "/sin-limites" },
 ];
 
-// Barra superior con las redes oficiales de Barkley. Antes mostraba "Portal
-// Alumno / Portal Familia", pero esos portales todavía no existen y los links
-// solo llevaban a inscripción.
+// Barra superior: accesos a portales al centro y redes oficiales a la
+// derecha. Los portales TODAVÍA no tienen backend real detrás (no hay portal
+// de alumno ni de apoderados construido), pero visualmente comunican lo que
+// todo colegio serio muestra: un acceso diferenciado para alumno y familia.
+// Llevan a la sección de inscripción en vez de a un link muerto.
 const REDES = [
   { nombre: "Instagram", url: "https://www.instagram.com/ibarkley.cl", Icono: Instagram },
   { nombre: "TikTok", url: "https://www.tiktok.com/@barkleyonline", Icono: TikTokIcon },
@@ -47,17 +49,43 @@ function TikTokIcon({ size = 16 }: { size?: number }) {
   );
 }
 
+// Escritorio: grilla de 3 columnas (vacía · portales centrados · redes a la
+// derecha). Móvil (<600px): portales a la izquierda y redes a la derecha, sin
+// íconos de usuario, para que todo quepa en una línea.
+const BARRA_CSS = `
+.barra-sup { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 6px 16px; background: #0a2e52; }
+.barra-portales { display: flex; align-items: center; font-size: 13px; font-weight: 700; letter-spacing: .04em; }
+.barra-portales a { display: flex; align-items: center; gap: 8px; color: #fff; text-decoration: none; padding: 0 20px; }
+.barra-redes { display: flex; justify-content: flex-end; gap: 2px; }
+.barra-red { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; color: #fff; opacity: .85; transition: opacity .2s ease, background .2s ease; }
+.barra-red:hover { opacity: 1; background: rgba(255,255,255,.12); }
+.barra-red:focus-visible, .barra-portales a:focus-visible { outline: 2px solid #FFC548; outline-offset: 2px; }
+@media (max-width: 599px) {
+  .barra-sup { grid-template-columns: auto 1fr; padding: 6px 8px 6px 4px; }
+  .barra-vacia, .barra-portales svg { display: none; }
+  .barra-portales { font-size: 11.5px; letter-spacing: .02em; }
+  .barra-portales a { padding: 0 10px; }
+  .barra-red { width: 28px; height: 28px; }
+}
+`;
+
 function PortalBar() {
   return (
-    <div style={{ background: "#0a2e52", display: "flex", justifyContent: "center", alignItems: "center", gap: 6, padding: "7px 0" }}>
-      {REDES.map(({ nombre, url, Icono }) => (
-        <a key={nombre} href={url} target="_blank" rel="me noopener noreferrer" aria-label={`${nombre} de Barkley Online`} title={nombre}
-          className="barra-red"
-          style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: "50%", color: "#fff" }}>
-          <Icono size={16} />
-        </a>
-      ))}
-      <style>{`.barra-red { opacity: .85; transition: opacity .2s ease, background .2s ease; } .barra-red:hover { opacity: 1; background: rgba(255,255,255,.12); } .barra-red:focus-visible { outline: 2px solid #FFC548; outline-offset: 2px; }`}</style>
+    <div className="barra-sup">
+      <style>{BARRA_CSS}</style>
+      <span className="barra-vacia" />
+      <div className="barra-portales">
+        <a href="/#inscripcion"><User size={15} /> PORTAL ALUMNO</a>
+        <span style={{ width: 1, height: 16, background: "rgba(255,255,255,0.25)" }} />
+        <a href="/#inscripcion"><User size={15} /> PORTAL FAMILIA</a>
+      </div>
+      <div className="barra-redes">
+        {REDES.map(({ nombre, url, Icono }) => (
+          <a key={nombre} href={url} target="_blank" rel="me noopener noreferrer" aria-label={`${nombre} de Barkley Online`} title={nombre} className="barra-red">
+            <Icono size={16} />
+          </a>
+        ))}
+      </div>
     </div>
   );
 }
