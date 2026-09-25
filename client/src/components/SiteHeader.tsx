@@ -6,7 +6,7 @@
  * la sección. Sin esto, una página secundaria queda sin forma de volver.
  */
 import { useState } from "react";
-import { Search, Menu, X, User } from "lucide-react";
+import { Search, Menu, X, Instagram, Youtube } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const NAVY = "#003366";
@@ -30,21 +30,34 @@ const NAV_LINKS = [
   { label: "Por qué somos distintos", href: "/sin-limites" },
 ];
 
-// Barra de acceso a portales — TODAVÍA sin backend real detrás (no hay Canvas
-// ni portal de apoderados construido), pero visualmente comunica lo que todo
-// colegio serio muestra: un acceso diferenciado para alumno y familia. Lleva
-// a la sección de inscripción en vez de a un link muerto, así el clic nunca
-// se siente roto aunque el portal real no exista todavía.
+// Barra superior con las redes oficiales de Barkley. Antes mostraba "Portal
+// Alumno / Portal Familia", pero esos portales todavía no existen y los links
+// solo llevaban a inscripción.
+const REDES = [
+  { nombre: "Instagram", url: "https://www.instagram.com/ibarkley.cl", Icono: Instagram },
+  { nombre: "TikTok", url: "https://www.tiktok.com/@barkleyonline", Icono: TikTokIcon },
+  { nombre: "YouTube", url: "https://www.youtube.com/@barkleyonline1/shorts", Icono: Youtube },
+];
+
+function TikTokIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden>
+      <path d="M16.6 5.82a4.28 4.28 0 0 1-3.14-1.4 4.29 4.29 0 0 1-1-2.7h-3.06v13.5a2.6 2.6 0 1 1-1.83-2.48v-3.1a5.66 5.66 0 1 0 4.89 5.6V9.17a7.3 7.3 0 0 0 4.14 1.29z"/>
+    </svg>
+  );
+}
+
 function PortalBar() {
   return (
-    <div style={{ background: "#0a2e52", display: "flex", justifyContent: "center", alignItems: "center", gap: 0, padding: "10px 0", fontSize: 13, fontWeight: 700, letterSpacing: "0.04em" }}>
-      <a href="/#inscripcion" style={{ display: "flex", alignItems: "center", gap: 8, color: "#fff", textDecoration: "none", padding: "0 20px" }}>
-        <User size={15} /> PORTAL ALUMNO
-      </a>
-      <span style={{ width: 1, height: 16, background: "rgba(255,255,255,0.25)" }} />
-      <a href="/#inscripcion" style={{ display: "flex", alignItems: "center", gap: 8, color: "#fff", textDecoration: "none", padding: "0 20px" }}>
-        <User size={15} /> PORTAL FAMILIA
-      </a>
+    <div style={{ background: "#0a2e52", display: "flex", justifyContent: "center", alignItems: "center", gap: 6, padding: "7px 0" }}>
+      {REDES.map(({ nombre, url, Icono }) => (
+        <a key={nombre} href={url} target="_blank" rel="me noopener noreferrer" aria-label={`${nombre} de Barkley Online`} title={nombre}
+          className="barra-red"
+          style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: "50%", color: "#fff" }}>
+          <Icono size={16} />
+        </a>
+      ))}
+      <style>{`.barra-red { opacity: .85; transition: opacity .2s ease, background .2s ease; } .barra-red:hover { opacity: 1; background: rgba(255,255,255,.12); } .barra-red:focus-visible { outline: 2px solid #FFC548; outline-offset: 2px; }`}</style>
     </div>
   );
 }

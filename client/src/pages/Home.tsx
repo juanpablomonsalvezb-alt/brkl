@@ -17,11 +17,12 @@ import {
   Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
   Layers, BookOpen, Headphones, Image as ImageIcon, ListChecks, Sparkles,
   Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock, Instagram, Zap, Home as HomeIcon,
-  Users2,
+  Users2, Youtube,
 } from "lucide-react";
 
 const INSTAGRAM_URL = "https://www.instagram.com/ibarkley.cl";
 const TIKTOK_URL = "https://www.tiktok.com/@barkleyonline";
+const YOUTUBE_URL = "https://www.youtube.com/@barkleyonline1/shorts";
 
 // Ícono TikTok — lucide-react no lo incluye, SVG del logotipo oficial simplificado.
 function TikTokIcon({ style }: { style?: React.CSSProperties }) {
@@ -828,7 +829,7 @@ export default function Home() {
             description: "Colegio 100% online y asíncrono en Chile, de 1° básico a 4° medio, con validación oficial MINEDUC.",
             address: { "@type": "PostalAddress", addressCountry: "CL" },
             areaServed: { "@type": "Country", name: "Chile" },
-            sameAs: [INSTAGRAM_URL, TIKTOK_URL],
+            sameAs: [INSTAGRAM_URL, TIKTOK_URL, "https://www.youtube.com/@barkleyonline1"],
           }),
         }}
       />
@@ -1615,6 +1616,9 @@ export default function Home() {
               </a>
               <a href={TIKTOK_URL} target="_blank" rel="me noreferrer" aria-label="TikTok de Barkley Online" style={{ color: "#fff", opacity: 0.85, display: "flex" }}>
                 <TikTokIcon style={{ width: 20, height: 20 }} />
+              </a>
+              <a href={YOUTUBE_URL} target="_blank" rel="me noreferrer" aria-label="YouTube de Barkley Online" style={{ color: "#fff", opacity: 0.85, display: "flex" }}>
+                <Youtube style={{ width: 20, height: 20 }} />
               </a>
             </div>
           </div>
