@@ -15,6 +15,14 @@ import prerenderedHtml from "../client/public/prerendered/index.html";
 import prerenderedAdaptativoHtml from "../client/public/prerendered/adaptativo.html";
 // @ts-ignore
 import prerenderedSinLimitesHtml from "../client/public/prerendered/sin-limites.html";
+// @ts-ignore
+import prerendered_adulto_acompanante from "../client/public/prerendered/adulto-acompanante.html";
+// @ts-ignore
+import prerendered_asi_esta_construido from "../client/public/prerendered/asi-esta-construido.html";
+// @ts-ignore
+import prerendered_todo_incluido from "../client/public/prerendered/todo-incluido.html";
+// @ts-ignore
+import prerendered_herramientas_de_estudio from "../client/public/prerendered/herramientas-de-estudio.html";
 
 // Bots que no ejecutan JS (o cuya política prefiere HTML estático): reciben
 // el snapshot prerenderizado en vez del shell vacío <div id="root"></div>.
@@ -112,6 +120,22 @@ app.get("/sin-limites", (req, res) => {
   res.setHeader("Cache-Control", "no-cache");
   res.type("html").send(BOT_USER_AGENT.test(ua) ? prerenderedSinLimitesHtml : spaShellHtml);
 });
+
+// Páginas de "Conoce Barkley por dentro": mismo esquema que /adaptativo
+// (bot → snapshot con su propia meta; persona → shell + React).
+const POR_DENTRO_SNAPSHOTS: Record<string, string> = {
+  "/adulto-acompanante": prerendered_adulto_acompanante,
+  "/asi-esta-construido": prerendered_asi_esta_construido,
+  "/todo-incluido": prerendered_todo_incluido,
+  "/herramientas-de-estudio": prerendered_herramientas_de_estudio,
+};
+for (const [ruta, snapshot] of Object.entries(POR_DENTRO_SNAPSHOTS)) {
+  app.get(ruta, (req, res) => {
+    const ua = req.headers["user-agent"] || "";
+    res.setHeader("Cache-Control", "no-cache");
+    res.type("html").send(BOT_USER_AGENT.test(ua) ? snapshot : spaShellHtml);
+  });
+}
 
 // Middleware
 app.use(express.json());

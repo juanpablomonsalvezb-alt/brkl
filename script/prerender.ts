@@ -15,6 +15,10 @@ const ROUTES: { path: string; out: string }[] = [
   { path: "/", out: "dist/public/prerendered/index.html" },
   { path: "/adaptativo", out: "dist/public/prerendered/adaptativo.html" },
   { path: "/sin-limites", out: "dist/public/prerendered/sin-limites.html" },
+  { path: "/adulto-acompanante", out: "dist/public/prerendered/adulto-acompanante.html" },
+  { path: "/asi-esta-construido", out: "dist/public/prerendered/asi-esta-construido.html" },
+  { path: "/todo-incluido", out: "dist/public/prerendered/todo-incluido.html" },
+  { path: "/herramientas-de-estudio", out: "dist/public/prerendered/herramientas-de-estudio.html" },
 ];
 
 /**

@@ -16,6 +16,7 @@ import { useEffect, lazy, Suspense } from "react";
 // bajo demanda; un visitante que solo mira la landing no descarga nada de eso.
 const NotFound = lazy(() => import("@/pages/not-found"));
 const SinLimites = lazy(() => import("@/pages/SinLimites"));
+const PorDentro = lazy(() => import("@/pages/PorDentro"));
 const TourPlataforma = lazy(() => import("@/pages/TourPlataforma"));
 const PreguntasFrecuentes = lazy(() => import("@/pages/PreguntasFrecuentes"));
 const Electivos = lazy(() => import("@/pages/Electivos"));
@@ -73,6 +74,10 @@ function Router() {
       <Route path="/prepara-tus-examenes" component={PreparaTusExamenes} />
       <Route path="/together/:sala?" component={Together} />
       <Route path="/sin-limites" component={SinLimites} />
+      <Route path="/adulto-acompanante">{() => <PorDentro ruta="/adulto-acompanante" />}</Route>
+      <Route path="/asi-esta-construido">{() => <PorDentro ruta="/asi-esta-construido" />}</Route>
+      <Route path="/todo-incluido">{() => <PorDentro ruta="/todo-incluido" />}</Route>
+      <Route path="/herramientas-de-estudio">{() => <PorDentro ruta="/herramientas-de-estudio" />}</Route>
       <Route path="/tour-plataforma" component={TourPlataforma} />
       <Route path="/preguntas-frecuentes" component={PreguntasFrecuentes} />
       <Route path="/electivos" component={Electivos} />

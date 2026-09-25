@@ -191,6 +191,22 @@
       "destination": "/api/handler.js"
     },
     {
+      "source": "/adulto-acompanante",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/asi-esta-construido",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/todo-incluido",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/herramientas-de-estudio",
+      "destination": "/api/handler.js"
+    },
+    {
       "source": "/((?!api/|assets/|images/|videos/|docs/|fonts/|prerendered/|.*\\.\\w+$).*)",
       "destination": "/app.html"
     }
