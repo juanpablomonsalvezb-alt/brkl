@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Youtube } from "lucide-react";
 
 // Extraído de Home.tsx para code-splitting: este componente (más el arreglo
 // de 57 videos) no aporta nada al LCP — está debajo del hero — pero sumaba
@@ -8,6 +8,7 @@ import { ArrowDown } from "lucide-react";
 // React.lazy() desde Home.tsx, queda en su propio chunk descargado después.
 const NAVY = "#003366";
 const GOLD = "#FFC548";
+const CANAL = "https://www.youtube.com/@barkleyonline1";
 
 function Reveal({ children, delay = 0, style }: { children: React.ReactNode; delay?: number; style?: React.CSSProperties }) {
   return (
@@ -174,6 +175,21 @@ export default function BarkleyTVSection() {
               <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 40, borderRadius: "0 0 16px 16px", background: "linear-gradient(to top, #0a0e14, rgba(10,14,20,0))", pointerEvents: "none" }} />
             </div>
           </div>
+        </Reveal>
+        {/* Llevar tráfico al canal: el embed solo reproduce, no suscribe.
+            sub_confirmation=1 abre directo el diálogo de suscripción. */}
+        <Reveal delay={0.15}>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 36 }}>
+            <a href={`${CANAL}?sub_confirmation=1`} target="_blank" rel="noopener noreferrer"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#FF0033", color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 15, borderRadius: 999, padding: "13px 24px" }}>
+              <Youtube style={{ width: 18, height: 18 }} /> Suscríbete a Barkley TV
+            </a>
+            <a href={`https://www.youtube.com/shorts/${activeId}`} target="_blank" rel="noopener noreferrer"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "transparent", color: "#fff", textDecoration: "none", fontWeight: 600, fontSize: 15, borderRadius: 999, padding: "12px 22px", border: "1.5px solid rgba(255,255,255,0.35)" }}>
+              Ver este Short en YouTube →
+            </a>
+          </div>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", margin: "12px 0 0" }}>{BARKLEY_TV_VIDEOS.length} Shorts sobre cómo aprender distinto — y siguen llegando.</p>
         </Reveal>
       </div>
     </section>
