@@ -1,7 +1,7 @@
 import type { Express, RequestHandler } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
-import { eq } from "drizzle-orm";
+import { and, eq, gte, isNull } from "drizzle-orm";
 import { storage } from "./storage";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
 import {
@@ -10,7 +10,7 @@ import {
   insertEvaluationProgressSchema, updateLevelSubjectTextbookSchema, updateLearningObjectivePagesSchema,
   insertReservationSchema, insertWaitlistSchema, waitlistSignups,
   insertFunnelEventSchema, funnelEvents,
-  insertTogetherHeartbeatSchema, togetherPresence
+  insertTogetherHeartbeatSchema, togetherPresence, togetherRoomSchema
 } from "@shared/schema";
 import { db } from "./db";
 import { notifyByEmail, sendConfirmationEmail } from "./notify";
@@ -261,7 +261,7 @@ export async function registerRoutes(
         .values({ ...parsed.data, email: "", lastSeen: now })
         .onConflictDoUpdate({
           target: togetherPresence.clientId,
-          set: { displayName: parsed.data.displayName, email: "", subject: parsed.data.subject, lastSeen: now },
+          set: { displayName: parsed.data.displayName, email: "", subject: parsed.data.subject, room: parsed.data.room ?? null, lastSeen: now },
         });
       res.status(204).end();
     } catch {
@@ -272,8 +272,14 @@ export async function registerRoutes(
   app.get("/api/together/presence", async (req, res) => {
     try {
       const cutoff = new Date(Date.now() - 30_000);
-      const rows = await db.select().from(togetherPresence);
-      const activos = rows.filter((r) => r.lastSeen >= cutoff);
+      const sala = togetherRoomSchema.safeParse(req.query.sala);
+      const activos = await db
+        .select()
+        .from(togetherPresence)
+        .where(and(
+          gte(togetherPresence.lastSeen, cutoff),
+          sala.success ? eq(togetherPresence.room, sala.data) : isNull(togetherPresence.room),
+        ));
       res.json(activos.map((r) => ({ displayName: r.displayName, subject: r.subject })));
     } catch {
       res.json([]);

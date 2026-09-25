@@ -71,7 +71,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/adaptativo" component={Adaptativo} />
       <Route path="/prepara-tus-examenes" component={PreparaTusExamenes} />
-      <Route path="/together" component={Together} />
+      <Route path="/together/:sala?" component={Together} />
       <Route path="/sin-limites" component={SinLimites} />
       <Route path="/tour-plataforma" component={TourPlataforma} />
       <Route path="/preguntas-frecuentes" component={PreguntasFrecuentes} />

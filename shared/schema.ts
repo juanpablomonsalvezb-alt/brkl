@@ -834,12 +834,17 @@ export const togetherPresence = sqliteTable("together_presence", {
   email: text("email").notNull(),
   subject: text("subject"),
   lastSeen: integer("last_seen", { mode: "timestamp" }).notNull(),
+  // Sala privada (/together/<sala>). null = sala general.
+  room: text("room"),
 });
+
+export const togetherRoomSchema = z.string().regex(/^[a-z0-9-]{3,24}$/);
 
 export const insertTogetherHeartbeatSchema = z.object({
   clientId: z.string().trim().min(6).max(60),
   displayName: z.string().trim().min(1).max(40),
   subject: z.string().trim().max(60).optional(),
+  room: togetherRoomSchema.optional(),
 });
 
 export type TogetherPresence = typeof togetherPresence.$inferSelect;

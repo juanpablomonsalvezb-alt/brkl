@@ -9,14 +9,124 @@
   "redirects": [
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "barkleyinstituto.cl" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "barkleyinstituto.cl"
+        }
+      ],
       "destination": "https://www.barkleyinstituto.cl/$1",
       "permanent": true
     },
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "brkl.vercel.app" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "brkl.vercel.app"
+        }
+      ],
       "destination": "https://www.barkleyinstituto.cl/$1",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-arica{/}?",
+      "destination": "/colegio-online-chile/#arica",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-antofagasta{/}?",
+      "destination": "/colegio-online-chile/#antofagasta-ciudad",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-coquimbo{/}?",
+      "destination": "/colegio-online-chile/#coquimbo-ciudad",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-la-serena{/}?",
+      "destination": "/colegio-online-chile/#la-serena",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-valparaiso{/}?",
+      "destination": "/colegio-online-chile/#valparaiso-ciudad",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-vina-del-mar{/}?",
+      "destination": "/colegio-online-chile/#vina-del-mar",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-santiago{/}?",
+      "destination": "/colegio-online-chile/#santiago",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-puente-alto{/}?",
+      "destination": "/colegio-online-chile/#puente-alto",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-maipu{/}?",
+      "destination": "/colegio-online-chile/#maipu",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-la-florida{/}?",
+      "destination": "/colegio-online-chile/#la-florida",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-las-condes{/}?",
+      "destination": "/colegio-online-chile/#las-condes",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-san-bernardo{/}?",
+      "destination": "/colegio-online-chile/#san-bernardo",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-penalolen{/}?",
+      "destination": "/colegio-online-chile/#penalolen",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-pudahuel{/}?",
+      "destination": "/colegio-online-chile/#pudahuel",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-quilicura{/}?",
+      "destination": "/colegio-online-chile/#quilicura",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-rancagua{/}?",
+      "destination": "/colegio-online-chile/#rancagua",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-talca{/}?",
+      "destination": "/colegio-online-chile/#talca",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-concepcion{/}?",
+      "destination": "/colegio-online-chile/#concepcion",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-temuco{/}?",
+      "destination": "/colegio-online-chile/#temuco",
+      "permanent": true
+    },
+    {
+      "source": "/colegio-online-puerto-montt{/}?",
+      "destination": "/colegio-online-chile/#puerto-montt",
       "permanent": true
     },
     {
@@ -28,19 +138,39 @@
   "headers": [
     {
       "source": "/assets/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/images/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=2592000" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=2592000"
+        }
+      ]
     },
     {
       "source": "/videos/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=2592000" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=2592000"
+        }
+      ]
     },
     {
       "source": "/logos/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=2592000" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=2592000"
+        }
+      ]
     }
   ],
   "rewrites": [

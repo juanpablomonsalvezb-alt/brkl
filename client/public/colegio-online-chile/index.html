@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Colegio Online en Chile — Cobertura por Comuna | Barkley</title>
-  <meta name="description" content="Barkley es un colegio 100% online disponible en cualquier comuna de Chile. Revisa cómo funciona en tu comuna." />
+  <title>Colegio Online en Chile: funciona igual en todas las regiones | Barkley</title>
+  <meta name="description" content="Barkley es un colegio 100% online que funciona igual de Arica a Puerto Montt. Qué es igual en todo Chile, qué cambia según tu región y cómo se rinde el Examen Libre." />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <link rel="canonical" href="https://www.barkleyinstituto.cl/colegio-online-chile/" />
-  <meta property="og:title" content="Colegio Online en Chile — Cobertura por Comuna | Barkley" />
-  <meta property="og:description" content="Barkley es un colegio 100% online disponible en cualquier comuna de Chile. Revisa cómo funciona en tu comuna." />
+  <meta property="og:title" content="Colegio Online en Chile: funciona igual en todas las regiones | Barkley" />
+  <meta property="og:description" content="Barkley es un colegio 100% online que funciona igual de Arica a Puerto Montt. Qué es igual en todo Chile, qué cambia según tu región y cómo se rinde el Examen Libre." />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="es_CL" />
   <meta property="og:url" content="https://www.barkleyinstituto.cl/colegio-online-chile/" />
@@ -22,24 +22,56 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.barkleyinstituto.cl/"},{"@type":"ListItem","position":2,"name":"Colegio Online en Chile","item":"https://www.barkleyinstituto.cl/colegio-online-chile/"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+    {"@type":"Question","name":"¿Barkley funciona igual en regiones que en Santiago?","acceptedAnswer":{"@type":"Answer","text":"Sí. Barkley es 100% online: el currículum, los videos y pódcasts, el tutor y el asesor son los mismos en cualquier comuna de Chile. No existe una versión regional del servicio ni diferencia de precio por ubicación."}},
+    {"@type":"Question","name":"¿Qué cambia según la región donde vivo?","acceptedAnswer":{"@type":"Answer","text":"Solo el lugar donde se rinde físicamente el Examen Libre. Ese trámite lo administra el MINEDUC, que asigna un establecimiento examinador según el domicilio declarado en la inscripción. Todo lo demás ocurre desde la casa."}},
+    {"@type":"Question","name":"¿Dónde se rinde el Examen Libre si vivo lejos de una ciudad grande?","acceptedAnswer":{"@type":"Answer","text":"El MINEDUC asigna un establecimiento examinador de tu región, en general el más cercano disponible a tu domicilio. Barkley te guía en la inscripción, pero la asignación del lugar la decide el Ministerio."}},
+    {"@type":"Question","name":"¿Necesito buena conexión a internet?","acceptedAnswer":{"@type":"Answer","text":"No se necesita una conexión rápida permanente. Como Barkley es asincrónico, no hay clases en vivo que cortar: los contenidos se revisan cuando la conexión lo permite y el avance queda guardado."}},
+    {"@type":"Question","name":"¿Puedo seguir estudiando si me cambio de comuna o de región?","acceptedAnswer":{"@type":"Answer","text":"Sí. Cambiarse de comuna no interrumpe el avance en Barkley. Lo único que se actualiza es el domicilio para la inscripción del Examen Libre, que puede asignar otro establecimiento examinador."}}
+  ]}</script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Poppins', system-ui, sans-serif; color: #525252; background: #fff; line-height: 1.7; }
     a { color: inherit; }
+    html { scroll-behavior: smooth; }
     .nav { background: #fff; border-bottom: 1px solid #e8e8e8; padding: 14px 24px; }
-    .nav-inner { max-width: 1000px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .nav-inner { max-width: 760px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .brand-badge { width: 42px; height: 42px; background: #003366; border: 2px solid #FFC548; border-radius: 8px; color: #fff; font-weight: 800; font-size: 17px; display: flex; align-items: center; justify-content: center; }
     .brand-name { font-weight: 700; color: #003366; font-size: 15px; line-height: 1.2; }
     .nav-cta { background: #FF3D37; color: #fff; text-decoration: none; font-weight: 600; font-size: 14px; padding: 10px 22px; border-radius: 999px; white-space: nowrap; }
-    header.hero { background: #003366; color: #fff; padding: 56px 24px; text-align: center; }
-    header.hero h1 { font-size: clamp(28px, 4.5vw, 42px); font-weight: 800; margin-bottom: 12px; }
-    header.hero p { font-size: 16px; color: rgba(255,255,255,0.85); max-width: 640px; margin: 0 auto; }
-    .grid { max-width: 900px; margin: 0 auto; padding: 48px 24px 64px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
-    .grid a { display: block; text-decoration: none; background: #f5f5f5; border-radius: 12px; padding: 16px 18px; color: #003366; font-weight: 600; font-size: 15px; text-align: center; }
-    .grid a:hover { background: #eee; }
+    article { max-width: 760px; margin: 0 auto; padding: 56px 24px 64px; }
+    .kicker { color: #FF3D37; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+    h1 { font-size: clamp(28px, 4.5vw, 42px); font-weight: 800; color: #003366; line-height: 1.2; margin-bottom: 14px; }
+    .lead { font-size: 17px; margin-bottom: 30px; }
+    article h2 { color: #003366; font-size: 22px; font-weight: 700; margin: 38px 0 12px; }
+    article p { font-size: 16px; margin-bottom: 10px; }
+    .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0 6px; }
+    .col { background: #f5f5f5; border-radius: 14px; padding: 18px 20px; }
+    .col b { display: block; color: #003366; margin-bottom: 6px; }
+    .col ul { padding-left: 18px; font-size: 14.5px; }
+    .regiones { margin-top: 10px; }
+    .region { border-top: 1px solid #e8e8e8; padding: 18px 0; scroll-margin-top: 16px; }
+    .region h3 { color: #003366; font-size: 17px; margin-bottom: 4px; }
+    .region p { font-size: 14.5px; margin: 0; }
+    .region .comunas { font-size: 13.5px; color: #8a8a8a; margin-top: 6px; }
+    .region .comunas span { scroll-margin-top: 16px; }
+    .region:target, .region .comunas span:target { background: #FFF6DE; border-radius: 6px; }
+    .faq-item { border-bottom: 1px solid #e8e8e8; padding: 18px 0; }
+    .faq-item b { display: block; color: #003366; font-size: 15.5px; margin-bottom: 6px; }
+    .faq-item p { font-size: 14.5px; }
+    .cta-box { background: #f5f5f5; border-radius: 16px; padding: 28px 26px; margin-top: 40px; text-align: center; }
+    .cta-box p { font-size: 15.5px; margin-bottom: 16px; }
+    .btn-gold { background: #FFC548; color: #003366; text-decoration: none; font-weight: 700; font-size: 15px; padding: 13px 28px; border-radius: 999px; display: inline-block; }
+    .otros { border-top: 1px solid #e8e8e8; padding-top: 30px; margin-top: 40px; }
+    .otros .lbl { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #525252; margin-bottom: 12px; display: block; }
+    .otros a { display: block; font-size: 14.5px; font-weight: 600; color: #003366; text-decoration: none; padding: 8px 0; }
+    .crumbs { font-size: 13px; color: #8a8a8a; margin-bottom: 18px; }
+    .crumbs a { color: #003366; text-decoration: none; font-weight: 600; }
+    .crumbs span { margin: 0 7px; }
     footer { background: #003366; color: rgba(255,255,255,0.75); font-size: 13px; text-align: center; padding: 26px 24px; }
     footer a { color: #FFC548; text-decoration: none; }
+    @media (max-width: 600px) { .cols { grid-template-columns: 1fr; } .nav-cta { padding: 9px 16px; } }
   </style>
 </head>
 <body>
@@ -53,33 +85,114 @@
     </div>
   </nav>
 
-  <header class="hero">
+  <article>
+    <div class="crumbs"><a href="/">Inicio</a><span>›</span>Colegio Online en Chile</div>
+    <div class="kicker">Barkley Online · Todo Chile</div>
     <h1>Colegio Online en Chile</h1>
-    <p>Barkley funciona igual en cualquier comuna del país. Revisa cómo aplica en la tuya.</p>
-  </header>
+    <p class="lead">Barkley funciona igual en Arica, en Puente Alto o en Puerto Montt. Aquí explicamos qué es igual en todo el país, qué cambia según tu región y cómo se rinde el Examen Libre donde vives.</p>
 
-  <div class="grid">
-    <a href="/colegio-online-puente-alto/">Puente Alto</a>
-    <a href="/colegio-online-maipu/">Maipú</a>
-    <a href="/colegio-online-santiago/">Santiago</a>
-    <a href="/colegio-online-la-florida/">La Florida</a>
-    <a href="/colegio-online-antofagasta/">Antofagasta</a>
-    <a href="/colegio-online-vina-del-mar/">Viña del Mar</a>
-    <a href="/colegio-online-san-bernardo/">San Bernardo</a>
-    <a href="/colegio-online-valparaiso/">Valparaíso</a>
-    <a href="/colegio-online-las-condes/">Las Condes</a>
-    <a href="/colegio-online-temuco/">Temuco</a>
-    <a href="/colegio-online-puerto-montt/">Puerto Montt</a>
-    <a href="/colegio-online-rancagua/">Rancagua</a>
-    <a href="/colegio-online-penalolen/">Peñalolén</a>
-    <a href="/colegio-online-pudahuel/">Pudahuel</a>
-    <a href="/colegio-online-coquimbo/">Coquimbo</a>
-    <a href="/colegio-online-concepcion/">Concepción</a>
-    <a href="/colegio-online-arica/">Arica</a>
-    <a href="/colegio-online-la-serena/">La Serena</a>
-    <a href="/colegio-online-talca/">Talca</a>
-    <a href="/colegio-online-quilicura/">Quilicura</a>
-  </div>
+    <h2>Qué es igual y qué cambia según dónde vives</h2>
+    <div class="cols">
+      <div class="col">
+        <b>Igual en todo Chile</b>
+        <ul>
+          <li>Currículum, videos y pódcasts</li>
+          <li>Tutor y asesor asignados</li>
+          <li>Precio y plan</li>
+          <li>Horario: estudias cuando puedes, sin clases en vivo</li>
+        </ul>
+      </div>
+      <div class="col">
+        <b>Cambia según tu región</b>
+        <ul>
+          <li>El establecimiento donde rindes el Examen Libre, que asigna el MINEDUC según tu domicilio</li>
+        </ul>
+      </div>
+    </div>
+    <p>Barkley es una sola plataforma para todo el país. No existe una versión regional ni una sede. Lo único que depende de la ubicación es un trámite del Ministerio: dónde se rinde físicamente el <a href="/guia-examenes-libres/">Examen Libre</a>.</p>
+
+    <h2>Cómo se rinde el Examen Libre en tu región</h2>
+    <p>Al inscribirte en los Exámenes Libres, declaras tu domicilio. Con ese dato, el MINEDUC te asigna un establecimiento examinador de tu región, en general el más cercano disponible. Barkley te acompaña en la inscripción y en la preparación, pero la asignación del lugar y las fechas las decide el Ministerio.</p>
+    <p>¿Quieres saber cuánto tiempo te queda? En <a href="/prepara-tus-examenes">Prepara tus Exámenes</a> hay una cuenta regresiva a las fechas oficiales y un plan de estudio según las semanas que te quedan.</p>
+
+    <h2>Barkley por región</h2>
+    <div class="regiones">
+      <section class="region" id="arica-y-parinacota">
+        <h3>Región de Arica y Parinacota</h3>
+        <p>En el extremo norte, la distancia a un colegio con cupo suele ser el problema. Con Barkley el estudio ocurre en casa y solo te trasladas el día del examen.</p>
+        <p class="comunas">Incluye: <span id="arica">Arica</span></p>
+      </section>
+      <section class="region" id="antofagasta">
+        <h3>Región de Antofagasta</h3>
+        <p>Muchas familias con turnos mineros cambian de ciudad o de horario seguido. El aprendizaje asincrónico se adapta a esos cambios sin perder el avance.</p>
+        <p class="comunas">Incluye: <span id="antofagasta-ciudad">Antofagasta</span></p>
+      </section>
+      <section class="region" id="coquimbo">
+        <h3>Región de Coquimbo</h3>
+        <p>Mismo servicio en la conurbación y en el interior del valle. El examen se rinde en el establecimiento que asigne el MINEDUC en la región.</p>
+        <p class="comunas">Incluye: <span id="la-serena">La Serena</span> · <span id="coquimbo-ciudad">Coquimbo</span></p>
+      </section>
+      <section class="region" id="valparaiso">
+        <h3>Región de Valparaíso</h3>
+        <p>Para familias que se mueven entre Santiago y la costa, el avance sigue igual desde cualquier lugar con conexión.</p>
+        <p class="comunas">Incluye: <span id="valparaiso-ciudad">Valparaíso</span> · <span id="vina-del-mar">Viña del Mar</span></p>
+      </section>
+      <section class="region" id="metropolitana">
+        <h3>Región Metropolitana</h3>
+        <p>En Santiago, lo que más pesa suelen ser los traslados largos, la falta de cupos y los casos de bullying o ansiedad escolar. Estudiar desde casa elimina los traslados diarios.</p>
+        <p class="comunas">Incluye: <span id="santiago">Santiago</span> · <span id="puente-alto">Puente Alto</span> · <span id="maipu">Maipú</span> · <span id="la-florida">La Florida</span> · <span id="las-condes">Las Condes</span> · <span id="san-bernardo">San Bernardo</span> · <span id="penalolen">Peñalolén</span> · <span id="pudahuel">Pudahuel</span> · <span id="quilicura">Quilicura</span></p>
+      </section>
+      <section class="region" id="ohiggins">
+        <h3>Región de O'Higgins</h3>
+        <p>Útil en zonas rurales o agrícolas donde el colegio más cercano queda lejos. El estudio se organiza según los tiempos de la familia.</p>
+        <p class="comunas">Incluye: <span id="rancagua">Rancagua</span></p>
+      </section>
+      <section class="region" id="maule">
+        <h3>Región del Maule</h3>
+        <p>Mismo currículum y acompañamiento que en la capital, sin depender de la oferta de colegios de la comuna.</p>
+        <p class="comunas">Incluye: <span id="talca">Talca</span></p>
+      </section>
+      <section class="region" id="biobio">
+        <h3>Región del Biobío</h3>
+        <p>En el Gran Concepción y en las comunas cercanas, el Examen Libre se rinde en el establecimiento que asigne el MINEDUC en la región.</p>
+        <p class="comunas">Incluye: <span id="concepcion">Concepción</span></p>
+      </section>
+      <section class="region" id="araucania">
+        <h3>Región de La Araucanía</h3>
+        <p>Para estudiantes de comunas rurales, estudiar desde casa evita viajes diarios largos a la ciudad.</p>
+        <p class="comunas">Incluye: <span id="temuco">Temuco</span></p>
+      </section>
+      <section class="region" id="los-lagos">
+        <h3>Región de Los Lagos</h3>
+        <p>Incluye a familias en islas o sectores apartados: basta con una conexión, aunque sea intermitente, para avanzar.</p>
+        <p class="comunas">Incluye: <span id="puerto-montt">Puerto Montt</span></p>
+      </section>
+      <section class="region" id="otras-regiones">
+        <h3>Otras regiones</h3>
+        <p>Tarapacá, Atacama, Ñuble, Los Ríos, Aysén y Magallanes: funciona exactamente igual. Si vives en Chile, puedes estudiar en Barkley.</p>
+      </section>
+    </div>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item"><b>¿Barkley funciona igual en regiones que en Santiago?</b><p>Sí. El currículum, los videos y pódcasts, el tutor y el asesor son los mismos en cualquier comuna de Chile. No existe una versión regional del servicio ni diferencia de precio por ubicación.</p></div>
+    <div class="faq-item"><b>¿Qué cambia según la región donde vivo?</b><p>Solo el lugar donde se rinde físicamente el Examen Libre. Ese trámite lo administra el MINEDUC, que asigna un establecimiento examinador según el domicilio declarado en la inscripción.</p></div>
+    <div class="faq-item"><b>¿Dónde se rinde el Examen Libre si vivo lejos de una ciudad grande?</b><p>El MINEDUC asigna un establecimiento examinador de tu región, en general el más cercano disponible a tu domicilio. Barkley te guía en la inscripción, pero la asignación del lugar la decide el Ministerio.</p></div>
+    <div class="faq-item"><b>¿Necesito buena conexión a internet?</b><p>No se necesita una conexión rápida permanente. Como Barkley es asincrónico, no hay clases en vivo que cortar: los contenidos se revisan cuando la conexión lo permite y el avance queda guardado.</p></div>
+    <div class="faq-item"><b>¿Puedo seguir estudiando si me cambio de comuna o de región?</b><p>Sí. Cambiarse de comuna no interrumpe el avance. Lo único que se actualiza es el domicilio para la inscripción del Examen Libre, que puede asignar otro establecimiento examinador.</p></div>
+
+    <div class="cta-box">
+      <p>¿Quieres ver cómo funciona Barkley por dentro? Prueba la demo real de la plataforma, sin costo.</p>
+      <a class="btn-gold" href="https://barkley-platform.vercel.app/demo/student">Probar la demo gratis →</a>
+    </div>
+
+    <div class="otros">
+      <span class="lbl">Sigue leyendo</span>
+      <a href="/guia-examenes-libres/">Guía completa de exámenes libres en Chile</a>
+      <a href="/prepara-tus-examenes">Prepara tus Exámenes: cuenta regresiva y plan de estudio</a>
+      <a href="/blog/mejor-colegio-online-chile/">Mejor colegio online en Chile: cómo elegir</a>
+      <a href="/blog/educacion-asincronica-que-es/">Clase Asincrónica: Significado y Definición</a>
+    </div>
+  </article>
 
   <footer>
     <p>Barkley Online — Colegio 100% asincrónico e inclusivo en Chile · Preparación para Exámenes Libres ante el MINEDUC · <a href="/">barkleyinstituto.cl</a></p>
