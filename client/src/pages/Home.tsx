@@ -233,7 +233,7 @@ const HERO_PHOTO = "/images/hero-estudiante.webp";
 // 3 de los 4 puntos detrás de una flecha).
 const PILARES = [
   { title: "Tu ritmo, no el nuestro", img: "/images/rutas-flexibles.webp", text: "No hay un horario que cumplir ni una clase que no puedes recuperar: decides cuándo estudias, a qué hora y en qué orden. Un asesor sigue tu progreso completo de principio a fin. Lo único fijo es la fecha del examen libre ante el Ministerio de Educación — todo lo demás lo organizas tú." },
-  { title: "Aprendizaje por Dominio", img: "/images/metodologia.webp", text: "Trabajamos con Mastery Learning, el modelo de Benjamin Bloom (Harvard, 1968): cada unidad se desbloquea solo si dominas la anterior — video corto, práctica, y si te cuesta, refuerzo antes de seguir. Sin saltos, sin huecos." },
+  { title: "Aprendizaje por Dominio", img: "/images/metodologia.webp", text: "Trabajamos con Mastery Learning, el modelo de Benjamin Bloom (Universidad de Chicago, 1968): cada unidad se desbloquea solo si dominas la anterior — video corto, práctica, y si te cuesta, refuerzo antes de seguir. Sin saltos, sin huecos." },
   { title: "El tutor aparece cuando lo necesitas", img: "/images/acompanamiento.webp", text: "No es una clase obligatoria ni algo que pides por capricho: el sistema detecta cuando estás con dificultad real en una asignatura, y ahí aparece la ayuda — no antes, no como un horario más que administrar." },
   { title: "Tu progreso, medido de verdad", img: "/images/plataforma-pilar.webp", text: "Cada intento, cada puntaje, cada unidad completada queda registrado por Umbral™, nuestro motor de progreso — no son solo impresiones. Si tu perfil de aprendizaje es TDAH o dislexia, el contenido se adapta automáticamente (programa Adaptativo). Y siempre hay un asesor humano revisando cómo vas, no solo un algoritmo mirando de lejos." },
 ];
@@ -346,7 +346,7 @@ function ShapeInline({ color, shape: Shape }: { color: string; shape: typeof Sha
 
 function AdmisionSection({ anchorId }: { anchorId?: string }) {
   return (
-    <section id={anchorId} style={{ background: NAVY, position: "relative", overflow: "hidden", padding: "80px 24px" }}>
+    <section id={anchorId} data-admision style={{ background: NAVY, position: "relative", overflow: "hidden", padding: "80px 24px" }}>
       <div style={{ position: "absolute", top: -60, right: -60, opacity: 0.12 }}><ShapeFlower color="#FFC548" size={220} /></div>
       <div style={{ maxWidth: 1100, margin: "0 auto", position: "relative", display: "flex", flexWrap: "wrap", gap: 44, alignItems: "center" }}>
         <div style={{ flex: "1 1 380px", minWidth: 280 }}>
@@ -642,7 +642,7 @@ function ReactionWidget() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          style={{ position: "fixed", left: 20, bottom: 20, zIndex: 30, background: "#fff", borderRadius: 18, padding: "18px 20px", boxShadow: "0 12px 40px rgba(0,20,60,0.18)", maxWidth: 280, border: "1px solid #eef0f3" }}
+          style={{ position: "fixed", left: 20, bottom: "calc(20px + var(--cta-bar, 0px))", zIndex: 30, background: "#fff", borderRadius: 18, padding: "18px 20px", boxShadow: "0 12px 40px rgba(0,20,60,0.18)", maxWidth: 280, border: "1px solid #eef0f3" }}
         >
           {!answered ? (
             <>
@@ -674,7 +674,7 @@ function ReactionWidget() {
 
 // EL MÉTODO — el gancho central de Barkley. Sin clases en vivo, el método las suple.
 // Módulo dedicado, muy visual, con pasos en auto-play. Nombre real (Mastery Learning),
-// fundamento (Bloom/Harvard) y quiénes lo usan en el mundo (colegios reales licenciados).
+// fundamento (Bloom/Chicago) y quiénes lo usan en el mundo (colegios reales licenciados).
 const METODO_PASOS = [
   { n: "01", title: "Aprendes", text: "Cada objetivo del temario oficial viene con 2 a 3 videos y sus pódcasts. Ves, escuchas, pausas y repites — a tu ritmo, cuando tu día lo permite.", color: GOLD },
   { n: "02", title: "Practicas", text: "Ejercicios que se corrigen solos, al instante. Sabes de inmediato si entendiste, sin esperar a que un profesor revise la próxima semana.", color: GREEN },
@@ -696,7 +696,7 @@ function MetodoModule() {
       <div style={{ position: "absolute", top: -40, right: -40, opacity: 0.06 }}><ShapeFastForward color="#fff" size={280} /></div>
       <div style={{ maxWidth: 1080, margin: "0 auto", position: "relative" }}>
         {/* Orden pensado como AIDA: primero el nombre propio y memorable (Umbral)
-            que engancha, después la autoridad científica (Bloom/Harvard) que
+            que engancha, después la autoridad científica (Bloom/Chicago) que
             cierra la confianza — un apoderado scrolleando responde primero a un
             concepto pegajoso, la ciencia detrás es lo que sostiene esa primera
             impresión, no lo que la genera. */}
@@ -705,7 +705,7 @@ function MetodoModule() {
             <p style={{ fontSize: 14, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.12em", margin: 0 }}>Nuestro método · lo que nos hace distintos</p>
             <h2 style={{ fontSize: "clamp(34px,6vw,60px)", fontWeight: 600, margin: "10px 0 6px" }}>Umbral<sup style={{ fontSize: "0.35em", fontWeight: 600, marginLeft: 2 }}>™</sup></h2>
             <p style={{ fontSize: 16, opacity: 0.8, margin: 0 }}>
-              El motor que decide cuándo estás listo para avanzar — basado en <em>Mastery Learning</em>, el modelo de <strong style={{ color: "#fff" }}>Benjamin Bloom</strong>, Universidad de Harvard, 1968.
+              El motor que decide cuándo estás listo para avanzar — basado en <em>Mastery Learning</em>, el modelo de <strong style={{ color: "#fff" }}>Benjamin Bloom</strong>, Universidad de Chicago, 1968.
             </p>
           </div>
         </Reveal>
@@ -749,7 +749,7 @@ function MetodoModule() {
             <div style={{ flex: "1 1 300px", background: "rgba(255,255,255,0.05)", borderRadius: 14, padding: "24px 26px" }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Quiénes lo usan en el mundo</p>
               <p style={{ fontSize: 15, lineHeight: 1.6, opacity: 0.9, margin: 0 }}>
-                Colegios online líderes de EE.UU. como <strong style={{ color: "#fff" }}>Acellus Academy</strong> y <strong style={{ color: "#fff" }}>Edmentum / Apex Learning</strong> educan con este mismo método. En Chile, somos los primeros en traerlo — con video, podcast y tutor incluidos.
+                Colegios online líderes de EE.UU. como <strong style={{ color: "#fff" }}>Acellus Academy</strong> y <strong style={{ color: "#fff" }}>Edmentum / Apex Learning</strong> educan con este mismo método. En Barkley lo aplicamos al temario oficial chileno — con video, pódcast y tutor incluidos.
               </p>
             </div>
           </div>
@@ -773,6 +773,62 @@ function MetodoModule() {
         </Reveal>
       </div>
     </section>
+  );
+}
+
+/* Barra fija de inscripción, solo en celular: la home mide ~55 pantallas y el
+   formulario queda a mitad de camino. Aparece tras el hero y se esconde
+   mientras hay un formulario de admisión a la vista. Mientras está visible,
+   --cta-bar sube los flotantes de abajo (volver arriba, chat) para no taparlos. */
+function BarraInscripcion() {
+  const [pasoHero, setPasoHero] = useState(false);
+  const [formVisible, setFormVisible] = useState(false);
+  const [movil, setMovil] = useState(() => window.matchMedia("(max-width: 767px)").matches);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const onMq = () => setMovil(mq.matches);
+    const onScroll = () => setPasoHero(window.scrollY > window.innerHeight * 0.8);
+    onScroll();
+    mq.addEventListener("change", onMq);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const visibles = new Set<Element>();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? visibles.add(e.target) : visibles.delete(e.target)));
+      setFormVisible(visibles.size > 0);
+    });
+    document.querySelectorAll("[data-admision]").forEach((el) => io.observe(el));
+    return () => {
+      mq.removeEventListener("change", onMq);
+      window.removeEventListener("scroll", onScroll);
+      io.disconnect();
+    };
+  }, []);
+
+  const visible = movil && pasoHero && !formVisible;
+  useEffect(() => {
+    document.documentElement.style.setProperty("--cta-bar", visible ? "72px" : "0px");
+    return () => { document.documentElement.style.removeProperty("--cta-bar"); };
+  }, [visible]);
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={{ y: 90 }} animate={{ y: 0 }} exit={{ y: 90 }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 40, background: "#fff", borderTop: "1px solid #e8ecf1", boxShadow: "0 -6px 24px rgba(0,20,60,0.1)", padding: "10px 16px calc(10px + env(safe-area-inset-bottom))", display: "flex", alignItems: "center", gap: 12, fontFamily: FONT }}
+        >
+          <div style={{ flex: 1, minWidth: 0, lineHeight: 1.25 }}>
+            <p style={{ margin: 0, fontSize: 13.5, fontWeight: 700, color: NAVY }}>Admisión 2027</p>
+            <p style={{ margin: 0, fontSize: 12, color: "#5b6573" }}>Reserva sin costo hoy</p>
+          </div>
+          <a href="#inscripcion" style={{ background: GOLD, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 14.5, borderRadius: 999, padding: "12px 20px", whiteSpace: "nowrap" }}>
+            Reservar cupo →
+          </a>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -922,7 +978,7 @@ export default function Home() {
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             data-hero="texto" style={{ position: "absolute", left: 45, right: 40, bottom: 42, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
             <div style={{ maxWidth: 780 }}>
-              <h1 data-hero="titulo" style={{ fontSize: "clamp(36px,5vw,69px)", fontWeight: 600, margin: 0, lineHeight: 1.05 }}>Líderes en Educación Asincrónica Inclusiva</h1>
+              <h1 data-hero="titulo" style={{ fontSize: "clamp(36px,5vw,69px)", fontWeight: 600, margin: 0, lineHeight: 1.05 }}>El colegio online donde nadie avanza sin entender</h1>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 20 }}>
                 <a href="/tour-plataforma"
                   style={{ display: "inline-flex", alignItems: "center", gap: 10, fontSize: 16, fontWeight: 600, color: NAVY, background: GOLD, border: "none", borderRadius: 999, padding: "13px 26px", cursor: "pointer", fontFamily: FONT, textDecoration: "none" }}>
@@ -990,7 +1046,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.2 }}
-            style={{ position: "fixed", right: 20, bottom: 20, zIndex: 30, width: 48, height: 48, borderRadius: "50%", background: NAVY, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 14px rgba(0,51,102,0.35)" }}
+            style={{ position: "fixed", right: 20, bottom: "calc(20px + var(--cta-bar, 0px))", transition: "bottom 0.3s ease", zIndex: 30, width: 48, height: 48, borderRadius: "50%", background: NAVY, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 14px rgba(0,51,102,0.35)" }}
           >
             <ArrowUpRight style={{ width: 20, height: 20, color: "#fff", transform: "rotate(-45deg)" }} />
           </motion.button>
@@ -1032,7 +1088,7 @@ export default function Home() {
                 El mismo método,<br />en <em style={{ fontStyle: "normal", color: SLATE }}>cuatro colegios</em><br />del mundo.
               </h2>
               <p style={{ fontSize: 16, color: TEXT, lineHeight: 1.75, margin: "0 0 28px" }}>
-                El Aprendizaje por Dominio no es un experimento: forma a miles de estudiantes en colegios online acreditados de Estados Unidos y Reino Unido. Barkley es el primero en traerlo a Chile.
+                El Aprendizaje por Dominio no es un experimento: forma a miles de estudiantes en colegios online acreditados de Estados Unidos y Reino Unido. Barkley lo aplica al temario oficial chileno.
               </p>
               <div style={{ display: "flex", gap: 28 }}>
                 {[["4", "colegios"], ["3", "países"], ["1", "método"]].map(([n, l]) => (
@@ -1742,66 +1798,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === Reseñas reales de Google Business — actualizar a mano cuando lleguen nuevas ===
-          Fuente: https://g.page/r/CU_3TsueqIXYEBM (Barkley Online, Google Maps).
-          Última revisión: 17-sep-2026, 5.0★ · 5 reseñas. La reseña de Carlos
-          Castellón (visible el 11-sep) ya no aparece en el listado público —
-          se quitó de acá sin especular por qué. */}
-      <section style={{ maxWidth: 1180, margin: "0 auto", padding: "56px 24px 0" }}>
-        <Reveal>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 16, marginBottom: 28 }}>
-            <div>
-              <h2 style={{ fontSize: "clamp(26px,4vw,36px)", fontWeight: 600, color: SLATE, margin: "0 0 6px" }}>Lo que dicen en Google</h2>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 15 }}>
-                <span style={{ color: GOLD, letterSpacing: 2, fontSize: 17 }}>★★★★★</span>
-                <span style={{ fontWeight: 700, color: NAVY }}>5.0</span>
-                <span style={{ opacity: 0.6 }}>· reseñas verificadas de Google Business</span>
-              </div>
-            </div>
-            <a href="https://g.page/r/CU_3TsueqIXYEBM" target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, fontWeight: 700, color: NAVY, textDecoration: "underline", textDecorationColor: GOLD, whiteSpace: "nowrap" }}>
-              Ver todas en Google →
-            </a>
-          </div>
-        </Reveal>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: 20 }}>
-          {[
-            {
-              nombre: "Maria Ignacia",
-              texto: "Estamos profundamente agradecidos con Barkley Instituto. Su enfoque inclusivo y el acompañamiento personalizado marcan una diferencia abismal respecto a la educación convencional. Es un espacio seguro donde los chicos neurodivergentes pueden desarrollarse académicamente sin la presión de moldes rígidos. Altamente recomendado para familias que buscan una alternativa verdaderamente empática.",
-            },
-            {
-              nombre: "Andrés Astaburuaga",
-              texto: "Para un estudiante neurodivergente, encontrar el espacio educativo correcto suele ser un desafío enorme. En Barkley Instituto entendieron perfectamente las necesidades de mi hijo; la flexibilidad de los tiempos, la ausencia de la sobrecarga sensorial del aula tradicional y el respeto por sus propios ritmos de aprendizaje han hecho que por fin recupere la motivación por estudiar. Un 10/10 en empatía y profesionalismo.",
-            },
-            {
-              nombre: "Marlene Solange Lamerain Barra",
-              texto: "Hasta ahora ha sido una muy buena experiencia. Destaco principalmente la flexibilidad de los horarios y que el estudiante pueda avanzar a su propio ritmo. La atención también ha sido buena y siempre han respondido cuando hemos tenido alguna duda. Muy conforme.",
-            },
-            {
-              nombre: "Macarena Monsalvez",
-              texto: "Muy buena experiencia con Barkley Online. Hemos recibido un excelente apoyo, con mucha preocupación, paciencia y dedicación. Se agradece mucho contar con profesionales que realmente se preocupan por las necesidades de cada estudiante. 100% recomendable.",
-            },
-            {
-              nombre: "Maria Barra",
-              texto: "Excelente experiencia. Muy buena atención, responsables y comprometidos con el aprendizaje. Se nota la preocupación por entregar una buena enseñanza y acompañar durante el proceso. Todo fue claro y fácil de realizar. Sin duda, un lugar que recomiendo para quienes buscan estudiar de manera online.",
-            },
-          ].map((r) => (
-            <Reveal key={r.nombre}>
-              <div style={{ background: "#fff", border: "1px solid #eef1f5", borderRadius: 16, padding: 24, height: "100%", display: "flex", flexDirection: "column", gap: 12 }}>
-                <span style={{ color: GOLD, letterSpacing: 2, fontSize: 15 }}>★★★★★</span>
-                <p style={{ fontSize: 14.5, lineHeight: 1.65, color: SLATE, opacity: 0.9, flex: 1, margin: 0 }}>{r.texto}</p>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, paddingTop: 8, borderTop: "1px solid #f0f1f3" }}>
-                  <span style={{ width: 32, height: 32, borderRadius: "50%", background: NAVY, color: "#fff", fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    {r.nombre.charAt(0)}
-                  </span>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: NAVY }}>{r.nombre}</span>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
       {/* === Banner test "¿Es para mi hijo?" — segundo punto de acceso, entre precios y FAQ === */}
       <section style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px 56px" }}>
         <Reveal>
@@ -1949,6 +1945,7 @@ export default function Home() {
 
       <ReservationDialog open={callOpen} onOpenChange={setCallOpen} />
       <SalesChatbot />
+      <BarraInscripcion />
     </div>
   );
 }

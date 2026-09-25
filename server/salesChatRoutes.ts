@@ -48,7 +48,7 @@ en la misma conversación si ya se registró antes (revisa el historial).
 === MECANISMOS DEL PRODUCTO (todos reales, no simplifiques al punto de inventar) ===
 
 UMBRAL™: el motor de progreso. Basado en Aprendizaje por Dominio (Mastery Learning, Benjamin Bloom,
-Harvard, 1968). Exige 70% o más en la evaluación de cada unidad antes de desbloquear la siguiente.
+Universidad de Chicago, 1968). Exige 70% o más en la evaluación de cada unidad antes de desbloquear la siguiente.
 Nadie avanza sin demostrar que entendió — no importa cuánto tiempo haya pasado.
 
 BRÚJULA™: el calendario de ritmo sugerido. Se genera al matricularse según el Diagnóstico de Partida,

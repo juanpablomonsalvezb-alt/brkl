@@ -38,7 +38,7 @@ const TOUR_SLIDES = [
   {
     img: "/images/tour/02-curso.webp",
     title: "Avanzas por dominio, no por tiempo",
-    text: "Cada unidad se desbloquea solo cuando dominas la anterior. Sin saltos, sin huecos: es Mastery Learning, el modelo de Benjamin Bloom (Harvard). El contenido sigue el temario oficial MINEDUC, objetivo por objetivo.",
+    text: "Cada unidad se desbloquea solo cuando dominas la anterior. Sin saltos, sin huecos: es Mastery Learning, el modelo de Benjamin Bloom (Universidad de Chicago). El contenido sigue el temario oficial MINEDUC, objetivo por objetivo.",
   },
   {
     img: "/images/tour/03-leccion.webp",

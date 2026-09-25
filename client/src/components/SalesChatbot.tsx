@@ -95,7 +95,8 @@ export default function SalesChatbot() {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="fixed bottom-6 right-6 z-50"
+            className="fixed right-6 z-50"
+            style={{ bottom: "calc(1.5rem + var(--cta-bar, 0px))", transition: "bottom 0.3s ease" }}
           >
             <Button
               onClick={() => setIsOpen(true)}
