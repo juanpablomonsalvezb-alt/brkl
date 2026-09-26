@@ -357,10 +357,10 @@ Umbral\u2122 bloquea contenido (exige dominio real). Br\xFAjula\u2122 no bloquea
     <link rel="preload" as="image" href="/images/hero-estudiante-900.webp"
           imagesrcset="/images/hero-estudiante-900.webp 900w, /images/hero-estudiante-1400.webp 1400w, /images/hero-estudiante.webp 1800w"
           imagesizes="(max-width: 760px) 100vw, 70vw" fetchpriority="high">
-    <script type="module" crossorigin src="/assets/index-DrL40848.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/icons-1OiOyoh8.js">
-    <link rel="modulepreload" crossorigin href="/assets/motion-t-Bkmb19.js">
-    <link rel="modulepreload" crossorigin href="/assets/react-CzTgtkhK.js">
+    <script type="module" crossorigin src="/assets/index-Bt5R9jDY.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/icons-DAE7lL_J.js">
+    <link rel="modulepreload" crossorigin href="/assets/motion-DQUZI8ho.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-D8ARPX-r.js">
     <link rel="stylesheet" crossorigin href="/assets/index-C7jfqNrM.css">
   </head>
   <body>
