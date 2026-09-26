@@ -44,6 +44,8 @@
   #flash { position: absolute; inset: 0; pointer-events: none; opacity: 0; }
   #vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(0,0,0,.55) 100%); }
   #grain { position: absolute; inset: 0; width: 1920px; height: 1080px; opacity: .09; mix-blend-mode: overlay; pointer-events: none; }
+  html.vert, html.vert body { width: 1080px; height: 1920px; }
+  html.vert #grain { width: 1080px; height: 1920px; }
 </style>
 </head>
 <body>
@@ -211,6 +213,10 @@
 </div>
 
 <script>
+const VERT = new URLSearchParams(location.search).has("vertical");
+if (VERT) document.documentElement.classList.add("vert");
+const W = VERT ? 1080 : 1920, H = VERT ? 1920 : 1080;
+const JW = VERT ? 1000 : 1620; // ancho del gráfico de Brújula
 const DURATION = 45;
 const $ = (id) => document.getElementById(id);
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -263,7 +269,7 @@ function placa(sceneId, nombre, lema) {
   const line = mk(wrap, "", "mask anton", "font-size:400px;display:inline-block");
   const letras = [...nombre].map((ch) => { const s = document.createElement("span"); s.textContent = ch; line.appendChild(s); return s; });
   const tm = document.createElement("span"); tm.className = "tm"; tm.textContent = "™"; line.appendChild(tm);
-  const sub = mk(wrap, lema, "tag", "margin-top:6px;font-size:34px");
+  const sub = mk(wrap, lema, "tag", `margin-top:6px;font-size:34px${VERT ? ";white-space:normal;max-width:900px;margin-left:auto;margin-right:auto;line-height:1.6" : ""}`);
   return { wrap, letras, tm, sub, line };
 }
 const FONDOS_PLACA = {
@@ -297,7 +303,7 @@ const anillos = Array.from({ length: 8 }, (_, i) => {
 });
 
 // Together: puntos de presencia
-const kDots = Array.from({ length: 140 }, () => mk($("kDots"), "", "abs", `left:${rnd() * 1920}px;top:${rnd() * 1080}px;width:10px;height:10px;border-radius:50%;background:#3ddc84`));
+const kDots = Array.from({ length: 140 }, () => mk($("kDots"), "", "abs", `left:${rnd() * W}px;top:${rnd() * H}px;width:10px;height:10px;border-radius:50%;background:#3ddc84`));
 kDots.forEach((d) => { d._ph = rnd() * 6; d._s = 0.5 + rnd(); });
 
 // ---------- Vórtice en acción ----------
@@ -313,21 +319,21 @@ const PIEZAS = [["video", "Video", "3 por lección"], ["podcast", "Pódcast", "E
 const fCards = PIEZAS.map(([ic, t, m]) => mk($("fCards"), `<div class="ico">${ICON[ic]}</div><div><b>${t}</b><br><i>${m}</i></div>`, "panel"));
 
 // ---------- Umbral partículas ----------
-const hParts = Array.from({ length: 46 }, (_, i) => { const d = mk($("hParts"), "", "abs", `left:960px;top:540px;width:${8 + rnd() * 14}px;height:${8 + rnd() * 14}px;border-radius:${i % 3 ? 3 : 50}px;background:${i % 3 ? "#003366" : "#ffffff"}`); d._a = rnd() * Math.PI * 2; d._v = 500 + rnd() * 700; d._r = rnd() * 720; return d; });
+const hParts = Array.from({ length: 46 }, (_, i) => { const d = mk($("hParts"), "", "abs", `left:${W / 2}px;top:${H / 2}px;width:${8 + rnd() * 14}px;height:${8 + rnd() * 14}px;border-radius:${i % 3 ? 3 : 50}px;background:${i % 3 ? "#003366" : "#ffffff"}`); d._a = rnd() * Math.PI * 2; d._v = 500 + rnd() * 700; d._r = rnd() * 720; return d; });
 
 // ---------- Brújula barras ----------
 const SEM = 30, HUECO = 11;
 const planA = Array.from({ length: SEM }, (_, i) => 0.5 + 0.18 * Math.sin(i * 0.7) + 0.12 * Math.cos(i * 0.31));
 const planB = planA.map((v, i) => (i === HUECO ? 0.07 : i > HUECO ? v * 1.1 + 0.03 : v));
-const jBars = planA.map(() => mk($("jBars"), "", "abs", "bottom:0;width:40px;border-radius:10px 10px 3px 3px"));
-["Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct"].forEach((m, i) => mk($("jMonths"), m, "abs", `left:${i * 1620 / 7.4}px;bottom:0;font-size:24px;font-weight:600;color:rgba(255,255,255,.55)`));
+const jBars = planA.map(() => mk($("jBars"), "", "abs", `bottom:0;width:${VERT ? 24 : 40}px;border-radius:8px 8px 3px 3px`));
+["Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct"].forEach((m, i) => mk($("jMonths"), m, "abs", `left:${i * JW / 7.4}px;bottom:0;font-size:24px;font-weight:600;color:rgba(255,255,255,.55)`));
 
 // ---------- Together tiles ----------
 const ALUM = [["SM", "Matemática", "#ffc548"], ["JP", "Lenguaje", "#8fd3ff"], ["AR", "Historia", "#ff9bc8"], ["CT", "Ciencias", "#9be7b5"], ["VL", "Inglés", "#c9b3ff"], ["DM", "Matemática", "#ffd9a0"]];
-const lTiles = ALUM.map(([ini, a, col], i) => mk($("lIn"), `<div style="display:flex;justify-content:space-between;align-items:center"><div class="av" style="background:${col}">${ini}</div><div class="live"></div></div><div><div style="font-size:24px;font-weight:700">${a}</div><div style="font-size:18px;color:var(--mute)">estudiando · ${12 + i * 7} min</div></div>`, "tile", `left:${(i % 3) * 350}px;top:${Math.floor(i / 3) * 250}px`));
+const lTiles = ALUM.map(([ini, a, col], i) => mk($("lIn"), `<div style="display:flex;justify-content:space-between;align-items:center"><div class="av" style="background:${col}">${ini}</div><div class="live"></div></div><div><div style="font-size:24px;font-weight:700">${a}</div><div style="font-size:18px;color:var(--mute)">estudiando · ${12 + i * 7} min</div></div>`, "tile", VERT ? `left:${(i % 2) * 350}px;top:${Math.floor(i / 2) * 250}px` : `left:${(i % 3) * 350}px;top:${Math.floor(i / 3) * 250}px`));
 
 // ---------- ticker final ----------
-const nTick = [0, 1, 2].map((row) => mk($("nTicker"), (PERFILES.join("  ·  ") + "  ·  ").repeat(3), "abs anton", `left:0;top:${140 + row * 360}px;font-size:120px;color:rgba(255,255,255,.05)`));
+const nTick = (VERT ? [0, 1, 2, 3, 4] : [0, 1, 2]).map((row) => mk($("nTicker"), (PERFILES.join("  ·  ") + "  ·  ").repeat(3), "abs anton", `left:0;top:${140 + row * 360}px;font-size:120px;color:rgba(255,255,255,.05)`));
 
 // ---------- grano ----------
 const gctx = $("grain").getContext("2d");
@@ -386,7 +392,7 @@ function render(t) {
       if (!vis) return;
       const sc = 0.12 * Math.pow(34, q);
       const o = q < 0.15 ? q / 0.15 : q > 0.7 ? (1 - q) / 0.3 : 1;
-      tf(el, { c: true, x: el._x * sc * 0.35, y: el._y * sc * 0.35, s: sc, o, blur: sc > 2.2 ? (sc - 2.2) * 4 : 0 });
+      tf(el, { c: true, x: el._x * sc * (VERT ? 0.18 : 0.35), y: el._y * sc * (VERT ? 0.6 : 0.35), s: sc, o, blur: sc > 2.2 ? (sc - 2.2) * 4 : 0 });
     });
   }
 
@@ -445,7 +451,7 @@ function render(t) {
   if (onG) {
     bg = FONDOS_PLACA.U.bg;
     animPlaca(plU, t, 17.0, 19.0);
-    $("gLine").style.width = `${1920 * p(t, 17.0, 17.7, E.expo)}px`;
+    $("gLine").style.width = `${W * p(t, 17.0, 17.7, E.expo)}px`;
     tf($("gLbl"), { o: p(t, 17.6, 18.0), y: (1 - p(t, 17.6, 18.0, E.expo)) * 20 });
   }
   // H · Umbral en acción
@@ -498,15 +504,15 @@ function render(t) {
     jBars.forEach((b, i) => {
       const g = p(t, 27.0 + i * 0.025, 27.7 + i * 0.025, E.expo);
       const v = lerp(planA[i], planB[i], i === HUECO ? p(t, 28.8, 29.1) : recal);
-      b.style.left = `${i * (1620 / SEM) + 6}px`;
+      b.style.left = `${i * (JW / SEM) + 4}px`;
       b.style.height = `${v * 430 * g}px`;
       b.style.background = i === HUECO && t > 28.8 ? "#ff3d37" : i < hoy ? "linear-gradient(180deg,#ffd978,#ffb81f)" : "rgba(255,255,255,.22)";
       b.style.boxShadow = i < hoy ? "0 0 22px rgba(255,197,72,.35)" : "none";
     });
-    $("jHoy").style.left = `${hoy * (1620 / SEM)}px`;
+    $("jHoy").style.left = `${hoy * (JW / SEM)}px`;
     $("jHoy").style.opacity = p(t, 27.4, 27.8);
     $("jFlag").style.opacity = p(t, 27.6, 28.2);
-    $("jBeam").style.left = `${lerp(HUECO * 54, 1620, p(t, 30.0, 31.2, E.inOut))}px`;
+    $("jBeam").style.left = `${lerp(HUECO * (JW / SEM), JW, p(t, 30.0, 31.2, E.inOut))}px`;
     $("jBeam").style.opacity = recal > 0 && recal < 1 ? 1 : 0;
     [["jT1", 28.9, 30.0], ["jT2", 30.0, 31.3], ["jT3", 31.3, 32.5]].forEach(([id, a, b]) => {
       const on = inr(t, a, b); $(id).style.visibility = on ? "visible" : "hidden";
@@ -580,14 +586,53 @@ function render(t) {
   $("bgSolid").style.background = bg;
   grano(Math.floor(t * 30));
 }
+// Reduce con zoom (no con transform, que usa la animación) lo que no cabe en el ancho.
+function encajar(el, maxW) {
+  const objetivo = el.id === "sC" || el.id === "sN" ? el.querySelector(":scope > .abs.c") : el;
+  objetivo.style.zoom = 1;
+  const w = objetivo.scrollWidth;
+  if (w > maxW) objetivo.style.zoom = maxW / w;
+}
+function disenoVertical() {
+  const css = (id, estilo) => { $(id).style.cssText += ";" + estilo; };
+  $("grain").width = 270; $("grain").height = 480;
+  css("fTxt", "left:60px;top:1330px");
+  css("fPersp", "left:-30px;top:360px");
+  css("gLine", "top:1180px");
+  css("gLbl", "right:60px;top:1200px");
+  css("hCap", "top:1640px;padding:0 60px");
+  css("jPersp", "top:760px;width:1080px;height:760px");
+  css("jIn", "left:40px;width:1000px;height:600px");
+  css("jFlag", "bottom:560px;font-size:34px");
+  ["jT1", "jT2", "jT3"].forEach((id) => css(id, "left:60px;top:300px;width:960px;white-space:normal;font-size:150px;line-height:1.05"));
+  css("lIn", "left:215px;top:620px;width:650px;height:720px");
+  css("lTimer", "left:0;right:0;top:330px;text-align:center");
+  $("lT1").innerHTML = "Estudias<br>solo.";
+  css("lT1", "text-align:center;line-height:1.05");
+  $("pT").innerHTML = "Admisión<br>2027";
+  css("pT", "line-height:1.02");
+  $("pSub").innerHTML = "Cupos limitados<br>Reserva sin costo";
+  css("pSub", "line-height:1.6;margin-top:30px");
+  $("hOk").firstElementChild.innerHTML = "Desblo-<br>queado.";
+  css("hOk", "line-height:1");
+  const filaCta = $("oCta").parentElement;
+  filaCta.style.flexDirection = "column";
+  filaCta.style.gap = "26px";
+  const marca = $("oBox").children[1];
+  marca.style.flexDirection = "column";
+  marca.style.gap = "20px";
+}
 function ajustar() {
   // Las escenas ocultas (display:none) miden 0 de ancho: se muestran solo para medir.
   const escenas = [...document.querySelectorAll(".scene")];
   escenas.forEach((e) => { e.style.display = "block"; e.style.visibility = "hidden"; });
-  aEls.forEach((el) => fit(el, 1760, 560));
-  mEls.forEach((el) => fit(el, 1700, 460));
-  [plV, plU, plB, plT].forEach((pl) => fit(pl.line, 1640, 400));
-  fit($("pT"), 1700, 330);
+  if (VERT) disenoVertical();
+  const AW = VERT ? 1000 : 1760;
+  aEls.forEach((el) => fit(el, AW, 560));
+  mEls.forEach((el) => fit(el, VERT ? 1000 : 1700, 460));
+  [plV, plU, plB, plT].forEach((pl) => fit(pl.line, VERT ? 1000 : 1640, 400));
+  fit($("pT"), VERT ? 1000 : 1700, 330);
+  if (VERT) ["sC", "dWord", "dSub", "lT1", "lT2", "sN", "hOk", "hRef", "oBox", "pSub", "hCap", "fTxt"].forEach((id) => encajar($(id), 1000));
   escenas.forEach((e) => { e.style.display = "none"; e.style.visibility = ""; });
 }
 window.listo = Promise.all(["400 100px Anton", "800 100px Poppins", "700 100px Poppins", "600 100px Poppins", "400 100px Poppins"].map((f) => document.fonts.load(f))).then(ajustar);

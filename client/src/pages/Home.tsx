@@ -43,6 +43,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const BarkleyTVSection = lazy(() => import("@/components/BarkleyTVSection"));
 import PorDentroHub from "@/components/PorDentroHub";
 import { SiteHeader } from "@/components/SiteHeader";
+import { IntroVideo } from "@/components/IntroVideo";
 
 // Réplica de .fade-in-on-scroll / .animatedElement reales de isb.be (opacity+translateY al entrar en viewport)
 // IMPORTANTE: acepta `style` y lo aplica al propio wrapper — si no, el flex-basis del hijo
@@ -1008,6 +1009,8 @@ export default function Home() {
           </motion.button>
         )}
       </AnimatePresence>
+
+      <IntroVideo />
 
       {/* === INTRO === */}
       <section id="nosotros" style={{ maxWidth: 1180, margin: "0 auto", padding: "90px 24px", textAlign: "left" }}>

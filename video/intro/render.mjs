@@ -2,6 +2,7 @@
 //   node video/intro/render.mjs                 → video/intro/out/intro-1080p.mp4
 //   node video/intro/render.mjs --stills 3,12,20 → PNG de esos segundos
 //   --file intro-v2.html  elige la animación; SUB=3 promedia 3 subcuadros por cuadro (desenfoque de movimiento)
+//   --vertical            formato 9:16 (1080×1920) para redes
 // Requiere Chromium (PUPPETEER_EXECUTABLE_PATH) y ffmpeg con libx264 (FFMPEG).
 import puppeteer from "puppeteer";
 import { spawn } from "child_process";
@@ -17,15 +18,16 @@ const idx = process.argv.indexOf("--stills");
 const stills = idx > -1 ? process.argv[idx + 1].split(",").map(Number) : null;
 const fi = process.argv.indexOf("--file");
 const archivo = fi > -1 ? process.argv[fi + 1] : "intro.html";
-const nombre = archivo.replace(/\.html$/, "");
+const vertical = process.argv.includes("--vertical");
+const nombre = archivo.replace(/\.html$/, "") + (vertical ? "-vertical" : "");
 const SUB = Number(process.env.SUB || 1);
 
 const browser = await puppeteer.launch({ args: ["--no-sandbox", "--disable-dev-shm-usage", "--font-render-hinting=none"] });
 const page = await browser.newPage();
-await page.setViewport({ width: 1920, height: 1080, deviceScaleFactor: 1 });
+await page.setViewport(vertical ? { width: 1080, height: 1920, deviceScaleFactor: 1 } : { width: 1920, height: 1080, deviceScaleFactor: 1 });
 const errores = [];
 page.on("pageerror", (e) => errores.push(e.message));
-await page.goto(pathToFileURL(resolve(aqui, archivo)).href, { waitUntil: "load" });
+await page.goto(pathToFileURL(resolve(aqui, archivo)).href + (vertical ? "?vertical" : ""), { waitUntil: "load" });
 await page.evaluate(() => window.listo || document.fonts.ready);
 if (errores.length) throw new Error(errores.join("\n"));
 
@@ -42,7 +44,7 @@ if (stills) {
     "-y", "-f", "image2pipe", "-framerate", String(FPS * SUB), "-c:v", "mjpeg", "-i", "-",
     ...mezcla,
     "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-pix_fmt", "yuv420p", "-movflags", "+faststart",
-    resolve(out, `${nombre}-1080p.mp4`),
+    resolve(out, `${nombre}-${vertical ? "1080x1920" : "1080p"}.mp4`),
   ], { stdio: ["pipe", "inherit", "inherit"] });
   for (let f = 0; f < frames; f++) {
     await page.evaluate((t) => window.render(t), f / (FPS * SUB));
