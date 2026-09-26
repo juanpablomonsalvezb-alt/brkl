@@ -136,13 +136,20 @@ const TITULO_POST = {
   "ansiedad-escolar-y-aula-tradicional": "Ansiedad escolar: rendir mejor sin exposición constante",
   "paes-despues-de-cuarto-medio": "PAES después de 4° medio: qué necesitas y cuándo",
   "adulto-acompanante-examenes-libres-basica": "Adulto Acompañante en exámenes libres de básica",
-  "educacion-asincronica-que-es": "Qué significa clase asincrónica (explicado simple)",
+  "educacion-asincronica-que-es": "Clase Asincrónica: Significado y Definición (Explicado Simple)",
 };
+
+// Van primero en todas las landings: son el paso siguiente de quien busca el temario.
+const RELACIONADOS_FIJOS = [
+  `<a href="/blog/como-inscribirse-examenes-libres-mineduc/">Cómo inscribirse a Exámenes Libres MINEDUC paso a paso</a>`,
+  `<a href="/blog/resultados-examenes-libres-2026/">Resultados Exámenes Libres 2026: cómo y cuándo verlos</a>`,
+];
 
 function relacionadosHtml(slug) {
   const r = RELACIONADO_POR_NIVEL[slug];
   if (!r) return "";
   const items = [
+    ...RELACIONADOS_FIJOS,
     `<a href="/blog/${r.post}/">${TITULO_POST[r.post]}</a>`,
     r.adaptativo ? `<a href="/adaptativo">Programa Adaptativo — TDAH, dislexia, TEA y motricidad</a>` : "",
   ].filter(Boolean);
@@ -295,7 +302,7 @@ function faqsFor(n) {
 function pageHtml(n) {
   const url = `${BASE}/examenes-libres-${n.slug}/`;
   // Los datos mandan: "temario <nivel> examenes libres" es la consulta dominante.
-  const title = `Temario Exámenes Libres ${n.nombre} — Oficial MINEDUC`;
+  const title = `Temario Exámenes Libres ${n.nombre} 2026 — Oficial MINEDUC`;
   const desc = `Temario oficial completo de ${n.nombre} para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.`;
   const faqs = faqsFor(n);
   // BreadcrumbList: Google lo usa para mostrar la ruta en el resultado en vez de
@@ -391,7 +398,9 @@ function pageHtml(n) {
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
   <script type="application/ld+json">${JSON.stringify(schema)}</script>
   <script type="application/ld+json">${JSON.stringify(faqSchema)}</script>
   <script type="application/ld+json">${JSON.stringify(crumbs)}</script>
@@ -509,8 +518,9 @@ function pageHtml(n) {
     <div class="inner">
       <h2>Fechas oficiales MINEDUC 2026</h2>
       <div class="grid3">
-        <div class="card"><b>Primer período</b><p>Inscripción: 6 al 24 de abril de 2026<br>Rendición: 3 al 7 de junio de 2026</p></div>
-        <div class="card"><b>Segundo período</b><p>Inscripción: 1 al 22 de julio de 2026<br>Rendición: 7 al 11 de octubre de 2026</p></div>
+        <div class="card"><b>Primer período · todos los cursos y NEE</b><p>Inscripción: 6 al 29 de abril de 2026<br>Rendición: 8 al 19 de junio de 2026<br>Resultados: 27 de julio de 2026</p></div>
+        <div class="card"><b>Segundo período · solo 4° medio y NEE</b><p>Inscripción: 12 de mayo al 17 de julio de 2026<br>Rendición: 21 de septiembre al 2 de octubre de 2026<br>Resultados: 27 de octubre de 2026</p></div>
+        <div class="card"><b>Tercer período · todos excepto 4° medio y NEE</b><p>Inscripción: mismo plazo del primer período<br>Rendición: 19 al 30 de octubre de 2026<br>Resultados: 20 de noviembre de 2026</p></div>
         <div class="card"><b>Inscripción gratuita</b><p>Se realiza en el Portal de Ayuda MINEDUC. Para menores de 18 años, revisa la <a class="mineduc" href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11" target="_blank" rel="noopener noreferrer">ficha oficial</a>.</p></div>
       </div>
     </div>

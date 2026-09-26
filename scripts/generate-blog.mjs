@@ -20,6 +20,7 @@ const TEXT = "#525252";
 // como isla: recibe enlace del home pero no pasa autoridad a las landings ni le
 // da al lector una ruta hacia el nivel que le corresponde.
 const DESTINOS = {
+  bullying: { href: "/bullying-y-colegio-online/", label: "Bullying y colegio online: qué cambia realmente" },
   guia: { href: "/guia-examenes-libres/", label: "Guía completa de exámenes libres en Chile" },
   adaptativo: { href: "/adaptativo", label: "Barkley Adaptativo — apoyo para TDAH, dislexia y TEA" },
   "1-basico": { href: "/examenes-libres-1-basico/", label: "Exámenes libres 1° Básico" },
@@ -42,13 +43,18 @@ const RELACIONADOS = {
   "dislexia-estudiar-en-casa": ["adaptativo", "guia", "3-basico"],
   "aprendizaje-por-dominio-que-es": ["guia", "5-basico", "1-medio"],
   "colegio-para-deportistas-alto-rendimiento": ["guia", "2-medio", "8-basico"],
-  "terminar-el-colegio-siendo-adulto": ["4-medio", "3-medio", "guia"],
   "como-inscribirse-examenes-libres-mineduc": ["guia", "8-basico", "4-medio"],
-  "ansiedad-escolar-y-aula-tradicional": ["adaptativo", "guia", "6-basico"],
+  "ansiedad-escolar-y-aula-tradicional": ["bullying", "adaptativo", "guia"],
   "paes-despues-de-cuarto-medio": ["4-medio", "3-medio", "guia"],
   "adulto-acompanante-examenes-libres-basica": ["1-basico", "2-basico", "3-basico"],
   "educacion-asincronica-que-es": ["guia", "1-medio", "5-basico"],
 };
+
+// Poppins sin bloquear el render: se precarga y se aplica al terminar de bajar.
+const FUENTE_URL = "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap";
+const FUENTES = `<link rel="preload" as="style" href="${FUENTE_URL}">
+  <link href="${FUENTE_URL}" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="${FUENTE_URL}" rel="stylesheet"></noscript>`;
 
 // Meta compartida por todas las páginas estáticas. Sin max-image-preview:large
 // Google recorta la miniatura en resultados y en Discover.
@@ -84,7 +90,7 @@ const POSTS = [
     desc: "Examen libre y colegio online no son lo mismo en Chile. Te explicamos la diferencia real y cómo Barkley combina ambos.",
     date: "2026-06-02",
     body: `
-      <h2>Son dos cosas distintas que se confunden todo el tiempo</h2>
+      <h2>¿Examen libre y colegio online son lo mismo?</h2>
       <p>"Examen libre" es la modalidad oficial del Ministerio de Educación para validar un año escolar sin asistir a un colegio presencial. Es un trámite: te inscribes en el Portal de Ayuda MINEDUC, rindes una prueba en una fecha oficial, y si apruebas, obtienes la certificación de ese nivel — sin importar cómo estudiaste para llegar ahí.</p>
       <p>"Colegio online" es la preparación: cómo estudias el temario antes de llegar a esa prueba. Puede ser con clases en vivo por Zoom, con apuntes en PDF, o —como en Barkley— con lecciones grabadas en video y pódcast que ves cuando tu día lo permite.</p>
       <h2>Por qué se confunden</h2>
@@ -103,7 +109,7 @@ const POSTS = [
     desc: "El horario fijo y el aula ruidosa no son neutros para un estudiante con TDAH. Explicamos por qué, y qué cambia con un formato asincrónico.",
     date: "2026-06-05",
     body: `
-      <h2>El aula impone una norma que no es neutra</h2>
+      <h2>¿Por qué el aula tradicional complica más a un estudiante con TDAH?</h2>
       <p>Cuarenta minutos sentado, en silencio, siguiendo el ritmo del grupo — esa estructura funciona razonablemente bien para el estudiante promedio. Para un estudiante con TDAH, cada uno de esos elementos (tiempo fijo, bloque largo, exposición constante) es una fricción adicional que no tiene que ver con cuánto entiende la materia.</p>
       <h2>Qué cambia con un formato sin horario fijo</h2>
       <p>Cuando no hay una hora de clase que empieza y termina para todos igual, el estudiante puede estudiar en bloques más cortos, repetir la parte que no entendió sin sentir que "atrasa al curso", y avanzar en el momento del día en que realmente rinde mejor — que no siempre es a las 8 de la mañana.</p>
@@ -121,7 +127,7 @@ const POSTS = [
     desc: "Cómo adaptar el estudio en casa cuando leer cuesta más, sin reducir la exigencia académica ni la comprensión del contenido.",
     date: "2026-06-09",
     body: `
-      <h2>La dificultad es con el texto, no con el contenido</h2>
+      <h2>¿La dislexia dificulta el aprendizaje o solo la lectura?</h2>
       <p>Un niño o joven con dislexia puede entender perfectamente un concepto de historia o de ciencias — el obstáculo aparece cuando ese concepto llega solo en forma de texto largo y denso. Confundir "le cuesta leer" con "le cuesta aprender" es el error más común y el más dañino.</p>
       <h2>Qué ayuda de verdad en casa</h2>
       <p>Dar la misma información en más de un formato (audio además de texto), usar tipografías pensadas para dislexia, aumentar el interlineado, y quitar la presión de "leer en voz alta frente a otros" — que en un aula es casi inevitable y en casa se puede evitar por completo.</p>
@@ -138,6 +144,7 @@ const POSTS = [
     title: "Aprendizaje por Dominio: nadie avanza sin entender",
     desc: "Qué es el Aprendizaje por Dominio (Mastery Learning), el método detrás de Barkley, y por qué evita que un estudiante arrastre vacíos hasta el examen.",
     date: "2026-06-13",
+    otrosAntes: [["/blog/resultados-pisa-chile-2025/", "Resultados PISA 2025 Chile: qué dicen los números y qué no"]],
     body: `
       <h2>El problema que resuelve</h2>
       <p>En un curso tradicional, el calendario manda: si la clase de fracciones terminó, la clase pasa al siguiente tema aunque un tercio del curso no haya entendido fracciones todavía. Ese vacío no desaparece — reaparece meses después, cuando el nuevo contenido depende del anterior.</p>
@@ -157,7 +164,7 @@ const POSTS = [
     desc: "Giras, entrenamientos y competencias no calzan con un horario escolar fijo. Cómo un formato asincrónico resuelve ese conflicto real.",
     date: "2026-06-17",
     body: `
-      <h2>El conflicto real</h2>
+      <h2>¿Por qué un colegio presencial no funciona para un deportista de alto rendimiento?</h2>
       <p>Un deportista de alto rendimiento entrena en horarios que no siempre coinciden con la jornada escolar, viaja a competencias en días de semana, y necesita recuperación física que no espera al timbre de la próxima clase. El colegio presencial tradicional obliga a elegir entre deporte y estudios cuando ambos chocan.</p>
       <h2>Qué necesita realmente este perfil</h2>
       <p>No es "menos exigencia académica" — es flexibilidad real de cuándo y desde dónde estudiar. Clases grabadas que se ven en un hotel entre competencias, evaluaciones que se rinden cuando el calendario deportivo lo permite, y avance que no depende de estar presente un día específico.</p>
@@ -174,18 +181,11 @@ const POSTS = [
     title: "Terminar el colegio siendo adulto, en Chile",
     desc: "Guía práctica para adultos que quieren completar su escolaridad y obtener la licencia de enseñanza media a través de exámenes libres.",
     date: "2026-06-21",
-    body: `
-      <h2>No hay límite de edad para terminar el colegio</h2>
-      <p>Muchos adultos asumen que retomar el colegio después de los 20, 30 o 40 años ya no es una opción formal. En Chile sí lo es: los exámenes libres MINEDUC no tienen límite de edad superior — el único requisito es haber completado el nivel anterior al que se quiere validar.</p>
-      <h2>Por qué el formato presencial no funciona para un adulto</h2>
-      <p>Volver a una sala de clases con adolescentes, en un horario que compite con un trabajo de jornada completa, es la principal barrera práctica para un adulto. Un formato 100% asincrónico elimina ese problema de raíz: se estudia de noche, los fines de semana, o en los tiempos que el trabajo deja libres.</p>
-      <h2>Qué se obtiene al final</h2>
-      <p>La licencia de enseñanza media obtenida por exámenes libres es la misma licencia que entrega cualquier colegio tradicional — habilita para rendir la PAES y postular a educación superior en igualdad de condiciones.</p>
-    `,
-    faqs: [
-      { q: "¿Hay edad máxima para rendir exámenes libres en Chile?", a: "No. El único requisito es tener 18 años o más (para la modalidad de adultos) y haber completado el nivel anterior al que se desea validar." },
-      { q: "¿La licencia obtenida por examen libre sirve para postular a la PAES?", a: "Sí, es la misma licencia de enseñanza media que entrega un colegio tradicional." },
-    ],
+    // La página creció a landing propia (temario de adultos, precios con
+    // marcadores {{precio_adultos}}, formulario a /api/waitlist): se mantiene a
+    // mano en client/public/blog/terminar-el-colegio-siendo-adulto/index.html.
+    // Acá solo queda para el hub; el generador no escribe su archivo.
+    estatico: true,
   },
   {
     slug: "como-inscribirse-examenes-libres-mineduc",
@@ -193,12 +193,12 @@ const POSTS = [
     desc: "Guía práctica y gratuita para inscribir a exámenes libres en el Portal de Ayuda MINEDUC, con fechas oficiales 2026.",
     date: "2026-06-25",
     body: `
-      <h2>Es un trámite gratuito, y lo hace el apoderado</h2>
+      <h2>¿Es gratis inscribirse a Exámenes Libres, y quién lo hace?</h2>
       <p>La inscripción a exámenes libres ante el MINEDUC no tiene costo. Para menores de 18 años, el trámite lo realiza el adulto responsable en el Portal de Ayuda MINEDUC, siguiendo la ficha oficial del ministerio.</p>
       <h2>Los pasos generales</h2>
       <p>1) Verificar el nivel que corresponde validar (el estudiante debe haber completado el nivel anterior). 2) Ingresar al Portal de Ayuda MINEDUC dentro del período de inscripción oficial. 3) Completar los datos del estudiante y el nivel a rendir. 4) Guardar el comprobante de inscripción. 5) Presentarse a rendir en la fecha y sede asignada.</p>
       <h2>Fechas oficiales 2026</h2>
-      <p>Primer período: inscripción del 6 al 24 de abril, rendición del 3 al 7 de junio. Segundo período: inscripción del 1 al 22 de julio, rendición del 7 al 11 de octubre.</p>
+      <p>Para menores de 18 años hay tres períodos en 2026. Primero (todos los cursos y NEE): inscripción del 6 al 29 de abril, rendición del 8 al 19 de junio. Segundo (solo 4° medio y NEE): inscripción del 12 de mayo al 17 de julio, rendición del 21 de septiembre al 2 de octubre. Tercero (todos excepto 4° medio y NEE): mismo plazo de inscripción que el primero, rendición del 19 al 30 de octubre.</p>
       <h2>Dónde pedir ayuda con el trámite</h2>
       <p>En Barkley entregamos charlas y asesoría personalizada para hacer correctamente la inscripción, aunque el trámite en sí siempre lo completa el apoderado directamente ante el MINEDUC.</p>
     `,
@@ -213,7 +213,7 @@ const POSTS = [
     desc: "Para algunos estudiantes, la exposición social permanente del aula es un costo diario que no tiene relación con cuánto saben. Qué cambia en un formato sin esa exposición.",
     date: "2026-06-30",
     body: `
-      <h2>Un costo invisible del aula tradicional</h2>
+      <h2>¿Por qué el aula tradicional genera ansiedad escolar?</h2>
       <p>Levantar la mano y equivocarse frente a 30 personas, ser evaluado socialmente todo el día, no tener un momento realmente propio — para un estudiante con ansiedad escolar, ese costo social diario compite directamente con la capacidad de concentrarse en el contenido.</p>
       <h2>Qué cambia sin esa exposición constante</h2>
       <p>Estudiar sin público reduce la carga emocional que antecede al aprendizaje. El estudiante puede equivocarse en una práctica autocorregida, repetir sin que nadie lo note, y solo mostrar su avance cuando está listo para hacerlo.</p>
@@ -231,7 +231,7 @@ const POSTS = [
     desc: "Con la licencia de enseñanza media en mano, la PAES es el siguiente paso. Qué se necesita y cuándo conviene empezar a prepararla.",
     date: "2026-07-03",
     body: `
-      <h2>La licencia es el requisito, no el fin</h2>
+      <h2>¿Basta con la licencia de enseñanza media para dar la PAES?</h2>
       <p>Tener la licencia de enseñanza media (por examen libre o colegio tradicional) habilita para rendir la PAES y postular a educación superior a través del sistema centralizado de admisión chileno.</p>
       <h2>Cuándo conviene empezar a prepararla</h2>
       <p>Idealmente, la preparación de contenidos PAES se solapa con el último tramo de 3° y 4° medio — no es algo que se improvisa en las últimas semanas antes de la prueba. Las bases de matemática y comprensión lectora que se consolidan en el plan común son la misma base que evalúa la PAES.</p>
@@ -249,7 +249,7 @@ const POSTS = [
     desc: "En los primeros niveles de básica, el Adulto Acompañante cumple un rol clave. Qué se espera de esa persona y cómo cambia con los años.",
     date: "2026-07-07",
     body: `
-      <h2>Por qué se necesita en los primeros niveles</h2>
+      <h2>¿Por qué se necesita un Adulto Acompañante en los primeros niveles?</h2>
       <p>En 1° y 2° básico, el niño está recién consolidando lectoescritura y las primeras operaciones — necesita a un adulto presente casi todo el tiempo de estudio, no como profesor, sino como guía y compañía durante la lección.</p>
       <h2>Cómo cambia el rol con los años</h2>
       <p>De 3° a 4° básico, el adulto empieza a soltar: acompaña el inicio de la jornada y supervisa el resto del día. De 5° en adelante, el rol pasa a ser principalmente de supervisión — revisar avances y estar disponible si el estudiante lo necesita, no sentado al lado todo el tiempo.</p>
@@ -270,13 +270,20 @@ const POSTS = [
     // >250 impresiones acumuladas en variantes de "significado/significa", 0 clics:
     // la intención es definición literal, así que el artículo abre respondiéndola
     // en la primera oración, sin rodeos.
-    title: "Qué significa clase asincrónica (explicado simple)",
-    desc: "Clase asincrónica significa que no hay horario fijo: el contenido está grabado y lo ves cuando puedas. Te explicamos la diferencia con las clases en vivo.",
+    title: "Clase Asincrónica: Significado y Definición (Explicado Simple)",
+    desc: "Definición simple: una clase asincrónica es aquella sin horario fijo de conexión, donde el contenido queda grabado (video, guía, pódcast) y se ve cuando cada estudiante puede. Qué significan las “horas asincrónicas” y en qué se diferencia de una clase en vivo.",
+    // Texto corto para la tarjeta del hub (la desc de arriba es para el snippet de Google).
+    resumen: "Clase asincrónica significa que no hay horario fijo: el contenido está grabado y lo ves cuando puedas. Te explicamos la diferencia con las clases en vivo.",
     date: "2026-07-11",
+    intro: `<p class="definicion"><strong>Definición:</strong> una clase asincrónica es aquella sin horario fijo de conexión — el contenido queda grabado (video, guía, pódcast) y cada estudiante lo ve cuando puede, en vez de coincidir todos a la misma hora como en una clase en vivo.</p>`,
+    css: `
+    .definicion { background: #f5f5f5; border-left: 4px solid ${GOLD}; border-radius: 8px; padding: 18px 20px; margin-bottom: 28px; font-size: 16px; }
+    .definicion strong { color: ${NAVY}; }`,
+    otrosAntes: [["/blog/clase-sincronica-vs-asincronica/", "Clase Sincrónica vs Asincrónica: la Diferencia Real"]],
     body: `
-      <h2>Qué significa "asincrónico", en una frase</h2>
+      <h2>¿Qué significa una clase asincrónica?</h2>
       <p><strong>Asincrónico significa que no todos están conectados al mismo tiempo.</strong> En una clase sincrónica (como Zoom), el profesor y los estudiantes coinciden en la misma hora. En una clase asincrónica, el contenido queda grabado — video, pódcast, guía — y cada quien lo ve cuando puede: a las 8 de la mañana o a las 11 de la noche, da lo mismo.</p>
-      <h2>Entonces, ¿"horas asincrónicas" qué son?</h2>
+      <h2>Entonces, ¿“horas asincrónicas” qué son?</h2>
       <p>Son las horas de estudio que el estudiante hace por su cuenta, con material ya preparado, sin que nadie esté "en vivo" al otro lado. Se contraponen a las horas sincrónicas (clase en vivo, con horario fijo). Un colegio 100% asincrónico, como Barkley, no tiene horas sincrónicas: todo el contenido está disponible para verse cuando cada estudiante esté listo.</p>
       <h2>No es lo mismo que "clases online" a secas</h2>
       <p>Muchos colegios online en Chile simplemente trasladaron la sala de clases a Zoom, manteniendo el horario fijo. Eso sigue siendo síncrono — solo cambió la ubicación, no el problema del tiempo compartido obligatorio.</p>
@@ -290,6 +297,57 @@ const POSTS = [
       { q: "¿Qué colegios en el mundo usan este modelo?", a: "Acellus Academy en EE.UU. y plataformas como Edmentum/Apex Learning en EE.UU. y Reino Unido son referentes reales de este método con estudiantes de todas las edades." },
     ],
   },
+];
+
+// Artículos escritos a mano (no los genera este script) que igual van en el hub.
+// desc = la del schema; resumen/tituloCard = texto más corto para la tarjeta.
+const EXTERNOS = [
+  { slug: "colegio-online-gratis-chile", date: "2026-08-29",
+    title: "¿Existe un colegio online gratis en Chile? La respuesta real",
+    desc: "Lo gratuito y lo pagado en la educación online chilena, sin letra chica: qué cubre el MINEDUC sin costo y qué es lo que realmente pagas en una plataforma como Barkley.",
+    resumen: "Lo gratuito y lo pagado en la educación online chilena, sin letra chica: qué cubre el MINEDUC sin costo y qué es lo que realmente pagas en una plataforma privada." },
+  { slug: "mejor-colegio-online-chile", date: "2026-08-29",
+    title: "Mejor colegio online en Chile: cómo elegir (guía 2027)",
+    desc: "No hay un solo 'mejor' colegio online en Chile — hay criterios objetivos para comparar: modalidad, metodología, transparencia de precio y validación oficial. Guía para decidir bien.",
+    resumen: "No hay un solo \"mejor\" colegio online — hay criterios objetivos para comparar: modalidad, metodología, transparencia de precio y validación oficial." },
+  { slug: "resultados-examenes-libres-2026", date: "2026-08-29",
+    title: "Resultados Exámenes Libres 2026: cómo y cuándo verlos",
+    desc: "Dónde consultar los resultados de Exámenes Libres MINEDUC 2026, qué necesitas para entrar, y las fechas oficiales de publicación para menores de 18 años.",
+    resumen: "Dónde consultar los resultados, qué necesitas para entrar, y las fechas oficiales de publicación para menores de 18 años." },
+  { slug: "reprobar-examen-libre-que-hacer", date: "2026-08-29",
+    title: "¿Reprobé un examen libre? Qué hacer y cuándo se puede repetir",
+    desc: "Si tu hijo reprobó un examen libre MINEDUC, esto es lo que dice la normativa: opciones de recorrección, plazos y cuándo se puede volver a inscribir.",
+    resumen: "Opciones de recorrección, plazos oficiales y cuándo se puede volver a inscribir si el resultado fue reprobatorio." },
+  { slug: "examenes-libres-2026-calendario-completo", date: "2026-08-29",
+    title: "Exámenes Libres 2026: calendario completo, los 3 períodos",
+    desc: "Calendario oficial MINEDUC 2026 de Exámenes Libres para menores de 18 años: los 3 períodos, inscripción, rendición y resultados, explicado sin vueltas.",
+    resumen: "Los 3 períodos oficiales MINEDUC 2026 para menores de 18 años, explicado sin vueltas: quién se inscribe en cuál y por qué." },
+  { slug: "colegio-para-ninos-superdotados", date: "2026-08-29",
+    title: "¿Dónde estudian los niños con altas capacidades? Colegio y ritmo real",
+    tituloCard: "¿Dónde estudian los niños con altas capacidades?",
+    desc: "Un estudiante con altas capacidades (superdotado) no necesita más contenido, necesita avanzar a su propio ritmo. Por qué el aula tradicional lo frena y qué cambia en un formato por dominio.",
+    resumen: "Un estudiante con altas capacidades no necesita más contenido, necesita avanzar a su propio ritmo. Por qué el aula tradicional lo frena." },
+  { slug: "sindrome-de-down-y-colegio-online", date: "2026-08-29",
+    title: "Síndrome de Down y colegio online: qué considerar antes de elegir",
+    tituloCard: "Síndrome de Down y colegio online: qué considerar",
+    desc: "Qué preguntar antes de matricular a un estudiante con síndrome de Down en un colegio online, y por qué la respuesta depende del apoyo real detrás de la plataforma, no solo del formato.",
+    resumen: "Qué preguntar antes de matricular, y por qué la respuesta depende del apoyo real detrás de la plataforma, no solo del formato." },
+  { slug: "mitos-vs-realidad-colegio-online", date: "2026-08-29",
+    title: "8 Mitos vs. Realidad sobre el Colegio Online en Chile",
+    desc: "Los mitos más comunes sobre educación online y homeschool en Chile, contrastados con la realidad: exámenes libres, TDAH, aprobación, validez oficial y más.",
+    resumen: "Los mitos más comunes sobre educación online y homeschool, contrastados con la realidad: exámenes libres, TDAH, aprobación y más." },
+];
+
+// Páginas temáticas fuera del blog, enlazadas desde el hub antes de los niveles.
+const OTRAS_PAGINAS = [
+  ["/colegio-online-chile/", "Cobertura por comuna"],
+  ["/bullying-y-colegio-online/", "Bullying y colegio online"],
+  ["/colegio-online-salud-cronica/", "Salud crónica"],
+  ["/colegio-online-movilidad-reducida/", "Movilidad reducida"],
+  ["/colegio-online-portal-padres/", "Portal Familia"],
+  ["/colegio-online-expatriados-fijos/", "Expatriados fijos"],
+  ["/colegio-online-familias-viajeras/", "Familias viajeras"],
+  ["/colegio-presencial-vs-online/", "Presencial vs Online"],
 ];
 
 function articleHtml(p) {
@@ -323,8 +381,10 @@ function articleHtml(p) {
     { name: p.title, path: `/blog/${p.slug}/` },
   ]);
 
-  const otros = POSTS.filter((x) => x.slug !== p.slug).slice(0, 4)
-    .map((x) => `<a href="/blog/${x.slug}/">${x.title}</a>`).join("");
+  const otros = [
+    ...(p.otrosAntes || []),
+    ...POSTS.filter((x) => x.slug !== p.slug).slice(0, 4).map((x) => [`/blog/${x.slug}/`, x.title]),
+  ].map(([href, label]) => `<a href="${href}">${label}</a>`).join("");
 
   const destinos = (RELACIONADOS[p.slug] || ["guia"])
     .map((k) => DESTINOS[k])
@@ -353,7 +413,7 @@ function articleHtml(p) {
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  ${FUENTES}
   <script type="application/ld+json">${JSON.stringify(articleSchema)}</script>
   ${faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>` : ""}
   <script type="application/ld+json">${JSON.stringify(crumbs)}</script>
@@ -375,7 +435,7 @@ function articleHtml(p) {
     article p { font-size: 16px; margin-bottom: 4px; }
     .faq-item { border-bottom: 1px solid #e8e8e8; padding: 18px 0; }
     .faq-item b { display: block; color: ${NAVY}; font-size: 15.5px; margin-bottom: 6px; }
-    .faq-item p { font-size: 14.5px; }
+    .faq-item p { font-size: 14.5px; }${p.css || ""}
     .cta-box { background: #f5f5f5; border-radius: 16px; padding: 28px 26px; margin-top: 40px; text-align: center; }
     .cta-box p { font-size: 15.5px; margin-bottom: 16px; }
     .btn-gold { background: ${GOLD}; color: ${NAVY}; text-decoration: none; font-weight: 700; font-size: 15px; padding: 13px 28px; border-radius: 999px; display: inline-block; }
@@ -410,7 +470,7 @@ function articleHtml(p) {
     <p class="kicker">Blog Barkley Online</p>
     <h1>${p.title}</h1>
     <p class="meta">Publicado el ${new Date(p.date + "T12:00:00").toLocaleDateString("es-CL", { day: "numeric", month: "long", year: "numeric" })}</p>
-    ${p.body}
+${p.intro ? `\n    ${p.intro}\n` : "    "}${p.body}
 
     ${p.faqs ? `
     <h2>Preguntas frecuentes</h2>
@@ -445,10 +505,10 @@ function indexHtml() {
   const url = `${BASE}/blog/`;
   const title = "Blog — Exámenes libres, TDAH y dislexia | Barkley";
   const desc = "Artículos sobre exámenes libres MINEDUC, TDAH, dislexia, Aprendizaje por Dominio y educación asincrónica en Chile.";
-  const cards = POSTS.map((p) => `
+  const cards = [...POSTS, ...EXTERNOS].map((p) => `
     <a class="card" href="/blog/${p.slug}/">
-      <b>${p.title}</b>
-      <p>${p.desc}</p>
+      <b>${p.tituloCard || p.title}</b>
+      <p>${p.resumen || p.desc}</p>
     </a>
   `).join("");
 
@@ -466,10 +526,10 @@ function indexHtml() {
     url,
     inLanguage: "es-CL",
     publisher: { "@type": "Organization", name: "Barkley Online", url: `${BASE}/` },
-    blogPost: POSTS.map((p) => ({
+    blogPost: [...POSTS, ...EXTERNOS].map((p) => ({
       "@type": "BlogPosting",
       headline: p.title,
-      description: p.desc,
+      description: EXTERNOS.includes(p) ? p.desc : p.resumen || p.desc,
       datePublished: p.date,
       url: `${BASE}/blog/${p.slug}/`,
     })),
@@ -497,7 +557,7 @@ function indexHtml() {
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  ${FUENTES}
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Poppins', system-ui, sans-serif; color: ${TEXT}; background: #fff; line-height: 1.7; }
@@ -547,7 +607,7 @@ function indexHtml() {
       <span class="lbl">Prepara tu nivel:</span>
       <a href="/guia-examenes-libres/">Guía completa</a>
       <a href="/adaptativo">Adaptativo</a>
-      ${["1-basico","2-basico","3-basico","4-basico","5-basico","6-basico","7-basico","8-basico","1-medio","2-medio","3-medio","4-medio"]
+${OTRAS_PAGINAS.map(([href, label]) => `      <a href="${href}">${label}</a>\n`).join("")}      ${["1-basico","2-basico","3-basico","4-basico","5-basico","6-basico","7-basico","8-basico","1-medio","2-medio","3-medio","4-medio"]
         .map((s) => `<a href="/examenes-libres-${s}/">${s.replace("-basico", "° Básico").replace("-medio", "° Medio")}</a>`)
         .join("")}
     </div>
@@ -561,7 +621,7 @@ function indexHtml() {
 `;
 }
 
-for (const p of POSTS) {
+for (const p of POSTS.filter((x) => !x.estatico)) {
   const dir = join(ROOT, "client", "public", "blog", p.slug);
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "index.html"), articleHtml(p));
@@ -570,4 +630,4 @@ for (const p of POSTS) {
 mkdirSync(join(ROOT, "client", "public", "blog"), { recursive: true });
 writeFileSync(join(ROOT, "client", "public", "blog", "index.html"), indexHtml());
 console.log(`✓ blog/index.html (hub)`);
-console.log(`Listo: ${POSTS.length} artículos generados.`);
+console.log(`Listo: ${POSTS.filter((x) => !x.estatico).length} artículos generados.`);
