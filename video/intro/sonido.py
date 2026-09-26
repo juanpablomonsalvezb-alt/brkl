@@ -31,10 +31,17 @@ def filtro(x, tipo, f):
     return sosfilt(sos, x)
 
 
+GOLPES = []  # instantes de impacto, para bajar la música bajo cada uno
+
+
 def poner(bus, x, t, g=1.0, pan=0.0, rev=0.0):
     i = int(t * SR)
     if i >= N:
         return
+    if isinstance(x, Impacto) and bus is sfx:
+        GOLPES.append(t)
+        g *= 0.62
+    x = np.asarray(x)
     x = x[: N - i]
     l, r = np.cos((pan + 1) * np.pi / 4), np.sin((pan + 1) * np.pi / 4)
     bus[0, i : i + len(x)] += x * g * l * 1.414
@@ -59,14 +66,26 @@ def bombo(d=0.42, f0=130, f1=42):
     return np.tanh((x + click) * 1.6)
 
 
-def impacto(grande=1.0):
-    d = 1.6 + grande
+def impacto_(grande=1.0):
+    """Golpe limpio: el peso viene del ataque y del cuerpo medio, no de saturar el grave."""
+    d = 0.9 + 0.6 * grande
     t = t_arr(d)
-    f = 28 + 90 * np.exp(-t * 10)
-    sub = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * (3.2 / grande))
-    ruido = filtro(rng.standard_normal(len(t)), "lowpass", 2400) * np.exp(-t * 9) * 0.55
-    cuerpo = filtro(rng.standard_normal(len(t)), "bandpass", [120, 600]) * np.exp(-t * 14) * 0.6
-    return np.tanh((sub * 1.2 + ruido + cuerpo) * 1.4)
+    f = 48 + 70 * np.exp(-t * 12)
+    sub = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * (5.5 / grande))
+    cuerpo = filtro(rng.standard_normal(len(t)), "bandpass", [140, 700]) * np.exp(-t * 16) * 0.45
+    aire = filtro(rng.standard_normal(len(t)), "lowpass", 3000) * np.exp(-t * 11) * 0.3
+    ataque = filtro(rng.standard_normal(len(t)), "bandpass", [2000, 7000]) * np.exp(-t * 90) * 0.5
+    x = sub * 0.8 + cuerpo + aire + ataque
+    x = x * np.minimum(1, t * 2000)
+    return x / (np.max(np.abs(x)) + 1e-9)
+
+
+class Impacto(np.ndarray):
+    pass
+
+
+def impacto(grande=1.0):
+    return impacto_(grande).view(Impacto)
 
 
 def aplauso(d=0.22):
@@ -341,12 +360,33 @@ ir = [rng.standard_normal(len(ir_t)) * np.exp(-ir_t / 0.45) for _ in range(2)]
 ir = [filtro(x, "lowpass", 5000) for x in ir]
 rev = np.stack([fftconvolve(envio[c], ir[c])[:N] for c in range(2)]) * 0.06
 
-mezcla = sfx * 0.9 + musica * 0.55 + rev
-mezcla = np.stack([filtro(mezcla[c], "highpass", 28) for c in range(2)])
+# la música se aparta 0,3 s en cada golpe (ducking)
+duck = np.ones(N)
+for tg in GOLPES:
+    i = int(tg * SR)
+    tt = t_arr(0.45)
+    curva = 1 - 0.5 * np.exp(-tt / 0.12)
+    j = min(N, i + len(tt))
+    duck[i:j] = np.minimum(duck[i:j], curva[: j - i])
+mezcla = sfx * 0.9 + musica * 0.55 * duck + rev
+mezcla = np.stack([filtro(mezcla[c], "highpass", 32) for c in range(2)])
 fin = t_arr(0.8)
 mezcla[:, -len(fin):] *= np.linspace(1, 0, len(fin))
-mezcla = np.tanh(mezcla * 1.1) / np.tanh(1.1)
-mezcla = mezcla / (np.max(np.abs(mezcla)) + 1e-9) * 0.89
+
+# limitador: ataque instantáneo, liberación 120 ms, techo -1 dBFS
+from scipy.ndimage import maximum_filter1d
+from scipy.signal import lfilter
+techo = 0.89
+nivel = maximum_filter1d(np.max(np.abs(mezcla), axis=0), size=int(0.004 * SR))
+rms = np.sqrt(np.mean(mezcla**2))
+mezcla = mezcla * (10 ** (-14.5 / 20) / rms)  # nivel promedio objetivo: -14,5 dBFS
+nivel = maximum_filter1d(np.max(np.abs(mezcla), axis=0), size=int(0.004 * SR))
+ganancia = np.minimum(1.0, techo / np.maximum(nivel, 1e-9))
+a = np.exp(-1 / (0.12 * SR))
+suave = lfilter([1 - a], [1, -a], 1 - ganancia)
+ganancia = np.minimum(ganancia, 1 - suave)
+REDUCCION_MAX_DB = -20 * np.log10(np.min(ganancia))
+mezcla = np.clip(mezcla * ganancia, -techo, techo)
 
 os.makedirs(os.path.join(AQUI, "out"), exist_ok=True)
 ruta = os.path.join(AQUI, "out", "sonido-v3.wav")
@@ -355,4 +395,4 @@ with wave.open(ruta, "wb") as w:
     w.setsampwidth(2)
     w.setframerate(SR)
     w.writeframes((mezcla.T * 32767).astype("<i2").tobytes())
-print(ruta)
+print(ruta, f"reducción máxima del limitador: {REDUCCION_MAX_DB:.1f} dB")
