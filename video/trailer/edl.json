@@ -1,0 +1,196 @@
+{
+  "fps": 24,
+  "duracion": 60.0,
+  "clips": {
+    "sala": "Empty_school_classroom_in_Santiago_20260926173218.mp4",
+    "ventana": "Girl_looking_out_window_1080p_20260926174614.mp4",
+    "laptop": "Girl_opening_laptop_at_desk_20260926174847.mp4",
+    "retrato": "Girl_wearing_knit_sweater_1080p_20260926173123.mp4",
+    "pista": "Teenager_preparing_for_track_tra…_20260926175328.mp4",
+    "nino": "Boy_listening_and_reading_book_20260926175731.mp4",
+    "fracciones": "Girl_solves_fractions_problem_1080p_20260926175926.mp4",
+    "tutor": "Man_on_video_call_1080p_20260926180453.mp4",
+    "together": "Teenager_studying_at_desk_with_20260926175524.mp4",
+    "madre": "Woman_looking_at_phone_and_20260926180214.mp4"
+  },
+  "tomas": [
+    {
+      "clip": "sala",
+      "entrada": 1.0,
+      "dur": 5.0
+    },
+    {
+      "clip": "ventana",
+      "entrada": 1.5,
+      "dur": 5.0
+    },
+    {
+      "clip": null,
+      "dur": 1.2
+    },
+    {
+      "clip": "laptop",
+      "entrada": 1.0,
+      "dur": 5.0,
+      "titulo": "Vórtice",
+      "tm": true,
+      "lema": "Todo tu año, en un solo lugar."
+    },
+    {
+      "clip": "fracciones",
+      "entrada": 6.0,
+      "dur": 4.0,
+      "titulo": "Umbral",
+      "tm": true,
+      "lema": "Avanzas cuando dominas."
+    },
+    {
+      "clip": "pista",
+      "entrada": 3.0,
+      "dur": 5.0,
+      "titulo": "Brújula",
+      "tm": true,
+      "lema": "Tu ritmo, recalculado cada semana."
+    },
+    {
+      "clip": "together",
+      "entrada": 0.3,
+      "dur": 5.0,
+      "titulo": "Together",
+      "tm": true,
+      "lema": "Estudias solo, pero no estás solo."
+    },
+    {
+      "clip": "nino",
+      "entrada": 1.0,
+      "dur": 5.0,
+      "titulo": "Programa Adaptativo",
+      "lema": "TDAH, dislexia, TEA: cada uno a su manera."
+    },
+    {
+      "clip": "fracciones",
+      "entrada": 2.2,
+      "dur": 3.6,
+      "titulo": "IA Barkley",
+      "lema": "Aparece justo cuando la necesitas."
+    },
+    {
+      "clip": "madre",
+      "entrada": 0.5,
+      "dur": 5.0,
+      "titulo": "Portal Familia",
+      "lema": "Sabes cómo va. Sin vigilar."
+    },
+    {
+      "clip": "tutor",
+      "entrada": 1.5,
+      "dur": 5.0,
+      "titulo": "Tutor humano",
+      "lema": "Personas reales, donde importan."
+    },
+    {
+      "clip": "laptop",
+      "entrada": 4.5,
+      "dur": 0.6,
+      "rapida": true
+    },
+    {
+      "clip": "pista",
+      "entrada": 8.0,
+      "dur": 0.6,
+      "rapida": true
+    },
+    {
+      "clip": "together",
+      "entrada": 7.0,
+      "dur": 0.6,
+      "rapida": true
+    },
+    {
+      "clip": "nino",
+      "entrada": 6.0,
+      "dur": 0.6,
+      "rapida": true
+    },
+    {
+      "clip": "fracciones",
+      "entrada": 8.3,
+      "dur": 0.6,
+      "rapida": true
+    },
+    {
+      "clip": "madre",
+      "entrada": 6.5,
+      "dur": 0.6,
+      "rapida": true
+    },
+    {
+      "clip": "tutor",
+      "entrada": 6.0,
+      "dur": 0.6,
+      "rapida": true
+    },
+    {
+      "clip": "ventana",
+      "entrada": 8.5,
+      "dur": 0.6,
+      "rapida": true
+    },
+    {
+      "clip": "retrato",
+      "entrada": 5.0,
+      "dur": 3.4
+    },
+    {
+      "clip": null,
+      "dur": 3.0,
+      "final": true
+    }
+  ],
+  "textos": [
+    {
+      "desde": 0.6,
+      "hasta": 4.6,
+      "lineas": [
+        "Durante años,",
+        "todos aprendieron igual."
+      ]
+    },
+    {
+      "desde": 5.6,
+      "hasta": 9.7,
+      "lineas": [
+        "Pero nadie",
+        "aprende igual."
+      ]
+    },
+    {
+      "desde": 10.05,
+      "hasta": 11.15,
+      "lineas": [
+        "Llega un colegio distinto."
+      ],
+      "grande": true
+    },
+    {
+      "desde": 50.6,
+      "hasta": 53.55,
+      "lineas": [
+        "Diseñado para",
+        "cada alumno."
+      ],
+      "grande": true
+    },
+    {
+      "desde": 54.2,
+      "hasta": 56.95,
+      "lineas": [
+        "Admisión 2027"
+      ],
+      "sello": true
+    }
+  ],
+  "recorte": {
+    "madre": 0.07
+  }
+}

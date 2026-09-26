@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Barkley — tráiler, capa de títulos</title>
+<style>
+  @font-face { font-family: "Poppins"; font-weight: 400; src: url(../intro/fonts/poppins-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 600; src: url(../intro/fonts/poppins-latin-600-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 700; src: url(../intro/fonts/poppins-latin-700-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 800; src: url(../intro/fonts/poppins-latin-800-normal.woff2) format("woff2"); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+  body { font-family: "Poppins", sans-serif; color: #fff; -webkit-font-smoothing: antialiased; }
+  .abs { position: absolute; }
+  #scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 760px; background: linear-gradient(180deg, rgba(0,8,24,0) 0%, rgba(0,8,24,.55) 55%, rgba(0,8,24,.8) 100%); opacity: 0; }
+  #scrimTop { position: absolute; left: 0; right: 0; top: 0; height: 700px; background: linear-gradient(0deg, rgba(0,8,24,0) 0%, rgba(0,8,24,.6) 100%); opacity: 0; }
+  #nombre { left: 0; right: 0; top: 1420px; text-align: center; font-weight: 700; font-size: 84px; letter-spacing: .32em; text-transform: uppercase; padding-left: .32em; white-space: nowrap; text-shadow: 0 6px 40px rgba(0,0,0,.55); }
+  #nombre sup { font-size: .28em; color: #ffc548; letter-spacing: 0; vertical-align: top; position: relative; top: .2em; }
+  #linea { left: 50%; top: 1548px; height: 3px; background: #ffc548; transform: translateX(-50%); box-shadow: 0 0 18px rgba(255,197,72,.7); }
+  #lema { left: 60px; right: 60px; top: 1580px; text-align: center; font-weight: 400; font-size: 40px; letter-spacing: .02em; color: rgba(255,255,255,.92); text-shadow: 0 4px 24px rgba(0,0,0,.6); }
+  #texto { left: 60px; right: 60px; top: 50%; transform: translateY(-50%); text-align: center; }
+  #texto div { font-weight: 600; font-size: 70px; line-height: 1.25; letter-spacing: .01em; text-shadow: 0 6px 40px rgba(0,0,0,.6); }
+  #texto.grande div { font-weight: 800; font-size: 96px; line-height: 1.1; text-transform: uppercase; letter-spacing: .02em; }
+  #texto.grande div:last-child { color: #ffc548; }
+  #sello { left: 0; right: 0; top: 330px; text-align: center; }
+  #sello span { display: inline-block; border: 3px solid #ffc548; color: #ffc548; font-weight: 700; font-size: 44px; letter-spacing: .3em; padding: 18px 36px 18px 48px; text-transform: uppercase; background: rgba(0,8,24,.35); }
+  #flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+  #final { position: absolute; inset: 0; background: radial-gradient(90% 60% at 50% 45%, #0a2a57 0%, #00132d 60%, #000814 100%); opacity: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  #fLogo { width: 170px; height: 170px; border-radius: 26px; border: 6px solid #ffc548; background: #fff; color: #003366; font-weight: 800; font-size: 128px; line-height: 150px; }
+  #fMarca { font-weight: 800; font-size: 150px; letter-spacing: -.02em; margin-top: 26px; }
+  #fSub { font-size: 26px; letter-spacing: .2em; white-space: nowrap; text-transform: uppercase; color: rgba(255,255,255,.75); margin-top: 10px; padding-left: .28em; }
+  #fAdm { margin-top: 70px; border: 3px solid #ffc548; color: #ffc548; font-weight: 700; font-size: 34px; letter-spacing: .16em; padding: 16px 28px 16px 34px; white-space: nowrap; text-transform: uppercase; }
+  #fCta { margin-top: 44px; font-weight: 600; font-size: 38px; }
+  #fUrl { margin-top: 12px; font-size: 34px; color: rgba(255,255,255,.8); }
+  #grain { position: absolute; inset: 0; width: 1080px; height: 1920px; opacity: .07; mix-blend-mode: overlay; }
+</style>
+</head>
+<body>
+  <div id="scrimTop"></div>
+  <div id="scrim"></div>
+  <div class="abs" id="nombre"></div>
+  <div class="abs" id="linea"></div>
+  <div class="abs" id="lema"></div>
+  <div class="abs" id="texto"></div>
+  <div class="abs" id="sello"><span>Admisión 2027</span></div>
+  <div id="flash"></div>
+  <div id="final">
+    <div id="fLogo">B</div>
+    <div id="fMarca">Barkley</div>
+    <div id="fSub">Colegio online · Exámenes Libres MINEDUC</div>
+    <div id="fAdm">Admisión 2027 · Cupos limitados</div>
+    <div id="fCta">Reserva tu cupo sin costo</div>
+    <div id="fUrl">barkleyinstituto.cl</div>
+  </div>
+  <canvas id="grain" width="270" height="480"></canvas>
+<script>
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const eo = (t) => 1 - Math.pow(1 - t, 3);
+const ventana = (t, a, b, fi = 0.5, fo = 0.4) => clamp((t - a) / fi) * clamp((b - t) / fo);
+
+let EDL, TOMAS;
+function preparar(edl) {
+  EDL = edl;
+  let t = 0;
+  TOMAS = edl.tomas.map((x) => { const r = { ...x, ini: t, fin: t + x.dur }; t += x.dur; return r; });
+}
+
+const gctx = $("grain").getContext("2d");
+const gimg = gctx.createImageData(270, 480);
+function grano(frame) { let s = (frame * 9301 + 49297) % 233280 || 1; const d = gimg.data; for (let i = 0; i < d.length; i += 4) { s = (s * 16807) % 2147483647; const v = s & 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; } gctx.putImageData(gimg, 0, 0); }
+
+// tamaño del nombre: 84px, o lo que quepa en 960px con el espaciado final
+const tamanos = {};
+function tamano(titulo) {
+  if (tamanos[titulo]) return tamanos[titulo];
+  const n = $("nombre");
+  const prev = [n.style.letterSpacing, n.style.paddingLeft, n.style.fontSize, n.style.filter];
+  n.style.letterSpacing = ".32em"; n.style.paddingLeft = ".32em"; n.style.fontSize = "84px"; n.style.filter = "none";
+  const r = document.createRange(); r.selectNodeContents(n);
+  const ancho = r.getBoundingClientRect().width;
+  [n.style.letterSpacing, n.style.paddingLeft, n.style.fontSize, n.style.filter] = prev;
+  return (tamanos[titulo] = Math.min(84, Math.floor(84 * 940 / ancho)));
+}
+
+function render(t) {
+  const toma = TOMAS.find((x) => t >= x.ini && t < x.fin) || TOMAS[TOMAS.length - 1];
+
+  // nombre de producto + lema
+  let op = 0;
+  if (toma.titulo) {
+    const a = toma.ini, b = toma.fin;
+    op = ventana(t, a + 0.3, b - 0.1, 0.6, 0.35);
+    const n = $("nombre");
+    const texto = toma.titulo + (toma.tm ? "<sup>™</sup>" : "");
+    if (n.innerHTML !== texto) n.innerHTML = texto;
+    const k = eo(clamp((t - a - 0.3) / 1.2));
+    n.style.letterSpacing = `${lerp(0.55, 0.32, k)}em`;
+    n.style.paddingLeft = `${lerp(0.55, 0.32, k)}em`;
+    n.style.opacity = op;
+    n.style.filter = `blur(${(1 - k) * 8}px)`;
+    n.style.fontSize = `${tamano(toma.titulo)}px`;
+    $("linea").style.width = `${eo(clamp((t - a - 0.55) / 0.8)) * 260}px`;
+    $("linea").style.opacity = op;
+    $("lema").textContent = toma.lema;
+    const kl = eo(clamp((t - a - 0.8) / 0.7));
+    $("lema").style.opacity = kl * ventana(t, a, b - 0.1, 0.01, 0.35);
+    $("lema").style.transform = `translateY(${(1 - kl) * 16}px)`;
+  } else {
+    $("nombre").style.opacity = 0; $("linea").style.opacity = 0; $("lema").style.opacity = 0;
+  }
+  $("scrim").style.opacity = toma.titulo ? ventana(t, toma.ini, toma.fin, 0.4, 0.3) : 0;
+
+  // frases centrales
+  const tx = EDL.textos.find((x) => !x.sello && t >= x.desde - 0.01 && t < x.hasta);
+  const el = $("texto");
+  if (tx) {
+    const html = tx.lineas.map((l) => `<div>${l}</div>`).join("");
+    if (el.innerHTML !== html) el.innerHTML = html;
+    el.className = "abs" + (tx.grande ? " grande" : "");
+    const k = eo(clamp((t - tx.desde) / 1.0));
+    el.style.opacity = ventana(t, tx.desde, tx.hasta, 0.7, 0.45);
+    el.style.transform = `translateY(-50%) translateY(${(1 - k) * 24}px) scale(${lerp(1.04, 1, k)})`;
+    el.style.letterSpacing = `${lerp(0.08, 0.01, k)}em`;
+    $("scrimTop").style.opacity = 0;
+  } else el.style.opacity = 0;
+
+  // sello de admisión sobre el retrato
+  const se = EDL.textos.find((x) => x.sello);
+  const ks = eo(clamp((t - se.desde) / 0.8));
+  $("sello").style.opacity = ventana(t, se.desde, se.hasta, 0.6, 0.3);
+  $("sello").style.transform = `scale(${lerp(1.15, 1, ks)})`;
+  $("scrimTop").style.opacity = ventana(t, se.desde, se.hasta, 0.6, 0.3) * 0.9;
+
+  // destellos: entrada de cada producto y cada corte del montaje rápido
+  let fl = 0;
+  for (const x of TOMAS) {
+    const d = t - x.ini;
+    if (d >= 0 && d < 0.12 && (x.rapida || x.titulo)) fl = Math.max(fl, (x.rapida ? 0.35 : 0.22) * (1 - d / 0.12));
+  }
+  $("flash").style.opacity = fl;
+
+  // placa final
+  const fin = TOMAS.find((x) => x.final);
+  const kf = clamp((t - fin.ini) / 0.5);
+  $("final").style.opacity = kf;
+  const pop = (id, t0) => { const k = eo(clamp((t - fin.ini - t0) / 0.6)); $(id).style.opacity = k; $(id).style.transform = `translateY(${(1 - k) * 22}px)`; };
+  pop("fLogo", 0.1); pop("fMarca", 0.25); pop("fSub", 0.45); pop("fAdm", 0.8); pop("fCta", 1.0); pop("fUrl", 1.1);
+
+  grano(Math.floor(t * 24));
+}
+window.render = render;
+window.preparar = preparar;
+window.listo = Promise.all(["700 80px Poppins", "400 40px Poppins", "600 70px Poppins", "800 96px Poppins"].map((f) => document.fonts.load(f)));
+</script>
+</body>
+</html>
