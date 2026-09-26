@@ -15,7 +15,7 @@ import { PRECIOS } from "@shared/precios";
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import {
   Loader2, Check, ArrowUpRight, Menu, Search, Play, Download,
-  Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
+  Hourglass, Circle, Triangle, Star, Heart, Leaf, ChevronsRight,
   Layers, BookOpen, Headphones, Image as ImageIcon, ListChecks, Sparkles,
   Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock, Instagram, Zap, Home as HomeIcon,
   Users2, Youtube, MessageCircle,
@@ -210,33 +210,12 @@ function ShapeFlower({ color, size = 40 }: { color: string; size?: number }) {
 function ShapeArrow({ color, size = 40 }: { color: string; size?: number }) {
   return <ChevronsRight color={color} size={size} strokeWidth={2.5} />;
 }
-function ShapeHourglass({ color, size = 40 }: { color: string; size?: number }) {
-  return <Hourglass color={color} fill={color} size={size} strokeWidth={1} />;
-}
-function ShapeStairs({ color, size = 40 }: { color: string; size?: number }) {
-  return <Rows3 color={color} fill={color} size={size} strokeWidth={1.5} />;
-}
-function ShapeLeaf({ color, size = 40 }: { color: string; size?: number }) {
-  return <Leaf color={color} fill={color} size={size} strokeWidth={0} />;
-}
 function ShapeFastForward({ color, size = 40 }: { color: string; size?: number }) {
   return <ChevronsRight color={color} size={size} strokeWidth={3} />;
 }
 const SHAPES = [ShapeCircle, ShapeTriangle, ShapeStar, ShapeHeart, ShapeFlower, ShapeArrow];
 
 const HERO_PHOTO = "/images/hero-estudiante.webp";
-
-// Consolidado: antes existían PILARES (carrusel) y RAZONES (tarjetas) diciendo
-// casi lo mismo con otras palabras — un apoderado leía "sin horario fijo" y
-// "el tutor no dicta clase" tres veces seguidas en el scroll. Un solo array,
-// mostrado una vez en grid estático (visible completo, sin carrusel que oculte
-// 3 de los 4 puntos detrás de una flecha).
-const PILARES = [
-  { title: "Tu ritmo, no el nuestro", img: "/images/rutas-flexibles.webp", text: "No hay un horario que cumplir ni una clase que no puedes recuperar: decides cuándo estudias, a qué hora y en qué orden. Un asesor sigue tu progreso completo de principio a fin. Lo único fijo es la fecha del examen libre ante el Ministerio de Educación — todo lo demás lo organizas tú." },
-  { title: "Aprendizaje por Dominio", img: "/images/metodologia.webp", text: "Trabajamos con Mastery Learning, el modelo de Benjamin Bloom (Universidad de Chicago, 1968): cada unidad se desbloquea solo si dominas la anterior — video corto, práctica, y si te cuesta, refuerzo antes de seguir. Sin saltos, sin huecos." },
-  { title: "El tutor aparece cuando lo necesitas", img: "/images/acompanamiento.webp", text: "No es una clase obligatoria ni algo que pides por capricho: el sistema detecta cuando estás con dificultad real en una asignatura, y ahí aparece la ayuda — no antes, no como un horario más que administrar." },
-  { title: "Tu progreso, medido de verdad", img: "/images/plataforma-pilar.webp", text: "Cada intento, cada puntaje, cada unidad completada queda registrado por Umbral™, nuestro motor de progreso — no son solo impresiones. Si tu perfil de aprendizaje es TDAH o dislexia, el contenido se adapta automáticamente (programa Adaptativo). Y siempre hay un asesor humano revisando cómo vas, no solo un algoritmo mirando de lejos." },
-];
 
 // Solo Básica y Media en el módulo de niveles del home — Validación de Adultos existe como
 // producto pero no se anuncia con el mismo peso: mezclarlo en primer scroll con el mismo tamaño
@@ -259,14 +238,6 @@ const INCLUSIVOS = [
   { title: "Homeschool", desc: "Currículum oficial ya armado, sin diseñar el plan de estudio desde cero.", url: "/colegio-online-homeschool/", icon: HomeIcon },
 ];
 
-// Fact-boxes: fondo negro real, glifo grande de color arriba a la derecha (patrón exacto de .fact-box)
-// Pastel real: bg claro + chevron/forma grande como marca de agua + número gigante (no negro con ícono chico)
-const FACTS = [
-  { n: "100%", label: "Asincrónico", shape: ShapeFastForward, bg: "#fdeccb", numColor: NAVY, shapeColor: "#fbd98a" },
-  { n: "1°–4°", label: "Básico a Medio", shape: ShapeStairs, bg: "#d9ecff", numColor: NAVY, shapeColor: "#a9d3ff" },
-  { n: "6", label: "Asignaturas evaluadas", shape: ShapeHourglass, bg: "#e3d9f7", numColor: NAVY, shapeColor: "#c6b3ea" },
-  { n: "2027", label: "Año académico de apertura", shape: ShapeLeaf, bg: "#d7f0e3", numColor: NAVY, shapeColor: "#a9dfc3" },
-];
 
 // Solo lo que NO está ya cubierto en el grid consolidado de arriba (PILARES):
 // metodología, plataforma y acompañamiento se explican una sola vez, ahí.
@@ -1121,35 +1092,6 @@ export default function Home() {
       {/* === POR DENTRO — índice interactivo a las páginas de detalle === */}
       <PorDentroHub />
 
-      {/* === PILARES — bloque de color sólido + foto, como "An Education Designed Around You" === */}
-      <section style={{ background: "#f5f5f5", padding: "64px 0" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
-          <Reveal>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 0, marginBottom: 48, alignItems: "stretch" }}>
-              <div style={{ flex: "1 1 320px", minWidth: 260, position: "relative", minHeight: 340, overflow: "hidden" }}>
-                <img src="/images/asincronico-tablet.webp" alt="" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-              </div>
-              <div style={{ flex: "1 1 380px", minWidth: 280, background: "#fff", padding: "40px 32px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 8px" }}>Sin clases en vivo. Sin horarios fijos.</p>
-                <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, color: NAVY, margin: "0 0 16px" }}>Aprende cuando puedas. Avanza a tu ritmo real.</h2>
-                <p style={{ fontSize: 15, margin: 0 }}>Barkley es 100% asincrónico: nada de clases por Zoom ni horarios que cumplir. Cada estudiante avanza a su propio paso, con tutores y asesores disponibles cuando los necesita — pensado para quienes no tienen acceso constante a un horario fijo, y para quienes aprenden distinto.</p>
-              </div>
-            </div>
-          </Reveal>
-          {/* Grid estático — los 4 puntos visibles a la vez, sin carrusel que
-              esconda 3 de cada 4 detrás de una flecha que casi nadie toca. */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 32 }}>
-            {PILARES.map((p, i) => (
-              <Reveal key={p.title} delay={i * 0.08}>
-                <img src={p.img} alt={p.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/2", objectFit: "cover", borderRadius: 12, display: "block", marginBottom: 18 }} />
-                <h3 style={{ fontSize: 19, fontWeight: 700, color: NAVY, margin: "0 0 10px" }}>{p.title}</h3>
-                <p style={{ fontSize: 14.5, margin: 0, color: TEXT, lineHeight: 1.6 }}>{p.text}</p>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* === NIVELES — panel azul sólido detrás + botón dorado debajo, como el real === */}
       <section id="metodo" style={{ padding: "64px 24px 0", textAlign: "center" }}>
         <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 8px" }}>De 1° básico a 4° medio</p>
@@ -1270,28 +1212,6 @@ export default function Home() {
           </a>
         </div>
       </section>
-
-      {/* === FACT-BOXES — pastel real con forma grande de fondo + número gigante (verificado en vivo, no negro) === */}
-      <section style={{ padding: "72px 24px" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 8px", textAlign: "center" }}>Barkley en cifras</p>
-          <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, color: NAVY, margin: "0 0 40px", textAlign: "center" }}>Más que un colegio</h2>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
-            {FACTS.map((s, i) => (
-              <Reveal key={s.label} delay={i * 0.08} style={{ flex: "1 1 260px", minWidth: 240 }}>
-                <motion.div whileHover={{ scale: 1.01 }} transition={{ duration: 0.25, ease: "easeInOut" }} style={{ background: s.bg, borderRadius: 8, padding: "32px", position: "relative", minHeight: 260, display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden", height: "100%" }}>
-                  <div style={{ position: "absolute", top: -10, right: -10, opacity: 0.9 }}><s.shape color={s.shapeColor} size={150} /></div>
-                  <p style={{ fontSize: 52, fontWeight: 800, color: s.numColor, margin: 0, position: "relative" }}>{s.n}</p>
-                  <p style={{ fontSize: 15, margin: "8px 0 0", color: s.numColor, opacity: 0.75, position: "relative" }}>{s.label}</p>
-                </motion.div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* === INSCRIPCIÓN (mitad de página) — misma sección, sin id repetido === */}
-      <AdmisionSection />
 
       {/* === PROGRAMAS === */}
       <section id="plataforma" style={{ background: "#f5f5f5", padding: "64px 24px" }}>
@@ -1612,20 +1532,6 @@ export default function Home() {
             </a>
           </Reveal>
         </div>
-      </section>
-
-      {/* === CTA — bloque de color sólido navy === */}
-      <section style={{ backgroundColor: NAVY, color: "#fff", padding: "72px 24px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", bottom: -20, left: -20, opacity: 0.5 }}><ShapeFlower color="#ffffff22" size={140} /></div>
-        <Reveal>
-          <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center", position: "relative" }}>
-            <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, margin: "0 0 16px" }}>¿Quieres saber más sobre Barkley Online?</h2>
-            <p style={{ fontSize: 16, opacity: 0.85, margin: "0 0 28px" }}>Déjanos tus datos y te contactamos.</p>
-            <motion.button whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} onClick={() => document.getElementById("inscripcion")?.scrollIntoView({ behavior: "smooth" })}
-              style={{ fontSize: 15, fontWeight: 700, color: NAVY, background: GOLD, border: "none", borderRadius: 999, padding: "14px 30px", cursor: "pointer", fontFamily: FONT, display: "inline-flex", alignItems: "center", gap: 8 }}
-            >Ir al formulario de inscripción <ArrowUpRight style={{ width: 18, height: 18 }} /></motion.button>
-          </div>
-        </Reveal>
       </section>
 
       {/* === INSCRIPCIÓN === */}
