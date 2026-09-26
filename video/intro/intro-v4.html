@@ -604,7 +604,7 @@ function ajustar() {
   fit($("hCasiT"), AW, 120);
   ["f1", "f2"].forEach((id) => { if (!VERT) { $(id).style.whiteSpace = "normal"; $(id).style.width = "760px"; } });
   ["cWord", "f1", "f2", "hOkT", "n1", "n2", "lT1", "lT2"].forEach((id) => fit($(id), id === "f1" || id === "f2" ? (VERT ? 960 : 760) : id === "n1" || id === "n2" ? (VERT ? 900 : 1250) : AW, parseFloat($(id).style.fontSize)));
-  ["jT1", "jT2", "jT3"].forEach((id) => { if (!VERT) fit($(id), AW, 104); });
+  ["jT1", "jT2", "jT3"].forEach((id) => fit($(id), VERT ? 940 : AW, 104));
   escenas.forEach((e) => { e.style.display = "none"; e.style.visibility = ""; });
 }
 window.listo = Promise.all(["900 100px Unbounded", "800 100px Unbounded", "800 100px Poppins", "700 100px Poppins", "600 100px Poppins"].map((f) => document.fonts.load(f)))
