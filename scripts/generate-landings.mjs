@@ -360,7 +360,7 @@ function pageHtml(n) {
     offers: {
       "@type": "Offer",
       category: "Mensualidad",
-      price: "65000",
+      price: "{{precio_escolar_numero}}",
       priceCurrency: "CLP",
     },
   };
@@ -526,8 +526,8 @@ function pageHtml(n) {
   <section class="cta-final">
     <div class="inner">
       <h2>Un solo valor, sin matrícula</h2>
-      <p class="precio">$65.000 <span>/ mes</span></p>
-      <p style="margin:10px 0 26px;">O pago anual de $442.000 (15% de descuento). Reserva ahora sin costo — pagas recién en febrero de 2027.</p>
+      <p class="precio">{{precio_escolar}} <span>/ mes</span></p>
+      <p style="margin:10px 0 26px;">O pago anual de {{precio_escolar_anual}} (15% de descuento). Reserva ahora sin costo — pagas recién en febrero de 2027.</p>
       <a class="btn-gold" style="background:${RED};color:#fff;" href="/#inscripcion">Inscribirme en ${n.nombre} →</a>
     </div>
   </section>

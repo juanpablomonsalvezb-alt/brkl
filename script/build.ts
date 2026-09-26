@@ -4,6 +4,28 @@ import { rm, readFile, rename, writeFile } from "fs/promises";
 import { existsSync, readFileSync } from "fs";
 import type { Plugin } from "esbuild";
 import { PRERENDER_ROUTES, snapshotFile } from "../shared/prerender-routes";
+import { aplicarPrecios, marcadoresDesconocidos } from "../shared/precios";
+import { readdir } from "fs/promises";
+import { join } from "path";
+
+// Reemplaza {{precio_*}} en los archivos estáticos ya copiados a dist/public
+// (landings, blog, llms.txt, index.html). Un marcador mal escrito corta el build
+// en vez de publicarse crudo.
+async function aplicarPreciosEnDist(dir = "dist/public"): Promise<void> {
+  for (const entrada of await readdir(dir, { withFileTypes: true })) {
+    const ruta = join(dir, entrada.name);
+    if (entrada.isDirectory()) {
+      if (!["assets", "videos", "images", "fonts"].includes(entrada.name)) await aplicarPreciosEnDist(ruta);
+      continue;
+    }
+    if (!/\.(html|txt|xml)$/.test(entrada.name)) continue;
+    const original = await readFile(ruta, "utf-8");
+    if (!original.includes("{{")) continue;
+    const desconocidos = marcadoresDesconocidos(original);
+    if (desconocidos.length) throw new Error(`Marcador de precio desconocido en ${ruta}: ${desconocidos.join(", ")}`);
+    await writeFile(ruta, aplicarPrecios(original));
+  }
+}
 
 // Módulo virtual "virtual:prerendered": { "/ruta": "<html del snapshot>" } para
 // todas las rutas de shared/prerender-routes.ts que tengan snapshot versionado.
@@ -72,6 +94,7 @@ async function buildAll() {
 
   console.log("building client...");
   await viteBuild();
+  await aplicarPreciosEnDist();
 
   console.log("building server...");
   const pkg = JSON.parse(await readFile("package.json", "utf-8"));

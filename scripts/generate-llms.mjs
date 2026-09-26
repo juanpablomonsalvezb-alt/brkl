@@ -56,7 +56,7 @@ const contenido = `# Barkley Online
   aparte: es la misma materia con la interfaz adaptada (lectura en voz,
   tipografía para dislexia, bloques cortos, agenda visible, objetivos grandes).
 - **Cobertura**: 1° básico a 4° medio, currículum oficial MINEDUC.
-- **Precio**: $65.000 CLP al mes. En 4° medio incluye el preuniversitario PAES.
+- **Precio**: {{precio_escolar}} CLP al mes. En 4° medio incluye el preuniversitario PAES.
 - **Apertura**: enero de 2027. Durante 2026 hay inscripción y reserva de cupo.
 
 ## Precisión importante

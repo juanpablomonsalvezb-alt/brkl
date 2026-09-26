@@ -16,6 +16,7 @@
  * Dirección estética: editorial cálido / cuaderno de trabajo. Fraunces display +
  * Lexend body. Paleta de marca (navy/gold/rojo) reinterpretada sobre papel.
  */
+import { PRECIOS } from "@shared/precios";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Check, X, ArrowRight, Pause, Play, Square } from "lucide-react";
@@ -1032,7 +1033,7 @@ export default function Adaptativo() {
             {[
               ["Mismo temario oficial", "Currículo MINEDUC completo. Sin recortes, sin versión simplificada."],
               ["Misma validación", "Exámenes Libres ante el Ministerio, igual que cualquier estudiante."],
-              ["Mismo valor", "$65.000 al mes. Adaptativo no cuesta un peso más."],
+              ["Mismo valor", `${PRECIOS.escolar} al mes. Adaptativo no cuesta un peso más.`],
             ].map(([t, d]) => (
               <div key={t} style={{ background: INK, padding: "30px 26px" }}>
                 <Check style={{ width: 19, height: 19, color: GOLD, marginBottom: 14 }} />

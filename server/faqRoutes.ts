@@ -5,6 +5,7 @@ import { eq, desc } from "drizzle-orm";
 import multer from "multer";
 import mammoth from "mammoth";
 import { z } from "zod";
+import { aplicarPrecios } from "../shared/precios";
 
 // Configurar multer para manejar archivos en memoria
 const upload = multer({ storage: multer.memoryStorage() });
@@ -19,7 +20,10 @@ export function registerFaqRoutes(app: Express) {
         .where(eq(faqs.isActive, true))
         .orderBy(faqs.sortOrder, faqs.createdAt);
 
-      return res.json(allFaqs);
+      // Las respuestas pueden usar {{precio_escolar}}, etc. (ver shared/precios.ts).
+      return res.json(
+        allFaqs.map((f) => ({ ...f, question: aplicarPrecios(f.question), answer: aplicarPrecios(f.answer) })),
+      );
     } catch (error: any) {
       console.error("Error fetching FAQs:", error);
       return res.status(500).json({ error: "Error al obtener FAQs" });

@@ -11,6 +11,7 @@
  * panel "Cuatro pilares" con bloque de color sólido + foto, fact-boxes negros con
  * glifo grande de color, programa highlights, footer navy con formas orgánicas.
  */
+import { PRECIOS } from "@shared/precios";
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import {
   Loader2, Check, ArrowUpRight, Menu, Search, Play, Download,
@@ -1360,7 +1361,7 @@ export default function Home() {
           <div style={{ position: "relative" }}>
             <div style={{ position: "absolute", left: 21, top: 8, bottom: 8, width: 2, background: "#e3e8ef" }} className="hidden md:block" />
             {[
-              { fecha: "Ahora", titulo: "Reserva tu cupo", texto: "Sin pago hoy. Solo completas tus datos y aseguras el lugar. Matrícula $30.000 — gratis si te inscribes antes del 30 de noviembre." },
+              { fecha: "Ahora", titulo: "Reserva tu cupo", texto: `Sin pago hoy. Solo completas tus datos y aseguras el lugar. Matrícula ${PRECIOS.matricula} — gratis si te inscribes antes del 30 de noviembre.` },
               { fecha: "Enero 2027", titulo: "Primer pago", texto: "Confirmas tu plan (mensual o anual con 15% dcto) y activas la cuenta. El arancel se paga a partir de enero 2027." },
               { fecha: "Marzo 2027", titulo: "Inicio del año de preparación", texto: "Acceso completo a la plataforma: video, pódcast, tutor y asesor." },
               { fecha: "Marzo – octubre", texto: "8 meses de avance a tu ritmo con Aprendizaje por Dominio, acompañado por tu tutor y monitoreado por tu asesor.", titulo: "Año lectivo" },
@@ -1457,7 +1458,7 @@ export default function Home() {
               Sin costos ocultos. El año de preparación va de <strong style={{ color: NAVY }}>marzo al 31 de octubre</strong>, cuando rindes tus exámenes libres. Todo incluido — 2 a 3 videos y pódcasts por lección, un tutor asignado a tu hijo (no un pool genérico de soporte) que te acompaña en todo, no solo lo académico, asesor que sigue tu progreso y portal para tu familia.
             </p>
             <p style={{ display: "inline-block", background: "#fff8ea", border: `1px solid ${GOLD}`, borderRadius: 999, padding: "8px 20px", fontSize: 14.5, fontWeight: 700, color: NAVY, margin: "0 0 40px" }}>
-              🎁 Matrícula $30.000 — gratis para quienes se inscriban antes del 30 de noviembre
+              🎁 Matrícula {PRECIOS.matricula} — gratis para quienes se inscriban antes del 30 de noviembre
             </p>
           </Reveal>
           <Reveal delay={0.1}>
@@ -1466,10 +1467,10 @@ export default function Home() {
               <div style={{ flex: "1 1 320px", maxWidth: 380, background: "#fff", borderRadius: 18, padding: "36px 32px", boxShadow: "0 6px 24px rgba(0,20,60,0.08)", textAlign: "left" }}>
                 <p style={{ fontSize: 13, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>Plan mensual</p>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 6, margin: "10px 0 4px" }}>
-                  <span style={{ fontSize: 48, fontWeight: 700, color: NAVY }}>$65.000</span>
+                  <span style={{ fontSize: 48, fontWeight: 700, color: NAVY }}>{PRECIOS.escolar}</span>
                   <span style={{ fontSize: 16, color: TEXT }}>/ mes</span>
                 </div>
-                <p style={{ fontSize: 14, color: TEXT, margin: "0 0 22px" }}>Matrícula $30.000 (gratis si te inscribes antes del 30 de noviembre). Arancel desde enero 2027, cancela cuando quieras.</p>
+                <p style={{ fontSize: 14, color: TEXT, margin: "0 0 22px" }}>Matrícula {PRECIOS.matricula} (gratis si te inscribes antes del 30 de noviembre). Arancel desde enero 2027, cancela cuando quieras.</p>
                 {["Todas las asignaturas de tu nivel", "2 a 3 videos y pódcasts en cada lección", "Un tutor general que te acompaña integralmente", "Asesor que sigue tu progreso", "Portal Familia con avance en tiempo real", "Preparación para exámenes libres MINEDUC"].map((f) => (
                   <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
                     <Check style={{ width: 18, height: 18, color: GREEN, flexShrink: 0, marginTop: 2 }} strokeWidth={3} />
@@ -1483,10 +1484,10 @@ export default function Home() {
                 <span style={{ position: "absolute", top: 20, right: -34, background: GOLD, color: NAVY, fontSize: 12, fontWeight: 700, padding: "5px 40px", transform: "rotate(45deg)" }}>15% dcto</span>
                 <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>Pago único del año</p>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 6, margin: "10px 0 4px" }}>
-                  <span style={{ fontSize: 48, fontWeight: 700 }}>$442.000</span>
-                  <span style={{ fontSize: 16, opacity: 0.8, textDecoration: "line-through" }}>$520.000</span>
+                  <span style={{ fontSize: 48, fontWeight: 700 }}>{PRECIOS.escolarAnual}</span>
+                  <span style={{ fontSize: 16, opacity: 0.8, textDecoration: "line-through" }}>{PRECIOS.escolarAnualLista}</span>
                 </div>
-                <p style={{ fontSize: 14, opacity: 0.85, margin: "0 0 22px" }}>15% de descuento por pagar todo el año de una vez. Ahorras $78.000.</p>
+                <p style={{ fontSize: 14, opacity: 0.85, margin: "0 0 22px" }}>{PRECIOS.descuentoAnual} de descuento por pagar todo el año de una vez. Ahorras {PRECIOS.escolarAhorroAnual}.</p>
                 {["Todo lo del plan mensual", "15% de descuento", "Precio congelado todo el año", "Un solo pago, cero preocupaciones"].map((f) => (
                   <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
                     <Check style={{ width: 18, height: 18, color: GOLD, flexShrink: 0, marginTop: 2 }} strokeWidth={3} />

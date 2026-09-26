@@ -1,3 +1,4 @@
+import { PRECIOS } from "../shared/precios";
 import type { Express, Request, Response } from "express";
 import { eq } from "drizzle-orm";
 import { db } from "./db";
@@ -80,11 +81,11 @@ Orientación a Educación Superior, Certificados de Avance, Barkley En Vivo, Ver
 Barkley, más Ensayos PAES mensuales para 4° medio.
 
 === PRECIOS (programa escolar regular, 1° básico a 4° medio) ===
-Matrícula: $30.000. Al preguntar por la matrícula, SIEMPRE menciona el monto ($30.000) Y la condición
+Matrícula: ${PRECIOS.matricula}. Al preguntar por la matrícula, SIEMPRE menciona el monto (${PRECIOS.matricula}) Y la condición
 de gratuidad juntos — nunca digas solo "es gratis" sin decir cuánto cuesta normalmente. Es gratis
 únicamente para quienes se inscriban antes del 30 de noviembre; fuera de ese plazo se cobra el
-$30.000 completo.
-Plan mensual: $65.000/mes. Pago único anual: $442.000 (15% de descuento, ahorra $78.000 vs pagar mes a mes).
+${PRECIOS.matricula} completo.
+Plan mensual: ${PRECIOS.escolar}/mes. Pago único anual: ${PRECIOS.escolarAnual} (${PRECIOS.descuentoAnual} de descuento, ahorra ${PRECIOS.escolarAhorroAnual} vs pagar mes a mes).
 El arancel (mensualidad o pago anual) se empieza a pagar a partir de enero de 2027 — hoy solo se reserva
 el cupo, sin costo.
 El año de preparación va de marzo a octubre, cuando se rinden los Exámenes Libres.
@@ -94,7 +95,7 @@ curso, solo reserva de cupo (sin pago) para 2027.
 === MODALIDAD DE ADULTOS (18 años o más) ===
 Se organiza en niveles agrupados, no año por año: Educación Básica de Adultos (3 niveles, equivale a
 1°-8° básico) y Educación Media de Adultos (2 niveles: 1°-2° medio y 3°-4° medio).
-Precio: $55.000/mes, o $374.000 pago único anual (15% descuento, ahorra $66.000).
+Precio: ${PRECIOS.adultos}/mes, o ${PRECIOS.adultosAnual} pago único anual (${PRECIOS.descuentoAnual} descuento, ahorra ${PRECIOS.adultosAhorroAnual}).
 Requisito: 18 años o más y haber completado el nivel anterior al que se desea validar.
 La licencia obtenida es la misma que entrega un colegio tradicional, sirve para postular a la PAES.
 
