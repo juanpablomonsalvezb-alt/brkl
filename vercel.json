@@ -171,6 +171,28 @@
           "value": "public, max-age=604800, stale-while-revalidate=2592000"
         }
       ]
+    },
+    {
+      "source": "/speculation-rules.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/speculationrules+json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    },
+    {
+      "source": "/((?!api/|assets/|images/|videos/|fonts/).*)",
+      "headers": [
+        {
+          "key": "Speculation-Rules",
+          "value": "\"/speculation-rules.json\""
+        }
+      ]
     }
   ],
   "rewrites": [
@@ -204,6 +226,38 @@
     },
     {
       "source": "/herramientas-de-estudio",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/preguntas-frecuentes",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/prepara-tus-examenes",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/together",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/electivos",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/tour-plataforma",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/privacidad",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/terminos",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/reembolso",
       "destination": "/api/handler.js"
     },
     {

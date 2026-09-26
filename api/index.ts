@@ -2,62 +2,40 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import express from "express";
 import { registerRoutes } from "../server/routes";
-// Inlineados en el bundle vía esbuild (loader "text") para no depender de
-// rutas de filesystem en el runtime serverless.
+// Inlineados en el bundle vía esbuild (loader "text" y el módulo virtual que
+// arma script/build.ts) para no depender de rutas de filesystem en runtime.
 // El HTML COMPILADO (con el bundle JS real /assets/index-HASH.js), no el
-// fuente de client/index.html (ese referencia /src/main.tsx, solo válido en
-// dev con Vite — en prod causaba pantalla en blanco, 404 del script).
+// fuente de client/index.html (ese referencia /src/main.tsx, solo válido en dev).
 // @ts-ignore
 import spaShellHtml from "../dist/public/index.html";
 // @ts-ignore
-import prerenderedHtml from "../client/public/prerendered/index.html";
-// @ts-ignore
-import prerenderedAdaptativoHtml from "../client/public/prerendered/adaptativo.html";
-// @ts-ignore
-import prerenderedSinLimitesHtml from "../client/public/prerendered/sin-limites.html";
-// @ts-ignore
-import prerendered_adulto_acompanante from "../client/public/prerendered/adulto-acompanante.html";
-// @ts-ignore
-import prerendered_asi_esta_construido from "../client/public/prerendered/asi-esta-construido.html";
-// @ts-ignore
-import prerendered_todo_incluido from "../client/public/prerendered/todo-incluido.html";
-// @ts-ignore
-import prerendered_herramientas_de_estudio from "../client/public/prerendered/herramientas-de-estudio.html";
-
-// Bots que no ejecutan JS (o cuya política prefiere HTML estático): reciben
-// el snapshot prerenderizado en vez del shell vacío <div id="root"></div>.
-// El caché estático de Vercel no reevalúa condiciones "has" por request en
-// output 100% estático, así que la decisión se hace en código, acá.
-const BOT_USER_AGENT = /(GPTBot|ChatGPT-User|OAI-SearchBot|ClaudeBot|anthropic-ai|Claude-Web|PerplexityBot|Perplexity-User|CCBot|Google-Extended|Applebot-Extended|cohere-ai|Bytespider|facebookexternalhit|Twitterbot|LinkedInBot|Slackbot|WhatsApp|Googlebot|bingbot)/i;
+import snapshots from "virtual:prerendered";
+import { PRERENDER_ROUTES } from "../shared/prerender-routes";
 
 /**
- * Antes la home servía a las personas el shell vacío <div id="root"></div>:
- * el navegador no pintaba NADA hasta descargar, parsear y ejecutar ~600KB de
- * JS. Medido con Lighthouse, eso dejaba el LCP en 8.2s.
+ * Cada ruta pública se sirve con el MISMO HTML a personas y a bots:
+ * el <head> del snapshot (title, description, canónica, og, JSON-LD propios de
+ * esa página) + el contenido ya renderizado dentro de #root + los assets
+ * vigentes del shell compilado.
  *
- * Ahora se sirve el shell compilado (que trae los hashes vigentes de
- * /assets/index-HASH.js y .css) con el contenido real del snapshot inyectado
- * dentro del div#root. El navegador pinta de inmediato y, cuando el bundle
- * termina de cargar, createRoot() de client/src/main.tsx reemplaza ese DOM.
- * Sin riesgo de hydration mismatch: createRoot limpia el contenedor y
- * renderiza de cero (no es hydrateRoot).
+ * - Bots que no ejecutan JS (GPTBot, ClaudeBot, PerplexityBot…) ven la página
+ *   completa en vez de <div id="root"></div>.
+ * - Google recibe una sola versión: antes los bots veían el snapshot y las
+ *   personas el shell vacío, lo que roza el "cloaking".
+ * - Las personas ven contenido en el primer pintado (LCP) en vez de esperar el
+ *   bundle. Cuando carga, createRoot() de client/src/main.tsx reemplaza el DOM
+ *   (no es hydrateRoot, así que no hay hydration mismatch).
  *
- * Por qué fusionar y no servir el snapshot tal cual: script/prerender.ts le
- * quita todos los <script> a propósito, porque los hashes de assets cambian
- * en cada deploy y quedarían en 404.
- *
- * Solo aplica a "/": el <head> viene del shell, que es el de la home. Usarlo
- * en /adaptativo o /sin-limites les pisaría su title/description/canonical
- * propios — esas rutas siguen con el esquema anterior (bot: snapshot con su
- * meta correcta; persona: shell + React, que fija la meta al montar).
+ * El snapshot no trae <script> propios (script/prerender.ts los quita porque
+ * los hashes de /assets cambian en cada deploy); los assets se toman del shell.
  */
-function fusionarHome(shell: string, snapshot: string): string {
-  const marcadorVacio = '<div id="root"></div>';
+const ASSET_TAG = /<(?:script|link)\b[^>]*["']\/assets\/[^>]*>(?:\s*<\/script>)?/gi;
+const HEAD = /(<head[^>]*>)([\s\S]*?)(<\/head>)/i;
+
+function contenidoDeRoot(snapshot: string): string | null {
   const marcadorInicio = '<div id="root">';
-
   const inicio = snapshot.indexOf(marcadorInicio);
-  if (inicio === -1 || !shell.includes(marcadorVacio)) return shell;
-
+  if (inicio === -1) return null;
   // Recorre balanceando <div>/</div> para encontrar el cierre real del root
   // (indexOf del primer </div> cortaría en el primer hijo anidado).
   const desde = inicio + marcadorInicio.length;
@@ -66,74 +44,52 @@ function fusionarHome(shell: string, snapshot: string): string {
   while (i < snapshot.length) {
     const abre = snapshot.indexOf("<div", i);
     const cierra = snapshot.indexOf("</div>", i);
-    if (cierra === -1) return shell;
+    if (cierra === -1) return null;
     if (abre !== -1 && abre < cierra) {
       profundidad++;
       i = abre + 4;
     } else {
       profundidad--;
-      if (profundidad === 0) {
-        const contenido = snapshot.slice(desde, cierra);
-        // Función replacer, no string: el HTML renderizado puede contener
-        // "$&", "$'" o "$$", que en un string de reemplazo se expanden como
-        // patrones y corromperían la salida.
-        return shell.replace(marcadorVacio, () => `<div id="root">${contenido}</div>`);
-      }
+      if (profundidad === 0) return snapshot.slice(desde, cierra);
       i = cierra + 6;
     }
   }
+  return null;
+}
+
+function componer(shell: string, snapshot: string): string {
+  const marcadorVacio = '<div id="root"></div>';
+  const headShell = shell.match(HEAD);
+  const headSnap = snapshot.match(HEAD);
+  const contenido = contenidoDeRoot(snapshot);
   // Snapshot malformado: se sirve el shell, que siempre funciona.
-  return shell;
+  if (!headShell || !headSnap || contenido === null || !shell.includes(marcadorVacio)) return shell;
+
+  const assets = headShell[2].match(ASSET_TAG) ?? [];
+  const head = headSnap[2].replace(ASSET_TAG, "") + assets.join("\n");
+  // Funciones replacer, no strings: el HTML puede contener "$&", "$'" o "$$",
+  // que en un string de reemplazo se expanden como patrones.
+  return shell
+    .replace(HEAD, (_m, abre, _h, cierra) => `${abre}${head}${cierra}`)
+    .replace(marcadorVacio, () => `<div id="root">${contenido}</div>`);
 }
 
 // Se calcula una sola vez por instancia (cold start), no por request.
-const homeHtml = fusionarHome(spaShellHtml, prerenderedHtml);
+const paginas = new Map<string, string>();
+for (const ruta of PRERENDER_ROUTES) {
+  const snapshot = (snapshots as Record<string, string>)[ruta];
+  if (snapshot) paginas.set(ruta, componer(spaShellHtml, snapshot));
+}
 
 // Create Express app for Vercel
 const app = express();
 
-app.get("/", (_req, res) => {
-  // no-cache (no no-store): fuerza revalidar en cada visita normal, así que
-  // nunca sirve un build viejo — pero a diferencia de no-store, no bloquea el
-  // back/forward cache del navegador (confirmado con Lighthouse: no-store
-  // impedía la navegación atrás/adelante instantánea).
-  res.setHeader("Cache-Control", "no-cache");
-  res.type("html").send(homeHtml);
-});
-
-app.get("/adaptativo", (req, res) => {
-  const ua = req.headers["user-agent"] || "";
-  // no-cache (no no-store): fuerza revalidar en cada visita normal, así que
-  // nunca sirve un build viejo — pero a diferencia de no-store, no bloquea el
-  // back/forward cache del navegador (confirmado con Lighthouse: no-store
-  // impedía la navegación atrás/adelante instantánea).
-  res.setHeader("Cache-Control", "no-cache");
-  res.type("html").send(BOT_USER_AGENT.test(ua) ? prerenderedAdaptativoHtml : spaShellHtml);
-});
-
-app.get("/sin-limites", (req, res) => {
-  const ua = req.headers["user-agent"] || "";
-  // no-cache (no no-store): fuerza revalidar en cada visita normal, así que
-  // nunca sirve un build viejo — pero a diferencia de no-store, no bloquea el
-  // back/forward cache del navegador (confirmado con Lighthouse: no-store
-  // impedía la navegación atrás/adelante instantánea).
-  res.setHeader("Cache-Control", "no-cache");
-  res.type("html").send(BOT_USER_AGENT.test(ua) ? prerenderedSinLimitesHtml : spaShellHtml);
-});
-
-// Páginas de "Conoce Barkley por dentro": mismo esquema que /adaptativo
-// (bot → snapshot con su propia meta; persona → shell + React).
-const POR_DENTRO_SNAPSHOTS: Record<string, string> = {
-  "/adulto-acompanante": prerendered_adulto_acompanante,
-  "/asi-esta-construido": prerendered_asi_esta_construido,
-  "/todo-incluido": prerendered_todo_incluido,
-  "/herramientas-de-estudio": prerendered_herramientas_de_estudio,
-};
-for (const [ruta, snapshot] of Object.entries(POR_DENTRO_SNAPSHOTS)) {
-  app.get(ruta, (req, res) => {
-    const ua = req.headers["user-agent"] || "";
+for (const [ruta, html] of paginas) {
+  app.get(ruta, (_req, res) => {
+    // no-cache (no no-store): revalida en cada visita, así nunca sirve un build
+    // viejo, pero no bloquea el back/forward cache del navegador.
     res.setHeader("Cache-Control", "no-cache");
-    res.type("html").send(BOT_USER_AGENT.test(ua) ? snapshot : spaShellHtml);
+    res.type("html").send(html);
   });
 }
 

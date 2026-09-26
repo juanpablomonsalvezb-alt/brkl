@@ -1,12 +1,14 @@
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 const NAVY = "#003366";
 const GOLD = "#FFC548";
 const TEXT = "#525252";
 const FONT = "'Poppins', sans-serif";
 
-function LegalPage({ title, updated, children }: { title: string; updated: string; children: React.ReactNode }) {
+function LegalPage({ title, description, updated, children }: { title: string; description: string; updated: string; children: React.ReactNode }) {
+  usePageMeta({ title: `${title} | Barkley Online`, description });
   return (
     <div style={{ fontFamily: FONT, color: TEXT, background: "#fff", minHeight: "100vh" }}>
       <header style={{ background: NAVY, padding: "28px 24px" }}>
@@ -39,7 +41,7 @@ function Ul({ children }: { children: React.ReactNode }) {
 
 export function PrivacyPolicy() {
   return (
-    <LegalPage title="Política de privacidad" updated="julio 2026">
+    <LegalPage title="Política de privacidad" description="Cómo Barkley Online recopila, usa y protege los datos personales de estudiantes y apoderados." updated="julio 2026">
       <P>
         Barkley Online ("Barkley", "nosotros") recopila y trata los datos personales de estudiantes y apoderados
         exclusivamente para operar el servicio educativo: crear la cuenta del estudiante, hacer seguimiento de su
@@ -69,7 +71,7 @@ export function PrivacyPolicy() {
 
 export function TermsOfUse() {
   return (
-    <LegalPage title="Términos de uso" updated="julio 2026">
+    <LegalPage title="Términos de uso" description="Términos que regulan el uso de la plataforma y el servicio de preparación para exámenes libres de Barkley Online." updated="julio 2026">
       <P>
         Al inscribirte en Barkley Online aceptas estos términos, que regulan el uso de la plataforma y el servicio
         educativo de preparación para exámenes libres ante el Ministerio de Educación de Chile (MINEDUC).
@@ -97,7 +99,7 @@ export function TermsOfUse() {
 
 export function RefundPolicy() {
   return (
-    <LegalPage title="Política de reembolso y cancelación" updated="julio 2026">
+    <LegalPage title="Política de reembolso y cancelación" description="Condiciones de reserva de cupo, cancelación y reembolso en Barkley Online." updated="julio 2026">
       <P>
         Barkley no cobra matrícula. Puedes reservar tu cupo ahora sin pagar hasta febrero de 2027, antes del inicio
         del año de preparación en marzo.

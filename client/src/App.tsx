@@ -5,21 +5,51 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Home from "@/pages/Home";
-import Adaptativo from "@/pages/Adaptativo";
-import PreparaTusExamenes from "@/pages/PreparaTusExamenes";
-import Together from "@/pages/Together";
+import { lazyRoute } from "@/lib/lazyRoute";
 import Lenis from 'lenis';
 import { useEffect, lazy, Suspense } from "react";
 
 // Code-splitting: solo Home va en el bundle inicial (es la landing pública y
 // define el LCP). Todo lo demás — dashboards, admin, course player — se carga
 // bajo demanda; un visitante que solo mira la landing no descarga nada de eso.
+// Las páginas públicas usan lazyRoute: main.tsx precarga el chunk de la ruta
+// actual antes de montar, para no borrar el HTML prerenderizado con un fallback.
+const Adaptativo = lazyRoute(() => import("@/pages/Adaptativo"));
+const PreparaTusExamenes = lazyRoute(() => import("@/pages/PreparaTusExamenes"));
+const Together = lazyRoute(() => import("@/pages/Together"));
+const SinLimites = lazyRoute(() => import("@/pages/SinLimites"));
+const PorDentro = lazyRoute(() => import("@/pages/PorDentro"));
+const TourPlataforma = lazyRoute(() => import("@/pages/TourPlataforma"));
+const PreguntasFrecuentes = lazyRoute(() => import("@/pages/PreguntasFrecuentes"));
+const Electivos = lazyRoute(() => import("@/pages/Electivos"));
+const PlanSelector2026 = lazyRoute(() => import("@/pages/PlanSelector2026"));
+const PrivacyPolicy = lazyRoute(() => import("@/pages/Legal").then((m) => ({ default: m.PrivacyPolicy })));
+const TermsOfUse = lazyRoute(() => import("@/pages/Legal").then((m) => ({ default: m.TermsOfUse })));
+const RefundPolicy = lazyRoute(() => import("@/pages/Legal").then((m) => ({ default: m.RefundPolicy })));
+
+const PRECARGA: Record<string, () => Promise<void>> = {
+  "/adaptativo": Adaptativo.preload,
+  "/prepara-tus-examenes": PreparaTusExamenes.preload,
+  "/together": Together.preload,
+  "/sin-limites": SinLimites.preload,
+  "/adulto-acompanante": PorDentro.preload,
+  "/asi-esta-construido": PorDentro.preload,
+  "/todo-incluido": PorDentro.preload,
+  "/herramientas-de-estudio": PorDentro.preload,
+  "/tour-plataforma": TourPlataforma.preload,
+  "/preguntas-frecuentes": PreguntasFrecuentes.preload,
+  "/electivos": Electivos.preload,
+  "/privacidad": PrivacyPolicy.preload,
+  "/terminos": TermsOfUse.preload,
+  "/reembolso": RefundPolicy.preload,
+};
+
+export function preloadRoute(pathname: string): Promise<void> {
+  const base = "/" + (pathname.split("/")[1] ?? "");
+  return PRECARGA[base]?.() ?? Promise.resolve();
+}
+
 const NotFound = lazy(() => import("@/pages/not-found"));
-const SinLimites = lazy(() => import("@/pages/SinLimites"));
-const PorDentro = lazy(() => import("@/pages/PorDentro"));
-const TourPlataforma = lazy(() => import("@/pages/TourPlataforma"));
-const PreguntasFrecuentes = lazy(() => import("@/pages/PreguntasFrecuentes"));
-const Electivos = lazy(() => import("@/pages/Electivos"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const CoursePlayer = lazy(() => import("@/pages/CoursePlayer"));
 const DriveSync = lazy(() => import("@/pages/DriveSync"));
@@ -27,7 +57,6 @@ const TextbookConfig = lazy(() => import("@/pages/TextbookConfig"));
 const Reservations = lazy(() => import("@/pages/Reservations"));
 const PlanSettings = lazy(() => import("@/pages/PlanSettings"));
 const LevelPlanSettings = lazy(() => import("@/pages/LevelPlanSettings"));
-const PlanSelector2026 = lazy(() => import("@/pages/PlanSelector2026"));
 const BarkleyAdmin = lazy(() => import("@/pages/BarkleyAdmin"));
 const EvaluationLinksAdmin = lazy(() => import("@/pages/EvaluationLinksAdmin"));
 const GeminiCopilotsAdmin = lazy(() => import("@/pages/GeminiCopilotsAdmin"));
@@ -36,9 +65,6 @@ const PaesAdmin = lazy(() => import("@/pages/PaesAdmin"));
 const ReservationsAdmin = lazy(() => import("@/pages/ReservationsAdmin"));
 const AcademicCopilot = lazy(() => import("@/pages/AcademicCopilot"));
 const PaymentResult = lazy(() => import("@/pages/PaymentResult"));
-const PrivacyPolicy = lazy(() => import("@/pages/Legal").then((m) => ({ default: m.PrivacyPolicy })));
-const TermsOfUse = lazy(() => import("@/pages/Legal").then((m) => ({ default: m.TermsOfUse })));
-const RefundPolicy = lazy(() => import("@/pages/Legal").then((m) => ({ default: m.RefundPolicy })));
 
 function SmoothScroll() {
   useEffect(() => {

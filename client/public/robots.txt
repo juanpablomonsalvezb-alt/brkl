@@ -19,17 +19,37 @@ Disallow: /api/
 
 # Asistentes de IA: acceso explícito. Con "User-agent: *" ya estaban permitidos,
 # pero declararlos evita quedar fuera si algún día cambia el criterio por defecto.
+# Se repiten los Disallow porque un grupo propio reemplaza al de "*".
 User-agent: GPTBot
-Allow: /
-
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
 User-agent: ClaudeBot
-Allow: /
-
+User-agent: Claude-SearchBot
+User-agent: Claude-User
 User-agent: PerplexityBot
-Allow: /
-
+User-agent: Perplexity-User
 User-agent: Google-Extended
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: meta-externalagent
+User-agent: bingbot
 Allow: /
+Disallow: /dashboard
+Disallow: /course/
+Disallow: /drive-sync
+Disallow: /textbook-config
+Disallow: /reservations
+Disallow: /plan-settings
+Disallow: /level-plan-settings
+Disallow: /barkley-admin
+Disallow: /evaluation-links-admin
+Disallow: /gemini-copilots-admin
+Disallow: /faq-admin
+Disallow: /paes-admin
+Disallow: /reservations-admin
+Disallow: /academic-copilot
+Disallow: /payment-result
+Disallow: /api/
 
 Sitemap: https://www.barkleyinstituto.cl/sitemap.xml
 # Mapa curado para asistentes de IA (estándar llms.txt)

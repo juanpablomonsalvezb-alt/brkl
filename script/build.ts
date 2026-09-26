@@ -1,6 +1,41 @@
 import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
-import { rm, readFile, rename } from "fs/promises";
+import { rm, readFile, rename, writeFile } from "fs/promises";
+import { existsSync, readFileSync } from "fs";
+import type { Plugin } from "esbuild";
+import { PRERENDER_ROUTES, snapshotFile } from "../shared/prerender-routes";
+
+// Módulo virtual "virtual:prerendered": { "/ruta": "<html del snapshot>" } para
+// todas las rutas de shared/prerender-routes.ts que tengan snapshot versionado.
+const snapshotsPlugin: Plugin = {
+  name: "prerendered-snapshots",
+  setup(build) {
+    build.onResolve({ filter: /^virtual:prerendered$/ }, (args) => ({ path: args.path, namespace: "prerendered" }));
+    build.onLoad({ filter: /.*/, namespace: "prerendered" }, () => {
+      const mapa: Record<string, string> = {};
+      for (const ruta of PRERENDER_ROUTES) {
+        const archivo = `client/public/prerendered/${snapshotFile(ruta)}`;
+        if (existsSync(archivo)) mapa[ruta] = readFileSync(archivo, "utf-8");
+        else console.warn(`sin snapshot para ${ruta} (correr npm run prerender)`);
+      }
+      return { contents: `export default ${JSON.stringify(mapa)};`, loader: "js" };
+    });
+  },
+};
+
+/**
+ * app.html es el fallback de las rutas del SPA sin snapshot (dashboard, salas
+ * privadas de Together, 404…). Heredaba la canónica, og:url y el FAQPage de la
+ * home: cada una de esas URLs le decía a Google "soy la home". Sin canónica,
+ * Google asume la propia URL.
+ */
+function limpiarFallback(html: string): string {
+  return html
+    .replace(/\s*<link rel="canonical"[^>]*>/i, "")
+    .replace(/\s*<meta property="og:url"[^>]*>/i, "")
+    .replace(/\s*<link rel="preload" as="image"[^>]*>/gi, "")
+    .replace(/\s*<script type="application\/ld\+json">(?:(?!<\/script>)[\s\S])*?"FAQPage"[\s\S]*?<\/script>/gi, "");
+}
 
 // server deps to bundle to reduce openat(2) syscalls
 // which helps cold start times
@@ -75,6 +110,7 @@ async function buildAll() {
     // El shell SPA y el snapshot prerenderizado para bots se inlinean como texto
     // en el bundle — así la función no depende de rutas de filesystem en runtime.
     loader: { ".html": "text" },
+    plugins: [snapshotsPlugin],
     logLevel: "info",
   });
 
@@ -94,6 +130,7 @@ async function buildAll() {
     // devuelven 404. Se renombra a app.html — "/" queda libre para la función,
     // y el fallback del SPA apunta a app.html en vercel.json.
     await rename("dist/public/index.html", "dist/public/app.html");
+    await writeFile("dist/public/app.html", limpiarFallback(await readFile("dist/public/app.html", "utf-8")));
     console.log("dist/public/index.html → app.html (Vercel): '/' la sirve api/handler.js, el resto del SPA cae en app.html");
   }
 }

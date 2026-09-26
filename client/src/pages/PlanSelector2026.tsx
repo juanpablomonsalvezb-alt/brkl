@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Check, Sparkles, BookOpen, Users, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 // Tipos
 interface Plan {
@@ -74,6 +75,9 @@ const plansData: Record<string, Plan[]> = {
 };
 
 export default function PlanSelector2026() {
+  // Precios de una estructura de planes anterior: fuera del índice para que
+  // buscadores e IA no citen montos que ya no aplican.
+  usePageMeta({ title: "Planes académicos 2026 | Barkley Online", noindex: true });
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 

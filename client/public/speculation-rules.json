@@ -1,0 +1,28 @@
+{
+  "prefetch": [
+    {
+      "where": {
+        "and": [
+          { "href_matches": "/*" },
+          {
+            "not": {
+              "href_matches": [
+                "/api/*",
+                "/dashboard*",
+                "/course/*",
+                "/*-admin*",
+                "/barkley-admin*",
+                "/payment-result*",
+                "/*.mp4",
+                "/*.mov",
+                "/*.mp3",
+                "/*.pdf"
+              ]
+            }
+          }
+        ]
+      },
+      "eagerness": "moderate"
+    }
+  ]
+}

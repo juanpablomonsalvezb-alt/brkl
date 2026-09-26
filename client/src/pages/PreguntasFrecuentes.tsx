@@ -62,6 +62,23 @@ export default function PreguntasFrecuentes() {
     <div style={{ backgroundColor: "#fff", color: TEXT, fontFamily: FONT, fontSize: 16, lineHeight: 1.8, overflowX: "hidden" }}>
       <SiteHeader overlay={false} />
 
+      {faqs && faqs.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqs.map((f) => ({
+                "@type": "Question",
+                name: f.question,
+                acceptedAnswer: { "@type": "Answer", text: f.answer },
+              })),
+            }),
+          }}
+        />
+      )}
+
       <section style={{ background: `linear-gradient(180deg, ${NAVY} 0%, #001d3d 100%)`, padding: "60px 24px 50px", textAlign: "center" }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <Reveal>
@@ -84,7 +101,9 @@ export default function PreguntasFrecuentes() {
                   <AccordionTrigger style={{ fontSize: 16, fontWeight: 600, color: NAVY, padding: "16px 0", textAlign: "left" }} className="hover:no-underline">
                     {f.question}
                   </AccordionTrigger>
-                  <AccordionContent style={{ fontSize: 15, opacity: 0.85, paddingBottom: 16 }}>
+                  {/* forceMount: la respuesta queda en el HTML aunque esté cerrada (con hidden),
+                      así buscadores e IA la leen sin abrir el acordeón. */}
+                  <AccordionContent forceMount style={{ fontSize: 15, opacity: 0.85, paddingBottom: 16 }}>
                     {f.answer}
                   </AccordionContent>
                 </AccordionItem>
