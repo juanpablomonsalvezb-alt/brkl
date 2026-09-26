@@ -25,8 +25,20 @@ const SUGGESTIONS_INICIALES = [
   "¿Y si mi hijo tiene TDAH o dislexia?",
 ];
 
+const EVENTO_ABRIR = "barkley:abrir-chat";
+
+// Abre el chat desde otro elemento (en móvil, la barra de reserva reemplaza la burbuja).
+export function abrirChat() {
+  window.dispatchEvent(new Event(EVENTO_ABRIR));
+}
+
 export default function SalesChatbot() {
   const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    const abrir = () => setIsOpen(true);
+    window.addEventListener(EVENTO_ABRIR, abrir);
+    return () => window.removeEventListener(EVENTO_ABRIR, abrir);
+  }, []);
   const [messages, setMessages] = useState<Message[]>([
     { id: "welcome", text: WELCOME_MESSAGE, sender: "bot" },
   ]);
@@ -95,8 +107,7 @@ export default function SalesChatbot() {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="fixed right-6 z-50"
-            style={{ bottom: "calc(1.5rem + var(--cta-bar, 0px))", transition: "bottom 0.3s ease" }}
+            className="bk-chat-burbuja fixed right-6 bottom-6 z-50"
           >
             <Button
               onClick={() => setIsOpen(true)}
@@ -117,8 +128,8 @@ export default function SalesChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.9 }}
             transition={{ type: "spring", damping: 26, stiffness: 320 }}
-            className="fixed bottom-6 right-6 w-[380px] max-w-[calc(100vw-32px)] bg-white rounded-2xl shadow-2xl overflow-hidden z-50 flex flex-col"
-            style={{ height: 560, boxShadow: "0 20px 60px rgba(0,51,102,0.28)" }}
+            className="fixed right-6 w-[380px] max-w-[calc(100vw-32px)] bg-white rounded-2xl shadow-2xl overflow-hidden z-50 flex flex-col"
+            style={{ bottom: "calc(1.5rem + var(--cta-bar, 0px))", height: "min(560px, calc(100dvh - 3rem - var(--cta-bar, 0px)))", boxShadow: "0 20px 60px rgba(0,51,102,0.28)" }}
           >
             <div className="p-4 flex items-center justify-between" style={{ background: NAVY }}>
               <div className="flex items-center gap-3">

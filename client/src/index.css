@@ -218,3 +218,8 @@
 .bk-carousel::-webkit-scrollbar {
   display: none;
 }
+
+/* Móvil: mientras se ve la barra "Reservar cupo", el chat se abre desde ella. */
+html[data-cta-bar] .bk-chat-burbuja {
+  display: none;
+}

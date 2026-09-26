@@ -100,7 +100,7 @@ export default function BarkleyTVSection() {
       <div style={{ maxWidth: 1040, margin: "0 auto", textAlign: "center" }}>
         <Reveal>
           <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 10px" }}>Barkley TV</p>
-          <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 600, color: "#fff", margin: "0 0 14px" }}>Todo sobre Barkley, sin pausa.</h2>
+          <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, color: "#fff", margin: "0 0 14px" }}>Todo sobre Barkley, sin pausa.</h2>
           <p style={{ fontSize: 15.5, color: "rgba(255,255,255,0.7)", maxWidth: 560, margin: "0 auto 32px" }}>
             Umbral™, Brújula™, el Programa Adaptativo y más. Elige un video de la lista o déjalo corriendo solo.
           </p>

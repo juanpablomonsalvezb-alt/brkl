@@ -18,7 +18,7 @@ import {
   Hourglass, Circle, Triangle, Star, Heart, Leaf, Rows3, ChevronsRight,
   Layers, BookOpen, Headphones, Image as ImageIcon, ListChecks, Sparkles,
   Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock, Instagram, Zap, Home as HomeIcon,
-  Users2, Youtube,
+  Users2, Youtube, MessageCircle,
 } from "lucide-react";
 
 const INSTAGRAM_URL = "https://www.instagram.com/ibarkley.cl";
@@ -36,7 +36,8 @@ function TikTokIcon({ style }: { style?: React.CSSProperties }) {
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { ReservationDialog } from "@/components/ReservationDialog";
-import SalesChatbot from "@/components/SalesChatbot";
+import SalesChatbot, { abrirChat } from "@/components/SalesChatbot";
+import { useIsMobile } from "@/hooks/use-mobile";
 // Code-splitting: sección debajo del hero, no aporta al LCP, sacada del
 // bundle inicial (ver client/src/components/BarkleyTVSection.tsx).
 const BarkleyTVSection = lazy(() => import("@/components/BarkleyTVSection"));
@@ -218,9 +219,6 @@ function ShapeStairs({ color, size = 40 }: { color: string; size?: number }) {
 function ShapeLeaf({ color, size = 40 }: { color: string; size?: number }) {
   return <Leaf color={color} fill={color} size={size} strokeWidth={0} />;
 }
-function ShapeBars({ color, size = 40 }: { color: string; size?: number }) {
-  return <Rows3 color={color} fill={color} size={size} strokeWidth={1.5} />;
-}
 function ShapeFastForward({ color, size = 40 }: { color: string; size?: number }) {
   return <ChevronsRight color={color} size={size} strokeWidth={3} />;
 }
@@ -283,10 +281,6 @@ const PROGRAMAS = [
 // se está inscribiendo — el acceso a la plataforma abre en enero de 2027.
 
 interface Faq { id: string; question: string; answer: string; sortOrder: number; isActive?: boolean; }
-
-function ShapeInline({ color, shape: Shape }: { color: string; shape: typeof ShapeCircle }) {
-  return <span style={{ display: "inline-block", margin: "0 4px", verticalAlign: "middle", transform: "translateY(2px)" }}><Shape color={color} size={28} /></span>;
-}
 
 function AdmisionSection({ anchorId }: { anchorId?: string }) {
   return (
@@ -539,56 +533,28 @@ function InscripcionForm() {
 // vio). Aparece tras un tiempo en página o al detectar intención de salida
 // (mouse hacia la barra del navegador) — nunca modal invasivo, se puede
 // ignorar sin fricción, y no vuelve a aparecer en la misma sesión.
-function ReactionWidget() {
-  const [visible, setVisible] = useState(false);
+const REACCION_CAJA: React.CSSProperties = { position: "fixed", left: 20, bottom: "calc(20px + var(--cta-bar, 0px))", zIndex: 30, background: "#fff", borderRadius: 18, padding: "18px 20px", boxShadow: "0 12px 40px rgba(0,20,60,0.18)", maxWidth: 280, border: "1px solid #eef0f3" };
+
+function useReaccion() {
+  const [yaMostrada] = useState(() => {
+    try { return !!sessionStorage.getItem("bk_reaccion_shown"); } catch { return false; }
+  });
   const [answered, setAnswered] = useState(false);
-  const shownRef = useRef(false);
-
-  useEffect(() => {
-    if (sessionStorage.getItem("bk_reaccion_shown")) return;
-
-    const show = () => {
-      if (shownRef.current) return;
-      shownRef.current = true;
-      setVisible(true);
-    };
-
-    const timer = setTimeout(show, 25000);
-
-    const onExitIntent = (e: MouseEvent) => {
-      if (e.clientY <= 0) show();
-    };
-    document.addEventListener("mouseleave", onExitIntent);
-
-    return () => {
-      clearTimeout(timer);
-      document.removeEventListener("mouseleave", onExitIntent);
-    };
-  }, []);
-
+  const [cerrada, setCerrada] = useState(false);
   const react = (liked: boolean) => {
     medir(liked ? "reaccion_like" : "reaccion_dislike");
     setAnswered(true);
-    sessionStorage.setItem("bk_reaccion_shown", "1");
-    setTimeout(() => setVisible(false), 1400);
+    try { sessionStorage.setItem("bk_reaccion_shown", "1"); } catch { /* sin storage */ }
   };
-
   const dismiss = () => {
-    sessionStorage.setItem("bk_reaccion_shown", "1");
-    setVisible(false);
+    try { sessionStorage.setItem("bk_reaccion_shown", "1"); } catch { /* sin storage */ }
+    setCerrada(true);
   };
+  return { yaMostrada, answered, cerrada, react, dismiss };
+}
 
-  return (
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.95 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          style={{ position: "fixed", left: 20, bottom: "calc(20px + var(--cta-bar, 0px))", zIndex: 30, background: "#fff", borderRadius: 18, padding: "18px 20px", boxShadow: "0 12px 40px rgba(0,20,60,0.18)", maxWidth: 280, border: "1px solid #eef0f3" }}
-        >
-          {!answered ? (
+function ReaccionContenido({ answered, react, dismiss }: { answered: boolean; react: (liked: boolean) => void; dismiss: () => void }) {
+  return !answered ? (
             <>
               <button aria-label="Cerrar" onClick={dismiss} style={{ position: "absolute", top: 8, right: 10, background: "none", border: "none", cursor: "pointer", fontSize: 15, color: "#c5c5c5", lineHeight: 1 }}>✕</button>
               <p style={{ fontSize: 14.5, fontWeight: 600, color: NAVY, margin: "0 0 14px", paddingRight: 14 }}>¿Te sirvió lo que viste?</p>
@@ -607,12 +573,73 @@ function ReactionWidget() {
                 </button>
               </div>
             </>
-          ) : (
-            <p style={{ fontSize: 14, fontWeight: 600, color: NAVY, margin: 0, textAlign: "center", padding: "6px 0" }}>Gracias 💛</p>
-          )}
+) : (
+    <p style={{ fontSize: 14, fontWeight: 600, color: NAVY, margin: 0, textAlign: "center", padding: "6px 0" }}>Gracias 💛</p>
+  );
+}
+
+// Escritorio: tarjeta flotante tras 25 s o intención de salida.
+// Móvil: nunca flota (competía con la barra de reserva y el chat por el
+// tercio inferior de la pantalla); ReaccionEnLinea la muestra dentro de la página.
+function ReactionWidget() {
+  const { yaMostrada, answered, cerrada, react, dismiss } = useReaccion();
+  const [visible, setVisible] = useState(false);
+  const shownRef = useRef(false);
+
+  useEffect(() => {
+    if (yaMostrada || window.matchMedia("(max-width: 767px)").matches) return;
+
+    const show = () => {
+      if (shownRef.current) return;
+      shownRef.current = true;
+      setVisible(true);
+    };
+
+    const timer = setTimeout(show, 25000);
+
+    const onExitIntent = (e: MouseEvent) => {
+      if (e.clientY <= 0) show();
+    };
+    document.addEventListener("mouseleave", onExitIntent);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("mouseleave", onExitIntent);
+    };
+  }, [yaMostrada]);
+
+  useEffect(() => {
+    if (!answered) return;
+    const t = setTimeout(() => setVisible(false), 1400);
+    return () => clearTimeout(t);
+  }, [answered]);
+
+  return (
+    <AnimatePresence>
+      {visible && !cerrada && (
+        <motion.div
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 20, scale: 0.95 }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          style={REACCION_CAJA}
+        >
+          <ReaccionContenido answered={answered} react={react} dismiss={dismiss} />
         </motion.div>
       )}
     </AnimatePresence>
+  );
+}
+
+function ReaccionEnLinea() {
+  const { yaMostrada, answered, cerrada, react, dismiss } = useReaccion();
+  if (yaMostrada || cerrada) return null;
+  return (
+    <div className="md:hidden" style={{ padding: "8px 16px 40px", display: "flex", justifyContent: "center" }}>
+      <div style={{ ...REACCION_CAJA, position: "relative", left: "auto", bottom: "auto", maxWidth: 360, width: "100%" }}>
+        <ReaccionContenido answered={answered} react={react} dismiss={dismiss} />
+      </div>
+    </div>
   );
 }
 
@@ -752,7 +779,11 @@ function BarraInscripcion() {
   const visible = movil && pasoHero && !formVisible;
   useEffect(() => {
     document.documentElement.style.setProperty("--cta-bar", visible ? "72px" : "0px");
-    return () => { document.documentElement.style.removeProperty("--cta-bar"); };
+    document.documentElement.toggleAttribute("data-cta-bar", visible);
+    return () => {
+      document.documentElement.style.removeProperty("--cta-bar");
+      document.documentElement.removeAttribute("data-cta-bar");
+    };
   }, [visible]);
 
   return (
@@ -767,6 +798,14 @@ function BarraInscripcion() {
             <p style={{ margin: 0, fontSize: 13.5, fontWeight: 700, color: NAVY, whiteSpace: "nowrap" }}>Admisión 2027</p>
             <p style={{ margin: 0, fontSize: 12, color: "#5b6573", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Reserva sin costo hoy</p>
           </div>
+          <button
+            type="button"
+            aria-label="Abrir chat con Barkley"
+            onClick={abrirChat}
+            style={{ width: 44, height: 44, borderRadius: "50%", background: NAVY, border: "none", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, cursor: "pointer" }}
+          >
+            <MessageCircle style={{ width: 20, height: 20, color: "#fff" }} />
+          </button>
           <a href="#inscripcion" style={{ background: GOLD, color: NAVY, textDecoration: "none", fontWeight: 700, fontSize: 14.5, borderRadius: 999, padding: "12px 18px", whiteSpace: "nowrap", flexShrink: 0 }}>
             Reservar cupo →
           </a>
@@ -779,6 +818,8 @@ function BarraInscripcion() {
 export default function Home() {
   const [callOpen, setCallOpen] = useState(false);
   const [showBackTop, setShowBackTop] = useState(false);
+  // En móvil ya están la barra de reserva y el chat; en escritorio va sobre la burbuja del chat.
+  const esMovil = useIsMobile();
   const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5*60*1000 });
 
   // Botón flotante de volver arriba: aparece tras pasar una pantalla de scroll,
@@ -955,7 +996,7 @@ export default function Home() {
             </div>
           </motion.a>
           {/* Pinwheel de 4 cuartos rosa arriba, sobre morado saturado real (#861FCE), texto blanco */}
-          <motion.a href="/preguntas-frecuentes" data-hero="panel" whileHover={{ opacity: 0.9 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: PURPLE_PANEL, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+          <motion.a href="#precio" data-hero="panel" whileHover={{ opacity: 0.9 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: PURPLE_PANEL, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
             <motion.div data-hero="deco" whileHover={{ rotate: 8 }} transition={{ duration: 0.4 }} style={{ position: "absolute", top: 12, right: -26, width: 190, height: 190, display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr", gap: 8 }}>
               {/* Un solo path (cuarto de disco, pivote en la esquina interior) espejado en las 4 celdas → pinwheel */}
               <svg viewBox="0 0 50 50"><path d="M50,50 L50,0 A50,50 0 0,0 0,50 Z" fill={PINK} /></svg>
@@ -964,7 +1005,7 @@ export default function Home() {
               <svg viewBox="0 0 50 50" style={{ transform: "scale(-1,-1)" }}><path d="M50,50 L50,0 A50,50 0 0,0 0,50 Z" fill={PINK} /></svg>
             </motion.div>
             <div style={{ padding: "28px 26px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", color: "#fff", fontWeight: 500, fontSize: 26, lineHeight: 1.25 }}>
-              <span>Últimas<br />Noticias</span> <ArrowUpRight style={{ width: 26, height: 26, marginBottom: 6 }} />
+              <span>Precio y<br />Admisión</span> <ArrowUpRight style={{ width: 26, height: 26, marginBottom: 6 }} />
             </div>
           </motion.a>
         </div>
@@ -982,7 +1023,7 @@ export default function Home() {
           visible en cualquier dispositivo (a diferencia de la insignia del footer,
           que solo se ve en desktop y solo al llegar hasta abajo). */}
       <AnimatePresence>
-        {showBackTop && (
+        {showBackTop && !esMovil && (
           <motion.button
             aria-label="Volver arriba"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -990,20 +1031,20 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.2 }}
-            style={{ position: "fixed", right: 20, bottom: "calc(20px + var(--cta-bar, 0px))", transition: "bottom 0.3s ease", zIndex: 30, width: 48, height: 48, borderRadius: "50%", background: NAVY, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 14px rgba(0,51,102,0.35)" }}
+            style={{ position: "fixed", right: 32, bottom: 104, zIndex: 30, width: 48, height: 48, borderRadius: "50%", background: NAVY, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 14px rgba(0,51,102,0.35)" }}
           >
             <ArrowUpRight style={{ width: 20, height: 20, color: "#fff", transform: "rotate(-45deg)" }} />
           </motion.button>
         )}
       </AnimatePresence>
 
-      {/* === INTRO — azul apagado real (no navy puro), formas literales inline (hourglass/circle/triangle/stairs/leaf/bars) === */}
+      {/* === INTRO === */}
       <section id="nosotros" style={{ maxWidth: 1180, margin: "0 auto", padding: "90px 24px", textAlign: "left" }}>
         <Reveal>
-          <p style={{ fontSize: "clamp(26px,3.6vw,42px)", fontWeight: 500, lineHeight: 1.35, color: SLATE, margin: 0 }}>
-            Somos un colegio<ShapeInline color={BLOCK_BLUE} shape={ShapeHourglass} /> 100% asincrónico en Chile<ShapeInline color={PINK} shape={ShapeCircle} /> para
-            estudiantes<ShapeInline color={RED} shape={ShapeTriangle} /> desde 1° básico hasta 4° medio<ShapeInline color={PURPLE} shape={ShapeStairs} />, ofreciendo una
-            preparación rigurosa y culturalmente cercana<ShapeInline color={GREEN} shape={ShapeLeaf} /> para rendir exámenes libres ante personas<ShapeInline color={GOLD} shape={ShapeBars} /> de todo Chile.
+          <p style={{ fontSize: "clamp(26px,3.6vw,42px)", fontWeight: 500, lineHeight: 1.35, color: NAVY, margin: 0 }}>
+            Somos un colegio <span style={{ color: RED }}>100% asincrónico</span> en Chile para
+            estudiantes desde 1° básico hasta 4° medio, ofreciendo una
+            preparación rigurosa y culturalmente cercana para rendir exámenes libres ante personas de todo Chile.
           </p>
         </Reveal>
         <Reveal delay={0.08}>
@@ -1028,7 +1069,7 @@ export default function Home() {
           <Reveal>
             <div style={{ flex: "1 1 340px", minWidth: "min(300px, 100%)", maxWidth: 440 }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 14px" }}>No estamos solos en esto</p>
-              <h2 style={{ fontSize: "clamp(32px,4.5vw,52px)", fontWeight: 700, color: NAVY, margin: "0 0 20px", lineHeight: 1.1 }}>
+              <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, color: NAVY, margin: "0 0 20px", lineHeight: 1.15 }}>
                 El mismo método,<br />en <em style={{ fontStyle: "normal", color: SLATE }}>cuatro colegios</em><br />del mundo.
               </h2>
               <p style={{ fontSize: 16, color: TEXT, lineHeight: 1.75, margin: "0 0 28px" }}>
@@ -1089,8 +1130,8 @@ export default function Home() {
                 <img src="/images/asincronico-tablet.webp" alt="" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
               <div style={{ flex: "1 1 380px", minWidth: 280, background: "#fff", padding: "40px 32px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Sin clases en vivo. Sin horarios fijos.</p>
-                <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 600, color: NAVY, margin: "0 0 16px" }}>Aprende cuando puedas. Avanza a tu ritmo real.</h2>
+                <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 8px" }}>Sin clases en vivo. Sin horarios fijos.</p>
+                <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, color: NAVY, margin: "0 0 16px" }}>Aprende cuando puedas. Avanza a tu ritmo real.</h2>
                 <p style={{ fontSize: 15, margin: 0 }}>Barkley es 100% asincrónico: nada de clases por Zoom ni horarios que cumplir. Cada estudiante avanza a su propio paso, con tutores y asesores disponibles cuando los necesita — pensado para quienes no tienen acceso constante a un horario fijo, y para quienes aprenden distinto.</p>
               </div>
             </div>
@@ -1111,9 +1152,9 @@ export default function Home() {
 
       {/* === NIVELES — panel azul sólido detrás + botón dorado debajo, como el real === */}
       <section id="metodo" style={{ padding: "64px 24px 0", textAlign: "center" }}>
-        <p style={{ fontSize: 14, fontWeight: 600, color: SLATE, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>De 1° básico a 4° medio</p>
+        <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 8px" }}>De 1° básico a 4° medio</p>
         {/* h2 slate 600 — como "Our Learning Journey" real (no navy bold) */}
-        <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 600, color: SLATE, margin: "0 0 48px" }}>Nuestro camino de aprendizaje</h2>
+        <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, color: NAVY, margin: "0 0 48px" }}>Nuestro camino de aprendizaje</h2>
       </section>
       <section style={{ background: VIVID_BLUE, padding: "0 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", transform: "translateY(-24px)" }}>
@@ -1147,8 +1188,8 @@ export default function Home() {
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <Reveal>
             <div style={{ textAlign: "center", marginBottom: 56 }}>
-              <p style={{ fontSize: 14, fontWeight: 600, color: SLATE, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>Inclusión real</p>
-              <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 600, color: NAVY, margin: "0 0 24px" }}>Para todos. Adaptado a cada uno.</h2>
+              <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 8px" }}>Inclusión real</p>
+              <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, color: NAVY, margin: "0 0 24px" }}>Para todos. Adaptado a cada uno.</h2>
               <p style={{ fontSize: 16, color: TEXT, maxWidth: 600, margin: "0 auto", lineHeight: 1.6 }}>Barkley es un colegio para todos. Si tienes TDAH, eres deportista de alto rendimiento, tienes una necesidad educativa especial o necesitas flexibilidad para exámenes libres, la tecnología y metodología ya están diseñadas para ti.</p>
             </div>
           </Reveal>
@@ -1196,10 +1237,10 @@ export default function Home() {
           propio espacio, no un ítem más dentro de una lista genérica. === */}
       <section id="adaptativo" style={{ background: "#f6f1ff", padding: "90px 24px" }}>
         <div style={{ maxWidth: 980, margin: "0 auto", textAlign: "center" }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: PURPLE, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 12px" }}>
             Adaptativo · el programa de Barkley para otros ritmos de aprendizaje
           </p>
-          <h2 style={{ fontSize: "clamp(30px,5vw,48px)", fontWeight: 600, color: NAVY, margin: "0 0 20px", lineHeight: 1.15 }}>
+          <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, color: NAVY, margin: "0 0 20px", lineHeight: 1.15 }}>
             No todos aprenden igual.<br />No todos deberían estudiar igual.
           </h2>
           <p style={{ fontSize: 18, color: TEXT, maxWidth: 680, margin: "0 auto 40px", lineHeight: 1.7 }}>
@@ -1233,8 +1274,8 @@ export default function Home() {
       {/* === FACT-BOXES — pastel real con forma grande de fondo + número gigante (verificado en vivo, no negro) === */}
       <section style={{ padding: "72px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px", textAlign: "center" }}>Barkley en cifras</p>
-          <h2 style={{ fontSize: "clamp(34px,6vw,60px)", fontWeight: 600, color: NAVY, margin: "0 0 40px", textAlign: "center" }}>Más que un colegio</h2>
+          <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 8px", textAlign: "center" }}>Barkley en cifras</p>
+          <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, color: NAVY, margin: "0 0 40px", textAlign: "center" }}>Más que un colegio</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
             {FACTS.map((s, i) => (
               <Reveal key={s.label} delay={i * 0.08} style={{ flex: "1 1 260px", minWidth: 240 }}>
@@ -1255,8 +1296,8 @@ export default function Home() {
       {/* === PROGRAMAS === */}
       <section id="plataforma" style={{ background: "#f5f5f5", padding: "64px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.04em", margin: "0 0 8px" }}>Descubre y experimenta</p>
-          <h2 style={{ fontSize: "clamp(34px,6vw,64px)", fontWeight: 600, color: SLATE, margin: "0 0 24px" }}>La plataforma, por dentro</h2>
+          <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 8px" }}>Descubre y experimenta</p>
+          <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, color: NAVY, margin: "0 0 24px" }}>La plataforma, por dentro</h2>
 
           {/* Tour virtual narrado: recorrido real por el dashboard del alumno y el portal del apoderado */}
           <Reveal>
@@ -1325,8 +1366,8 @@ export default function Home() {
         <div style={{ maxWidth: 1180, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 56, alignItems: "center" }}>
           <Reveal>
             <div style={{ flex: "1 1 420px", minWidth: "min(300px, 100%)", maxWidth: 520 }}>
-              <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 10px" }}>Cuando de verdad lo necesita</p>
-              <h2 style={{ fontSize: "clamp(30px,4.5vw,48px)", fontWeight: 700, color: NAVY, margin: "0 0 18px", lineHeight: 1.12 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 10px" }}>Cuando de verdad lo necesita</p>
+              <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, color: NAVY, margin: "0 0 18px", lineHeight: 1.15 }}>
                 <em style={{ fontStyle: "normal", color: "#b5892a" }}>IA Barkley</em>: el tutor que aparece solo cuando toca.
               </h2>
               <p style={{ fontSize: 16, color: TEXT, lineHeight: 1.75, margin: "0 0 16px" }}>
@@ -1355,8 +1396,8 @@ export default function Home() {
       <section id="calendario" style={{ background: "#fff", padding: "80px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <Reveal>
-            <p style={{ fontSize: 14, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px", textAlign: "center" }}>Fechas claras, sin letra chica</p>
-            <h2 style={{ fontSize: "clamp(30px,5vw,48px)", fontWeight: 600, color: NAVY, margin: "0 0 48px", textAlign: "center" }}>Calendario académico 2026–2027</h2>
+            <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 8px", textAlign: "center" }}>Fechas claras, sin letra chica</p>
+            <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, color: NAVY, margin: "0 0 48px", textAlign: "center" }}>Calendario académico 2026–2027</h2>
           </Reveal>
           <div style={{ position: "relative" }}>
             <div style={{ position: "absolute", left: 21, top: 8, bottom: 8, width: 2, background: "#e3e8ef" }} className="hidden md:block" />
@@ -1452,8 +1493,8 @@ export default function Home() {
       <section id="precio" style={{ background: "#f5f5f5", padding: "80px 24px" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center" }}>
           <Reveal>
-            <p style={{ fontSize: 14, fontWeight: 600, color: RED, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 8px" }}>Precio transparente</p>
-            <h2 style={{ fontSize: "clamp(30px,5vw,52px)", fontWeight: 600, color: NAVY, margin: "0 0 12px" }}>Un solo valor, sin letra chica</h2>
+            <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 8px" }}>Precio transparente</p>
+            <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, color: NAVY, margin: "0 0 12px" }}>Un solo valor, sin letra chica</h2>
             <p style={{ fontSize: 16, color: TEXT, margin: "0 auto 20px", maxWidth: 640 }}>
               Sin costos ocultos. El año de preparación va de <strong style={{ color: NAVY }}>marzo al 31 de octubre</strong>, cuando rindes tus exámenes libres. Todo incluido — 2 a 3 videos y pódcasts por lección, un tutor asignado a tu hijo (no un pool genérico de soporte) que te acompaña en todo, no solo lo académico, asesor que sigue tu progreso y portal para tu familia.
             </p>
@@ -1560,7 +1601,7 @@ export default function Home() {
             <span style={{ display: "inline-block", background: "rgba(255,197,72,0.15)", color: GOLD, fontSize: 13, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", padding: "7px 18px", borderRadius: 999, marginBottom: 20 }}>
               Por qué somos distintos
             </span>
-            <h2 style={{ fontSize: "clamp(30px,5vw,48px)", fontWeight: 800, color: "#fff", margin: "0 0 20px", lineHeight: 1.15 }}>
+            <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, color: "#fff", margin: "0 0 20px", lineHeight: 1.15 }}>
               Aprende sin estar atrapado.
             </h2>
             <p style={{ fontSize: 17, color: "#cfe0f5", margin: "0 auto 36px", maxWidth: 620, lineHeight: 1.7 }}>
@@ -1578,7 +1619,7 @@ export default function Home() {
         <div style={{ position: "absolute", bottom: -20, left: -20, opacity: 0.5 }}><ShapeFlower color="#ffffff22" size={140} /></div>
         <Reveal>
           <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center", position: "relative" }}>
-            <h2 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 600, margin: "0 0 16px" }}>¿Quieres saber más sobre Barkley Online?</h2>
+            <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, margin: "0 0 16px" }}>¿Quieres saber más sobre Barkley Online?</h2>
             <p style={{ fontSize: 16, opacity: 0.85, margin: "0 0 28px" }}>Déjanos tus datos y te contactamos.</p>
             <motion.button whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} onClick={() => document.getElementById("inscripcion")?.scrollIntoView({ behavior: "smooth" })}
               style={{ fontSize: 15, fontWeight: 700, color: NAVY, background: GOLD, border: "none", borderRadius: 999, padding: "14px 30px", cursor: "pointer", fontFamily: FONT, display: "inline-flex", alignItems: "center", gap: 8 }}
@@ -1589,6 +1630,8 @@ export default function Home() {
 
       {/* === INSCRIPCIÓN === */}
       <AdmisionSection anchorId="inscripcion" />
+
+      <ReaccionEnLinea />
 
       {/* === FOOTER — navy sólido + formas orgánicas, como el real === */}
       <footer style={{ backgroundColor: NAVY, color: "#fff", padding: "56px 24px 24px", position: "relative", overflow: "hidden" }}>
