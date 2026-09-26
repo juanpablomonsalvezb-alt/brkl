@@ -16,3 +16,7 @@ vite.config.ts.*
 .env.bak
 .env*
 .env*.local
+
+# Notas de investigación sueltas (deep-research), no son código del proyecto
+reports/
+research_notes/
