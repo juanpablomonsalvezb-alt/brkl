@@ -20,3 +20,4 @@ vite.config.ts.*
 # Notas de investigación sueltas (deep-research), no son código del proyecto
 reports/
 research_notes/
+video/intro/out/

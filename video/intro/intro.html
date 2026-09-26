@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Barkley — intro 45 s</title>
+<style>
+  @font-face { font-family: "Poppins"; font-weight: 400; src: url(fonts/poppins-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 500; src: url(fonts/poppins-latin-500-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 600; src: url(fonts/poppins-latin-600-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 700; src: url(fonts/poppins-latin-700-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 800; src: url(fonts/poppins-latin-800-normal.woff2) format("woff2"); }
+
+  :root {
+    --navy: #003366; --navy-deep: #001a38; --ink: #000e22;
+    --gold: #ffc548; --red: #ff3d37; --white: #ffffff;
+    --mute: rgba(255,255,255,.62); --line: rgba(255,255,255,.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--ink); }
+  body { font-family: "Poppins", sans-serif; color: var(--white); -webkit-font-smoothing: antialiased; }
+
+  #stage { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(120% 90% at 50% 0%, #00264d 0%, var(--navy-deep) 55%, var(--ink) 100%); }
+  .glow { position: absolute; width: 900px; height: 900px; border-radius: 50%; filter: blur(40px); pointer-events: none; }
+  #glowA { background: radial-gradient(circle, rgba(255,197,72,.22), rgba(255,197,72,0) 65%); }
+  #glowB { background: radial-gradient(circle, rgba(74,123,224,.28), rgba(74,123,224,0) 65%); }
+  #grid { position: absolute; inset: -200px; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 96px 96px; opacity: .18; mask-image: radial-gradient(60% 60% at 50% 50%, #000, transparent); }
+
+  .scene { position: absolute; inset: 0; opacity: 0; will-change: opacity, transform; }
+  .abs { position: absolute; will-change: transform, opacity, filter; }
+  .center { left: 50%; top: 50%; }
+
+  .eyebrow { font-size: 22px; font-weight: 700; letter-spacing: .22em; color: var(--gold); text-transform: uppercase; }
+  .h1 { font-size: 96px; font-weight: 700; line-height: 1.04; letter-spacing: -.02em; }
+  .h2 { font-size: 68px; font-weight: 700; line-height: 1.08; letter-spacing: -.015em; }
+  .sub { font-size: 30px; font-weight: 400; color: var(--mute); line-height: 1.45; }
+  .word { display: inline-block; will-change: transform, opacity, filter; }
+
+  .chip { padding: 16px 30px; border-radius: 999px; font-size: 28px; font-weight: 600; white-space: nowrap; border: 1.5px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06); backdrop-filter: blur(6px); }
+  .chip.gold { border-color: rgba(255,197,72,.55); color: var(--gold); background: rgba(255,197,72,.08); }
+
+  .card { border-radius: 26px; background: rgba(255,255,255,.06); border: 1.5px solid rgba(255,255,255,.12); box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+  .panel { border-radius: 20px; background: #0b2a50; border: 1.5px solid rgba(255,255,255,.1); display: flex; flex-direction: column; justify-content: space-between; padding: 22px 24px; }
+  .panel .t { font-size: 24px; font-weight: 600; }
+  .panel .m { font-size: 17px; color: var(--mute); }
+  .icon { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: rgba(255,197,72,.14); }
+  .icon svg { width: 26px; height: 26px; stroke: var(--gold); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .caption { font-size: 28px; color: var(--mute); text-align: center; }
+  .tile { width: 300px; height: 210px; border-radius: 22px; background: linear-gradient(160deg, #0d2d55, #07203f); border: 1.5px solid rgba(255,255,255,.1); padding: 22px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+  .avatar { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 22px; color: var(--navy); }
+  .dot { width: 14px; height: 14px; border-radius: 50%; background: #3ddc84; box-shadow: 0 0 0 0 rgba(61,220,132,.6); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="grid"></div>
+  <div class="glow" id="glowA"></div>
+  <div class="glow" id="glowB"></div>
+
+  <!-- 1 · No todos aprenden igual -->
+  <section class="scene" id="s1">
+    <div class="abs center" id="s1t" style="width:1500px;text-align:center">
+      <div class="h1" id="s1l1"></div>
+      <div class="h2" id="s1l2" style="color:var(--gold);margin-top:18px"></div>
+    </div>
+    <div id="s1chips"></div>
+  </section>
+
+  <!-- 2 · Qué es Barkley -->
+  <section class="scene" id="s2">
+    <div class="abs center" id="s2logo" style="width:180px;height:180px">
+      <svg viewBox="0 0 180 180" width="180" height="180">
+        <rect id="s2box" x="6" y="6" width="168" height="168" rx="10" fill="none" stroke="#ffc548" stroke-width="6" pathLength="1" stroke-dasharray="1" />
+        <rect id="s2fill" x="26" y="26" width="128" height="128" rx="4" fill="#ffffff" />
+        <text id="s2b" x="90" y="129" text-anchor="middle" font-family="Poppins" font-weight="800" font-size="112" fill="#003366">B</text>
+      </svg>
+    </div>
+    <div class="abs center" id="s2word" style="width:1600px;text-align:center">
+      <div class="h1" style="font-size:132px;letter-spacing:-.03em">Barkley</div>
+    </div>
+    <div class="abs center" id="s2sub1" style="width:1600px;text-align:center">
+      <div style="font-size:40px;font-weight:600">Colegio online de preparación para <span style="color:var(--gold)">Exámenes Libres MINEDUC</span></div>
+    </div>
+    <div class="abs center" id="s2sub2" style="width:1600px;text-align:center">
+      <div class="sub">1° básico a 4° medio &nbsp;·&nbsp; 100% asincrónico &nbsp;·&nbsp; a tu ritmo</div>
+    </div>
+  </section>
+
+  <!-- 3 · Vórtice -->
+  <section class="scene" id="s3">
+    <div class="abs" id="s3head" style="left:130px;top:300px;width:640px">
+      <div class="eyebrow">Vórtice™</div>
+      <div class="h2" style="margin-top:22px">Todo tu año,<br />en un solo lugar.</div>
+      <div class="sub" style="margin-top:26px">Video, pódcast, práctica y tutor, organizados lección por lección.</div>
+    </div>
+    <div class="abs" id="s3screen" style="left:880px;top:190px;width:900px;height:620px">
+      <div class="card" style="position:absolute;inset:0;border-radius:30px;background:rgba(3,22,46,.85)"></div>
+      <div style="position:absolute;left:34px;top:26px;display:flex;gap:10px">
+        <span style="width:14px;height:14px;border-radius:50%;background:#ff5f57"></span>
+        <span style="width:14px;height:14px;border-radius:50%;background:#febc2e"></span>
+        <span style="width:14px;height:14px;border-radius:50%;background:#28c840"></span>
+      </div>
+      <div style="position:absolute;left:34px;top:66px;right:34px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:26px;font-weight:700">Hola, Sofía</div><div style="font-size:18px;color:var(--mute)">7° básico · Matemática</div></div>
+        <div style="width:300px"><div style="font-size:16px;color:var(--mute);text-align:right;margin-bottom:8px">Avance del año</div>
+          <div style="height:12px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden"><div id="s3bar" style="height:100%;width:0;background:var(--gold);border-radius:9px"></div></div></div>
+      </div>
+    </div>
+    <div id="s3cards"></div>
+  </section>
+
+  <!-- 4 · Umbral -->
+  <section class="scene" id="s4">
+    <div class="abs" id="s4head" style="left:130px;top:300px;width:640px">
+      <div class="eyebrow">Umbral™</div>
+      <div class="h2" style="margin-top:22px">Avanzas cuando<br />dominas.</div>
+      <div class="sub" style="margin-top:26px">70% para desbloquear la siguiente unidad. Si no llegas, refuerzas y vuelves a intentar.</div>
+    </div>
+    <div class="abs card" id="s4unit" style="left:900px;top:230px;width:420px;height:560px;padding:40px;display:flex;flex-direction:column;align-items:center;justify-content:space-between">
+      <div style="text-align:center"><div style="font-size:20px;color:var(--mute);font-weight:600;letter-spacing:.08em">UNIDAD 3</div><div style="font-size:34px;font-weight:700;margin-top:6px">Fracciones</div></div>
+      <div style="position:relative;width:260px;height:260px">
+        <svg viewBox="0 0 260 260" width="260" height="260" style="transform:rotate(-90deg)">
+          <circle cx="130" cy="130" r="112" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="18" />
+          <circle id="s4ring" cx="130" cy="130" r="112" fill="none" stroke="#ffc548" stroke-width="18" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100" />
+          <line x1="218" y1="130" x2="254" y2="130" stroke="#ffffff" stroke-width="5" stroke-linecap="round" transform="rotate(252 130 130)" />
+        </svg>
+        <div style="position:absolute;inset:0;display:grid;place-items:center;text-align:center">
+          <div><div id="s4pct" style="font-size:72px;font-weight:800;line-height:1">0%</div><div id="s4try" style="font-size:18px;color:var(--mute);margin-top:6px">Intento 1</div></div>
+        </div>
+      </div>
+      <div id="s4state" class="chip" style="font-size:22px;padding:12px 24px">Evaluación de la unidad</div>
+    </div>
+    <div class="abs card" id="s4next" style="left:1370px;top:300px;width:400px;height:420px;padding:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px">
+      <svg viewBox="0 0 120 140" width="120" height="140">
+        <path id="s4shackle" d="M30 64 V42 a30 30 0 0 1 60 0 V64" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" />
+        <rect x="14" y="62" width="92" height="70" rx="14" fill="#ffffff" />
+        <circle cx="60" cy="96" r="9" fill="#003366" />
+      </svg>
+      <div style="text-align:center"><div style="font-size:20px;color:var(--mute);font-weight:600;letter-spacing:.08em">UNIDAD 4</div><div style="font-size:32px;font-weight:700;margin-top:6px">Decimales</div></div>
+      <div id="s4open" class="chip gold" style="font-size:22px;padding:12px 24px;opacity:0">Desbloqueada</div>
+    </div>
+  </section>
+
+  <!-- 5 · Brújula -->
+  <section class="scene" id="s5">
+    <div class="abs" id="s5head" style="left:130px;top:150px;width:1500px">
+      <div class="eyebrow">Brújula™</div>
+      <div class="h2" style="margin-top:22px">Tu ritmo, recalculado cada semana.</div>
+    </div>
+    <div class="abs" id="s5compass" style="left:1600px;top:130px;width:190px;height:190px">
+      <svg viewBox="0 0 190 190" width="190" height="190">
+        <circle cx="95" cy="95" r="86" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="3" />
+        <circle cx="95" cy="95" r="70" fill="none" stroke="rgba(255,197,72,.35)" stroke-width="2" stroke-dasharray="3 9" />
+        <g id="s5needle"><path d="M95 22 L109 95 L95 168 L81 95 Z" fill="#ffc548" /><path d="M95 95 L109 95 L95 168 L81 95 Z" fill="#ffffff" opacity=".85" /></g>
+        <circle cx="95" cy="95" r="8" fill="#003366" stroke="#fff" stroke-width="3" />
+      </svg>
+    </div>
+    <div class="abs" id="s5chart" style="left:130px;top:430px;width:1660px;height:420px">
+      <div id="s5bars" style="position:absolute;left:0;right:0;bottom:70px;height:330px"></div>
+      <div id="s5months" style="position:absolute;left:0;right:0;bottom:0;height:50px"></div>
+      <div id="s5today" style="position:absolute;bottom:60px;width:3px;height:370px;background:#fff"><div style="position:absolute;top:-44px;left:-38px;width:80px;text-align:center;font-size:20px;font-weight:700">Hoy</div></div>
+      <div id="s5hueco" style="position:absolute;bottom:118px;font-size:19px;font-weight:700;color:#ff8a86;white-space:nowrap;transform:translateX(-50%);background:rgba(0,14,34,.92);border:1.5px solid rgba(255,61,55,.6);border-radius:999px;padding:6px 14px">Semana difícil</div>
+      <div id="s5ajuste" class="chip gold" style="position:absolute;bottom:380px;font-size:20px;padding:8px 18px;transform:translateX(-50%)">Plan ajustado ✓</div>
+      <div id="s5flag" style="position:absolute;right:-10px;bottom:410px;font-size:22px;font-weight:700;color:var(--gold);white-space:nowrap">Exámenes libres · octubre ⚑</div>
+    </div>
+    <div class="abs caption" id="s5cap" style="left:0;right:0;top:930px">Si te atrasas o te adelantas, Brújula reorganiza las semanas para llegar a tiempo al examen.</div>
+  </section>
+
+  <!-- 6 · Together -->
+  <section class="scene" id="s6">
+    <div class="abs" id="s6head" style="left:130px;top:270px;width:680px">
+      <div class="eyebrow">Together™</div>
+      <div class="h2" style="margin-top:22px">Estudias solo,<br />pero no estás solo.</div>
+      <div class="sub" style="margin-top:26px">Salas de estudio en silencio, con otros alumnos conectados y un temporizador compartido.</div>
+      <div id="s6timer" style="margin-top:40px;font-size:84px;font-weight:800;letter-spacing:-.02em;color:var(--gold)">25:00</div>
+    </div>
+    <div id="s6tiles"></div>
+  </section>
+
+  <!-- 7 · Cierre -->
+  <section class="scene" id="s7">
+    <div class="abs center" id="s7h" style="width:1700px;text-align:center">
+      <div class="h1" id="s7l1"></div>
+    </div>
+    <div id="s7chips"></div>
+    <div class="abs center" id="s7brand" style="width:1600px;text-align:center">
+      <div style="display:flex;justify-content:center;align-items:center;gap:26px">
+        <svg viewBox="0 0 180 180" width="92" height="92"><rect x="6" y="6" width="168" height="168" rx="10" fill="none" stroke="#ffc548" stroke-width="8" /><rect x="26" y="26" width="128" height="128" rx="4" fill="#fff" /><text x="90" y="129" text-anchor="middle" font-family="Poppins" font-weight="800" font-size="112" fill="#003366">B</text></svg>
+        <div style="text-align:left"><div style="font-size:56px;font-weight:700;line-height:1">Barkley</div><div style="font-size:24px;color:var(--mute);margin-top:6px">Colegio online · Exámenes Libres MINEDUC</div></div>
+      </div>
+      <div style="margin-top:44px;display:flex;justify-content:center;gap:28px;align-items:center">
+        <span style="background:var(--gold);color:var(--navy);font-weight:700;font-size:28px;padding:18px 38px;border-radius:999px">Reserva tu cupo sin costo</span>
+        <span style="font-size:28px;font-weight:600">barkleyinstituto.cl</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const DURATION = 45;
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const E = {
+  out: (t) => 1 - Math.pow(1 - t, 3),
+  inOut: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+  expo: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
+  back: (t) => { const c1 = 1.4, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); },
+  lin: (t) => t,
+};
+const p = (t, a, b, e = E.out) => e(clamp((t - a) / (b - a)));
+function tf(el, { x = 0, y = 0, s = 1, r = 0, o = 1, blur = 0, cx = false }) {
+  el.style.transform = `${cx ? "translate(-50%,-50%) " : ""}translate(${x}px,${y}px) scale(${s}) rotate(${r}deg)`;
+  el.style.opacity = o;
+  el.style.filter = blur > 0.05 ? `blur(${blur}px)` : "none";
+}
+function envelope(t, a, b, fin = 0.6, fout = 0.6) { return p(t, a, a + fin, E.inOut) * (1 - p(t, b - fout, b, E.inOut)); }
+
+function words(el, text, cls = "") { el.innerHTML = text.split(" ").map((w) => `<span class="word ${cls}">${w}</span>`).join(" "); return [...el.children]; }
+function revealWords(ws, t, start, step = 0.09, dur = 0.7, dy = 40) {
+  ws.forEach((w, i) => { const k = p(t, start + i * step, start + i * step + dur, E.expo); tf(w, { y: (1 - k) * dy, o: k, blur: (1 - k) * 14 }); });
+}
+function mk(parent, html, cls = "abs") { const d = document.createElement("div"); d.className = cls; d.innerHTML = html; parent.appendChild(d); return d; }
+
+const PERFILES = ["TDAH", "Dislexia", "TEA", "Deportista", "Familia viajera", "Salud crónica", "Movilidad reducida", "Trabaja y estudia"];
+
+// ---------- construcción ----------
+const s1w1 = words($("s1l1"), "No todos aprenden igual.");
+const s1w2 = words($("s1l2"), "Tampoco deberían estudiar igual.");
+const s1pos = [[-700, -300], [620, -330], [-820, 40], [760, 20], [-560, 320], [540, 330], [-60, -420], [60, 430]];
+const s1chips = PERFILES.map((n) => mk($("s1chips"), n, "abs center chip"));
+
+const s7w = words($("s7l1"), "Diseñado para cada alumno.");
+const s7chips = PERFILES.map((n) => mk($("s7chips"), n, "abs center chip gold"));
+
+const ICONOS = {
+  video: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg>',
+  podcast: '<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  lectura: '<svg viewBox="0 0 24 24"><path d="M4 5h6a3 3 0 0 1 3 3v11a2 2 0 0 0-2-2H4zM20 5h-6a3 3 0 0 0-3 3v11a2 2 0 0 1 2-2h7z"/></svg>',
+  practica: '<svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg>',
+  eval: '<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+  tutor: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
+};
+const PIEZAS = [
+  ["video", "Video", "3 videos por lección"], ["podcast", "Pódcast", "Escucha donde estés"], ["lectura", "Lectura", "Texto adaptado"],
+  ["practica", "Práctica", "Corrección al instante"], ["eval", "Evaluación", "Umbral™ 70%"], ["tutor", "Tutor", "Te acompaña"],
+];
+const s3cards = PIEZAS.map(([ic, t, m]) => mk($("s3cards"), `<div class="icon">${ICONOS[ic]}</div><div><div class="t">${t}</div><div class="m">${m}</div></div>`, "abs panel"));
+s3cards.forEach((c) => { c.style.width = "260px"; c.style.height = "196px"; });
+
+const SEMANAS = 30;
+const planA = Array.from({ length: SEMANAS }, (_, i) => 0.5 + 0.18 * Math.sin(i * 0.7) + 0.12 * Math.cos(i * 0.31));
+const HUECO = 11;
+const planB = planA.map((v, i) => (i === HUECO ? 0.08 : i > HUECO ? v * 1.08 + 0.03 : v));
+const s5bars = planA.map(() => { const b = document.createElement("div"); b.style.cssText = "position:absolute;bottom:0;width:38px;border-radius:10px 10px 4px 4px"; $("s5bars").appendChild(b); return b; });
+["Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct"].forEach((m, i) => mk($("s5months"), m, "abs"));
+[...$("s5months").children].forEach((m, i) => { m.style.cssText += `;left:${i * (1660 / 7.4)}px;bottom:0;font-size:22px;color:rgba(255,255,255,.55);font-weight:600`; });
+
+const ALUMNOS = [["SM", "Matemática", "#ffc548"], ["JP", "Lenguaje", "#8fd3ff"], ["AR", "Historia", "#ff9bc8"], ["CT", "Ciencias", "#9be7b5"], ["VL", "Inglés", "#c9b3ff"], ["DM", "Matemática", "#ffd9a0"]];
+const s6tiles = ALUMNOS.map(([ini, asig, col], i) => mk($("s6tiles"), `<div style="display:flex;justify-content:space-between;align-items:center"><div class="avatar" style="background:${col}">${ini}</div><div class="dot"></div></div><div><div style="font-size:22px;font-weight:600">${asig}</div><div style="font-size:17px;color:var(--mute)" data-min="${12 + i * 7}">estudiando · ${12 + i * 7} min</div></div>`, "abs tile"));
+
+// ---------- render(t) ----------
+function render(t) {
+  // fondo vivo
+  tf($("glowA"), { x: 900 + 380 * Math.sin(t * 0.21), y: -250 + 220 * Math.cos(t * 0.17), o: 1 });
+  tf($("glowB"), { x: -200 + 300 * Math.cos(t * 0.13), y: 380 + 200 * Math.sin(t * 0.19), o: 1 });
+  tf($("grid"), { x: (t * 12) % 96, y: (t * 7) % 96, o: 0.18 });
+
+  // 1 · perfiles (0–5.4)
+  const a1 = envelope(t, 0, 5.4, 0.01, 0.7);
+  tf($("s1"), { s: lerp(1.04, 1, p(t, 0, 5.4, E.lin)), o: a1 });
+  tf($("s1t"), { cx: true, y: -20 });
+  revealWords(s1w1, t, 0.25);
+  revealWords(s1w2, t, 1.5, 0.08, 0.7, 30);
+  s1chips.forEach((c, i) => {
+    const k = p(t, 2.2 + i * 0.12, 3.2 + i * 0.12, E.expo);
+    const [x, y] = s1pos[i];
+    const fl = Math.sin(t * 1.3 + i) * 8;
+    tf(c, { cx: true, x: x * lerp(1.35, 1, k), y: y * lerp(1.35, 1, k) + fl, o: k * 0.95, blur: (1 - k) * 10, s: lerp(0.8, 1, k) });
+  });
+
+  // 2 · Barkley (5–10.4)
+  const a2 = envelope(t, 5.0, 10.4, 0.5, 0.6);
+  tf($("s2"), { s: lerp(1.03, 1, p(t, 5, 10.4, E.lin)), o: a2 });
+  $("s2box").setAttribute("stroke-dashoffset", 1 - p(t, 5.3, 6.3, E.inOut));
+  const kf = p(t, 6.0, 6.6, E.back);
+  $("s2fill").setAttribute("transform", `translate(${90 - 90 * kf} ${90 - 90 * kf}) scale(${kf})`);
+  $("s2b").setAttribute("opacity", p(t, 6.3, 6.8));
+  const up = p(t, 6.9, 7.7, E.inOut);
+  tf($("s2logo"), { cx: true, y: lerp(0, -250, up), s: lerp(1.25, 0.9, up) });
+  const kw = p(t, 7.2, 8.0, E.expo);
+  tf($("s2word"), { cx: true, y: -40 + (1 - kw) * 40, o: kw, blur: (1 - kw) * 16 });
+  const ks1 = p(t, 7.8, 8.6, E.expo);
+  tf($("s2sub1"), { cx: true, y: 90 + (1 - ks1) * 30, o: ks1, blur: (1 - ks1) * 10 });
+  const ks2 = p(t, 8.3, 9.1, E.expo);
+  tf($("s2sub2"), { cx: true, y: 170 + (1 - ks2) * 30, o: ks2 });
+
+  // 3 · Vórtice (10–18.4)
+  const a3 = envelope(t, 10.0, 18.4, 0.6, 0.6);
+  tf($("s3"), { o: a3 });
+  const h3 = p(t, 10.3, 11.3, E.expo);
+  tf($("s3head"), { x: (1 - h3) * -60, o: h3, blur: (1 - h3) * 10 });
+  const scr = p(t, 13.0, 14.2, E.expo);
+  tf($("s3screen"), { s: lerp(0.92, 1, scr), o: scr });
+  $("s3bar").style.width = `${lerp(0, 42, p(t, 14.4, 16.6, E.inOut))}%`;
+  const snap = p(t, 12.8, 14.6, E.inOut);
+  s3cards.forEach((c, i) => {
+    const ang = i * (Math.PI * 2 / 6) + t * 1.6 * (1 - snap * 0.9);
+    const rad = lerp(330, 150, p(t, 10.4, 12.8, E.inOut));
+    const vx = 1330 - 130 + Math.cos(ang) * rad * 1.25;
+    const vy = 500 - 98 + Math.sin(ang) * rad * 0.8;
+    const col = i % 3, row = Math.floor(i / 3);
+    const gx = 880 + 34 + col * 286;
+    const gy = 190 + 150 + row * 222;
+    const kin = p(t, 10.3 + i * 0.08, 11.2 + i * 0.08, E.expo);
+    const depth = (Math.sin(ang) + 1) / 2;
+    c.style.left = lerp(vx, gx, snap) + "px";
+    c.style.top = lerp(vy, gy, snap) + "px";
+    tf(c, { s: lerp(lerp(0.7, 1, depth), 1, snap) * lerp(0.4, 1, kin), o: kin * lerp(lerp(0.45, 1, depth), 1, snap), r: lerp(Math.cos(ang) * 8, 0, snap), blur: lerp((1 - depth) * 3, 0, snap) });
+  });
+
+  // 4 · Umbral (18–26.4)
+  const a4 = envelope(t, 18.0, 26.4, 0.6, 0.6);
+  tf($("s4"), { o: a4 });
+  const h4 = p(t, 18.3, 19.3, E.expo);
+  tf($("s4head"), { x: (1 - h4) * -60, o: h4, blur: (1 - h4) * 10 });
+  const u = p(t, 18.5, 19.4, E.expo);
+  tf($("s4unit"), { y: (1 - u) * 50, o: u });
+  const nx = p(t, 18.8, 19.7, E.expo);
+  const unlocked = p(t, 23.2, 23.9, E.back);
+  tf($("s4next"), { y: (1 - nx) * 50, o: nx * lerp(0.45, 1, unlocked), s: lerp(0.96, 1.03, unlocked) });
+  let pct;
+  if (t < 21.1) pct = 58 * p(t, 19.4, 21.0, E.inOut);
+  else if (t < 22.0) pct = 58 * (1 - p(t, 21.6, 22.0, E.inOut));
+  else pct = 76 * p(t, 22.0, 23.6, E.inOut);
+  $("s4ring").setAttribute("stroke-dasharray", `${pct} 100`);
+  $("s4ring").setAttribute("stroke", t >= 21.0 && t < 22.0 ? "#ff3d37" : "#ffc548");
+  $("s4pct").textContent = Math.round(pct) + "%";
+  $("s4try").textContent = t < 21.8 ? "Intento 1" : "Intento 2";
+  const st = $("s4state");
+  if (t < 21.0) { st.textContent = "Evaluación de la unidad"; st.className = "chip"; }
+  else if (t < 22.2) { st.textContent = "Refuerza este tema"; st.className = "chip"; st.style.borderColor = "rgba(255,61,55,.6)"; st.style.color = "#ff8a86"; }
+  else if (pct < 70) { st.textContent = "Nuevo intento"; st.className = "chip"; st.style.borderColor = ""; st.style.color = ""; }
+  else { st.textContent = "¡Dominado!"; st.className = "chip gold"; st.style.borderColor = ""; st.style.color = ""; }
+  $("s4shackle").setAttribute("transform", `translate(${unlocked * 26} ${-unlocked * 16}) rotate(${unlocked * 18} 90 64)`);
+  $("s4open").style.opacity = unlocked;
+  $("s4next").style.boxShadow = `0 30px 80px rgba(0,0,0,.35), 0 0 ${80 * unlocked}px rgba(255,197,72,${0.35 * unlocked})`;
+
+  // 5 · Brújula (26–33.4)
+  const a5 = envelope(t, 26.0, 33.4, 0.6, 0.6);
+  tf($("s5"), { o: a5 });
+  const h5 = p(t, 26.3, 27.3, E.expo);
+  tf($("s5head"), { y: (1 - h5) * 30, o: h5, blur: (1 - h5) * 10 });
+  const today = p(t, 27.2, 29.4, E.inOut);
+  const recal = p(t, 29.6, 31.0, E.inOut);
+  const hoyIdx = lerp(2, HUECO + 1.2, today);
+  s5bars.forEach((b, i) => {
+    const grow = p(t, 26.6 + i * 0.03, 27.4 + i * 0.03, E.expo);
+    const v = lerp(planA[i], planB[i], i === HUECO ? p(t, 28.9, 29.3) : recal);
+    b.style.left = `${i * (1660 / SEMANAS) + 6}px`;
+    b.style.height = `${v * 330 * grow}px`;
+    const pasado = i < hoyIdx;
+    b.style.background = i === HUECO && t > 28.9 ? "rgba(255,61,55,.55)" : pasado ? "#ffc548" : `rgba(255,255,255,${i > HUECO && recal > 0 && recal < 1 ? 0.35 + 0.25 * Math.sin(recal * Math.PI) : 0.28})`;
+  });
+  $("s5today").style.left = `${hoyIdx * (1660 / SEMANAS)}px`;
+  $("s5today").style.opacity = p(t, 27.0, 27.4);
+  $("s5flag").style.opacity = p(t, 27.4, 28.0);
+  const xh = (HUECO + 0.5) * (1660 / SEMANAS);
+  $("s5hueco").style.left = `${xh}px`;
+  $("s5hueco").style.opacity = p(t, 29.0, 29.4) * (1 - p(t, 32.6, 33.0));
+  $("s5ajuste").style.left = `${(HUECO + 9) * (1660 / SEMANAS)}px`;
+  $("s5ajuste").style.opacity = p(t, 30.8, 31.3);
+  $("s5needle").setAttribute("transform", `rotate(${-30 + 30 * p(t, 26.6, 27.6, E.back) + 200 * p(t, 29.6, 31.0, E.inOut) - 200 * p(t, 29.6, 31.0, E.back) + 25 * Math.sin(recal * Math.PI)} 95 95)`);
+  const c5 = p(t, 30.6, 31.4, E.expo);
+  tf($("s5cap"), { y: (1 - c5) * 20, o: c5 });
+
+  // 6 · Together (33–39.4)
+  const a6 = envelope(t, 33.0, 39.4, 0.6, 0.6);
+  tf($("s6"), { o: a6 });
+  const h6 = p(t, 33.3, 34.3, E.expo);
+  tf($("s6head"), { x: (1 - h6) * -60, o: h6, blur: (1 - h6) * 10 });
+  const seg = Math.max(0, Math.floor(t - 33.6));
+  const rest = 25 * 60 - seg;
+  $("s6timer").textContent = `${String(Math.floor(rest / 60)).padStart(2, "0")}:${String(rest % 60).padStart(2, "0")}`;
+  s6tiles.forEach((c, i) => {
+    const col = i % 3, row = Math.floor(i / 3);
+    const late = i === 5 ? 1.6 : 0;
+    const k = p(t, 33.6 + i * 0.12 + late, 34.5 + i * 0.12 + late, E.back);
+    c.style.left = `${860 + col * 330}px`;
+    c.style.top = `${250 + row * 250}px`;
+    tf(c, { s: lerp(0.85, 1, k), o: clamp(k), y: Math.sin(t * 1.1 + i) * 4 });
+    const dot = c.querySelector(".dot");
+    const pulse = (t * 1.2 + i * 0.3) % 1;
+    dot.style.boxShadow = `0 0 0 ${pulse * 14}px rgba(61,220,132,${0.5 * (1 - pulse)})`;
+  });
+
+  // 7 · Cierre (39–45)
+  const a7 = envelope(t, 39.0, 45.2, 0.6, 0.01);
+  tf($("s7"), { o: a7, s: lerp(1.03, 1, p(t, 39, 45, E.lin)) });
+  const lift = p(t, 42.2, 43.0, E.inOut);
+  tf($("s7h"), { cx: true, y: lerp(-80, -300, lift) });
+  revealWords(s7w, t, 39.3, 0.1, 0.8);
+  s7chips.forEach((c, i) => {
+    const k = p(t, 40.4 + i * 0.07, 41.3 + i * 0.07, E.expo);
+    const cols = 4, row = Math.floor(i / cols), col = i % cols;
+    const x = (col - (cols - 1) / 2) * 330;
+    const y = 70 + row * 96;
+    tf(c, { cx: true, x, y: lerp(y, y - 220, lift) + (1 - k) * 30, o: k * (1 - lift * 0.35), s: lerp(1, 0.86, lift) });
+  });
+  const kb = p(t, 42.8, 43.8, E.expo);
+  tf($("s7brand"), { cx: true, y: 170 + (1 - kb) * 40, o: kb, blur: (1 - kb) * 12 });
+}
+window.render = render;
+window.DURATION = DURATION;
+
+if (!navigator.webdriver) {
+  const t0 = performance.now();
+  const loop = () => { render(((performance.now() - t0) / 1000) % DURATION); requestAnimationFrame(loop); };
+  document.fonts.ready.then(loop);
+} else {
+  render(0);
+}
+</script>
+</body>
+</html>
