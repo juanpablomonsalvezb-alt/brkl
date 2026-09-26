@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Barkley — intro v4 · explosión de color</title>
+<style>
+  @font-face { font-family: "Unbounded"; font-weight: 800; src: url(fonts/unbounded-latin-800-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Unbounded"; font-weight: 900; src: url(fonts/unbounded-latin-900-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 600; src: url(fonts/poppins-latin-600-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 700; src: url(fonts/poppins-latin-700-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 800; src: url(fonts/poppins-latin-800-normal.woff2) format("woff2"); }
+  :root { --rosa: #ff3e9a; --violeta: #7b3ff2; --lima: #c6f432; --naranja: #ff7a1a; --celeste: #22d3ee; --sol: #ffd23f; --navy: #0b1b3f; --crema: #fff6e5; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+  html.vert, html.vert body { width: 1080px; height: 1920px; }
+  body { font-family: "Poppins", sans-serif; color: var(--navy); -webkit-font-smoothing: antialiased; }
+  #stage { position: absolute; inset: 0; overflow: hidden; }
+  #bg { position: absolute; inset: 0; }
+  .scene { position: absolute; inset: 0; display: none; }
+  .abs { position: absolute; }
+  .c { left: 50%; top: 50%; }
+  .ub { font-family: "Unbounded", sans-serif; font-weight: 900; text-transform: uppercase; line-height: 1.02; letter-spacing: -.02em; white-space: nowrap; }
+  .ub .l { display: inline-block; will-change: transform; }
+  .chip { display: inline-block; padding: 12px 26px; border-radius: 999px; font-weight: 800; font-size: 26px; white-space: nowrap; border: 3px solid var(--navy); box-shadow: 5px 5px 0 var(--navy); background: #fff; }
+  .sticker { width: 150px; height: 150px; filter: drop-shadow(6px 8px 0 rgba(11,27,63,.22)); }
+  .av { border-radius: 50%; overflow: hidden; border: 5px solid var(--navy); box-shadow: 8px 8px 0 var(--navy); }
+  .av img { width: 100%; height: 100%; display: block; }
+  .card { border-radius: 34px; border: 5px solid var(--navy); box-shadow: 12px 12px 0 var(--navy); }
+  .tm { font-family: "Poppins"; font-weight: 800; font-size: .2em; vertical-align: top; position: relative; top: .35em; }
+  #grain { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .06; mix-blend-mode: multiply; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div>
+  <div id="iris"></div>
+  <div id="cam" class="abs" style="inset:0">
+
+    <section class="scene" id="sA"><div id="aStk"></div></section>
+
+    <section class="scene" id="sB">
+      <div class="abs ub" id="bT" style="left:0;right:0;text-align:center;font-size:96px;color:var(--navy)"></div>
+      <div id="bGrid"></div>
+    </section>
+
+    <section class="scene" id="sC">
+      <div class="abs c" id="cRays"></div>
+      <div id="cConf"></div>
+      <div class="abs c" id="cBrand" style="text-align:center">
+        <div id="cLogo" style="display:inline-block;width:190px;height:190px;border-radius:40px;background:#fff;border:6px solid var(--navy);box-shadow:10px 10px 0 var(--navy);font-family:Poppins;font-weight:800;font-size:150px;line-height:178px;color:var(--navy)">B</div>
+        <div class="ub" id="cWord" style="font-size:220px;color:#fff;-webkit-text-stroke:6px var(--navy);paint-order:stroke fill;text-shadow:10px 10px 0 var(--navy);margin-top:10px">Barkley</div>
+        <div id="cChips" style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:24px"></div>
+      </div>
+    </section>
+
+    <section class="scene" id="sE"><div id="eBlobs"></div><div class="abs c" id="ePl"></div></section>
+    <section class="scene" id="sF">
+      <div class="abs card" id="fDev" style="background:#fff;overflow:hidden">
+        <div style="height:64px;background:var(--navy);display:flex;align-items:center;gap:12px;padding:0 26px"><span style="width:18px;height:18px;border-radius:50%;background:var(--rosa)"></span><span style="width:18px;height:18px;border-radius:50%;background:var(--sol)"></span><span style="width:18px;height:18px;border-radius:50%;background:var(--lima)"></span><span style="margin-left:18px;color:#fff;font-weight:800;font-size:24px">Hola, Sofía 👋</span></div>
+        <div id="fBarWrap" style="margin:22px 28px 0;height:22px;border-radius:12px;background:#eee;border:3px solid var(--navy);overflow:hidden"><div id="fBar" style="height:100%;width:0;background:repeating-linear-gradient(45deg,var(--lima) 0 16px,#a8d81f 16px 32px)"></div></div>
+      </div>
+      <div id="fOrbs"></div>
+      <div class="abs" id="fTxt"><div class="ub" id="f1" style="font-size:112px;color:#fff;-webkit-text-stroke:5px var(--navy);paint-order:stroke fill;text-shadow:7px 7px 0 var(--navy)">Todo tu año.</div><div class="ub" id="f2" style="font-size:112px;color:var(--sol);-webkit-text-stroke:5px var(--navy);paint-order:stroke fill;text-shadow:7px 7px 0 var(--navy)">En un solo lugar.</div></div>
+    </section>
+
+    <section class="scene" id="sG"><div id="gBlobs"></div><div class="abs c" id="gPl"></div></section>
+    <section class="scene" id="sH">
+      <div class="abs" id="hHead" style="text-align:center">
+        <div class="chip" style="font-size:30px;background:var(--sol)">UNIDAD 3 · FRACCIONES</div>
+      </div>
+      <div class="abs" id="hBarBox">
+        <div class="card" style="position:absolute;inset:0;background:#fff;overflow:hidden;border-radius:60px"><div id="hFill" style="position:absolute;left:0;top:0;bottom:0;width:0;background:repeating-linear-gradient(45deg,var(--violeta) 0 28px,#6a2fe0 28px 56px)"></div></div>
+        <div id="hGoal" style="position:absolute;top:-40px;bottom:-40px;width:10px;background:var(--navy);border-radius:6px"><div class="chip" style="position:absolute;top:-78px;left:50%;transform:translateX(-50%);background:var(--lima);font-size:24px">META 70%</div></div>
+        <div id="hPct" class="ub" style="position:absolute;top:50%;transform:translateY(-50%);font-size:84px;color:#fff;-webkit-text-stroke:4px var(--navy);paint-order:stroke fill"></div>
+      </div>
+      <div class="abs c" id="hCasi" style="text-align:center"><img class="sticker" src="vectores/emoji/face-exhaling.svg" style="width:200px;height:200px"><div class="ub" id="hCasiT" style="font-size:120px;color:var(--naranja);-webkit-text-stroke:5px var(--navy);paint-order:stroke fill;text-shadow:7px 7px 0 var(--navy)">¡Casi! Refuerza</div></div>
+      <div class="abs c" id="hOk" style="text-align:center"><img class="sticker" src="vectores/emoji/unlocked.svg" style="width:230px;height:230px"><div class="ub" id="hOkT" style="font-size:150px;color:#fff;-webkit-text-stroke:6px var(--navy);paint-order:stroke fill;text-shadow:9px 9px 0 var(--navy)">¡Nivel desbloqueado!</div></div>
+      <div id="hConf"></div>
+      <div class="abs" id="hCap" style="left:0;right:0;text-align:center"><span class="chip" style="font-size:28px">Avanzas cuando dominas · 70% para seguir</span></div>
+    </section>
+
+    <section class="scene" id="sI"><div id="iBlobs"></div><img class="abs sticker" id="iComp" src="vectores/emoji/compass.svg"><div class="abs c" id="iPl"></div></section>
+    <section class="scene" id="sJ">
+      <svg class="abs" id="jSvg" style="left:0;top:0;overflow:visible"><path id="jRutaSombra" fill="none" stroke="rgba(11,27,63,.18)" stroke-width="46" stroke-linecap="round"/><path id="jRuta" fill="none" stroke="#fff" stroke-width="30" stroke-linecap="round"/><path id="jRutaB" fill="none" stroke="#ffd23f" stroke-width="30" stroke-linecap="round" stroke-dasharray="1 0"/></svg>
+      <div id="jMarcas"></div>
+      <img class="abs" id="jFlag" src="vectores/emoji/chequered-flag.svg" style="width:150px;height:150px">
+      <div class="abs av" id="jYo" style="width:130px;height:130px;background:var(--sol)"><img src="vectores/personajes/p05.svg"></div>
+      <img class="abs sticker" id="jUf" src="vectores/emoji/face-exhaling.svg" style="width:120px;height:120px">
+      <div class="abs ub" id="jT1" style="font-size:104px;color:#fff;-webkit-text-stroke:5px var(--navy);paint-order:stroke fill;text-shadow:7px 7px 0 var(--navy)">¿Semana difícil?</div>
+      <div class="abs ub" id="jT2" style="font-size:104px;color:var(--sol);-webkit-text-stroke:5px var(--navy);paint-order:stroke fill;text-shadow:7px 7px 0 var(--navy)">¡Recalculando!</div>
+      <div class="abs ub" id="jT3" style="font-size:104px;color:#fff;-webkit-text-stroke:5px var(--navy);paint-order:stroke fill;text-shadow:7px 7px 0 var(--navy)">Llegas a octubre.</div>
+    </section>
+
+    <section class="scene" id="sK"><div id="kBlobs"></div><div class="abs c" id="kPl"></div></section>
+    <section class="scene" id="sL">
+      <div id="lGrid"></div>
+      <div id="lHearts"></div>
+      <div class="abs" id="lTimer" style="display:flex;align-items:center;gap:16px"><img src="vectores/emoji/stopwatch.svg" style="width:90px;height:90px"><span id="lTime" class="ub" style="font-size:80px;color:#fff;-webkit-text-stroke:4px var(--navy);paint-order:stroke fill">25:00</span></div>
+      <div class="abs c card" id="lT" style="text-align:center;background:#7b3ff2;padding:34px 54px"><div class="ub" id="lT1" style="font-size:118px;color:#fff;-webkit-text-stroke:5px var(--navy);paint-order:stroke fill;text-shadow:8px 8px 0 var(--navy)">Estudias solo,</div><div class="ub" id="lT2" style="font-size:118px;color:var(--sol);-webkit-text-stroke:5px var(--navy);paint-order:stroke fill;text-shadow:8px 8px 0 var(--navy)">pero no estás solo.</div></div>
+    </section>
+
+    <section class="scene" id="sM"></section>
+
+    <section class="scene" id="sN">
+      <div id="nRing"></div>
+      <div class="abs c" id="nT" style="text-align:center"><div class="ub" id="n1" style="font-size:118px;color:#fff;-webkit-text-stroke:5px var(--navy);paint-order:stroke fill;text-shadow:8px 8px 0 var(--navy)">Diseñado para</div><div class="ub" id="n2" style="font-size:150px;color:var(--sol);-webkit-text-stroke:6px var(--navy);paint-order:stroke fill;text-shadow:9px 9px 0 var(--navy)">cada alumno.</div></div>
+    </section>
+
+    <section class="scene" id="sP">
+      <div id="pConf"></div>
+      <div class="abs c" id="pBadge" style="width:760px;height:760px">
+        <svg viewBox="0 0 200 200" width="760" height="760" style="position:absolute;inset:0;filter:drop-shadow(14px 14px 0 #0b1b3f)"><path id="pStar" fill="#ffd23f" stroke="#0b1b3f" stroke-width="3"/></svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+          <div class="ub" style="font-size:86px;color:var(--navy);line-height:1">Admisión</div>
+          <div class="ub" style="font-size:150px;color:var(--rosa);-webkit-text-stroke:5px var(--navy);paint-order:stroke fill;line-height:1">2027</div>
+          <div class="chip" style="margin-top:18px;font-size:24px;background:var(--lima)">Cupos limitados · Reserva sin costo</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" id="sO">
+      <div id="oStk"></div>
+      <div class="abs c" id="oBox" style="text-align:center">
+        <div class="chip" id="oAdm" style="background:var(--lima);font-size:30px">🎉 ADMISIÓN 2027 ABIERTA</div>
+        <div id="oMarca" style="display:flex;justify-content:center;align-items:center;gap:28px;margin-top:36px">
+          <div style="width:150px;height:150px;border-radius:32px;background:#fff;border:6px solid var(--navy);box-shadow:8px 8px 0 var(--navy);font-weight:800;font-size:116px;line-height:138px;color:var(--navy)">B</div>
+          <div class="ub" style="font-size:150px;color:#fff;-webkit-text-stroke:5px var(--navy);paint-order:stroke fill;text-shadow:8px 8px 0 var(--navy)">Barkley</div>
+        </div>
+        <div style="margin-top:22px;font-size:30px;font-weight:700;color:#fff">Colegio online · Exámenes Libres MINEDUC</div>
+        <div id="oCtaRow" style="display:flex;justify-content:center;align-items:center;gap:26px;margin-top:40px">
+          <span class="chip" id="oCta" style="background:var(--sol);font-size:40px;padding:18px 40px">Reserva tu cupo sin costo</span>
+          <span style="font-size:36px;font-weight:800;color:#fff">barkleyinstituto.cl</span>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div id="stripes"></div>
+  <canvas id="grain" width="480" height="270"></canvas>
+</div>
+
+<script>
+const VERT = new URLSearchParams(location.search).has("vertical");
+if (VERT) document.documentElement.classList.add("vert");
+const W = VERT ? 1080 : 1920, H = VERT ? 1920 : 1080, CX = W / 2, CY = H / 2;
+const DURATION = 45;
+const COL = { rosa: "#ff3e9a", violeta: "#7b3ff2", lima: "#c6f432", naranja: "#ff7a1a", celeste: "#22d3ee", sol: "#ffd23f", navy: "#0b1b3f", crema: "#fff6e5", blanco: "#ffffff" };
+const PAL = [COL.rosa, COL.sol, COL.violeta, COL.lima, COL.naranja, COL.celeste];
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const E = {
+  out: (t) => 1 - Math.pow(1 - t, 3),
+  inOut: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+  back: (t) => { const c1 = 2.2, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); },
+  elastic: (t) => (t <= 0 ? 0 : t >= 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * (2 * Math.PI / 3)) + 1),
+  inBack: (t) => { const c1 = 1.8; return (c1 + 1) * t * t * t - c1 * t * t; },
+  lin: (t) => t,
+};
+const p = (t, a, b, e = E.out) => e(clamp((t - a) / (b - a)));
+const inr = (t, a, b) => t >= a && t < b;
+function tf(el, { x = 0, y = 0, s = 1, sx = 1, sy = 1, r = 0, o = 1, c = false }) {
+  el.style.transform = `${c ? "translate(-50%,-50%) " : ""}translate(${x}px,${y}px) rotate(${r}deg) scale(${s * sx},${s * sy})`;
+  el.style.opacity = o;
+}
+function show(id, on) { $(id).style.display = on ? "block" : "none"; }
+let seed = 11;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+function mk(parent, html, cls, style = "") { const d = document.createElement("div"); d.className = cls; d.innerHTML = html; d.style.cssText = style; parent.appendChild(d); return d; }
+function img(parent, src, cls, style) { const i = document.createElement("img"); i.src = src; i.className = cls; i.style.cssText = style; parent.appendChild(i); return i; }
+const EMO = (n) => `vectores/emoji/${n}.svg`;
+const PJ = (i) => `vectores/personajes/p${String(i).padStart(2, "0")}.svg`;
+
+// letras que rebotan
+// Letras agrupadas por palabra: el salto de línea solo puede caer entre palabras.
+function letras(el, texto, colores) {
+  el.innerHTML = "";
+  const todas = [];
+  let i = 0;
+  texto.split(" ").forEach((pal, w) => {
+    if (w) el.appendChild(document.createTextNode(" "));
+    const ps = document.createElement("span"); ps.style.cssText = "display:inline-block;white-space:nowrap";
+    [...pal].forEach((ch) => {
+      const s = document.createElement("span"); s.className = "l"; s.textContent = ch;
+      if (colores) s.style.color = colores[i % colores.length];
+      i++; ps.appendChild(s); todas.push(s);
+    });
+    el.appendChild(ps);
+  });
+  return todas;
+}
+function rebote(ls, t, t0, paso = 0.035, dur = 0.55) {
+  ls.forEach((s, i) => {
+    const k = clamp((t - t0 - i * paso) / dur);
+    const e = E.elastic(k);
+    const sq = k < 0.25 ? lerp(1.35, 0.8, k / 0.25) : lerp(0.8, 1, clamp((k - 0.25) / 0.4));
+    s.style.transform = `translateY(${(1 - e) * 160}px) rotate(${(1 - E.out(k)) * (i % 2 ? 22 : -22)}deg) scale(${k <= 0 ? 0 : e / sq * 1}, ${k <= 0 ? 0 : e * sq})`;
+  });
+}
+function pop(el, t, t0, { d = 0.5, r0 = -25, x = 0, y = 0, c = true, sExtra = 1 } = {}) {
+  const k = clamp((t - t0) / d);
+  const e = E.elastic(k);
+  tf(el, { c, x, y, s: (k <= 0 ? 0 : e) * sExtra, r: (1 - E.out(k)) * r0, o: k > 0 ? 1 : 0 });
+}
+function fit(el, maxW, maxSize) { el.style.fontSize = maxSize + "px"; const w = el.scrollWidth; if (w > maxW) el.style.fontSize = Math.floor(maxSize * maxW / w) + "px"; }
+
+// ---------- fondos: iris de color y franjas ----------
+const iris = $("iris");
+iris.style.cssText = "position:absolute;border-radius:50%;pointer-events:none";
+const IRIS = [];
+function irisEn(at, color, x = CX, y = CY, d = 0.42) { IRIS.push({ at, color, x, y, d }); }
+const R_MAX = Math.hypot(W, H);
+function fondo(t) {
+  // color base: el último iris que ya terminó
+  let base = COL.navy, activo = null;
+  for (const ir of IRIS) { if (t >= ir.at + ir.d) base = ir.color; else if (t >= ir.at && !activo) activo = ir; }
+  $("bg").style.background = base;
+  if (activo) {
+    const k = E.out(clamp((t - activo.at) / activo.d));
+    const r = R_MAX * k;
+    iris.style.display = "block";
+    iris.style.left = activo.x - r + "px"; iris.style.top = activo.y - r + "px";
+    iris.style.width = iris.style.height = 2 * r + "px";
+    iris.style.background = activo.color;
+  } else iris.style.display = "none";
+}
+
+const stripes = $("stripes");
+stripes.style.cssText = "position:absolute;inset:0;pointer-events:none;overflow:hidden";
+const bandas = PAL.map((c, i) => mk(stripes, "", "abs", `top:-30%;height:160%;width:${W * 0.34}px;background:${c};left:0`));
+const FRANJAS = [];
+function franjasEn(at) { FRANJAS.push(at); }
+function franjas(t) {
+  let vis = false;
+  for (const at of FRANJAS) {
+    if (t < at - 0.3 || t > at + 0.3) continue;
+    vis = true;
+    bandas.forEach((b, i) => {
+      const q = clamp((t - (at - 0.3) - i * 0.03) / 0.5);
+      const x = lerp(-W * 0.5, W * 1.3, E.inOut(q)) - i * W * 0.12;
+      b.style.transform = `translateX(${x}px) skewX(-18deg)`;
+    });
+  }
+  stripes.style.display = vis ? "block" : "none";
+}
+
+// ---------- confeti con física ----------
+function confeti(parent, n, ox, oy, fuerza = 1) {
+  return Array.from({ length: n }, (_, i) => {
+    const w = 14 + rnd() * 16, h = rnd() < 0.5 ? w : w * 0.45;
+    const d = mk(parent, "", "abs", `left:${ox}px;top:${oy}px;width:${w}px;height:${h}px;border-radius:${rnd() < 0.35 ? 50 : 3}%;background:${PAL[i % PAL.length]};border:2px solid ${COL.navy}`);
+    const a = rnd() * Math.PI * 2;
+    const v = (700 + rnd() * 1300) * fuerza;
+    d._vx = Math.cos(a) * v; d._vy = Math.sin(a) * v - 700 * fuerza; d._rot = (rnd() - 0.5) * 1440;
+    return d;
+  });
+}
+function animConfeti(ps, t, t0, dur = 2.2) {
+  ps.forEach((d) => {
+    const q = t - t0;
+    if (q < 0 || q > dur) { d.style.display = "none"; return; }
+    d.style.display = "block";
+    const drag = 1 - Math.exp(-q * 2.2);
+    const x = (d._vx / 2.2) * drag, y = (d._vy / 2.2) * drag + 900 * q * q * 0.5;
+    d.style.transform = `translate(${x}px,${y}px) rotate(${d._rot * q}deg)`;
+    d.style.opacity = q > dur - 0.4 ? (dur - q) / 0.4 : 1;
+  });
+}
+
+// ---------- manchas orgánicas ----------
+const BLOB = "M44.7,-58.1C57.3,-49.2,66.7,-35.4,71.1,-19.9C75.6,-4.4,75.1,12.8,68.3,27.1C61.5,41.4,48.4,52.8,33.6,60.7C18.8,68.6,2.3,73,-14.9,71.3C-32.1,69.6,-50,61.8,-61.3,48.3C-72.6,34.8,-77.3,15.6,-75.4,-2.7C-73.5,-21,-65,-38.4,-51.9,-47.6C-38.8,-56.8,-21.1,-57.8,-4.7,-51.9C11.7,-46,32.1,-67,44.7,-58.1Z";
+function manchas(parent, cols) {
+  return cols.map((c, i) => {
+    const size = (VERT ? 700 : 820) * (0.7 + rnd() * 0.6);
+    const d = mk(parent, `<svg viewBox="-80 -80 160 160" width="${size}" height="${size}"><path d="${BLOB}" fill="${c}"/></svg>`, "abs", `left:${rnd() * W - size / 2}px;top:${rnd() * H - size / 2}px`);
+    d._sp = (rnd() - 0.5) * 40; d._ph = rnd() * 6;
+    return d;
+  });
+}
+function animManchas(ms, t, t0) {
+  ms.forEach((m, i) => { const k = E.elastic(clamp((t - t0 - i * 0.06) / 0.8)); m.style.transform = `rotate(${m._sp * t}deg) scale(${k * (1 + 0.06 * Math.sin(t * 2 + m._ph))})`; });
+}
+
+// ---------- placas de producto ----------
+function placa(id, nombre, lema, colores, texto) {
+  const root = $(id);
+  const t1 = mk(root, "", "ub", `font-size:250px;color:${texto};-webkit-text-stroke:8px ${COL.navy};paint-order:stroke fill;text-shadow:14px 14px 0 ${COL.navy}`);
+  const ls = letras(t1, nombre, colores);
+  const tm = mk(t1, "™", "tm", `color:${COL.navy};-webkit-text-stroke:0;text-shadow:none`);
+  const sub = mk(root, lema, "chip", "font-size:32px;margin-top:26px");
+  root.style.textAlign = "center";
+  return { t1, ls, tm, sub };
+}
+function animPlaca(pl, t, t0, t1) {
+  rebote(pl.ls, t, t0 + 0.1, 0.05, 0.6);
+  const ktm = E.back(clamp((t - t0 - 0.6) / 0.35)); pl.tm.style.display = "inline-block"; pl.tm.style.transform = `scale(${ktm})`;
+  pop(pl.sub, t, t0 + 0.75, { d: 0.5, r0: -8, c: false });
+  const out = clamp((t - (t1 - 0.28)) / 0.28);
+  const wrap = pl.t1.parentElement;
+  tf(wrap, { c: true, s: lerp(1, 0.2, E.inBack(out)) * (1 + 0.03 * Math.sin(t * 5)), r: out * 12, o: 1 - out * 0.6 });
+}
+
+// ---------- A · golpes ----------
+const GOLPES = [["No", 0.35, 0.85, COL.rosa, [COL.blanco]], ["todos", 0.85, 1.35, COL.sol, [COL.navy]], ["aprenden", 1.35, 1.85, COL.violeta, [COL.lima, COL.blanco]], ["igual.", 1.85, 3.0, COL.lima, [COL.violeta, COL.rosa, COL.navy]]];
+GOLPES.forEach(([, a, , c]) => irisEn(a, c, CX + (rnd() - 0.5) * W * 0.4, CY + (rnd() - 0.5) * H * 0.3, 0.3));
+const aEls = GOLPES.map(([w, , , , cols]) => { const d = mk($("sA"), "", "abs c ub", `-webkit-text-stroke:8px ${COL.navy};paint-order:stroke fill;text-shadow:14px 14px 0 ${COL.navy}`); d._ls = letras(d, w, cols); return d; });
+const aStk = ["sparkles", "high-voltage", "star-struck", "glowing-star", "party-popper", "hundred-points"].map((n, i) => {
+  const e = img($("aStk"), EMO(n), "abs sticker", "");
+  const ang = i / 6 * Math.PI * 2 + 0.4;
+  e._x = CX + Math.cos(ang) * W * (VERT ? 0.36 : 0.4) - 75; e._y = CY + Math.sin(ang) * H * (VERT ? 0.36 : 0.38) - 75;
+  return e;
+});
+
+// ---------- B · personajes ----------
+irisEn(3.0, COL.naranja, CX, H, 0.45);
+const PERFILES = ["TDAH", "Dislexia", "TEA", "Deportista", "Viaja", "Trabaja", "Salud crónica", "Movilidad reducida"];
+const bCols = [COL.rosa, COL.sol, COL.celeste, COL.lima, COL.violeta, COL.crema, COL.rosa, COL.celeste];
+const bCells = PERFILES.map((perfil, i) => {
+  const d = mk($("bGrid"), `<div class="av" style="width:100%;height:100%;background:${bCols[i]}"><img src="${PJ(i + 1)}"></div><div class="chip" style="position:absolute;left:50%;bottom:-34px;transform:translateX(-50%);font-size:22px;padding:8px 18px">${perfil}</div>`, "abs", "");
+  const cols = VERT ? 2 : 4, cw = VERT ? 330 : 330, chh = VERT ? 370 : 370, size = VERT ? 250 : 240;
+  const col = i % cols, row = Math.floor(i / cols);
+  const gx = CX + (col - (cols - 1) / 2) * cw, gy = (VERT ? 560 : 470) + row * chh;
+  d.style.cssText += `;width:${size}px;height:${size}px;left:${gx - size / 2}px;top:${gy - size / 2}px`;
+  return d;
+});
+
+// ---------- C · marca ----------
+irisEn(7.0, COL.violeta, CX, CY, 0.4);
+const rays = $("cRays");
+rays.style.cssText += `;width:${R_MAX * 2}px;height:${R_MAX * 2}px;border-radius:50%;background:repeating-conic-gradient(${PAL.map((c, i) => `${c} ${i * 10}deg ${i * 10 + 10}deg`).join(",")})`;
+const cConf = confeti($("cConf"), 110, CX, CY, 1.1);
+const cChips = ["Colegio online", "Exámenes Libres MINEDUC", "1° básico a 4° medio"].map((t, i) => mk($("cChips"), t, "chip", `background:${[COL.lima, COL.sol, COL.celeste][i]};font-size:28px`));
+
+// ---------- VÓRTICE ----------
+irisEn(10.0, COL.violeta, CX, CY, 0.4);
+const eBlobs = manchas($("eBlobs"), [COL.rosa, COL.celeste, COL.sol, COL.lima]);
+const plV = placa("ePl", "Vórtice", "Todo tu año, en un solo lugar", [COL.blanco, COL.sol, COL.lima, COL.blanco, COL.celeste, COL.sol, COL.blanco], COL.blanco);
+irisEn(11.8, COL.celeste, CX, CY, 0.35);
+const DEV = VERT ? { x: 90, y: 330, w: 900, h: 760 } : { x: 900, y: 150, w: 900, h: 700 };
+$("fDev").style.cssText += `;left:${DEV.x}px;top:${DEV.y}px;width:${DEV.w}px;height:${DEV.h}px`;
+const PIEZAS = [["clapper-board", "Video", COL.rosa], ["headphone", "Pódcast", COL.sol], ["books", "Lectura", COL.lima], ["pencil", "Práctica", COL.celeste], ["memo", "Evaluación", COL.violeta], ["woman-teacher", "Tutor", COL.naranja]];
+const TW = (DEV.w - 56 - 2 * 24) / 3, TH = VERT ? 250 : 240;
+const fOrbs = PIEZAS.map(([e, n, c], i) => {
+  const d = mk($("fOrbs"), `<img src="${EMO(e)}" style="width:96px;height:96px"><div style="font-weight:800;font-size:28px;margin-top:6px">${n}</div>`, "abs card", `width:${TW}px;height:${TH}px;background:${c};display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:28px;box-shadow:8px 8px 0 ${COL.navy}`);
+  d._gx = DEV.x + 28 + (i % 3) * (TW + 24); d._gy = DEV.y + 130 + Math.floor(i / 3) * (TH + 24);
+  return d;
+});
+$("fTxt").style.cssText += VERT ? ";left:60px;top:1180px" : ";left:90px;top:360px";
+
+// ---------- UMBRAL ----------
+irisEn(17.0, COL.lima, CX, CY, 0.4);
+const gBlobs = manchas($("gBlobs"), [COL.sol, COL.celeste, COL.rosa]);
+const plU = placa("gPl", "Umbral", "Avanzas cuando dominas", [COL.violeta, COL.rosa, COL.navy, COL.violeta, COL.rosa, COL.navy], COL.violeta);
+irisEn(18.8, COL.sol, CX, CY, 0.35);
+const BAR = VERT ? { x: 80, y: 820, w: 920, h: 150 } : { x: 260, y: 470, w: 1400, h: 150 };
+$("hBarBox").style.cssText += `;left:${BAR.x}px;top:${BAR.y}px;width:${BAR.w}px;height:${BAR.h}px`;
+$("hGoal").style.left = BAR.w * 0.7 - 5 + "px";
+$("hHead").style.cssText += `;left:0;right:0;top:${BAR.y - 190}px`;
+$("hCap").style.top = (VERT ? 1640 : 900) + "px";
+const hConf = confeti($("hConf"), 120, CX, CY, 1.2);
+
+// ---------- BRÚJULA ----------
+irisEn(25.0, COL.celeste, CX, CY, 0.4);
+const iBlobs = manchas($("iBlobs"), [COL.sol, COL.rosa, COL.lima]);
+const plB = placa("iPl", "Brújula", "Tu ritmo, recalculado cada semana", [COL.navy, COL.rosa, COL.navy, COL.violeta, COL.navy, COL.rosa, COL.navy], COL.navy);
+irisEn(26.8, COL.violeta, CX, CY, 0.35);
+const RUTA = VERT
+  ? "M140 700 C 700 700, 940 760, 940 900 S 200 1040, 160 1180 S 700 1360, 920 1420 S 600 1640, 540 1700"
+  : "M120 700 C 380 420, 560 420, 700 640 S 1000 900, 1180 640 S 1500 380, 1780 560";
+const RUTA_B = VERT
+  ? "M160 1180 C 420 1260, 980 1240, 900 1450 S 620 1640, 540 1700"
+  : "M1180 640 C 1300 820, 1500 820, 1600 700 S 1740 560, 1780 560";
+$("jSvg").setAttribute("width", W); $("jSvg").setAttribute("height", H);
+["jRuta", "jRutaSombra"].forEach((id) => $(id).setAttribute("d", RUTA));
+$("jRutaB").setAttribute("d", RUTA_B);
+const LR = $("jRuta").getTotalLength(), LB = $("jRutaB").getTotalLength();
+const HUECO_F = VERT ? 0.5 : 0.6; // fracción de la ruta donde aparece la semana difícil
+const MESES = ["Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep"];
+const jMarcas = MESES.map((m, i) => { const pt = $("jRuta").getPointAtLength(LR * (i + 0.5) / 8); return mk($("jMarcas"), m, "abs chip", `left:${pt.x}px;top:${pt.y}px;font-size:20px;padding:6px 14px;background:${PAL[i % PAL.length]}`); });
+const fin = $("jRutaB").getPointAtLength(LB);
+$("jFlag").style.left = fin.x - 30 + "px"; $("jFlag").style.top = fin.y - 140 + "px";
+["jT1", "jT2", "jT3"].forEach((id) => { $(id).style.left = "70px"; $(id).style.top = (VERT ? 330 : 90) + "px"; if (VERT) { $(id).style.whiteSpace = "normal"; $(id).style.width = "940px"; } });
+
+// ---------- TOGETHER ----------
+irisEn(32.5, COL.rosa, CX, CY, 0.4);
+const kBlobs = manchas($("kBlobs"), [COL.violeta, COL.sol, COL.celeste]);
+const plT = placa("kPl", "Together", "Estudias solo, pero no estás solo", [COL.blanco, COL.sol, COL.blanco, COL.lima, COL.blanco, COL.sol, COL.blanco, COL.lima], COL.blanco);
+irisEn(34.3, COL.violeta, CX, CY, 0.35);
+const MATERIAS = ["Matemática", "Lenguaje", "Historia", "Ciencias", "Inglés", "Matemática"];
+const lCells = MATERIAS.map((m, i) => {
+  const cols = VERT ? 2 : 3, cw = VERT ? 400 : 400, chh = VERT ? 320 : 330, size = VERT ? 330 : 300;
+  const col = i % cols, row = Math.floor(i / cols);
+  const gx = (VERT ? CX : CX + 170) + (col - (cols - 1) / 2) * cw, gy = (VERT ? 600 : 330) + row * chh;
+  const d = mk($("lGrid"), `<div class="card" style="position:absolute;inset:0;background:${[COL.sol, COL.lima, COL.celeste, COL.naranja, COL.crema, COL.rosa][i]};border-radius:42px;overflow:hidden"><img src="${PJ(i + 3)}" style="position:absolute;left:50%;bottom:0;width:78%;transform:translateX(-50%)"></div><div class="chip" style="position:absolute;left:18px;top:18px;font-size:20px;padding:6px 14px">${m}</div><div style="position:absolute;right:22px;top:26px;width:22px;height:22px;border-radius:50%;background:#2ee06a;border:3px solid ${COL.navy}"></div>`, "abs", `width:${size}px;height:${size * 0.86}px;left:${gx - size / 2}px;top:${gy - size * 0.43}px`);
+  return d;
+});
+const lHearts = Array.from({ length: 16 }, (_, i) => { const e = img($("lHearts"), EMO(i % 2 ? "sparkling-heart" : "sparkles"), "abs", `width:70px;height:70px;left:${rnd() * (W - 70)}px;top:${H * 0.3 + rnd() * H * 0.6}px`); e._ph = rnd(); return e; });
+$("lTimer").style.cssText += VERT ? ";left:0;right:0;justify-content:center;top:300px" : ";left:90px;top:110px";
+
+// ---------- repaso ----------
+const REPASO = [["Vórtice", COL.violeta, COL.blanco, "clapper-board"], ["Umbral", COL.lima, COL.violeta, "unlocked"], ["Brújula", COL.celeste, COL.navy, "compass"], ["Together", COL.rosa, COL.blanco, "sparkling-heart"]];
+const mEls = REPASO.map(([n, bgc, fg, e], i) => {
+  const qw = VERT ? W : W / 2, qh = VERT ? H / 4 : H / 2;
+  const x = VERT ? 0 : (i % 2) * qw, y = VERT ? i * qh : Math.floor(i / 2) * qh;
+  const d = mk($("sM"), `<img src="${EMO(e)}" style="width:${VERT ? 140 : 130}px;height:${VERT ? 140 : 130}px"><div class="ub" style="font-size:${VERT ? 104 : 92}px;color:${fg};-webkit-text-stroke:5px ${COL.navy};paint-order:stroke fill;text-shadow:7px 7px 0 ${COL.navy}">${n}</div>`, "abs", `left:${x}px;top:${y}px;width:${qw}px;height:${qh}px;background:${bgc};display:flex;align-items:center;justify-content:center;gap:24px;overflow:hidden;border:4px solid ${COL.navy}`);
+  return d;
+});
+
+// ---------- diseñado para cada alumno ----------
+irisEn(41.0, COL.naranja, CX, CY, 0.35);
+const nRing = Array.from({ length: 10 }, (_, i) => {
+  const size = VERT ? 200 : 190;
+  const a = i / 10 * Math.PI * 2 - Math.PI / 2;
+  const rx = VERT ? 430 : 860, ry = VERT ? 800 : 430;
+  const d = mk($("nRing"), `<img src="${PJ(i + 1)}">`, "abs av", `width:${size}px;height:${size}px;background:${PAL[i % PAL.length]};left:${CX + Math.cos(a) * rx - size / 2}px;top:${CY + Math.sin(a) * ry - size / 2}px`);
+  return d;
+});
+
+// ---------- admisión ----------
+irisEn(42.6, COL.celeste, CX, CY, 0.3);
+(() => { let d = ""; for (let i = 0; i < 24; i++) { const a = i / 24 * Math.PI * 2 - Math.PI / 2, r = i % 2 ? 80 : 96; d += `${i ? "L" : "M"}${100 + Math.cos(a) * r} ${100 + Math.sin(a) * r} `; } $("pStar").setAttribute("d", d + "Z"); })();
+const pConf = confeti($("pConf"), 110, CX, CY, 1.2);
+
+// ---------- cierre ----------
+irisEn(43.7, COL.violeta, CX, CY, 0.35);
+const oStk = ["party-popper", "sparkles", "graduation-cap", "rocket", "trophy", "glowing-star"].map((n, i) => { const e = img($("oStk"), EMO(n), "abs sticker", ""); const a = i / 6 * Math.PI * 2 + 0.2; e._x = CX + Math.cos(a) * W * (VERT ? 0.38 : 0.42) - 75; e._y = CY + Math.sin(a) * H * (VERT ? 0.4 : 0.38) - 75; return e; });
+
+franjasEn(10.0); franjasEn(17.0); franjasEn(25.0); franjasEn(32.5); franjasEn(39.0);
+
+// ---------- grano ----------
+const gctx = $("grain").getContext("2d");
+const gimg = gctx.createImageData(480, 270);
+function grano(frame) { let s = (frame * 9301 + 49297) % 233280 || 1; const d = gimg.data; for (let i = 0; i < d.length; i += 4) { s = (s * 16807) % 2147483647; const v = 128 + ((s & 255) - 128) * 0.9; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; } gctx.putImageData(gimg, 0, 0); }
+
+const HITS = [0.35, 0.85, 1.35, 1.85, 7.0, 10.0, 17.0, 20.6, 22.65, 25.0, 28.8, 30.0, 31.3, 32.5, 35.6, 36.8, 39.0, 39.5, 40.0, 40.5, 41.0, 42.6, 43.7];
+function sacudida(t) { let x = 0, y = 0, r = 0; for (const h of HITS) { if (t < h || t > h + 0.5) continue; const a = Math.exp(-(t - h) * 10); x += a * 12 * Math.sin((t - h) * 60); y += a * 9 * Math.cos((t - h) * 53); r += a * 0.6 * Math.sin((t - h) * 40); } return { x, y, r }; }
+
+function render(t) {
+  fondo(t);
+  franjas(t);
+  const sh = sacudida(t);
+  $("cam").style.transform = `translate(${sh.x}px,${sh.y}px) rotate(${sh.r}deg)`;
+
+  // A
+  show("sA", inr(t, 0, 3.0));
+  GOLPES.forEach(([, a, b], i) => { const el = aEls[i]; const on = inr(t, a, b); el.style.display = on ? "block" : "none"; if (on) { rebote(el._ls, t, a, 0.04, 0.5); tf(el, { c: true, s: 1 + 0.08 * p(t, a, b, E.lin), r: i % 2 ? 2 : -2 }); } });
+  aStk.forEach((e, i) => { const t0 = 0.4 + i * 0.35; pop(e, t, t0, { d: 0.5, r0: -40, c: false, x: 0, y: 0 }); e.style.left = e._x + "px"; e.style.top = e._y + Math.sin(t * 3 + i) * 12 + "px"; });
+
+  // B
+  const onB = inr(t, 3.0, 7.0); show("sB", onB);
+  if (onB) {
+    const bt = $("bT");
+    bt.style.top = (VERT ? 200 : 100) + "px";
+    rebote(bt._ls, t, 3.1, 0.03, 0.5);
+    bCells.forEach((d, i) => { pop(d, t, 3.5 + i * 0.12, { d: 0.6, r0: i % 2 ? 30 : -30, c: false }); const im = d.querySelector("img"); im.style.transform = `translateY(${Math.sin(t * 4 + i) * 4}px) rotate(${Math.sin(t * 3 + i) * 3}deg)`; });
+    if (t > 5.4 && !bt._b2) { bt._b2 = true; }
+    if (t >= 5.4) { if (bt._fase !== 2) { bt._ls2 = letras(bt, "a su manera.", [COL.navy, COL.blanco]); bt._fase = 2; } rebote(bt._ls2, t, 5.4, 0.03, 0.5); }
+    else if (bt._fase === 2) { bt._ls = letras(bt, "Cada uno aprende", [COL.navy]); bt._fase = 1; }
+  }
+
+  // C
+  const onC = inr(t, 7.0, 10.0); show("sC", onC);
+  if (onC) {
+    tf($("cRays"), { c: true, r: t * 30, s: E.out(clamp((t - 7.0) / 0.5)) });
+    $("cRays").style.opacity = 0.9;
+    animConfeti(cConf, t, 7.0, 2.6);
+    pop($("cLogo"), t, 7.15, { d: 0.6, r0: -30, c: false });
+    const cw = $("cWord"); if (!cw._ls) cw._ls = letras(cw, "Barkley", [COL.blanco, COL.sol, COL.blanco, COL.lima, COL.blanco, COL.celeste, COL.blanco]);
+    rebote(cw._ls, t, 7.5, 0.05, 0.6);
+    cChips.forEach((d, i) => pop(d, t, 8.4 + i * 0.15, { d: 0.5, r0: i % 2 ? 10 : -10, c: false }));
+    tf($("cBrand"), { c: true, s: 1 + 0.03 * p(t, 7, 10, E.lin) });
+  }
+
+  // VÓRTICE placa
+  const onE = inr(t, 10.0, 11.8); show("sE", onE);
+  if (onE) { animManchas(eBlobs, t, 10.0); animPlaca(plV, t, 10.0, 11.8); }
+  // Vórtice en acción
+  const onF = inr(t, 11.8, 17.0); show("sF", onF);
+  if (onF) {
+    pop($("fDev"), t, 12.2, { d: 0.7, r0: -6, c: false });
+    $("fBar").style.width = `${lerp(0, 46, p(t, 14.4, 16.4, E.inOut))}%`;
+    const snap = p(t, 13.2, 14.5, E.back);
+    const dc = { x: DEV.x + DEV.w / 2, y: DEV.y + DEV.h / 2 };
+    fOrbs.forEach((d, i) => {
+      const ang = i * Math.PI / 3 + t * 3.2 * (1 - clamp(snap));
+      const rad = lerp(VERT ? 520 : 620, 260, p(t, 11.8, 13.2, E.inOut));
+      const vx = dc.x + Math.cos(ang) * rad - TW / 2, vy = dc.y + Math.sin(ang) * rad * 0.75 - TH / 2;
+      d.style.left = lerp(vx, d._gx, snap) + "px"; d.style.top = lerp(vy, d._gy, snap) + "px";
+      const kin = E.elastic(clamp((t - 11.85 - i * 0.07) / 0.6));
+      tf(d, { s: kin * lerp(0.75, 1, clamp(snap)), r: lerp(Math.sin(ang) * 25, 0, clamp(snap)) });
+    });
+    const f1 = $("f1"), f2 = $("f2");
+    if (!f1._ls) { f1._ls = letras(f1, "Todo tu año."); f2._ls = letras(f2, "En un solo lugar."); }
+    rebote(f1._ls, t, 14.6, 0.03, 0.5); rebote(f2._ls, t, 15.1, 0.03, 0.5);
+  }
+
+  // UMBRAL placa
+  const onG = inr(t, 17.0, 18.8); show("sG", onG);
+  if (onG) { animManchas(gBlobs, t, 17.0); animPlaca(plU, t, 17.0, 18.8); }
+  // Umbral en acción
+  const onH = inr(t, 18.8, 25.0); show("sH", onH);
+  if (onH) {
+    let pct;
+    if (t < 20.6) pct = 58 * p(t, 19.3, 20.5, E.inOut);
+    else if (t < 21.7) pct = 58 * (1 - p(t, 21.35, 21.7, E.inOut));
+    else pct = 76 * p(t, 21.7, 22.9, E.inOut);
+    $("hFill").style.width = pct + "%";
+    $("hFill").style.backgroundPosition = `${t * 80}px 0`;
+    const pc = $("hPct"); pc.textContent = Math.round(pct) + "%"; pc.style.left = Math.max(30, BAR.w * pct / 100 - 230) + "px";
+    pop($("hHead"), t, 18.9, { d: 0.5, r0: -6, c: false });
+    pop($("hBarBox"), t, 19.0, { d: 0.6, r0: 0, c: false });
+    const casi = inr(t, 20.6, 21.5); $("hCasi").style.display = casi ? "block" : "none"; if (casi) pop($("hCasi"), t, 20.6, { d: 0.5, r0: -15, y: VERT ? 380 : 240 });
+    const ok = inr(t, 22.65, 24.2); $("hOk").style.display = ok ? "block" : "none";
+    if (ok) { pop($("hOk"), t, 22.65, { d: 0.6, r0: -12 }); const ht = $("hOkT"); if (!ht._ls) ht._ls = letras(ht, "¡Nivel desbloqueado!", [COL.blanco, COL.sol, COL.lima]); rebote(ht._ls, t, 22.7, 0.025, 0.45); }
+    $("hBarBox").style.opacity = ok ? 0.25 : 1; $("hHead").style.opacity = ok ? 0.25 : 1;
+    animConfeti(hConf, t, 22.65, 2.2);
+    pop($("hCap"), t, 24.1, { d: 0.5, r0: 0, c: false });
+  }
+
+  // BRÚJULA placa
+  const onI = inr(t, 25.0, 26.8); show("sI", onI);
+  if (onI) { animManchas(iBlobs, t, 25.0); animPlaca(plB, t, 25.0, 26.8); const ic = $("iComp"); ic.style.left = (VERT ? CX - 110 : W - 420) + "px"; ic.style.top = (VERT ? 250 : 120) + "px"; ic.style.width = ic.style.height = "220px"; tf(ic, { s: E.elastic(clamp((t - 25.2) / 0.6)), r: -400 + 400 * p(t, 25.2, 26.4, E.back) }); }
+  // Brújula en acción
+  const onJ = inr(t, 26.8, 32.5); show("sJ", onJ);
+  if (onJ) {
+    const dib = p(t, 27.0, 28.2, E.inOut);
+    ["jRuta", "jRutaSombra"].forEach((id) => { $(id).style.strokeDasharray = `${LR} ${LR}`; $(id).style.strokeDashoffset = LR * (1 - dib); });
+    jMarcas.forEach((m, i) => pop(m, t, 27.3 + i * 0.12, { d: 0.45, r0: -10, c: true }));
+    const recal = p(t, 30.0, 30.9, E.inOut);
+    $("jRutaB").style.strokeDasharray = `${LB} ${LB}`; $("jRutaB").style.strokeDashoffset = LB * (1 - recal);
+    $("jRuta").style.stroke = t > 28.8 ? "#ffffff" : "#ffffff";
+    // el personaje avanza por la ruta, se frena en la semana difícil y sigue por la ruta recalculada
+    let pt;
+    if (t < 30.9) { const f = lerp(0, HUECO_F, p(t, 27.4, 28.8, E.inOut)); pt = $("jRuta").getPointAtLength(LR * f); }
+    else { const f = p(t, 30.9, 32.2, E.inOut); pt = $("jRutaB").getPointAtLength(LB * f); }
+    const yo = $("jYo"); yo.style.left = pt.x - 65 + "px"; yo.style.top = pt.y - 65 - Math.abs(Math.sin(t * 9)) * 18 + "px";
+    tf(yo, { s: E.elastic(clamp((t - 27.2) / 0.5)) });
+    const uf = inr(t, 28.8, 30.0); $("jUf").style.display = uf ? "block" : "none"; if (uf) { $("jUf").style.left = pt.x + 40 + "px"; $("jUf").style.top = pt.y - 170 + "px"; pop($("jUf"), t, 28.8, { d: 0.5, r0: 20, c: false }); }
+    pop($("jFlag"), t, 30.6, { d: 0.6, r0: -20, c: false });
+    [["jT1", 28.8, 30.0], ["jT2", 30.0, 31.3], ["jT3", 31.3, 32.5]].forEach(([id, a, b]) => { const on = inr(t, a, b); const el = $(id); el.style.display = on ? "block" : "none"; if (on) { if (!el._ls) el._ls = letras(el, el.textContent); rebote(el._ls, t, a, 0.025, 0.45); } });
+  }
+
+  // TOGETHER placa
+  const onK = inr(t, 32.5, 34.3); show("sK", onK);
+  if (onK) { animManchas(kBlobs, t, 32.5); animPlaca(plT, t, 32.5, 34.3); }
+  // Together en acción
+  const onL = inr(t, 34.3, 39.0); show("sL", onL);
+  if (onL) {
+    lCells.forEach((d, i) => { pop(d, t, 34.4 + i * 0.1 + (i === 5 ? 0.5 : 0), { d: 0.6, r0: i % 2 ? 12 : -12, c: false }); const im = d.querySelector("img"); im.style.transform = `translateX(-50%) translateY(${Math.sin(t * 3 + i) * 5}px)`; });
+    lHearts.forEach((e, i) => { const q = ((t - 34.6) * 0.35 + e._ph) % 1; e.style.opacity = t > 34.6 ? Math.sin(q * Math.PI) : 0; e.style.transform = `translateY(${-q * 260}px) scale(${0.6 + q * 0.6})`; });
+    const seg = Math.max(0, Math.floor(t - 34.6)); const rest = 1500 - seg; $("lTime").textContent = `${String(Math.floor(rest / 60)).padStart(2, "0")}:${String(rest % 60).padStart(2, "0")}`;
+    pop($("lTimer"), t, 34.7, { d: 0.5, r0: -8, c: false });
+    const onT = t >= 35.6; $("lT").style.display = onT ? "block" : "none";
+    if (onT) { const a = $("lT1"), b = $("lT2"); if (!a._ls) { a._ls = letras(a, "Estudias solo,"); b._ls = letras(b, "pero no estás solo.", [COL.sol, COL.lima, COL.sol]); } rebote(a._ls, t, 35.6, 0.03, 0.45); rebote(b._ls, t, 36.8, 0.03, 0.5); tf($("lT"), { c: true, y: VERT ? 560 : 0 }); }
+    lCells.forEach((d) => { d.style.filter = t > 35.6 ? `saturate(${t > 36.8 ? 1.2 : 0.85})` : "none"; });
+  }
+
+  // repaso
+  const onM = inr(t, 39.0, 41.0); show("sM", onM);
+  if (onM) mEls.forEach((d, i) => { const t0 = 39.0 + i * 0.5; d.style.display = t >= t0 ? "flex" : "none"; const k = E.elastic(clamp((t - t0) / 0.5)); d.firstElementChild.style.transform = `scale(${k}) rotate(${(1 - k) * -40}deg)`; d.lastElementChild.style.transform = `scale(${k})`; });
+
+  // diseñado para cada alumno
+  const onN = inr(t, 41.0, 42.6); show("sN", onN);
+  if (onN) {
+    nRing.forEach((d, i) => { pop(d, t, 41.05 + i * 0.05, { d: 0.5, r0: i % 2 ? 25 : -25, c: false }); d.style.marginTop = Math.sin(t * 5 + i) * 10 + "px"; });
+    const a = $("n1"), b = $("n2"); if (!a._ls) { a._ls = letras(a, "Diseñado para"); b._ls = letras(b, "cada alumno.", [COL.sol, COL.lima, COL.celeste, COL.rosa]); }
+    rebote(a._ls, t, 41.1, 0.025, 0.45); rebote(b._ls, t, 41.45, 0.035, 0.5); tf($("nT"), { c: true });
+  }
+
+  // admisión
+  const onP = inr(t, 42.6, 43.7); show("sP", onP);
+  if (onP) { pop($("pBadge"), t, 42.62, { d: 0.6, r0: -35 }); $("pStar").parentElement.style.transform = `rotate(${t * 40}deg)`; animConfeti(pConf, t, 42.6, 1.1); }
+
+  // cierre
+  const onO = inr(t, 43.7, 45.01); show("sO", onO);
+  if (onO) {
+    pop($("oAdm"), t, 43.8, { d: 0.5, r0: -8, c: false });
+    pop($("oMarca"), t, 43.95, { d: 0.6, r0: 0, c: false });
+    pop($("oCta"), t, 44.2, { d: 0.5, r0: 6, c: false });
+    oStk.forEach((e, i) => { pop(e, t, 43.8 + i * 0.07, { d: 0.5, r0: -40, c: false }); e.style.left = e._x + "px"; e.style.top = e._y + Math.sin(t * 3 + i) * 10 + "px"; });
+    tf($("oBox"), { c: true });
+  }
+
+  grano(Math.floor(t * 24));
+}
+
+function disenoVertical() {
+  $("grain").width = 270; $("grain").height = 480;
+  $("cChips").style.flexDirection = "column"; $("cChips").style.alignItems = "center";
+  $("oMarca").style.flexDirection = "column";
+  $("oCtaRow").style.flexDirection = "column";
+  $("lT1").style.fontSize = "96px"; $("lT2").style.fontSize = "96px";
+}
+function ajustar() {
+  const escenas = [...document.querySelectorAll(".scene")];
+  escenas.forEach((e) => { e.style.display = "block"; e.style.visibility = "hidden"; });
+  if (VERT) disenoVertical();
+  const AW = W - (VERT ? 80 : 160);
+  aEls.forEach((el) => fit(el, AW - (VERT ? 60 : 220), VERT ? 400 : 480));
+  [plV, plU, plB, plT].forEach((pl) => fit(pl.t1, AW, 250));
+  const bt = $("bT");
+  letras(bt, "Cada uno aprende", [COL.navy]); fit(bt, AW, 96); const f1b = parseFloat(bt.style.fontSize);
+  letras(bt, "a su manera.", [COL.navy]); fit(bt, AW, 96); bt.style.fontSize = Math.min(f1b, parseFloat(bt.style.fontSize)) + "px";
+  bt._ls = letras(bt, "Cada uno aprende", [COL.navy]); bt._fase = 1;
+  fit($("hCasiT"), AW, 120);
+  ["f1", "f2"].forEach((id) => { if (!VERT) { $(id).style.whiteSpace = "normal"; $(id).style.width = "760px"; } });
+  ["cWord", "f1", "f2", "hOkT", "n1", "n2", "lT1", "lT2"].forEach((id) => fit($(id), id === "f1" || id === "f2" ? (VERT ? 960 : 760) : id === "n1" || id === "n2" ? (VERT ? 900 : 1250) : AW, parseFloat($(id).style.fontSize)));
+  ["jT1", "jT2", "jT3"].forEach((id) => { if (!VERT) fit($(id), AW, 104); });
+  escenas.forEach((e) => { e.style.display = "none"; e.style.visibility = ""; });
+}
+window.listo = Promise.all(["900 100px Unbounded", "800 100px Unbounded", "800 100px Poppins", "700 100px Poppins", "600 100px Poppins"].map((f) => document.fonts.load(f)))
+  .then(() => Promise.all([...document.images].map((i) => (i.complete ? 1 : new Promise((r) => { i.onload = i.onerror = r; })))))
+  .then(ajustar);
+window.render = render;
+window.DURATION = DURATION;
+if (!navigator.webdriver) {
+  const t0 = performance.now();
+  window.listo.then(function loop() { render(((performance.now() - t0) / 1000) % DURATION); requestAnimationFrame(loop); });
+} else window.listo.then(() => render(0));
+</script>
+</body>
+</html>

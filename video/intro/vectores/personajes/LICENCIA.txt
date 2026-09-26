@@ -1,0 +1,2 @@
+Personajes Notionists (DiceBear), licencia CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+Generados con @dicebear/collection (semillas b34 b28 b0 b17 b15 b25 b38 b7 b9 b29, en ese orden p01..p10).
