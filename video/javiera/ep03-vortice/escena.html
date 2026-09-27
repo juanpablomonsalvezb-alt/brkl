@@ -237,7 +237,7 @@ function render(t) {
   // 4 · lección: cada pestaña se enciende al nombrarla
   pop($("l-card"), t, ESC[3].desde);
   const fmts = [...document.querySelectorAll(".fmt")];
-  const tiempos = [E.video, E.podcast, E.podcast + 0.35, E.podcast + 0.55, E.podcast + 0.75, E.podcast + 0.95, E.podcast + 1.15, E.evaluaciones];
+  const tiempos = [E.video, E.podcast, E.infografias, E.informes, E.mapas, E.presentaciones, E.cuestionarios, E.evaluaciones];
   fmts.forEach((el, i) => {
     const t0 = tiempos[i], k = seg(t, t0 - 0.1, t0 + 0.2);
     el.style.opacity = 0.35 + 0.65 * k;

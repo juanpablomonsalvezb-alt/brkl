@@ -20,9 +20,13 @@
       "texto": "En Barkley todo vive en Vórtice, nuestra plataforma propia: tu año completo en un solo lugar."
     },
     {
-      "archivo": "vortice-04.mp4",
+      "archivo": "vortice-04b.mp4",
       "escena": "leccion",
-      "texto": "Cada lección trae video y pódcast, y tus evaluaciones, avances y mensajes están ahí mismo."
+      "frases": [
+        "Cada lección trae video, pódcast, infografías,",
+        "informes, mapas mentales, presentaciones,",
+        "cuestionarios y evaluaciones."
+      ]
     },
     {
       "archivo": "vortice-05.mp4",
@@ -94,14 +98,6 @@
       3,
       "evaluaciones"
     ],
-    "avances": [
-      3,
-      "avances"
-    ],
-    "mensajes": [
-      3,
-      "mensajes"
-    ],
     "tutor": [
       4,
       "tutor"
@@ -125,6 +121,26 @@
     "cta": [
       5,
       "Conoce"
+    ],
+    "infografias": [
+      3,
+      "infografías"
+    ],
+    "informes": [
+      3,
+      "informes"
+    ],
+    "mapas": [
+      3,
+      "mapas"
+    ],
+    "presentaciones": [
+      3,
+      "presentaciones"
+    ],
+    "cuestionarios": [
+      3,
+      "cuestionarios"
     ]
   },
   "sonidos": {
@@ -138,12 +154,17 @@
       "leccion",
       "video",
       "podcast",
-      "evaluaciones",
       "tutor",
       "asesor",
       "familia",
       "ordenado",
-      "cta"
+      "cta",
+      "infografias",
+      "informes",
+      "mapas",
+      "presentaciones",
+      "cuestionarios",
+      "evaluaciones"
     ],
     "campana": [
       "vortice",
