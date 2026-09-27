@@ -1,0 +1,35 @@
+{
+  "carpeta": ".",
+  "salida": "javiera-brujula-9x16.mp4",
+  "fps": 24,
+  "cierre": 3.2,
+  "clips": [
+    { "archivo": "brujula-01.mp4", "escena": "saludo", "texto": "Hola, soy Javiera de Barkley. ¿Te ha pasado que no sabes si vas atrasado o adelantado?" },
+    { "archivo": "brujula-02.mp4", "escena": "rumbo", "texto": "Estudiar a tu ritmo es libertad, pero sin una guía es fácil perder el rumbo." },
+    { "archivo": "brujula-03.mp4", "escena": "brujula", "texto": "Por eso existe Brújula: un calendario que te sugiere cuánto avanzar cada semana." },
+    { "archivo": "brujula-04.mp4", "escena": "examen", "texto": "Está anclado a la fecha real de tu Examen Libre, así siempre sabes dónde estás." },
+    { "archivo": "brujula-05.mp4", "escena": "recalcula", "texto": "¿Te enfermaste o tuviste un viaje? Brújula recalcula tu ritmo, sin castigos ni culpa." },
+    { "archivo": "brujula-06.mp4", "escena": "cierre", "texto": "Brújula te da dirección, no obligación. Reserva tu cupo sin costo en nuestro sitio web." }
+  ],
+  "eventos": {
+    "nombre": [0, "soy"],
+    "pregunta": [0, "¿Te"],
+    "libertad": [1, "libertad"],
+    "rumbo": [1, "perder"],
+    "brujula": [2, "Brújula"],
+    "calendario": [2, "calendario"],
+    "semana": [2, "semana"],
+    "examen": [3, "Examen"],
+    "aqui": [3, "dónde"],
+    "imprevisto": [4, "enfermaste"],
+    "viaje": [4, "viaje"],
+    "recalcula": [4, "recalcula"],
+    "culpa": [4, "castigos"],
+    "direccion": [5, "dirección"],
+    "cta": [5, "Reserva"]
+  },
+  "sonidos": {
+    "pop": ["nombre", "pregunta", "libertad", "calendario", "examen", "aqui", "imprevisto", "viaje", "culpa", "direccion", "cta"],
+    "campana": ["brujula", "recalcula"]
+  }
+}

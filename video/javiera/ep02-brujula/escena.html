@@ -2,17 +2,17 @@
 <html lang="es">
 <head>
 <meta charset="utf-8" />
-<title>Barkley — Javiera, capa de fondo y gráficos</title>
+<title>Barkley — Javiera · Brújula, fondo y gráficos</title>
 <!--
   Fondo del video de Javiera (1080×1920): estudio azul Barkley, gráficos que ilustran
   lo que ella dice (zona superior) y placa final. Javiera y los subtítulos se
   superponen después en componer.py. Tiempos: out/linea.json (window.preparar).
 -->
 <style>
-  @font-face { font-family: "Poppins"; font-weight: 400; src: url(../intro/fonts/poppins-latin-400-normal.woff2) format("woff2"); }
-  @font-face { font-family: "Poppins"; font-weight: 600; src: url(../intro/fonts/poppins-latin-600-normal.woff2) format("woff2"); }
-  @font-face { font-family: "Poppins"; font-weight: 700; src: url(../intro/fonts/poppins-latin-700-normal.woff2) format("woff2"); }
-  @font-face { font-family: "Poppins"; font-weight: 800; src: url(../intro/fonts/poppins-latin-800-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 400; src: url(../../intro/fonts/poppins-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 600; src: url(../../intro/fonts/poppins-latin-600-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 700; src: url(../../intro/fonts/poppins-latin-700-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 800; src: url(../../intro/fonts/poppins-latin-800-normal.woff2) format("woff2"); }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000814; }
   body { font-family: "Poppins", sans-serif; color: #fff; -webkit-font-smoothing: antialiased; position: relative; }
@@ -61,58 +61,76 @@
     <div id="s-linea" style="height:3px;background:#ffc548;margin:14px auto;box-shadow:0 0 14px rgba(255,197,72,.7)"></div>
     <div style="font-size:30px;font-weight:600;letter-spacing:.12em;opacity:.85">TUTORA · BARKLEY</div>
   </div>
-  <div id="s-preg" style="position:absolute;font-weight:800;font-size:84px;line-height:1.05;text-transform:uppercase;letter-spacing:.01em;text-shadow:0 8px 40px rgba(0,0,0,.5)">
-    <div>¿Avanzan sin</div><div class="oro">entender?</div>
+  <div id="s-preg" style="position:absolute;display:flex;align-items:center;gap:34px">
+    <div style="text-align:center"><div style="color:#9ec5ff"><svg width="96" height="96" viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto"><path d="M52 20 24 48l28 28M76 20 48 48l28 28"/></svg></div><div style="font-weight:800;font-size:44px;margin-top:10px">¿Atrasado?</div></div>
+    <div style="font-weight:800;font-size:44px;opacity:.6">o</div>
+    <div style="text-align:center"><div style="color:#ffc548"><svg width="96" height="96" viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto"><path d="M44 20l28 28-28 28M20 20l28 28-28 28"/></svg></div><div class="oro" style="font-weight:800;font-size:44px;margin-top:10px">¿Adelantado?</div></div>
   </div>
 </div>
 
-<!-- 2 · colegio tradicional -->
-<div class="esc" id="e-trad">
-  <div id="t-cinta" style="position:absolute;left:0;top:40px;width:2000px;height:170px"></div>
-  <div id="t-flecha" style="position:absolute;left:120px;right:120px;top:250px;display:flex;align-items:center;gap:18px;font-size:28px;font-weight:600;color:rgba(255,255,255,.8)">
-    <div style="flex:1;height:3px;background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.6))"></div><span>el curso sigue</span><span style="font-size:34px">▶</span>
+<!-- 2 · sin guía se pierde el rumbo -->
+<div class="esc" id="e-rumbo">
+  <svg id="r-ruta" width="1080" height="330" viewBox="0 0 1080 330" style="position:absolute;left:0;top:0">
+    <path id="r-path" d="M120 250 C 260 60, 330 300, 460 170 S 640 40, 700 220 S 900 300, 960 90" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="5" stroke-dasharray="4 16" stroke-linecap="round"/>
+  </svg>
+  <div id="r-libre" style="position:absolute;left:70px;top:20px;font-weight:800;font-size:46px">Libertad <span class="oro">✓</span></div>
+  <div id="r-perdido" style="position:absolute;right:70px;top:250px;font-weight:800;font-size:40px;color:#9ec5ff">¿Y el rumbo?</div>
+  <div id="r-aguja" style="position:absolute;left:0;top:0;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;background:#fff;box-shadow:0 0 24px rgba(255,255,255,.7)"></div>
+</div>
+
+<!-- 3 · Brújula: calendario semanal -->
+<div class="esc" id="e-brujula">
+  <div id="b-comp" style="position:absolute;left:70px;top:10px;width:300px;height:300px">
+    <svg width="300" height="300" viewBox="0 0 300 300">
+      <circle cx="150" cy="150" r="140" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.35)" stroke-width="3"/>
+      <circle cx="150" cy="150" r="118" fill="none" stroke="rgba(255,197,72,.35)" stroke-width="2" stroke-dasharray="2 10"/>
+      <text x="150" y="44" text-anchor="middle" font-family="Poppins" font-weight="800" font-size="30" fill="#ffc548">N</text>
+      <text x="150" y="276" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="24" fill="rgba(255,255,255,.6)">S</text>
+      <text x="264" y="159" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="24" fill="rgba(255,255,255,.6)">E</text>
+      <text x="36" y="159" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="24" fill="rgba(255,255,255,.6)">O</text>
+      <g id="b-aguja"><path d="M150 50 L170 150 L150 160 L130 150Z" fill="#ffc548"/><path d="M150 250 L170 150 L150 140 L130 150Z" fill="#ffffff" opacity=".8"/><circle cx="150" cy="150" r="10" fill="#06204a" stroke="#fff" stroke-width="3"/></g>
+    </svg>
+  </div>
+  <div id="b-cal" class="card" style="position:absolute;left:400px;top:20px;width:610px;height:280px;padding:26px 30px">
+    <div style="font-size:22px;letter-spacing:.18em;font-weight:700;opacity:.7">ESTA SEMANA</div>
+    <div id="b-dias" style="display:flex;gap:14px;margin-top:20px"></div>
+    <div id="b-meta" style="margin-top:22px;font-size:28px;font-weight:700">Meta sugerida: <span class="oro">3 lecciones</span></div>
   </div>
 </div>
 
-<!-- 3 · Umbral -->
-<div class="esc" id="e-umbral"></div>
-
-<!-- 4 · reintento -->
-<div class="esc" id="e-reint">
-  <div id="r-1" class="card" style="position:absolute;left:70px;top:30px;width:400px;height:250px;padding:28px 30px">
-    <div style="font-size:22px;letter-spacing:.18em;font-weight:700;opacity:.7">INTENTO 1</div>
-    <div id="r-1n" style="font-size:78px;font-weight:800;color:#ff8f7a;margin-top:6px">0%</div>
-    <div class="barra" style="left:30px;right:30px;bottom:34px"><i id="r-1b" style="background:#ff8f7a"></i></div>
+<!-- 4 · anclado al Examen Libre -->
+<div class="esc" id="e-examen">
+  <div id="x-linea" style="position:absolute;left:100px;top:170px;height:6px;border-radius:4px;background:linear-gradient(90deg,rgba(255,255,255,.35),#ffc548)"></div>
+  <div id="x-meses" style="position:absolute;left:100px;right:100px;top:196px;display:flex;justify-content:space-between;font-size:24px;font-weight:600;color:rgba(255,255,255,.7)"></div>
+  <div id="x-bandera" style="position:absolute;right:62px;top:30px;text-align:center">
+    <svg width="70" height="80" viewBox="0 0 70 80" style="margin:0 auto"><path d="M10 6v70" stroke="#fff" stroke-width="6" stroke-linecap="round"/><path d="M13 8h46l-10 16 10 16H13z" fill="#ffc548"/></svg>
+    <div style="font-weight:800;font-size:28px;color:#ffc548;margin-top:6px">Examen Libre</div>
   </div>
-  <div id="r-loop" style="position:absolute;left:490px;top:95px;width:100px;height:100px;display:flex;flex-direction:column;align-items:center">
-    <svg width="84" height="84" viewBox="0 0 84 84" fill="none" stroke="#ffc548" stroke-width="7" stroke-linecap="round"><path d="M66 30a28 28 0 1 0 4 22"/><path d="M68 12v20H48"/></svg>
-    <div style="font-size:22px;font-weight:700;letter-spacing:.1em;margin-top:8px;color:#ffc548">REPASAS</div>
-  </div>
-  <div id="r-2" class="card" style="position:absolute;right:70px;top:30px;width:400px;height:250px;padding:28px 30px">
-    <div style="font-size:22px;letter-spacing:.18em;font-weight:700;opacity:.7">INTENTO 2</div>
-    <div id="r-2n" style="font-size:78px;font-weight:800;color:#ffc548;margin-top:6px">0%</div>
-    <div class="barra" style="left:30px;right:30px;bottom:34px"><i id="r-2b" style="background:linear-gradient(90deg,#ffc548,#ffe29a)"></i></div>
-    <div id="r-ok" class="badge" style="background:#ffc548;color:#06204a">✓</div>
+  <div id="x-aqui" style="position:absolute;top:40px;width:220px;margin-left:-110px;text-align:center">
+    <div style="display:inline-block;background:#fff;color:#06204a;font-weight:800;font-size:28px;padding:10px 22px;border-radius:30px">Estás aquí</div>
+    <div style="width:4px;height:48px;background:#fff;margin:0 auto"></div>
+    <div id="x-punto" style="width:30px;height:30px;border-radius:50%;background:#fff;margin:-6px auto 0;box-shadow:0 0 0 10px rgba(255,255,255,.2)"></div>
   </div>
 </div>
 
-<!-- 5 · apoyo -->
-<div class="esc" id="e-apoyo">
-  <div id="a-tutor" class="card centro" style="position:absolute;left:110px;top:0;width:400px;height:190px">
-    <svg width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="#fff" stroke-width="5"><circle cx="35" cy="24" r="13"/><path d="M12 62c3-13 12-19 23-19s20 6 23 19" stroke-linecap="round"/></svg>
-    <div style="font-size:30px;font-weight:700;margin-top:10px">Tutor humano</div>
+<!-- 5 · recalcula ante imprevistos -->
+<div class="esc" id="e-recalc">
+  <div id="c-sem" class="card" style="position:absolute;left:70px;right:70px;top:10px;height:210px;padding:24px 30px">
+    <div style="font-size:22px;letter-spacing:.18em;font-weight:700;opacity:.7">TU PLAN · PRÓXIMAS SEMANAS</div>
+    <div id="c-barras" style="position:absolute;left:30px;right:30px;bottom:26px;height:110px;display:flex;align-items:flex-end;gap:16px"></div>
   </div>
-  <div id="a-ia" class="card centro" style="position:absolute;right:110px;top:0;width:400px;height:190px">
-    <svg width="70" height="70" viewBox="0 0 70 70" fill="#ffc548"><path d="M35 4l6 20 20 6-20 6-6 20-6-20-20-6 20-6z"/><path d="M58 44l2.5 7.5L68 54l-7.5 2.5L58 64l-2.5-7.5L48 54l7.5-2.5z"/></svg>
-    <div style="font-size:30px;font-weight:700;margin-top:10px" class="oro">IA Barkley</div>
+  <div id="c-imp" style="position:absolute;left:70px;top:236px;display:flex;gap:16px">
+    <div id="c-enf" style="font-size:30px;font-weight:700;padding:12px 22px;border-radius:40px;background:rgba(255,120,100,.2);border:2px solid rgba(255,120,100,.7)">Enfermedad</div>
+    <div id="c-via" style="font-size:30px;font-weight:700;padding:12px 22px;border-radius:40px;background:rgba(120,170,255,.2);border:2px solid rgba(120,170,255,.7)">Viaje</div>
   </div>
-  <div id="a-burb" style="position:absolute;left:150px;right:150px;top:222px;text-align:center;font-size:34px;font-weight:600;padding:20px 28px;border-radius:26px 26px 26px 6px;background:#ffc548;color:#06204a;box-shadow:0 14px 40px rgba(255,197,72,.3)">Te ayudo a entender, no a copiar.</div>
+  <div id="c-rec" style="position:absolute;right:70px;top:236px;font-size:30px;font-weight:800;padding:12px 24px;border-radius:40px;background:#ffc548;color:#06204a">↻ Recalculado</div>
+  <div id="c-culpa" style="position:absolute;left:0;right:0;top:238px;text-align:center;font-weight:800;font-size:40px">Sin castigos · <span class="oro">sin culpa</span></div>
 </div>
 
 <!-- 6 · cierre -->
 <div class="esc centro" id="e-cierre">
-  <div id="c-nadie" style="position:absolute;top:10px;font-weight:800;font-size:88px;line-height:1.05;text-transform:uppercase;text-shadow:0 8px 40px rgba(0,0,0,.5)">
-    <div>Nadie queda</div><div class="oro">atrás.</div>
+  <div id="c-nadie" style="position:absolute;top:10px;font-weight:800;font-size:80px;line-height:1.05;text-transform:uppercase;text-shadow:0 8px 40px rgba(0,0,0,.5)">
+    <div>Dirección,</div><div class="oro">no obligación.</div>
   </div>
   <div id="c-cta" style="position:absolute;top:238px;display:flex;flex-direction:column;align-items:center">
     <div style="background:#ffc548;color:#06204a;font-weight:800;font-size:36px;padding:18px 44px;border-radius:50px;box-shadow:0 12px 40px rgba(255,197,72,.4)">Reserva tu cupo sin costo</div>
@@ -129,7 +147,7 @@
   <div id="f-adm" style="position:absolute;left:0;right:0;text-align:center"><span style="display:inline-block;border:2.5px solid #ffc548;color:#ffc548;font-weight:700;font-size:30px;letter-spacing:.2em;padding:14px 28px 14px 34px">ADMISIÓN 2027 · CUPOS LIMITADOS</span></div>
 </div>
 
-<script src="../intro/vectores/barkley-logos.js"></script>
+<script src="../../intro/vectores/barkley-logos.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -142,8 +160,8 @@ const eio = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
 const pop = (el, t, t0, d = 0.45) => { const k = seg(t, t0, t0 + d); el.style.opacity = eo(k); el.style.transform = `translateY(${(1 - eo(k)) * 30}px) scale(${lerp(0.86, 1, eback(k))})`; return k; };
 
 let L, E, ESC;
-const CHIP = { saludo: ["", "#fff"], tradicional: ["Colegio tradicional", "#ff9d8a"], umbral: ["Barkley · Umbral™", "#ffc548"], reintento: ["A tu ritmo, sin presión", "#ffc548"], apoyo: ["No estás solo", "#ffc548"], cierre: ["", "#fff"] };
-const IDS = { saludo: "e-saludo", tradicional: "e-trad", umbral: "e-umbral", reintento: "e-reint", apoyo: "e-apoyo", cierre: "e-cierre" };
+const CHIP = { saludo: ["", "#fff"], rumbo: ["Estudiar a tu ritmo", "#9ec5ff"], brujula: ["Barkley · Brújula™", "#ffc548"], examen: ["Anclado a tu examen", "#ffc548"], recalcula: ["Imprevistos", "#ffc548"], cierre: ["", "#fff"] };
+const IDS = { saludo: "e-saludo", rumbo: "e-rumbo", brujula: "e-brujula", examen: "e-examen", recalcula: "e-recalc", cierre: "e-cierre" };
 
 // ---- recorte de logos (igual que el sello) ----
 function recortar(svgTexto) {
@@ -164,23 +182,24 @@ function tile(padre, x, y, n, extra = "") {
 }
 const CANDADO = (abierto) => `<svg width="46" height="52" viewBox="0 0 46 52" fill="none"><rect x="4" y="22" width="38" height="28" rx="6" fill="#ffc548"/><path d="M12 22V15a11 11 0 0 1 22 0${abierto ? "" : "v7"}" stroke="#ffc548" stroke-width="6" stroke-linecap="round" ${abierto ? 'transform="translate(10 -6) rotate(18 34 15)"' : ""}/><circle cx="23" cy="35" r="4" fill="#06204a"/></svg>`;
 
-let T = {}, U = {};
+let B = {};
 function preparar(linea) {
   L = linea; E = linea.eventos;
   ESC = linea.escenas.map((e, i) => ({ ...e, hasta: i + 1 < linea.escenas.length ? linea.escenas[i + 1].desde : linea.fin_voz }));
-  // tradicional: cinta de unidades que avanza sola
-  const cinta = $("t-cinta");
-  T.tiles = [1, 2, 3, 4, 5, 6].map((n, i) => tile(cinta, 90 + i * 230, 0, n, '<div class="badge" style="background:#ff6b5a;color:#fff;opacity:0">?</div>'));
-  // umbral: escalera
-  const u = $("e-umbral");
-  U.tiles = [1, 2, 3, 4].map((n, i) => tile(u, 70 + i * 240, 150 - i * 50, n));
-  U.check = document.createElement("div"); U.check.className = "badge"; U.check.style.cssText += "background:#ffc548;color:#06204a"; U.check.textContent = "✓"; U.tiles[0].appendChild(U.check);
-  U.check2 = U.check.cloneNode(true); U.tiles[1].appendChild(U.check2);
-  U.candado = document.createElement("div"); U.candado.style.cssText = "position:absolute;right:-16px;top:-22px"; U.tiles[1].appendChild(U.candado);
-  U.locks = [2, 3].map((i) => { const c = document.createElement("div"); c.style.cssText = "position:absolute;right:-12px;top:-18px;opacity:.5;transform:scale(.8)"; c.innerHTML = CANDADO(false); U.tiles[i].appendChild(c); return c; });
-  U.barra = document.createElement("div"); U.barra.className = "barra"; U.barra.style.cssText += "left:310px;top:295px;width:190px";
-  U.barra.innerHTML = '<i style="background:linear-gradient(90deg,#ffc548,#ffe29a)"></i>'; u.appendChild(U.barra);
-  U.pct = document.createElement("div"); U.pct.style.cssText = "position:absolute;left:310px;top:236px;width:190px;text-align:center;font-weight:800;font-size:34px;color:#ffc548"; u.appendChild(U.pct);
+  // calendario semanal: 3 días con lección sugerida
+  B.dias = ["L", "M", "M", "J", "V", "S", "D"].map((d, i) => {
+    const el = document.createElement("div");
+    const meta = [0, 2, 4].includes(i);
+    el.style.cssText = `width:66px;height:92px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:26px;border:2px solid ${meta ? "#ffc548" : "rgba(255,255,255,.2)"};background:${meta ? "rgba(255,197,72,.14)" : "rgba(255,255,255,.05)"}`;
+    el.innerHTML = `<div>${d}</div><div style="font-size:24px;margin-top:4px;color:#ffc548">${meta ? "●" : ""}</div>`;
+    $("b-dias").appendChild(el); return el;
+  });
+  // línea de tiempo marzo → octubre
+  ["Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct"].forEach((m) => { const s = document.createElement("span"); s.textContent = m; $("x-meses").appendChild(s); });
+  // barras del plan (antes y después de recalcular)
+  B.antes = [3, 3, 3, 3, 3, 3, 3, 3];
+  B.despues = [0, 4, 4, 3, 3, 4, 3, 3];
+  B.barras = B.antes.map(() => { const b = document.createElement("div"); b.style.cssText = "flex:1;border-radius:10px 10px 4px 4px;background:linear-gradient(180deg,#ffc548,#e0a73a)"; $("c-barras").appendChild(b); return b; });
   // placa final
   const LB = recortar(window.LOGOS.b), LP = recortar(window.LOGOS.palabra);
   const bAlto = 230, pAncho = 720, pAlto = pAncho / LP.ratio, y0 = 560;
@@ -233,48 +252,55 @@ function render(t) {
   pop($("s-preg"), t, E.pregunta);
   if (t < E.pregunta) $("s-preg").style.opacity = 0;
 
-  // 2 · tradicional: la cinta avanza aunque aparezca un vacío
-  T.tiles.forEach((d, i) => { const k = seg(t, E.unidades + i * 0.12, E.unidades + i * 0.12 + 0.4); d.style.opacity = eo(k); });
-  const desplaz = Math.max(0, t - E.sigue) * 150;
-  $("t-cinta").style.transform = `translateX(${-desplaz}px)`;
-  T.tiles.forEach((d, i) => {
-    const b = d.querySelector(".badge");
-    const on = i === 1 ? seg(t, E.vacio - 0.1, E.vacio + 0.25) : i > 1 ? seg(t, E.vacio + 0.3 + (i - 2) * 0.25, E.vacio + 0.55 + (i - 2) * 0.25) : 0;
-    b.style.opacity = on; b.style.transform = `scale(${lerp(0.4, 1, eback(on))})`;
-    d.style.borderColor = on ? `rgba(255,120,100,${0.3 + 0.6 * on})` : "rgba(255,255,255,.22)";
-    d.style.background = on ? `rgba(255,90,70,${0.12 * on})` : "rgba(255,255,255,.08)";
+  // 2 · rumbo: un punto que avanza libre y termina dando vueltas
+  const e2 = ESC[1];
+  pop($("r-libre"), t, E.libertad - 0.1);
+  pop($("r-perdido"), t, E.rumbo);
+  const ruta = $("r-path"), largo = ruta.getTotalLength();
+  const kr = seg(t, e2.desde + 0.2, e2.hasta - 0.2);
+  ruta.style.strokeDashoffset = 0;
+  ruta.style.opacity = seg(t, e2.desde, e2.desde + 0.5);
+  const pt = ruta.getPointAtLength(largo * eio(kr));
+  const wob = t > E.rumbo ? 14 * Math.sin((t - E.rumbo) * 9) : 0;
+  $("r-aguja").style.left = pt.x + wob + "px"; $("r-aguja").style.top = pt.y + wob * 0.6 + "px";
+
+  // 3 · Brújula: la aguja deja de girar y apunta al norte
+  const e3 = ESC[2];
+  pop($("b-comp"), t, e3.desde);
+  const girando = Math.max(0, E.brujula - t);
+  const ang = t < E.brujula ? (t - e3.desde) * 540 : 360 * 3 + 12 * Math.exp(-(t - E.brujula) * 4) * Math.sin((t - E.brujula) * 18);
+  $("b-aguja").setAttribute("transform", `rotate(${ang % 360} 150 150)`);
+  pop($("b-cal"), t, E.calendario - 0.1);
+  B.dias.forEach((d, i) => { const k = seg(t, E.calendario + 0.1 + i * 0.07, E.calendario + 0.4 + i * 0.07); d.style.opacity = k; d.style.transform = `translateY(${(1 - eo(k)) * 20}px)`; });
+  pop($("b-meta"), t, E.semana - 0.2);
+
+  // 4 · examen: línea de marzo a octubre y marcador "Estás aquí"
+  const e4 = ESC[3];
+  const kx = eo(seg(t, e4.desde + 0.1, e4.desde + 1.0));
+  $("x-linea").style.width = `${880 * kx}px`;
+  $("x-meses").style.opacity = kx;
+  pop($("x-bandera"), t, E.examen - 0.1);
+  const ka = pop($("x-aqui"), t, E.aqui - 0.1);
+  $("x-aqui").style.left = `${100 + 880 * 0.42}px`;
+  $("x-punto").style.boxShadow = `0 0 0 ${8 + 8 * Math.abs(Math.sin(t * 4))}px rgba(255,255,255,.2)`;
+
+  // 5 · recalcula: aparece el imprevisto y el plan se redistribuye
+  const e5 = ESC[4];
+  pop($("c-sem"), t, e5.desde);
+  const kR = eio(seg(t, E.recalcula, E.recalcula + 0.8));
+  B.barras.forEach((b, i) => {
+    const h = lerp(B.antes[i], B.despues[i], kR) / 4;
+    b.style.height = `${h * 100 * eo(seg(t, e5.desde + 0.2 + i * 0.05, e5.desde + 0.6 + i * 0.05))}%`;
+    b.style.opacity = i === 0 && t > E.imprevisto ? lerp(1, 0.25, seg(t, E.imprevisto, E.imprevisto + 0.4)) : 1;
   });
-  $("t-flecha").style.opacity = seg(t, E.sigue - 0.1, E.sigue + 0.3);
-
-  // 3 · Umbral: la unidad 2 se abre recién al llegar a 70%
-  U.tiles.forEach((d, i) => { const k = seg(t, ESC[2].desde + 0.1 + i * 0.1, ESC[2].desde + 0.5 + i * 0.1); d.style.opacity = eo(k) * (i >= 2 ? 0.55 : 1); });
-  const kc = seg(t, E.check1, E.check1 + 0.35); U.check.style.opacity = kc; U.check.style.transform = `scale(${lerp(0.3, 1, eback(kc))})`;
-  const abierto = t >= E.desbloqueo;
-  const html = CANDADO(abierto); if (U.candado.dataset.a !== String(abierto)) { U.candado.innerHTML = html; U.candado.dataset.a = abierto; }
-  const kl = seg(t, E.candado - 0.1, E.candado + 0.3); U.candado.style.opacity = abierto ? 1 - seg(t, E.desbloqueo + 0.25, E.desbloqueo + 0.5) : kl;
-  U.candado.style.transform = `scale(${abierto ? 1 + 0.25 * Math.sin(seg(t, E.desbloqueo, E.desbloqueo + 0.3) * Math.PI) : lerp(1.6, 1, eback(kl))})`;
-  const fill = eio(seg(t, E.barra, E.desbloqueo)) * 70 + (abierto ? eo(seg(t, E.desbloqueo, E.desbloqueo + 0.6)) * 18 : 0);
-  U.barra.firstElementChild.style.width = fill / 0.88 + "%";
-  U.barra.style.opacity = seg(t, E.barra - 0.2, E.barra + 0.1);
-  U.pct.textContent = Math.round(fill) + "%"; U.pct.style.opacity = U.barra.style.opacity;
-  const k2 = seg(t, E.desbloqueo + 0.15, E.desbloqueo + 0.5); U.check2.style.opacity = k2; U.check2.style.transform = `scale(${lerp(0.3, 1, eback(k2))})`;
-  U.tiles[1].style.borderColor = abierto ? "#ffc548" : "rgba(255,255,255,.22)";
-  U.tiles[1].style.boxShadow = abierto ? `0 0 ${40 * (1 - 0.5 * k2)}px rgba(255,197,72,.55)` : "none";
-
-  // 4 · reintento
-  pop($("r-1"), t, E.intento1 - 0.15);
-  const p1 = eio(seg(t, E.intento1, E.intento1 + 0.9)) * 58; $("r-1n").textContent = Math.round(p1) + "%"; $("r-1b").style.width = p1 + "%";
-  const kr = seg(t, E.repasa - 0.1, E.repasa + 0.3); $("r-loop").style.opacity = kr; $("r-loop").firstElementChild.style.transform = `rotate(${-Math.max(0, t - E.repasa) * 240}deg)`;
-  pop($("r-2"), t, E.intento2 - 0.2);
-  const p2 = eio(seg(t, E.intento2, E.aprobado)) * 86; $("r-2n").textContent = Math.round(p2) + "%"; $("r-2b").style.width = p2 + "%";
-  const ko = seg(t, E.aprobado, E.aprobado + 0.35); $("r-ok").style.opacity = ko; $("r-ok").style.transform = `scale(${lerp(0.3, 1, eback(ko))})`;
-  $("r-2").style.borderColor = ko ? `rgba(255,197,72,${0.3 + 0.7 * ko})` : "rgba(255,255,255,.18)";
-
-  // 5 · apoyo
-  pop($("a-tutor"), t, E.tutor - 0.15); pop($("a-ia"), t, E.ia - 0.15); pop($("a-burb"), t, E.burbuja - 0.1);
+  pop($("c-enf"), t, E.imprevisto - 0.1); pop($("c-via"), t, E.viaje - 0.1);
+  pop($("c-rec"), t, E.recalcula + 0.3);
+  $("c-rec").firstChild.textContent = t < E.recalcula + 0.9 ? "↻ Recalculando…" : "✓ Recalculado";
+  pop($("c-culpa"), t, E.culpa - 0.1);
+  if (t > E.culpa - 0.2) { const k = 1 - seg(t, E.culpa - 0.2, E.culpa + 0.05); for (const id of ["c-imp", "c-rec"]) $(id).style.opacity = k; } else $("c-imp").style.opacity = 1;
 
   // 6 · cierre
-  pop($("c-nadie"), t, E.nadie - 0.2); pop($("c-cta"), t, E.cta - 0.1);
+  pop($("c-nadie"), t, E.direccion - 0.3); pop($("c-cta"), t, E.cta - 0.1);
   const pulso = t > E.cta + 0.6 ? 1 + 0.03 * Math.sin((t - E.cta) * 6) : 1;
   $("c-cta").firstElementChild.style.transform = `scale(${pulso})`;
 

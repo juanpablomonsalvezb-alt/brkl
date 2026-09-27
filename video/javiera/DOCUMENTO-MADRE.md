@@ -84,7 +84,8 @@ Pendiente de confirmar por el usuario: que los subtítulos coincidan palabra por
 ### Archivos (`video/javiera/`)
 | Archivo | Qué hace |
 |---|---|
-| `guion.json` | Orden de los clips, frases (una por pausa del audio) y escena gráfica de cada clip |
+| `<episodio>/guion.json` | Carpeta de los clips, orden, texto de cada clip (`texto`: el programa empareja solo pausas y puntuación; o `frases` si se quiere control exacto), escena, **eventos** (momentos de cada animación) y **sonidos** |
+| `<episodio>/escena.html` | Gráficos del episodio (se parte copiando el de otro episodio) |
 | `linea.py` | Detecta los tramos con voz de cada clip (`silencedetect`, -35 dB, ≥0,25 s), elimina los silencios dejando 0,08 s antes y 0,12 s después, reparte las palabras por sílabas y calcula los **eventos** (momentos de cada animación). Genera `out/linea.json` |
 | `escena.html` | Fondo "estudio Barkley" (azul marino, rayos, halo cálido, polvo dorado), etiqueta "Presentadora generada con IA", gráficos de cada escena y placa final. Se controla con `window.preparar(linea)` y `window.render(t)` |
 | `fondo.mjs` | Renderiza `escena.html` cuadro a cuadro → `out/fondo.mp4` (`--stills 3,9` para pruebas) |
@@ -115,13 +116,18 @@ for w in (700,800):
     f=TTFont(f'video/intro/fonts/poppins-latin-{w}-normal.woff2'); f.flavor=None; f.save(f'video/javiera/out/poppins-{w}.ttf')"
 
 # 1) Línea de tiempo → 2) fondo → 3) composición final
+export EP=ep02-brujula          # o ep01-umbral
 python3 video/javiera/linea.py
 node video/javiera/fondo.mjs
-cd video/javiera && python3 componer.py      # → out/javiera-umbral-9x16.mp4
+cd video/javiera && python3 componer.py      # → out/<EP>/<salida del guion>
 ```
 Tiempos aproximados: fondo ~3 min, composición ~3 min. Los mensajes "Broken pipe" / "Error muxing a packet" al final son normales: se cierran los lectores de clips.
 
 ---
+
+## 4b. Episodios
+- `ep01-umbral/`: hecho (los clips están en `video/javiera/`, por eso `"carpeta": ".."`).
+- `ep02-brujula/`: guion y gráficos listos; vestuario **blazer azul marino + polera blanca**. Esperando los clips `brujula-01.mp4` … `brujula-06.mp4` en `video/javiera/ep02-brujula/` (si llegan con nombres de Flow, actualizar `archivo` en su guion).
 
 ## 5. Cómo hacer un episodio nuevo
 

@@ -1,8 +1,9 @@
 """Video final de Javiera (9:16): fondo + Javiera recortada + subtítulos + audio + sello.
 
-    python3 video/javiera/linea.py      # línea de tiempo (out/linea.json)
-    node video/javiera/fondo.mjs        # fondo y gráficos (out/fondo.mp4)
-    python3 video/javiera/componer.py   # → out/javiera-umbral-9x16.mp4
+    export EP=ep01-umbral               # carpeta del episodio (guion.json + escena.html)
+    python3 video/javiera/linea.py      # línea de tiempo (out/<EP>/linea.json)
+    node video/javiera/fondo.mjs        # fondo y gráficos (out/<EP>/fondo.mp4)
+    python3 video/javiera/componer.py   # → out/<EP>/<salida del guion>
         --stills 3,12   solo cuadros de prueba (out/comp-*.png)
 
 Requiere el sello ya renderizado en video/intro/out/barkley-sello-9x16.mp4.
@@ -22,7 +23,8 @@ from scipy.signal import butter, fftconvolve, lfilter, sawtooth, sosfilt
 from clave import recortar
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(AQUI, "out")
+EP = os.environ.get("EP", "ep01-umbral")
+OUT = os.path.join(AQUI, "out", EP)
 FFMPEG = os.environ.get("FFMPEG", "ffmpeg")
 L = json.load(open(os.path.join(OUT, "linea.json"), encoding="utf-8"))
 FPS = L["fps"]
@@ -35,7 +37,7 @@ ENCUADRES = [(0.74, 720), (0.86, 690)]
 CORONILLA = 285  # px desde arriba en el clip original
 
 # ---------------- subtítulos ----------------
-FUENTE = os.path.join(OUT, "poppins-800.ttf")
+FUENTE = os.path.join(AQUI, "out", "poppins-800.ttf")
 
 
 def bloques():
@@ -123,7 +125,7 @@ def cuadros_javiera():
     for i, s in enumerate(L["segmentos"]):
         f0, f1 = round(s["desde"] * FPS), round((s["desde"] + s["dur"]) * FPS)
         esc, cor = ENCUADRES[i % 2]
-        src = lector(["-ss", str(s["entrada"]), "-t", str(s["dur"] + 0.2), "-i", os.path.join(AQUI, s["archivo"]), "-vf", f"fps={FPS}"], 1080, 1920)
+        src = lector(["-ss", str(s["entrada"]), "-t", str(s["dur"] + 0.2), "-i", os.path.join(AQUI, s["ruta"]), "-vf", f"fps={FPS}"], 1080, 1920)
         for _ in range(f1 - f0):
             yield next(src), esc, cor
     ultimo = None
@@ -212,7 +214,7 @@ def audio():
     # nivel parejo entre clips: se mide la voz de cada clip y se lleva al mismo RMS
     por_clip = {}
     for s in L["segmentos"]:
-        x = leer_audio(os.path.join(AQUI, s["archivo"]), s["entrada"], s["dur"])
+        x = leer_audio(os.path.join(AQUI, s["ruta"]), s["entrada"], s["dur"])
         por_clip.setdefault(s["clip"], []).append((s, x))
     for clip, partes in por_clip.items():
         todo = np.concatenate([x for _, x in partes], axis=1)
@@ -289,11 +291,11 @@ def audio():
     for e in L["escenas"][1:]:
         poner(whoosh(), e["desde"] - 0.2, 0.05)
     E = L["eventos"]
-    for clave in ("nombre", "pregunta", "unidades", "check1", "candado", "intento1", "intento2", "tutor", "ia", "burbuja", "nadie", "cta"):
+    for clave in L["sonidos"].get("pop", []):
         poner(popp(), E[clave], 0.07, pan=0.2 * rng.uniform(-1, 1))
-    poner(campana(86), E["desbloqueo"], 0.07)
-    poner(campana(91, 1.0), E["desbloqueo"] + 0.09, 0.05)
-    poner(campana(88), E["aprobado"], 0.06)
+    for clave in L["sonidos"].get("campana", []):
+        poner(campana(86), E[clave], 0.07)
+        poner(campana(91, 1.0), E[clave] + 0.09, 0.04)
     # placa final: golpe suave y brillo
     tt = t_arr(2.5)
     golpe = np.sin(2 * np.pi * np.cumsum(46 + 70 * np.exp(-tt * 12)) / SR) * np.exp(-tt * 2.5)
@@ -324,7 +326,7 @@ def audio():
 
 
 def final():
-    salida = os.path.join(OUT, "javiera-umbral-9x16.mp4")
+    salida = os.path.join(OUT, L["salida"])
     subprocess.run([
         FFMPEG, "-y", "-v", "error", "-i", SELLO, "-i", os.path.join(OUT, "cuerpo-sin-audio.mp4"), "-i", os.path.join(OUT, "cuerpo.wav"),
         "-filter_complex",

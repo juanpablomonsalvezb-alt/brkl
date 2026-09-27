@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Barkley — Javiera, capa de fondo y gráficos</title>
+<!--
+  Fondo del video de Javiera (1080×1920): estudio azul Barkley, gráficos que ilustran
+  lo que ella dice (zona superior) y placa final. Javiera y los subtítulos se
+  superponen después en componer.py. Tiempos: out/linea.json (window.preparar).
+-->
+<style>
+  @font-face { font-family: "Poppins"; font-weight: 400; src: url(../../intro/fonts/poppins-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 600; src: url(../../intro/fonts/poppins-latin-600-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 700; src: url(../../intro/fonts/poppins-latin-700-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 800; src: url(../../intro/fonts/poppins-latin-800-normal.woff2) format("woff2"); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000814; }
+  body { font-family: "Poppins", sans-serif; color: #fff; -webkit-font-smoothing: antialiased; position: relative; }
+  .capa { position: absolute; inset: 0; }
+  #fondo { background: radial-gradient(90% 60% at 50% 40%, #0d3469 0%, #06204a 45%, #01112a 80%, #000814 100%); }
+  #rayos { position: absolute; left: 50%; top: 380px; width: 3000px; height: 3000px; margin: -1500px 0 0 -1500px; border-radius: 50%;
+    background: repeating-conic-gradient(from 0deg, rgba(255,236,190,0) 0deg 7deg, rgba(255,236,190,.07) 9deg, rgba(255,236,190,0) 11deg 17deg);
+    filter: blur(22px); -webkit-mask-image: radial-gradient(closest-side, #000, transparent 70%); opacity: .8; }
+  #halo { position: absolute; left: 540px; top: 1000px; width: 1300px; height: 1300px; margin: -650px 0 0 -650px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255,205,120,.30), rgba(80,140,230,.14) 45%, rgba(0,0,0,0) 100%); }
+  #piso { position: absolute; left: -10%; right: -10%; top: 1500px; height: 600px; background: radial-gradient(50% 40% at 50% 0%, rgba(120,170,255,.10), transparent 70%); }
+  canvas#polvo { position: absolute; inset: 0; }
+  #ia { position: absolute; left: 40px; top: 176px; font-size: 22px; font-weight: 600; letter-spacing: .06em; color: rgba(255,255,255,.62);
+    border: 1.5px solid rgba(255,255,255,.28); border-radius: 30px; padding: 6px 16px; background: rgba(0,10,30,.35); }
+  #chip { position: absolute; left: 0; right: 0; top: 250px; text-align: center; }
+  #chip span { display: inline-block; font-weight: 700; font-size: 28px; letter-spacing: .22em; text-transform: uppercase; padding: 10px 26px 10px 32px;
+    border-radius: 40px; border: 2px solid currentColor; background: rgba(0,10,30,.4); }
+  .esc { position: absolute; left: 0; right: 0; top: 320px; height: 330px; opacity: 0; }
+  .centro { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .card { background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.18); border-radius: 26px; backdrop-filter: blur(6px); box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+  .oro { color: #ffc548; }
+  .tile { position: absolute; width: 190px; height: 150px; border-radius: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 26px; background: rgba(255,255,255,.08); border: 2px solid rgba(255,255,255,.22); }
+  .tile small { font-size: 18px; font-weight: 600; letter-spacing: .12em; opacity: .65; text-transform: uppercase; }
+  .badge { position: absolute; right: -14px; top: -14px; width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 32px; }
+  .barra { position: absolute; height: 18px; border-radius: 10px; background: rgba(255,255,255,.12); overflow: hidden; }
+  .barra i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 10px; }
+  svg { display: block; }
+  #final { background: radial-gradient(90% 60% at 50% 45%, #0b2f5e 0%, #03152f 60%, #000814 100%); opacity: 0; }
+  .logo { position: absolute; left: 50%; -webkit-mask-repeat: no-repeat; -webkit-mask-size: 100% 100%; background: linear-gradient(180deg, #fff, #dfe7f2); }
+</style>
+</head>
+<body>
+<div id="fondo" class="capa"></div>
+<div id="rayos"></div>
+<div id="halo"></div>
+<div id="piso"></div>
+<canvas id="polvo" width="1080" height="1920"></canvas>
+<div id="ia">Presentadora generada con IA</div>
+<div id="chip"><span></span></div>
+
+<!-- 1 · saludo -->
+<div class="esc centro" id="e-saludo">
+  <div id="s-nombre" class="card" style="padding:34px 70px 30px;position:absolute">
+    <div style="font-weight:800;font-size:66px;letter-spacing:.2em;padding-left:.2em">JAVIERA</div>
+    <div id="s-linea" style="height:3px;background:#ffc548;margin:14px auto;box-shadow:0 0 14px rgba(255,197,72,.7)"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:.12em;opacity:.85">TUTORA · BARKLEY</div>
+  </div>
+  <div id="s-preg" style="position:absolute;font-weight:800;font-size:84px;line-height:1.05;text-transform:uppercase;letter-spacing:.01em;text-shadow:0 8px 40px rgba(0,0,0,.5)">
+    <div>¿Avanzan sin</div><div class="oro">entender?</div>
+  </div>
+</div>
+
+<!-- 2 · colegio tradicional -->
+<div class="esc" id="e-trad">
+  <div id="t-cinta" style="position:absolute;left:0;top:40px;width:2000px;height:170px"></div>
+  <div id="t-flecha" style="position:absolute;left:120px;right:120px;top:250px;display:flex;align-items:center;gap:18px;font-size:28px;font-weight:600;color:rgba(255,255,255,.8)">
+    <div style="flex:1;height:3px;background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.6))"></div><span>el curso sigue</span><span style="font-size:34px">▶</span>
+  </div>
+</div>
+
+<!-- 3 · Umbral -->
+<div class="esc" id="e-umbral"></div>
+
+<!-- 4 · reintento -->
+<div class="esc" id="e-reint">
+  <div id="r-1" class="card" style="position:absolute;left:70px;top:30px;width:400px;height:250px;padding:28px 30px">
+    <div style="font-size:22px;letter-spacing:.18em;font-weight:700;opacity:.7">INTENTO 1</div>
+    <div id="r-1n" style="font-size:78px;font-weight:800;color:#ff8f7a;margin-top:6px">0%</div>
+    <div class="barra" style="left:30px;right:30px;bottom:34px"><i id="r-1b" style="background:#ff8f7a"></i></div>
+  </div>
+  <div id="r-loop" style="position:absolute;left:490px;top:95px;width:100px;height:100px;display:flex;flex-direction:column;align-items:center">
+    <svg width="84" height="84" viewBox="0 0 84 84" fill="none" stroke="#ffc548" stroke-width="7" stroke-linecap="round"><path d="M66 30a28 28 0 1 0 4 22"/><path d="M68 12v20H48"/></svg>
+    <div style="font-size:22px;font-weight:700;letter-spacing:.1em;margin-top:8px;color:#ffc548">REPASAS</div>
+  </div>
+  <div id="r-2" class="card" style="position:absolute;right:70px;top:30px;width:400px;height:250px;padding:28px 30px">
+    <div style="font-size:22px;letter-spacing:.18em;font-weight:700;opacity:.7">INTENTO 2</div>
+    <div id="r-2n" style="font-size:78px;font-weight:800;color:#ffc548;margin-top:6px">0%</div>
+    <div class="barra" style="left:30px;right:30px;bottom:34px"><i id="r-2b" style="background:linear-gradient(90deg,#ffc548,#ffe29a)"></i></div>
+    <div id="r-ok" class="badge" style="background:#ffc548;color:#06204a">✓</div>
+  </div>
+</div>
+
+<!-- 5 · apoyo -->
+<div class="esc" id="e-apoyo">
+  <div id="a-tutor" class="card centro" style="position:absolute;left:110px;top:0;width:400px;height:190px">
+    <svg width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="#fff" stroke-width="5"><circle cx="35" cy="24" r="13"/><path d="M12 62c3-13 12-19 23-19s20 6 23 19" stroke-linecap="round"/></svg>
+    <div style="font-size:30px;font-weight:700;margin-top:10px">Tutor humano</div>
+  </div>
+  <div id="a-ia" class="card centro" style="position:absolute;right:110px;top:0;width:400px;height:190px">
+    <svg width="70" height="70" viewBox="0 0 70 70" fill="#ffc548"><path d="M35 4l6 20 20 6-20 6-6 20-6-20-20-6 20-6z"/><path d="M58 44l2.5 7.5L68 54l-7.5 2.5L58 64l-2.5-7.5L48 54l7.5-2.5z"/></svg>
+    <div style="font-size:30px;font-weight:700;margin-top:10px" class="oro">IA Barkley</div>
+  </div>
+  <div id="a-burb" style="position:absolute;left:150px;right:150px;top:222px;text-align:center;font-size:34px;font-weight:600;padding:20px 28px;border-radius:26px 26px 26px 6px;background:#ffc548;color:#06204a;box-shadow:0 14px 40px rgba(255,197,72,.3)">Te ayudo a entender, no a copiar.</div>
+</div>
+
+<!-- 6 · cierre -->
+<div class="esc centro" id="e-cierre">
+  <div id="c-nadie" style="position:absolute;top:10px;font-weight:800;font-size:88px;line-height:1.05;text-transform:uppercase;text-shadow:0 8px 40px rgba(0,0,0,.5)">
+    <div>Nadie queda</div><div class="oro">atrás.</div>
+  </div>
+  <div id="c-cta" style="position:absolute;top:238px;display:flex;flex-direction:column;align-items:center">
+    <div style="background:#ffc548;color:#06204a;font-weight:800;font-size:36px;padding:18px 44px;border-radius:50px;box-shadow:0 12px 40px rgba(255,197,72,.4)">Reserva tu cupo sin costo</div>
+  </div>
+</div>
+
+<!-- placa final -->
+<div id="final" class="capa">
+  <div class="logo" id="f-b"></div>
+  <div class="logo" id="f-p"></div>
+  <div id="f-l" style="position:absolute;left:50%;height:2px;background:linear-gradient(90deg,transparent,#ffc548 18%,#ffe29a 50%,#ffc548 82%,transparent);transform:translateX(-50%)"></div>
+  <div id="f-lema" style="position:absolute;left:0;right:0;text-align:center;font-weight:600;font-size:34px;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap">Colegio online<span class="oro" style="padding:0 .5em">·</span>100% asincrónico</div>
+  <div id="f-url" style="position:absolute;left:0;right:0;text-align:center;font-size:36px;color:rgba(255,255,255,.88);letter-spacing:.04em">www.barkleyinstituto.cl</div>
+  <div id="f-adm" style="position:absolute;left:0;right:0;text-align:center"><span style="display:inline-block;border:2.5px solid #ffc548;color:#ffc548;font-weight:700;font-size:30px;letter-spacing:.2em;padding:14px 28px 14px 34px">ADMISIÓN 2027 · CUPOS LIMITADOS</span></div>
+</div>
+
+<script src="../../intro/vectores/barkley-logos.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const eo = (k) => 1 - Math.pow(1 - k, 3);
+const eback = (k) => { const c = 1.7; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
+const eio = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+// aparición con rebote suave: opacidad, subida y escala
+const pop = (el, t, t0, d = 0.45) => { const k = seg(t, t0, t0 + d); el.style.opacity = eo(k); el.style.transform = `translateY(${(1 - eo(k)) * 30}px) scale(${lerp(0.86, 1, eback(k))})`; return k; };
+
+let L, E, ESC;
+const CHIP = { saludo: ["", "#fff"], tradicional: ["Colegio tradicional", "#ff9d8a"], umbral: ["Barkley · Umbral™", "#ffc548"], reintento: ["A tu ritmo, sin presión", "#ffc548"], apoyo: ["No estás solo", "#ffc548"], cierre: ["", "#fff"] };
+const IDS = { saludo: "e-saludo", tradicional: "e-trad", umbral: "e-umbral", reintento: "e-reint", apoyo: "e-apoyo", cierre: "e-cierre" };
+
+// ---- recorte de logos (igual que el sello) ----
+function recortar(svgTexto) {
+  const caja = document.createElement("div"); caja.style.cssText = "position:absolute;left:-99999px;top:0"; caja.innerHTML = svgTexto; document.body.appendChild(caja);
+  const svg = caja.querySelector("svg"); const [, , vw, vh] = svg.getAttribute("viewBox").split(/\s+/).map(Number);
+  svg.setAttribute("width", vw); svg.setAttribute("height", vh);
+  const rs = svg.getBoundingClientRect(), rg = svg.querySelector("g").getBoundingClientRect();
+  const box = [rg.left - rs.left, rg.top - rs.top, rg.width, rg.height];
+  svg.setAttribute("viewBox", box.join(" ")); svg.removeAttribute("width"); svg.removeAttribute("height"); svg.setAttribute("preserveAspectRatio", "none");
+  const url = "url(\"data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg.outerHTML) + "\")"; caja.remove();
+  return { url, ratio: box[2] / box[3] };
+}
+
+// ---- tiles ----
+function tile(padre, x, y, n, extra = "") {
+  const d = document.createElement("div"); d.className = "tile"; d.style.left = x + "px"; d.style.top = y + "px";
+  d.innerHTML = `<small>Unidad</small><div style="font-size:52px;font-weight:800;line-height:1.1">${n}</div>${extra}`; padre.appendChild(d); return d;
+}
+const CANDADO = (abierto) => `<svg width="46" height="52" viewBox="0 0 46 52" fill="none"><rect x="4" y="22" width="38" height="28" rx="6" fill="#ffc548"/><path d="M12 22V15a11 11 0 0 1 22 0${abierto ? "" : "v7"}" stroke="#ffc548" stroke-width="6" stroke-linecap="round" ${abierto ? 'transform="translate(10 -6) rotate(18 34 15)"' : ""}/><circle cx="23" cy="35" r="4" fill="#06204a"/></svg>`;
+
+let T = {}, U = {};
+function preparar(linea) {
+  L = linea; E = linea.eventos;
+  ESC = linea.escenas.map((e, i) => ({ ...e, hasta: i + 1 < linea.escenas.length ? linea.escenas[i + 1].desde : linea.fin_voz }));
+  // tradicional: cinta de unidades que avanza sola
+  const cinta = $("t-cinta");
+  T.tiles = [1, 2, 3, 4, 5, 6].map((n, i) => tile(cinta, 90 + i * 230, 0, n, '<div class="badge" style="background:#ff6b5a;color:#fff;opacity:0">?</div>'));
+  // umbral: escalera
+  const u = $("e-umbral");
+  U.tiles = [1, 2, 3, 4].map((n, i) => tile(u, 70 + i * 240, 150 - i * 50, n));
+  U.check = document.createElement("div"); U.check.className = "badge"; U.check.style.cssText += "background:#ffc548;color:#06204a"; U.check.textContent = "✓"; U.tiles[0].appendChild(U.check);
+  U.check2 = U.check.cloneNode(true); U.tiles[1].appendChild(U.check2);
+  U.candado = document.createElement("div"); U.candado.style.cssText = "position:absolute;right:-16px;top:-22px"; U.tiles[1].appendChild(U.candado);
+  U.locks = [2, 3].map((i) => { const c = document.createElement("div"); c.style.cssText = "position:absolute;right:-12px;top:-18px;opacity:.5;transform:scale(.8)"; c.innerHTML = CANDADO(false); U.tiles[i].appendChild(c); return c; });
+  U.barra = document.createElement("div"); U.barra.className = "barra"; U.barra.style.cssText += "left:310px;top:295px;width:190px";
+  U.barra.innerHTML = '<i style="background:linear-gradient(90deg,#ffc548,#ffe29a)"></i>'; u.appendChild(U.barra);
+  U.pct = document.createElement("div"); U.pct.style.cssText = "position:absolute;left:310px;top:236px;width:190px;text-align:center;font-weight:800;font-size:34px;color:#ffc548"; u.appendChild(U.pct);
+  // placa final
+  const LB = recortar(window.LOGOS.b), LP = recortar(window.LOGOS.palabra);
+  const bAlto = 230, pAncho = 720, pAlto = pAncho / LP.ratio, y0 = 560;
+  Object.assign($("f-b").style, { WebkitMaskImage: LB.url, width: bAlto * LB.ratio + "px", height: bAlto + "px", marginLeft: -bAlto * LB.ratio / 2 + "px", top: y0 + "px" });
+  Object.assign($("f-p").style, { WebkitMaskImage: LP.url, width: pAncho + "px", height: pAlto + "px", marginLeft: -pAncho / 2 + "px", top: y0 + bAlto + 64 + "px" });
+  const yl = y0 + bAlto + 64 + pAlto + 52;
+  $("f-l").style.top = yl + "px"; $("f-lema").style.top = yl + 34 + "px"; $("f-url").style.top = yl + 104 + "px"; $("f-adm").style.top = yl + 230 + "px";
+}
+
+// polvo dorado
+const pc = $("polvo").getContext("2d");
+let s = 11; const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+const motas = Array.from({ length: 110 }, () => ({ x: rnd() * 1080, y: rnd() * 1920, z: rnd(), f: rnd() * 6.3, oro: rnd() < 0.6 }));
+function polvo(t) {
+  pc.clearRect(0, 0, 1080, 1920);
+  for (const m of motas) {
+    const x = (m.x + t * (m.z - 0.5) * 12 + 1080) % 1080, y = (m.y - t * (6 + m.z * 14) + 1920 * 4) % 1920, r = 0.8 + m.z * 2.4;
+    const a = (0.25 + 0.3 * Math.sin(m.f + t * (1.5 + m.z * 2))) * (0.4 + m.z * 0.6);
+    const g = pc.createRadialGradient(x, y, 0, x, y, r * 2.2); const c = m.oro ? "255,214,140" : "200,222,255";
+    g.addColorStop(0, `rgba(${c},${a})`); g.addColorStop(1, `rgba(${c},0)`); pc.fillStyle = g; pc.beginPath(); pc.arc(x, y, r * 2.2, 0, 6.29); pc.fill();
+  }
+}
+
+function render(t) {
+  polvo(t);
+  $("rayos").style.transform = `rotate(${t * 2}deg)`;
+  $("halo").style.opacity = 0.85 + 0.15 * Math.sin(t * 0.8);
+  $("ia").style.opacity = t < L.fin_voz ? 1 : 0;
+
+  // escena activa: entra con fundido y subida, sale con fundido
+  let actual = null;
+  for (const e of ESC) {
+    const el = $(IDS[e.escena]);
+    const op = seg(t, e.desde + 0.05, e.desde + 0.4) * (1 - seg(t, e.hasta - 0.22, e.hasta));
+    el.style.opacity = op;
+    el.style.transform = `translateY(${(1 - eo(seg(t, e.desde, e.desde + 0.5))) * 40}px)`;
+    el.style.filter = op < 1 ? `blur(${(1 - op) * 8}px)` : "none";
+    if (t >= e.desde && t < e.hasta) actual = e;
+  }
+  const chip = CHIP[actual ? actual.escena : "cierre"];
+  const ch = $("chip").firstElementChild;
+  if (ch.textContent !== chip[0]) ch.textContent = chip[0];
+  ch.style.color = chip[1];
+  $("chip").style.opacity = chip[0] && actual ? seg(t, actual.desde + 0.1, actual.desde + 0.45) * (1 - seg(t, actual.hasta - 0.22, actual.hasta)) : 0;
+
+  // 1 · saludo
+  pop($("s-nombre"), t, E.nombre - 0.1);
+  $("s-linea").style.width = `${eo(seg(t, E.nombre + 0.1, E.nombre + 0.7)) * 300}px`;
+  if (t >= E.pregunta - 0.15) { const k = seg(t, E.pregunta - 0.15, E.pregunta + 0.15); $("s-nombre").style.opacity = 1 - k; $("s-nombre").style.transform = `translateY(${-k * 60}px) scale(.95)`; }
+  pop($("s-preg"), t, E.pregunta);
+  if (t < E.pregunta) $("s-preg").style.opacity = 0;
+
+  // 2 · tradicional: la cinta avanza aunque aparezca un vacío
+  T.tiles.forEach((d, i) => { const k = seg(t, E.unidades + i * 0.12, E.unidades + i * 0.12 + 0.4); d.style.opacity = eo(k); });
+  const desplaz = Math.max(0, t - E.sigue) * 150;
+  $("t-cinta").style.transform = `translateX(${-desplaz}px)`;
+  T.tiles.forEach((d, i) => {
+    const b = d.querySelector(".badge");
+    const on = i === 1 ? seg(t, E.vacio - 0.1, E.vacio + 0.25) : i > 1 ? seg(t, E.vacio + 0.3 + (i - 2) * 0.25, E.vacio + 0.55 + (i - 2) * 0.25) : 0;
+    b.style.opacity = on; b.style.transform = `scale(${lerp(0.4, 1, eback(on))})`;
+    d.style.borderColor = on ? `rgba(255,120,100,${0.3 + 0.6 * on})` : "rgba(255,255,255,.22)";
+    d.style.background = on ? `rgba(255,90,70,${0.12 * on})` : "rgba(255,255,255,.08)";
+  });
+  $("t-flecha").style.opacity = seg(t, E.sigue - 0.1, E.sigue + 0.3);
+
+  // 3 · Umbral: la unidad 2 se abre recién al llegar a 70%
+  U.tiles.forEach((d, i) => { const k = seg(t, ESC[2].desde + 0.1 + i * 0.1, ESC[2].desde + 0.5 + i * 0.1); d.style.opacity = eo(k) * (i >= 2 ? 0.55 : 1); });
+  const kc = seg(t, E.check1, E.check1 + 0.35); U.check.style.opacity = kc; U.check.style.transform = `scale(${lerp(0.3, 1, eback(kc))})`;
+  const abierto = t >= E.desbloqueo;
+  const html = CANDADO(abierto); if (U.candado.dataset.a !== String(abierto)) { U.candado.innerHTML = html; U.candado.dataset.a = abierto; }
+  const kl = seg(t, E.candado - 0.1, E.candado + 0.3); U.candado.style.opacity = abierto ? 1 - seg(t, E.desbloqueo + 0.25, E.desbloqueo + 0.5) : kl;
+  U.candado.style.transform = `scale(${abierto ? 1 + 0.25 * Math.sin(seg(t, E.desbloqueo, E.desbloqueo + 0.3) * Math.PI) : lerp(1.6, 1, eback(kl))})`;
+  const fill = eio(seg(t, E.barra, E.desbloqueo)) * 70 + (abierto ? eo(seg(t, E.desbloqueo, E.desbloqueo + 0.6)) * 18 : 0);
+  U.barra.firstElementChild.style.width = fill / 0.88 + "%";
+  U.barra.style.opacity = seg(t, E.barra - 0.2, E.barra + 0.1);
+  U.pct.textContent = Math.round(fill) + "%"; U.pct.style.opacity = U.barra.style.opacity;
+  const k2 = seg(t, E.desbloqueo + 0.15, E.desbloqueo + 0.5); U.check2.style.opacity = k2; U.check2.style.transform = `scale(${lerp(0.3, 1, eback(k2))})`;
+  U.tiles[1].style.borderColor = abierto ? "#ffc548" : "rgba(255,255,255,.22)";
+  U.tiles[1].style.boxShadow = abierto ? `0 0 ${40 * (1 - 0.5 * k2)}px rgba(255,197,72,.55)` : "none";
+
+  // 4 · reintento
+  pop($("r-1"), t, E.intento1 - 0.15);
+  const p1 = eio(seg(t, E.intento1, E.intento1 + 0.9)) * 58; $("r-1n").textContent = Math.round(p1) + "%"; $("r-1b").style.width = p1 + "%";
+  const kr = seg(t, E.repasa - 0.1, E.repasa + 0.3); $("r-loop").style.opacity = kr; $("r-loop").firstElementChild.style.transform = `rotate(${-Math.max(0, t - E.repasa) * 240}deg)`;
+  pop($("r-2"), t, E.intento2 - 0.2);
+  const p2 = eio(seg(t, E.intento2, E.aprobado)) * 86; $("r-2n").textContent = Math.round(p2) + "%"; $("r-2b").style.width = p2 + "%";
+  const ko = seg(t, E.aprobado, E.aprobado + 0.35); $("r-ok").style.opacity = ko; $("r-ok").style.transform = `scale(${lerp(0.3, 1, eback(ko))})`;
+  $("r-2").style.borderColor = ko ? `rgba(255,197,72,${0.3 + 0.7 * ko})` : "rgba(255,255,255,.18)";
+
+  // 5 · apoyo
+  pop($("a-tutor"), t, E.tutor - 0.15); pop($("a-ia"), t, E.ia - 0.15); pop($("a-burb"), t, E.burbuja - 0.1);
+
+  // 6 · cierre
+  pop($("c-nadie"), t, E.nadie - 0.2); pop($("c-cta"), t, E.cta - 0.1);
+  const pulso = t > E.cta + 0.6 ? 1 + 0.03 * Math.sin((t - E.cta) * 6) : 1;
+  $("c-cta").firstElementChild.style.transform = `scale(${pulso})`;
+
+  // placa final
+  const tf = t - L.fin_voz;
+  $("final").style.opacity = eo(seg(tf, 0, 0.45));
+  const pf = (id, t0) => { const k = eo(seg(tf, t0, t0 + 0.55)); $(id).style.opacity = k; $(id).style.transform = `translateY(${(1 - k) * 22}px)`; };
+  pf("f-b", 0.15); pf("f-p", 0.35); pf("f-lema", 0.7); pf("f-url", 0.9); pf("f-adm", 1.15);
+  $("f-l").style.width = `${eo(seg(tf, 0.55, 1.1)) * 520}px`; $("f-l").style.transform = "translateX(-50%)";
+}
+window.preparar = preparar;
+window.render = render;
+window.listo = Promise.all(["800 84px Poppins", "700 30px Poppins", "600 34px Poppins", "400 36px Poppins"].map((f) => document.fonts.load(f)));
+</script>
+</body>
+</html>
