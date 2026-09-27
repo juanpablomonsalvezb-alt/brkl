@@ -39,7 +39,13 @@
     {
       "archivo": "brujula-05.mp4",
       "escena": "recalcula",
-      "texto": "¿Te enfermaste o tuviste un viaje? Brújula recalcula tu ritmo, sin castigos ni culpa."
+      "texto": "¿Te enfermaste o tuviste un viaje? Brújula recalcula tu ritmo, sin castigos ni culpa.",
+      "quitar": [
+        [
+          4.47,
+          4.765
+        ]
+      ]
     },
     {
       "archivo": "brujula-06.mp4",
