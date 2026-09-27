@@ -4,38 +4,150 @@
   "fps": 24,
   "cierre": 3.2,
   "clips": [
-    { "archivo": "vortice-01.mp4", "escena": "saludo", "texto": "Hola, soy Javiera de Barkley. ¿Tienes tus clases, tareas y notas repartidas en mil aplicaciones?" },
-    { "archivo": "vortice-02.mp4", "escena": "caos", "texto": "Links por WhatsApp, tareas por correo, notas en otra plataforma. Así es fácil perderse." },
-    { "archivo": "vortice-03.mp4", "escena": "vortice", "texto": "En Barkley todo vive en Vórtice, nuestra plataforma propia: tu año completo en un solo lugar." },
-    { "archivo": "vortice-04.mp4", "escena": "leccion", "texto": "Cada lección trae video y pódcast, y tus evaluaciones, avances y mensajes están ahí mismo." },
-    { "archivo": "vortice-05.mp4", "escena": "conectados", "texto": "Tu tutor, tu asesor y tu familia ven tu avance en tiempo real, sin perseguir a nadie." },
-    { "archivo": "vortice-06.mp4", "escena": "cierre", "texto": "Tu año completo, ordenado en un solo lugar. Conoce más sobre Barkley en nuestra página." }
+    {
+      "archivo": "vortice-01.mp4",
+      "escena": "saludo",
+      "texto": "Hola, soy Javiera de Barkley. ¿Tienes tus clases, tareas y notas repartidas en mil aplicaciones?"
+    },
+    {
+      "archivo": "vortice-02.mp4",
+      "escena": "caos",
+      "texto": "Links por WhatsApp, tareas por correo, notas en otra plataforma. Así es fácil perderse."
+    },
+    {
+      "archivo": "vortice-03.mp4",
+      "escena": "vortice",
+      "texto": "En Barkley todo vive en Vórtice, nuestra plataforma propia: tu año completo en un solo lugar."
+    },
+    {
+      "archivo": "vortice-04.mp4",
+      "escena": "leccion",
+      "texto": "Cada lección trae video y pódcast, y tus evaluaciones, avances y mensajes están ahí mismo."
+    },
+    {
+      "archivo": "vortice-05.mp4",
+      "escena": "conectados",
+      "texto": "Tu tutor, tu asesor y tu familia ven tu avance en tiempo real, sin perseguir a nadie."
+    },
+    {
+      "archivo": "vortice-06.mp4",
+      "escena": "cierre",
+      "texto": "Tu año completo, ordenado en un solo lugar. Conoce más sobre Barkley en nuestra página.",
+      "quitar": [
+        [
+          6.15,
+          7.16
+        ]
+      ]
+    }
   ],
   "eventos": {
-    "nombre": [0, "soy"],
-    "pregunta": [0, "¿Tienes"],
-    "whatsapp": [1, "WhatsApp"],
-    "correo": [1, "correo"],
-    "otra": [1, "plataforma"],
-    "perderse": [1, "perderse"],
-    "vortice": [2, "Vórtice"],
-    "propia": [2, "propia"],
-    "lugar": [2, "lugar"],
-    "leccion": [3, "lección"],
-    "video": [3, "video"],
-    "podcast": [3, "pódcast"],
-    "evaluaciones": [3, "evaluaciones"],
-    "avances": [3, "avances"],
-    "mensajes": [3, "mensajes"],
-    "tutor": [4, "tutor"],
-    "asesor": [4, "asesor"],
-    "familia": [4, "familia"],
-    "tiempo": [4, "tiempo"],
-    "ordenado": [5, "ordenado"],
-    "cta": [5, "Conoce"]
+    "nombre": [
+      0,
+      "soy"
+    ],
+    "pregunta": [
+      0,
+      "¿Tienes"
+    ],
+    "whatsapp": [
+      1,
+      "WhatsApp"
+    ],
+    "correo": [
+      1,
+      "correo"
+    ],
+    "otra": [
+      1,
+      "plataforma"
+    ],
+    "perderse": [
+      1,
+      "perderse"
+    ],
+    "vortice": [
+      2,
+      "Vórtice"
+    ],
+    "propia": [
+      2,
+      "propia"
+    ],
+    "lugar": [
+      2,
+      "lugar"
+    ],
+    "leccion": [
+      3,
+      "lección"
+    ],
+    "video": [
+      3,
+      "video"
+    ],
+    "podcast": [
+      3,
+      "pódcast"
+    ],
+    "evaluaciones": [
+      3,
+      "evaluaciones"
+    ],
+    "avances": [
+      3,
+      "avances"
+    ],
+    "mensajes": [
+      3,
+      "mensajes"
+    ],
+    "tutor": [
+      4,
+      "tutor"
+    ],
+    "asesor": [
+      4,
+      "asesor"
+    ],
+    "familia": [
+      4,
+      "familia"
+    ],
+    "tiempo": [
+      4,
+      "tiempo"
+    ],
+    "ordenado": [
+      5,
+      "ordenado"
+    ],
+    "cta": [
+      5,
+      "Conoce"
+    ]
   },
   "sonidos": {
-    "pop": ["nombre", "pregunta", "whatsapp", "correo", "otra", "propia", "leccion", "video", "podcast", "evaluaciones", "avances", "mensajes", "tutor", "asesor", "familia", "ordenado", "cta"],
-    "campana": ["vortice", "tiempo"]
+    "pop": [
+      "nombre",
+      "pregunta",
+      "whatsapp",
+      "correo",
+      "otra",
+      "propia",
+      "leccion",
+      "video",
+      "podcast",
+      "evaluaciones",
+      "tutor",
+      "asesor",
+      "familia",
+      "ordenado",
+      "cta"
+    ],
+    "campana": [
+      "vortice",
+      "tiempo"
+    ]
   }
 }
