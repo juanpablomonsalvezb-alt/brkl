@@ -127,7 +127,7 @@ Tiempos aproximados: fondo ~3 min, composición ~3 min. Los mensajes "Broken pip
 
 ## 4b. Episodios
 - `ep01-umbral/`: hecho (los clips están en `video/javiera/`, por eso `"carpeta": ".."`).
-- `ep02-brujula/`: guion y gráficos listos; vestuario **blazer azul marino + polera blanca**. Esperando los clips `brujula-01.mp4` … `brujula-06.mp4` en `video/javiera/ep02-brujula/` (si llegan con nombres de Flow, actualizar `archivo` en su guion).
+- `ep02-brujula/`: hecho (41 s). Vestuario **blazer azul marino + polera blanca**. Clips `brujula-01.mp4` … `brujula-06.mp4` (Flow entregó el 3 y el 4 intercambiados; se detectó por gestos y pausas).
 
 ## 5. Cómo hacer un episodio nuevo
 
