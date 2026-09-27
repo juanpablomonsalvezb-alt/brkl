@@ -129,6 +129,8 @@ Tiempos aproximados: fondo ~3 min, composición ~3 min. Los mensajes "Broken pip
 - `ep01-umbral/`: hecho (los clips están en `video/javiera/`, por eso `"carpeta": ".."`).
 - `ep02-brujula/`: hecho (41 s). Vestuario **blazer azul marino + polera blanca**. Clips `brujula-01.mp4` … `brujula-06.mp4` (Flow entregó el 3 y el 4 intercambiados; se detectó por gestos y pausas).
 - `ep03-vortice/`: hecho (45 s). Vestuario **blusa blanca lisa de manga larga**. El clip 6 original ("Reserva tu cupo…" + "Vórtice:") fue rechazado por Flow por políticas; se usó "Tu año completo, ordenado en un solo lugar. Conoce más sobre Barkley en nuestra página." y el botón de reserva va en el gráfico. En los prompts se agregó *"saying each word only once with no repeated words or syllables"* para evitar repeticiones.
+- `ep04-together/`: hecho (34 s, 5 clips). Vestuario **camisa de mezclilla clara abierta sobre polera blanca** (casual). El clip 2 original ("No es falta de ganas…") fue rechazado por Flow; se usó "Es normal. Cuando otras personas estudian cerca, es más fácil mantener el foco."
+- Desde el ep. 4, `linea.py` también recorta las pausas internas cuando funde varios tramos en una frase (si se re-renderizan ep. 2 y 3 quedan algo más ágiles que las versiones entregadas).
 
 ## 5. Cómo hacer un episodio nuevo
 

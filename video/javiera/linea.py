@@ -48,6 +48,9 @@ def partir(texto):
     return [x.strip() for x in re.findall(r"[^,.:;?!]+[,.:;?!]*", texto) if x.strip()]
 
 
+HUECOS = []  # pausas internas de frases fundidas; se quitan igual que "quitar"
+
+
 def emparejar(tramos, frases):
     """Hace calzar tramos de voz con trozos de texto aunque no haya el mismo número:
     agrupa lo que sobra (trozos si hay menos pausas, tramos si hay más) buscando que
@@ -72,6 +75,10 @@ def emparejar(tramos, frases):
 
     if len(tramos) > len(frases):
         b = mejor(dur, len(frases), sil)
+        # los silencios entre tramos fundidos también se recortan (se devuelven como huecos)
+        for i in range(len(frases)):
+            for j in range(b[i], b[i + 1] - 1):
+                HUECOS.append((tramos[j][1] + DESPUES, tramos[j + 1][0] - ANTES))
         tramos = [(tramos[b[i]][0], tramos[b[i + 1] - 1][1]) for i in range(len(frases))]
     else:
         b = mejor(sil, len(tramos), dur)
@@ -89,9 +96,10 @@ for ic, clip in enumerate(guion["clips"]):
     ruta = os.path.join(CARPETA, clip["archivo"])
     tramos = tramos_con_voz(ruta)
     frases = clip["frases"] if "frases" in clip else partir(clip["texto"])
+    HUECOS.clear()
     tramos, frases = emparejar(tramos, frases)
     linea["escenas"].append({"escena": clip["escena"], "desde": round(t, 3)})
-    quitar = clip.get("quitar", [])  # trozos repetidos por Flow, en segundos del clip
+    quitar = clip.get("quitar", []) + [h for h in HUECOS if h[1] - h[0] > 0.05]  # repeticiones de Flow + pausas internas
     for jt, ((a, b), frase) in enumerate(zip(tramos, frases)):
         a0, b0 = max(0.0, a - ANTES), b + DESPUES
         piezas = [(a0, b0)]
