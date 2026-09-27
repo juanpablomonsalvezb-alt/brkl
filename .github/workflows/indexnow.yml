@@ -1,0 +1,42 @@
+name: Avisar a Bing (IndexNow)
+
+# En cada push a main (lo que dispara el deploy en Vercel) notifica a IndexNow
+# las páginas públicas que cambiaron. Bing alimenta a Copilot y a la búsqueda
+# de ChatGPT, así que las páginas nuevas llegan a esos asistentes en horas en
+# vez de semanas. Google no usa IndexNow: para Google está el sitemap.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "client/public/**"
+      - "client/src/**"
+      - "shared/**"
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
+jobs:
+  avisar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Hay que avisar recién cuando Vercel terminó de publicar; si Bing llega
+      # antes, lee la versión anterior.
+      - name: Esperar el deploy de Vercel
+        run: sleep 300
+
+      - name: Notificar páginas cambiadas
+        run: |
+          BASE="${{ github.event.before }}"
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BASE" 2>/dev/null; then
+            BASE="${{ github.sha }}~1"
+          fi
+          node scripts/ping-indexnow.mjs --cambios "$BASE" "${{ github.sha }}"

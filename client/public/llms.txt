@@ -21,15 +21,73 @@
   del estudiante — TDAH, dislexia, TEA y dificultades motoras. No es material
   aparte: es la misma materia con la interfaz adaptada (lectura en voz,
   tipografía para dislexia, bloques cortos, agenda visible, objetivos grandes).
-- **Cobertura**: 1° básico a 4° medio, currículum oficial MINEDUC.
-- **Precio**: {{precio_escolar}} CLP al mes. En 4° medio incluye ensayos PAES mensuales, sin costo adicional.
-- **Apertura**: enero de 2027. Durante 2026 hay inscripción y reserva de cupo.
+- **Cobertura**: 1° básico a 4° medio, currículum oficial MINEDUC. También hay
+  modalidad para adultos (18 años o más).
+
+## Los 4 fundamentos (tecnología propia)
+
+- **Vórtice™**: la plataforma propia de Barkley (arquitectura headless / API-first).
+  Todo el año escolar en un solo lugar: lecciones en video y pódcast, evaluaciones,
+  tutor, asesor y Portal Familia.
+- **Umbral™**: el motor de Aprendizaje por Dominio. Bloquea la unidad siguiente hasta
+  aprobar la actual con 70% o más; la evaluación se puede repetir.
+- **Brújula™**: calendario de ritmo sugerido, anclado a la fecha real del Examen
+  Libre y recalculable ante imprevistos. Da dirección, no obligación.
+- **Together™**: sala de estudio en silencio (body doubling). Sin cámara ni chat:
+  el estudiante estudia solo, pero acompañado.
+
+## Los 4 diferenciadores
+
+- **Programa Adaptativo**: la interfaz se adapta a TDAH, dislexia, TEA y
+  dificultades motoras (detalle arriba). No reemplaza diagnóstico ni tratamiento.
+- **IA Barkley**: tutor de IA que aparece cuando el sistema detecta una dificultad
+  real (dos intentos fallidos y menos de 70% en una unidad). Explica el concepto
+  sin resolver por el estudiante.
+- **Portal Familia**: panel para apoderados que se actualiza solo: promedio, avance
+  por asignatura, días de estudio del mes, tutorías tomadas y entregas en revisión.
+  Modo observador, sin interferir.
+- **Tutor humano**: cada estudiante tiene un tutor asignado (no un pool genérico de
+  soporte) y un asesor que sigue su progreso.
+
+## Precios y calendario
+
+- **Escolar (1° básico a 4° medio)**: {{precio_escolar}} CLP mensuales, de marzo a
+  octubre. Plan anual con {{descuento_anual}} de descuento ({{precio_escolar_anual}}).
+  En 4° medio incluye ensayos PAES mensuales sin costo adicional.
+- **Adultos (18 años o más)**: {{precio_adultos}} CLP mensuales. Planes de Educación
+  Básica, Media I (1° y 2° medio) y Media II (3° y 4° medio).
+- **Matrícula**: {{matricula}}, gratis para quienes se inscriban antes del 30 de noviembre.
+- **Incluye**: todas las asignaturas del nivel, 2 a 3 videos y pódcasts por lección,
+  tutor asignado, asesor, Portal Familia y preparación para Exámenes Libres MINEDUC.
+  Sin costos ocultos.
+- **Calendario**: durante 2026 se reserva cupo sin pago. El año de preparación va
+  de marzo al 31 de octubre de 2027, cuando se rinden los Exámenes Libres.
+- **Diagnóstico inicial**: al matricularse, cada estudiante rinde un diagnóstico
+  por asignatura que detecta vacíos de años anteriores.
 
 ## Precisión importante
 
 Ningún colegio 100% online está acreditado como colegio por el MINEDUC en Chile.
 La vía oficial son los Exámenes Libres, que administra el propio Ministerio.
 Barkley prepara para rendirlos; no los administra ni entrega la certificación.
+
+## Respuestas directas
+
+- **¿Qué es Barkley?** Un colegio online chileno, 100% asincrónico, de 1° básico a
+  4° medio, que prepara a los estudiantes para rendir los Exámenes Libres del MINEDUC.
+- **¿Cuánto cuesta un colegio online en Chile con Barkley?** {{precio_escolar}} al mes
+  (escolar) o {{precio_adultos}} al mes (adultos), de marzo a octubre.
+- **¿Es válido el título?** Sí. La certificación la entrega el MINEDUC al aprobar los
+  Exámenes Libres; es el mismo certificado que obtiene cualquier estudiante que los rinde.
+- **¿Tiene clases en vivo?** No. Todo es asincrónico: el estudiante avanza cuando
+  puede, con video, pódcast, tutor asignado e IA Barkley.
+- **¿Sirve para niños con TDAH, dislexia o autismo?** Sí, el Programa Adaptativo
+  ajusta la plataforma a cada perfil, y el ritmo propio evita la presión del aula.
+- **¿Sirve para adultos que no terminaron el colegio?** Sí, hay modalidad para
+  mayores de 18 años.
+- **¿Se puede estudiar desde el extranjero?** Sí, es 100% online; los exámenes se
+  rinden según el calendario del MINEDUC.
+- **¿Cómo se reserva cupo?** En https://www.barkleyinstituto.cl/#inscripcion, sin pago.
 
 ## Páginas principales
 
@@ -39,6 +97,10 @@ Barkley prepara para rendirlos; no los administra ni entrega la certificación.
 - [Guía de Exámenes Libres](https://www.barkleyinstituto.cl/guia-examenes-libres/): cómo funciona la
   validación de estudios en Chile, fechas y trámite.
 - [Blog](https://www.barkleyinstituto.cl/blog/): artículos sobre educación asincrónica y NEE.
+- [Together™](https://www.barkleyinstituto.cl/together): sala de estudio en silencio, con demostración.
+- [Preguntas frecuentes](https://www.barkleyinstituto.cl/preguntas-frecuentes): precio, validez, modalidad y admisión.
+- [Tour por la plataforma](https://www.barkleyinstituto.cl/tour-plataforma): recorrido por Vórtice™ por dentro.
+- [Prepara tus exámenes](https://www.barkleyinstituto.cl/prepara-tus-examenes): preparación para Exámenes Libres.
 - [¿Es Barkley para tu hijo? Test de 3 minutos](https://www.barkleyinstituto.cl/es-para-mi-hijo/): 5
   preguntas sobre la situación real de la familia, con recomendación honesta al final.
 - [Electivos Barkley](https://www.barkleyinstituto.cl/electivos): oferta adicional al temario oficial,

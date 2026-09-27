@@ -10,7 +10,11 @@
  * Uso:
  *   node scripts/ping-indexnow.mjs            # todas las URLs del sitemap
  *   node scripts/ping-indexnow.mjs /blog/x/   # solo las rutas indicadas
+ *   node scripts/ping-indexnow.mjs --cambios <commit-base> <commit-nuevo>
+ *       # solo las páginas cuyos archivos cambiaron entre esos commits
+ *       # (lo usa .github/workflows/indexnow.yml en cada push a main)
  */
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -25,10 +29,45 @@ function urlsDelSitemap() {
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
 }
 
+// Archivo del repo → URL publicada. Solo se notifican URLs que están en el
+// sitemap (más llms.txt), para no avisar de recursos sueltos.
+function urlsCambiadas(base, nuevo) {
+  const enSitemap = new Set(urlsDelSitemap().map((u) => u.replace(/\/$/, "")));
+  const archivos = execFileSync("git", ["diff", "--name-only", base, nuevo], { cwd: ROOT, encoding: "utf8" })
+    .split("\n")
+    .filter(Boolean);
+  const rutas = new Set();
+  for (const a of archivos) {
+    let m;
+    if (a === "client/public/llms.txt") rutas.add("/llms.txt");
+    else if ((m = a.match(/^client\/public\/prerendered\/(.+)\.html$/))) rutas.add(m[1] === "index" ? "/" : `/${m[1]}`);
+    else if ((m = a.match(/^client\/public\/(.+)\/index\.html$/))) rutas.add(`/${m[1]}/`);
+    else if (/^(client\/src|shared)\//.test(a)) {
+      // cambio en la app: afecta a todas las rutas del SPA
+      for (const r of readFileSync(join(ROOT, "shared", "prerender-routes.ts"), "utf8").matchAll(/^\s+"(\/[^"]*)",$/gm)) rutas.add(r[1]);
+    }
+  }
+  return [...rutas]
+    .map((r) => `${BASE}${r}`)
+    .filter((u) => u.endsWith("/llms.txt") || enSitemap.has(u.replace(/\/$/, "") || BASE));
+}
+
 const args = process.argv.slice(2);
-const urlList = args.length
-  ? args.map((r) => (r.startsWith("http") ? r : `${BASE}${r.startsWith("/") ? r : `/${r}`}`))
-  : urlsDelSitemap();
+const urlList =
+  args[0] === "--cambios"
+    ? urlsCambiadas(args[1], args[2])
+    : args.length
+      ? args.map((r) => (r.startsWith("http") ? r : `${BASE}${r.startsWith("/") ? r : `/${r}`}`))
+      : urlsDelSitemap();
+
+if (urlList.length === 0) {
+  console.log("Sin páginas públicas cambiadas: nada que notificar.");
+  process.exit(0);
+}
+if (process.env.INDEXNOW_SIMULAR) {
+  console.log(urlList.join("\n"));
+  process.exit(0);
+}
 
 // La clave tiene que estar publicada y accesible: si no, IndexNow rechaza el lote
 // completo y el error es silencioso.
