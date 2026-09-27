@@ -4,7 +4,8 @@
  * crawlers: un mapa curado en texto plano de qué es el sitio y dónde está cada
  * cosa, sin que el modelo tenga que inferirlo del HTML.
  *
- * Se genera desde la misma lista que el sitemap para que no se desincronicen.
+ * Las listas de niveles y artículos se completan desde el sitemap para que no
+ * se desincronicen; el resto del archivo es curado a mano.
  *
  * Uso: node scripts/generate-llms.mjs
  */
@@ -37,57 +38,29 @@ function titulo(url) {
   return (html.match(/<title>([^<]*)<\/title>/)?.[1] ?? slug).replace(" | Blog Barkley Online", "");
 }
 
-const contenido = `# Barkley Online
+// llms.txt se edita a mano (descripciones curadas, precios con marcadores
+// {{...}}). Este script ya no lo reescribe: solo agrega lo que falte de las
+// listas automáticas —niveles y artículos del blog del sitemap—, así correrlo
+// nunca borra contenido curado.
+const RUTA = join(ROOT, "client", "public", "llms.txt");
+let contenido = readFileSync(RUTA, "utf8");
 
-> Colegio 100% online y asincrónico en Chile, de 1° básico a 4° medio. Prepara
-> para los Exámenes Libres del Ministerio de Educación (única vía oficial de
-> validación de estudios fuera del sistema presencial). Sin clases en vivo ni
-> horarios fijos: cada lección incluye video y pódcast, y se avanza por
-> Aprendizaje por Dominio — no se pasa de unidad sin dominar la anterior.
+function agregarEnSeccion(titulo, lineas) {
+  const faltan = lineas.filter((l) => !contenido.includes(l.match(/\]\(([^)]+)\)/)[1] + ")"));
+  if (!faltan.length) return 0;
+  const i = contenido.indexOf(`## ${titulo}\n`);
+  if (i === -1) throw new Error(`llms.txt no tiene la sección "## ${titulo}"`);
+  const fin = contenido.indexOf("\n## ", i + 3);
+  const corte = fin === -1 ? contenido.length : fin;
+  contenido = contenido.slice(0, corte).replace(/\n+$/, "\n") + faltan.join("\n") + "\n" + contenido.slice(corte);
+  return faltan.length;
+}
 
-## Qué nos distingue
+const nuevosNiveles = agregarEnSeccion(
+  "Preparación por nivel",
+  NIVELES.map(([slug, label]) => `- [Exámenes libres ${label}](${BASE}/examenes-libres-${slug}/)`),
+);
+const nuevosArticulos = agregarEnSeccion("Artículos", articulosDelBlog().map((u) => `- [${titulo(u)}](${u})`));
 
-- **100% asincrónico**: no hay clases en vivo ni horario fijo. Es distinto de un
-  colegio online que traslada la sala a Zoom manteniendo el horario.
-- **Aprendizaje por Dominio**: la unidad siguiente se desbloquea recién al
-  aprobar la anterior con 70% o más. Se puede repetir la evaluación.
-- **Programa Adaptativo**: la plataforma cambia su comportamiento según el perfil
-  del estudiante — TDAH, dislexia, TEA y dificultades motoras. No es material
-  aparte: es la misma materia con la interfaz adaptada (lectura en voz,
-  tipografía para dislexia, bloques cortos, agenda visible, objetivos grandes).
-- **Cobertura**: 1° básico a 4° medio, currículum oficial MINEDUC.
-- **Precio**: {{precio_escolar}} CLP al mes. En 4° medio incluye el preuniversitario PAES.
-- **Apertura**: enero de 2027. Durante 2026 hay inscripción y reserva de cupo.
-
-## Precisión importante
-
-Ningún colegio 100% online está acreditado como colegio por el MINEDUC en Chile.
-La vía oficial son los Exámenes Libres, que administra el propio Ministerio.
-Barkley prepara para rendirlos; no los administra ni entrega la certificación.
-
-## Páginas principales
-
-- [Inicio](${BASE}/): metodología, plataforma, precio y calendario académico.
-- [Programa Adaptativo](${BASE}/adaptativo): demostraciones interactivas de las
-  adaptaciones para TDAH, dislexia, TEA y dificultades motoras.
-- [Guía de Exámenes Libres](${BASE}/guia-examenes-libres/): cómo funciona la
-  validación de estudios en Chile, fechas y trámite.
-- [Blog](${BASE}/blog/): artículos sobre educación asincrónica y NEE.
-
-## Preparación por nivel
-
-${NIVELES.map(([slug, label]) => `- [Exámenes libres ${label}](${BASE}/examenes-libres-${slug}/)`).join("\n")}
-
-## Artículos
-
-${articulosDelBlog().map((u) => `- [${titulo(u)}](${u})`).join("\n")}
-
-## Contacto
-
-- Admisiones: admisiones@barkleyinstituto.cl
-- Instagram: https://www.instagram.com/ibarkley.cl
-- TikTok: https://www.tiktok.com/@barkleyonline
-`;
-
-writeFileSync(join(ROOT, "client", "public", "llms.txt"), contenido);
-console.log(`✓ llms.txt (${contenido.length} caracteres, ${articulosDelBlog().length} artículos)`);
+writeFileSync(RUTA, contenido);
+console.log(`✓ llms.txt: ${nuevosNiveles} nivel(es) y ${nuevosArticulos} artículo(s) agregados`);
