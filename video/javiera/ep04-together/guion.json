@@ -4,31 +4,118 @@
   "fps": 24,
   "cierre": 3.2,
   "clips": [
-    { "archivo": "together-01.mp4", "escena": "saludo", "texto": "Hola, soy Javiera de Barkley. ¿Te cuesta concentrarte cuando estudias solo en casa?" },
-    { "archivo": "together-02.mp4", "escena": "foco", "texto": "Es normal. Cuando otras personas estudian cerca, es más fácil mantener el foco." },
-    { "archivo": "together-03.mp4", "escena": "together", "texto": "Por eso creamos Together: una sala de estudio en silencio, sin cámara y sin chat." },
-    { "archivo": "together-04.mp4", "escena": "sala", "texto": "Ves que otros alumnos estudian contigo, y puedes invitar a tus amigos a tu propia sala." },
-    { "archivo": "together-05.mp4", "escena": "cierre", "texto": "Together: estudias solo, pero no estás solo. Conoce más sobre Barkley en nuestra página." }
+    {
+      "archivo": "together-01.mp4",
+      "escena": "saludo",
+      "texto": "Hola, soy Javiera de Barkley. ¿Te cuesta concentrarte cuando estudias solo en casa?"
+    },
+    {
+      "archivo": "together-02.mp4",
+      "escena": "foco",
+      "texto": "Es normal. Cuando otras personas estudian cerca, es más fácil mantener el foco."
+    },
+    {
+      "archivo": "together-03.mp4",
+      "escena": "together",
+      "texto": "Por eso creamos Together: una sala de estudio en silencio, sin cámara y sin chat.",
+      "quitar": [
+        [
+          5.27,
+          6.25
+        ]
+      ]
+    },
+    {
+      "archivo": "together-04.mp4",
+      "escena": "sala",
+      "texto": "Ves que otros alumnos estudian contigo, y puedes invitar a tus amigos a tu propia sala."
+    },
+    {
+      "archivo": "together-05.mp4",
+      "escena": "cierre",
+      "texto": "Together: estudias solo, pero no estás solo. Conoce más sobre Barkley en nuestra página."
+    }
   ],
   "eventos": {
-    "nombre": [0, "soy"],
-    "pregunta": [0, "¿Te"],
-    "normal": [1, "Es"],
-    "cerca": [1, "cerca"],
-    "foco": [1, "foco"],
-    "together": [2, "Together"],
-    "silencio": [2, "silencio"],
-    "camara": [2, "cámara"],
-    "chat": [2, "chat"],
-    "otros": [3, "otros"],
-    "invitar": [3, "invitar"],
-    "amigos": [3, "amigos"],
-    "solo": [4, "estudias"],
-    "nosolo": [4, "pero"],
-    "cta": [4, "Conoce"]
+    "nombre": [
+      0,
+      "soy"
+    ],
+    "pregunta": [
+      0,
+      "¿Te"
+    ],
+    "normal": [
+      1,
+      "Es"
+    ],
+    "cerca": [
+      1,
+      "cerca"
+    ],
+    "foco": [
+      1,
+      "foco"
+    ],
+    "together": [
+      2,
+      "Together"
+    ],
+    "silencio": [
+      2,
+      "silencio"
+    ],
+    "camara": [
+      2,
+      "cámara"
+    ],
+    "chat": [
+      2,
+      "chat"
+    ],
+    "otros": [
+      3,
+      "otros"
+    ],
+    "invitar": [
+      3,
+      "invitar"
+    ],
+    "amigos": [
+      3,
+      "amigos"
+    ],
+    "solo": [
+      4,
+      "estudias"
+    ],
+    "nosolo": [
+      4,
+      "pero"
+    ],
+    "cta": [
+      4,
+      "Conoce"
+    ]
   },
   "sonidos": {
-    "pop": ["nombre", "pregunta", "normal", "cerca", "silencio", "camara", "chat", "otros", "invitar", "amigos", "nosolo", "cta"],
-    "campana": ["together", "foco"]
+    "pop": [
+      "nombre",
+      "pregunta",
+      "normal",
+      "cerca",
+      "silencio",
+      "camara",
+      "chat",
+      "otros",
+      "invitar",
+      "amigos",
+      "nosolo",
+      "cta"
+    ],
+    "campana": [
+      "together",
+      "foco"
+    ]
   }
 }
