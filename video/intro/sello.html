@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Barkley — sello de marca 4 s</title>
+<!--
+  Sello de marca de 4 segundos para abrir videos. Cuadro a cuadro con window.render(t).
+  ?vertical → 1080×1920 (redes); sin parámetro → 1920×1080.
+  Logos: vectores/barkley-logos.js (generado desde client/public/logos).
+-->
+<style>
+  @font-face { font-family: "Poppins"; font-weight: 400; src: url(fonts/poppins-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 600; src: url(fonts/poppins-latin-600-normal.woff2) format("woff2"); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overflow: hidden; background: #000814; }
+  body { font-family: "Poppins", sans-serif; color: #fff; -webkit-font-smoothing: antialiased; }
+  #lienzo { position: relative; overflow: hidden; background: radial-gradient(75% 65% at 50% 46%, #0b2f5e 0%, #03152f 55%, #000814 100%); }
+  .capa { position: absolute; inset: 0; }
+  #rayos { position: absolute; left: 50%; width: 260vmax; height: 260vmax; margin-left: -130vmax; border-radius: 50%;
+    background: repeating-conic-gradient(from 0deg, rgba(255,236,190,.0) 0deg 7deg, rgba(255,236,190,.10) 9deg, rgba(255,236,190,0) 11deg 17deg);
+    filter: blur(22px); -webkit-mask-image: radial-gradient(closest-side, #000 0%, rgba(0,0,0,.5) 30%, transparent 70%); mask-image: radial-gradient(closest-side, #000 0%, rgba(0,0,0,.5) 30%, transparent 70%); }
+  #bloom { position: absolute; left: 50%; border-radius: 50%; transform: translate(-50%, -50%);
+    background: radial-gradient(closest-side, rgba(255,214,130,.55), rgba(255,197,72,.18) 45%, rgba(255,197,72,0) 100%); }
+  #camara { position: absolute; inset: 0; transform-origin: 50% 46%; }
+  .logo { position: absolute; left: 50%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; }
+  #b { background-image: var(--brillo), linear-gradient(180deg, #ffffff 0%, #eef3fa 55%, #cfd9e8 100%); }
+  #palabra { background-image: var(--brillo), linear-gradient(180deg, #ffffff 0%, #eef3fa 55%, #d3dcea 100%); }
+  #borde { position: absolute; width: 3px; background: linear-gradient(180deg, transparent, #fff3d1 30%, #ffffff 50%, #fff3d1 70%, transparent);
+    box-shadow: 0 0 18px 6px rgba(255,210,120,.65), 0 0 60px 18px rgba(255,197,72,.35); }
+  #linea { position: absolute; left: 50%; height: 2px; transform: translateX(-50%);
+    background: linear-gradient(90deg, transparent, #ffc548 18%, #ffe29a 50%, #ffc548 82%, transparent); box-shadow: 0 0 14px rgba(255,197,72,.7); }
+  #lema { position: absolute; left: 0; right: 0; text-align: center; font-weight: 600; text-transform: uppercase; white-space: nowrap; color: #fff; }
+  #lema b { color: #ffc548; font-weight: 600; padding: 0 .5em; }
+  #url { position: absolute; left: 0; right: 0; text-align: center; font-weight: 400; letter-spacing: .06em; color: rgba(255,255,255,.82); white-space: nowrap; }
+  #flare { position: absolute; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+  #flare i { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 50%; }
+  #vineta { background: radial-gradient(120% 90% at 50% 48%, transparent 55%, rgba(0,0,0,.55) 100%); }
+  #grano { width: 100%; height: 100%; opacity: .085; mix-blend-mode: overlay; }
+  #negro { background: #000; }
+</style>
+</head>
+<body>
+<div id="lienzo">
+  <div id="rayos"></div>
+  <canvas id="polvo" class="capa"></canvas>
+  <div id="bloom"></div>
+  <div id="camara">
+    <div class="logo" id="b"></div>
+    <div class="logo" id="palabra"></div>
+    <div id="borde"></div>
+    <div id="linea"></div>
+    <div id="lema">Colegio online<b>·</b>100% asincrónico</div>
+    <div id="url">www.barkleyinstituto.cl</div>
+  </div>
+  <div id="flare"><i id="fNucleo"></i><i id="fLinea"></i><i id="fHalo"></i></div>
+  <div id="vineta" class="capa"></div>
+  <canvas id="grano" class="capa" width="320" height="320"></canvas>
+  <div id="negro" class="capa"></div>
+</div>
+<script src="vectores/barkley-logos.js"></script>
+<script>
+const V = new URLSearchParams(location.search).has("vertical");
+const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
+window.DURATION = 4.0;
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const eo3 = (k) => 1 - Math.pow(1 - k, 3);
+const eoExpo = (k) => (k >= 1 ? 1 : 1 - Math.pow(2, -10 * k));
+const eio = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+const campana = (t, a, pico, b) => (t < a || t > b ? 0 : t < pico ? eo3((t - a) / (pico - a)) : 1 - eio((t - pico) / (b - pico)));
+
+document.body.style.width = W + "px"; document.body.style.height = H + "px";
+Object.assign($("lienzo").style, { width: W + "px", height: H + "px" });
+
+// Recorta el viewBox de cada logo a su contenido real y lo usa como máscara.
+function recortar(svgTexto) {
+  const caja = document.createElement("div");
+  caja.style.cssText = "position:absolute;left:-99999px;top:0";
+  caja.innerHTML = svgTexto;
+  document.body.appendChild(caja);
+  const svg = caja.querySelector("svg");
+  const [, , vw, vh] = svg.getAttribute("viewBox").split(/\s+/).map(Number);
+  svg.setAttribute("width", vw); svg.setAttribute("height", vh);
+  const rs = svg.getBoundingClientRect(), rg = svg.querySelector("g").getBoundingClientRect();
+  const box = [rg.left - rs.left, rg.top - rs.top, rg.width, rg.height];
+  svg.setAttribute("viewBox", box.join(" "));
+  svg.removeAttribute("width"); svg.removeAttribute("height");
+  svg.setAttribute("preserveAspectRatio", "none");
+  const url = "url(\"data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg.outerHTML) + "\")";
+  caja.remove();
+  return { url, ratio: box[2] / box[3] };
+}
+const LB = recortar(window.LOGOS.b), LP = recortar(window.LOGOS.palabra);
+for (const [id, l] of [["b", LB], ["palabra", LP]]) { $(id).style.webkitMaskImage = l.url; $(id).style.maskImage = l.url; }
+
+// ---------- composición ----------
+const K = V ? { bAlto: 300, palabraAncho: 820, gap1: 70, gap2: 58, lema: 34, track: 0.2, gap3: 44, url: 34, gap4: 26, linea: 520, bInicial: 1.0 }
+            : { bAlto: 250, palabraAncho: 700, gap1: 56, gap2: 48, lema: 31, track: 0.26, gap3: 36, url: 27, gap4: 22, linea: 560, bInicial: 1.0 };
+const bAncho = K.bAlto * LB.ratio;
+const pAlto = K.palabraAncho / LP.ratio;
+const altoTotal = K.bAlto + K.gap1 + pAlto + K.gap2 + 2 + K.gap3 + K.lema * 1.2 + K.gap4 + K.url * 1.2;
+const y0 = (H - altoTotal) / 2 - (V ? 20 : 10);
+const Y = {};
+Y.b = y0; Y.p = Y.b + K.bAlto + K.gap1; Y.linea = Y.p + pAlto + K.gap2; Y.lema = Y.linea + 2 + K.gap3; Y.url = Y.lema + K.lema * 1.2 + K.gap4;
+const bCentroInicial = H * 0.46 - K.bAlto / 2;
+
+Object.assign($("b").style, { width: bAncho + "px", height: K.bAlto + "px", marginLeft: -bAncho / 2 + "px" });
+Object.assign($("palabra").style, { width: K.palabraAncho + "px", height: pAlto + "px", marginLeft: -K.palabraAncho / 2 + "px", top: Y.p + "px" });
+Object.assign($("borde").style, { height: pAlto * 1.7 + "px", top: Y.p - pAlto * 0.35 + "px" });
+$("linea").style.top = Y.linea + "px";
+Object.assign($("lema").style, { top: Y.lema + "px", fontSize: K.lema + "px" });
+Object.assign($("url").style, { top: Y.url + "px", fontSize: K.url + "px" });
+$("rayos").style.top = `calc(${H * 0.44}px - 130vmax)`;
+
+// destello anamórfico
+const fy = H * 0.46;
+Object.assign($("flare").style, { top: fy + "px", width: W * 2 + "px", height: "400px" });
+Object.assign($("fLinea").style, { width: W * 1.6 + "px", height: "3px", background: "linear-gradient(90deg, transparent, rgba(120,170,255,.5) 25%, #fff7e0 50%, rgba(120,170,255,.5) 75%, transparent)", boxShadow: "0 0 12px 3px rgba(190,215,255,.55)" });
+Object.assign($("fNucleo").style, { width: "120px", height: "120px", background: "radial-gradient(closest-side, #fff, rgba(255,235,190,.8) 30%, rgba(255,197,72,0))" });
+Object.assign($("fHalo").style, { width: W * 0.9 + "px", height: "140px", background: "radial-gradient(closest-side, rgba(150,190,255,.28), rgba(150,190,255,0))" });
+
+// ---------- polvo en suspensión (determinístico) ----------
+const pc = $("polvo"); pc.width = W; pc.height = H;
+const px = pc.getContext("2d");
+let semilla = 7;
+const rnd = () => ((semilla = (semilla * 16807) % 2147483647) / 2147483647);
+const motas = Array.from({ length: V ? 150 : 170 }, () => {
+  const z = rnd();
+  return { x: rnd() * W, y: rnd() * H, z, r: z < 0.85 ? 0.7 + z * 2.2 : 6 + rnd() * 14, vx: (rnd() - 0.5) * 14, vy: -6 - rnd() * 16, fase: rnd() * 6.28, oro: rnd() < 0.55 };
+});
+function polvo(t, luz) {
+  px.clearRect(0, 0, W, H);
+  for (const m of motas) {
+    const x = (m.x + m.vx * t * (0.4 + m.z) + W) % W, y = (m.y + m.vy * t * (0.4 + m.z) + H) % H;
+    const tw = 0.55 + 0.45 * Math.sin(m.fase + t * (2 + m.z * 3));
+    const cerca = Math.exp(-(((x - W / 2) / (W * 0.45)) ** 2 + ((y - H * 0.46) / (H * 0.4)) ** 2));
+    const a = (m.r > 5 ? 0.06 : 0.55) * tw * (0.25 + 0.75 * luz) * (0.35 + 0.65 * cerca);
+    const g = px.createRadialGradient(x, y, 0, x, y, m.r);
+    const c = m.oro ? "255,214,140" : "210,228,255";
+    g.addColorStop(0, `rgba(${c},${a})`); g.addColorStop(1, `rgba(${c},0)`);
+    px.fillStyle = g; px.beginPath(); px.arc(x, y, m.r, 0, 6.283); px.fill();
+  }
+}
+
+// ---------- grano ----------
+const gc = $("grano").getContext("2d"), gi = gc.createImageData(320, 320);
+function grano(f) { let s = (f * 7919 + 104729) % 2147483647 || 1; const d = gi.data; for (let i = 0; i < d.length; i += 4) { s = (s * 16807) % 2147483647; const v = s & 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; } gc.putImageData(gi, 0, 0); }
+
+// brillo especular que cruza un logo: banda diagonal en posición p (-0.3 → 1.3)
+const brillo = (p, fuerza) => `linear-gradient(112deg, rgba(255,255,255,0) ${(p - 0.16) * 100}%, rgba(255,226,150,${0.9 * fuerza}) ${(p - 0.03) * 100}%, rgba(255,255,255,${fuerza}) ${p * 100}%, rgba(255,226,150,${0.9 * fuerza}) ${(p + 0.03) * 100}%, rgba(255,255,255,0) ${(p + 0.16) * 100}%)`;
+
+function render(t) {
+  // apertura desde negro y cámara que avanza sin parar
+  $("negro").style.opacity = 1 - eo3(seg(t, 0, 0.35));
+  $("camara").style.transform = `scale(${lerp(1.0, 1.045, eio(seg(t, 0, 4)))})`;
+
+  // destello anamórfico que "enciende" la B
+  const fl = campana(t, 0.08, 0.5, 1.15);
+  $("flare").style.opacity = fl;
+  $("fLinea").style.width = `${W * lerp(0.2, 1.7, eo3(seg(t, 0.08, 0.7)))}px`;
+  $("fNucleo").style.transform = `translate(-50%,-50%) scale(${lerp(0.3, 1.4, eo3(seg(t, 0.1, 0.55)))})`;
+
+  // B: de la luz a la forma
+  const kb = eoExpo(seg(t, 0.38, 1.25));
+  const ks = eio(seg(t, 1.15, 1.85));
+  const bTop = lerp(bCentroInicial, Y.b, ks);
+  const bEsc = lerp(1.32, 1, kb) * lerp(1.12, 1, ks);
+  Object.assign($("b").style, { top: bTop + "px", opacity: clamp(seg(t, 0.38, 0.8)), filter: `blur(${(1 - kb) * 16}px) drop-shadow(0 0 ${lerp(40, 14, kb)}px rgba(255,214,140,${lerp(0.9, 0.28, eo3(seg(t, 0.5, 1.6)))}))`, transform: `scale(${bEsc})` });
+
+  // bloom cálido detrás de la B
+  const bl = 0.35 + 0.65 * campana(t, 0.35, 0.72, 1.9);
+  const bloomD = K.bAlto * 3.2 * lerp(0.6, 1, kb);
+  Object.assign($("bloom").style, { top: bTop + K.bAlto / 2 + "px", width: bloomD + "px", height: bloomD + "px", opacity: clamp(seg(t, 0.3, 0.6)) * bl });
+
+  // rayos de luz: nacen con la B y giran lento
+  $("rayos").style.opacity = 0.9 * eo3(seg(t, 0.45, 1.4));
+  $("rayos").style.transform = `rotate(${t * 3.2}deg)`;
+
+  // BARKLEY: barrido de luz de izquierda a derecha
+  const kp = eio(seg(t, 1.35, 2.05));
+  $("palabra").style.clipPath = `inset(-10% ${(1 - kp) * 100}% -10% 0)`;
+  $("palabra").style.opacity = t > 1.35 ? 1 : 0;
+  const bx = W / 2 - K.palabraAncho / 2 + K.palabraAncho * kp;
+  $("borde").style.left = bx - 1.5 + "px";
+  $("borde").style.opacity = campana(t, 1.33, 1.45, 2.15);
+
+  // línea dorada
+  $("linea").style.width = `${K.linea * eo3(seg(t, 1.9, 2.55))}px`;
+  $("linea").style.opacity = eo3(seg(t, 1.9, 2.1));
+
+  // COLEGIO ONLINE · 100% ASINCRÓNICO
+  const kl = eo3(seg(t, 2.05, 2.75));
+  Object.assign($("lema").style, { opacity: kl, letterSpacing: `${lerp(K.track + 0.35, K.track, kl)}em`, paddingLeft: `${lerp(K.track + 0.35, K.track, kl)}em`, filter: `blur(${(1 - kl) * 6}px)` });
+
+  // sitio web
+  const ku = eo3(seg(t, 2.55, 3.15));
+  Object.assign($("url").style, { opacity: ku, transform: `translateY(${(1 - ku) * 14}px)` });
+
+  // brillo especular final sobre B y BARKLEY
+  const pB = lerp(-0.35, 1.35, eio(seg(t, 0.95, 1.6))), fB = campana(t, 0.95, 1.25, 1.6);
+  const pG = lerp(-0.35, 1.35, eio(seg(t, 3.05, 3.7))), fG = campana(t, 3.05, 3.35, 3.75);
+  $("b").style.setProperty("--brillo", fB > fG ? brillo(pB, fB * 0.9) : brillo(pG, fG * 0.8));
+  $("palabra").style.setProperty("--brillo", brillo(lerp(-0.35, 1.35, eio(seg(t, 3.12, 3.8))), campana(t, 3.12, 3.42, 3.82) * 0.8));
+
+  polvo(t, eo3(seg(t, 0.4, 1.3)));
+  grano(Math.floor(t * 30));
+}
+window.render = render;
+window.listo = Promise.all(["600 38px Poppins", "400 34px Poppins"].map((f) => document.fonts.load(f))).then(() => render(0));
+</script>
+</body>
+</html>
