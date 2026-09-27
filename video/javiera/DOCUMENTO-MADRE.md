@@ -161,6 +161,7 @@ Ideas de próximos episodios, con los fundamentos y diferenciadores de Barkley:
 ## 6. Limitaciones conocidas y decisiones
 
 - **Sin transcripción automática.** La red del entorno bloquea Hugging Face y los modelos de voz, así que los subtítulos salen del texto del guion, repartido por sílabas. Si Flow cambia alguna palabra, el subtítulo no coincide: hay que corregir la frase en `guion.json`.
+- **Palabras repetidas por Flow** (ej. "cada, cada"): se quitan con `"quitar": [[inicio, fin]]` en el clip del guion (segundos del clip original). Para ubicarlas sin escuchar se usa autosimilitud del espectrograma: dos trozos seguidos casi idénticos = repetición; el corte se alinea al mínimo de energía.
 - **El orden y las frases de cada clip** se validan comparando la cantidad de pausas del audio con la puntuación de la frase. Si no coinciden, `linea.py` avisa y reparte las palabras en un solo bloque.
 - **No se puede generar video de personas** en este entorno. Los clips los genera el usuario en Flow y el montaje lo hace Claude.
 - **Plataforma**: solo formato **9:16** para redes (preferencia del usuario).

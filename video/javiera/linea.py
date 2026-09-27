@@ -91,13 +91,20 @@ for ic, clip in enumerate(guion["clips"]):
     frases = clip["frases"] if "frases" in clip else partir(clip["texto"])
     tramos, frases = emparejar(tramos, frases)
     linea["escenas"].append({"escena": clip["escena"], "desde": round(t, 3)})
+    quitar = clip.get("quitar", [])  # trozos repetidos por Flow, en segundos del clip
     for jt, ((a, b), frase) in enumerate(zip(tramos, frases)):
         a0, b0 = max(0.0, a - ANTES), b + DESPUES
-        d = b0 - a0
-        linea["segmentos"].append({"clip": ic, "archivo": clip["archivo"], "ruta": os.path.relpath(ruta, AQUI), "entrada": round(a0, 3), "dur": round(d, 3), "desde": round(t, 3), "tramo": jt})
+        piezas = [(a0, b0)]
+        for qa, qb in quitar:
+            piezas = [p for x, y in piezas for p in ((x, min(y, qa)), (max(x, qb), y)) if p[1] - p[0] > 0.04]
+        d = sum(y - x for x, y in piezas)
+        tp = t
+        for x, y in piezas:
+            linea["segmentos"].append({"clip": ic, "archivo": clip["archivo"], "ruta": os.path.relpath(ruta, AQUI), "entrada": round(x, 3), "dur": round(y - x, 3), "desde": round(tp, 3), "tramo": jt})
+            tp += y - x
         palabras = frase.split()
         pesos = [silabas(p) + (0.8 if re.search(r"[,.:?]$", p) else 0) for p in palabras]
-        voz0, voz = t + ANTES, (b - a)
+        voz0, voz = t + ANTES, max(0.2, d - ANTES - DESPUES)
         acc = 0.0
         for p, w in zip(palabras, pesos):
             ini = voz0 + voz * acc / sum(pesos)
