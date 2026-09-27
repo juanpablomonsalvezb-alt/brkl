@@ -128,6 +128,7 @@ Tiempos aproximados: fondo ~3 min, composición ~3 min. Los mensajes "Broken pip
 ## 4b. Episodios
 - `ep01-umbral/`: hecho (los clips están en `video/javiera/`, por eso `"carpeta": ".."`).
 - `ep02-brujula/`: hecho (41 s). Vestuario **blazer azul marino + polera blanca**. Clips `brujula-01.mp4` … `brujula-06.mp4` (Flow entregó el 3 y el 4 intercambiados; se detectó por gestos y pausas).
+- `ep03-vortice/`: hecho (45 s). Vestuario **blusa blanca lisa de manga larga**. El clip 6 original ("Reserva tu cupo…" + "Vórtice:") fue rechazado por Flow por políticas; se usó "Tu año completo, ordenado en un solo lugar. Conoce más sobre Barkley en nuestra página." y el botón de reserva va en el gráfico. En los prompts se agregó *"saying each word only once with no repeated words or syllables"* para evitar repeticiones.
 
 ## 5. Cómo hacer un episodio nuevo
 

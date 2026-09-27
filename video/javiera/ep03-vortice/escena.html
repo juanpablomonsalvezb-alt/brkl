@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Barkley — Javiera · Vórtice, fondo y gráficos</title>
+<!--
+  Fondo del video de Javiera (1080×1920): estudio azul Barkley, gráficos que ilustran
+  lo que ella dice (zona superior) y placa final. Javiera y los subtítulos se
+  superponen después en componer.py. Tiempos: out/linea.json (window.preparar).
+-->
+<style>
+  @font-face { font-family: "Poppins"; font-weight: 400; src: url(../../intro/fonts/poppins-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 600; src: url(../../intro/fonts/poppins-latin-600-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 700; src: url(../../intro/fonts/poppins-latin-700-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Poppins"; font-weight: 800; src: url(../../intro/fonts/poppins-latin-800-normal.woff2) format("woff2"); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000814; }
+  body { font-family: "Poppins", sans-serif; color: #fff; -webkit-font-smoothing: antialiased; position: relative; }
+  .capa { position: absolute; inset: 0; }
+  #fondo { background: radial-gradient(90% 60% at 50% 40%, #0d3469 0%, #06204a 45%, #01112a 80%, #000814 100%); }
+  #rayos { position: absolute; left: 50%; top: 380px; width: 3000px; height: 3000px; margin: -1500px 0 0 -1500px; border-radius: 50%;
+    background: repeating-conic-gradient(from 0deg, rgba(255,236,190,0) 0deg 7deg, rgba(255,236,190,.07) 9deg, rgba(255,236,190,0) 11deg 17deg);
+    filter: blur(22px); -webkit-mask-image: radial-gradient(closest-side, #000, transparent 70%); opacity: .8; }
+  #halo { position: absolute; left: 540px; top: 1000px; width: 1300px; height: 1300px; margin: -650px 0 0 -650px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255,205,120,.30), rgba(80,140,230,.14) 45%, rgba(0,0,0,0) 100%); }
+  #piso { position: absolute; left: -10%; right: -10%; top: 1500px; height: 600px; background: radial-gradient(50% 40% at 50% 0%, rgba(120,170,255,.10), transparent 70%); }
+  canvas#polvo { position: absolute; inset: 0; }
+  #ia { position: absolute; left: 40px; top: 176px; font-size: 22px; font-weight: 600; letter-spacing: .06em; color: rgba(255,255,255,.62);
+    border: 1.5px solid rgba(255,255,255,.28); border-radius: 30px; padding: 6px 16px; background: rgba(0,10,30,.35); }
+  #chip { position: absolute; left: 0; right: 0; top: 250px; text-align: center; }
+  #chip span { display: inline-block; font-weight: 700; font-size: 28px; letter-spacing: .22em; text-transform: uppercase; padding: 10px 26px 10px 32px;
+    border-radius: 40px; border: 2px solid currentColor; background: rgba(0,10,30,.4); }
+  .esc { position: absolute; left: 0; right: 0; top: 320px; height: 330px; opacity: 0; }
+  .centro { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .card { background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.18); border-radius: 26px; backdrop-filter: blur(6px); box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+  .oro { color: #ffc548; }
+  .tile { position: absolute; width: 190px; height: 150px; border-radius: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 26px; background: rgba(255,255,255,.08); border: 2px solid rgba(255,255,255,.22); }
+  .tile small { font-size: 18px; font-weight: 600; letter-spacing: .12em; opacity: .65; text-transform: uppercase; }
+  .badge { position: absolute; right: -14px; top: -14px; width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 32px; }
+  .barra { position: absolute; height: 18px; border-radius: 10px; background: rgba(255,255,255,.12); overflow: hidden; }
+  .barra i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 10px; }
+  svg { display: block; }
+  #final { background: radial-gradient(90% 60% at 50% 45%, #0b2f5e 0%, #03152f 60%, #000814 100%); opacity: 0; }
+  .logo { position: absolute; left: 50%; -webkit-mask-repeat: no-repeat; -webkit-mask-size: 100% 100%; background: linear-gradient(180deg, #fff, #dfe7f2); }
+</style>
+</head>
+<body>
+<div id="fondo" class="capa"></div>
+<div id="rayos"></div>
+<div id="halo"></div>
+<div id="piso"></div>
+<canvas id="polvo" width="1080" height="1920"></canvas>
+<div id="ia">Presentadora generada con IA</div>
+<div id="chip"><span></span></div>
+
+<!-- 1 · saludo -->
+<div class="esc centro" id="e-saludo">
+  <div id="s-nombre" class="card" style="padding:34px 70px 30px;position:absolute">
+    <div style="font-weight:800;font-size:66px;letter-spacing:.2em;padding-left:.2em">JAVIERA</div>
+    <div id="s-linea" style="height:3px;background:#ffc548;margin:14px auto;box-shadow:0 0 14px rgba(255,197,72,.7)"></div>
+    <div style="font-size:30px;font-weight:600;letter-spacing:.12em;opacity:.85">TUTORA · BARKLEY</div>
+  </div>
+  <div id="s-preg" style="position:absolute;text-align:center;font-weight:800;font-size:78px;line-height:1.05;text-transform:uppercase;text-shadow:0 8px 40px rgba(0,0,0,.5)"><div>¿Todo en</div><div class="oro">mil apps?</div></div>
+</div>
+
+<!-- 2 · caos de aplicaciones -->
+<div class="esc" id="e-caos">
+  <div id="k-wa" class="card centro" style="position:absolute;left:70px;top:10px;width:270px;height:170px"><svg width="56" height="56" viewBox="0 0 56 56" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"><path d="M8 12h40v26H24l-10 8v-8H8z"/></svg><div style="font-size:26px;font-weight:700;margin-top:8px">WhatsApp</div><div style="font-size:20px;opacity:.65">links de clases</div></div>
+  <div id="k-mail" class="card centro" style="position:absolute;left:405px;top:120px;width:270px;height:170px"><svg width="56" height="56" viewBox="0 0 56 56" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"><rect x="7" y="13" width="42" height="30" rx="4"/><path d="M8 15l20 15 20-15"/></svg><div style="font-size:26px;font-weight:700;margin-top:8px">Correo</div><div style="font-size:20px;opacity:.65">tareas</div></div>
+  <div id="k-otra" class="card centro" style="position:absolute;left:740px;top:20px;width:270px;height:170px"><svg width="56" height="56" viewBox="0 0 56 56" fill="#fff"><rect x="9" y="9" width="16" height="16" rx="3"/><rect x="31" y="9" width="16" height="16" rx="3"/><rect x="9" y="31" width="16" height="16" rx="3"/><rect x="31" y="31" width="16" height="16" rx="3" opacity=".5"/></svg><div style="font-size:26px;font-weight:700;margin-top:8px">Otra plataforma</div><div style="font-size:20px;opacity:.65">notas</div></div>
+  <div id="k-perd" style="position:absolute;left:0;right:0;top:250px;text-align:center;font-weight:800;font-size:44px;color:#ff9d8a">¿Y dónde estaba…?</div>
+</div>
+
+<!-- 3 · Vórtice: todo converge -->
+<div class="esc" id="e-vortice">
+  <div id="v-aros" style="position:absolute;left:540px;top:150px;width:0;height:0"></div>
+  <div id="v-centro" style="position:absolute;left:0;right:0;top:95px;text-align:center">
+    <div style="font-weight:800;font-size:76px;letter-spacing:.14em;padding-left:.14em;text-shadow:0 0 30px rgba(255,197,72,.5)">VÓRTICE<sup style="font-size:.3em;color:#ffc548">™</sup></div>
+    <div id="v-propia" style="font-size:26px;font-weight:600;letter-spacing:.18em;opacity:.8;margin-top:4px">PLATAFORMA PROPIA DE BARKLEY</div>
+  </div>
+  <div id="v-lugar" style="position:absolute;left:0;right:0;top:268px;text-align:center;font-weight:700;font-size:36px">Tu año completo, <span class="oro">en un solo lugar</span></div>
+</div>
+
+<!-- 4 · la lección -->
+<div class="esc" id="e-leccion">
+  <div id="l-card" class="card" style="position:absolute;left:70px;right:70px;top:10px;height:300px;padding:26px 30px">
+    <div style="font-size:22px;letter-spacing:.18em;font-weight:700;opacity:.7">MATEMÁTICA · UNIDAD 3</div>
+    <div style="font-size:40px;font-weight:800;margin-top:4px">Lección 4: Fracciones</div>
+    <div style="display:flex;gap:14px;margin-top:24px">
+      <div id="l-video" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:16px;flex:1;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.14)"><svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#ffc548"/><path d="M16 12l12 8-12 8z" fill="#06204a"/></svg><div style="font-size:21px;font-weight:700">Video</div></div><div id="l-pod" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:16px;flex:1;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.14)"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#ffc548" stroke-width="4" stroke-linecap="round"><path d="M8 24v-4a12 12 0 0 1 24 0v4"/><rect x="6" y="22" width="7" height="12" rx="3" fill="#ffc548"/><rect x="27" y="22" width="7" height="12" rx="3" fill="#ffc548"/></svg><div style="font-size:21px;font-weight:700">Pódcast</div></div><div id="l-eval" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:16px;flex:1;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.14)"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#ffc548" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21l8 8 16-17"/></svg><div style="font-size:21px;font-weight:700">Evaluación</div></div><div id="l-av" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:16px;flex:1;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.14)"><svg width="40" height="40" viewBox="0 0 40 40" fill="#ffc548"><rect x="6" y="22" width="7" height="12" rx="2"/><rect x="17" y="14" width="7" height="20" rx="2"/><rect x="28" y="6" width="7" height="28" rx="2"/></svg><div style="font-size:21px;font-weight:700">Avance</div></div><div id="l-msg" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:16px;flex:1;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.14)"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#ffc548" stroke-width="4" stroke-linejoin="round"><path d="M6 8h28v18H18l-8 6v-6H6z"/></svg><div style="font-size:21px;font-weight:700">Mensajes</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 · todos conectados -->
+<div class="esc" id="e-conect">
+  <svg id="n-lineas" width="1080" height="330" style="position:absolute;left:0;top:0" fill="none" stroke="rgba(255,197,72,.6)" stroke-width="3" stroke-dasharray="8 8">
+    <path id="n-l1" d="M540 165 L230 70"/><path id="n-l2" d="M540 165 L850 70"/><path id="n-l3" d="M540 165 L540 290"/>
+  </svg>
+  <div id="n-panel" class="card centro" style="position:absolute;left:390px;top:95px;width:300px;height:140px;border-color:#ffc548">
+    <div style="font-size:22px;letter-spacing:.14em;font-weight:700;opacity:.75">TU AVANCE</div>
+    <div id="n-pct" style="font-size:64px;font-weight:800;color:#ffc548;line-height:1.1">0%</div>
+    <div id="n-vivo" style="position:absolute;right:16px;top:14px;width:14px;height:14px;border-radius:50%;background:#4ade80"></div>
+  </div>
+  <div id="n-tutor" class="card centro" style="position:absolute;left:120px;top:0px;width:220px;height:120px"><svg width="44" height="44" viewBox="0 0 70 70" fill="none" stroke="#fff" stroke-width="6"><circle cx="35" cy="24" r="13"/><path d="M12 62c3-13 12-19 23-19s20 6 23 19" stroke-linecap="round"/></svg><div style="font-size:24px;font-weight:700;margin-top:6px">Tutor</div></div><div id="n-asesor" class="card centro" style="position:absolute;left:740px;top:0px;width:220px;height:120px"><svg width="44" height="44" viewBox="0 0 70 70" fill="none" stroke="#fff" stroke-width="6"><circle cx="35" cy="24" r="13"/><path d="M12 62c3-13 12-19 23-19s20 6 23 19" stroke-linecap="round"/></svg><div style="font-size:24px;font-weight:700;margin-top:6px">Asesor</div></div>
+  <div id="n-familia" class="card centro" style="position:absolute;left:430px;top:250px;width:220px;height:74px;flex-direction:row;gap:10px"><svg width="44" height="44" viewBox="0 0 70 70" fill="none" stroke="#fff" stroke-width="6"><circle cx="35" cy="24" r="13"/><path d="M12 62c3-13 12-19 23-19s20 6 23 19" stroke-linecap="round"/></svg><div style="font-size:24px;font-weight:700">Familia</div></div>
+</div>
+
+<!-- 6 · cierre -->
+<div class="esc centro" id="e-cierre">
+  <div id="c-nadie" style="position:absolute;top:10px;font-weight:800;font-size:80px;line-height:1.05;text-transform:uppercase;text-shadow:0 8px 40px rgba(0,0,0,.5)">
+    <div>Tu año completo,</div><div class="oro">ordenado.</div>
+  </div>
+  <div id="c-cta" style="position:absolute;top:238px;display:flex;flex-direction:column;align-items:center">
+    <div style="background:#ffc548;color:#06204a;font-weight:800;font-size:36px;padding:18px 44px;border-radius:50px;box-shadow:0 12px 40px rgba(255,197,72,.4)">Reserva tu cupo sin costo</div>
+  </div>
+</div>
+
+<!-- placa final -->
+<div id="final" class="capa">
+  <div class="logo" id="f-b"></div>
+  <div class="logo" id="f-p"></div>
+  <div id="f-l" style="position:absolute;left:50%;height:2px;background:linear-gradient(90deg,transparent,#ffc548 18%,#ffe29a 50%,#ffc548 82%,transparent);transform:translateX(-50%)"></div>
+  <div id="f-lema" style="position:absolute;left:0;right:0;text-align:center;font-weight:600;font-size:34px;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap">Colegio online<span class="oro" style="padding:0 .5em">·</span>100% asincrónico</div>
+  <div id="f-url" style="position:absolute;left:0;right:0;text-align:center;font-size:36px;color:rgba(255,255,255,.88);letter-spacing:.04em">www.barkleyinstituto.cl</div>
+  <div id="f-adm" style="position:absolute;left:0;right:0;text-align:center"><span style="display:inline-block;border:2.5px solid #ffc548;color:#ffc548;font-weight:700;font-size:30px;letter-spacing:.2em;padding:14px 28px 14px 34px">ADMISIÓN 2027 · CUPOS LIMITADOS</span></div>
+</div>
+
+<script src="../../intro/vectores/barkley-logos.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const eo = (k) => 1 - Math.pow(1 - k, 3);
+const eback = (k) => { const c = 1.7; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
+const eio = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+// aparición con rebote suave: opacidad, subida y escala
+const pop = (el, t, t0, d = 0.45) => { const k = seg(t, t0, t0 + d); el.style.opacity = eo(k); el.style.transform = `translateY(${(1 - eo(k)) * 30}px) scale(${lerp(0.86, 1, eback(k))})`; return k; };
+
+let L, E, ESC;
+const CHIP = { saludo: ["", "#fff"], caos: ["Hoy en muchos colegios", "#ff9d8a"], vortice: ["Barkley · Vórtice™", "#ffc548"], leccion: ["Todo en tu lección", "#ffc548"], conectados: ["En tiempo real", "#ffc548"], cierre: ["", "#fff"] };
+const IDS = { saludo: "e-saludo", caos: "e-caos", vortice: "e-vortice", leccion: "e-leccion", conectados: "e-conect", cierre: "e-cierre" };
+
+// ---- recorte de logos (igual que el sello) ----
+function recortar(svgTexto) {
+  const caja = document.createElement("div"); caja.style.cssText = "position:absolute;left:-99999px;top:0"; caja.innerHTML = svgTexto; document.body.appendChild(caja);
+  const svg = caja.querySelector("svg"); const [, , vw, vh] = svg.getAttribute("viewBox").split(/\s+/).map(Number);
+  svg.setAttribute("width", vw); svg.setAttribute("height", vh);
+  const rs = svg.getBoundingClientRect(), rg = svg.querySelector("g").getBoundingClientRect();
+  const box = [rg.left - rs.left, rg.top - rs.top, rg.width, rg.height];
+  svg.setAttribute("viewBox", box.join(" ")); svg.removeAttribute("width"); svg.removeAttribute("height"); svg.setAttribute("preserveAspectRatio", "none");
+  const url = "url(\"data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg.outerHTML) + "\")"; caja.remove();
+  return { url, ratio: box[2] / box[3] };
+}
+
+// ---- tiles ----
+function tile(padre, x, y, n, extra = "") {
+  const d = document.createElement("div"); d.className = "tile"; d.style.left = x + "px"; d.style.top = y + "px";
+  d.innerHTML = `<small>Unidad</small><div style="font-size:52px;font-weight:800;line-height:1.1">${n}</div>${extra}`; padre.appendChild(d); return d;
+}
+const CANDADO = (abierto) => `<svg width="46" height="52" viewBox="0 0 46 52" fill="none"><rect x="4" y="22" width="38" height="28" rx="6" fill="#ffc548"/><path d="M12 22V15a11 11 0 0 1 22 0${abierto ? "" : "v7"}" stroke="#ffc548" stroke-width="6" stroke-linecap="round" ${abierto ? 'transform="translate(10 -6) rotate(18 34 15)"' : ""}/><circle cx="23" cy="35" r="4" fill="#06204a"/></svg>`;
+
+let B = {};
+function preparar(linea) {
+  L = linea; E = linea.eventos;
+  ESC = linea.escenas.map((e, i) => ({ ...e, hasta: i + 1 < linea.escenas.length ? linea.escenas[i + 1].desde : linea.fin_voz }));
+  // aros dorados del vórtice
+  B.aros = [0, 1, 2, 3, 4].map((i) => {
+    const a = document.createElement("div"); const r = 120 + i * 58;
+    a.style.cssText = `position:absolute;left:${-r}px;top:${-r * 0.42}px;width:${2 * r}px;height:${2 * r * 0.42}px;border-radius:50%;border:${5 - i * 0.7}px solid rgba(255,205,110,${0.95 - i * 0.14});box-shadow:0 0 22px rgba(255,197,72,.55), inset 0 0 18px rgba(255,197,72,.35)`;
+    $("v-aros").appendChild(a); return a;
+  });
+  // placa final
+  const LB = recortar(window.LOGOS.b), LP = recortar(window.LOGOS.palabra);
+  const bAlto = 230, pAncho = 720, pAlto = pAncho / LP.ratio, y0 = 560;
+  Object.assign($("f-b").style, { WebkitMaskImage: LB.url, width: bAlto * LB.ratio + "px", height: bAlto + "px", marginLeft: -bAlto * LB.ratio / 2 + "px", top: y0 + "px" });
+  Object.assign($("f-p").style, { WebkitMaskImage: LP.url, width: pAncho + "px", height: pAlto + "px", marginLeft: -pAncho / 2 + "px", top: y0 + bAlto + 64 + "px" });
+  const yl = y0 + bAlto + 64 + pAlto + 52;
+  $("f-l").style.top = yl + "px"; $("f-lema").style.top = yl + 34 + "px"; $("f-url").style.top = yl + 104 + "px"; $("f-adm").style.top = yl + 230 + "px";
+}
+
+// polvo dorado
+const pc = $("polvo").getContext("2d");
+let s = 11; const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+const motas = Array.from({ length: 110 }, () => ({ x: rnd() * 1080, y: rnd() * 1920, z: rnd(), f: rnd() * 6.3, oro: rnd() < 0.6 }));
+function polvo(t) {
+  pc.clearRect(0, 0, 1080, 1920);
+  for (const m of motas) {
+    const x = (m.x + t * (m.z - 0.5) * 12 + 1080) % 1080, y = (m.y - t * (6 + m.z * 14) + 1920 * 4) % 1920, r = 0.8 + m.z * 2.4;
+    const a = (0.25 + 0.3 * Math.sin(m.f + t * (1.5 + m.z * 2))) * (0.4 + m.z * 0.6);
+    const g = pc.createRadialGradient(x, y, 0, x, y, r * 2.2); const c = m.oro ? "255,214,140" : "200,222,255";
+    g.addColorStop(0, `rgba(${c},${a})`); g.addColorStop(1, `rgba(${c},0)`); pc.fillStyle = g; pc.beginPath(); pc.arc(x, y, r * 2.2, 0, 6.29); pc.fill();
+  }
+}
+
+function render(t) {
+  polvo(t);
+  $("rayos").style.transform = `rotate(${t * 2}deg)`;
+  $("halo").style.opacity = 0.85 + 0.15 * Math.sin(t * 0.8);
+  $("ia").style.opacity = t < L.fin_voz ? 1 : 0;
+
+  // escena activa: entra con fundido y subida, sale con fundido
+  let actual = null;
+  for (const e of ESC) {
+    const el = $(IDS[e.escena]);
+    const op = seg(t, e.desde + 0.05, e.desde + 0.4) * (1 - seg(t, e.hasta - 0.22, e.hasta));
+    el.style.opacity = op;
+    el.style.transform = `translateY(${(1 - eo(seg(t, e.desde, e.desde + 0.5))) * 40}px)`;
+    el.style.filter = op < 1 ? `blur(${(1 - op) * 8}px)` : "none";
+    if (t >= e.desde && t < e.hasta) actual = e;
+  }
+  const chip = CHIP[actual ? actual.escena : "cierre"];
+  const ch = $("chip").firstElementChild;
+  if (ch.textContent !== chip[0]) ch.textContent = chip[0];
+  ch.style.color = chip[1];
+  $("chip").style.opacity = chip[0] && actual ? seg(t, actual.desde + 0.1, actual.desde + 0.45) * (1 - seg(t, actual.hasta - 0.22, actual.hasta)) : 0;
+
+  // 1 · saludo
+  pop($("s-nombre"), t, E.nombre - 0.1);
+  $("s-linea").style.width = `${eo(seg(t, E.nombre + 0.1, E.nombre + 0.7)) * 300}px`;
+  if (t >= E.pregunta - 0.15) { const k = seg(t, E.pregunta - 0.15, E.pregunta + 0.15); $("s-nombre").style.opacity = 1 - k; $("s-nombre").style.transform = `translateY(${-k * 60}px) scale(.95)`; }
+  pop($("s-preg"), t, E.pregunta);
+  if (t < E.pregunta) $("s-preg").style.opacity = 0;
+
+  // 2 · caos: cada app aparece por su lado y al final tiemblan
+  const temblor = (id, i) => t > E.perderse ? `translate(${6 * Math.sin(t * 23 + i)}px, ${5 * Math.cos(t * 19 + i * 2)}px) rotate(${3 * Math.sin(t * 7 + i)}deg)` : "";
+  [["k-wa", E.whatsapp], ["k-mail", E.correo], ["k-otra", E.otra]].forEach(([id, t0], i) => { pop($(id), t, t0 - 0.15); $(id).style.transform += " " + temblor(id, i); if (t > E.perderse) $(id).style.borderColor = "rgba(255,120,100,.7)"; });
+  pop($("k-perd"), t, E.perderse);
+
+  // 3 · Vórtice: los aros giran y todo se ordena al centro
+  const e3 = ESC[2];
+  B.aros.forEach((a, i) => { const k = eo(seg(t, e3.desde + i * 0.08, e3.desde + 0.6 + i * 0.08)); a.style.opacity = k * (t > E.lugar ? 0.55 : 1); a.style.transform = `rotate(${(t - e3.desde) * (60 - i * 9) * (i % 2 ? -1 : 1)}deg) scale(${lerp(1.6, 1, k)})`; });
+  pop($("v-centro"), t, E.vortice - 0.15);
+  pop($("v-propia"), t, E.propia - 0.1);
+  pop($("v-lugar"), t, E.lugar - 0.3);
+
+  // 4 · lección: cada pestaña se enciende al nombrarla
+  pop($("l-card"), t, ESC[3].desde);
+  [["l-video", E.video], ["l-pod", E.podcast], ["l-eval", E.evaluaciones], ["l-av", E.avances], ["l-msg", E.mensajes]].forEach(([id, t0]) => {
+    const k = seg(t, t0 - 0.1, t0 + 0.2); const el = $(id);
+    el.style.borderColor = k ? `rgba(255,197,72,${0.2 + 0.8 * k})` : "rgba(255,255,255,.14)";
+    el.style.background = k ? `rgba(255,197,72,${0.14 * k})` : "rgba(255,255,255,.05)";
+    el.style.transform = `scale(${1 + 0.08 * Math.sin(Math.PI * seg(t, t0 - 0.1, t0 + 0.35))})`;
+  });
+
+  // 5 · conectados en tiempo real
+  const e5 = ESC[4];
+  pop($("n-panel"), t, e5.desde);
+  const pct = Math.round(eio(seg(t, e5.desde + 0.2, e5.hasta - 0.3)) * 72);
+  $("n-pct").textContent = pct + "%";
+  $("n-vivo").style.opacity = t > E.tiempo ? 0.5 + 0.5 * Math.sin(t * 8) : 0.25;
+  [["n-tutor", "n-l1", E.tutor], ["n-asesor", "n-l2", E.asesor], ["n-familia", "n-l3", E.familia]].forEach(([id, l, t0]) => {
+    pop($(id), t, t0 - 0.15);
+    $(l).style.opacity = seg(t, t0, t0 + 0.3); $(l).style.strokeDashoffset = -t * 40;
+  });
+
+  // 6 · cierre
+  pop($("c-nadie"), t, E.ordenado - 0.4); pop($("c-cta"), t, E.cta - 0.1);
+  const pulso = t > E.cta + 0.6 ? 1 + 0.03 * Math.sin((t - E.cta) * 6) : 1;
+  $("c-cta").firstElementChild.style.transform = `scale(${pulso})`;
+
+  // placa final
+  const tf = t - L.fin_voz;
+  $("final").style.opacity = eo(seg(tf, 0, 0.45));
+  const pf = (id, t0) => { const k = eo(seg(tf, t0, t0 + 0.55)); $(id).style.opacity = k; $(id).style.transform = `translateY(${(1 - k) * 22}px)`; };
+  pf("f-b", 0.15); pf("f-p", 0.35); pf("f-lema", 0.7); pf("f-url", 0.9); pf("f-adm", 1.15);
+  $("f-l").style.width = `${eo(seg(tf, 0.55, 1.1)) * 520}px`; $("f-l").style.transform = "translateX(-50%)";
+}
+window.preparar = preparar;
+window.render = render;
+window.listo = Promise.all(["800 84px Poppins", "700 30px Poppins", "600 34px Poppins", "400 36px Poppins"].map((f) => document.fonts.load(f)));
+</script>
+</body>
+</html>
