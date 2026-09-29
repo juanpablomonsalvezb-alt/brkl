@@ -261,6 +261,14 @@
       "destination": "/api/handler.js"
     },
     {
+      "source": "/en",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/en/support",
+      "destination": "/api/handler.js"
+    },
+    {
       "source": "/((?!api/|assets/|images/|videos/|docs/|fonts/|prerendered/|.*\\.\\w+$).*)",
       "destination": "/app.html"
     }

@@ -69,7 +69,10 @@ function componer(shell: string, snapshot: string): string {
   const head = headSnap[2].replace(ASSET_TAG, "") + assets.join("\n");
   // Funciones replacer, no strings: el HTML puede contener "$&", "$'" o "$$",
   // que en un string de reemplazo se expanden como patrones.
-  return shell
+  // El idioma de la página (<html lang>) viene del snapshot: /en es "en", el resto "es-CL".
+  const lang = snapshot.match(/<html[^>]*\blang="([^"]+)"/i)?.[1];
+  const conLang = lang ? shell.replace(/(<html[^>]*\blang=")[^"]*(")/i, (_m, a, b) => `${a}${lang}${b}`) : shell;
+  return conLang
     .replace(HEAD, (_m, abre, _h, cierra) => `${abre}${head}${cierra}`)
     .replace(marcadorVacio, () => `<div id="root">${contenido}</div>`);
 }

@@ -44,6 +44,7 @@ const BarkleyTVSection = lazy(() => import("@/components/BarkleyTVSection"));
 import PorDentroHub from "@/components/PorDentroHub";
 import { SiteHeader } from "@/components/SiteHeader";
 import { IntroVideo } from "@/components/IntroVideo";
+import { useIdioma } from "@/lib/useIdioma";
 
 // Réplica de .fade-in-on-scroll / .animatedElement reales de isb.be (opacity+translateY al entrar en viewport)
 // IMPORTANTE: acepta `style` y lo aplica al propio wrapper — si no, el flex-basis del hijo
@@ -788,6 +789,7 @@ function BarraInscripcion() {
 }
 
 export default function Home() {
+  useIdioma("es", "/");
   const [callOpen, setCallOpen] = useState(false);
   const [showBackTop, setShowBackTop] = useState(false);
   // En móvil ya están la barra de reserva y el chat; en escritorio va sobre la burbuja del chat.

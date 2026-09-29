@@ -22,6 +22,8 @@ const PorDentro = lazyRoute(() => import("@/pages/PorDentro"));
 const TourPlataforma = lazyRoute(() => import("@/pages/TourPlataforma"));
 const PreguntasFrecuentes = lazyRoute(() => import("@/pages/PreguntasFrecuentes"));
 const Electivos = lazyRoute(() => import("@/pages/Electivos"));
+const HomeEn = lazyRoute(() => import("@/pages/en/HomeEn"));
+const SupportEn = lazyRoute(() => import("@/pages/en/SupportEn"));
 const PlanSelector2026 = lazyRoute(() => import("@/pages/PlanSelector2026"));
 const PrivacyPolicy = lazyRoute(() => import("@/pages/Legal").then((m) => ({ default: m.PrivacyPolicy })));
 const TermsOfUse = lazyRoute(() => import("@/pages/Legal").then((m) => ({ default: m.TermsOfUse })));
@@ -42,11 +44,13 @@ const PRECARGA: Record<string, () => Promise<void>> = {
   "/privacidad": PrivacyPolicy.preload,
   "/terminos": TermsOfUse.preload,
   "/reembolso": RefundPolicy.preload,
+  "/en": HomeEn.preload,
+  "/en/support": SupportEn.preload,
 };
 
 export function preloadRoute(pathname: string): Promise<void> {
   const base = "/" + (pathname.split("/")[1] ?? "");
-  return PRECARGA[base]?.() ?? Promise.resolve();
+  return (PRECARGA[pathname.replace(/\/$/, "")] ?? PRECARGA[base])?.() ?? Promise.resolve();
 }
 
 const NotFound = lazy(() => import("@/pages/not-found"));
@@ -96,6 +100,8 @@ function Router() {
     <Suspense fallback={null}>
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/en" component={HomeEn} />
+      <Route path="/en/support" component={SupportEn} />
       <Route path="/adaptativo" component={Adaptativo} />
       <Route path="/prepara-tus-examenes" component={PreparaTusExamenes} />
       <Route path="/together/:sala?" component={Together} />

@@ -18,6 +18,8 @@ export const PRERENDER_ROUTES = [
   "/privacidad",
   "/terminos",
   "/reembolso",
+  "/en",
+  "/en/support",
 ] as const;
 
 export const SITE_URL = "https://www.barkleyinstituto.cl";
