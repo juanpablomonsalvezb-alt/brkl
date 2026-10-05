@@ -47,9 +47,9 @@ export function H2({ children, color = NAVY, center }: { children: React.ReactNo
   return <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, color, margin: "0 0 20px", textAlign: center ? "center" : undefined }}>{children}</h2>;
 }
 
-export function BotonOro({ href, children }: { href: string; children: React.ReactNode }) {
+export function BotonOro({ href, children, target, rel }: { href: string; children: React.ReactNode; target?: string; rel?: string }) {
   return (
-    <a href={href} style={{ display: "inline-flex", alignItems: "center", gap: 10, fontSize: 16, fontWeight: 600, color: NAVY, background: GOLD, borderRadius: 999, padding: "14px 28px", textDecoration: "none", fontFamily: FONT }}>
+    <a href={href} target={target} rel={rel} style={{ display: "inline-flex", alignItems: "center", gap: 10, fontSize: 16, fontWeight: 600, color: NAVY, background: GOLD, borderRadius: 999, padding: "14px 28px", textDecoration: "none", fontFamily: FONT }}>
       {children}
     </a>
   );

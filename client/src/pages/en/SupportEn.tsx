@@ -5,7 +5,7 @@
  * cifras de impacto: Barkley abre en marzo de 2027 y los aliados de hoy son
  * aliados fundadores.
  */
-import { ArrowUpRight, GraduationCap, HeartHandshake, Laptop, Accessibility, Building2, HandCoins, Mail } from "lucide-react";
+import { GraduationCap, HeartHandshake, Laptop, Accessibility, Building2, HandCoins, Mail, Heart } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { usePageMeta } from "@/lib/usePageMeta";
 import { useIdioma } from "@/lib/useIdioma";
@@ -13,6 +13,8 @@ import { NAVY, RED, GOLD, TEXT, VIVID_BLUE, FONT, MONTOS, CONTACTO, Reveal, Eyeb
 
 const ASUNTO = encodeURIComponent("Partnership with Barkley");
 const MAILTO = `mailto:${CONTACTO}?subject=${ASUNTO}`;
+const PAYPAL_DONATE_URL =
+  "https://www.paypal.com/donate/?business=juanpablo.monsalvezb@gmail.com&currency_code=USD&item_name=Donation+for+Barkley";
 
 const PROBLEMA = [
   { titulo: "Children who don't fit the classroom", texto: "Students with ADHD, dyslexia or autism often fall behind not for lack of ability, but because a 40-student classroom moves at one speed." },
@@ -61,9 +63,10 @@ export default function SupportEn() {
               for founding partners to make sure cost is never the reason a child can't join.
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-              <BotonOro href={MAILTO}><Mail style={{ width: 18, height: 18 }} /> Talk to us</BotonOro>
-              <a href="/en" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 16, fontWeight: 600, color: "#fff", border: "1.5px solid rgba(255,255,255,0.5)", borderRadius: 999, padding: "13px 26px", textDecoration: "none" }}>Learn about Barkley <ArrowUpRight style={{ width: 18, height: 18 }} /></a>
+              <BotonOro href={PAYPAL_DONATE_URL} target="_blank" rel="noopener noreferrer"><Heart style={{ width: 18, height: 18 }} /> Donate now</BotonOro>
+              <a href={MAILTO} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 16, fontWeight: 600, color: "#fff", border: "1.5px solid rgba(255,255,255,0.5)", borderRadius: 999, padding: "13px 26px", textDecoration: "none" }}><Mail style={{ width: 18, height: 18 }} /> Talk to us</a>
             </div>
+            <p style={{ fontSize: 13, opacity: 0.65, margin: "14px 0 0" }}>Small donations welcome — any amount helps.</p>
           </Reveal>
         </div>
       </section>
@@ -146,9 +149,12 @@ export default function SupportEn() {
               Our first school year starts in March 2027. Write to us and we will share our plan, how scholarship students are selected and how we
               report on the use of every contribution.
             </p>
-            <BotonOro href={MAILTO}><Mail style={{ width: 18, height: 18 }} /> {CONTACTO}</BotonOro>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
+              <BotonOro href={PAYPAL_DONATE_URL} target="_blank" rel="noopener noreferrer"><Heart style={{ width: 18, height: 18 }} /> Donate now</BotonOro>
+              <a href={MAILTO} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 16, fontWeight: 600, color: "#fff", border: "1.5px solid rgba(255,255,255,0.5)", borderRadius: 999, padding: "13px 26px", textDecoration: "none" }}><Mail style={{ width: 18, height: 18 }} /> {CONTACTO}</a>
+            </div>
             <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", margin: "22px 0 0" }}>
-              Amounts are in Chilean pesos (CLP), based on Barkley's {new Date().getFullYear() >= 2027 ? "current" : "2027"} tuition.
+              Scholarship and sponsorship amounts are in Chilean pesos (CLP), based on Barkley's {new Date().getFullYear() >= 2027 ? "current" : "2027"} tuition. Donations via PayPal are processed in USD.
             </p>
           </div>
         </Reveal>
