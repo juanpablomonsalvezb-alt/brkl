@@ -22,6 +22,7 @@ const PorDentro = lazyRoute(() => import("@/pages/PorDentro"));
 const TourPlataforma = lazyRoute(() => import("@/pages/TourPlataforma"));
 const PreguntasFrecuentes = lazyRoute(() => import("@/pages/PreguntasFrecuentes"));
 const Electivos = lazyRoute(() => import("@/pages/Electivos"));
+const PlataformaNivel = lazyRoute(() => import("@/pages/PlataformaNivel"));
 const HomeEn = lazyRoute(() => import("@/pages/en/HomeEn"));
 const SupportEn = lazyRoute(() => import("@/pages/en/SupportEn"));
 const PlanSelector2026 = lazyRoute(() => import("@/pages/PlanSelector2026"));
@@ -44,6 +45,7 @@ const PRECARGA: Record<string, () => Promise<void>> = {
   "/privacidad": PrivacyPolicy.preload,
   "/terminos": TermsOfUse.preload,
   "/reembolso": RefundPolicy.preload,
+  "/plataforma": PlataformaNivel.preload,
   "/en": HomeEn.preload,
   "/en/support": SupportEn.preload,
 };
@@ -100,6 +102,7 @@ function Router() {
     <Suspense fallback={null}>
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/plataforma/:nivel" component={PlataformaNivel} />
       <Route path="/en" component={HomeEn} />
       <Route path="/en/support" component={SupportEn} />
       <Route path="/adaptativo" component={Adaptativo} />

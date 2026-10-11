@@ -225,8 +225,9 @@ const HERO_PHOTO = "/images/hero-estudiante.webp";
 // aspiracional para su hijo. Los competidores (Colegio Online LAT, Instituto Virtual de Chile)
 // separan la marca de adultos de la marca K-12 por la misma razón.
 const NIVELES = [
-  { title: "Enseñanza Básica", sub: "1° a 8° Básico", img: "/images/ensenanza-basica.webp" },
-  { title: "Enseñanza Media", sub: "1° a 4° Medio", img: "/images/ensenanza-media.webp" },
+  { title: "Enseñanza Básica", sub: "1° a 4° Básico", img: "/images/nivel-basica-1-4.webp", href: "/plataforma/basica-1-4" },
+  { title: "Enseñanza Básica", sub: "5° a 8° Básico", img: "/images/nivel-basica-5-8.webp", href: "/plataforma/basica-5-8" },
+  { title: "Enseñanza Media", sub: "1° a 4° Medio", img: "/images/nivel-media.webp", href: "/plataforma/media" },
 ];
 
 // Inclusión: el mismo colegio, adaptado a necesidades específicas (sin ser "especializado")
@@ -1108,9 +1109,9 @@ export default function Home() {
           {/* Con solo 2 tarjetas no deben estirarse a llenar el ancho — tamaño fijo, centradas */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 24, justifyContent: "center" }}>
             {NIVELES.map((n, i) => (
-              <Reveal key={n.title} delay={i * 0.1} style={{ flex: "0 1 300px", width: 300, maxWidth: 300 }}>
+              <Reveal key={n.sub} delay={i * 0.1} style={{ flex: "0 1 300px", width: 300, maxWidth: 300 }}>
                 {/* Tarjetas altas tipo retrato con overlay navy denso abajo, título 26px sobre subtítulo+flecha — patrón real */}
-                <motion.a href="#inscripcion" whileHover={{ scale: 1.01 }} transition={{ duration: 0.25, ease: "easeInOut" }} style={{ textDecoration: "none", color: NAVY, position: "relative", overflow: "hidden", display: "block" }}>
+                <motion.a href={n.href} whileHover={{ scale: 1.01 }} transition={{ duration: 0.25, ease: "easeInOut" }} style={{ textDecoration: "none", color: NAVY, position: "relative", overflow: "hidden", display: "block" }}>
                   <img src={n.img} alt={n.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/3.4", objectFit: "cover", display: "block" }} />
                   <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(10,25,50,0) 40%, rgba(10,25,50,0.92) 100%)" }} />
                   <div style={{ position: "absolute", left: 28, right: 24, bottom: 24, color: "#fff" }}>
