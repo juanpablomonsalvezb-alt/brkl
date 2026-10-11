@@ -1112,15 +1112,7 @@ export default function Home() {
               <Reveal key={n.sub} delay={i * 0.1} style={{ flex: "0 1 300px", width: 300, maxWidth: 300 }}>
                 {/* Tarjetas altas tipo retrato con overlay navy denso abajo, título 26px sobre subtítulo+flecha — patrón real */}
                 <motion.a href={n.href} whileHover={{ scale: 1.01 }} transition={{ duration: 0.25, ease: "easeInOut" }} style={{ textDecoration: "none", color: NAVY, position: "relative", overflow: "hidden", display: "block" }}>
-                  <img src={n.img} alt={n.title} loading="lazy" style={{ width: "100%", aspectRatio: "3/3.4", objectFit: "cover", display: "block" }} />
-                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(10,25,50,0) 40%, rgba(10,25,50,0.92) 100%)" }} />
-                  <div style={{ position: "absolute", left: 28, right: 24, bottom: 24, color: "#fff" }}>
-                    <p style={{ fontSize: 26, fontWeight: 500, margin: 0, lineHeight: 1.25 }}>{n.title}</p>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
-                      <p style={{ fontSize: 13, margin: 0, opacity: 0.9, textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 600 }}>{n.sub}</p>
-                      <ArrowUpRight style={{ width: 22, height: 22, flexShrink: 0 }} />
-                    </div>
-                  </div>
+                  <img src={n.img} alt={`${n.title} ${n.sub}`} loading="lazy" style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", display: "block" }} />
                 </motion.a>
               </Reveal>
             ))}
