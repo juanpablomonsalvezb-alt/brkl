@@ -225,9 +225,9 @@ const HERO_PHOTO = "/images/hero-estudiante.webp";
 // aspiracional para su hijo. Los competidores (Colegio Online LAT, Instituto Virtual de Chile)
 // separan la marca de adultos de la marca K-12 por la misma razón.
 const NIVELES = [
-  { title: "Enseñanza Básica", sub: "1° a 4° Básico", img: "/images/nivel-basica-1-4.webp", href: "/plataforma/basica-1-4" },
-  { title: "Enseñanza Básica", sub: "5° a 8° Básico", img: "/images/nivel-basica-5-8.webp", href: "/plataforma/basica-5-8" },
-  { title: "Enseñanza Media", sub: "1° a 4° Medio", img: "/images/nivel-media.webp", href: "/plataforma/media" },
+  { title: "Enseñanza Básica", sub: "1° a 4° Básico", img: "/images/portada-basica-1-4.webp", href: "/plataforma/basica-1-4" },
+  { title: "Enseñanza Básica", sub: "5° a 8° Básico", img: "/images/portada-basica-5-8.webp", href: "/plataforma/basica-5-8" },
+  { title: "Enseñanza Media", sub: "1° a 4° Medio", img: "/images/portada-media.webp", href: "/plataforma/media" },
 ];
 
 // Inclusión: el mismo colegio, adaptado a necesidades específicas (sin ser "especializado")
