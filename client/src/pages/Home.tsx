@@ -669,7 +669,7 @@ function MetodoModule() {
               </p>
             </div>
             <div style={{ position: "relative", maxWidth: 560, width: "100%", justifySelf: "center" }}>
-              <img src="/images/hero-estudiante-1400.webp" alt="Estudiante aprendiendo desde casa, a su propio ritmo" loading="lazy" style={{ width: "100%", aspectRatio: "1.38", objectFit: "cover", objectPosition: "48% 48%", display: "block", borderRadius: 8 }} />
+              <img src="/images/metodologia-asincronica.webp" alt="Estudiante aprendiendo desde casa, a su propio ritmo" loading="lazy" style={{ width: "100%", aspectRatio: "1.38", objectFit: "cover", objectPosition: "50% 30%", display: "block", borderRadius: 8 }} />
               <svg viewBox="0 0 150 90" aria-hidden="true" style={{ position: "absolute", width: 118, height: 72, top: -28, right: -24, overflow: "visible" }}>
                 <path d="M18 65c26-43 68-51 112-23" fill="none" stroke="#edaa2f" strokeWidth="4" strokeLinecap="round" strokeDasharray="1 10" />
                 <path d="m117 31 14 10-17 4" fill="none" stroke="#ed6f55" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />

@@ -51,7 +51,7 @@ function EscenaVortice({ color }: { color: string }) {
       <circle cx="297" cy="194" r="17" fill="#fff" />
       <path d="M292 185l16 9-16 9z" fill={color} />
       <rect x="232" y="224" width="130" height="5" rx="2.5" fill="#fff" fillOpacity="0.25" />
-      <motion.rect x="232" y="224" height="5" rx="2.5" fill={color} animate={{ width: [18, 92, 18] }} transition={loop(7)} />
+      <motion.rect x="232" y="224" width="18" height="5" rx="2.5" fill={color} animate={{ width: [18, 92, 18] }} transition={loop(7)} />
       <rect x="220" y="248" width="98" height="9" rx="4.5" fill="#d9e3ef" />
       <rect x="220" y="264" width="70" height="9" rx="4.5" fill="#e8eef6" />
       <rect x="330" y="248" width="44" height="25" rx="7" fill={color} />
