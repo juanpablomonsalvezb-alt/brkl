@@ -16,8 +16,8 @@ import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import {
   Loader2, Check, ArrowUpRight, Menu, Search, Play, Download,
   Hourglass, Circle, Triangle, Star, Heart, Leaf, ChevronsRight,
-  Layers, BookOpen, Headphones, Image as ImageIcon, ListChecks, Sparkles,
-  Lock, CheckCircle2, ArrowDown, CalendarCheck, CalendarClock, Instagram, Zap, Home as HomeIcon,
+  BookOpen, Headphones, Image as ImageIcon, ListChecks, Sparkles,
+  CheckCircle2, ArrowDown, CalendarClock, Instagram, Zap, Home as HomeIcon,
   Users2, Youtube, MessageCircle,
 } from "lucide-react";
 
@@ -42,6 +42,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 // bundle inicial (ver client/src/components/BarkleyTVSection.tsx).
 const BarkleyTVSection = lazy(() => import("@/components/BarkleyTVSection"));
 import PorDentroHub from "@/components/PorDentroHub";
+import { MetodoHerramientas } from "@/components/MetodoHerramientas";
 import { SiteHeader } from "@/components/SiteHeader";
 import { IntroVideo } from "@/components/IntroVideo";
 import { useIdioma } from "@/lib/useIdioma";
@@ -617,103 +618,82 @@ function ReaccionEnLinea() {
   );
 }
 
-// EL MÉTODO — el gancho central de Barkley. Sin clases en vivo, el método las suple.
-// Módulo dedicado, muy visual, con pasos en auto-play. Nombre real (Mastery Learning),
-// fundamento (Bloom/Chicago) y quiénes lo usan en el mundo (colegios reales licenciados).
-const METODO_PASOS = [
-  { n: "01", title: "Aprendes", text: "Cada objetivo del temario oficial viene con 2 a 3 videos y sus pódcasts. Ves, escuchas, pausas y repites — a tu ritmo, cuando tu día lo permite.", color: GOLD },
-  { n: "02", title: "Practicas", text: "Ejercicios que se corrigen solos, al instante. Sabes de inmediato si entendiste, sin esperar a que un profesor revise la próxima semana.", color: GREEN },
-  { n: "03", title: "Refuerzas", text: "¿Te costó? Antes de seguir, refuerzo del mismo tema. Nadie avanza arrastrando vacíos — el error se corrige en el momento, no meses después.", color: PINK },
-  { n: "04", title: "Dominas", text: "Evaluación de la unidad. Umbral™ verifica que tengas 70% o más antes de desbloquear la siguiente. Avanzas porque de verdad dominaste, no porque pasó el calendario.", color: RED },
+const METODO_HERRAMIENTAS = [
+  {
+    id: "vortice" as const,
+    name: "Vórtice™",
+    role: "Tu lugar para aprender",
+    text: "Tus ramos, videos y avances quedan juntos. Siempre sabes dónde estabas y qué viene después.",
+    color: "#3978d4",
+    href: "/tour-plataforma",
+  },
+  {
+    id: "umbral" as const,
+    name: "Umbral™",
+    role: "Entender antes de seguir",
+    text: "Practicas hasta sentirte seguro. Con 70% o más, se abre la unidad que viene.",
+    color: "#edaa2f",
+    href: "/como-funciona-umbral/",
+  },
+  {
+    id: "brujula" as const,
+    name: "Brújula™",
+    role: "Un plan que se mueve contigo",
+    text: "Ordena tus días de estudio y se ajusta cuando la semana no sale como esperabas.",
+    color: "#299d72",
+    href: "/como-funciona-brujula/",
+  },
+  {
+    id: "together" as const,
+    name: "Together™",
+    role: "Estudiar en compañía",
+    text: "Una sala tranquila para concentrarte junto a otros estudiantes, sin cámara ni chat.",
+    color: "#e76e83",
+    href: "/together",
+  },
 ];
 
 function MetodoModule() {
-  const [idx, setIdx] = useState(0);
-  const [paused, setPaused] = useState(false);
-  useEffect(() => {
-    if (paused) return;
-    const t = setInterval(() => setIdx(i => (i + 1) % METODO_PASOS.length), 4200);
-    return () => clearInterval(t);
-  }, [paused]);
-  const paso = METODO_PASOS[idx];
   return (
-    <section id="metodo-barkley" style={{ background: NAVY, color: "#fff", padding: "88px 24px", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", top: -40, right: -40, opacity: 0.06 }}><ShapeFastForward color="#fff" size={280} /></div>
-      <div style={{ maxWidth: 1080, margin: "0 auto", position: "relative" }}>
-        {/* Orden pensado como AIDA: primero el nombre propio y memorable (Umbral)
-            que engancha, después la autoridad científica (Bloom/Chicago) que
-            cierra la confianza — un apoderado scrolleando responde primero a un
-            concepto pegajoso, la ciencia detrás es lo que sostiene esa primera
-            impresión, no lo que la genera. */}
+    <section id="metodo-barkley" style={{ background: "#f2f8f5", color: "#183c36", padding: "clamp(64px,8vw,104px) 24px", position: "relative", overflow: "hidden" }}>
+      <div style={{ maxWidth: 1180, margin: "0 auto" }}>
         <Reveal>
-          <div style={{ textAlign: "center", marginBottom: 12 }}>
-            <p style={{ fontSize: 14, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.12em", margin: 0 }}>Nuestro método · lo que nos hace distintos</p>
-            <h2 style={{ fontSize: "clamp(34px,6vw,60px)", fontWeight: 600, margin: "10px 0 6px" }}>Umbral<sup style={{ fontSize: "0.35em", fontWeight: 600, marginLeft: 2 }}>™</sup></h2>
-            <p style={{ fontSize: 16, opacity: 0.8, margin: 0 }}>
-              El motor que decide cuándo estás listo para avanzar — basado en <em>Mastery Learning</em>, el modelo de <strong style={{ color: "#fff" }}>Benjamin Bloom</strong>, Universidad de Chicago, 1968.
-            </p>
-          </div>
-        </Reveal>
-
-        <Reveal delay={0.1}>
-          <p style={{ fontSize: "clamp(17px,2.2vw,20px)", lineHeight: 1.6, textAlign: "center", maxWidth: 760, margin: "24px auto 48px", opacity: 0.92 }}>
-            No tenemos clases en vivo — y esa es una ventaja. En una clase por Zoom, todos avanzan al mismo ritmo aunque no entiendan, y el que se queda atrás, se queda atrás. Con Umbral<sup style={{ fontSize: "0.6em" }}>™</sup>, <strong style={{ color: GOLD }}>cada estudiante avanza solo cuando de verdad domina el tema</strong>. Nadie arrastra vacíos.
-          </p>
-        </Reveal>
-
-        {/* Los 4 pasos en auto-play */}
-        <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}
-          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 20, padding: "clamp(28px,5vw,48px)", minHeight: 220 }}>
-          <AnimatePresence mode="wait">
-            <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              style={{ display: "flex", flexWrap: "wrap", gap: "clamp(20px,4vw,44px)", alignItems: "center" }}>
-              <span style={{ fontSize: "clamp(64px,12vw,120px)", fontWeight: 800, color: paso.color, lineHeight: 0.9, flexShrink: 0 }}>{paso.n}</span>
-              <div style={{ flex: "1 1 320px", minWidth: 260 }}>
-                <h3 style={{ fontSize: "clamp(26px,4vw,38px)", fontWeight: 600, margin: "0 0 12px" }}>{paso.title}</h3>
-                <p style={{ fontSize: "clamp(16px,2vw,19px)", lineHeight: 1.6, opacity: 0.9, margin: 0 }}>{paso.text}</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 380px), 1fr))", gap: "clamp(32px,6vw,82px)", alignItems: "center", marginBottom: 64 }}>
+            <div>
+              <p style={{ color: "#299d72", fontSize: 14, fontWeight: 700, margin: "0 0 16px" }}>Nuestro método · lo que nos hace distintos</p>
+              <h2 style={{ maxWidth: 590, fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 52, fontWeight: 400, lineHeight: 1.02, margin: "0 0 22px", letterSpacing: 0 }}>
+                Aprender a tu ritmo se siente distinto.
+              </h2>
+              <p style={{ maxWidth: 540, fontSize: 18, lineHeight: 1.7, color: "#405951", margin: 0 }}>
+                Hay días en que todo fluye. Y otros, en que cuesta. Por eso, en Barkley tienes herramientas para aprender, volver a intentar y sentirte acompañado en el camino.
+              </p>
+            </div>
+            <div style={{ position: "relative", maxWidth: 560, width: "100%", justifySelf: "center" }}>
+              <img src="/images/hero-estudiante-1400.webp" alt="Estudiante aprendiendo desde casa, a su propio ritmo" loading="lazy" style={{ width: "100%", aspectRatio: "1.38", objectFit: "cover", objectPosition: "48% 48%", display: "block", borderRadius: 8 }} />
+              <svg viewBox="0 0 150 90" aria-hidden="true" style={{ position: "absolute", width: 118, height: 72, top: -28, right: -24, overflow: "visible" }}>
+                <path d="M18 65c26-43 68-51 112-23" fill="none" stroke="#edaa2f" strokeWidth="4" strokeLinecap="round" strokeDasharray="1 10" />
+                <path d="m117 31 14 10-17 4" fill="none" stroke="#ed6f55" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="m32 12 5 10 11 2-8 7 2 11-10-6-10 6 2-11-8-7 11-2z" fill="#ed6f55" />
+              </svg>
+              <div style={{ position: "absolute", left: 16, bottom: 16, background: "#fff", padding: "11px 15px", borderRadius: 6, color: "#183c36", fontSize: 14, fontWeight: 700, boxShadow: "0 8px 28px rgba(24,60,54,.14)" }}>
+                A tu ritmo. Con compañía.
               </div>
-            </motion.div>
-          </AnimatePresence>
-          <div style={{ display: "flex", gap: 8, marginTop: 32, justifyContent: "center" }}>
-            {METODO_PASOS.map((p, i) => (
-              <button key={p.n} aria-label={`Paso ${i+1}: ${p.title}`} onClick={() => setIdx(i)}
-                style={{ width: i === idx ? 40 : 12, height: 6, borderRadius: 3, border: "none", background: i === idx ? GOLD : "rgba(255,255,255,0.25)", cursor: "pointer", transition: "width 0.3s, background 0.3s" }} />
-            ))}
-          </div>
-        </div>
-
-        {/* Fundamento + quiénes lo usan en el mundo */}
-        <Reveal delay={0.15}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 20, marginTop: 40 }}>
-            <div style={{ flex: "1 1 300px", background: "rgba(255,255,255,0.05)", borderRadius: 14, padding: "24px 26px" }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>El respaldo científico</p>
-              <p style={{ fontSize: 15, lineHeight: 1.6, opacity: 0.9, margin: 0 }}>
-                El "Problema de las 2 Sigma" de Bloom (1984) demostró que un estudiante con dominio y apoyo personalizado rinde muy por encima del promedio de una clase tradicional. Ese es el principio que aplicamos.
-              </p>
-            </div>
-            <div style={{ flex: "1 1 300px", background: "rgba(255,255,255,0.05)", borderRadius: 14, padding: "24px 26px" }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Quiénes lo usan en el mundo</p>
-              <p style={{ fontSize: 15, lineHeight: 1.6, opacity: 0.9, margin: 0 }}>
-                Colegios online líderes de EE.UU. como <strong style={{ color: "#fff" }}>Acellus Academy</strong> y <strong style={{ color: "#fff" }}>Edmentum / Apex Learning</strong> educan con este mismo método. En Barkley lo aplicamos al temario oficial chileno — con video, pódcast y tutor incluidos.
-              </p>
             </div>
           </div>
         </Reveal>
 
-        <Reveal delay={0.18}>
-          <div style={{ marginTop: 32, background: "rgba(255,255,255,0.05)", borderRadius: 14, padding: "24px 26px", textAlign: "center" }}>
-            <p style={{ fontSize: 13, fontWeight: 700, color: GOLD, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Por dentro</p>
-            <p style={{ fontSize: 15, lineHeight: 1.7, opacity: 0.9, margin: 0, maxWidth: 640, marginLeft: "auto", marginRight: "auto" }}>
-              Umbral™, Brújula™ y el Programa Adaptativo corren sobre <strong style={{ color: "#fff" }}>Vórtice™</strong>, nuestra plataforma propia — arquitectura headless / API-first, la misma línea de nueva generación hacia la que hoy migran las plataformas educativas líderes, en vez del modelo monolítico de Moodle o Canvas de hace 15 años.
-            </p>
+        <Reveal delay={0.08}>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 24 }}>
+            <h3 style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 36, fontWeight: 400, lineHeight: 1.1, margin: 0 }}>Cuatro ayudas, cada una en su momento.</h3>
+            <p style={{ maxWidth: 420, color: "#526a62", fontSize: 15, lineHeight: 1.6, margin: 0 }}>No tienes que aprenderlas de memoria. Están ahí para hacerte más fácil el siguiente paso.</p>
           </div>
+          <MetodoHerramientas herramientas={METODO_HERRAMIENTAS} />
         </Reveal>
 
-        <Reveal delay={0.2}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", marginTop: 32 }}>
-            <a href="/como-funciona-umbral/" style={{ color: GOLD, fontWeight: 700, fontSize: 15, textDecoration: "underline", textUnderlineOffset: 3 }}>Cómo funciona Umbral™ en detalle →</a>
-            <span style={{ opacity: 0.35 }}>·</span>
-            <a href="/como-funciona-brujula/" style={{ color: GOLD, fontWeight: 700, fontSize: 15, textDecoration: "underline", textUnderlineOffset: 3 }}>Conoce Brújula™, tu calendario de ritmo →</a>
+        <Reveal delay={0.12}>
+          <div style={{ marginTop: 32, padding: "22px 0 0", borderTop: "1px solid #cdded5", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+            <span style={{ color: "#e76e83", fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 26, lineHeight: 1 }}>Y si algo cuesta,</span>
+            <span style={{ color: "#405951", fontSize: 16, lineHeight: 1.6 }}>paramos, lo repasamos y lo intentamos juntos. Aquí no tienes que correr.</span>
           </div>
         </Reveal>
       </div>
