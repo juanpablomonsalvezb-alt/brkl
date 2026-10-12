@@ -44,7 +44,6 @@ const BarkleyTVSection = lazy(() => import("@/components/BarkleyTVSection"));
 import PorDentroHub from "@/components/PorDentroHub";
 import { MetodoHerramientas } from "@/components/MetodoHerramientas";
 import { SiteHeader } from "@/components/SiteHeader";
-import { IntroVideo } from "@/components/IntroVideo";
 import { useIdioma } from "@/lib/useIdioma";
 
 // Réplica de .fade-in-on-scroll / .animatedElement reales de isb.be (opacity+translateY al entrar en viewport)
@@ -993,7 +992,11 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <IntroVideo />
+      {/* IntroVideo retirado: era una plantilla de motion graphics genérica (texto
+          grande sobre gradiente, gráfico de barras, dial de porcentaje) sin ninguna
+          toma de la plataforma real ni calidez — no está a la altura de las portadas
+          ilustradas de los niveles. Vuelve a entrar cuando haya plataforma real que
+          filmar, o un reemplazo animado con el mismo estilo de las portadas. */}
 
       {/* === INTRO === */}
       <section id="nosotros" style={{ maxWidth: 1180, margin: "0 auto", padding: "90px 24px", textAlign: "left" }}>
