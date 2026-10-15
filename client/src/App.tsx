@@ -64,7 +64,6 @@ const Reservations = lazy(() => import("@/pages/Reservations"));
 const PlanSettings = lazy(() => import("@/pages/PlanSettings"));
 const LevelPlanSettings = lazy(() => import("@/pages/LevelPlanSettings"));
 const BarkleyAdmin = lazy(() => import("@/pages/BarkleyAdmin"));
-const AdminLogin = lazy(() => import("@/pages/AdminLogin"));
 const EvaluationLinksAdmin = lazy(() => import("@/pages/EvaluationLinksAdmin"));
 const GeminiCopilotsAdmin = lazy(() => import("@/pages/GeminiCopilotsAdmin"));
 const FaqAdmin = lazy(() => import("@/pages/FaqAdmin"));
@@ -126,7 +125,6 @@ function Router() {
       <Route path="/plan-settings" component={PlanSettings} />
       <Route path="/level-plan-settings" component={LevelPlanSettings} />
       <Route path="/planes-2026" component={PlanSelector2026} />
-      <Route path="/admin-login" component={AdminLogin} />
       <Route path="/barkley-admin" component={BarkleyAdmin} />
       <Route path="/evaluation-links-admin" component={EvaluationLinksAdmin} />
       <Route path="/gemini-copilots-admin" component={GeminiCopilotsAdmin} />
