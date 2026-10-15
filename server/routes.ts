@@ -24,6 +24,7 @@ import mammoth from "mammoth";
 import multer from "multer";
 import { generateEvaluationQuestions } from "./aiEvaluationGenerator";
 import { registerEvaluationLinksRoutes } from "./evaluationLinksRoutes";
+import { toStudentQuestions, toPublicEvaluation } from "@shared/evaluations";
 import { registerFaqRoutes } from "./faqRoutes";
 import { registerPaesRoutes } from "./paesRoutes";
 import { registerSalesChatRoutes } from "./salesChatRoutes";
@@ -892,7 +893,8 @@ export async function registerRoutes(
         return res.status(404).json({ message: "Module not found" });
       }
 
-      const evaluations = await storage.getModuleEvaluations(objective.id);
+      // Saneadas: la fila completa traía questionsJson (con correctAnswer/explanation) y htmlContent.
+      const evaluations = (await storage.getModuleEvaluations(objective.id)).map(toPublicEvaluation);
       const userProgress = await storage.getEvaluationProgressByUser(userId, evaluations.map(e => e.id));
 
       const schedule = getModuleSchedule(moduleNumber, currentDate, true, false);
@@ -988,9 +990,13 @@ export async function registerRoutes(
   // Get evaluation HTML content
   app.get("/api/evaluations/:objectiveId/:evaluationNumber/html", async (req: any, res) => {
     try {
+      if (!currentUserId(req)) return res.status(401).json({ message: "Unauthorized" });
       const { objectiveId, evaluationNumber } = req.params;
       const evalNum = parseInt(evaluationNumber);
 
+      // ponytail: el HTML lo pega un admin (generado por Gemini) y se renderiza tal cual;
+      // si trae las respuestas incrustadas, el estudiante las ve igual en el DOM. Sanearlo
+      // exige migrar esas evaluaciones a questionsJson (corregidas en /submit).
       const evaluation = await storage.getEvaluationHtml(objectiveId, evalNum);
       res.json({ htmlContent: evaluation?.htmlContent || null });
     } catch (error) {
@@ -1505,12 +1511,7 @@ export async function registerRoutes(
         return res.status(404).json({ message: "No questions available for this evaluation" });
       }
 
-      const questions = JSON.parse(evaluation.questionsJson);
-      const questionsWithoutAnswers = questions.map((q: any) => ({
-        id: q.id,
-        question: q.question,
-        options: q.options
-      }));
+      const questionsWithoutAnswers = toStudentQuestions(evaluation.questionsJson);
 
       res.json({
         id: evaluation.id,
