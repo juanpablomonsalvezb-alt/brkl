@@ -23,7 +23,7 @@
     "publicar": "npm run seo:build && npm run prerender && vercel --prod && sleep 20 && npm run seo:loop",
     "seo:gsc": "node scripts/gsc-report.mjs --save",
     "embudo": "node scripts/embudo.mjs",
-    "check:vortice": "tsx script/vortice.check.ts && tsx script/vortice-db.check.ts",
+    "check:vortice": "tsx script/vortice.check.ts && tsx script/vortice-db.check.ts && tsx script/tutoria.check.ts",
     "seed:basica": "tsx script/seed-basica.ts"
   },
   "dependencies": {
