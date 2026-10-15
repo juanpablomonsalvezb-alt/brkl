@@ -93,3 +93,86 @@ export async function loadVorticeOverview(
 
   return buildOverview(level, input, new Set(done.map((d) => d.resourceId)), passedIds);
 }
+
+export type AccessResult =
+  | { ok: true; levelSubjectId: string; weekNumber: number }
+  | { ok: false; status: 403 | 404; reason: string };
+
+// Mismas reglas de módulo que el resumen y /api/modules/:n/access: matrícula activa en la
+// asignatura, fecha de inicio cumplida y módulo anterior completado (evaluación 2 aprobada).
+async function checkModuleAccess(
+  db: LibSQLDatabase<typeof schema>,
+  userId: string,
+  levelSubjectId: string,
+  weekNumber: number,
+  now: Date,
+): Promise<AccessResult> {
+  const [enrolled] = await db.select({ id: enrollments.id }).from(enrollments).where(and(
+    eq(enrollments.userId, userId), eq(enrollments.levelSubjectId, levelSubjectId), eq(enrollments.isActive, true),
+  ));
+  if (!enrolled) return { ok: false, status: 403, reason: "No tienes matrícula activa en esta asignatura" };
+
+  let previousCompleted = true;
+  if (weekNumber > 1) {
+    const closing = await db.select({ id: moduleEvaluations.id }).from(moduleEvaluations)
+      .innerJoin(learningObjectives, eq(moduleEvaluations.learningObjectiveId, learningObjectives.id))
+      .where(and(
+        eq(learningObjectives.levelSubjectId, levelSubjectId),
+        eq(learningObjectives.weekNumber, weekNumber - 1),
+        eq(moduleEvaluations.evaluationNumber, 2),
+      ));
+    const passed = closing.length
+      ? await db.select({ id: evaluationProgress.id }).from(evaluationProgress).where(and(
+          eq(evaluationProgress.userId, userId),
+          eq(evaluationProgress.passed, true),
+          inArray(evaluationProgress.evaluationId, closing.map((c) => c.id)),
+        ))
+      : [];
+    previousCompleted = passed.length > 0;
+  }
+  if (!isModuleAvailable(weekNumber, now, previousCompleted)) {
+    return { ok: false, status: 403, reason: "El módulo aún no está disponible" };
+  }
+  return { ok: true, levelSubjectId, weekNumber };
+}
+
+export async function checkResourceAccess(
+  db: LibSQLDatabase<typeof schema>, userId: string, resourceId: string, now: Date,
+): Promise<AccessResult> {
+  const [row] = await db.select({ levelSubjectId: learningObjectives.levelSubjectId, weekNumber: learningObjectives.weekNumber })
+    .from(weeklyResources)
+    .innerJoin(learningObjectives, eq(weeklyResources.learningObjectiveId, learningObjectives.id))
+    .where(and(eq(weeklyResources.id, resourceId), eq(weeklyResources.isActive, true)));
+  if (!row) return { ok: false, status: 404, reason: "Recurso no encontrado" };
+  return checkModuleAccess(db, userId, row.levelSubjectId, row.weekNumber, now);
+}
+
+export async function checkEvaluationAccess(
+  db: LibSQLDatabase<typeof schema>, userId: string, evaluationId: string, now: Date,
+): Promise<AccessResult> {
+  const [row] = await db.select({
+    levelSubjectId: learningObjectives.levelSubjectId,
+    weekNumber: learningObjectives.weekNumber,
+    evaluationNumber: moduleEvaluations.evaluationNumber,
+  })
+    .from(moduleEvaluations)
+    .innerJoin(learningObjectives, eq(moduleEvaluations.learningObjectiveId, learningObjectives.id))
+    .where(eq(moduleEvaluations.id, evaluationId));
+  if (!row) return { ok: false, status: 404, reason: "Evaluación no encontrada" };
+  const n = row.evaluationNumber;
+  if (n >= 1 && n <= 4 && !isEvaluationAvailable(row.weekNumber, n as 1 | 2 | 3 | 4, now)) {
+    return { ok: false, status: 403, reason: "La evaluación aún no está liberada" };
+  }
+  return checkModuleAccess(db, userId, row.levelSubjectId, row.weekNumber, now);
+}
+
+// Marcar un recurso como visto dos veces no debe duplicar el registro.
+export async function markResourceCompleteOnce(
+  db: LibSQLDatabase<typeof schema>, userId: string, resourceId: string,
+) {
+  const [existing] = await db.select().from(studentProgress)
+    .where(and(eq(studentProgress.userId, userId), eq(studentProgress.resourceId, resourceId)));
+  if (existing) return existing;
+  const [created] = await db.insert(studentProgress).values({ userId, resourceId }).returning();
+  return created;
+}

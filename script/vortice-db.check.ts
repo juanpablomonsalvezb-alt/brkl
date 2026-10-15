@@ -102,3 +102,23 @@ await db.insert(userProfiles).values([{ userId: "u2", levelId: "2b" }]);
 assert.equal((await loadVorticeOverview(db, "u2", despues)).track, "basica-1-4");
 
 console.log("vortice-db: ok");
+
+// Acceso: matrícula, calendario y cierre del módulo anterior.
+const { checkResourceAccess, checkEvaluationAccess, markResourceCompleteOnce } = await import("../server/vortice");
+assert.equal((await checkResourceAccess(db, "u1", "r1", despues)).ok, true);
+assert.deepEqual(await checkResourceAccess(db, "u1", "rx", despues), { ok: false, status: 404, reason: "Recurso no encontrado" });
+assert.equal((await checkResourceAccess(db, "u2", "r1", despues)).ok, false); // matrícula inactiva
+assert.equal((await checkResourceAccess(db, "u1", "r1", antes)).ok, false); // antes del inicio
+assert.equal((await checkEvaluationAccess(db, "u1", "e1", despues)).ok, true);
+assert.equal((await checkEvaluationAccess(db, "u1", "e1", antes)).ok, false);
+assert.equal((await checkEvaluationAccess(db, "u1", "nope", despues)).ok, false);
+// Módulo 2: abierto para u1 (aprobó e2); cerrado para u4, matriculado pero sin cerrar el módulo 1.
+await db.insert(users).values([{ id: "u4" }]);
+await db.insert(enrollments).values([{ userId: "u4", levelSubjectId: "ls1" }]);
+assert.equal((await checkResourceAccess(db, "u1", "r3", despues)).ok, true);
+assert.equal((await checkResourceAccess(db, "u4", "r3", despues)).ok, false);
+// Marcar dos veces no duplica.
+const a1 = await markResourceCompleteOnce(db, "u4", "r1");
+const a2 = await markResourceCompleteOnce(db, "u4", "r1");
+assert.equal(a1.id, a2.id);
+console.log("vortice-access: ok");

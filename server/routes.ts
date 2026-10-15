@@ -12,7 +12,7 @@ import {
   insertFunnelEventSchema, funnelEvents,
   insertTogetherHeartbeatSchema, togetherPresence, togetherRoomSchema,
 } from "@shared/schema";
-import { loadVorticeOverview } from "./vortice";
+import { loadVorticeOverview, checkResourceAccess, checkEvaluationAccess, markResourceCompleteOnce } from "./vortice";
 import { db } from "./db";
 import { notifyByEmail, sendConfirmationEmail } from "./notify";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
@@ -456,12 +456,11 @@ export async function registerRoutes(
     try {
       const userId = currentUserId(req);
       if (!userId) return res.status(401).json({ message: "Unauthorized" });
-      const parsed = insertStudentProgressSchema.safeParse({ ...req.body, userId });
-      if (!parsed.success) {
-        return res.status(400).json({ message: "Invalid data", errors: parsed.error.errors });
-      }
-      const progress = await storage.markResourceComplete(parsed.data);
-      res.json(progress);
+      const resourceId = typeof req.body?.resourceId === "string" ? req.body.resourceId : "";
+      if (!resourceId) return res.status(400).json({ message: "resourceId is required" });
+      const access = await checkResourceAccess(db, userId, resourceId, new Date());
+      if (!access.ok) return res.status(access.status).json({ message: access.reason });
+      res.json(await markResourceCompleteOnce(db, userId, resourceId));
     } catch (error) {
       console.error("Error saving progress:", error);
       res.status(500).json({ message: "Failed to save progress" });
@@ -936,14 +935,24 @@ export async function registerRoutes(
       const userId = currentUserId(req);
       if (!userId) return res.status(401).json({ message: "Unauthorized" });
       const evaluationId = req.params.id;
-      const { score, passed } = req.body;
+      // Las evaluaciones con preguntas se corrigen en el servidor (/submit): el resultado
+      // nunca lo informa el cliente. Este endpoint queda solo para las de formulario externo.
+      // ponytail: en formularios externos el resultado sigue siendo autodeclarado; verificarlo
+      // requiere leer las respuestas del formulario.
+      const evaluation = await storage.getModuleEvaluationById(evaluationId);
+      if (!evaluation) return res.status(404).json({ message: "Evaluation not found" });
+      if (evaluation.questionsJson) {
+        return res.status(409).json({ message: "Esta evaluación se responde y corrige en la plataforma" });
+      }
+      const access = await checkEvaluationAccess(db, userId, evaluationId, new Date());
+      if (!access.ok) return res.status(access.status).json({ message: access.reason });
 
       const progress = await storage.markEvaluationComplete({
         userId,
         evaluationId,
         completedAt: new Date(),
-        score: score || null,
-        passed: passed !== undefined ? passed : true,
+        score: typeof req.body?.score === "number" ? req.body.score : null,
+        passed: req.body?.passed !== false,
       });
 
       res.json(progress);
@@ -1527,6 +1536,9 @@ export async function registerRoutes(
       if (!Array.isArray(answers)) {
         return res.status(400).json({ message: "Answers must be an array" });
       }
+
+      const access = await checkEvaluationAccess(db, userId, id, new Date());
+      if (!access.ok) return res.status(access.status).json({ message: access.reason });
 
       const evaluation = await storage.getModuleEvaluationById(id);
       if (!evaluation || !evaluation.questionsJson) {
