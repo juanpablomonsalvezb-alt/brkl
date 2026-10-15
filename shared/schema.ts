@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, uniqueIndex } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { randomUUID } from "crypto";
@@ -197,6 +197,22 @@ export const studentProgress = sqliteTable("student_progress", {
   completedAt: integer("completed_at", { mode: "timestamp" }).defaultNow(),
   score: integer("score"), // For cuestionario
 });
+
+// Vórtice: repaso espaciado. Una fila por pregunta de evaluación ya respondida por el estudiante.
+// box = caja Leitner (0..3, ver shared/repaso.ts); dueDay = próximo repaso, "YYYY-MM-DD" hora de Chile.
+export const reviewItems = sqliteTable("review_items", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  userId: text("user_id").notNull().references(() => users.id),
+  evaluationId: text("evaluation_id").notNull().references(() => moduleEvaluations.id),
+  questionId: integer("question_id").notNull(),
+  box: integer("box").default(0).notNull(),
+  dueDay: text("due_day").notNull(),
+  reviews: integer("reviews").default(0).notNull(),
+  lastReviewedAt: integer("last_reviewed_at", { mode: "timestamp" }),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+}, (t) => [
+  uniqueIndex("review_items_user_question_idx").on(t.userId, t.evaluationId, t.questionId),
+]);
 
 // Weekly completion status
 export const weeklyCompletion = sqliteTable("weekly_completion", {

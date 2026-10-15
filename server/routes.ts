@@ -13,6 +13,7 @@ import {
   insertTogetherHeartbeatSchema, togetherPresence, togetherRoomSchema,
 } from "@shared/schema";
 import { loadVorticeOverview, checkResourceAccess, checkEvaluationAccess, markResourceCompleteOnce } from "./vortice";
+import { loadDueReview, answerReviewItem } from "./repaso";
 import { db } from "./db";
 import { notifyByEmail, sendConfirmationEmail } from "./notify";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
@@ -448,6 +449,36 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error building Vórtice overview:", error);
       res.status(500).json({ message: "Failed to build overview" });
+    }
+  });
+
+  // Vórtice: repaso espaciado. Ítems vencidos hoy (máx. 8), sin respuestas correctas en el payload.
+  // ?asignatura=<levelSubjectId> limita el repaso a un dominio.
+  app.get("/api/vortice/repaso", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const asignatura = typeof req.query?.asignatura === "string" ? req.query.asignatura : undefined;
+      res.json(await loadDueReview(db, userId, new Date(), asignatura));
+    } catch (error) {
+      console.error("Error loading Vórtice review:", error);
+      res.status(500).json({ message: "Failed to load review" });
+    }
+  });
+
+  app.post("/api/vortice/repaso/:itemId/responder", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const answer = req.body?.answer;
+      if (!Number.isInteger(answer)) return res.status(400).json({ message: "answer must be an integer" });
+      const result = await answerReviewItem(db, userId, req.params.itemId, answer, new Date());
+      if (!result.ok) return res.status(result.status).json({ message: result.reason });
+      const { ok, ...body } = result;
+      res.json(body);
+    } catch (error) {
+      console.error("Error answering Vórtice review item:", error);
+      res.status(500).json({ message: "Failed to answer review item" });
     }
   });
 
