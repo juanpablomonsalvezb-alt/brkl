@@ -7,6 +7,8 @@ import { generateSQLiteDrizzleJson, generateSQLiteMigration } from "drizzle-kit/
 import * as schema from "../shared/schema";
 import { users } from "../shared/models/auth";
 import { loadVorticeOverview } from "../server/vortice";
+import { applyBasica, planBasica } from "../server/seedBasica";
+import fs from "node:fs";
 
 const client = createClient({ url: ":memory:" });
 const ddl = await generateSQLiteMigration(await generateSQLiteDrizzleJson({}), await generateSQLiteDrizzleJson(schema as any));
@@ -80,5 +82,23 @@ assert.deepEqual([inactivo.subjects.length, inactivo.level, inactivo.track], [0,
 // Sin matrícula pero con nivel en el perfil: se conoce el tramo.
 const soloPerfil = await loadVorticeOverview(db, "u3", despues);
 assert.deepEqual([soloPerfil.level?.id, soloPerfil.track], ["1m", "media"]);
+
+// Estructura de 1° a 6° Básico desde el temario MINEDUC: simulación no escribe, aplicar es idempotente.
+const plan = planBasica(JSON.parse(fs.readFileSync("scripts/data/mineduc-temarios-manifest.json", "utf8")));
+assert.equal(plan.levels.length, 6);
+assert.ok(!plan.levelSubjects.some((ls) => ls.subjectSlug === "fisica"));
+const simulado = await applyBasica(db, plan, false);
+assert.equal((await db.select().from(levels)).length, 2);
+assert.equal(simulado.levelSubjectsAdded.length, 24); // 6 cursos × 4 asignaturas
+const primera = await applyBasica(db, plan, true);
+assert.deepEqual(primera.levelsAdded, ["1b", "2b", "3b", "4b", "5b", "6b"]);
+assert.ok(!primera.subjectsAdded.includes("matematica")); // reutiliza la existente
+assert.equal((await db.select().from(levelSubjects)).length, 1 + 24);
+const segunda = await applyBasica(db, plan, true);
+assert.deepEqual([segunda.levelsAdded, segunda.subjectsAdded, segunda.levelSubjectsAdded], [[], [], []]);
+assert.equal((await db.select().from(levelSubjects)).length, 1 + 24);
+// El tramo del nuevo nivel queda listo para su dashboard.
+await db.insert(userProfiles).values([{ userId: "u2", levelId: "2b" }]);
+assert.equal((await loadVorticeOverview(db, "u2", despues)).track, "basica-1-4");
 
 console.log("vortice-db: ok");
