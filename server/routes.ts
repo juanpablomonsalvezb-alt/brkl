@@ -1,6 +1,7 @@
 import type { Express, RequestHandler } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
+import { createHmac, timingSafeEqual } from "crypto";
 import { and, eq, gte, isNull } from "drizzle-orm";
 import { storage } from "./storage";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
@@ -101,31 +102,54 @@ function parseAllModulesFromText(text: string): ModuleInfo[] {
 }
 
 // Admin authorization middleware - must be used after isAuthenticated
-const isAdmin: RequestHandler = async (req: any, res, next) => {
-  // DEV MODE: Allow all access
-  next();
-  return;
+// Sin sesión válida (o sin login configurado en el entorno) se rechaza: falla cerrado.
+// Clave de admin (env ADMIN_TOKEN): POST /api/admin-login deja una cookie httpOnly
+// con un HMAC de la clave; sin ADMIN_TOKEN configurado esta vía queda deshabilitada.
+const ADMIN_COOKIE = "brkl_admin";
+function adminCookieValue(): string | null {
+  const token = process.env.ADMIN_TOKEN;
+  if (!token || token.length < 16) return null;
+  return createHmac("sha256", token).update("brkl-admin-v1").digest("hex");
+}
+function safeEqual(a: string, b: string): boolean {
+  const ba = Buffer.from(a);
+  const bb = Buffer.from(b);
+  return ba.length === bb.length && timingSafeEqual(ba, bb);
+}
+function hasAdminCookie(req: any): boolean {
+  const expected = adminCookieValue();
+  if (!expected) return false;
+  const raw = String(req.headers.cookie || "")
+    .split(";")
+    .map((c) => c.trim())
+    .find((c) => c.startsWith(ADMIN_COOKIE + "="));
+  return !!raw && safeEqual(raw.slice(ADMIN_COOKIE.length + 1), expected);
+}
 
-  /*
+const isAdmin: RequestHandler = async (req: any, res, next) => {
   try {
+    if (hasAdminCookie(req)) return next();
+    const authed = typeof req.isAuthenticated === "function" && req.isAuthenticated();
     // Support both Google OAuth (req.user.id) and Replit Auth (req.user.claims.sub)
-    const userId = req.user?.id || req.user?.claims?.sub;
+    const userId = authed ? req.user?.id || req.user?.claims?.sub : undefined;
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    
+
     const profile = await storage.getUserProfile(userId);
     if (!profile || profile.role !== "admin") {
       return res.status(403).json({ message: "Forbidden: Admin access required" });
     }
-    
+
     next();
   } catch (error) {
     console.error("Error checking admin status:", error);
     res.status(500).json({ message: "Failed to verify admin status" });
   }
-  */
 };
+
+// Escrituras administrativas que no viven bajo /api/admin.
+const ADMIN_WRITE_PREFIXES = ["/api/evaluation-links", "/api/textbooks/auto-match"];
 
 export async function registerRoutes(
   httpServer: Server,
@@ -298,6 +322,34 @@ export async function registerRoutes(
     console.log("⚠️  Running in development mode without authentication");
   }
   registerAuthRoutes(app);
+
+  // ponytail: sin rate limit; la clave exige ≥16 caracteres, agregar límite si se acorta.
+  app.post("/api/admin-login", (req, res) => {
+    const expected = adminCookieValue();
+    const token = typeof req.body?.token === "string" ? req.body.token : "";
+    if (!expected || !process.env.ADMIN_TOKEN || !safeEqual(token, process.env.ADMIN_TOKEN)) {
+      return res.status(401).json({ message: "Clave incorrecta" });
+    }
+    res.cookie(ADMIN_COOKIE, expected, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 12 * 60 * 60 * 1000,
+      path: "/",
+    });
+    res.json({ ok: true });
+  });
+  app.post("/api/admin-logout", (_req, res) => {
+    res.clearCookie(ADMIN_COOKIE, { path: "/" });
+    res.json({ ok: true });
+  });
+
+  // Guard por prefijo: cubre toda ruta /api/admin/* (incluidas las de faqRoutes y
+  // paesRoutes, que no declaran middleware propio) aunque se agreguen rutas nuevas.
+  app.use("/api/admin", isAdmin);
+  app.use(ADMIN_WRITE_PREFIXES, (req, res, next) =>
+    req.method === "GET" || req.method === "HEAD" ? next() : isAdmin(req, res, next),
+  );
 
   // === PUBLIC ROUTES ===
 
