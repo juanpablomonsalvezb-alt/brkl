@@ -5,7 +5,9 @@ import { buildOverview, trackForLevel, type OverviewSubjectInput } from "../shar
 assert.equal(trackForLevel("3b"), "basica-1-4");
 assert.equal(trackForLevel("7b"), "basica-5-8");
 assert.equal(trackForLevel("2m"), "media");
-assert.equal(trackForLevel("nm2"), "media");
+assert.equal(trackForLevel("nm2"), null); // adultos: fuera de Vórtice
+assert.equal(trackForLevel("1b"), "basica-1-4");
+assert.equal(trackForLevel("4m"), "media");
 assert.equal(trackForLevel("xx"), null);
 assert.equal(trackForLevel(null), null);
 

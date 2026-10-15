@@ -3,13 +3,12 @@
 
 export type VorticeTrack = "basica-1-4" | "basica-5-8" | "media";
 
-// Mismos tres tramos que las portadas de la landing (/plataforma/:nivel).
-// ponytail: adultos se mapean al tramo equivalente; separar si tendrán dashboard propio.
+// El colegio va de 1° Básico a 4° Medio, en los mismos tres tramos que las portadas
+// de la landing (/plataforma/:nivel). Los niveles de adultos (nb*/nm*) no son parte de Vórtice.
 const TRACK_BY_LEVEL: Record<string, VorticeTrack> = {
   "1b": "basica-1-4", "2b": "basica-1-4", "3b": "basica-1-4", "4b": "basica-1-4",
   "5b": "basica-5-8", "6b": "basica-5-8", "7b": "basica-5-8", "8b": "basica-5-8",
   "1m": "media", "2m": "media", "3m": "media", "4m": "media",
-  nb1: "basica-1-4", nb2: "basica-5-8", nb3: "basica-5-8", nm1: "media", nm2: "media",
 };
 
 export function trackForLevel(levelId: string | null | undefined): VorticeTrack | null {
