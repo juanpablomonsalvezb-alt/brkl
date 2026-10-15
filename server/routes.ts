@@ -1,7 +1,7 @@
 import type { Express, RequestHandler } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
-import { and, eq, gte, inArray, isNull } from "drizzle-orm";
+import { and, eq, gte, isNull } from "drizzle-orm";
 import { storage } from "./storage";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
 import {
@@ -11,9 +11,8 @@ import {
   insertReservationSchema, insertWaitlistSchema, waitlistSignups,
   insertFunnelEventSchema, funnelEvents,
   insertTogetherHeartbeatSchema, togetherPresence, togetherRoomSchema,
-  enrollments, levelSubjects, subjects, levels, learningObjectives, weeklyResources, studentProgress, userProfiles,
 } from "@shared/schema";
-import { buildOverview, type OverviewSubjectInput } from "@shared/vortice";
+import { loadVorticeOverview } from "./vortice";
 import { db } from "./db";
 import { notifyByEmail, sendConfirmationEmail } from "./notify";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
@@ -445,55 +444,7 @@ export async function registerRoutes(
       const userId = currentUserId(req);
       if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
-      const rows = await db
-        .select({
-          levelSubjectId: levelSubjects.id,
-          levelId: levels.id,
-          levelName: levels.name,
-          subjectName: subjects.name,
-          subjectSlug: subjects.slug,
-        })
-        .from(enrollments)
-        .innerJoin(levelSubjects, eq(enrollments.levelSubjectId, levelSubjects.id))
-        .innerJoin(subjects, eq(levelSubjects.subjectId, subjects.id))
-        .innerJoin(levels, eq(levelSubjects.levelId, levels.id))
-        .where(and(eq(enrollments.userId, userId), eq(enrollments.isActive, true)));
-
-      // Nivel: el de la matrícula; si aún no hay matrícula, el del perfil.
-      let level = rows[0] ? { id: rows[0].levelId, name: rows[0].levelName } : null;
-      if (!level) {
-        const [profile] = await db.select({ levelId: userProfiles.levelId }).from(userProfiles).where(eq(userProfiles.userId, userId));
-        if (profile?.levelId) {
-          const [lvl] = await db.select({ id: levels.id, name: levels.name }).from(levels).where(eq(levels.id, profile.levelId));
-          level = lvl ?? null;
-        }
-      }
-
-      const lsIds = rows.map((r) => r.levelSubjectId);
-      const objectives = lsIds.length
-        ? await db.select().from(learningObjectives).where(inArray(learningObjectives.levelSubjectId, lsIds))
-        : [];
-      const oaIds = objectives.map((o) => o.id);
-      const resources = oaIds.length
-        ? await db.select().from(weeklyResources).where(and(inArray(weeklyResources.learningObjectiveId, oaIds), eq(weeklyResources.isActive, true)))
-        : [];
-      const done = await db.select({ resourceId: studentProgress.resourceId }).from(studentProgress).where(eq(studentProgress.userId, userId));
-
-      const input: OverviewSubjectInput[] = rows.map((r) => ({
-        levelSubjectId: r.levelSubjectId,
-        subjectName: r.subjectName,
-        subjectSlug: r.subjectSlug,
-        objectives: objectives
-          .filter((o) => o.levelSubjectId === r.levelSubjectId)
-          .map((o) => ({
-            id: o.id, code: o.code, title: o.title, weekNumber: o.weekNumber, sortOrder: o.sortOrder,
-            resources: resources
-              .filter((x) => x.learningObjectiveId === o.id)
-              .map((x) => ({ id: x.id, title: x.title, resourceType: x.resourceType, sortOrder: x.sortOrder })),
-          })),
-      }));
-
-      res.json(buildOverview(level, input, new Set(done.map((d) => d.resourceId))));
+      res.json(await loadVorticeOverview(db, userId, new Date()));
     } catch (error) {
       console.error("Error building Vórtice overview:", error);
       res.status(500).json({ message: "Failed to build overview" });
