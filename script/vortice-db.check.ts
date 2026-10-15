@@ -122,3 +122,41 @@ const a1 = await markResourceCompleteOnce(db, "u4", "r1");
 const a2 = await markResourceCompleteOnce(db, "u4", "r1");
 assert.equal(a1.id, a2.id);
 console.log("vortice-access: ok");
+
+// Umbral™: rúbricas por objetivo, versionadas y visibles solo con matrícula activa.
+const { getStudentRubric, createRubricVersion, updateDraftRubric, rubricInputSchema } = await import("../server/rubricas");
+const niveles = ["Inicial", "En desarrollo", "Logrado", "Destacado"].map((label) => ({ label, description: `Nivel ${label}` }));
+const entrada = (title: string, publish: boolean) => rubricInputSchema.parse({
+  title, publish,
+  criteria: [{ description: "Ordena enteros", performanceLevels: niveles }, { description: "Explica", performanceLevels: niveles.slice(0, 2) }],
+});
+const versionVisible = async (userId: string) => {
+  const r = await getStudentRubric(db, userId, "oa1");
+  return r.ok ? r.value.version : r.status;
+};
+assert.equal(rubricInputSchema.safeParse({ title: "x", criteria: [] }).success, false);
+assert.equal(rubricInputSchema.safeParse({ title: "x", criteria: [{ description: "d", performanceLevels: [niveles[0], niveles[0]] }] }).success, false);
+assert.deepEqual(await getStudentRubric(db, "u1", "nope"), { ok: false, status: 404, reason: "Objetivo no encontrado" });
+assert.equal((await updateDraftRubric(db, "oa1", entrada("x", false))).ok, false); // sin rúbrica aún
+assert.equal((await createRubricVersion(db, "nope", entrada("x", false))).ok, false);
+const borrador = await createRubricVersion(db, "oa1", entrada("Borrador", false));
+assert.ok(borrador.ok && borrador.value.version === 1);
+assert.equal(await versionVisible("u1"), 404); // borrador no visible
+const v1 = await updateDraftRubric(db, "oa1", entrada("Rúbrica OA1", true));
+assert.ok(v1.ok && v1.value.isPublished && v1.value.criteria.length === 2);
+const visto = await getStudentRubric(db, "u1", "oa1");
+assert.ok(visto.ok);
+assert.deepEqual(visto.value.criteria.map((c) => c.description), ["Ordena enteros", "Explica"]);
+assert.deepEqual(visto.value.criteria[0].performanceLevels.map((l) => l.label), ["Inicial", "En desarrollo", "Logrado", "Destacado"]);
+assert.equal(await versionVisible("u2"), 403); // matrícula inactiva
+// Publicada no se edita; una versión nueva no borra la anterior.
+const editarPublicada = await updateDraftRubric(db, "oa1", entrada("x", true));
+assert.ok(!editarPublicada.ok && editarPublicada.status === 409);
+const v2 = await createRubricVersion(db, "oa1", entrada("Rúbrica OA1 v2", false));
+assert.ok(v2.ok && v2.value.version === 2);
+assert.equal(await versionVisible("u1"), 1); // v2 aún es borrador
+await updateDraftRubric(db, "oa1", entrada("Rúbrica OA1 v2", true));
+assert.equal(await versionVisible("u1"), 2);
+assert.equal((await db.select().from(schema.rubrics)).length, 2);
+assert.equal((await db.select().from(schema.rubricCriteria)).length, 4);
+console.log("umbral-rubricas: ok");
