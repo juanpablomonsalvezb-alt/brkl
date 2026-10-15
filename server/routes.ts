@@ -14,6 +14,7 @@ import {
 } from "@shared/schema";
 import { loadVorticeOverview, checkResourceAccess, checkEvaluationAccess, markResourceCompleteOnce } from "./vortice";
 import { db } from "./db";
+import { purgarPresenciaVieja } from "./retencion";
 import { notifyByEmail, sendConfirmationEmail } from "./notify";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
 import {
@@ -264,11 +265,13 @@ export async function registerRoutes(
       const now = new Date();
       await db
         .insert(togetherPresence)
-        .values({ ...parsed.data, email: "", lastSeen: now })
+        .values({ ...parsed.data, lastSeen: now })
         .onConflictDoUpdate({
           target: togetherPresence.clientId,
-          set: { displayName: parsed.data.displayName, email: "", subject: parsed.data.subject, room: parsed.data.room ?? null, lastSeen: now },
+          set: { displayName: parsed.data.displayName, subject: parsed.data.subject, room: parsed.data.room ?? null, lastSeen: now },
         });
+      // ponytail: limpieza en el propio latido (un DELETE sobre tabla chica); cron si la tabla crece.
+      await purgarPresenciaVieja(db, now);
       res.status(204).end();
     } catch {
       res.status(204).end();

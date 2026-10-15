@@ -122,3 +122,26 @@ const a1 = await markResourceCompleteOnce(db, "u4", "r1");
 const a2 = await markResourceCompleteOnce(db, "u4", "r1");
 assert.equal(a1.id, a2.id);
 console.log("vortice-access: ok");
+
+// Retención: presencia de Together (> 1 hora) y eventos de embudo (> 12 meses). Idempotente.
+const { purgarPresenciaVieja, purgarEventosEmbudoViejos } = await import("../server/retencion");
+const { togetherPresence, funnelEvents } = schema;
+const ahora = new Date(2026, 9, 15, 12, 0, 0);
+assert.ok(!("email" in togetherPresence), "together_presence no debe guardar email");
+await db.insert(togetherPresence).values([
+  { clientId: "activo-1", displayName: "Ana", lastSeen: new Date(ahora.getTime() - 20_000) },
+  { clientId: "reciente", displayName: "Beto", lastSeen: new Date(ahora.getTime() - 59 * 60_000) },
+  { clientId: "viejo-01", displayName: "Caro", lastSeen: new Date(ahora.getTime() - 2 * 3600_000) },
+]);
+assert.equal(await purgarPresenciaVieja(db, ahora), 1);
+assert.equal(await purgarPresenciaVieja(db, ahora), 0);
+assert.deepEqual((await db.select().from(togetherPresence)).map((r) => r.clientId).sort(), ["activo-1", "reciente"]);
+await db.insert(funnelEvents).values([
+  { step: "llega_pagina", createdAt: new Date(2026, 8, 1) },
+  { step: "llega_pagina", createdAt: new Date(2025, 10, 1) }, // 11,5 meses: se queda
+  { step: "ve_formulario", createdAt: new Date(2025, 8, 1) }, // 13,5 meses: se borra
+]);
+assert.equal(await purgarEventosEmbudoViejos(db, ahora), 1);
+assert.equal(await purgarEventosEmbudoViejos(db, ahora), 0);
+assert.equal((await db.select().from(funnelEvents)).length, 2);
+console.log("retencion: ok");
