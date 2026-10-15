@@ -18,6 +18,7 @@ const Adaptativo = lazyRoute(() => import("@/pages/Adaptativo"));
 const PreparaTusExamenes = lazyRoute(() => import("@/pages/PreparaTusExamenes"));
 const Together = lazyRoute(() => import("@/pages/Together"));
 const SinLimites = lazyRoute(() => import("@/pages/SinLimites"));
+const Neurodivergentes = lazyRoute(() => import("@/pages/Neurodivergentes"));
 const PorDentro = lazyRoute(() => import("@/pages/PorDentro"));
 const TourPlataforma = lazyRoute(() => import("@/pages/TourPlataforma"));
 const PreguntasFrecuentes = lazyRoute(() => import("@/pages/PreguntasFrecuentes"));
@@ -35,6 +36,7 @@ const PRECARGA: Record<string, () => Promise<void>> = {
   "/prepara-tus-examenes": PreparaTusExamenes.preload,
   "/together": Together.preload,
   "/sin-limites": SinLimites.preload,
+  "/neurodivergentes": Neurodivergentes.preload,
   "/adulto-acompanante": PorDentro.preload,
   "/asi-esta-construido": PorDentro.preload,
   "/todo-incluido": PorDentro.preload,
@@ -109,6 +111,7 @@ function Router() {
       <Route path="/prepara-tus-examenes" component={PreparaTusExamenes} />
       <Route path="/together/:sala?" component={Together} />
       <Route path="/sin-limites" component={SinLimites} />
+      <Route path="/neurodivergentes" component={Neurodivergentes} />
       <Route path="/adulto-acompanante">{() => <PorDentro ruta="/adulto-acompanante" />}</Route>
       <Route path="/asi-esta-construido">{() => <PorDentro ruta="/asi-esta-construido" />}</Route>
       <Route path="/todo-incluido">{() => <PorDentro ruta="/todo-incluido" />}</Route>
