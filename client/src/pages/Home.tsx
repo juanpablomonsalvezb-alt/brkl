@@ -833,28 +833,6 @@ export default function Home() {
         }}
       />
 
-      {/* VideoObject schema del tour real de la plataforma — permite aparecer en
-          Google Video y que la IA cite directamente qué muestra el video. */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "VideoObject",
-            name: "Tour de la plataforma Barkley Online — alumno y apoderado",
-            description: "Recorrido narrado por el dashboard del alumno y el portal del apoderado de Barkley Online, colegio 100% asincrónico en Chile.",
-            thumbnailUrl: "https://www.barkleyinstituto.cl/videos/tour-poster.webp",
-            // ISO 8601 con zona horaria obligatoria: Google Search Console marca
-            // como "no válido" una fecha sin hora/offset, aunque el resto del
-            // schema esté correcto. -04:00 es horario de Chile (CLT).
-            uploadDate: "2026-07-11T12:00:00-04:00",
-            duration: "PT53S",
-            contentUrl: "https://www.barkleyinstituto.cl/videos/tour-plataforma.mp4",
-            embedUrl: "https://www.barkleyinstituto.cl/#plataforma",
-          }),
-        }}
-      />
-
       {faqs && faqs.length > 0 && (
         // FAQPage schema: permite a buscadores e IA (ChatGPT, Perplexity, Google AI
         // Overviews) extraer preguntas/respuestas directamente sin tener que
@@ -1206,26 +1184,8 @@ export default function Home() {
           {/* Tour virtual narrado: recorrido real por el dashboard del alumno y el portal del apoderado */}
           <Reveal>
             <div style={{ margin: "0 auto 48px", maxWidth: 880 }}>
-              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, margin: "0 0 14px" }}>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 7, background: NAVY, color: "#fff", fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", padding: "6px 12px", borderRadius: 999 }}>
-                  <Play style={{ width: 13, height: 13 }} strokeWidth={3} /> Video resumen · 53 segundos
-                </span>
-                <span style={{ fontSize: 14, color: TEXT }}>Lo que ve tu hijo y lo que ves tú como apoderado — al grano.</span>
-              </div>
-              <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", boxShadow: "0 18px 50px rgba(0,20,60,0.18)", border: `1px solid ${SLATE}22`, background: NAVY }}>
-                <video
-                  controls
-                  preload="metadata"
-                  poster="/videos/tour-poster.webp"
-                  playsInline
-                  style={{ width: "100%", display: "block", aspectRatio: "16/9", background: NAVY }}
-                >
-                  <source src="/videos/tour-plataforma.mp4" type="video/mp4" />
-                  Tu navegador no puede reproducir el video.
-                </video>
-              </div>
               {/* CTA a la demo REAL de la plataforma — lección completa + dashboards alumno y familia */}
-              <div style={{ marginTop: 22, background: "#fff", border: `1px solid ${SLATE}22`, borderRadius: 16, padding: "22px 24px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16, boxShadow: "0 6px 24px rgba(0,20,60,0.06)" }}>
+              <div style={{ marginTop: 0, background: "#fff", border: `1px solid ${SLATE}22`, borderRadius: 16, padding: "22px 24px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16, boxShadow: "0 6px 24px rgba(0,20,60,0.06)" }}>
                 <div>
                   <p style={{ fontSize: 17, fontWeight: 700, color: NAVY, margin: "0 0 3px" }}>¿Quieres verla por dentro de verdad?</p>
                   <p style={{ fontSize: 14, color: TEXT, margin: 0 }}>Entra a una cuenta de ejemplo con una lección completa — como alumno o como familia.</p>
