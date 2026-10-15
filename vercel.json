@@ -213,6 +213,10 @@
       "destination": "/api/handler.js"
     },
     {
+      "source": "/neurodivergentes",
+      "destination": "/api/handler.js"
+    },
+    {
       "source": "/adulto-acompanante",
       "destination": "/api/handler.js"
     },
