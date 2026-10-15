@@ -272,6 +272,9 @@ function AdmisionSection({ anchorId }: { anchorId?: string }) {
             Sin compromiso, sin costo hoy — <span style={{ color: GOLD }}>pagas recién en enero de 2027</span>.
           </p>
           <p style={{ fontSize: 15, color: "#9db3cf", margin: 0 }}>Cupos limitados para el año académico 2027. No hay matrícula disponible para el año en curso.</p>
+          <a href="/neurodivergentes" style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 22, color: GOLD, fontWeight: 700, fontSize: 15, textDecoration: "underline", textUnderlineOffset: 4 }}>
+            ¿Tu hijo tiene TEA, dislexia o TDAH? Mira cómo trabajamos <ArrowUpRight size={16} />
+          </a>
         </div>
         <div style={{ flex: "1 1 460px", minWidth: 300, maxWidth: 560, background: "#fff", borderRadius: 24, padding: "44px 40px", boxShadow: "0 32px 80px rgba(0,0,0,0.35)", border: `1px solid rgba(255,255,255,0.08)` }}>
           <InscripcionForm />
@@ -1512,6 +1515,40 @@ export default function Home() {
               Ver el fundamento completo <ArrowUpRight size={16} />
             </a>
           </Reveal>
+        </div>
+      </section>
+
+      {/* === NEURODIVERGENTES: intro a /neurodivergentes === */}
+      <section style={{ padding: "90px 24px", background: "#f4f8fd" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <Reveal>
+            <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 40px" }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: "#5b7ba3", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 12px" }}>Para familias neurodivergentes</p>
+              <h2 style={{ fontSize: "clamp(28px,4.2vw,42px)", fontWeight: 700, color: NAVY, margin: "0 0 16px", lineHeight: 1.2 }}>
+                ¿Cómo aprende en Barkley un estudiante con TEA, dislexia o TDAH?
+              </h2>
+              <p style={{ fontSize: 17, color: "#525252", margin: 0, lineHeight: 1.7 }}>
+                Muchas familias nos preguntan el cómo. Una sola plataforma, una secuencia clara en cada actividad y los apoyos que cada estudiante necesita.
+              </p>
+            </div>
+          </Reveal>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20, marginBottom: 36 }}>
+            {[
+              { n: "TEA", c: "#2f6fd6", d: "Previsibilidad: siempre se sabe qué viene después." },
+              { n: "Dislexia", c: "#7b5ad8", d: "Acceso al contenido, sin bajar el objetivo." },
+              { n: "TDAH", c: "#e8801a", d: "Tareas pequeñas y un primer paso claro." },
+            ].map((x) => (
+              <a key={x.n} href={`/neurodivergentes#${x.n === "TEA" ? "tea" : x.n === "Dislexia" ? "dislexia" : "tdah"}`} style={{ textDecoration: "none", background: "#fff", borderRadius: 16, padding: "26px 24px", borderTop: `4px solid ${x.c}`, boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
+                <h3 style={{ fontSize: 20, fontWeight: 800, color: x.c, margin: "0 0 6px" }}>{x.n}</h3>
+                <p style={{ fontSize: 15, color: "#525252", margin: 0, lineHeight: 1.6 }}>{x.d}</p>
+              </a>
+            ))}
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <a href="/neurodivergentes" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: NAVY, color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 15, borderRadius: 999, padding: "16px 32px" }}>
+              Ver cómo trabajamos <ArrowUpRight size={16} />
+            </a>
+          </div>
         </div>
       </section>
 
