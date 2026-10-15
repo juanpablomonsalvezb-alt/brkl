@@ -1,7 +1,7 @@
 import type { Express, RequestHandler } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
-import { and, eq, gte, isNull } from "drizzle-orm";
+import { and, eq, gte, inArray, isNull } from "drizzle-orm";
 import { storage } from "./storage";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
 import {
@@ -10,8 +10,10 @@ import {
   insertEvaluationProgressSchema, updateLevelSubjectTextbookSchema, updateLearningObjectivePagesSchema,
   insertReservationSchema, insertWaitlistSchema, waitlistSignups,
   insertFunnelEventSchema, funnelEvents,
-  insertTogetherHeartbeatSchema, togetherPresence, togetherRoomSchema
+  insertTogetherHeartbeatSchema, togetherPresence, togetherRoomSchema,
+  enrollments, levelSubjects, subjects, levels, learningObjectives, weeklyResources, studentProgress, userProfiles,
 } from "@shared/schema";
+import { buildOverview, type OverviewSubjectInput } from "@shared/vortice";
 import { db } from "./db";
 import { notifyByEmail, sendConfirmationEmail } from "./notify";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
@@ -100,6 +102,11 @@ function parseAllModulesFromText(text: string): ModuleInfo[] {
   return modules;
 }
 
+// Id del usuario en sesión: Google OAuth guarda req.user.id; Replit Auth, req.user.claims.sub.
+function currentUserId(req: any): string | undefined {
+  return req.user?.id || req.user?.claims?.sub || undefined;
+}
+
 // Admin authorization middleware - must be used after isAuthenticated
 const isAdmin: RequestHandler = async (req: any, res, next) => {
   // DEV MODE: Allow all access
@@ -109,7 +116,7 @@ const isAdmin: RequestHandler = async (req: any, res, next) => {
   /*
   try {
     // Support both Google OAuth (req.user.id) and Replit Auth (req.user.claims.sub)
-    const userId = req.user?.id || req.user?.claims?.sub;
+    const userId = currentUserId(req);
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -387,7 +394,8 @@ export async function registerRoutes(
   app.get("/api/profile", async (req: any, res) => {
     try {
       // Check if user is authenticated
-      if (!req.user || !req.user.claims || !req.user.claims.sub) {
+      const userId = currentUserId(req);
+      if (!userId) {
         // In development, return a default profile
         return res.json({ 
           id: "dev-user",
@@ -397,7 +405,6 @@ export async function registerRoutes(
         });
       }
       
-      const userId = req.user.claims.sub;
       const profile = await storage.getUserProfile(userId);
       res.json(profile || { role: "student" });
     } catch (error) {
@@ -409,7 +416,8 @@ export async function registerRoutes(
   // Get user's enrollments
   app.get("/api/enrollments", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
       const userEnrollments = await storage.getEnrollmentsByUser(userId);
       res.json(userEnrollments);
     } catch (error) {
@@ -421,7 +429,8 @@ export async function registerRoutes(
   // Get user's progress
   app.get("/api/progress", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
       const progress = await storage.getProgressByUser(userId);
       res.json(progress);
     } catch (error) {
@@ -430,10 +439,72 @@ export async function registerRoutes(
     }
   });
 
+  // Vórtice: resumen del estudiante (tramo de dashboard, avance por asignatura, siguiente paso).
+  app.get("/api/vortice/overview", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+      const rows = await db
+        .select({
+          levelSubjectId: levelSubjects.id,
+          levelId: levels.id,
+          levelName: levels.name,
+          subjectName: subjects.name,
+          subjectSlug: subjects.slug,
+        })
+        .from(enrollments)
+        .innerJoin(levelSubjects, eq(enrollments.levelSubjectId, levelSubjects.id))
+        .innerJoin(subjects, eq(levelSubjects.subjectId, subjects.id))
+        .innerJoin(levels, eq(levelSubjects.levelId, levels.id))
+        .where(and(eq(enrollments.userId, userId), eq(enrollments.isActive, true)));
+
+      // Nivel: el de la matrícula; si aún no hay matrícula, el del perfil.
+      let level = rows[0] ? { id: rows[0].levelId, name: rows[0].levelName } : null;
+      if (!level) {
+        const [profile] = await db.select({ levelId: userProfiles.levelId }).from(userProfiles).where(eq(userProfiles.userId, userId));
+        if (profile?.levelId) {
+          const [lvl] = await db.select({ id: levels.id, name: levels.name }).from(levels).where(eq(levels.id, profile.levelId));
+          level = lvl ?? null;
+        }
+      }
+
+      const lsIds = rows.map((r) => r.levelSubjectId);
+      const objectives = lsIds.length
+        ? await db.select().from(learningObjectives).where(inArray(learningObjectives.levelSubjectId, lsIds))
+        : [];
+      const oaIds = objectives.map((o) => o.id);
+      const resources = oaIds.length
+        ? await db.select().from(weeklyResources).where(and(inArray(weeklyResources.learningObjectiveId, oaIds), eq(weeklyResources.isActive, true)))
+        : [];
+      const done = await db.select({ resourceId: studentProgress.resourceId }).from(studentProgress).where(eq(studentProgress.userId, userId));
+
+      const input: OverviewSubjectInput[] = rows.map((r) => ({
+        levelSubjectId: r.levelSubjectId,
+        subjectName: r.subjectName,
+        subjectSlug: r.subjectSlug,
+        objectives: objectives
+          .filter((o) => o.levelSubjectId === r.levelSubjectId)
+          .map((o) => ({
+            id: o.id, code: o.code, title: o.title, weekNumber: o.weekNumber, sortOrder: o.sortOrder,
+            resources: resources
+              .filter((x) => x.learningObjectiveId === o.id)
+              .map((x) => ({ id: x.id, title: x.title, resourceType: x.resourceType, sortOrder: x.sortOrder })),
+          })),
+      }));
+
+      res.json(buildOverview(level, input, new Set(done.map((d) => d.resourceId))));
+    } catch (error) {
+      console.error("Error building Vórtice overview:", error);
+      res.status(500).json({ message: "Failed to build overview" });
+    }
+  });
+
   // Mark resource as complete
   app.post("/api/progress", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
       const parsed = insertStudentProgressSchema.safeParse({ ...req.body, userId });
       if (!parsed.success) {
         return res.status(400).json({ message: "Invalid data", errors: parsed.error.errors });
@@ -771,7 +842,7 @@ export async function registerRoutes(
   // Get all modules schedule for a level-subject (public for development)
   app.get("/api/level-subjects/:id/calendar", async (req: any, res) => {
     try {
-      const userId = req.user?.claims?.sub || "dev-user";
+      const userId = currentUserId(req) || "dev-user";
       const idOrSlug = req.params.id;
       const currentDate = new Date();
 
@@ -818,7 +889,8 @@ export async function registerRoutes(
   // Check if a specific module is accessible
   app.get("/api/modules/:moduleNumber/access", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
       const moduleNumber = parseInt(req.params.moduleNumber);
       const levelSubjectId = req.query.levelSubjectId as string;
 
@@ -853,7 +925,8 @@ export async function registerRoutes(
   // Check evaluation availability
   app.get("/api/modules/:moduleNumber/evaluations", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
       const moduleNumber = parseInt(req.params.moduleNumber);
       const levelSubjectId = req.query.levelSubjectId as string;
       const currentDate = new Date();
@@ -909,7 +982,8 @@ export async function registerRoutes(
   // Mark evaluation as complete
   app.post("/api/evaluations/:id/complete", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
       const evaluationId = req.params.id;
       const { score, passed } = req.body;
 
@@ -1495,7 +1569,8 @@ export async function registerRoutes(
   app.post("/api/evaluations/:id/submit", async (req: any, res) => {
     try {
       const { id } = req.params;
-      const userId = req.user?.claims?.sub;
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
       const { answers } = req.body;
 
       if (!Array.isArray(answers)) {
