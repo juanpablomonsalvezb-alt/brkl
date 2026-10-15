@@ -23,7 +23,7 @@ export function PremiumButton({
   delay = 0,
   isSecondary = false,
 }: PremiumButtonProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLAnchorElement & HTMLButtonElement>(null);
   
   // Magnetic effect
   const x = useMotionValue(0);
@@ -36,7 +36,7 @@ export function PremiumButton({
   const rotateX = useTransform(springY, [-50, 50], [5, -5]);
   const rotateY = useTransform(springX, [-50, 50], [-5, 5]);
 
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: MouseEvent<HTMLElement>) => {
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;

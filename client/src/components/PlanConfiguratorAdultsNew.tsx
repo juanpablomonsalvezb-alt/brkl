@@ -188,7 +188,6 @@ export function PlanConfiguratorAdultsNew() {
       <ReservationDialog
         open={isReservationOpen}
         onOpenChange={setIsReservationOpen}
-        planId={selectedPlanId}
       />
     </section>
   );

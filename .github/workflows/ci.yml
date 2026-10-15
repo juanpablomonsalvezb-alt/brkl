@@ -1,0 +1,33 @@
+name: CI
+
+# Chequeos en cada push y PR: tipos, chequeos de Vórtice (SQLite en memoria,
+# sin secretos) y build. No despliega nada.
+#
+# Nota: `npm run build` regenera api/handler.js, que está versionado. El CI no
+# falla si el artefacto queda distinto al commiteado; solo verifica que compile.
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npx tsc --noEmit -p .
+      - run: npm run check:vortice
+      - run: npm run build

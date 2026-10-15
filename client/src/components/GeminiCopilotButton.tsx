@@ -59,7 +59,7 @@ export function GeminiCopilotButton({
         <button
           onClick={() => setShowDialog(true)}
           className={`fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-br from-purple-600 to-blue-600 text-white rounded-full shadow-2xl hover:scale-110 transition-all duration-300 group ${className}`}
-          title={`Hablar con ${copilot.name}`}
+          title={`Hablar con ${copilot?.name}`}
         >
           <Bot className="w-6 h-6 group-hover:rotate-12 transition-transform" />
           <span className="absolute -top-1 -right-1 flex h-3 w-3">
@@ -73,10 +73,10 @@ export function GeminiCopilotButton({
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Bot className="w-6 h-6 text-purple-600" />
-                {copilot.name}
+                {copilot?.name}
               </DialogTitle>
               <DialogDescription>
-                {copilot.description || "Tu asistente de IA personalizado para ayudarte en tus estudios"}
+                {copilot?.description || "Tu asistente de IA personalizado para ayudarte en tus estudios"}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 pt-4">
@@ -94,7 +94,7 @@ export function GeminiCopilotButton({
               </div>
               <Button onClick={openCopilot} className="w-full" size="lg">
                 <ExternalLink className="w-4 h-4 mr-2" />
-                Abrir Chat con {copilot.name}
+                Abrir Chat con {copilot?.name}
               </Button>
             </div>
           </DialogContent>
@@ -111,7 +111,7 @@ export function GeminiCopilotButton({
         className={`border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 ${className}`}
       >
         <Bot className="w-4 h-4 mr-2 text-purple-600" />
-        Pregúntale a {copilot.name}
+        Pregúntale a {copilot?.name}
       </Button>
     );
   }
