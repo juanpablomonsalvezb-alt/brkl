@@ -13,6 +13,8 @@ import {
   insertTogetherHeartbeatSchema, togetherPresence, togetherRoomSchema,
 } from "@shared/schema";
 import { loadVorticeOverview, checkResourceAccess, checkEvaluationAccess, markResourceCompleteOnce } from "./vortice";
+import { getBrujulaWeek, saveBrujulaWeek, closeBrujulaWeek } from "./brujula";
+import { saveWeekSchema, closeWeekSchema } from "@shared/brujula";
 import { db } from "./db";
 import { notifyByEmail, sendConfirmationEmail } from "./notify";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
@@ -448,6 +450,50 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error building Vórtice overview:", error);
       res.status(500).json({ message: "Failed to build overview" });
+    }
+  });
+
+  // Brújula™: plan semanal (si no hay uno guardado, propuesta sin guardar).
+  app.get("/api/vortice/brujula/semana", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      res.json(await getBrujulaWeek(db, userId, new Date()));
+    } catch (error) {
+      console.error("Error loading Brújula week:", error);
+      res.status(500).json({ message: "Failed to load weekly plan" });
+    }
+  });
+
+  // Brújula™: aceptar o ajustar el plan de la semana actual.
+  app.post("/api/vortice/brujula/semana", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const parsed = saveWeekSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Invalid data", errors: parsed.error.errors });
+      const result = await saveBrujulaWeek(db, userId, new Date(), parsed.data.objectiveIds);
+      if (!result.ok) return res.status(result.status).json({ message: result.reason });
+      res.json(result.data);
+    } catch (error) {
+      console.error("Error saving Brújula week:", error);
+      res.status(500).json({ message: "Failed to save weekly plan" });
+    }
+  });
+
+  // Brújula™: autoevaluación de cierre de semana.
+  app.post("/api/vortice/brujula/semana/cierre", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const parsed = closeWeekSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Invalid data", errors: parsed.error.errors });
+      const result = await closeBrujulaWeek(db, userId, new Date(), parsed.data);
+      if (!result.ok) return res.status(result.status).json({ message: result.reason });
+      res.json(result.data);
+    } catch (error) {
+      console.error("Error closing Brújula week:", error);
+      res.status(500).json({ message: "Failed to close week" });
     }
   });
 
