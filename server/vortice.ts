@@ -167,12 +167,13 @@ export async function checkEvaluationAccess(
 }
 
 // Marcar un recurso como visto dos veces no debe duplicar el registro.
+// `created` dice si fue la primera vez (la analítica solo cuenta esa).
 export async function markResourceCompleteOnce(
   db: LibSQLDatabase<typeof schema>, userId: string, resourceId: string,
 ) {
   const [existing] = await db.select().from(studentProgress)
     .where(and(eq(studentProgress.userId, userId), eq(studentProgress.resourceId, resourceId)));
-  if (existing) return existing;
-  const [created] = await db.insert(studentProgress).values({ userId, resourceId }).returning();
-  return created;
+  if (existing) return { progress: existing, created: false };
+  const [progress] = await db.insert(studentProgress).values({ userId, resourceId }).returning();
+  return { progress, created: true };
 }

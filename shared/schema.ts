@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { randomUUID } from "crypto";
@@ -197,6 +197,31 @@ export const studentProgress = sqliteTable("student_progress", {
   completedAt: integer("completed_at", { mode: "timestamp" }).defaultNow(),
   score: integer("score"), // For cuestionario
 });
+
+/**
+ * Analítica de aprendizaje, capa mínima: qué pasó, con qué recurso o evaluación y cuándo.
+ * Sin texto libre, sin IP, sin user agent ni duración: solo lo necesario para ver si un
+ * objetivo se está logrando. Se registra desde el servidor (server/analitica.ts) y se
+ * borra pasados RETENCION_MESES.
+ */
+export const LEARNING_EVENT_TYPES = [
+  "recurso_abierto", "recurso_completado", "evaluacion_enviada",
+  "evaluacion_aprobada", "ayuda_solicitada", "repaso_respondido",
+] as const;
+export type LearningEventType = (typeof LEARNING_EVENT_TYPES)[number];
+
+export const learningEvents = sqliteTable("learning_events", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  userId: text("user_id").notNull().references(() => users.id),
+  tipo: text("tipo", { enum: LEARNING_EVENT_TYPES }).notNull(),
+  // Id del recurso o la evaluación; nunca contenido.
+  referencia: text("referencia").notNull(),
+  levelSubjectId: text("level_subject_id").notNull().references(() => levelSubjects.id),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+}, (t) => [
+  index("idx_learning_events_ls_fecha").on(t.levelSubjectId, t.createdAt),
+  index("idx_learning_events_user_fecha").on(t.userId, t.createdAt),
+]);
 
 // Weekly completion status
 export const weeklyCompletion = sqliteTable("weekly_completion", {

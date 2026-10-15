@@ -120,5 +120,78 @@ assert.equal((await checkResourceAccess(db, "u4", "r3", despues)).ok, false);
 // Marcar dos veces no duplica.
 const a1 = await markResourceCompleteOnce(db, "u4", "r1");
 const a2 = await markResourceCompleteOnce(db, "u4", "r1");
-assert.equal(a1.id, a2.id);
+assert.equal(a1.progress.id, a2.progress.id);
+assert.deepEqual([a1.created, a2.created], [true, false]);
 console.log("vortice-access: ok");
+
+// Analítica: registro sin romper la acción principal, anti-spam, agregados y retención.
+const { learningEvents } = schema;
+const {
+  recordEvent, recordResourceOpened, purgeOldEvents, loadAnaliticaResumen,
+  MAX_ABIERTOS_POR_HORA, MIN_GRUPO,
+} = await import("../server/analitica");
+const t0 = new Date(Date.UTC(2026, 5, 3, 12)); // miércoles 3 de junio de 2026
+const minutos = (m: number) => new Date(t0.getTime() + m * 60_000);
+
+// Un fallo al registrar se traga y devuelve false (aquí: userId nulo viola NOT NULL).
+const consoleError = console.error;
+const logged: unknown[] = [];
+console.error = (...args: unknown[]) => { logged.push(args); };
+assert.equal(await recordEvent(db, { userId: null as any, tipo: "recurso_abierto", referencia: "r1", levelSubjectId: "ls1" }), false);
+console.error = consoleError;
+assert.equal(logged.length, 1);
+
+assert.equal(await recordResourceOpened(db, "u1", "r1", "ls1", t0), "registrado");
+assert.equal(await recordResourceOpened(db, "u1", "r1", "ls1", minutos(10)), "duplicado");
+assert.equal(await recordResourceOpened(db, "u1", "r2", "ls1", minutos(10)), "registrado");
+assert.equal(await recordResourceOpened(db, "u1", "r1", "ls1", minutos(31)), "registrado");
+await db.insert(learningEvents).values(Array.from({ length: MAX_ABIERTOS_POR_HORA }, (_, i) => ({
+  userId: "u4", tipo: "recurso_abierto" as const, referencia: `spam${i}`, levelSubjectId: "ls1", createdAt: minutos(1),
+})));
+assert.equal(await recordResourceOpened(db, "u4", "r1", "ls1", minutos(2)), "limite");
+assert.equal(await recordResourceOpened(db, "u4", "r1", "ls1", minutos(62)), "registrado"); // pasó la hora
+
+// Con menos de MIN_GRUPO matriculados activos (hoy: u1 y u4) no hay resumen.
+assert.deepEqual(await loadAnaliticaResumen(db, "ls1"), { levelSubjectId: "ls1", suprimido: true, minimoGrupo: MIN_GRUPO });
+
+await db.insert(users).values([{ id: "u5" }, { id: "u6" }, { id: "u7" }]);
+await db.insert(enrollments).values([
+  { userId: "u5", levelSubjectId: "ls1" }, { userId: "u6", levelSubjectId: "ls1" }, { userId: "u7", levelSubjectId: "ls1" },
+]);
+const domingo = new Date(Date.UTC(2026, 5, 7, 12)); // misma semana (lunes 1 de junio)
+const ev = (userId: string, tipo: "recurso_completado" | "evaluacion_aprobada", referencia: string, createdAt = domingo) =>
+  ({ userId, tipo, referencia, levelSubjectId: "ls1", createdAt });
+await db.insert(learningEvents).values([
+  ev("u1", "recurso_completado", "r1"), ev("u1", "recurso_completado", "r2"),
+  ev("u1", "recurso_completado", "r1"), // repetido: no infla la tasa
+  ev("u5", "recurso_completado", "r1"),
+  ev("u2", "recurso_completado", "r2"), // matrícula inactiva: no cuenta en tasas
+  ev("u1", "evaluacion_aprobada", "e2"), ev("u5", "evaluacion_aprobada", "e2"),
+  ev("u6", "evaluacion_aprobada", "e1"), // no es la de cierre
+  ev("u7", "recurso_completado", "r3", new Date(Date.UTC(2026, 5, 8, 12))), // lunes siguiente
+]);
+const resumen = await loadAnaliticaResumen(db, "ls1");
+assert.ok(!resumen.suprimido);
+assert.equal(resumen.matriculados, 5);
+assert.deepEqual(
+  resumen.semanas.filter((s) => s.tipo === "recurso_completado"),
+  [
+    { semana: "2026-06-01", tipo: "recurso_completado", eventos: 5, estudiantes: 3 },
+    { semana: "2026-06-08", tipo: "recurso_completado", eventos: 1, estudiantes: 1 },
+  ],
+);
+assert.deepEqual(resumen.objetivos.map((o) => [o.id, o.recursos, o.recursosCompletadosPct, o.cierreAprobadoPct]), [
+  ["oa1", 2, 30, 40], // 3 de 2×5 pares; 2 de 5 aprobaron e2
+  ["oa2", 1, 20, null], // r3 por 1 de 5; sin evaluación de cierre
+]);
+// La respuesta no trae ids de estudiantes.
+assert.ok(!/"u\d"/.test(JSON.stringify(resumen)));
+
+// Retención: borra lo anterior al corte y es idempotente.
+await db.insert(learningEvents).values([ev("u1", "recurso_completado", "r1", new Date(Date.UTC(2025, 3, 1)))]);
+const antesPurga = (await db.select().from(learningEvents)).length;
+const hoy = new Date(Date.UTC(2026, 5, 10));
+assert.equal(await purgeOldEvents(db, hoy), 1);
+assert.equal(await purgeOldEvents(db, hoy), 0);
+assert.equal((await db.select().from(learningEvents)).length, antesPurga - 1);
+console.log("vortice-analitica: ok");
