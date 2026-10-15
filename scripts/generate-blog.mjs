@@ -21,7 +21,7 @@ const TEXT = "#525252";
 // da al lector una ruta hacia el nivel que le corresponde.
 const DESTINOS = {
   guia: { href: "/guia-examenes-libres/", label: "Guía completa de exámenes libres en Chile" },
-  adaptativo: { href: "/adaptativo", label: "Barkley Adaptativo — apoyo para TDAH, dislexia y TEA" },
+  adaptativo: { href: "/neurodivergentes", label: "Cómo trabajamos con TEA, dislexia y TDAH" },
   "1-basico": { href: "/examenes-libres-1-basico/", label: "Exámenes libres 1° Básico" },
   "2-basico": { href: "/examenes-libres-2-basico/", label: "Exámenes libres 2° Básico" },
   "3-basico": { href: "/examenes-libres-3-basico/", label: "Exámenes libres 3° Básico" },
@@ -546,7 +546,7 @@ function indexHtml() {
     <div class="inner">
       <span class="lbl">Prepara tu nivel:</span>
       <a href="/guia-examenes-libres/">Guía completa</a>
-      <a href="/adaptativo">Adaptativo</a>
+      <a href="/neurodivergentes">Neurodivergentes</a>
       ${["1-basico","2-basico","3-basico","4-basico","5-basico","6-basico","7-basico","8-basico","1-medio","2-medio","3-medio","4-medio"]
         .map((s) => `<a href="/examenes-libres-${s}/">${s.replace("-basico", "° Básico").replace("-medio", "° Medio")}</a>`)
         .join("")}

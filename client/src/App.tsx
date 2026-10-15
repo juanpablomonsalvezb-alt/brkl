@@ -14,7 +14,6 @@ import { useEffect, lazy, Suspense } from "react";
 // bajo demanda; un visitante que solo mira la landing no descarga nada de eso.
 // Las páginas públicas usan lazyRoute: main.tsx precarga el chunk de la ruta
 // actual antes de montar, para no borrar el HTML prerenderizado con un fallback.
-const Adaptativo = lazyRoute(() => import("@/pages/Adaptativo"));
 const PreparaTusExamenes = lazyRoute(() => import("@/pages/PreparaTusExamenes"));
 const Together = lazyRoute(() => import("@/pages/Together"));
 const SinLimites = lazyRoute(() => import("@/pages/SinLimites"));
@@ -32,7 +31,6 @@ const TermsOfUse = lazyRoute(() => import("@/pages/Legal").then((m) => ({ defaul
 const RefundPolicy = lazyRoute(() => import("@/pages/Legal").then((m) => ({ default: m.RefundPolicy })));
 
 const PRECARGA: Record<string, () => Promise<void>> = {
-  "/adaptativo": Adaptativo.preload,
   "/prepara-tus-examenes": PreparaTusExamenes.preload,
   "/together": Together.preload,
   "/sin-limites": SinLimites.preload,
@@ -107,7 +105,6 @@ function Router() {
       <Route path="/plataforma/:nivel" component={PlataformaNivel} />
       <Route path="/en" component={HomeEn} />
       <Route path="/en/support" component={SupportEn} />
-      <Route path="/adaptativo" component={Adaptativo} />
       <Route path="/prepara-tus-examenes" component={PreparaTusExamenes} />
       <Route path="/together/:sala?" component={Together} />
       <Route path="/sin-limites" component={SinLimites} />

@@ -4,7 +4,6 @@
 // los rewrites de vercel.json hacia /api/handler.js.
 export const PRERENDER_ROUTES = [
   "/",
-  "/adaptativo",
   "/sin-limites",
   "/neurodivergentes",
   "/adulto-acompanante",

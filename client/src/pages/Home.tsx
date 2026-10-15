@@ -234,7 +234,7 @@ const NIVELES = [
 const INCLUSIVOS = [
   { title: "TDAH", desc: "Flexibilidad real: sin hora fija, con ritmo propio y tutor dedicado.", url: "/blog/tdah-y-colegio-presencial/", icon: Sparkles },
   { title: "Deportistas", desc: "Para atletas de alto rendimiento: exámenes flexibles, sin asistencia obligatoria.", url: "/blog/colegio-para-deportistas-alto-rendimiento/", icon: Zap },
-  { title: "NEE", desc: "Inclusión real: dislexia, autismo, discapacidad. Adaptaciones desde el diseño.", url: "/adaptativo", icon: Heart },
+  { title: "NEE", desc: "Inclusión real: dislexia, autismo, discapacidad. Adaptaciones desde el diseño.", url: "/neurodivergentes", icon: Heart },
   { title: "Exámenes Libres", desc: "Preparación completa para validación oficial MINEDUC, a tu ritmo.", url: "/guia-examenes-libres/", icon: CheckCircle2 },
   { title: "PAES y pruebas globales", desc: "Cuenta regresiva a fechas oficiales, plan de estudio interactivo y técnicas con evidencia real.", url: "/prepara-tus-examenes", icon: CalendarClock },
   { title: "Together™", desc: "Sala de estudio en silencio: aunque estudies solo, no estás solo. Sin cámara, sin chat.", url: "/together", icon: Users2 },
@@ -430,7 +430,7 @@ function InscripcionForm() {
             {QUESTION[stepId]}
             {(stepId === "learningProfile" || stepId === "notes") && (
               <span style={{ display: "block", fontSize: 15, fontWeight: 400, opacity: 0.6, marginTop: 6 }}>
-                {stepId === "learningProfile" ? "Opcional — programa Adaptativo" : "Opcional"}
+                {stepId === "learningProfile" ? "Opcional — apoyos para tu hijo" : "Opcional"}
               </span>
             )}
           </label>
@@ -990,7 +990,7 @@ export default function Home() {
         </Reveal>
         <Reveal delay={0.08}>
           <p style={{ fontSize: 16, color: TEXT, marginTop: 22, maxWidth: 620 }}>
-            Con un <a href="/adaptativo" style={{ color: NAVY, fontWeight: 700, textDecoration: "underline", textDecorationColor: GOLD, textUnderlineOffset: 3 }}>Programa Adaptativo</a> que cambia según el perfil de cada estudiante — TDAH, dislexia, TEA o dificultad motora — sin ser un curso aparte: es la misma materia, con la puerta de entrada que cada uno necesita.
+            Con un <a href="/neurodivergentes" style={{ color: NAVY, fontWeight: 700, textDecoration: "underline", textDecorationColor: GOLD, textUnderlineOffset: 3 }}>apoyos pensados para cada perfil</a> — TEA, dislexia o TDAH — sin ser un curso aparte: es la misma materia, con la puerta de entrada que cada uno necesita.
           </p>
         </Reveal>
       </section>
@@ -1133,45 +1133,6 @@ export default function Home() {
               );
             })}
           </div>
-        </div>
-      </section>
-
-      {/* === BARKLEY ADAPTATIVO — sección propia, dirigida a familias con hijos TDAH/dislexia/
-          otro ritmo de aprendizaje. Separada del carrusel de razones a pedido: necesita su
-          propio espacio, no un ítem más dentro de una lista genérica. === */}
-      <section id="adaptativo" style={{ background: "#f6f1ff", padding: "90px 24px" }}>
-        <div style={{ maxWidth: 980, margin: "0 auto", textAlign: "center" }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 12px" }}>
-            Adaptativo · el programa de Barkley para otros ritmos de aprendizaje
-          </p>
-          <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, color: NAVY, margin: "0 0 20px", lineHeight: 1.15 }}>
-            No todos aprenden igual.<br />No todos deberían estudiar igual.
-          </h2>
-          <p style={{ fontSize: 18, color: TEXT, maxWidth: 680, margin: "0 auto 40px", lineHeight: 1.7 }}>
-            Si tu hijo tiene TDAH o dislexia, el problema casi nunca es él — es el formato.
-            Una clase de 45 minutos por Zoom exige algo que no todos los cerebros dan igual.
-            Adaptativo ajusta la forma, no la exigencia: mismo contenido oficial, presentado
-            de un modo que sí puede recorrer.
-          </p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 20, justifyContent: "center", marginBottom: 40 }}>
-            {[
-              { t: "Sin exigencia de atención sostenida", d: "Video y pódcast en bloques cortos, con pausas donde tu hijo las necesite — no donde el reloj lo decide." },
-              { t: "Sin comparación con el curso", d: "Avanza contra su propio progreso anterior, no contra el ritmo de 30 compañeros en una clase en vivo." },
-              { t: "Con acompañamiento humano real", d: "Un asesor sigue su proceso — no es contenido que corre solo mientras nadie mira cómo le va." },
-            ].map((f) => (
-              <div key={f.t} style={{ background: "#fff", borderRadius: 16, padding: 26, flex: "1 1 260px", minWidth: 240, textAlign: "left", boxShadow: "0 4px 16px rgba(0,20,60,0.1)" }}>
-                <h3 style={{ fontSize: 17, fontWeight: 600, color: NAVY, margin: "0 0 8px" }}>{f.t}</h3>
-                <p style={{ fontSize: 14, margin: 0, color: TEXT }}>{f.d}</p>
-              </div>
-            ))}
-          </div>
-          <p style={{ fontSize: 13, color: SLATE, maxWidth: 600, margin: "0 auto 28px" }}>
-            Adaptativo no reemplaza el diagnóstico ni el tratamiento profesional de tu
-            hijo — es un formato de estudio que se acomoda a cómo aprende, no una terapia.
-          </p>
-          <a href="/adaptativo" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: PURPLE, color: "#fff", fontWeight: 700, fontSize: 15, padding: "14px 28px", borderRadius: 999, textDecoration: "none" }}>
-            Quiero saber más de Adaptativo
-          </a>
         </div>
       </section>
 
@@ -1555,7 +1516,7 @@ export default function Home() {
             <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6, fontSize: 14, opacity: 0.85 }}>
               <li><a href="#metodo" style={{ color: "#fff" }}>El método</a></li>
               <li><a href="#plataforma" style={{ color: "#fff" }}>La plataforma</a></li>
-              <li><a href="/adaptativo" style={{ color: "#fff" }}>Adaptativo</a></li>
+              <li><a href="/neurodivergentes" style={{ color: "#fff" }}>Neurodivergentes</a></li>
               <li><a href="/como-funciona-umbral/" style={{ color: "#fff" }}>Cómo funciona Umbral™</a></li>
               <li><a href="/como-funciona-brujula/" style={{ color: "#fff" }}>Cómo funciona Brújula™</a></li>
               <li><a href="/demo-brujula/" style={{ color: "#fff" }}>Prueba Brújula™ (demo)</a></li>

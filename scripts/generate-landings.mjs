@@ -144,7 +144,7 @@ function relacionadosHtml(slug) {
   if (!r) return "";
   const items = [
     `<a href="/blog/${r.post}/">${TITULO_POST[r.post]}</a>`,
-    r.adaptativo ? `<a href="/adaptativo">Programa Adaptativo — TDAH, dislexia, TEA y motricidad</a>` : "",
+    r.adaptativo ? `<a href="/neurodivergentes">Cómo trabajamos con TEA, dislexia y TDAH</a>` : "",
   ].filter(Boolean);
   return `
   <section style="background:#fff;">

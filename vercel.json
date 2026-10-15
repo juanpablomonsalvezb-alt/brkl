@@ -130,8 +130,8 @@
       "permanent": true
     },
     {
-      "source": "/adaptativo/",
-      "destination": "/adaptativo",
+      "source": "/adaptativo{/}?",
+      "destination": "/neurodivergentes",
       "permanent": true
     }
   ],
@@ -202,10 +202,6 @@
     },
     {
       "source": "/",
-      "destination": "/api/handler.js"
-    },
-    {
-      "source": "/adaptativo",
       "destination": "/api/handler.js"
     },
     {

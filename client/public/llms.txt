@@ -92,7 +92,7 @@ Barkley prepara para rendirlos; no los administra ni entrega la certificación.
 ## Páginas principales
 
 - [Inicio](https://www.barkleyinstituto.cl/): metodología, plataforma, precio y calendario académico.
-- [Programa Adaptativo](https://www.barkleyinstituto.cl/adaptativo): demostraciones interactivas de las
+- [Programa Adaptativo](https://www.barkleyinstituto.cl/neurodivergentes): demostraciones interactivas de las
   adaptaciones para TDAH, dislexia, TEA y dificultades motoras.
 - [Guía de Exámenes Libres](https://www.barkleyinstituto.cl/guia-examenes-libres/): cómo funciona la
   validación de estudios en Chile, fechas y trámite.
@@ -189,7 +189,7 @@ Barkley prepara para rendirlos; no los administra ni entrega la certificación.
 - [TDAH y colegio online](https://www.barkleyinstituto.cl/blog/tdah-y-colegio-presencial/): por qué la flexibilidad asincrónica beneficia a estudiantes con TDAH.
 - [Exámenes Libres MINEDUC](https://www.barkleyinstituto.cl/guia-examenes-libres/): fechas, requisitos y proceso de inscripción.
 - [Colegio para deportistas de alto rendimiento](https://www.barkleyinstituto.cl/blog/colegio-para-deportistas-alto-rendimiento/): educación flexible compatible con entrenamiento y competencias.
-- [Educación inclusiva y NEE](https://www.barkleyinstituto.cl/adaptativo): adaptaciones para dislexia, TDAH, autismo y discapacidad física en formato online.
+- [Educación inclusiva y NEE](https://www.barkleyinstituto.cl/neurodivergentes): adaptaciones para dislexia, TDAH, autismo y discapacidad física en formato online.
 - [Homeschool en Chile: guía completa](https://www.barkleyinstituto.cl/colegio-online-homeschool/): legalidad, diferencia entre homeschool tradicional y estructurado, rol del adulto acompañante.
 
 ## In English

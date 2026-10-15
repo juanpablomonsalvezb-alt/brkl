@@ -4,10 +4,11 @@
  * (15-oct-2026). Regla de la guía: no prometer funciones sin validar. Por eso
  * las imágenes se rotulan como ilustración referencial y hay un bloque de límites.
  */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Check, AlertTriangle, ExternalLink } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
+import { PRECIOS } from "@shared/precios";
 
 const NAVY = "#003366";
 const GOLD = "#FFC548";
@@ -169,6 +170,50 @@ const FUNDAMENTOS = [
     href: "https://www.bcn.cl/leychile/navegar?idNorma=1190123",
   },
 ];
+
+const JORNADA = [
+  ["Inicio", "15-20 min", "Revisar la agenda del día: qué viene y en qué orden."],
+  ["Foco principal", "30-45 min", "Una o dos microlecciones de la materia núcleo, con una actividad breve al cierre de cada una."],
+  ["Pausa", "20-30 min", "Sin pantallas. Movimiento, colación o silencio: el corte también es parte del aprendizaje."],
+  ["Aplicación", "30-40 min", "Lectura, proyecto o evaluación, con distintas formas de mostrar lo aprendido."],
+  ["Cierre libre", "20-30 min", "Módulos opcionales o por interés, para terminar el día desde lo que le gusta."],
+];
+
+const NO_CAMBIA = [
+  ["Mismo temario oficial", "Currículo MINEDUC completo. Sin recortes ni versión simplificada."],
+  ["Misma validación", "Exámenes Libres ante el Ministerio, igual que cualquier estudiante."],
+  ["Mismo valor", `${PRECIOS.escolar} al mes. Los apoyos no tienen costo adicional.`],
+];
+
+const FAQS = [
+  { q: "¿Esto es una terapia o un tratamiento?", a: "No. Es un formato de estudio que se acomoda a cómo aprende tu hijo, no una terapia ni un tratamiento clínico. El acompañamiento profesional (psicopedagogo, terapeuta ocupacional, neurólogo) sigue siendo el de tu confianza; Barkley no lo reemplaza." },
+  { q: "¿Rinde los mismos exámenes que el resto?", a: "Sí. El contenido es el temario oficial MINEDUC completo y la validación es la misma: Exámenes Libres. Se adapta la forma de aprender, nunca la exigencia académica ni el nivel del contenido." },
+  { q: "¿Necesito un diagnóstico o un informe para matricular?", a: "No lo pedimos. En el formulario de inscripción puedes indicar el perfil de tu hijo, y la conversación con el asesor define qué apoyos activar." },
+  { q: "¿Y si tiene TDAH y dislexia a la vez?", a: "Se combinan los apoyos de ambos: no hay que elegir uno solo. Lo conversamos con el asesor para armar el conjunto que le sirva." },
+  { q: "¿Y si el diagnóstico de mi hijo es otro?", a: "Hoy esta página cubre TEA, dislexia y TDAH. Si el perfil es otro, por ejemplo discapacidad intelectual, sensorial o motriz, todavía no tenemos acomodaciones automáticas y preferimos decirlo antes de que te inscribas. Escríbenos y revisamos el caso." },
+  { q: "¿Tengo que hacer de profesor en la casa?", a: "No. Tu rol es del entorno, no del contenido: armar un espacio de estudio cómodo, sostener las pausas y acompañar el checklist diario. Diseñar el material, adaptarlo y corregir es trabajo del equipo pedagógico de Barkley." },
+];
+
+function Faq() {
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <div style={{ maxWidth: 780, margin: "0 auto" }}>
+      {FAQS.map((f, i) => (
+        <div key={f.q} style={{ borderBottom: "1px solid #dfe6ef" }}>
+          <button
+            onClick={() => setOpen(open === i ? null : i)}
+            aria-expanded={open === i}
+            style={{ width: "100%", textAlign: "left", background: "none", border: "none", padding: "20px 0", cursor: "pointer", display: "flex", gap: 16, justifyContent: "space-between", fontFamily: FONT }}
+          >
+            <span style={{ fontSize: 17, fontWeight: 600, color: NAVY, lineHeight: 1.4 }}>{f.q}</span>
+            <span style={{ color: SLATE, fontSize: 22, lineHeight: 1 }}>{open === i ? "−" : "+"}</span>
+          </button>
+          {open === i && <p style={{ margin: "0 0 20px", fontSize: 15.5, lineHeight: 1.7 }}>{f.a}</p>}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 const COMPARA = [
   { n: "TEA", ref: "#tea", c: "#2f6fd6", ve: "Orden previsible, pasos explícitos, lenguaje concreto y anticipación.", no: "Que la plataforma resuelve todas las necesidades sensoriales o de comunicación." },
@@ -340,6 +385,49 @@ export default function Neurodivergentes() {
         </div>
       </section>
 
+      {/* LO QUE NO CAMBIA */}
+      <section style={{ padding: "80px 24px", background: NAVY }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+          <Reveal>
+            <h2 style={{ fontSize: "clamp(26px,3.8vw,38px)", fontWeight: 700, color: "#fff", margin: "0 0 10px", lineHeight: 1.25 }}>
+              Lo que <em>no</em> cambia
+            </h2>
+            <p style={{ color: "#cfe0f5", margin: "0 0 36px", maxWidth: 560 }}>Adaptar el formato no significa bajar la vara. El contenido y la exigencia son los mismos.</p>
+          </Reveal>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20 }}>
+            {NO_CAMBIA.map(([t, d], i) => (
+              <Reveal key={t} delay={i * 0.07}>
+                <div style={{ background: "rgba(255,255,255,0.07)", borderRadius: 16, padding: "26px 24px", height: "100%" }}>
+                  <Check size={19} color={GOLD} />
+                  <h3 style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: "12px 0 6px" }}>{t}</h3>
+                  <p style={{ fontSize: 14.5, color: "#cfe0f5", margin: 0, lineHeight: 1.65 }}>{d}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* JORNADA SUGERIDA */}
+      <section style={{ padding: "90px 24px", background: "#fff" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <Reveal>
+            <p style={{ fontSize: 14, fontWeight: 700, color: SLATE, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 12px" }}>Un día posible</p>
+            <h2 style={{ fontSize: "clamp(26px,3.8vw,38px)", fontWeight: 700, color: NAVY, margin: "0 0 28px", lineHeight: 1.25 }}>Jornada sugerida: foco y pausa, sin horario rígido</h2>
+          </Reveal>
+          <div style={{ display: "flex", flexDirection: "column", gap: 1, background: "#dfe6ef", border: "1px solid #dfe6ef", borderRadius: 14, overflow: "hidden" }}>
+            {JORNADA.map(([n, d, t]) => (
+              <div key={n} style={{ background: "#fff", padding: "18px 22px", display: "flex", gap: 18, alignItems: "baseline", flexWrap: "wrap" }}>
+                <span style={{ fontWeight: 700, color: NAVY, minWidth: 140 }}>{n}</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: "#a06a00", minWidth: 80 }}>{d}</span>
+                <span style={{ fontSize: 14.5, flex: "1 1 280px" }}>{t}</span>
+              </div>
+            ))}
+          </div>
+          <p style={{ fontSize: 13.5, fontStyle: "italic", margin: "14px 4px 0" }}>Es una estructura sugerida para que el día tenga forma sin volverse rígido, no un horario impuesto.</p>
+        </div>
+      </section>
+
       {/* FUNDAMENTOS */}
       <section style={{ padding: "90px 24px", background: "#fff" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
@@ -372,6 +460,16 @@ export default function Neurodivergentes() {
               </Reveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* PREGUNTAS FRECUENTES */}
+      <section style={{ padding: "90px 24px", background: "#fff" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <Reveal>
+            <h2 style={{ fontSize: "clamp(26px,3.8vw,38px)", fontWeight: 700, color: NAVY, margin: "0 0 28px", lineHeight: 1.25, textAlign: "center" }}>Preguntas frecuentes</h2>
+            <Faq />
+          </Reveal>
         </div>
       </section>
 

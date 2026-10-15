@@ -152,8 +152,7 @@ async function auditarSchema() {
   const A = "Datos estructurados";
   const exigidos = {
     "/": ["Organization", "FAQPage"],
-    "/adaptativo": [],
-    "/examenes-libres-4-medio/": ["Course", "FAQPage", "BreadcrumbList"],
+        "/examenes-libres-4-medio/": ["Course", "FAQPage", "BreadcrumbList"],
     "/blog/tdah-y-colegio-presencial/": ["Article", "FAQPage", "BreadcrumbList"],
   };
   for (const [ruta, tipos] of Object.entries(exigidos)) {
@@ -221,10 +220,10 @@ function declararNoCubierto() {
   nc(A, "calidad del contenido", "juicio humano");
 }
 
-const rutasFijas = ["/", "/adaptativo", "/blog/", "/guia-examenes-libres/", "/examenes-libres-4-medio/", "/blog/tdah-y-colegio-presencial/"];
+const rutasFijas = ["/", "/blog/", "/guia-examenes-libres/", "/examenes-libres-4-medio/", "/blog/tdah-y-colegio-presencial/"];
 
 await auditarSitemap();
-await auditarPrerender(["/", "/adaptativo"]);
+await auditarPrerender(["/", "/neurodivergentes"]);
 await auditarMetadatos(rutasFijas);
 await auditarSchema();
 await auditarSocial(rutasFijas);
