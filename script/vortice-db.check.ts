@@ -122,3 +122,17 @@ const a1 = await markResourceCompleteOnce(db, "u4", "r1");
 const a2 = await markResourceCompleteOnce(db, "u4", "r1");
 assert.equal(a1.id, a2.id);
 console.log("vortice-access: ok");
+
+// Seed base de /api/admin/seed: ejecutarlo dos veces no duplica niveles, asignaturas ni level_subjects.
+const { seedBase, BASE_LEVELS } = await import("../server/seedBase");
+const s1 = await seedBase(db);
+assert.ok(!s1.levelsAdded.includes("7b") && s1.levelsAdded.length === BASE_LEVELS.length - 2); // 7b y 1m ya existían
+const nLevels = (await db.select().from(levels)).length;
+const nSubjects = (await db.select().from(subjects)).length;
+const lsRows = await db.select().from(levelSubjects);
+assert.equal(lsRows.length, nLevels * nSubjects); // todas las combinaciones, sin repetir
+assert.equal(new Set(lsRows.map((r) => `${r.levelId}:${r.subjectId}`)).size, lsRows.length);
+const s2 = await seedBase(db);
+assert.deepEqual([s2.levelsAdded, s2.subjectsAdded, s2.levelSubjectsAdded], [[], [], []]);
+assert.equal((await db.select().from(levelSubjects)).length, lsRows.length);
+console.log("seed-base: ok");
