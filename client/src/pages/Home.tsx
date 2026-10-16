@@ -43,6 +43,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const BarkleyTVSection = lazy(() => import("@/components/BarkleyTVSection"));
 import PorDentroHub from "@/components/PorDentroHub";
 import { MetodoHerramientas } from "@/components/MetodoHerramientas";
+import PreguntasQueImportan from "@/components/PreguntasQueImportan";
 import { SiteHeader } from "@/components/SiteHeader";
 import { useIdioma } from "@/lib/useIdioma";
 
@@ -994,6 +995,9 @@ export default function Home() {
           </p>
         </Reveal>
       </section>
+
+      {/* === LAS PREGUNTAS QUE IMPORTAN — ocho preguntas para familias, respuesta en panel integrado === */}
+      <PreguntasQueImportan />
 
       {/* === EL MÉTODO — módulo dedicado, el gancho central === */}
       <MetodoModule />
