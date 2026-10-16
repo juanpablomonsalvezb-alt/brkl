@@ -120,6 +120,8 @@ export async function checkModuleAccess(
     return { ok: false, status: 403, reason: "No tienes matrícula activa en esta asignatura" };
   }
 
+  if (!(await hasActiveEnrollment(db, userId, levelSubjectId))) return { ok: false, status: 403, reason: "No tienes matrícula activa en esta asignatura" };
+
   let previousCompleted = true;
   if (weekNumber > 1) {
     const closing = await db.select({ id: moduleEvaluations.id }).from(moduleEvaluations)
