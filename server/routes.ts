@@ -14,6 +14,7 @@ import {
 } from "@shared/schema";
 import { loadVorticeOverview, checkResourceAccess, checkEvaluationAccess, markResourceCompleteOnce } from "./vortice";
 import { db } from "./db";
+import { seedBase, BASE_LEVELS, BASE_SUBJECTS } from "./seedBase";
 import { notifyByEmail, sendConfirmationEmail } from "./notify";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
 import {
@@ -605,71 +606,8 @@ export async function registerRoutes(
   // Seed initial data endpoint (temporary public for development)
   app.post("/api/admin/seed", async (req: any, res) => {
     try {
-      // Seed levels (15 sesiones, cada sesión planificada para 2 semanas)
-      const levelsData = [
-        { id: "7b", name: "7° Básico", programType: "menores" as const, totalWeeks: 15, cadencePerOA: "2 sem/sesión", sortOrder: 1 },
-        { id: "8b", name: "8° Básico", programType: "menores" as const, totalWeeks: 15, cadencePerOA: "2 sem/sesión", sortOrder: 2 },
-        { id: "1m", name: "1° Medio", programType: "menores" as const, totalWeeks: 15, cadencePerOA: "2 sem/sesión", sortOrder: 3 },
-        { id: "2m", name: "2° Medio", programType: "menores" as const, totalWeeks: 15, cadencePerOA: "2 sem/sesión", sortOrder: 4 },
-        { id: "3m", name: "3° Medio", programType: "menores" as const, totalWeeks: 15, cadencePerOA: "2 sem/sesión", sortOrder: 5 },
-        { id: "4m", name: "4° Medio", programType: "menores" as const, totalWeeks: 15, cadencePerOA: "2 sem/sesión", sortOrder: 6 },
-        { id: "nb1", name: "NB1 (1-4)", programType: "adultos" as const, totalWeeks: 15, cadencePerOA: "2 sem/sesión", sortOrder: 7 },
-        { id: "nb2", name: "NB2 (5-6)", programType: "adultos" as const, totalWeeks: 15, cadencePerOA: "2 sem/sesión", sortOrder: 8 },
-        { id: "nb3", name: "NB3 (7-8)", programType: "adultos" as const, totalWeeks: 15, cadencePerOA: "2 sem/sesión", sortOrder: 9 },
-        { id: "nm1", name: "NM1 (1-2 Media)", programType: "adultos" as const, totalWeeks: 15, cadencePerOA: "2 sem/sesión", sortOrder: 10 },
-        { id: "nm2", name: "NM2 (3-4 Media)", programType: "adultos" as const, totalWeeks: 15, cadencePerOA: "2 sem/sesión", sortOrder: 11 },
-      ];
-
-      for (const level of levelsData) {
-        try {
-          await storage.createLevel(level);
-        } catch (e) {
-          // Ignore duplicate key errors
-        }
-      }
-
-      // Seed subjects
-      const subjectsData = [
-        { name: "Lengua y Literatura", slug: "lengua-y-literatura", description: "Comunicación, lectura y escritura" },
-        { name: "Matemática", slug: "matematica", description: "Álgebra, geometría y estadística" },
-        { name: "Ciencias Naturales", slug: "ciencias-naturales", description: "Física, química y biología" },
-        { name: "Historia", slug: "historia", description: "Historia, geografía y ciencias sociales" },
-        { name: "Inglés", slug: "ingles", description: "Idioma inglés" },
-        { name: "Educación Ciudadana", slug: "educacion-ciudadana", description: "Formación ciudadana" },
-        { name: "Filosofía", slug: "filosofia", description: "Pensamiento crítico y ética" },
-      ];
-
-      const createdSubjects: any[] = [];
-      for (const subject of subjectsData) {
-        try {
-          const created = await storage.createSubject(subject);
-          createdSubjects.push(created);
-        } catch (e) {
-          // Ignore duplicate key errors
-        }
-      }
-
-      // Create LevelSubject combinations
-      const allLevels = await storage.getLevels();
-      const allSubjects = await storage.getSubjects();
-      let levelSubjectsCreated = 0;
-
-      for (const level of allLevels) {
-        for (const subject of allSubjects) {
-          try {
-            await storage.createLevelSubject({
-              levelId: level.id,
-              subjectId: subject.id,
-              totalOAs: 15
-            });
-            levelSubjectsCreated++;
-          } catch (e) {
-            // Ignore duplicate key errors
-          }
-        }
-      }
-
-      res.json({ message: "Seed completed", levels: levelsData.length, subjects: subjectsData.length, levelSubjects: levelSubjectsCreated });
+      const r = await seedBase(db);
+      res.json({ message: "Seed completed", levels: BASE_LEVELS.length, subjects: BASE_SUBJECTS.length, levelSubjects: r.levelSubjectsAdded.length });
     } catch (error) {
       console.error("Error seeding data:", error);
       res.status(500).json({ message: "Failed to seed data" });

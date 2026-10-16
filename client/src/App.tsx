@@ -120,7 +120,6 @@ function Router() {
       <Route path="/course/:id" component={CoursePlayer} />
       <Route path="/drive-sync" component={DriveSync} />
       <Route path="/textbook-config" component={TextbookConfig} />
-      {/* <Route path="/textbook-config-new" component={TextbookConfigNew} /> */}
       <Route path="/reservations" component={Reservations} />
       <Route path="/plan-settings" component={PlanSettings} />
       <Route path="/level-plan-settings" component={LevelPlanSettings} />
