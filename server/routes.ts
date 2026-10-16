@@ -14,7 +14,9 @@ import {
 } from "@shared/schema";
 import { loadVorticeOverview, checkResourceAccess, checkEvaluationAccess, markResourceCompleteOnce } from "./vortice";
 import { db } from "./db";
-import { notifyByEmail, sendConfirmationEmail } from "./notify";
+import { notifyByEmail, sendConfirmationEmail, sendLearningEmail } from "./notify";
+import { cronAutorizado, despacharNotificaciones, guardarPreferencias, leerPreferencias } from "./notificaciones";
+import { HORARIO, actualizarPreferenciasSchema } from "@shared/notificaciones";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
 import {
   getAllModulesSchedule, getModuleSchedule, getCalendarSummary,
@@ -448,6 +450,45 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error building Vórtice overview:", error);
       res.status(500).json({ message: "Failed to build overview" });
+    }
+  });
+
+  // Vórtice: preferencias de notificaciones del usuario en sesión.
+  app.get("/api/notificaciones/preferencias", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      res.json({ preferencias: await leerPreferencias(db, userId), horario: HORARIO });
+    } catch (error) {
+      console.error("Error reading notification preferences:", error);
+      res.status(500).json({ message: "Failed to read preferences" });
+    }
+  });
+
+  app.put("/api/notificaciones/preferencias", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const parsed = actualizarPreferenciasSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Preferencias inválidas" });
+      res.json({ preferencias: await guardarPreferencias(db, userId, parsed.data), horario: HORARIO });
+    } catch (error) {
+      console.error("Error saving notification preferences:", error);
+      res.status(500).json({ message: "Failed to save preferences" });
+    }
+  });
+
+  // Vórtice: despacho de notificaciones para un cron externo. Header `Authorization: Bearer <CRON_SECRET>`.
+  // Idempotente: se puede invocar cada hora; fuera del horario (hora Chile) no envía nada.
+  app.post("/api/cron/notificaciones", async (req, res) => {
+    const secreto = process.env.CRON_SECRET?.trim();
+    if (!secreto) return res.status(503).json({ message: "Notificaciones no configuradas" });
+    if (!cronAutorizado(req.headers.authorization, secreto)) return res.status(401).json({ message: "Unauthorized" });
+    try {
+      res.json(await despacharNotificaciones(db, sendLearningEmail, new Date()));
+    } catch (error) {
+      console.error("Error dispatching notifications:", error);
+      res.status(500).json({ message: "Failed to dispatch notifications" });
     }
   });
 

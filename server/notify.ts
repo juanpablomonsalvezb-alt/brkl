@@ -79,3 +79,23 @@ export async function sendConfirmationEmail(to: string, name: string) {
     console.error("No se pudo enviar la confirmación al usuario:", err);
   }
 }
+
+// Transporte real de las notificaciones de aprendizaje (server/notificaciones.ts).
+// A diferencia de los avisos de arriba, lanza si falla: el despacho libera el
+// registro de envío para reintentar en la próxima ejecución del cron.
+export async function sendLearningEmail(correo: { para: string; asunto: string; texto: string; html: string }) {
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  if (!apiKey) throw new Error("RESEND_API_KEY no configurada");
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from: "Barkley Online <notificaciones@barkleyinstituto.cl>",
+      to: [correo.para],
+      subject: correo.asunto,
+      text: correo.texto,
+      html: correo.html,
+    }),
+  });
+  if (!res.ok) throw new Error(`Resend rechazó el envío (${res.status})`);
+}

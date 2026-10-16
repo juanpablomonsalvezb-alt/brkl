@@ -15,6 +15,16 @@ export async function loadVorticeOverview(
   userId: string,
   now: Date,
 ): Promise<VorticeOverview> {
+  const { level, input, completed, passed } = await loadVorticeInput(db, userId, now);
+  return buildOverview(level, input, completed, passed);
+}
+
+// Datos crudos del resumen (también los usan las notificaciones, que necesitan el detalle por módulo).
+export async function loadVorticeInput(
+  db: LibSQLDatabase<typeof schema>,
+  userId: string,
+  now: Date,
+) {
   const rows = await db
     .select({
       levelSubjectId: levelSubjects.id,
@@ -91,7 +101,7 @@ export async function loadVorticeOverview(
       })),
   }));
 
-  return buildOverview(level, input, new Set(done.map((d) => d.resourceId)), passedIds);
+  return { level, input, completed: new Set(done.map((d) => d.resourceId)), passed: passedIds };
 }
 
 export type AccessResult =
