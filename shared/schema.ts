@@ -884,3 +884,23 @@ export const insertTogetherHeartbeatSchema = z.object({
 });
 
 export type TogetherPresence = typeof togetherPresence.$inferSelect;
+
+// ============================================
+// Brújula™ (Vórtice): plan semanal del estudiante y autoevaluación de cierre.
+// Una fila por estudiante y semana (lunes "YYYY-MM-DD"). Las metas se guardan como
+// JSON (BrujulaGoal[] de shared/brujula.ts) porque siempre se leen y escriben juntas.
+// ============================================
+export const brujulaWeeks = sqliteTable("brujula_weeks", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  userId: text("user_id").notNull().references(() => users.id),
+  weekStart: text("week_start").notNull(),
+  goalsJson: text("goals_json").notNull(),
+  // Autoevaluación: null hasta que el estudiante cierra la semana.
+  difficulty: text("difficulty"),
+  note: text("note"),
+  closedAt: integer("closed_at", { mode: "timestamp" }),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
+}, (t) => [uniqueIndex("brujula_weeks_user_week").on(t.userId, t.weekStart)]);
+
+export type BrujulaWeek = typeof brujulaWeeks.$inferSelect;

@@ -109,7 +109,7 @@ export async function hasActiveEnrollment(
 
 // Mismas reglas de módulo que el resumen y /api/modules/:n/access: matrícula activa en la
 // asignatura, fecha de inicio cumplida y módulo anterior completado (evaluación 2 aprobada).
-async function checkModuleAccess(
+export async function checkModuleAccess(
   db: LibSQLDatabase<typeof schema>,
   userId: string,
   levelSubjectId: string,
