@@ -999,6 +999,9 @@ export default function Home() {
       {/* === LAS PREGUNTAS QUE IMPORTAN — ocho preguntas para familias, respuesta en panel integrado === */}
       <PreguntasQueImportan />
 
+      {/* === INSCRIPCIÓN (1 de 3) — arriba, después de las preguntas === */}
+      <AdmisionSection />
+
       {/* === EL MÉTODO — módulo dedicado, el gancho central === */}
       <MetodoModule />
 
@@ -1091,7 +1094,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === INSCRIPCIÓN (1 de 2) — a mitad de página; la segunda va al final con el ancla #inscripcion === */}
+      {/* === INSCRIPCIÓN (2 de 3) — a mitad de página; la última va al final con el ancla #inscripcion === */}
       <AdmisionSection />
 
       {/* === INCLUSIVO — Para todos, adaptado a cada uno === */}
@@ -1480,7 +1483,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === INSCRIPCIÓN (2 de 2) === */}
+      {/* === INSCRIPCIÓN (3 de 3) === */}
       <AdmisionSection anchorId="inscripcion" />
 
       <ReaccionEnLinea />
