@@ -8,7 +8,8 @@ import {
   studentProgress, userProfiles, moduleEvaluations, evaluationProgress,
 } from "@shared/schema";
 import { buildOverview, type OverviewSubjectInput, type VorticeOverview } from "@shared/vortice";
-import { isEvaluationAvailable, isModuleAvailable } from "./calendarUtils";
+import { isEvaluationAvailable, isModuleAvailable, type CalendarConfig } from "./calendarUtils";
+import { resolveCalendarConfig } from "./calendarConfig";
 
 export async function loadVorticeOverview(
   db: LibSQLDatabase<typeof schema>,
@@ -67,6 +68,10 @@ export async function loadVorticeOverview(
       .map((o) => moduleKey(o.levelSubjectId, o.weekNumber)),
   );
 
+  // Calendario resuelto por nivel (normalmente todas las matrículas son del mismo nivel).
+  const configs = new Map<string, CalendarConfig>();
+  for (const levelId of new Set(rows.map((r) => r.levelId))) configs.set(levelId, await resolveCalendarConfig(db, levelId, now));
+
   const input: OverviewSubjectInput[] = rows.map((r) => ({
     levelSubjectId: r.levelSubjectId,
     subjectName: r.subjectName,
@@ -75,7 +80,7 @@ export async function loadVorticeOverview(
       .filter((o) => o.levelSubjectId === r.levelSubjectId)
       .map((o) => ({
         id: o.id, code: o.code, title: o.title, weekNumber: o.weekNumber, sortOrder: o.sortOrder,
-        available: isModuleAvailable(o.weekNumber, now, completedModules.has(moduleKey(r.levelSubjectId, o.weekNumber - 1))),
+        available: isModuleAvailable(o.weekNumber, now, completedModules.has(moduleKey(r.levelSubjectId, o.weekNumber - 1)), configs.get(r.levelId)),
         resources: resources
           .filter((x) => x.learningObjectiveId === o.id)
           .map((x) => ({ id: x.id, title: x.title, resourceType: x.resourceType, sortOrder: x.sortOrder })),
@@ -85,7 +90,7 @@ export async function loadVorticeOverview(
             id: e.id, title: e.title, evaluationNumber: e.evaluationNumber,
             // Fuera de 1-4 no hay fecha de liberación definida: se considera disponible.
             available: e.evaluationNumber >= 1 && e.evaluationNumber <= 4
-              ? isEvaluationAvailable(o.weekNumber, e.evaluationNumber as 1 | 2 | 3 | 4, now)
+              ? isEvaluationAvailable(o.weekNumber, e.evaluationNumber as 1 | 2 | 3 | 4, now, configs.get(r.levelId))
               : true,
           })),
       })),
@@ -106,6 +111,7 @@ async function checkModuleAccess(
   levelSubjectId: string,
   weekNumber: number,
   now: Date,
+  config: CalendarConfig,
 ): Promise<AccessResult> {
   const [enrolled] = await db.select({ id: enrollments.id }).from(enrollments).where(and(
     eq(enrollments.userId, userId), eq(enrollments.levelSubjectId, levelSubjectId), eq(enrollments.isActive, true),
@@ -130,7 +136,7 @@ async function checkModuleAccess(
       : [];
     previousCompleted = passed.length > 0;
   }
-  if (!isModuleAvailable(weekNumber, now, previousCompleted)) {
+  if (!isModuleAvailable(weekNumber, now, previousCompleted, config)) {
     return { ok: false, status: 403, reason: "El módulo aún no está disponible" };
   }
   return { ok: true, levelSubjectId, weekNumber };
@@ -139,12 +145,16 @@ async function checkModuleAccess(
 export async function checkResourceAccess(
   db: LibSQLDatabase<typeof schema>, userId: string, resourceId: string, now: Date,
 ): Promise<AccessResult> {
-  const [row] = await db.select({ levelSubjectId: learningObjectives.levelSubjectId, weekNumber: learningObjectives.weekNumber })
+  const [row] = await db.select({
+    levelSubjectId: learningObjectives.levelSubjectId, weekNumber: learningObjectives.weekNumber, levelId: levelSubjects.levelId,
+  })
     .from(weeklyResources)
     .innerJoin(learningObjectives, eq(weeklyResources.learningObjectiveId, learningObjectives.id))
+    .innerJoin(levelSubjects, eq(learningObjectives.levelSubjectId, levelSubjects.id))
     .where(and(eq(weeklyResources.id, resourceId), eq(weeklyResources.isActive, true)));
   if (!row) return { ok: false, status: 404, reason: "Recurso no encontrado" };
-  return checkModuleAccess(db, userId, row.levelSubjectId, row.weekNumber, now);
+  const config = await resolveCalendarConfig(db, row.levelId, now);
+  return checkModuleAccess(db, userId, row.levelSubjectId, row.weekNumber, now, config);
 }
 
 export async function checkEvaluationAccess(
@@ -154,16 +164,19 @@ export async function checkEvaluationAccess(
     levelSubjectId: learningObjectives.levelSubjectId,
     weekNumber: learningObjectives.weekNumber,
     evaluationNumber: moduleEvaluations.evaluationNumber,
+    levelId: levelSubjects.levelId,
   })
     .from(moduleEvaluations)
     .innerJoin(learningObjectives, eq(moduleEvaluations.learningObjectiveId, learningObjectives.id))
+    .innerJoin(levelSubjects, eq(learningObjectives.levelSubjectId, levelSubjects.id))
     .where(eq(moduleEvaluations.id, evaluationId));
   if (!row) return { ok: false, status: 404, reason: "Evaluación no encontrada" };
+  const config = await resolveCalendarConfig(db, row.levelId, now);
   const n = row.evaluationNumber;
-  if (n >= 1 && n <= 4 && !isEvaluationAvailable(row.weekNumber, n as 1 | 2 | 3 | 4, now)) {
+  if (n >= 1 && n <= 4 && !isEvaluationAvailable(row.weekNumber, n as 1 | 2 | 3 | 4, now, config)) {
     return { ok: false, status: 403, reason: "La evaluación aún no está liberada" };
   }
-  return checkModuleAccess(db, userId, row.levelSubjectId, row.weekNumber, now);
+  return checkModuleAccess(db, userId, row.levelSubjectId, row.weekNumber, now, config);
 }
 
 // Marcar un recurso como visto dos veces no debe duplicar el registro.

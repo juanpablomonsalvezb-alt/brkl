@@ -11,6 +11,7 @@ import {
   insertReservationSchema, insertWaitlistSchema, waitlistSignups,
   insertFunnelEventSchema, funnelEvents,
   insertTogetherHeartbeatSchema, togetherPresence, togetherRoomSchema,
+  calendarConfigInputSchema, programCalendar, levels,
 } from "@shared/schema";
 import { loadVorticeOverview, checkResourceAccess, checkEvaluationAccess, markResourceCompleteOnce } from "./vortice";
 import { db } from "./db";
@@ -18,8 +19,11 @@ import { notifyByEmail, sendConfirmationEmail } from "./notify";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
 import {
   getAllModulesSchedule, getModuleSchedule, getCalendarSummary,
-  isModuleAvailable, isEvaluationAvailable, DEFAULT_CONFIG, formatModuleDates
+  isEvaluationAvailable, formatModuleDates
 } from "./calendarUtils";
+import {
+  resolveCalendarConfig, resolveCalendarConfigForLevelSubject, rowToCalendarInput, calendarInputToRow,
+} from "./calendarConfig";
 import mammoth from "mammoth";
 import multer from "multer";
 import { generateEvaluationQuestions } from "./aiEvaluationGenerator";
@@ -776,12 +780,72 @@ export async function registerRoutes(
     }
   });
 
+  // === CALENDARIO CONFIGURABLE (admin) ===
+  // Config por año académico y nivel opcional. Fechas "YYYY-MM-DD" interpretadas como día calendario de Chile.
+  app.get("/api/admin/calendar-configs", isAuthenticated, isAdmin, async (_req, res) => {
+    try {
+      const rows = await db.select().from(programCalendar);
+      res.json(rows.map((r) => ({ id: r.id, ...rowToCalendarInput(r), updatedAt: r.updatedAt })));
+    } catch (error) {
+      console.error("Error listing calendar configs:", error);
+      res.status(500).json({ message: "Failed to list calendar configs" });
+    }
+  });
+
+  const saveCalendarConfig = async (res: any, input: unknown, id?: string) => {
+    const parsed = calendarConfigInputSchema.safeParse(input);
+    if (!parsed.success) return res.status(400).json({ message: "Configuración inválida", errors: parsed.error.flatten() });
+    const data = parsed.data;
+    if (data.levelId) {
+      const [lvl] = await db.select({ id: levels.id }).from(levels).where(eq(levels.id, data.levelId));
+      if (!lvl) return res.status(400).json({ message: "Nivel inexistente" });
+    }
+    try {
+      const values = { ...calendarInputToRow(data), updatedAt: new Date() };
+      const [row] = id
+        ? await db.update(programCalendar).set(values).where(eq(programCalendar.id, id)).returning()
+        : await db.insert(programCalendar).values(values).returning();
+      res.status(id ? 200 : 201).json({ id: row.id, ...rowToCalendarInput(row), updatedAt: row.updatedAt });
+    } catch (error: any) {
+      if (/UNIQUE/i.test(String(error?.message ?? error?.cause?.message))) {
+        return res.status(409).json({ message: "Ya existe una configuración para ese año y nivel" });
+      }
+      throw error;
+    }
+  };
+
+  app.post("/api/admin/calendar-configs", isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      await saveCalendarConfig(res, req.body);
+    } catch (error) {
+      console.error("Error creating calendar config:", error);
+      res.status(500).json({ message: "Failed to create calendar config" });
+    }
+  });
+
+  // Edición parcial: se mezcla con la config guardada y se valida completa.
+  app.patch("/api/admin/calendar-configs/:id", isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const id = getStringParam(req.params.id);
+      const [existing] = await db.select().from(programCalendar).where(eq(programCalendar.id, id));
+      if (!existing) return res.status(404).json({ message: "Configuración no encontrada" });
+      if (!req.body || typeof req.body !== "object" || Array.isArray(req.body)) {
+        return res.status(400).json({ message: "Cuerpo inválido" });
+      }
+      await saveCalendarConfig(res, { ...rowToCalendarInput(existing), ...req.body }, id);
+    } catch (error) {
+      console.error("Error updating calendar config:", error);
+      res.status(500).json({ message: "Failed to update calendar config" });
+    }
+  });
+
   // === CALENDAR AND MODULE ACCESS ROUTES ===
 
   // Get calendar summary
   app.get("/api/calendar/summary", async (req, res) => {
     try {
-      const summary = getCalendarSummary();
+      const levelId = typeof req.query.levelId === "string" ? req.query.levelId : null;
+      const summary = getCalendarSummary(await resolveCalendarConfig(db, levelId, new Date()));
       res.json(summary);
     } catch (error) {
       console.error("Error getting calendar summary:", error);
@@ -807,7 +871,8 @@ export async function registerRoutes(
 
       // Admin bypass mode: unlock all modules for development/testing
       const adminBypass = true;
-      const modulesSchedule = getAllModulesSchedule(currentDate, completedModules, DEFAULT_CONFIG, adminBypass);
+      const config = await resolveCalendarConfigForLevelSubject(db, levelSubjectId, currentDate);
+      const modulesSchedule = getAllModulesSchedule(currentDate, completedModules, config, adminBypass);
 
       const modulesWithDetails = modulesSchedule.map(schedule => {
         const objective = objectives.find(o => o.weekNumber === schedule.moduleNumber);
@@ -828,7 +893,7 @@ export async function registerRoutes(
       res.json({
         levelSubjectId,
         modules: modulesWithDetails,
-        summary: getCalendarSummary(),
+        summary: getCalendarSummary(config),
       });
     } catch (error) {
       console.error("Error getting calendar:", error);
@@ -852,9 +917,9 @@ export async function registerRoutes(
       const completedModules = await storage.getUserCompletedModules(userId, levelSubjectId);
 
       const previousCompleted = moduleNumber === 1 || completedModules.includes(moduleNumber - 1);
-      const isAvailable = isModuleAvailable(moduleNumber, currentDate, previousCompleted);
+      const config = await resolveCalendarConfigForLevelSubject(db, levelSubjectId, currentDate);
 
-      const schedule = getModuleSchedule(moduleNumber, currentDate, previousCompleted, completedModules.includes(moduleNumber));
+      const schedule = getModuleSchedule(moduleNumber, currentDate, previousCompleted, completedModules.includes(moduleNumber), config);
       const dates = formatModuleDates(schedule);
 
       res.json({
@@ -895,7 +960,8 @@ export async function registerRoutes(
       const evaluations = await storage.getModuleEvaluations(objective.id);
       const userProgress = await storage.getEvaluationProgressByUser(userId, evaluations.map(e => e.id));
 
-      const schedule = getModuleSchedule(moduleNumber, currentDate, true, false);
+      const config = await resolveCalendarConfigForLevelSubject(db, levelSubjectId, currentDate);
+      const schedule = getModuleSchedule(moduleNumber, currentDate, true, false, config);
 
       const evaluationsWithStatus = [
         {
@@ -903,7 +969,7 @@ export async function registerRoutes(
           title: "Evaluación Formativa 1",
           releaseDate: schedule.evaluation1ReleaseDate,
           releaseDateFormatted: formatModuleDates(schedule).eval1Formatted,
-          isAvailable: isEvaluationAvailable(moduleNumber, 1, currentDate),
+          isAvailable: isEvaluationAvailable(moduleNumber, 1, currentDate, config),
           evaluation: evaluations.find(e => e.evaluationNumber === 1),
           completed: userProgress.some(p => evaluations.find(e => e.evaluationNumber === 1 && e.id === p.evaluationId)),
         },
@@ -912,7 +978,7 @@ export async function registerRoutes(
           title: "Evaluación Formativa 2",
           releaseDate: schedule.evaluation2ReleaseDate,
           releaseDateFormatted: formatModuleDates(schedule).eval2Formatted,
-          isAvailable: isEvaluationAvailable(moduleNumber, 2, currentDate),
+          isAvailable: isEvaluationAvailable(moduleNumber, 2, currentDate, config),
           evaluation: evaluations.find(e => e.evaluationNumber === 2),
           completed: userProgress.some(p => evaluations.find(e => e.evaluationNumber === 2 && e.id === p.evaluationId) && p.passed),
         },
