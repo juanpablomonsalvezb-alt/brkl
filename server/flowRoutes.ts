@@ -4,6 +4,7 @@ import { db } from "./db";
 import { reservations } from "../shared/schema";
 import { eq } from "drizzle-orm";
 import { isValidEmail, getEmailErrorMessage } from "../shared/emailValidation";
+import { enrollFromPaidReservation } from "./matricula";
 
 export function registerFlowRoutes(app: Express) {
   /**
@@ -187,6 +188,17 @@ export function registerFlowRoutes(app: Express) {
           paymentDate: paymentStatus.paymentData?.date || null,
         })
         .where(eq(reservations.id, reservation.id));
+
+      // Matrícula automática si la reserva trae curso de Vórtice y el estudiante ya tiene cuenta.
+      // Nunca hace fallar la confirmación del pago: si no se puede, queda para el admin.
+      if (paymentStatusText === "completed") {
+        try {
+          const auto = await enrollFromPaidReservation(db, reservation.id);
+          if (!auto.ok) console.warn(`Matrícula automática pendiente (reserva ${reservation.id}): ${auto.reason}`);
+        } catch (error) {
+          console.error(`Error en matrícula automática (reserva ${reservation.id}):`, error);
+        }
+      }
 
       res.status(200).send("OK");
     } catch (error: any) {

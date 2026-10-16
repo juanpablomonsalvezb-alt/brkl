@@ -13,6 +13,7 @@ import {
   insertTogetherHeartbeatSchema, togetherPresence, togetherRoomSchema,
 } from "@shared/schema";
 import { loadVorticeOverview, checkResourceAccess, checkEvaluationAccess, markResourceCompleteOnce } from "./vortice";
+import { enrollStudentInLevel, listEnrollments, findUserIdByEmail, MatriculaError } from "./matricula";
 import { db } from "./db";
 import { notifyByEmail, sendConfirmationEmail } from "./notify";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
@@ -468,6 +469,40 @@ export async function registerRoutes(
   });
 
   // === ADMIN ROUTES (require admin role) ===
+
+  // Matrícula: deja al usuario con matrícula activa en todas las asignaturas del nivel (idempotente).
+  const matriculaSchema = z.object({
+    userId: z.string().min(1).optional(),
+    email: z.string().email().optional(),
+    levelId: z.string().min(1),
+  }).refine((b) => !!b.userId !== !!b.email, { message: "Indica userId o email (solo uno)" });
+
+  app.post("/api/admin/matriculas", isAuthenticated, isAdmin, async (req: any, res) => {
+    try {
+      const parsed = matriculaSchema.safeParse(req.body);
+      if (!parsed.success) {
+        return res.status(400).json({ message: "Datos inválidos", errors: parsed.error.flatten() });
+      }
+      const userId = parsed.data.userId ?? await findUserIdByEmail(db, parsed.data.email!);
+      if (!userId) return res.status(404).json({ message: "Usuario no encontrado" });
+      res.json(await enrollStudentInLevel(db, userId, parsed.data.levelId));
+    } catch (error) {
+      if (error instanceof MatriculaError) return res.status(error.status).json({ message: error.message });
+      console.error("Error enrolling student:", error);
+      res.status(500).json({ message: "Failed to enroll student" });
+    }
+  });
+
+  app.get("/api/admin/matriculas", isAuthenticated, isAdmin, async (req: any, res) => {
+    try {
+      const levelId = z.string().min(1).optional().safeParse(req.query.levelId);
+      if (!levelId.success) return res.status(400).json({ message: "levelId inválido" });
+      res.json(await listEnrollments(db, levelId.data));
+    } catch (error) {
+      console.error("Error listing enrollments:", error);
+      res.status(500).json({ message: "Failed to list enrollments" });
+    }
+  });
 
   // Create level (admin only)
   app.post("/api/admin/levels", isAdmin, async (req: any, res) => {
