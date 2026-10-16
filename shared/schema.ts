@@ -224,6 +224,26 @@ export const weeklyCompletion = sqliteTable("weekly_completion", {
   examScore: integer("exam_score"),
 });
 
+// Umbral™: rúbrica por objetivo de aprendizaje, visible antes de evaluar.
+// Cada edición publicada es una versión nueva; las anteriores se conservan (trazabilidad).
+export const rubrics = sqliteTable("rubrics", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  learningObjectiveId: text("learning_objective_id").notNull().references(() => learningObjectives.id),
+  title: text("title").notNull(),
+  version: integer("version").notNull(),
+  isPublished: integer("is_published", { mode: "boolean" }).default(false).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+}, (t) => [uniqueIndex("rubrics_objective_version_uq").on(t.learningObjectiveId, t.version)]);
+
+// Criterio de una rúbrica. performanceLevels: JSON [{ label: "Inicial", description: "..." }, ...]
+export const rubricCriteria = sqliteTable("rubric_criteria", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  rubricId: text("rubric_id").notNull().references(() => rubrics.id),
+  description: text("description").notNull(),
+  performanceLevels: text("performance_levels", { mode: "json" }).$type<{ label: string; description: string }[]>().notNull(),
+  sortOrder: integer("sort_order").default(0).notNull(),
+});
+
 // Relations
 export const levelsRelations = relations(levels, ({ many }) => ({
   levelSubjects: many(levelSubjects),

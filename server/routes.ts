@@ -14,6 +14,7 @@ import {
 } from "@shared/schema";
 import { loadVorticeOverview, checkResourceAccess, checkEvaluationAccess, markResourceCompleteOnce } from "./vortice";
 import { loadDueReview, answerReviewItem } from "./repaso";
+import { getStudentRubric, createRubricVersion, updateDraftRubric, rubricInputSchema } from "./rubricas";
 import { db } from "./db";
 import { seedBase, BASE_LEVELS, BASE_SUBJECTS } from "./seedBase";
 import { notifyByEmail, sendConfirmationEmail } from "./notify";
@@ -500,7 +501,37 @@ export async function registerRoutes(
     }
   });
 
+  // Umbral™: rúbrica publicada del objetivo (criterios de logro antes de evaluar).
+  app.get("/api/objectives/:id/rubrica", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const r = await getStudentRubric(db, userId, req.params.id);
+      if (!r.ok) return res.status(r.status).json({ message: r.reason });
+      res.json(r.value);
+    } catch (error) {
+      console.error("Error loading rubric:", error);
+      res.status(500).json({ message: "Failed to load rubric" });
+    }
+  });
+
   // === ADMIN ROUTES (require admin role) ===
+
+  // Umbral™: POST crea una versión nueva de la rúbrica; PUT edita la última si sigue en borrador.
+  for (const [method, write] of [["post", createRubricVersion], ["put", updateDraftRubric]] as const) {
+    app[method]("/api/admin/objectives/:id/rubrica", isAdmin, async (req: any, res) => {
+      try {
+        const parsed = rubricInputSchema.safeParse(req.body);
+        if (!parsed.success) return res.status(400).json({ message: "Invalid data", errors: parsed.error.errors });
+        const r = await write(db, req.params.id, parsed.data);
+        if (!r.ok) return res.status(r.status).json({ message: r.reason });
+        res.status(method === "post" ? 201 : 200).json(r.value);
+      } catch (error) {
+        console.error("Error saving rubric:", error);
+        res.status(500).json({ message: "Failed to save rubric" });
+      }
+    });
+  }
 
   // Create level (admin only)
   app.post("/api/admin/levels", isAdmin, async (req: any, res) => {
