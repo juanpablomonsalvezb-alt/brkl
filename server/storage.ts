@@ -1,13 +1,13 @@
 import { 
   levels, subjects, levelSubjects, learningObjectives, weeklyResources,
   enrollments, studentProgress, weeklyCompletion, userProfiles,
-  programCalendar, moduleEvaluations, evaluationProgress, textbookConfigs, reservations, planConfigurations,
+moduleEvaluations, evaluationProgress, textbookConfigs, reservations, planConfigurations,
   siteConfiguration, adultCycleConfigurations, geminiCopilots, levelPlanConfigurations,
   type Level, type InsertLevel, type Subject, type InsertSubject,
   type LevelSubject, type InsertLevelSubject, type LearningObjective, type InsertLearningObjective,
   type WeeklyResource, type InsertWeeklyResource, type Enrollment, type InsertEnrollment,
   type StudentProgress, type InsertStudentProgress, type UserProfile, type InsertUserProfile,
-  type ProgramCalendar, type InsertProgramCalendar, type ModuleEvaluation, type InsertModuleEvaluation,
+type ModuleEvaluation, type InsertModuleEvaluation,
   type EvaluationProgress, type InsertEvaluationProgress, type TextbookConfig, type InsertTextbookConfig,
   type Reservation, type InsertReservation, type PlanConfiguration, type InsertPlanConfiguration,
   type SiteConfiguration, type InsertSiteConfiguration, type AdultCycleConfiguration, type InsertAdultCycleConfiguration,
@@ -60,9 +60,6 @@ export interface IStorage {
   getUserProfile(userId: string): Promise<UserProfile | undefined>;
   createOrUpdateUserProfile(profile: InsertUserProfile): Promise<UserProfile>;
   
-  // Program Calendar
-  getProgramCalendar(levelId: string): Promise<ProgramCalendar | undefined>;
-  createProgramCalendar(calendar: InsertProgramCalendar): Promise<ProgramCalendar>;
   
   // Module Evaluations
   getModuleEvaluations(learningObjectiveId: string): Promise<ModuleEvaluation[]>;
@@ -330,17 +327,6 @@ export class DatabaseStorage implements IStorage {
       return updated;
     }
     const [created] = await db.insert(userProfiles).values(profile).returning();
-    return created;
-  }
-
-  // Program Calendar
-  async getProgramCalendar(levelId: string): Promise<ProgramCalendar | undefined> {
-    const [calendar] = await db.select().from(programCalendar).where(eq(programCalendar.levelId, levelId));
-    return calendar;
-  }
-
-  async createProgramCalendar(calendar: InsertProgramCalendar): Promise<ProgramCalendar> {
-    const [created] = await db.insert(programCalendar).values(calendar).returning();
     return created;
   }
 

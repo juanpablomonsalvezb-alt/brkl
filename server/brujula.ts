@@ -10,6 +10,7 @@ import {
 } from "@shared/brujula";
 import type { VorticeTrack } from "@shared/vortice";
 import { loadVorticeOverview, checkModuleAccess } from "./vortice";
+import { resolveCalendarConfigForLevelSubject } from "./calendarConfig";
 
 type Db = LibSQLDatabase<typeof schema>;
 type Result<T> = { ok: true; data: T } | { ok: false; status: 400 | 403 | 404 | 409; reason: string };
@@ -78,7 +79,8 @@ export async function saveBrujulaWeek(
       .innerJoin(subjects, eq(levelSubjects.subjectId, subjects.id))
       .where(eq(learningObjectives.id, objectiveId));
     if (!oa) return { ok: false, status: 404, reason: "Objetivo no encontrado" };
-    const access = await checkModuleAccess(db, userId, oa.levelSubjectId, oa.weekNumber, now);
+    const config = await resolveCalendarConfigForLevelSubject(db, oa.levelSubjectId, now);
+    const access = await checkModuleAccess(db, userId, oa.levelSubjectId, oa.weekNumber, now, config);
     if (!access.ok) return { ok: false, status: access.status, reason: access.reason };
     goals.push({
       levelSubjectId: oa.levelSubjectId, subjectName: oa.subjectName, objectiveId,

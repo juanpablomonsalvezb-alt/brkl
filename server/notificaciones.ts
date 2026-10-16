@@ -15,6 +15,7 @@ import { loadVorticeInput } from "./vortice";
 import {
   getModuleStartDate, getEvaluation1ReleaseDate, getEvaluation2ReleaseDate, getEvaluation3ReleaseDate, getEvaluation4ReleaseDate,
 } from "./calendarUtils";
+import { resolveCalendarConfig } from "./calendarConfig";
 
 type Db = LibSQLDatabase<typeof schema>;
 
@@ -89,17 +90,19 @@ export async function despacharNotificaciones(db: Db, transporte: Transporte, ah
       const registradas = await db.select({ type: notificationLog.type, periodKey: notificationLog.periodKey }).from(notificationLog)
         .where(and(eq(notificationLog.userId, u.id), inArray(notificationLog.periodKey, [fecha, semanaIso(fecha)])));
       const { level, input, completed, passed } = await loadVorticeInput(db, u.id, ahora);
+      // Mismas fechas que ve el estudiante: calendario configurado para su nivel y año.
+      const config = await resolveCalendarConfig(db, level?.id, ahora);
 
       const modulos: ModuloNotif[] = input.flatMap((s) => s.objectives.map((o) => ({
         asignatura: s.subjectName,
         titulo: o.title,
         abierto: o.available !== false,
-        abreEl: diaCalendario(getModuleStartDate(o.weekNumber)),
+        abreEl: diaCalendario(getModuleStartDate(o.weekNumber, config)),
         evaluaciones: (o.evaluations ?? [])
           .filter((ev) => ev.evaluationNumber >= 1 && ev.evaluationNumber <= 4)
           .map((ev) => ({
             id: ev.id, titulo: ev.title, aprobada: passed.has(ev.id),
-            liberadaEl: diaCalendario(LIBERACION[ev.evaluationNumber - 1](o.weekNumber)),
+            liberadaEl: diaCalendario(LIBERACION[ev.evaluationNumber - 1](o.weekNumber, config)),
           })),
       })));
 

@@ -128,14 +128,57 @@ export const learningObjectives = sqliteTable("learning_objectives", {
   wordDocUrl: text("word_doc_url"), // URL del documento Word original
 });
 
-// Program Calendar Configuration
+// Calendario por año académico y nivel (opcional). Sin fila aplicable rige DEFAULT_CONFIG
+// (server/calendarUtils.ts). Prioridad: nivel + año > año (level_id NULL) > DEFAULT_CONFIG.
 export const programCalendar = sqliteTable("program_calendar", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
-  levelId: text("level_id").notNull().references(() => levels.id),
-  startDate: integer("start_date", { mode: "timestamp" }).notNull(), // March 9, 2026
+  academicYear: integer("academic_year").notNull(),
+  levelId: text("level_id").references(() => levels.id), // NULL = todo el año, cualquier nivel
+  startDate: integer("start_date", { mode: "timestamp" }).notNull(), // lunes, 00:00 hora de Chile
   moduleDurationWeeks: integer("module_duration_weeks").default(2).notNull(),
+  totalModules: integer("total_modules").default(15).notNull(),
+  generalEvaluationWeeks: text("general_evaluation_weeks", { mode: "json" })
+    .$type<{ afterModule: number; name: string }[]>().default(sql`'[]'`).notNull(),
+  breaks: text("breaks", { mode: "json" }).$type<{ start: string; end: string; name?: string }[]>().default(sql`'[]'`).notNull(),
+  holidays: text("holidays", { mode: "json" }).$type<string[]>().default(sql`'[]'`).notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
-});
+  updatedAt: integer("updated_at", { mode: "timestamp" }),
+}, (table) => [
+  // Una config por (año, nivel). En SQLite dos NULL no chocan en un índice único: la de todo el año
+  // (level_id NULL) necesita su propio índice parcial.
+  uniqueIndex("program_calendar_year_level_unique").on(table.academicYear, table.levelId),
+  uniqueIndex("program_calendar_year_all_levels_unique").on(table.academicYear).where(sql`${table.levelId} IS NULL`),
+]);
+
+const ymdDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Formato YYYY-MM-DD")
+  .refine((v) => !Number.isNaN(Date.parse(`${v}T00:00:00Z`)) && new Date(`${v}T00:00:00Z`).toISOString().startsWith(v), "Fecha inválida");
+
+// Entrada de los endpoints admin de calendario. Fechas como día calendario de Chile.
+export const calendarConfigInputSchema = z.object({
+  academicYear: z.number().int().min(2020).max(2100),
+  levelId: z.string().trim().min(1).max(20).nullable().default(null),
+  startDate: ymdDate.refine((v) => new Date(`${v}T12:00:00Z`).getUTCDay() === 1, "La fecha de inicio debe ser lunes"),
+  moduleDurationWeeks: z.number().int().min(1).max(8).default(2),
+  totalModules: z.number().int().min(1).max(40).default(15),
+  generalEvaluationWeeks: z.array(z.object({
+    afterModule: z.number().int().min(1),
+    name: z.string().trim().min(1).max(120),
+  })).max(10).default([
+    { afterModule: 7, name: "Semana de Evaluaciones Generales (Primer Semestre)" },
+    { afterModule: 15, name: "Semana de Evaluaciones Finales" },
+  ]),
+  breaks: z.array(z.object({
+    start: ymdDate,
+    end: ymdDate,
+    name: z.string().trim().max(120).optional(),
+  }).refine((b) => b.start <= b.end, "El receso termina antes de empezar")).max(20).default([]),
+  holidays: z.array(ymdDate).max(60).default([]),
+}).strict()
+  .refine((c) => c.startDate.startsWith(`${c.academicYear}-`), { message: "La fecha de inicio debe caer en el año académico", path: ["startDate"] })
+  .refine((c) => c.generalEvaluationWeeks.every((w) => w.afterModule <= c.totalModules), {
+    message: "Semana de evaluación general después de un módulo inexistente", path: ["generalEvaluationWeeks"],
+  });
+export type CalendarConfigInput = z.infer<typeof calendarConfigInputSchema>;
 
 // Module Evaluations (4 per module - Wed/Fri for 2 weeks)
 export const moduleEvaluations = sqliteTable("module_evaluations", {
