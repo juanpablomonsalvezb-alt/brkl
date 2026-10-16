@@ -17,6 +17,10 @@ import { loadDueReview, answerReviewItem } from "./repaso";
 import { getStudentRubric, createRubricVersion, updateDraftRubric, rubricInputSchema } from "./rubricas";
 import { getBrujulaWeek, saveBrujulaWeek, closeBrujulaWeek } from "./brujula";
 import { saveWeekSchema, closeWeekSchema } from "@shared/brujula";
+import {
+  crearCaso, casosDelEstudiante, casosDelTutor, casosParaAdmin, asignarCaso, responderCaso, cerrarCaso,
+  type TutoriaResult,
+} from "./tutoria";
 import { db } from "./db";
 import { seedBase, BASE_LEVELS, BASE_SUBJECTS } from "./seedBase";
 import { purgarPresenciaVieja } from "./retencion";
@@ -563,6 +567,27 @@ export async function registerRoutes(
       res.status(500).json({ message: "Failed to load rubric" });
     }
   });
+  // Tutoría humana como caso. Los permisos por rol (user_profiles) se validan en server/tutoria.ts.
+  const tutoriaRoute = (run: (userId: string, req: any) => Promise<TutoriaResult<unknown>>, created = false) =>
+    async (req: any, res: any) => {
+      try {
+        const userId = currentUserId(req);
+        if (!userId) return res.status(401).json({ message: "Unauthorized" });
+        const r = await run(userId, req);
+        if (!r.ok) return res.status(r.status).json({ message: r.reason });
+        res.status(created ? 201 : 200).json(r.value);
+      } catch (error) {
+        console.error("Error en tutoría:", error);
+        res.status(500).json({ message: "Error en tutoría" });
+      }
+    };
+  app.post("/api/vortice/ayuda", tutoriaRoute((u, req) => crearCaso(db, u, req.body, new Date()), true));
+  app.get("/api/vortice/ayuda", tutoriaRoute((u) => casosDelEstudiante(db, u)));
+  app.get("/api/tutoria/casos", tutoriaRoute((u) => casosDelTutor(db, u)));
+  app.post("/api/tutoria/casos/:id/responder", tutoriaRoute((u, req) => responderCaso(db, u, getStringParam(req.params.id), req.body, new Date())));
+  app.post("/api/tutoria/casos/:id/cerrar", tutoriaRoute((u, req) => cerrarCaso(db, u, getStringParam(req.params.id), req.body, new Date())));
+  app.get("/api/admin/tutoria/casos", isAdmin, tutoriaRoute((u, req) => casosParaAdmin(db, u, req.query.estado)));
+  app.post("/api/admin/tutoria/casos/:id/asignar", isAdmin, tutoriaRoute((u, req) => asignarCaso(db, u, getStringParam(req.params.id), req.body, new Date())));
 
   // === ADMIN ROUTES (require admin role) ===
 

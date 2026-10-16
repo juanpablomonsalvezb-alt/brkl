@@ -216,7 +216,9 @@ export async function setupAuth(app: Express) {
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
   const user = req.user as any;
 
-  if (!req.isAuthenticated() || !user.expires_at) {
+  // Sin login configurado (setupAuth no corre) passport no agrega req.isAuthenticated:
+  // llamarlo lanzaba TypeError y toda ruta protegida respondía 500 en vez de 401.
+  if (typeof req.isAuthenticated !== "function" || !req.isAuthenticated() || !user?.expires_at) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 

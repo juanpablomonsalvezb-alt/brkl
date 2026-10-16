@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { sqliteTable, text, integer, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, uniqueIndex, index } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { randomUUID } from "crypto";
@@ -902,3 +902,32 @@ export const brujulaWeeks = sqliteTable("brujula_weeks", {
 }, (t) => [uniqueIndex("brujula_weeks_user_week").on(t.userId, t.weekStart)]);
 
 export type BrujulaWeek = typeof brujulaWeeks.$inferSelect;
+
+// ============================================
+// Tutoría humana como caso (Atlas #006): el estudiante pide ayuda asincrónica
+// sobre un OA (y opcionalmente un recurso de ese OA), un admin asigna un tutor,
+// el tutor responde y luego cierra documentando. Las fechas permiten medir el
+// tiempo de respuesta real. Estados: abierto → asignado → respondido → cerrado.
+// ============================================
+export const tutoringCaseStatuses = ["abierto", "asignado", "respondido", "cerrado"] as const;
+
+export const tutoringCases = sqliteTable("tutoring_cases", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  studentId: text("student_id").notNull().references(() => users.id),
+  tutorId: text("tutor_id").references(() => users.id),
+  learningObjectiveId: text("learning_objective_id").notNull().references(() => learningObjectives.id),
+  resourceId: text("resource_id").references(() => weeklyResources.id),
+  question: text("question").notNull(),
+  response: text("response"),
+  closingNote: text("closing_note"),
+  status: text("status", { enum: tutoringCaseStatuses }).default("abierto").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  assignedAt: integer("assigned_at", { mode: "timestamp" }),
+  respondedAt: integer("responded_at", { mode: "timestamp" }),
+  closedAt: integer("closed_at", { mode: "timestamp" }),
+}, (t) => [
+  index("idx_tutoring_cases_student").on(t.studentId),
+  index("idx_tutoring_cases_tutor_status").on(t.tutorId, t.status),
+]);
+
+export type TutoringCase = typeof tutoringCases.$inferSelect;
