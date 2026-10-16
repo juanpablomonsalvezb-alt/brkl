@@ -15,11 +15,39 @@ export function trackForLevel(levelId: string | null | undefined): VorticeTrack 
   return (levelId && TRACK_BY_LEVEL[levelId]) || null;
 }
 
+// Secuencia pedagógica del objetivo (IES "Organizing Instruction and Study"):
+// ejemplo resuelto → práctica guiada → práctica independiente → reflexión breve; luego evaluación.
+export const PEDAGOGICAL_STEPS = ["ejemplo", "practica_guiada", "practica_independiente", "reflexion"] as const;
+export type PedagogicalStep = (typeof PEDAGOGICAL_STEPS)[number];
+
+// Reflexión: preguntas breves con respuestas cortas del estudiante.
+export const REFLECTION_MAX_PROMPTS = 5;
+export const REFLECTION_PROMPT_MAX = 300;
+export const REFLECTION_ANSWER_MAX = 500;
+
 export interface OverviewResource {
   id: string;
   title: string;
   resourceType: string;
   sortOrder: number;
+  // null/ausente en recursos sin paso asignado (datos existentes).
+  pedagogicalStep?: PedagogicalStep | null;
+}
+
+// Orden dentro del objetivo: los recursos sin paso van primero (material previo, por sortOrder);
+// los que tienen paso siguen la secuencia pedagógica y, dentro del mismo paso, sortOrder.
+// Si ningún recurso tiene paso, queda exactamente el orden por sortOrder.
+const stepRank = (r: OverviewResource) => (r.pedagogicalStep ? PEDAGOGICAL_STEPS.indexOf(r.pedagogicalStep) : -1);
+export const byPedagogicalOrder = (a: OverviewResource, b: OverviewResource) =>
+  stepRank(a) - stepRank(b) || a.sortOrder - b.sortOrder;
+
+// Quién ve las respuestas de reflexión: el propio estudiante, su tutor asignado o un admin.
+export function canViewReflection(
+  viewer: { id: string; role: string | null | undefined },
+  student: { id: string; tutorUserId: string | null | undefined },
+): boolean {
+  if (viewer.id === student.id || viewer.role === "admin") return true;
+  return viewer.role === "tutor" && !!student.tutorUserId && student.tutorUserId === viewer.id;
 }
 
 export interface OverviewEvaluation {
@@ -60,6 +88,8 @@ export interface NextStep {
   itemId: string;
   itemTitle: string;
   resourceType: string | null;
+  // Paso pedagógico del recurso; null en evaluaciones o recursos sin paso.
+  pedagogicalStep: PedagogicalStep | null;
 }
 
 export interface SubjectSummary {
@@ -77,7 +107,6 @@ export interface SubjectSummary {
   next: NextStep | null;
 }
 
-const byOrder = <T extends { sortOrder: number }>(a: T, b: T) => a.sortOrder - b.sortOrder;
 const byModule = (a: OverviewObjective, b: OverviewObjective) =>
   a.weekNumber - b.weekNumber || a.sortOrder - b.sortOrder;
 
@@ -101,14 +130,15 @@ export function summarizeSubject(
   });
 
   for (const oa of objectives) {
-    // Dentro del objetivo: primero los recursos, después las evaluaciones.
+    // Dentro del objetivo: primero los recursos (en orden pedagógico), después las evaluaciones.
     const open = oa.available !== false;
-    for (const r of [...oa.resources].sort(byOrder)) {
+    for (const r of [...oa.resources].sort(byPedagogicalOrder)) {
       total++;
       if (completed.has(r.id)) done++;
       else if (!open) lockedPending++;
       else if (!next) {
-        next = { kind: "resource", ...base(oa), itemId: r.id, itemTitle: r.title, resourceType: r.resourceType };
+        next = { kind: "resource", ...base(oa), itemId: r.id, itemTitle: r.title, resourceType: r.resourceType,
+          pedagogicalStep: r.pedagogicalStep ?? null };
       }
     }
     for (const ev of [...(oa.evaluations ?? [])].sort((a, b) => a.evaluationNumber - b.evaluationNumber)) {
@@ -116,7 +146,7 @@ export function summarizeSubject(
       if (passed.has(ev.id)) done++;
       else if (!open || !ev.available) lockedPending++;
       else if (!next) {
-        next = { kind: "evaluation", ...base(oa), itemId: ev.id, itemTitle: ev.title, resourceType: null };
+        next = { kind: "evaluation", ...base(oa), itemId: ev.id, itemTitle: ev.title, resourceType: null, pedagogicalStep: null };
       }
     }
     if (next && !current) current = { id: oa.id, code: oa.code, title: oa.title };
