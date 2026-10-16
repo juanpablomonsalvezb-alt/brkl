@@ -21,6 +21,8 @@ import {
   crearCaso, casosDelEstudiante, casosDelTutor, casosParaAdmin, asignarCaso, responderCaso, cerrarCaso,
   type TutoriaResult,
 } from "./tutoria";
+
+import { listLinkedStudents, loadFamiliaResumen, guardianLinkInput, upsertGuardianLink } from "./familia";
 import { db } from "./db";
 import { seedBase, BASE_LEVELS, BASE_SUBJECTS } from "./seedBase";
 import { purgarPresenciaVieja } from "./retencion";
@@ -540,6 +542,32 @@ export async function registerRoutes(
     }
   });
 
+  // Vórtice familia (solo lectura): estudiantes con vínculo activo al apoderado en sesión.
+  app.get("/api/familia/estudiantes", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      res.json(await listLinkedStudents(db, userId));
+    } catch (error) {
+      console.error("Error listing familia students:", error);
+      res.status(500).json({ message: "Failed to list students" });
+    }
+  });
+
+  // Sin vínculo activo responde 404, igual que si el estudiante no existiera.
+  app.get("/api/familia/estudiantes/:studentId/resumen", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const resumen = await loadFamiliaResumen(db, userId, String(req.params.studentId), new Date());
+      if (!resumen) return res.status(404).json({ message: "Estudiante no encontrado" });
+      res.json(resumen);
+    } catch (error) {
+      console.error("Error building familia resumen:", error);
+      res.status(500).json({ message: "Failed to build resumen" });
+    }
+  });
+
   // Mark resource as complete
   app.post("/api/progress", async (req: any, res) => {
     try {
@@ -608,6 +636,24 @@ export async function registerRoutes(
       }
     });
   }
+
+  // Vórtice familia: crear o activar vínculo apoderado ↔ estudiante.
+  // isAdmin está en modo dev (deja pasar todo); un vínculo da lectura de un menor, así que aquí se exige admin real.
+  app.post("/api/admin/familia/vinculos", isAdmin, async (req: any, res) => {
+    try {
+      const adminId = currentUserId(req);
+      if (!adminId) return res.status(401).json({ message: "Unauthorized" });
+      if ((await storage.getUserProfile(adminId))?.role !== "admin") return res.status(403).json({ message: "Forbidden: Admin access required" });
+      const parsed = guardianLinkInput.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Datos inválidos", errors: parsed.error.flatten() });
+      const result = await upsertGuardianLink(db, parsed.data, adminId);
+      if (!result.ok) return res.status(result.status).json({ message: result.reason });
+      res.json(result.link);
+    } catch (error) {
+      console.error("Error saving guardian link:", error);
+      res.status(500).json({ message: "Failed to save link" });
+    }
+  });
 
   // Create level (admin only)
   app.post("/api/admin/levels", isAdmin, async (req: any, res) => {

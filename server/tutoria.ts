@@ -11,7 +11,7 @@ import {
 } from "@shared/schema";
 
 type Db = LibSQLDatabase<typeof schema>;
-type Role = "admin" | "student" | "tutor";
+type Role = (typeof userProfiles.$inferSelect)["role"];
 export type TutoriaResult<T> = { ok: true; value: T } | { ok: false; status: 400 | 403 | 404 | 409; reason: string };
 
 // ponytail: tope fijo de casos sin cerrar por estudiante contra spam; configurable si hace falta.

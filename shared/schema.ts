@@ -69,7 +69,7 @@ export type InsertWaitlistSignup = z.infer<typeof insertWaitlistSchema>;
 export const userProfiles = sqliteTable("user_profiles", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   userId: text("user_id").notNull(),
-  role: text("role", { enum: ["admin", "student", "tutor"] }).default("student").notNull(),
+  role: text("role", { enum: ["admin", "student", "tutor", "guardian"] }).default("student").notNull(),
   levelId: text("level_id"),
   createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
 });
@@ -163,6 +163,18 @@ export const evaluationProgress = sqliteTable("evaluation_progress", {
   answersJson: text("answers_json"), // JSON array of user's answers
   passed: integer("passed", { mode: "boolean" }).default(false),
 });
+
+// Vórtice familia: vínculo apoderado ↔ estudiante, creado por admin. Solo "activo" da acceso (lectura).
+export const guardianLinks = sqliteTable("guardian_links", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  guardianUserId: text("guardian_user_id").notNull().references(() => users.id),
+  studentUserId: text("student_user_id").notNull().references(() => users.id),
+  status: text("status", { enum: ["pendiente", "activo"] }).default("pendiente").notNull(),
+  createdBy: text("created_by"),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+}, (t) => [uniqueIndex("guardian_links_pair_idx").on(t.guardianUserId, t.studentUserId)]);
+
+export type GuardianLink = typeof guardianLinks.$inferSelect;
 
 // Weekly Resources (7 tipos por semana)
 export const weeklyResources = sqliteTable("weekly_resources", {
