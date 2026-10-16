@@ -857,17 +857,15 @@ export type InsertPaesSubscription = z.infer<typeof insertPaesSubscriptionSchema
 
 // ============================================
 // Together — sala de estudio en silencio (body doubling).
-// Acceso solo con nombre — sin correo, sin login, sin contraseña. El campo
-// email se mantiene NOT NULL por compatibilidad con filas existentes, pero
-// ya no se pide ni se usa (siempre se guarda como cadena vacía). El clientId
+// Acceso solo con nombre — sin correo, sin login, sin contraseña. La columna
+// email se eliminó (migración 0001): nunca se pidió ni se usó. El clientId
 // sigue siendo anónimo en localStorage y es lo único que identifica la
-// pestaña frente al servidor. Filas con lastSeen viejo (>30s) se tratan
-// como desconectadas y se limpian solas.
+// pestaña frente al servidor. Filas con lastSeen > 30s se tratan como
+// desconectadas; las de más de 1 hora se borran (server/retencion.ts).
 // ============================================
 export const togetherPresence = sqliteTable("together_presence", {
   clientId: text("client_id").primaryKey(),
   displayName: text("display_name").notNull(),
-  email: text("email").notNull(),
   subject: text("subject"),
   lastSeen: integer("last_seen", { mode: "timestamp" }).notNull(),
   // Sala privada (/together/<sala>). null = sala general.
