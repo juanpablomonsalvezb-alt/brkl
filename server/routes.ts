@@ -12,18 +12,30 @@ import {
   insertFunnelEventSchema, funnelEvents,
   insertTogetherHeartbeatSchema, togetherPresence, togetherRoomSchema,
 } from "@shared/schema";
-import { loadVorticeOverview, checkResourceAccess, checkEvaluationAccess, markResourceCompleteOnce } from "./vortice";
+import {
+  loadVorticeOverview,
+  checkResourceAccess,
+  checkEvaluationAccess,
+  markResourceCompleteOnce,
+  saveReflection,
+  getReflection,
+  setPedagogicalStep,
+} from "./vortice";
 import { loadDueReview, answerReviewItem } from "./repaso";
 import { getStudentRubric, createRubricVersion, updateDraftRubric, rubricInputSchema } from "./rubricas";
 import { getBrujulaWeek, saveBrujulaWeek, closeBrujulaWeek } from "./brujula";
 import { saveWeekSchema, closeWeekSchema } from "@shared/brujula";
 import {
-  crearCaso, casosDelEstudiante, casosDelTutor, casosParaAdmin, asignarCaso, responderCaso, cerrarCaso,
+  crearCaso,
+  casosDelEstudiante,
+  casosDelTutor,
+  casosParaAdmin,
+  asignarCaso,
+  responderCaso,
+  cerrarCaso,
   type TutoriaResult,
 } from "./tutoria";
-
 import { listLinkedStudents, loadFamiliaResumen, guardianLinkInput, upsertGuardianLink } from "./familia";
-
 import { recordEvent, recordResourceOpened, loadAnaliticaResumen } from "./analitica";
 import { db } from "./db";
 import { seedBase, BASE_LEVELS, BASE_SUBJECTS } from "./seedBase";
@@ -594,6 +606,35 @@ export async function registerRoutes(
   app.get("/api/vortice/portafolio/estudiante/:studentId", portafolio((u, req) => listStudentEvidences(db, u, req.params.studentId)));
   app.get("/api/vortice/portafolio/:id/versiones", portafolio((u, req) => listEvidenceVersions(db, u, req.params.id)));
 
+  // Vórtice: el estudiante guarda su reflexión breve del objetivo (completa el recurso).
+  app.post("/api/vortice/reflexion/:resourceId", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const result = await saveReflection(db, userId, getStringParam(req.params.resourceId), req.body, new Date());
+      if (!result.ok) return res.status(result.status).json({ message: result.reason });
+      res.json(result);
+    } catch (error) {
+      console.error("Error saving reflection:", error);
+      res.status(500).json({ message: "Failed to save reflection" });
+    }
+  });
+
+  // Vórtice: leer una reflexión (propia por defecto; ?userId= para tutor asignado o admin).
+  app.get("/api/vortice/reflexion/:resourceId", async (req: any, res) => {
+    try {
+      const viewerId = currentUserId(req);
+      if (!viewerId) return res.status(401).json({ message: "Unauthorized" });
+      const studentId = typeof req.query.userId === "string" && req.query.userId ? req.query.userId : viewerId;
+      const result = await getReflection(db, viewerId, studentId, getStringParam(req.params.resourceId));
+      if (!result.ok) return res.status(result.status).json({ message: result.reason });
+      res.json(result);
+    } catch (error) {
+      console.error("Error fetching reflection:", error);
+      res.status(500).json({ message: "Failed to fetch reflection" });
+    }
+  });
+
   // Mark resource as complete
   app.post("/api/progress", async (req: any, res) => {
     try {
@@ -850,6 +891,18 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error updating resource:", error);
       res.status(500).json({ message: "Failed to update resource" });
+    }
+  });
+
+  // Asignar paso pedagógico (y preguntas de reflexión) a un recurso (admin only)
+  app.patch("/api/admin/resources/:id/pedagogical-step", isAdmin, async (req: any, res) => {
+    try {
+      const result = await setPedagogicalStep(db, getStringParam(req.params.id), req.body);
+      if (!result.ok) return res.status(result.status).json({ message: result.reason });
+      res.json(result.resource);
+    } catch (error) {
+      console.error("Error setting pedagogical step:", error);
+      res.status(500).json({ message: "Failed to set pedagogical step" });
     }
   });
 

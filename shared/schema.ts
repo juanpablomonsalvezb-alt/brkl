@@ -1,8 +1,11 @@
-import { relations } from "drizzle-orm";
-import { sqliteTable, text, integer, uniqueIndex, index } from "drizzle-orm/sqlite-core";
+import { relations, sql } from "drizzle-orm";
+import { sqliteTable, text, integer, uniqueIndex, index, check } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { randomUUID } from "crypto";
+import {
+  PEDAGOGICAL_STEPS, REFLECTION_MAX_PROMPTS, REFLECTION_PROMPT_MAX, REFLECTION_ANSWER_MAX,
+} from "./vortice";
 
 // Re-export auth models (users and sessions tables)
 export * from "./models/auth";
@@ -71,6 +74,8 @@ export const userProfiles = sqliteTable("user_profiles", {
   userId: text("user_id").notNull(),
   role: text("role", { enum: ["admin", "student", "tutor", "guardian"] }).default("student").notNull(),
   levelId: text("level_id"),
+  // Tutor asignado al estudiante (puede ver sus reflexiones). Opcional.
+  tutorUserId: text("tutor_user_id"),
   createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
 });
 
@@ -180,12 +185,16 @@ export type GuardianLink = typeof guardianLinks.$inferSelect;
 export const weeklyResources = sqliteTable("weekly_resources", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   learningObjectiveId: text("learning_objective_id").notNull().references(() => learningObjectives.id),
-  resourceType: text("resource_type", { enum: ["video", "infografia", "audio", "presentacion"] }).notNull(),
+  resourceType: text("resource_type", { enum: ["video", "infografia", "audio", "presentacion", "reflexion"] }).notNull(),
   title: text("title").notNull(),
   notebookLmUrl: text("notebook_lm_url"),
   barkleyFoundation: text("barkley_foundation"), // "Activación Atencional (Barkley)"
   studentHelp: text("student_help"), // "Voz al alumno" text
   pedagogicalObjective: text("pedagogical_objective"),
+  // Paso de la secuencia pedagógica del objetivo; null = sin asignar (orden por sortOrder).
+  pedagogicalStep: text("pedagogical_step", { enum: PEDAGOGICAL_STEPS }),
+  // Solo recursos "reflexion": JSON con las preguntas breves (string[]).
+  reflectionPrompts: text("reflection_prompts"),
   sortOrder: integer("sort_order").default(0).notNull(),
   isActive: integer("is_active", { mode: "boolean" }).default(true),
   createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
@@ -282,6 +291,21 @@ export const portfolioEvidenceVersions = sqliteTable("portfolio_evidence_version
   evaluationProgressId: text("evaluation_progress_id"),
   createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
 }, (t) => [uniqueIndex("portfolio_evidence_versions_uq").on(t.evidenceId, t.version)]);
+
+// Respuestas de reflexión: una fila por estudiante y recurso (se sobrescribe al reenviar).
+// Visibles solo para el estudiante, su tutor asignado o un admin (canViewReflection).
+export const reflectionResponses = sqliteTable("reflection_responses", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  userId: text("user_id").notNull().references(() => users.id),
+  resourceId: text("resource_id").notNull().references(() => weeklyResources.id),
+  answersJson: text("answers_json").notNull(), // JSON string[]
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
+}, (t) => [
+  uniqueIndex("reflection_responses_user_resource_idx").on(t.userId, t.resourceId),
+  // Tope duro en la base además de zod: 5 × 500 caracteres aun con escapes JSON (peor caso \uXXXX = 6×).
+  check("reflection_answers_len", sql`length(${t.answersJson}) <= 16000`),
+]);
 
 // Weekly completion status
 export const weeklyCompletion = sqliteTable("weekly_completion", {
@@ -388,6 +412,17 @@ export const insertUserProfileSchema = createInsertSchema(userProfiles).omit({ i
 export const insertProgramCalendarSchema = createInsertSchema(programCalendar).omit({ id: true, createdAt: true });
 export const insertModuleEvaluationSchema = createInsertSchema(moduleEvaluations).omit({ id: true, createdAt: true });
 export const insertEvaluationProgressSchema = createInsertSchema(evaluationProgress).omit({ id: true });
+
+// Vórtice: secuencia pedagógica y reflexión.
+export const pedagogicalStepSchema = z.enum(PEDAGOGICAL_STEPS);
+export const reflectionPromptsSchema = z.array(z.string().trim().min(1).max(REFLECTION_PROMPT_MAX)).min(1).max(REFLECTION_MAX_PROMPTS);
+export const updatePedagogicalStepSchema = z.object({
+  pedagogicalStep: pedagogicalStepSchema.nullable(),
+  reflectionPrompts: reflectionPromptsSchema.nullable().optional(),
+}).strict();
+export const reflectionAnswersSchema = z.object({
+  answers: z.array(z.string().trim().min(1).max(REFLECTION_ANSWER_MAX)).min(1).max(REFLECTION_MAX_PROMPTS),
+}).strict();
 
 const baseLevelSubjectTextbookSchema = createInsertSchema(levelSubjects, {
   textbookPdfUrl: z.preprocess(

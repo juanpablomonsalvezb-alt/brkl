@@ -1,6 +1,6 @@
 // Chequeo de la lógica pura de Vórtice. Ejecutar: npm run check:vortice
 import assert from "node:assert/strict";
-import { buildOverview, trackForLevel, type OverviewSubjectInput } from "../shared/vortice";
+import { buildOverview, trackForLevel, canViewReflection, type OverviewSubjectInput, type PedagogicalStep } from "../shared/vortice";
 
 assert.equal(trackForLevel("3b"), "basica-1-4");
 assert.equal(trackForLevel("7b"), "basica-5-8");
@@ -53,5 +53,41 @@ assert.equal(espera.subjects[0].waitingForRelease, true);
 
 const vacio = buildOverview(null, [], new Set());
 assert.deepEqual([vacio.track, vacio.nextStep, vacio.totals.percent], [null, null, null]);
+
+// Secuencia pedagógica (#035): ejemplo → guiada → independiente → reflexión, luego evaluación.
+const paso = (id: string, sortOrder: number, pedagogicalStep: PedagogicalStep | null) =>
+  ({ id, title: id, resourceType: "video", sortOrder, pedagogicalStep });
+const sec: OverviewSubjectInput = {
+  levelSubjectId: "ls-sec", subjectName: "Ciencias", subjectSlug: "ciencias",
+  objectives: [{ id: "oa-s", code: "OA 1", title: "Célula", weekNumber: 1, sortOrder: 0,
+    // sortOrder contradice la secuencia a propósito: manda el paso pedagógico.
+    resources: [paso("refl", 0, "reflexion"), paso("indep", 1, "practica_independiente"), paso("guiada", 2, "practica_guiada"),
+      paso("ej", 3, "ejemplo"), paso("previo", 9, null)],
+    evaluations: [{ id: "ev-s", title: "Eval", evaluationNumber: 1, available: true }] }],
+};
+const orden: string[] = [];
+const hechos = new Set<string>();
+for (;;) {
+  const n = buildOverview(null, [sec], hechos).nextStep;
+  if (!n || n.kind !== "resource") { orden.push(n?.itemId ?? "fin"); break; }
+  orden.push(n.itemId); hechos.add(n.itemId);
+}
+// Sin paso va primero (material previo); luego la secuencia; la evaluación al final.
+assert.deepEqual(orden, ["previo", "ej", "guiada", "indep", "refl", "ev-s"]);
+assert.equal(buildOverview(null, [sec], new Set(["previo"])).nextStep?.pedagogicalStep, "ejemplo");
+// Mismo paso: desempata sortOrder. Sin ningún paso: orden actual por sortOrder (ver m2/m1 arriba).
+const dos: OverviewSubjectInput = { ...sec, objectives: [{ ...sec.objectives[0], resources: [paso("b", 5, "ejemplo"), paso("a", 1, "ejemplo")] }] };
+assert.equal(buildOverview(null, [dos], new Set()).nextStep?.itemId, "a");
+assert.equal(m.next?.pedagogicalStep, null);
+
+// Visibilidad de reflexiones: el estudiante, su tutor asignado o admin.
+const alumno = { id: "s1", tutorUserId: "t1" };
+assert.equal(canViewReflection({ id: "s1", role: "student" }, alumno), true);
+assert.equal(canViewReflection({ id: "t1", role: "tutor" }, alumno), true);
+assert.equal(canViewReflection({ id: "t2", role: "tutor" }, alumno), false); // otro tutor
+assert.equal(canViewReflection({ id: "a1", role: "admin" }, alumno), true);
+assert.equal(canViewReflection({ id: "s2", role: "student" }, alumno), false);
+assert.equal(canViewReflection({ id: "t1", role: "student" }, alumno), false); // ya no es tutor
+assert.equal(canViewReflection({ id: "t1", role: "tutor" }, { id: "s3", tutorUserId: null }), false);
 
 console.log("vortice: ok");

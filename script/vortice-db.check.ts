@@ -268,3 +268,63 @@ assert.equal(await purgeOldEvents(db, hoy), 1);
 assert.equal(await purgeOldEvents(db, hoy), 0);
 assert.equal((await db.select().from(learningEvents)).length, antesPurga - 1);
 console.log("vortice-analitica: ok");
+
+// Secuencia pedagógica y reflexión (#035).
+const { saveReflection, getReflection, setPedagogicalStep } = await import("../server/vortice");
+const { reflectionResponses } = schema;
+await db.insert(weeklyResources).values([
+  { id: "rf", learningObjectiveId: "oa1", resourceType: "reflexion", title: "Reflexión OA1", sortOrder: 0 },
+  { id: "rg", learningObjectiveId: "oa1", resourceType: "video", title: "Práctica guiada", sortOrder: 9 },
+]);
+// Admin: validación zod, 404, preguntas solo en reflexiones.
+assert.equal((await setPedagogicalStep(db, "rg", { pedagogicalStep: "otro" })).ok, false);
+assert.equal((await setPedagogicalStep(db, "nope", { pedagogicalStep: "ejemplo" })).ok, false);
+assert.deepEqual(await setPedagogicalStep(db, "rg", { pedagogicalStep: "practica_guiada", reflectionPrompts: ["¿?"] }),
+  { ok: false, status: 400, reason: "Solo los recursos de reflexión llevan preguntas" });
+assert.equal((await setPedagogicalStep(db, "rg", { pedagogicalStep: "practica_guiada" })).ok, true);
+// Reflexión sin preguntas configuradas: no se puede responder.
+assert.equal((await saveReflection(db, "u4", "rf", { answers: ["x"] }, despues) as any).status, 409);
+const conf = await setPedagogicalStep(db, "rf", { pedagogicalStep: "reflexion", reflectionPrompts: ["¿Qué aprendí?", "¿Qué me costó?"] });
+assert.ok(conf.ok && conf.resource.pedagogicalStep === "reflexion");
+
+// u4 (módulo 1 abierto, completó r1): siguiente paso respeta la secuencia aunque sortOrder diga otra cosa.
+// r2 (sin paso) → rg (guiada) → rf (reflexión) → e1.
+const pasos = async () => (await loadVorticeOverview(db, "u4", despues)).nextStep;
+assert.equal((await pasos())?.itemId, "r2");
+await markResourceCompleteOnce(db, "u4", "r2");
+assert.deepEqual([(await pasos())?.itemId, (await pasos())?.pedagogicalStep], ["rg", "practica_guiada"]);
+await markResourceCompleteOnce(db, "u4", "rg");
+assert.equal((await pasos())?.itemId, "rf");
+
+// Validación de respuestas y acceso.
+assert.equal((await saveReflection(db, "u4", "rf", { answers: ["solo una"] }, despues) as any).status, 400);
+assert.equal((await saveReflection(db, "u4", "rf", { answers: ["a", "x".repeat(501)] }, despues) as any).status, 400);
+assert.equal((await saveReflection(db, "u4", "rf", { answers: ["a", "b"], extra: 1 }, despues) as any).status, 400);
+assert.equal((await saveReflection(db, "u4", "r1", { answers: ["a"] }, despues) as any).status, 400); // no es reflexión
+assert.equal((await saveReflection(db, "u2", "rf", { answers: ["a", "b"] }, despues) as any).status, 403); // matrícula inactiva
+assert.equal((await saveReflection(db, "u4", "rf", { answers: ["a", "b"] }, antes) as any).status, 403); // antes del inicio
+// Guardar completa el recurso; reenviar sobrescribe sin duplicar.
+assert.equal((await saveReflection(db, "u4", "rf", { answers: [" Entendí el ejemplo ", "Las fracciones"] }, despues)).ok, true);
+assert.equal((await saveReflection(db, "u4", "rf", { answers: ["Entendí el ejemplo", "Nada"] }, despues)).ok, true);
+assert.equal((await db.select().from(reflectionResponses)).length, 1);
+assert.equal((await pasos())?.itemId, "e1");
+
+// Visibilidad: propio, tutor asignado y admin sí; otro tutor u otro estudiante no.
+await db.insert(users).values([{ id: "t1" }, { id: "t2" }, { id: "adm" }]);
+await db.insert(userProfiles).values([
+  { userId: "u4", tutorUserId: "t1" },
+  { userId: "t1", role: "tutor" }, { userId: "t2", role: "tutor" }, { userId: "adm", role: "admin" },
+]);
+const propia = await getReflection(db, "u4", "u4", "rf");
+assert.ok(propia.ok);
+assert.deepEqual([propia.prompts.length, propia.answers], [2, ["Entendí el ejemplo", "Nada"]]);
+assert.equal((await getReflection(db, "t1", "u4", "rf")).ok, true);
+assert.equal((await getReflection(db, "adm", "u4", "rf")).ok, true);
+assert.equal((await getReflection(db, "t2", "u4", "rf") as any).status, 403);
+assert.equal((await getReflection(db, "u1", "u4", "rf") as any).status, 403);
+assert.equal((await getReflection(db, "u1", "u1", "rf") as any).status, 404); // sin respuesta propia
+// Tope duro en la base aunque se salte zod.
+await assert.rejects(db.insert(reflectionResponses).values({ userId: "u1", resourceId: "rf", answersJson: "x".repeat(16001) }));
+// Quitar el paso (null) vuelve al orden por sortOrder.
+assert.equal((await setPedagogicalStep(db, "rg", { pedagogicalStep: null }) as any).resource.pedagogicalStep, null);
+console.log("vortice-secuencia: ok");
