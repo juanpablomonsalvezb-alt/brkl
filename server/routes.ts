@@ -23,6 +23,7 @@ import {
 import mammoth from "mammoth";
 import multer from "multer";
 import { generateEvaluationQuestions } from "./aiEvaluationGenerator";
+import { htmlToQuestions } from "@shared/evaluationHtml";
 import { registerEvaluationLinksRoutes } from "./evaluationLinksRoutes";
 import { registerFaqRoutes } from "./faqRoutes";
 import { registerPaesRoutes } from "./paesRoutes";
@@ -982,6 +983,25 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error saving evaluation HTML:", error);
       res.status(500).json({ message: "Failed to save evaluation HTML" });
+    }
+  });
+
+  // Previsualizar la conversión HTML → questionsJson (no escribe). Incluye respuestas correctas.
+  app.get("/api/admin/evaluations/:id/html-preview", isAdmin, async (req: any, res) => {
+    try {
+      // ponytail: isAdmin está en modo dev (deja pasar todo); al menos exigimos sesión.
+      if (!currentUserId(req)) return res.status(401).json({ message: "Unauthorized" });
+      const evaluation = await storage.getModuleEvaluationById(req.params.id);
+      if (!evaluation) return res.status(404).json({ message: "Evaluation not found" });
+      res.json({
+        id: evaluation.id,
+        title: evaluation.title,
+        hasQuestionsJson: !!evaluation.questionsJson,
+        ...htmlToQuestions(evaluation.htmlContent),
+      });
+    } catch (error) {
+      console.error("Error previewing evaluation HTML conversion:", error);
+      res.status(500).json({ message: "Failed to preview conversion" });
     }
   });
 
