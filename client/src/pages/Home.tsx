@@ -437,7 +437,7 @@ function InscripcionForm() {
           </label>
 
           {stepId === "name" && (
-            <input autoFocus value={name} onChange={e=>setName(e.target.value)} placeholder="Nombre completo" style={inp} data-testid="input-name" />
+            <input autoFocus={step > 0} value={name} onChange={e=>setName(e.target.value)} placeholder="Nombre completo" style={inp} data-testid="input-name" />
           )}
           {stepId === "email" && (
             <input autoFocus type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@correo.com" style={inp} data-testid="input-email" />
@@ -1091,6 +1091,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* === INSCRIPCIÓN (1 de 2) — a mitad de página; la segunda va al final con el ancla #inscripcion === */}
+      <AdmisionSection />
+
       {/* === INCLUSIVO — Para todos, adaptado a cada uno === */}
       <section style={{ padding: "64px 24px", background: "#f5f5f5" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
@@ -1477,7 +1480,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === INSCRIPCIÓN === */}
+      {/* === INSCRIPCIÓN (2 de 2) === */}
       <AdmisionSection anchorId="inscripcion" />
 
       <ReaccionEnLinea />
