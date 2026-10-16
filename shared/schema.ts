@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { sqliteTable, text, integer, uniqueIndex, index, check } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, uniqueIndex, index, check, primaryKey } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { randomUUID } from "crypto";
@@ -1035,3 +1035,25 @@ export const tutoringCases = sqliteTable("tutoring_cases", {
 ]);
 
 export type TutoringCase = typeof tutoringCases.$inferSelect;
+
+// ============================================
+// Vórtice: notificaciones de aprendizaje
+// Sin fila = preferencias por defecto (PREFERENCIAS_POR_DEFECTO en shared/notificaciones.ts).
+// ============================================
+export const notificationPreferences = sqliteTable("notification_preferences", {
+  userId: text("user_id").primaryKey().references(() => users.id),
+  evaluacionLiberada: integer("evaluacion_liberada", { mode: "boolean" }).notNull(),
+  moduloAbierto: integer("modulo_abierto", { mode: "boolean" }).notNull(),
+  resumenSemanal: integer("resumen_semanal", { mode: "boolean" }).notNull(),
+  resumenSemanalApoderado: integer("resumen_semanal_apoderado", { mode: "boolean" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
+});
+
+// Registro de envíos. La clave primaria compuesta es la idempotencia:
+// un mismo tipo no se envía dos veces al mismo usuario en el mismo día/semana.
+export const notificationLog = sqliteTable("notification_log", {
+  userId: text("user_id").notNull().references(() => users.id),
+  type: text("type").notNull(),
+  periodKey: text("period_key").notNull(), // "2026-10-15" (diaria) o "2026-W42" (semanal)
+  sentAt: integer("sent_at", { mode: "timestamp" }).notNull(),
+}, (t) => [primaryKey({ columns: [t.userId, t.type, t.periodKey] })]);
