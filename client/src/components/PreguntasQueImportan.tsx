@@ -146,7 +146,7 @@ export default function PreguntasQueImportan() {
           .pqi-cards > li:nth-child(3n + 1) { grid-column: span 2; }
         }
         .pqi-card { transition: transform .2s ease, background-color .2s ease, border-color .2s ease; }
-        @media (hover: hover) { .pqi-card:hover { transform: translateY(-3px); background-color: ${AZUL_2}; } }
+        @media (hover: hover) { .pqi-card:hover { transform: translateY(-3px); } .pqi-card[aria-pressed="false"]:hover { background-color: ${AZUL_2}; } }
         @media (prefers-reduced-motion: reduce) { .pqi-card, .pqi-card:hover { transition: none; transform: none; } }
       `}</style>
 
@@ -266,15 +266,17 @@ export default function PreguntasQueImportan() {
                       onClick={() => elegir(i)}
                       style={{
                         textAlign: "left", width: "100%", height: "100%", cursor: "pointer", fontFamily: FONT,
-                        background: sel ? AZUL_2 : AZUL, color: MARFIL,
+                        // Seleccionada: fondo lima con texto oscuro, para que destaque sobre el fondo noche.
+                        background: sel ? LIMA : AZUL, color: sel ? NOCHE : MARFIL,
                         border: `1.5px solid ${sel ? LIMA : "rgba(248,245,237,0.08)"}`,
+                        boxShadow: sel ? "0 14px 36px rgba(214,243,106,0.25)" : "none",
                         borderRadius: 18, padding: "18px 20px", display: "flex", flexDirection: "column", gap: 8,
                       }}
                     >
-                      <span style={{ display: "flex", alignItems: "center", flexWrap: "wrap", columnGap: 10, rowGap: 2, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: sel ? LIMA : "#9AA6B5" }}>
+                      <span style={{ display: "flex", alignItems: "center", flexWrap: "wrap", columnGap: 10, rowGap: 2, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: sel ? SALVIA : "#9AA6B5" }}>
                         <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
                           {num(i)}
-                          <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: 999, background: vistas.has(i) ? LIMA : "transparent", border: `1px solid ${LIMA}` }} />
+                          <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: 999, background: sel ? NOCHE : vistas.has(i) ? LIMA : "transparent", border: `1px solid ${sel ? NOCHE : LIMA}` }} />
                         </span>
                         <span>{q.tema}</span>
                       </span>
