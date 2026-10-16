@@ -23,6 +23,8 @@ import {
 } from "./tutoria";
 
 import { listLinkedStudents, loadFamiliaResumen, guardianLinkInput, upsertGuardianLink } from "./familia";
+
+import { recordEvent, recordResourceOpened, loadAnaliticaResumen } from "./analitica";
 import { db } from "./db";
 import { seedBase, BASE_LEVELS, BASE_SUBJECTS } from "./seedBase";
 import { purgarPresenciaVieja } from "./retencion";
@@ -577,7 +579,9 @@ export async function registerRoutes(
       if (!resourceId) return res.status(400).json({ message: "resourceId is required" });
       const access = await checkResourceAccess(db, userId, resourceId, new Date());
       if (!access.ok) return res.status(access.status).json({ message: access.reason });
-      res.json(await markResourceCompleteOnce(db, userId, resourceId));
+      const { progress, created } = await markResourceCompleteOnce(db, userId, resourceId);
+      if (created) await recordEvent(db, { userId, tipo: "recurso_completado", referencia: resourceId, levelSubjectId: access.levelSubjectId });
+      res.json(progress);
     } catch (error) {
       console.error("Error saving progress:", error);
       res.status(500).json({ message: "Failed to save progress" });
@@ -618,6 +622,43 @@ export async function registerRoutes(
   app.post("/api/tutoria/casos/:id/cerrar", tutoriaRoute((u, req) => cerrarCaso(db, u, getStringParam(req.params.id), req.body, new Date())));
   app.get("/api/admin/tutoria/casos", isAdmin, tutoriaRoute((u, req) => casosParaAdmin(db, u, req.query.estado)));
   app.post("/api/admin/tutoria/casos/:id/asignar", isAdmin, tutoriaRoute((u, req) => asignarCaso(db, u, getStringParam(req.params.id), req.body, new Date())));
+
+  // Vórtice: el cliente avisa que abrió un recurso. Solo este tipo entra por aquí; el resto
+  // se registra en el servidor donde ocurre. Mismo acceso que marcar el recurso como visto.
+  app.post("/api/vortice/eventos", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const parsed = z.object({ tipo: z.literal("recurso_abierto"), referencia: z.string().min(1).max(64) }).safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Evento no válido" });
+      const access = await checkResourceAccess(db, userId, parsed.data.referencia, new Date());
+      if (!access.ok) return res.status(access.status).json({ message: access.reason });
+      const resultado = await recordResourceOpened(db, userId, parsed.data.referencia, access.levelSubjectId);
+      if (resultado === "limite") return res.status(429).json({ message: "Demasiados eventos, intenta más tarde" });
+      res.json({ registrado: resultado === "registrado" });
+    } catch (error) {
+      console.error("Error registrando evento de aprendizaje:", error);
+      res.status(500).json({ message: "Failed to record event" });
+    }
+  });
+
+  // Analítica agregada por asignatura de un nivel: conteos por semana y tasas por objetivo.
+  // Nunca lista estudiantes. isAdmin hoy deja pasar a todos (modo desarrollo), así que esta
+  // ruta exige el rol admin del perfil por su cuenta: son datos de menores.
+  app.get("/api/admin/analitica/resumen", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const profile = await storage.getUserProfile(userId);
+      if (profile?.role !== "admin") return res.status(403).json({ message: "Forbidden: Admin access required" });
+      const levelSubjectId = typeof req.query.levelSubjectId === "string" ? req.query.levelSubjectId : "";
+      if (!levelSubjectId) return res.status(400).json({ message: "levelSubjectId is required" });
+      res.json(await loadAnaliticaResumen(db, levelSubjectId));
+    } catch (error) {
+      console.error("Error building learning analytics summary:", error);
+      res.status(500).json({ message: "Failed to build summary" });
+    }
+  });
 
   // === ADMIN ROUTES (require admin role) ===
 
@@ -1696,6 +1737,9 @@ export async function registerRoutes(
         JSON.stringify(answers),
         passed
       );
+      const evento = { userId, referencia: id, levelSubjectId: access.levelSubjectId };
+      await recordEvent(db, { ...evento, tipo: "evaluacion_enviada" });
+      if (passed) await recordEvent(db, { ...evento, tipo: "evaluacion_aprobada" });
 
       res.json({
         score,
