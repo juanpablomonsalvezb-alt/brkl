@@ -39,6 +39,8 @@ import { registerFaqRoutes } from "./faqRoutes";
 import { registerPaesRoutes } from "./paesRoutes";
 import { registerSalesChatRoutes } from "./salesChatRoutes";
 import { registerFlowRoutes } from "./flowRoutes";
+import { planCopilotTurn, evaluationQuestionTexts, takeRateToken } from "@shared/iaPolicy";
+import { trackForLevel } from "@shared/vortice";
 
 // Helper to ensure string params (not arrays)
 function getStringParam(param: string | string[]): string {
@@ -2202,24 +2204,40 @@ export async function registerRoutes(
   // Gemini Copilots Routes
   // ============================================
 
-  // POST: Send chat message to Gemini
-  app.post("/api/academic-copilot/chat", async (req, res) => {
+  // POST: copiloto académico (IA Barkley). Política en shared/iaPolicy.ts.
+  // ponytail: límite de frecuencia en memoria = por instancia (cada lambda serverless tiene el suyo);
+  // pasar a Redis/Upstash si se necesita un tope global.
+  const copilotRate = new Map<string, number[]>();
+  app.post("/api/academic-copilot/chat", async (req: any, res) => {
     try {
-      const { message, conversationHistory } = req.body;
-      
-      if (!message) {
-        return res.status(400).json({ message: "Message is required" });
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Debes iniciar sesión" });
+      if (!takeRateToken(copilotRate, userId, Date.now())) {
+        return res.status(429).json({ message: "Demasiados mensajes seguidos. Espera unos minutos." });
       }
 
+      const { message, conversationHistory, evaluationId } = req.body ?? {};
+      // Evaluación en curso: sus preguntas (module_evaluations.questions_json) no pueden salir hacia el proveedor.
+      let evaluationQuestions: string[] | null = null;
+      if (typeof evaluationId === "string" && evaluationId) {
+        const evaluation = await storage.getModuleEvaluationById(evaluationId);
+        if (evaluation) evaluationQuestions = evaluationQuestionTexts(evaluation.questionsJson);
+      }
+      // Tramo desde el perfil en servidor (no desde el cliente); sin nivel, tono intermedio.
+      const profile = await storage.getUserProfile(userId);
+
+      const plan = planCopilotTurn({
+        message, history: conversationHistory, track: trackForLevel(profile?.levelId), evaluationQuestions,
+      });
+      if (plan.kind === "invalid") return res.status(400).json({ message: "Message is required" });
+      if (plan.kind === "reply") return res.json({ response: plan.response, notice: plan.reason });
+
       const { sendChatMessage } = await import('./geminiChat');
-      const response = await sendChatMessage(message, conversationHistory || []);
-      
+      const response = await sendChatMessage(plan.systemPrompt, plan.message, plan.history);
       res.json({ response });
     } catch (error) {
-      console.error("Error in chat:", error);
-      res.status(500).json({ 
-        message: error instanceof Error ? error.message : "Failed to process chat message" 
-      });
+      console.error("Error in chat:", error instanceof Error ? error.message : "desconocido");
+      res.status(500).json({ message: "No se pudo procesar el mensaje. Intenta nuevamente." });
     }
   });
 
