@@ -14,6 +14,9 @@ import {
 } from "@shared/schema";
 import { loadVorticeOverview, checkResourceAccess, checkEvaluationAccess, markResourceCompleteOnce } from "./vortice";
 import { db } from "./db";
+import {
+  listMyEvidences, createEvidence, updateEvidence, deleteEvidence, listEvidenceVersions, listStudentEvidences,
+} from "./portafolio";
 import { notifyByEmail, sendConfirmationEmail } from "./notify";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
 import {
@@ -450,6 +453,26 @@ export async function registerRoutes(
       res.status(500).json({ message: "Failed to build overview" });
     }
   });
+
+  // Vórtice · Portafolio: evidencias del estudiante (permisos y validación en server/portafolio.ts).
+  const portafolio = (fn: (userId: string, req: any) => Promise<any>) => async (req: any, res: any) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const r = await fn(userId, req);
+      if (r && r.ok === false) return res.status(r.status).json({ message: r.reason });
+      res.json(r && r.ok === true ? r.value : r);
+    } catch (error) {
+      console.error("Error en portafolio:", error);
+      res.status(500).json({ message: "Error en portafolio" });
+    }
+  };
+  app.get("/api/vortice/portafolio", portafolio((u) => listMyEvidences(db, u)));
+  app.post("/api/vortice/portafolio", portafolio((u, req) => createEvidence(db, u, req.body)));
+  app.put("/api/vortice/portafolio/:id", portafolio((u, req) => updateEvidence(db, u, req.params.id, req.body)));
+  app.delete("/api/vortice/portafolio/:id", portafolio((u, req) => deleteEvidence(db, u, req.params.id)));
+  app.get("/api/vortice/portafolio/estudiante/:studentId", portafolio((u, req) => listStudentEvidences(db, u, req.params.studentId)));
+  app.get("/api/vortice/portafolio/:id/versiones", portafolio((u, req) => listEvidenceVersions(db, u, req.params.id)));
 
   // Mark resource as complete
   app.post("/api/progress", async (req: any, res) => {

@@ -98,6 +98,15 @@ export type AccessResult =
   | { ok: true; levelSubjectId: string; weekNumber: number }
   | { ok: false; status: 403 | 404; reason: string };
 
+export async function hasActiveEnrollment(
+  db: LibSQLDatabase<typeof schema>, userId: string, levelSubjectId: string,
+): Promise<boolean> {
+  const [enrolled] = await db.select({ id: enrollments.id }).from(enrollments).where(and(
+    eq(enrollments.userId, userId), eq(enrollments.levelSubjectId, levelSubjectId), eq(enrollments.isActive, true),
+  ));
+  return !!enrolled;
+}
+
 // Mismas reglas de módulo que el resumen y /api/modules/:n/access: matrícula activa en la
 // asignatura, fecha de inicio cumplida y módulo anterior completado (evaluación 2 aprobada).
 async function checkModuleAccess(
@@ -107,10 +116,7 @@ async function checkModuleAccess(
   weekNumber: number,
   now: Date,
 ): Promise<AccessResult> {
-  const [enrolled] = await db.select({ id: enrollments.id }).from(enrollments).where(and(
-    eq(enrollments.userId, userId), eq(enrollments.levelSubjectId, levelSubjectId), eq(enrollments.isActive, true),
-  ));
-  if (!enrolled) return { ok: false, status: 403, reason: "No tienes matrícula activa en esta asignatura" };
+  if (!(await hasActiveEnrollment(db, userId, levelSubjectId))) return { ok: false, status: 403, reason: "No tienes matrícula activa en esta asignatura" };
 
   let previousCompleted = true;
   if (weekNumber > 1) {

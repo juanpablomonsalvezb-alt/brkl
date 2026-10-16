@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, index, uniqueIndex } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { randomUUID } from "crypto";
@@ -197,6 +197,38 @@ export const studentProgress = sqliteTable("student_progress", {
   completedAt: integer("completed_at", { mode: "timestamp" }).defaultNow(),
   score: integer("score"), // For cuestionario
 });
+
+// Vórtice · Portafolio: evidencias que el estudiante elige de su trabajo, vinculadas a un objetivo.
+// Nunca públicas: privada (solo el estudiante) < tutor < familia (tutor y familia).
+// ponytail: sin almacenamiento binario; un archivo futuro se guardaría fuera (p. ej. Vercel Blob/S3) y aquí solo su URL https.
+export const portfolioEvidences = sqliteTable("portfolio_evidences", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  userId: text("user_id").notNull().references(() => users.id),
+  learningObjectiveId: text("learning_objective_id").notNull().references(() => learningObjectives.id),
+  kind: text("kind", { enum: ["texto", "enlace", "evaluacion"] }).notNull(),
+  title: text("title").notNull(),
+  reflection: text("reflection").notNull().default(""),
+  content: text("content"), // kind = texto
+  url: text("url"), // kind = enlace (solo https)
+  evaluationProgressId: text("evaluation_progress_id").references(() => evaluationProgress.id), // kind = evaluacion, propia
+  visibility: text("visibility", { enum: ["privada", "tutor", "familia"] }).default("privada").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
+}, (t) => [index("portfolio_evidences_user_idx").on(t.userId)]);
+
+// Historial de mejora: una fila por cada versión del contenido (la 1 es la creación).
+export const portfolioEvidenceVersions = sqliteTable("portfolio_evidence_versions", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  evidenceId: text("evidence_id").notNull().references(() => portfolioEvidences.id, { onDelete: "cascade" }),
+  version: integer("version").notNull(),
+  kind: text("kind", { enum: ["texto", "enlace", "evaluacion"] }).notNull(),
+  title: text("title").notNull(),
+  reflection: text("reflection").notNull().default(""),
+  content: text("content"),
+  url: text("url"),
+  evaluationProgressId: text("evaluation_progress_id"),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+}, (t) => [uniqueIndex("portfolio_evidence_versions_uq").on(t.evidenceId, t.version)]);
 
 // Weekly completion status
 export const weeklyCompletion = sqliteTable("weekly_completion", {
