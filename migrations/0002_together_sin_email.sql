@@ -1,1 +1,0 @@
-ALTER TABLE `together_presence` DROP COLUMN `email`;
