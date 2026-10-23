@@ -12,6 +12,7 @@ import {
   insertFunnelEventSchema, funnelEvents,
   insertTogetherHeartbeatSchema, togetherPresence, togetherRoomSchema,
   calendarConfigInputSchema, programCalendar, levels,
+  evaluationProgress,
 } from "@shared/schema";
 import {
   loadVorticeOverview,
@@ -152,31 +153,25 @@ function currentUserId(req: any): string | undefined {
 }
 
 // Admin authorization middleware - must be used after isAuthenticated
+// Autorización administrativa real: sesión válida + perfil con role "admin" leído del servidor.
+// Sin login configurado no hay sesión, así que se deniega (falla cerrado), nunca se deja pasar.
 const isAdmin: RequestHandler = async (req: any, res, next) => {
-  // DEV MODE: Allow all access
-  next();
-  return;
-
-  /*
   try {
-    // Support both Google OAuth (req.user.id) and Replit Auth (req.user.claims.sub)
     const userId = currentUserId(req);
-    if (!userId) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
     const profile = await storage.getUserProfile(userId);
     if (!profile || profile.role !== "admin") {
       return res.status(403).json({ message: "Forbidden: Admin access required" });
     }
-    
     next();
   } catch (error) {
-    console.error("Error checking admin status:", error);
+    console.error("Error checking admin status");
     res.status(500).json({ message: "Failed to verify admin status" });
   }
-  */
 };
+
+// Escrituras administrativas que no viven bajo /api/admin.
+const ADMIN_WRITE_PREFIXES = ["/api/evaluation-links", "/api/textbooks/auto-match"];
 
 export async function registerRoutes(
   httpServer: Server,
@@ -351,6 +346,14 @@ export async function registerRoutes(
     console.log("⚠️  Running in development mode without authentication");
   }
   registerAuthRoutes(app);
+
+  // Protección por prefijo: cubre toda ruta /api/admin/* (también las de faqRoutes, paesRoutes
+  // y las que no declaran middleware propio) y las escrituras administrativas sueltas.
+  // Se registra antes que cualquier ruta para que ninguna quede fuera.
+  app.use("/api/admin", isAdmin);
+  app.use(ADMIN_WRITE_PREFIXES, (req, res, next) =>
+    req.method === "GET" || req.method === "HEAD" ? next() : isAdmin(req, res, next),
+  );
 
   // === PUBLIC ROUTES ===
 
@@ -1336,18 +1339,59 @@ export async function registerRoutes(
       const access = await checkEvaluationAccess(db, userId, evaluationId, new Date());
       if (!access.ok) return res.status(access.status).json({ message: access.reason });
 
+      // Formulario externo: el cliente no puede declarar puntaje ni aprobación. La entrega queda
+      // "pendiente_revision" (passed=false, score=null) hasta que un admin la valide. Sin cambio
+      // de esquema, el estado se guarda en answersJson (las entregas de formulario no tienen
+      // respuestas propias). Mientras passed=false no habilita el módulo siguiente.
       const progress = await storage.markEvaluationComplete({
         userId,
         evaluationId,
         completedAt: new Date(),
-        score: typeof req.body?.score === "number" ? req.body.score : null,
-        passed: req.body?.passed !== false,
+        score: null,
+        passed: false,
+        answersJson: JSON.stringify({ estado: "pendiente_revision" }),
       });
 
-      res.json(progress);
+      res.status(202).json({ id: progress.id, estado: "pendiente_revision" });
     } catch (error) {
       console.error("Error completing evaluation:", error);
       res.status(500).json({ message: "Failed to complete evaluation" });
+    }
+  });
+
+  // Validación humana de una entrega de formulario externo (solo admin real, vía /api/admin).
+  // Registra quién, cuándo, decisión y motivo dentro de answersJson (sin cambio de esquema).
+  app.post("/api/admin/evaluation-progress/:id/validar", async (req: any, res) => {
+    try {
+      const parsed = z.object({
+        decision: z.enum(["aprobada_validada", "rechazada_requiere_correccion"]),
+        motivo: z.string().trim().max(500).optional(),
+      }).strict().safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Datos inválidos" });
+      const [row] = await db.select().from(evaluationProgress).where(eq(evaluationProgress.id, req.params.id));
+      if (!row) return res.status(404).json({ message: "Entrega no encontrada" });
+      let estadoActual: unknown;
+      try { estadoActual = JSON.parse(row.answersJson ?? "null")?.estado; } catch { estadoActual = undefined; }
+      if (estadoActual !== "pendiente_revision") {
+        return res.status(409).json({ message: "La entrega no está pendiente de revisión" });
+      }
+      const aprobada = parsed.data.decision === "aprobada_validada";
+      const registro = {
+        estado: parsed.data.decision,
+        validadoPor: currentUserId(req),
+        validadoEn: new Date().toISOString(),
+        motivo: parsed.data.motivo ?? null,
+      };
+      // Condicionado a seguir pendiente: dos validaciones simultáneas no se pisan.
+      const updated = await db.update(evaluationProgress)
+        .set({ passed: aprobada, answersJson: JSON.stringify(registro) })
+        .where(and(eq(evaluationProgress.id, row.id), eq(evaluationProgress.answersJson, row.answersJson!)))
+        .returning({ id: evaluationProgress.id });
+      if (updated.length === 0) return res.status(409).json({ message: "La entrega cambió; vuelve a cargarla" });
+      res.json({ id: row.id, ...registro, passed: aprobada });
+    } catch (error) {
+      console.error("Error validating evaluation submission");
+      res.status(500).json({ message: "Failed to validate submission" });
     }
   });
 
@@ -1404,7 +1448,16 @@ export async function registerRoutes(
       // si trae las respuestas incrustadas, el estudiante las ve igual en el DOM. Sanearlo
       // exige migrar esas evaluaciones a questionsJson (corregidas en /submit).
       const evaluation = await storage.getEvaluationHtml(objectiveId, evalNum);
-      res.json({ htmlContent: evaluation?.htmlContent || null });
+      if (!evaluation) return res.json({ htmlContent: null });
+      const access = await checkEvaluationAccess(db, currentUserId(req)!, evaluation.id, new Date());
+      if (!access.ok) return res.status(access.status).json({ message: access.reason });
+      // Si el HTML trae la clave detectable (preguntas con respuesta correcta marcada), no se sirve:
+      // el estudiante la vería en el DOM antes de agotar intentos. Debe convertirse a preguntas
+      // corregidas en servidor (npm run evaluaciones:convertir) antes de publicarse.
+      if (evaluation.htmlContent && htmlToQuestions(evaluation.htmlContent).questions.length > 0) {
+        return res.status(409).json({ message: "Esta evaluación está en revisión y no está disponible todavía" });
+      }
+      res.json({ htmlContent: evaluation.htmlContent || null });
     } catch (error) {
       console.error("Error getting evaluation HTML:", error);
       res.status(500).json({ message: "Failed to get evaluation HTML" });
@@ -1908,6 +1961,10 @@ export async function registerRoutes(
   app.get("/api/evaluations/:id", async (req: any, res) => {
     try {
       const { id } = req.params;
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const access = await checkEvaluationAccess(db, userId, id, new Date());
+      if (!access.ok) return res.status(access.status).json({ message: access.reason });
       const evaluation = await storage.getModuleEvaluationById(id);
       if (!evaluation) {
         return res.status(404).json({ message: "Evaluation not found" });
@@ -1984,13 +2041,18 @@ export async function registerRoutes(
       await recordEvent(db, { ...evento, tipo: "evaluacion_enviada" });
       if (passed) await recordEvent(db, { ...evento, tipo: "evaluacion_aprobada" });
 
+      // La clave (respuesta correcta y explicación por pregunta) solo se revela al agotar los
+      // intentos permitidos. Hoy no existe un máximo de intentos configurable (requiere cambio de
+      // esquema: etapa P0-E), así que los intentos nunca se agotan y la clave no se entrega.
+      const attemptsExhausted = false;
       res.json({
         score,
         totalCorrect: correctCount,
         totalQuestions: questions.length,
         passed,
         passingScore: evaluation.passingScore || 60,
-        results
+        answersRevealed: attemptsExhausted,
+        results: attemptsExhausted ? results : [],
       });
     } catch (error) {
       console.error("Error submitting evaluation:", error);

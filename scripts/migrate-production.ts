@@ -19,6 +19,13 @@ const __dirname = dirname(__filename);
 // Load environment variables
 dotenv.config();
 
+// Escritura en producción solo con confirmación explícita: evita ejecuciones accidentales
+// (por ejemplo desde un build). Requiere respaldo verificado y aprobación previa.
+if (process.env.CONFIRMO_ESCRITURA_PRODUCCION !== "si") {
+  console.error("Abortado: define CONFIRMO_ESCRITURA_PRODUCCION=si solo tras respaldo verificado y aprobación explícita.");
+  process.exit(1);
+}
+
 async function runMigrations() {
   console.log('🚀 Starting production database migration...');
   console.log('📍 Environment:', process.env.NODE_ENV || 'production');

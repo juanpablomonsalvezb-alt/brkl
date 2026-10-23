@@ -155,6 +155,13 @@ export function EvaluationQuiz({
               </div>
             </div>
 
+            {results.results.length === 0 ? (
+            <div className="border-t pt-6">
+              <p className="text-sm text-slate-600">
+                Las respuestas correctas se mostrarán cuando hayas usado todos tus intentos.
+              </p>
+            </div>
+            ) : (
             <div className="border-t pt-6">
               <h3 className="font-bold text-[#0A192F] mb-4">Revisión de Respuestas</h3>
               <div className="space-y-4">
@@ -193,6 +200,7 @@ export function EvaluationQuiz({
                 })}
               </div>
             </div>
+            )}
 
             <Button
               onClick={onClose}

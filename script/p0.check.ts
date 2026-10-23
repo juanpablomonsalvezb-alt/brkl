@@ -1,0 +1,157 @@
+// Pruebas P0 (autorización, claves de evaluación, formularios externos, logs y build).
+// Corre contra una base SQLite EN MEMORIA creada desde el schema: nunca toca producción ni db.sqlite.
+// Ejecutar: npm run check:vortice  (o: npx tsx script/p0.check.ts)
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import express from "express";
+import { createServer } from "node:http";
+import type { AddressInfo } from "node:net";
+
+if (process.env.NODE_ENV === "production") throw new Error("p0.check no debe correr con NODE_ENV=production");
+process.env.TEST_DATABASE_URL = ":memory:";
+
+const { sql } = await import("drizzle-orm");
+const { generateSQLiteDrizzleJson, generateSQLiteMigration } = await import("drizzle-kit/api");
+const schema = await import("../shared/schema");
+const { db } = await import("../server/db");
+for (const stmt of await generateSQLiteMigration(await generateSQLiteDrizzleJson({}), await generateSQLiteDrizzleJson(schema as any))) {
+  await db.run(sql.raw(stmt));
+}
+// Las rutas se importan después de crear las tablas (replitAuth crea "sessions" al cargarse).
+const { registerRoutes } = await import("../server/routes");
+const { requestLogger } = await import("../server/requestLog");
+
+// Datos mínimos: admin, estudiante matriculado, estudiante ajeno; módulo 1 con evaluación
+// corregida en servidor (1) y formulario externo (2, cierra el módulo); módulo 2 con un recurso.
+const { users } = await import("../shared/models/auth");
+const S = schema;
+await db.insert(users).values([{ id: "admin" }, { id: "alumno" }, { id: "ajeno" }]);
+await db.insert(S.userProfiles).values([
+  { userId: "admin", role: "admin" }, { userId: "alumno", role: "student" }, { userId: "ajeno", role: "student" },
+]);
+await db.insert(S.levels).values({ id: "7b", name: "7° Básico", programType: "menores", sortOrder: 1 });
+await db.insert(S.subjects).values({ id: "mat", name: "Matemática", slug: "matematica" });
+await db.insert(S.levelSubjects).values({ id: "ls1", levelId: "7b", subjectId: "mat" });
+await db.insert(S.enrollments).values({ userId: "alumno", levelSubjectId: "ls1" });
+await db.insert(S.learningObjectives).values([
+  { id: "m1", levelSubjectId: "ls1", code: "M1", title: "Módulo 1", weekNumber: 1 },
+  { id: "m2", levelSubjectId: "ls1", code: "M2", title: "Módulo 2", weekNumber: 2 },
+]);
+const preguntas = [
+  { id: 1, question: "¿2+2?", options: ["3", "4"], correctAnswer: 1, explanation: "CLAVE_SECRETA_EXPLICACION" },
+  { id: 2, question: "¿3+3?", options: ["6", "7"], correctAnswer: 0, explanation: "CLAVE_SECRETA_EXPLICACION_2" },
+];
+await db.insert(S.moduleEvaluations).values([
+  { id: "e1", learningObjectiveId: "m1", evaluationNumber: 1, title: "Eval 1", releaseWeek: 1, questionsJson: JSON.stringify(preguntas), totalQuestions: 2 },
+  { id: "e2", learningObjectiveId: "m1", evaluationNumber: 2, title: "Formulario", releaseWeek: 1, formUrl: "https://forms.example/x" },
+  { id: "e3", learningObjectiveId: "m1", evaluationNumber: 3, title: "HTML con clave", releaseWeek: 2,
+    htmlContent: '<script>const preguntas=[{pregunta:"¿Capital de Chile?",opciones:["Lima","Santiago"],respuesta:1}];</script>' },
+]);
+await db.insert(S.weeklyResources).values({ id: "r2", learningObjectiveId: "m2", resourceType: "video", title: "Video M2" });
+
+// App de prueba: la sesión se simula con un encabezado (solo en esta prueba, no en el servidor real).
+const app = express();
+app.use(express.json());
+const logs: string[] = [];
+app.use(requestLogger((l) => logs.push(l)));
+app.use((req: any, _res, next) => {
+  const u = req.header("x-test-user");
+  req.isAuthenticated = () => !!u;
+  if (u) req.user = { id: u, claims: { sub: u }, expires_at: Math.floor(Date.now() / 1000) + 3600 };
+  next();
+});
+const server = createServer(app);
+await registerRoutes(server, app);
+await new Promise<void>((r) => server.listen(0, r));
+const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+const call = async (method: string, path: string, user?: string, body?: unknown) => {
+  const res = await fetch(base + path, {
+    method,
+    headers: { "content-type": "application/json", ...(user ? { "x-test-user": user } : {}) },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  const text = await res.text();
+  return { status: res.status, text, json: (() => { try { return JSON.parse(text); } catch { return null; } })() };
+};
+
+// 1–3. Autorización administrativa (incluye módulos separados: faqRoutes, paesRoutes, evaluationLinks).
+const rutasAdmin: [string, string, unknown?][] = [
+  ["POST", "/api/admin/levels", { id: "9z", name: "x", programType: "menores", sortOrder: 9 }],
+  ["GET", "/api/admin/faqs"],
+  ["POST", "/api/admin/paes/subjects", {}],
+  ["GET", "/api/admin/paes/subscriptions"],
+  ["PUT", "/api/admin/evaluations/m1/1/html", { htmlContent: "<p>x</p>" }],
+  ["GET", "/api/admin/evaluations/e3/html-preview"],
+  ["POST", "/api/admin/learning-objectives/m1/generate-evaluations"],
+  ["POST", "/api/admin/seed"],
+  ["GET", "/api/admin/drive/folders"],
+  ["POST", "/api/admin/level-subjects/ls1/create-modules", {}],
+  ["POST", "/api/evaluation-links", {}],
+  ["DELETE", "/api/evaluation-links/x"],
+  ["POST", "/api/textbooks/auto-match", {}],
+];
+for (const [m, p, b] of rutasAdmin) {
+  assert.equal((await call(m, p, undefined, b)).status, 401, `anónimo ${m} ${p}`);
+  assert.equal((await call(m, p, "alumno", b)).status, 403, `estudiante ${m} ${p}`);
+}
+const adminCrea = await call("POST", "/api/admin/levels", "admin", { id: "9z", name: "Prueba", programType: "menores", sortOrder: 9 });
+assert.equal(adminCrea.status, 200, "admin autorizado crea nivel");
+assert.equal((await call("GET", "/api/admin/faqs", "admin")).status, 200, "admin lee FAQ (módulo separado)");
+const preview = await call("GET", "/api/admin/evaluations/e3/html-preview", "admin");
+assert.equal(preview.status, 200, "admin puede previsualizar");
+assert.notEqual((await call("GET", "/api/evaluation-links/7b/1")).status, 401, "lectura pública de evaluation-links sigue abierta");
+
+// 4. Acceso a evaluaciones: el ajeno (sin matrícula) no consulta ni envía.
+assert.equal((await call("GET", "/api/evaluations/e1", "ajeno")).status, 403);
+assert.equal((await call("POST", "/api/evaluations/e1/submit", "ajeno", { answers: [] })).status, 403);
+assert.equal((await call("GET", "/api/evaluations/m1/1/html", "ajeno")).status, 403);
+assert.equal((await call("GET", "/api/evaluations/e1")).status, 401);
+
+// 5. Sin claves antes de agotar intentos (no hay máximo configurable aún: nunca se revelan).
+const vista = await call("GET", "/api/evaluations/e1", "alumno");
+assert.equal(vista.status, 200);
+assert.ok(!vista.text.includes("correctAnswer") && !vista.text.includes("CLAVE_SECRETA"), "consulta sin clave");
+const envio = await call("POST", "/api/evaluations/e1/submit", "alumno", { answers: [{ questionId: 1, answer: 0 }] });
+assert.equal(envio.status, 200);
+assert.ok(!envio.text.includes("correctAnswer") && !envio.text.includes("CLAVE_SECRETA"), "envío sin clave");
+assert.equal(envio.json.answersRevealed, false);
+assert.deepEqual(envio.json.results, []);
+// HTML con clave detectable: no se sirve al estudiante.
+assert.equal((await call("GET", "/api/evaluations/m1/3/html", "alumno")).status, 409);
+
+// 6. Formulario externo: queda pendiente, ignora score/passed del cliente, no habilita el módulo 2.
+const form = await call("POST", "/api/evaluations/e2/complete", "alumno", { score: 100, passed: true });
+assert.equal(form.status, 202);
+assert.equal(form.json.estado, "pendiente_revision");
+const [fila] = await db.select().from(S.evaluationProgress).where(sql`id = ${form.json.id}`);
+assert.equal(fila.passed, false);
+assert.equal(fila.score, null);
+assert.equal((await call("POST", "/api/progress", "alumno", { resourceId: "r2" })).status, 403, "pendiente no habilita módulo 2");
+assert.equal((await call("POST", `/api/admin/evaluation-progress/${form.json.id}/validar`, "alumno", { decision: "aprobada_validada" })).status, 403, "estudiante no se valida");
+const val = await call("POST", `/api/admin/evaluation-progress/${form.json.id}/validar`, "admin", { decision: "aprobada_validada", motivo: "Revisado" });
+assert.equal(val.status, 200);
+assert.equal(val.json.validadoPor, "admin");
+assert.equal((await call("POST", `/api/admin/evaluation-progress/${form.json.id}/validar`, "admin", { decision: "aprobada_validada" })).status, 409, "no se valida dos veces");
+assert.equal((await call("POST", "/api/progress", "alumno", { resourceId: "r2" })).status, 200, "validada habilita módulo 2");
+// Rechazo: no habilita.
+const form2 = await call("POST", "/api/evaluations/e2/complete", "ajeno", { passed: true });
+assert.equal(form2.status, 403, "sin matrícula ni siquiera entrega");
+
+// 7. Logs: solo método, ruta, estado y duración; sin cuerpos ni claves.
+const todo = logs.join("\n");
+assert.ok(logs.some((l) => l.startsWith("POST /api/evaluations/e1/submit 200")));
+assert.ok(!todo.includes("::") && !todo.includes("correctAnswer") && !todo.includes("CLAVE_SECRETA") && !todo.includes("pendiente_revision"));
+
+// 8. Build sin migraciones ni seeds productivos; scripts con confirmación explícita.
+const render = fs.readFileSync("render.yaml", "utf8").split("\n").find((l) => l.includes("buildCommand")) ?? "";
+assert.ok(!/deploy:db|migrate|seed/.test(render), "build de Render sin migrar/sembrar");
+assert.ok(!/deploy:db|migrate|seed/.test(JSON.parse(fs.readFileSync("vercel.json", "utf8")).buildCommand));
+for (const f of ["scripts/migrate-production.ts", "scripts/seed-production.ts"]) {
+  const src = fs.readFileSync(f, "utf8");
+  const guarda = src.indexOf('CONFIRMO_ESCRITURA_PRODUCCION !== "si"');
+  assert.ok(guarda > 0 && guarda < src.indexOf("createClient("), `${f}: confirmación antes de conectar`);
+}
+assert.ok(!fs.readFileSync("scripts/seed-production.ts", "utf8").includes("db.update(paesSubjects)"), "seed no sobrescribe precios");
+
+server.close();
+console.log("p0: ok");

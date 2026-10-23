@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === "development") {
 const client = createClient({
   url: process.env.NODE_ENV === "production" 
     ? process.env.TURSO_DATABASE_URL!
-    : "file:./db.sqlite",
+    : process.env.TEST_DATABASE_URL || "file:./db.sqlite", // pruebas locales: base en memoria
   authToken: process.env.NODE_ENV === "production"
     ? process.env.TURSO_AUTH_TOKEN
     : undefined,

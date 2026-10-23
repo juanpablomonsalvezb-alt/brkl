@@ -12,6 +12,13 @@ import { paesSubjects } from '../shared/schema';
 import { eq } from 'drizzle-orm';
 import * as dotenv from 'dotenv';
 
+// Escritura en producción solo con confirmación explícita: evita ejecuciones accidentales
+// (por ejemplo desde un build). Requiere respaldo verificado y aprobación previa.
+if (process.env.CONFIRMO_ESCRITURA_PRODUCCION !== "si") {
+  console.error("Abortado: define CONFIRMO_ESCRITURA_PRODUCCION=si solo tras respaldo verificado y aprobación explícita.");
+  process.exit(1);
+}
+
 dotenv.config();
 
 async function seedProduction() {
@@ -85,11 +92,9 @@ async function seedProduction() {
         // Try to update first
         const existing = await db.select().from(paesSubjects).where(eq(paesSubjects.id, subject.id));
         
+        // Solo inserta lo que falta: nunca sobrescribe precios ni datos editados por un admin.
         if (existing.length > 0) {
-          await db.update(paesSubjects)
-            .set(subject)
-            .where(eq(paesSubjects.id, subject.id));
-          console.log(`  ✅ Updated: ${subject.name} - $${subject.basePrice.toLocaleString('es-CL')}`);
+          console.log(`  ⏭️  Ya existe, sin cambios: ${subject.name}`);
         } else {
           await db.insert(paesSubjects).values(subject);
           console.log(`  ✅ Created: ${subject.name} - $${subject.basePrice.toLocaleString('es-CL')}`);
