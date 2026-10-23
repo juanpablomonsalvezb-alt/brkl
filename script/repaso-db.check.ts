@@ -51,16 +51,20 @@ await db.insert(evaluationProgress).values([
   { userId: "u2", evaluationId: "e-mat", completedAt: dia(2), answersJson: JSON.stringify([]) },
 ]);
 
-// Día siguiente: vencen las falladas (P2, P3 de Mat y P1 de Len); P1 de Mat (acertada) espera 3 días.
+// Día siguiente: vencen todas (programación neutra, caja 0); nada distingue acertadas de falladas.
 const s1 = await loadDueReview(db, "u1", dia(3));
 assert.equal(s1.today, "2026-06-03");
-assert.equal(s1.items.length, 3);
-// Alternadas: Lenguaje no queda al final, detrás de las dos de Matemática.
-assert.notEqual(s1.items[2].subjectName, "Lenguaje");
-assert.ok(s1.items.every((i) => !("correctAnswer" in i) && !("explanation" in i)));
-assert.deepEqual(s1.domains.map((d) => [d.levelSubjectId, d.due]).sort(), [["ls-len", 1], ["ls-mat", 2]]);
+assert.equal(s1.items.length, 4);
+// Alternadas: Lenguaje no queda al final, detrás de las de Matemática.
+assert.notEqual(s1.items[3].subjectName, "Lenguaje");
+// Lista blanca del GET: sin clave, explicación, caja ni fecha.
+for (const i of s1.items) assert.deepEqual(Object.keys(i).sort(), ["id", "levelSubjectId", "objectiveTitle", "options", "question", "subjectName"]);
+assert.ok(!JSON.stringify(s1).match(/correctAnswer|explanation|"E\d|box|dueDay/));
+assert.deepEqual(s1.domains.map((d) => [d.levelSubjectId, d.due]).sort(), [["ls-len", 1], ["ls-mat", 3]]);
 const mine = async () => (await db.select().from(reviewItems)).filter((r) => r.userId === "u1");
 assert.equal((await mine()).length, 4); // un ítem por pregunta, aunque haya dos intentos
+// En la base tampoco: P1 (acertada) y P2/P3 (falladas/sin responder) nacen idénticas.
+assert.equal(new Set((await mine()).map((r) => `${r.box}|${r.dueDay}`)).size, 1);
 // Sincronizar de nuevo no duplica ni reprograma.
 await loadDueReview(db, "u1", dia(3));
 assert.equal((await mine()).length, 4);
@@ -71,27 +75,35 @@ assert.deepEqual((await loadDueReview(db, "u1", dia(3), "ls-len")).items.map((i)
 // Matrícula inactiva: no hay repaso.
 assert.equal((await loadDueReview(db, "u2", dia(3))).items.length, 0);
 
-// Responder: corrige en el servidor y reprograma.
+// Responder: solo acuse; acierto (P2 → 1) y error (P3 → 0) quedan con la misma caja y fecha.
 const p2 = s1.items.find((i) => i.subjectName === "Matemática" && i.question === "P2")!;
-// La respuesta solo confirma el registro: sin clave, explicación, acierto ni nueva caja/fecha.
-assert.deepEqual(await answerReviewItem(db, "u1", p2.id, 1, dia(3)), { ok: true, registrado: true });
-const fila = async (id: string) => (await db.select().from(reviewItems)).find((r) => r.id === id)!;
-assert.deepEqual([(await fila(p2.id)).box, (await fila(p2.id)).dueDay], [1, "2026-06-06"]); // reprogramado en la base
-// Una vez por vencimiento: repetir hoy no sube otra caja.
-assert.deepEqual(await answerReviewItem(db, "u1", p2.id, 1, dia(3)), { ok: false, status: 409, reason: "Este ítem aún no toca repasarlo" });
-// Error: vuelve a la caja 0, mañana.
 const p3 = s1.items.find((i) => i.question === "P3")!;
+const r2 = await answerReviewItem(db, "u1", p2.id, 1, dia(3));
 const r3 = await answerReviewItem(db, "u1", p3.id, 0, dia(3));
-assert.deepEqual(r3, { ok: true, registrado: true });
-assert.ok(!JSON.stringify(r3).match(/correctAnswer|explanation|E3|correct"/), "sin clave ni explicación");
-assert.deepEqual([(await fila(p3.id)).box, (await fila(p3.id)).dueDay], [0, "2026-06-04"]);
+assert.deepEqual([r2, r3], [{ ok: true, registrado: true }, { ok: true, registrado: true }]);
+assert.ok(!JSON.stringify([r2, r3]).match(/correctAnswer|explanation|E\d|correct"|box|dueDay/), "sin clave ni explicación");
+const fila = async (id: string) => (await db.select().from(reviewItems)).find((r) => r.id === id)!;
+assert.deepEqual([(await fila(p2.id)).box, (await fila(p2.id)).dueDay], [1, "2026-06-06"]);
+assert.deepEqual([(await fila(p3.id)).box, (await fila(p3.id)).dueDay], [1, "2026-06-06"], "error = acierto");
+// Al día siguiente, el GET no distingue: ninguno de los dos vuelve antes.
+assert.ok(!(await loadDueReview(db, "u1", dia(4))).items.some((i) => i.id === p2.id || i.id === p3.id));
+// Una vez por vencimiento.
+assert.deepEqual(await answerReviewItem(db, "u1", p2.id, 1, dia(3)), { ok: false, status: 409, reason: "Este ítem aún no toca repasarlo" });
+// Alternativa inexistente: rechazada (no se programa).
+const p1 = s1.items.find((i) => i.subjectName === "Matemática" && i.question === "P1")!;
+assert.equal((await answerReviewItem(db, "u1", p1.id, 9, dia(3))).ok, false);
 // Ítem ajeno o inexistente: 404.
-assert.equal((await answerReviewItem(db, "u2", p3.id, 2, dia(4))).ok, false);
+assert.equal((await answerReviewItem(db, "u2", p3.id, 2, dia(7))).ok, false);
 assert.deepEqual(await answerReviewItem(db, "u1", "nope", 0, dia(4)), { ok: false, status: 404, reason: "Ítem de repaso no encontrado" });
 
-// Sin castigo por ausencia: 3 semanas después todo sigue ahí, en su caja.
-const vuelta = await loadDueReview(db, "u1", dia(25));
-assert.equal(vuelta.items.length, 4);
-assert.equal(vuelta.items.find((i) => i.id === p2.id)?.box, 1);
+// Clave inválida en questionsJson: la evaluación no genera repaso.
+await db.insert(moduleEvaluations).values({ id: "e-mala", learningObjectiveId: "oa-mat", evaluationNumber: 2, title: "Mala", releaseWeek: 1,
+  questionsJson: JSON.stringify([q(1, 0), q(2, 7)]) });
+await db.insert(evaluationProgress).values({ userId: "u1", evaluationId: "e-mala", completedAt: dia(2), answersJson: "[]" });
+await loadDueReview(db, "u1", dia(3));
+assert.ok(!(await mine()).some((r) => r.evaluationId === "e-mala"));
+
+// Sin castigo por ausencia: 3 semanas después todo sigue ahí.
+assert.equal((await loadDueReview(db, "u1", dia(25))).items.length, 4);
 
 console.log("repaso-db: ok");

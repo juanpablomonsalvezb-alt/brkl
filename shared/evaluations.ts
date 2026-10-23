@@ -8,7 +8,9 @@ const KEY_MARKER = /✓|✔|☑|✅|\(\s*correct[ao]?\s*\)|\bcorrect[ao]s?\b|res
 
 /**
  * Preguntas corregibles en el servidor de una evaluación, o null si no las hay de forma segura.
- * - questionsJson: se usa tal cual (lo genera la plataforma).
+ * - questionsJson: solo si todas las preguntas son válidas (id entero único, enunciado, ≥2
+ *   alternativas de texto y correctAnswer entero que apunta a una de ellas). Con una inválida se
+ *   bloquea la evaluación completa: nunca se corrige contra una clave inexistente.
  * - htmlContent: solo si la conversión es completa (todas las preguntas con una correcta, sin
  *   fallidas) y ningún texto conserva marcas de corrección. El HTML original nunca se entrega.
  */
@@ -16,7 +18,7 @@ export function gradableQuestions(e: { questionsJson: string | null; htmlContent
   if (e.questionsJson) {
     try {
       const q = JSON.parse(e.questionsJson);
-      return Array.isArray(q) && q.length ? q : null;
+      return Array.isArray(q) && q.length && q.every(validQuestion) && new Set(q.map((x) => x.id)).size === q.length ? q : null;
     } catch {
       return null;
     }
@@ -27,6 +29,12 @@ export function gradableQuestions(e: { questionsJson: string | null; htmlContent
   if (!c.questions.length || c.failed.length || c.questions.length < c.detected) return null;
   const leaks = c.questions.some((q) => KEY_MARKER.test(q.question) || q.options.some((o) => KEY_MARKER.test(o)));
   return leaks ? null : c.questions;
+}
+
+function validQuestion(q: any): q is ConvertedQuestion {
+  return !!q && Number.isInteger(q.id) && typeof q.question === "string" && q.question.trim() !== ""
+    && Array.isArray(q.options) && q.options.length >= 2 && q.options.every((o: unknown) => typeof o === "string")
+    && Number.isInteger(q.correctAnswer) && q.correctAnswer >= 0 && q.correctAnswer < q.options.length;
 }
 
 export interface StudentQuestion {
@@ -49,6 +57,7 @@ export function toPublicEvaluation<T extends {
   questionsJson: string | null; totalQuestions: number | null; passingScore: number | null; isRequired: boolean | null;
   htmlContent?: string | null;
 }>(e: T) {
+  const g = gradableQuestions(e);
   return {
     id: e.id,
     learningObjectiveId: e.learningObjectiveId,
@@ -58,8 +67,8 @@ export function toPublicEvaluation<T extends {
     releaseDay: e.releaseDay,
     releaseWeek: e.releaseWeek,
     formUrl: e.formUrl,
-    hasQuestions: gradableQuestions(e) !== null,
-    totalQuestions: e.totalQuestions ?? gradableQuestions(e)?.length ?? null,
+    hasQuestions: g !== null,
+    totalQuestions: g?.length ?? null,
     passingScore: e.passingScore,
     isRequired: e.isRequired,
   };

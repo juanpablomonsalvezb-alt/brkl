@@ -166,6 +166,32 @@ const cop = await call("POST", "/api/academic-copilot/chat", "alumno", { message
 assert.equal(cop.status, 200);
 assert.equal(cop.json.notice, "evaluation", "bloqueo por evaluación HTML en curso");
 
+// 5e. /complete solo para formularios externos; metadatos coherentes con gradableQuestions; clave fuera de rango bloquea.
+await db.insert(S.learningObjectives).values({ id: "mk", levelSubjectId: "ls1", code: "MK", title: "Claves", weekNumber: 1 });
+await db.insert(S.moduleEvaluations).values([
+  { id: "ek-mala", learningObjectiveId: "mk", evaluationNumber: 1, title: "Clave fuera de rango", releaseWeek: 1, totalQuestions: 2,
+    questionsJson: JSON.stringify([preguntas[0], { ...preguntas[1], correctAnswer: 5 }]) },
+  { id: "ek-html", learningObjectiveId: "mk", evaluationNumber: 2, title: "HTML corregible", releaseWeek: 1, formUrl: "https://forms.example/y",
+    htmlContent: "<p>1. ¿Uno?</p><p>a) x</p><p>b) y ✓</p>" },
+  { id: "ek-ambigua", learningObjectiveId: "mk", evaluationNumber: 3, title: "HTML bloqueado", releaseWeek: 1, totalQuestions: 9,
+    htmlContent: bloqueados.ambigua },
+]);
+for (const ev of ["e1", "e3", "ek-mala", "ek-html", "ek-ambigua"]) {
+  assert.equal((await call("POST", `/api/evaluations/${ev}/complete`, "alumno", { passed: true })).status, 409, `${ev}: sin vía de formulario`);
+}
+assert.equal((await call("GET", "/api/evaluations/ek-mala", "alumno")).status, 404, "clave inválida: no se sirve");
+assert.equal((await call("POST", "/api/evaluations/ek-mala/submit", "alumno", { answers: [{ questionId: 2, answer: 1 }] })).status, 404, "ni se corrige");
+const metaLo = (await call("GET", "/api/learning-objectives/mk/evaluations", "alumno")).json;
+const metaMod = (await call("GET", "/api/modules/1/evaluations?levelSubjectId=ls1", "alumno")).text;
+assert.deepEqual(metaLo.map((e: any) => [e.id, e.hasQuestions, e.totalQuestions]).sort(),
+  [["ek-ambigua", false, null], ["ek-html", true, 1], ["ek-mala", false, null]]);
+assert.ok(!metaMod.includes("CLAVE_SECRETA") && !JSON.stringify(metaLo).includes("CLAVE_SECRETA"));
+const meta3 = (await call("GET", "/api/learning-objectives/m1/evaluations", "alumno")).json.find((e: any) => e.id === "e3");
+assert.deepEqual([meta3.hasQuestions, meta3.totalQuestions], [true, 1], "HTML convertible descrito como corregible");
+// Repaso por HTTP: ni caja ni fecha en el GET.
+const rep2 = await call("GET", "/api/vortice/repaso", "alumno");
+assert.ok(!/"box"|"dueDay"|correctAnswer|explanation/.test(rep2.text), "GET de repaso sin datos de programación");
+
 // 6. Formulario externo: queda pendiente, ignora score/passed del cliente, no habilita el módulo 2.
 const form = await call("POST", "/api/evaluations/e2/complete", "alumno", { score: 100, passed: true });
 assert.equal(form.status, 202);

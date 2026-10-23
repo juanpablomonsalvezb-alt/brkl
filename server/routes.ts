@@ -1333,9 +1333,11 @@ export async function registerRoutes(
       // requiere leer las respuestas del formulario.
       const evaluation = await storage.getModuleEvaluationById(evaluationId);
       if (!evaluation) return res.status(404).json({ message: "Evaluation not found" });
-      if (evaluation.questionsJson) {
+      // Solo formularios externos: con preguntas propias (válidas o no) o HTML corregible, nunca.
+      if (evaluation.questionsJson || gradableQuestions(evaluation)) {
         return res.status(409).json({ message: "Esta evaluación se responde y corrige en la plataforma" });
       }
+      if (!evaluation.formUrl) return res.status(409).json({ message: "Esta evaluación no tiene formulario externo" });
       const access = await checkEvaluationAccess(db, userId, evaluationId, new Date());
       if (!access.ok) return res.status(access.status).json({ message: access.reason });
 
@@ -2072,16 +2074,16 @@ export async function registerRoutes(
       const { id } = req.params;
       const evaluations = await storage.getModuleEvaluations(id);
 
-      const evaluationsWithStatus = evaluations.map(e => ({
+      const evaluationsWithStatus = evaluations.map(e => { const g = gradableQuestions(e); return {
         id: e.id,
         evaluationNumber: e.evaluationNumber,
         title: e.title,
         releaseDay: e.releaseDay,
         releaseWeek: e.releaseWeek,
-        hasQuestions: !!e.questionsJson,
-        totalQuestions: e.totalQuestions,
+        hasQuestions: g !== null,
+        totalQuestions: g?.length ?? null,
         generatedAt: e.generatedAt
-      }));
+      }; });
 
       res.json(evaluationsWithStatus);
     } catch (error) {
@@ -2622,8 +2624,8 @@ export async function registerRoutes(
       let evaluationQuestions: string[] | null = null;
       if (typeof evaluationId === "string" && evaluationId) {
         const evaluation = await storage.getModuleEvaluationById(evaluationId);
-        // Mismas preguntas que ve el estudiante: questionsJson o HTML convertido (gradableQuestions).
-        if (evaluation) evaluationQuestions = evaluationQuestionTexts(JSON.stringify(gradableQuestions(evaluation) ?? []));
+        // questionsJson tal cual (aunque esté bloqueada por clave inválida) o el HTML convertido.
+        if (evaluation) evaluationQuestions = evaluationQuestionTexts(evaluation.questionsJson ?? JSON.stringify(gradableQuestions(evaluation) ?? []));
       }
       // Tramo desde el perfil en servidor (no desde el cliente); sin nivel, tono intermedio.
       const profile = await storage.getUserProfile(userId);

@@ -7,20 +7,18 @@ import {
   enrollments, evaluationProgress, learningObjectives, levelSubjects, moduleEvaluations, reviewItems, subjects,
 } from "@shared/schema";
 import { dayKey, initialSchedule, isDue, pickDue, reschedule } from "@shared/repaso";
+import { gradableQuestions } from "@shared/evaluations";
 import { checkEvaluationAccess } from "./vortice";
 
 type Db = LibSQLDatabase<typeof schema>;
 
-interface Question { id: number; question: string; options: string[]; correctAnswer: number; explanation?: string }
-
-function parseJsonArray<T>(json: string | null): T[] {
-  try {
-    const v = JSON.parse(json ?? "[]");
-    return Array.isArray(v) ? v : [];
-  } catch {
-    return [];
-  }
-}
+// Mientras no exista límite de intentos (P0-E), las preguntas del repaso pertenecen a evaluaciones
+// que el estudiante puede volver a rendir. Si la caja o la fecha dependieran del acierto, el orden,
+// la fecha de regreso o el número de ítems vencidos delatarían qué respondió bien. Por eso la
+// programación es neutra: todo ítem nace en la caja 0 y avanza una caja al responderlo, acierte o no.
+// ponytail: Leitner adaptativo suspendido; reactivar el acierto cuando P0-E revele la clave.
+// Solo preguntas válidas (correctAnswer dentro de las alternativas); con una inválida, ninguna.
+const validQuestions = (questionsJson: string | null) => (questionsJson ? gradableQuestions({ questionsJson }) : null) ?? [];
 
 // Crea los ítems que falten a partir de los intentos de evaluación. Los ítems existentes no se
 // tocan: desde que nacen, su programación la maneja solo el repaso. Si hay varios intentos, manda
@@ -40,13 +38,10 @@ export async function syncReviewItems(db: Db, userId: string, now: Date): Promis
 
   const rows: (typeof reviewItems.$inferInsert)[] = [];
   for (const a of attempts) {
-    const answers = parseJsonArray<{ questionId: number; answer: number }>(a.answersJson);
     const answeredDay = dayKey(a.completedAt ?? now);
-    for (const q of parseJsonArray<Question>(a.questionsJson)) {
-      if (!Number.isInteger(q.id)) continue;
-      // Pregunta sin responder cuenta como fallada: es justo lo que conviene repasar.
-      const correct = answers.some((x) => x?.questionId === q.id && x.answer === q.correctAnswer);
-      rows.push({ userId, evaluationId: a.evaluationId, questionId: q.id, ...initialSchedule(correct, answeredDay) });
+    for (const q of validQuestions(a.questionsJson)) {
+      // Programación neutra: caja 0 para todas, sin mirar las respuestas.
+      rows.push({ userId, evaluationId: a.evaluationId, questionId: q.id, ...initialSchedule(false, answeredDay) });
     }
   }
   for (let i = 0; i < rows.length; i += 200) {
@@ -54,12 +49,11 @@ export async function syncReviewItems(db: Db, userId: string, now: Date): Promis
   }
 }
 
+// Sin caja ni fecha: no se exponen datos de programación al estudiante.
 export interface ReviewQuestion {
   id: string;
   question: string;
   options: string[];
-  box: number;
-  dueDay: string;
   levelSubjectId: string;
   subjectName: string;
   objectiveTitle: string;
@@ -96,11 +90,11 @@ export async function loadDueReview(db: Db, userId: string, now: Date, levelSubj
     ))
     .where(and(eq(reviewItems.userId, userId), lte(reviewItems.dueDay, today)));
 
-  const byId = new Map<string, ReviewQuestion & { domain: string }>();
-  const questionsCache = new Map<string, Question[]>();
+  const byId = new Map<string, ReviewQuestion & { domain: string; box: number; dueDay: string }>();
+  const questionsCache = new Map<string, { id: number; question: string; options: string[] }[]>();
   for (const r of rows) {
     const key = r.questionsJson ?? "";
-    if (!questionsCache.has(key)) questionsCache.set(key, parseJsonArray<Question>(r.questionsJson));
+    if (!questionsCache.has(key)) questionsCache.set(key, validQuestions(r.questionsJson));
     const q = questionsCache.get(key)!.find((x) => x.id === r.questionId);
     if (!q) continue; // la evaluación se regeneró y la pregunta ya no existe
     byId.set(r.id, {
@@ -119,7 +113,7 @@ export async function loadDueReview(db: Db, userId: string, now: Date, levelSubj
   }
 
   const pool = levelSubjectId ? all.filter((i) => i.levelSubjectId === levelSubjectId) : all;
-  const items = pickDue(pool, today).map(({ domain, ...rest }) => rest);
+  const items = pickDue(pool, today).map(({ domain, box, dueDay, ...rest }) => rest);
   return { today, domains: [...domains.values()], items };
 }
 
@@ -137,14 +131,16 @@ export async function answerReviewItem(db: Db, userId: string, itemId: string, a
 
   const [ev] = await db.select({ questionsJson: moduleEvaluations.questionsJson }).from(moduleEvaluations)
     .where(eq(moduleEvaluations.id, item.evaluationId));
-  const q = parseJsonArray<Question>(ev?.questionsJson ?? null).find((x) => x.id === item.questionId);
+  const q = validQuestions(ev?.questionsJson ?? null).find((x) => x.id === item.questionId);
   if (!q) return { ok: false, status: 404, reason: "La pregunta ya no existe" };
 
   const today = dayKey(now);
   if (!isDue(item, today)) return { ok: false, status: 409, reason: "Este ítem aún no toca repasarlo" };
 
-  const correct = answer === q.correctAnswer;
-  const next = reschedule(item.box, correct, today);
+  // Programación neutra (ver validQuestions): avanza igual acierte o no. La respuesta no se usa
+  // hasta P0-E; se valida solo que sea una alternativa existente.
+  if (answer < 0 || answer >= q.options.length) return { ok: false, status: 409, reason: "Alternativa inexistente" };
+  const next = reschedule(item.box, true, today);
   // Condición sobre dueDay: dos envíos simultáneos no pueden reprogramar dos veces.
   const updated = await db.update(reviewItems)
     .set({ box: next.box, dueDay: next.dueDay, reviews: item.reviews + 1, lastReviewedAt: now })
@@ -155,7 +151,6 @@ export async function answerReviewItem(db: Db, userId: string, itemId: string, a
   // Las preguntas del repaso son las de evaluaciones cuyos intentos pueden no estar agotados:
   // devolver la clave, la explicación, si acertó o la nueva caja/fecha permitiría deducir la
   // respuesta y volver a rendir con ella. Solo se confirma el registro. La política completa de
-  // revelación depende del límite de intentos (P0-E, pendiente). Riesgo residual: el ítem vuelve
-  // antes si se falló, así que el acierto se puede inferir con días de retraso.
+  // revelación depende del límite de intentos (P0-E, pendiente).
   return { ok: true, registrado: true };
 }
