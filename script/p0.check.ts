@@ -99,7 +99,6 @@ assert.equal(adminCrea.status, 200, "admin autorizado crea nivel");
 assert.equal((await call("GET", "/api/admin/faqs", "admin")).status, 200, "admin lee FAQ (módulo separado)");
 const preview = await call("GET", "/api/admin/evaluations/e3/html-preview", "admin");
 assert.equal(preview.status, 200, "admin puede previsualizar");
-assert.notEqual((await call("GET", "/api/evaluation-links/7b/1")).status, 401, "lectura pública de evaluation-links sigue abierta");
 
 // 4. Acceso a evaluaciones: el ajeno (sin matrícula) no consulta ni envía.
 assert.equal((await call("GET", "/api/evaluations/e1", "ajeno")).status, 403);
@@ -116,8 +115,18 @@ assert.equal(envio.status, 200);
 assert.ok(!envio.text.includes("correctAnswer") && !envio.text.includes("CLAVE_SECRETA"), "envío sin clave");
 assert.equal(envio.json.answersRevealed, false);
 assert.deepEqual(envio.json.results, []);
-// HTML con clave detectable: no se sirve al estudiante.
-assert.equal((await call("GET", "/api/evaluations/m1/3/html", "alumno")).status, 409);
+// HTML convertible de forma segura: nunca se entrega el HTML; se ofrece como cuestionario saneado.
+const html3 = await call("GET", "/api/evaluations/m1/3/html", "alumno");
+assert.equal(html3.status, 200);
+assert.deepEqual(html3.json, { htmlContent: null, structured: true, evaluationId: "e3" });
+const vista3 = await call("GET", "/api/evaluations/e3", "alumno");
+assert.equal(vista3.status, 200);
+assert.deepEqual(vista3.json.questions, [{ id: 1, question: "¿Capital de Chile?", options: ["Lima", "Santiago"] }]);
+assert.ok(!vista3.text.includes("correctAnswer") && !vista3.text.includes("respuesta"));
+const envio3 = await call("POST", "/api/evaluations/e3/submit", "alumno", { answers: [{ questionId: 1, answer: 1 }] });
+assert.equal(envio3.status, 200);
+assert.equal(envio3.json.score, 100, "se corrige en el servidor contra la clave convertida");
+assert.ok(!envio3.text.includes("correctAnswer") && !envio3.text.includes("explanation"));
 
 // 6. Formulario externo: queda pendiente, ignora score/passed del cliente, no habilita el módulo 2.
 const form = await call("POST", "/api/evaluations/e2/complete", "alumno", { score: 100, passed: true });
@@ -157,6 +166,66 @@ assert.equal((await call("POST", "/api/progress", "alumno2", { resourceId: "r2" 
 // Sin matrícula: no puede ni entregar.
 const form2 = await call("POST", "/api/evaluations/e2/complete", "ajeno", { passed: true });
 assert.equal(form2.status, 403, "sin matrícula ni siquiera entrega");
+
+// 6b. Autovalidación: un admin no valida su propia entrega; sí la de otro estudiante (ver arriba).
+await db.insert(S.enrollments).values({ userId: "admin", levelSubjectId: "ls1" });
+const propia = await call("POST", "/api/evaluations/e2/complete", "admin", { passed: true });
+assert.equal(propia.status, 202);
+assert.equal((await call("POST", `/api/admin/evaluation-progress/${propia.json.id}/validar`, "admin", { decision: "aprobada_validada" })).status, 403, "admin no se autovalida");
+const [filaPropia] = await db.select().from(S.evaluationProgress).where(sql`id = ${propia.json.id}`);
+assert.equal(filaPropia.passed, false);
+assert.equal(JSON.parse(filaPropia.answersJson!).estado, "pendiente_revision", "sigue pendiente");
+await db.insert(users).values({ id: "admin2" });
+await db.insert(S.userProfiles).values({ userId: "admin2", role: "admin" });
+assert.equal((await call("POST", `/api/admin/evaluation-progress/${propia.json.id}/validar`, "admin2", { decision: "aprobada_validada" })).status, 200, "otro admin sí puede");
+
+// 6c. Enlaces de evaluación (Gemini): privados, por matrícula, módulo abierto y fecha de liberación.
+await db.insert(S.evaluationLinks).values([
+  { id: "l1", courseId: "ls1", moduleNumber: 1, evaluationNumber: 1, geminiLink: "https://gemini.example/m1e1" },
+  { id: "l4", courseId: "ls1", moduleNumber: 1, evaluationNumber: 4, geminiLink: "https://gemini.example/m1e4-futura", releaseDate: new Date("2099-01-01") },
+  { id: "l2", courseId: "ls1", moduleNumber: 2, evaluationNumber: 1, geminiLink: "https://gemini.example/m2e1" },
+]);
+for (const p of ["/api/evaluation-links/ls1/1", "/api/evaluation-links/ls1"]) {
+  assert.equal((await call("GET", p)).status, 401, `anónimo ${p}`);
+  assert.equal((await call("GET", p, "ajeno")).status, 403, `sin matrícula ${p}`);
+}
+// alumno2 (formulario rechazado): el módulo 2 sigue cerrado.
+assert.equal((await call("GET", "/api/evaluation-links/ls1/2", "alumno2")).status, 403, "sin acceso temporal al módulo");
+const curso2 = await call("GET", "/api/evaluation-links/ls1", "alumno2");
+assert.deepEqual(curso2.json.map((l: any) => l.id), ["l1"], "solo módulos abiertos y enlaces liberados");
+assert.ok(!curso2.text.includes("m1e4-futura") && !curso2.text.includes("m2e1"));
+// alumno (formulario validado): módulo 2 abierto; el enlace futuro sigue oculto.
+assert.deepEqual((await call("GET", "/api/evaluation-links/ls1/2", "alumno")).json.map((l: any) => l.id), ["l2"]);
+assert.deepEqual((await call("GET", "/api/evaluation-links/ls1/1", "alumno")).json.map((l: any) => l.id), ["l1"]);
+// admin: todos.
+assert.deepEqual((await call("GET", "/api/evaluation-links/ls1", "admin2")).json.map((l: any) => l.id).sort(), ["l1", "l2", "l4"]);
+assert.equal((await call("POST", "/api/evaluation-links", "alumno", {})).status, 403, "escritura sigue siendo solo admin");
+
+// 6d. HTML con la clave en formatos que el parser no reconoce: nunca se entrega ni se ofrece.
+const formatos: Record<string, string> = {
+  data_answer: '<div data-answer="b"><p>1. ¿A?</p><p>a) x</p><p>b) y</p></div>',
+  comentario: '<p>1. ¿A?</p><p>a) x</p><p>b) y</p><!-- correcta: b -->',
+  negrita: '<p>1. ¿A?</p><p>a) x</p><p><strong>b) y</strong></p>',
+  estilo: '<p>1. ¿A?</p><p>a) x</p><p style="color:green">b) y</p>',
+  js_ofuscado: '<script>const k=atob("Yg==");</script><p>1. ¿A?</p><p>a) x</p><p>b) y</p>',
+  script_externo: '<script src="https://x.example/key.js"></script><p>1. ¿A?</p><p>a) x</p><p>b) y</p>',
+};
+for (const [nombre, html] of Object.entries(formatos)) {
+  const ls = `ls-${nombre}`, oa = `m-${nombre}`, ev = `ev-${nombre}`;
+  await db.insert(S.levelSubjects).values({ id: ls, levelId: "7b", subjectId: "mat" });
+  await db.insert(S.enrollments).values({ userId: "alumno", levelSubjectId: ls });
+  await db.insert(S.learningObjectives).values({ id: oa, levelSubjectId: ls, code: "M1", title: "Módulo 1", weekNumber: 1 });
+  await db.insert(S.moduleEvaluations).values({ id: ev, learningObjectiveId: oa, evaluationNumber: 1, title: nombre, releaseWeek: 1, htmlContent: html });
+  const h = await call("GET", `/api/evaluations/${oa}/1/html`, "alumno");
+  assert.equal(h.status, 409, `${nombre}: bloqueado`);
+  for (const fragmento of ["data-answer", "correcta", "<strong>", "color:green", "atob", "key.js", "<script", "b) y"]) {
+    assert.ok(!h.text.includes(fragmento), `${nombre}: no filtra "${fragmento}"`);
+  }
+  assert.equal((await call("GET", `/api/evaluations/${ev}`, "alumno")).status, 404, `${nombre}: sin preguntas servibles`);
+  assert.equal((await call("POST", `/api/evaluations/${ev}/submit`, "alumno", { answers: [] })).status, 404, `${nombre}: no se corrige`);
+  const meta = await call("GET", `/api/modules/1/evaluations?levelSubjectId=${ls}`, "alumno");
+  assert.ok(!meta.text.includes("data-answer") && !meta.text.includes("atob") && !meta.text.includes("<script"), `${nombre}: metadatos sin HTML`);
+}
 
 // 7. Logs: solo método, ruta, estado y duración; sin cuerpos ni claves.
 const todo = logs.join("\n");

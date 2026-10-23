@@ -1,7 +1,49 @@
 import { Express, Request, Response } from "express";
 import { db } from "./db";
-import { evaluationLinks, insertEvaluationLinkSchema } from "@shared/schema";
+import { evaluationLinks, insertEvaluationLinkSchema, userProfiles } from "@shared/schema";
 import { eq, and } from "drizzle-orm";
+import { checkModuleAccess, hasActiveEnrollment } from "./vortice";
+import { resolveCalendarConfigForLevelSubject } from "./calendarConfig";
+import { isEvaluationAvailable } from "./calendarUtils";
+
+type EvaluationLink = typeof evaluationLinks.$inferSelect;
+
+// Los enlaces de evaluación (Gemini) son privados: se exige sesión; el admin real ve todos;
+// el estudiante solo los de su asignatura matriculada, de módulos abiertos y ya liberados.
+async function visibleLinks(
+  req: Request, res: Response, courseId: string, links: EvaluationLink[], moduleNumber?: number,
+): Promise<EvaluationLink[] | null> {
+  const user = (req as any).user;
+  const userId: string | undefined = user?.id || user?.claims?.sub;
+  if (!userId) { res.status(401).json({ error: "No autorizado" }); return null; }
+  const [profile] = await db.select({ role: userProfiles.role }).from(userProfiles).where(eq(userProfiles.userId, userId));
+  if (profile?.role === "admin") return links;
+  if (!(await hasActiveEnrollment(db, userId, courseId))) {
+    res.status(403).json({ error: "No tienes matrícula activa en esta asignatura" });
+    return null;
+  }
+  const now = new Date();
+  const config = await resolveCalendarConfigForLevelSubject(db, courseId, now);
+  const openModules = new Map<number, boolean>();
+  const isOpen = async (m: number) => {
+    if (!openModules.has(m)) openModules.set(m, (await checkModuleAccess(db, userId, courseId, m, now, config)).ok);
+    return openModules.get(m)!;
+  };
+  if (moduleNumber !== undefined && !(await isOpen(moduleNumber))) {
+    res.status(403).json({ error: "El módulo aún no está disponible" });
+    return null;
+  }
+  const visible: EvaluationLink[] = [];
+  for (const l of links) {
+    if (!(await isOpen(l.moduleNumber))) continue;
+    const n = l.evaluationNumber;
+    const released = l.releaseDate
+      ? l.releaseDate.getTime() <= now.getTime()
+      : n >= 1 && n <= 4 && isEvaluationAvailable(l.moduleNumber, n as 1 | 2 | 3 | 4, now, config);
+    if (released) visible.push(l);
+  }
+  return visible;
+}
 
 export function registerEvaluationLinksRoutes(app: Express) {
   
@@ -27,7 +69,9 @@ export function registerEvaluationLinksRoutes(app: Express) {
         )
         .orderBy(evaluationLinks.evaluationNumber);
 
-      return res.json(links);
+      const visible = await visibleLinks(req, res, courseId.toString(), links, moduleNumber);
+      if (!visible) return;
+      return res.json(visible);
     } catch (error: any) {
       console.error("Error fetching evaluation links:", error);
       return res.status(500).json({ error: "Error al obtener links" });
@@ -132,7 +176,9 @@ export function registerEvaluationLinksRoutes(app: Express) {
         .from(evaluationLinks)
         .where(eq(evaluationLinks.courseId, courseId as string));
 
-      return res.json(links);
+      const visible = await visibleLinks(req, res, courseId as string, links);
+      if (!visible) return;
+      return res.json(visible);
     } catch (error: any) {
       console.error("Error fetching course evaluation links:", error);
       return res.status(500).json({ error: "Error al obtener links del curso" });

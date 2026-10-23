@@ -297,6 +297,12 @@ export default function CoursePlayer() {
         });
         if (res.ok) {
           const data = await res.json();
+          // El servidor ya no entrega HTML con posibles claves: si la evaluación se pudo convertir
+          // a preguntas corregidas en el servidor, se responde como cuestionario.
+          if (data.structured && data.evaluationId) {
+            await startEvaluationQuiz(data.evaluationId);
+            return;
+          }
           htmlContent = data.htmlContent || "";
         }
       } catch (e) {

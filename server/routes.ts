@@ -67,7 +67,7 @@ import multer from "multer";
 import { generateEvaluationQuestions } from "./aiEvaluationGenerator";
 import { htmlToQuestions } from "@shared/evaluationHtml";
 import { registerEvaluationLinksRoutes } from "./evaluationLinksRoutes";
-import { toStudentQuestions, toPublicEvaluation } from "@shared/evaluations";
+import { gradableQuestions, toStudentQuestions, toPublicEvaluation } from "@shared/evaluations";
 import { registerFaqRoutes } from "./faqRoutes";
 import { registerPaesRoutes } from "./paesRoutes";
 import { registerSalesChatRoutes } from "./salesChatRoutes";
@@ -1370,6 +1370,10 @@ export async function registerRoutes(
       if (!parsed.success) return res.status(400).json({ message: "Datos inválidos" });
       const [row] = await db.select().from(evaluationProgress).where(eq(evaluationProgress.id, req.params.id));
       if (!row) return res.status(404).json({ message: "Entrega no encontrada" });
+      // isAdmin ya verificó sesión y rol en el servidor; además nadie valida su propia entrega.
+      if (row.userId === currentUserId(req)) {
+        return res.status(403).json({ message: "No puedes validar tu propia entrega" });
+      }
       let estadoActual: unknown;
       try { estadoActual = JSON.parse(row.answersJson ?? "null")?.estado; } catch { estadoActual = undefined; }
       if (estadoActual !== "pendiente_revision") {
@@ -1451,13 +1455,15 @@ export async function registerRoutes(
       if (!evaluation) return res.json({ htmlContent: null });
       const access = await checkEvaluationAccess(db, currentUserId(req)!, evaluation.id, new Date());
       if (!access.ok) return res.status(access.status).json({ message: access.reason });
-      // Si el HTML trae la clave detectable (preguntas con respuesta correcta marcada), no se sirve:
-      // el estudiante la vería en el DOM antes de agotar intentos. Debe convertirse a preguntas
-      // corregidas en servidor (npm run evaluaciones:convertir) antes de publicarse.
-      if (evaluation.htmlContent && htmlToQuestions(evaluation.htmlContent).questions.length > 0) {
-        return res.status(409).json({ message: "Esta evaluación está en revisión y no está disponible todavía" });
+      // El HTML original NUNCA se entrega al estudiante: puede traer la clave en formatos que no se
+      // pueden detectar (negrita, comentarios, estilos, JS ofuscado o externo). Si se convierte de
+      // forma segura a preguntas corregidas en el servidor, el cliente las pide en
+      // GET /api/evaluations/:id (sin clave). Si no, la evaluación queda bloqueada.
+      if (!evaluation.htmlContent) return res.json({ htmlContent: null });
+      if (gradableQuestions(evaluation)) {
+        return res.json({ htmlContent: null, structured: true, evaluationId: evaluation.id });
       }
-      res.json({ htmlContent: evaluation.htmlContent || null });
+      return res.status(409).json({ message: "Esta evaluación está en revisión y no está disponible todavía" });
     } catch (error) {
       console.error("Error getting evaluation HTML:", error);
       res.status(500).json({ message: "Failed to get evaluation HTML" });
@@ -1970,16 +1976,17 @@ export async function registerRoutes(
         return res.status(404).json({ message: "Evaluation not found" });
       }
 
-      if (!evaluation.questionsJson) {
+      const gradable = gradableQuestions(evaluation);
+      if (!gradable) {
         return res.status(404).json({ message: "No questions available for this evaluation" });
       }
 
-      const questionsWithoutAnswers = toStudentQuestions(evaluation.questionsJson);
+      const questionsWithoutAnswers = toStudentQuestions(JSON.stringify(gradable));
 
       res.json({
         id: evaluation.id,
         title: evaluation.title,
-        totalQuestions: evaluation.totalQuestions,
+        totalQuestions: gradable.length,
         passingScore: evaluation.passingScore,
         questions: questionsWithoutAnswers
       });
@@ -2005,11 +2012,10 @@ export async function registerRoutes(
       if (!access.ok) return res.status(access.status).json({ message: access.reason });
 
       const evaluation = await storage.getModuleEvaluationById(id);
-      if (!evaluation || !evaluation.questionsJson) {
+      const questions = evaluation ? gradableQuestions(evaluation) : null;
+      if (!evaluation || !questions) {
         return res.status(404).json({ message: "Evaluation not found" });
       }
-
-      const questions = JSON.parse(evaluation.questionsJson);
       let correctCount = 0;
       const results: { questionId: number; correct: boolean; correctAnswer: number; explanation: string }[] = [];
 
