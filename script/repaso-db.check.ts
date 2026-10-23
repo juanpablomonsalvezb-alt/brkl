@@ -73,14 +73,18 @@ assert.equal((await loadDueReview(db, "u2", dia(3))).items.length, 0);
 
 // Responder: corrige en el servidor y reprograma.
 const p2 = s1.items.find((i) => i.subjectName === "Matemática" && i.question === "P2")!;
-assert.deepEqual(await answerReviewItem(db, "u1", p2.id, 1, dia(3)),
-  { ok: true, correct: true, correctAnswer: 1, explanation: "E2", box: 1, nextDueDay: "2026-06-06" });
+// La respuesta solo confirma el registro: sin clave, explicación, acierto ni nueva caja/fecha.
+assert.deepEqual(await answerReviewItem(db, "u1", p2.id, 1, dia(3)), { ok: true, registrado: true });
+const fila = async (id: string) => (await db.select().from(reviewItems)).find((r) => r.id === id)!;
+assert.deepEqual([(await fila(p2.id)).box, (await fila(p2.id)).dueDay], [1, "2026-06-06"]); // reprogramado en la base
 // Una vez por vencimiento: repetir hoy no sube otra caja.
 assert.deepEqual(await answerReviewItem(db, "u1", p2.id, 1, dia(3)), { ok: false, status: 409, reason: "Este ítem aún no toca repasarlo" });
 // Error: vuelve a la caja 0, mañana.
 const p3 = s1.items.find((i) => i.question === "P3")!;
-assert.deepEqual(await answerReviewItem(db, "u1", p3.id, 0, dia(3)),
-  { ok: true, correct: false, correctAnswer: 2, explanation: "E3", box: 0, nextDueDay: "2026-06-04" });
+const r3 = await answerReviewItem(db, "u1", p3.id, 0, dia(3));
+assert.deepEqual(r3, { ok: true, registrado: true });
+assert.ok(!JSON.stringify(r3).match(/correctAnswer|explanation|E3|correct"/), "sin clave ni explicación");
+assert.deepEqual([(await fila(p3.id)).box, (await fila(p3.id)).dueDay], [0, "2026-06-04"]);
 // Ítem ajeno o inexistente: 404.
 assert.equal((await answerReviewItem(db, "u2", p3.id, 2, dia(4))).ok, false);
 assert.deepEqual(await answerReviewItem(db, "u1", "nope", 0, dia(4)), { ok: false, status: 404, reason: "Ítem de repaso no encontrado" });

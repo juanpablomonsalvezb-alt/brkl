@@ -23,12 +23,23 @@ const scriptHtml = `<div id="quiz"></div><script>
 const s = htmlToQuestions(scriptHtml);
 assert.equal(s.format, "script");
 assert.deepEqual(s.questions[0], { id: 1, question: "¿Cuánto es 2 + 2?", options: ["3", "4", "5", "6"], correctAnswer: 1, explanation: "2 + 2 = 4" });
-assert.equal(s.questions[1].correctAnswer, 1);
-assert.deepEqual([s.questions[2].options, s.questions[2].correctAnswer], [["Verde", "Azul"], 1]);
+assert.deepEqual([s.questions[1].options, s.questions[1].correctAnswer], [["Verde", "Azul"], 1]);
 assert.deepEqual(s.failed.map((f) => [f.index, f.reason]), [
+  [2, 'Respuesta numérica ambigua "1": no se sabe si cuenta desde 0 o desde 1'],
   [4, "No se detectó la respuesta correcta"],
-  [5, 'Respuesta "7" no corresponde a ninguna alternativa'],
+  [5, 'Respuesta numérica ambigua "7": no se sabe si cuenta desde 0 o desde 1'],
 ]);
+assert.equal(s.detected, 5);
+// Índices numéricos ambiguos (número o string de dígitos) se rechazan; letra, texto exacto y value inequívocos se aceptan.
+for (const amb of ["0", "1", "'2'"]) {
+  const r = htmlToQuestions(`<script>const preguntas = [{ pregunta: "¿X?", opciones: ["a1", "b1", "c1"], respuesta: ${amb} }];</script>`);
+  assert.equal(r.questions.length, 0, `ambigua: ${amb}`);
+  assert.match(r.failed[0].reason, /ambigua/);
+}
+for (const [ans, idx] of [["'B'", 1], ["'c1'", 2], ["'a'", 0]] as const) {
+  const r = htmlToQuestions(`<script>const preguntas = [{ pregunta: "¿X?", opciones: ["a1", "b1", "c1"], respuesta: ${ans} }];</script>`);
+  assert.equal(r.questions[0]?.correctAnswer, idx, `inequívoca: ${ans}`);
+}
 
 // 2. Formulario con radios: data-correct, class en <label>, mapa de respuestas en script y texto oculto.
 const radioHtml = `<form>

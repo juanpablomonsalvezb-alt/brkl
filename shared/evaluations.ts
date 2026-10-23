@@ -23,7 +23,8 @@ export function gradableQuestions(e: { questionsJson: string | null; htmlContent
   }
   if (!e.htmlContent) return null;
   const c = htmlToQuestions(e.htmlContent);
-  if (!c.questions.length || c.failed.length) return null;
+  // Completa: sin preguntas fallidas y sin preguntas que otro formato detectó y esta conversión omitió.
+  if (!c.questions.length || c.failed.length || c.questions.length < c.detected) return null;
   const leaks = c.questions.some((q) => KEY_MARKER.test(q.question) || q.options.some((o) => KEY_MARKER.test(o)));
   return leaks ? null : c.questions;
 }

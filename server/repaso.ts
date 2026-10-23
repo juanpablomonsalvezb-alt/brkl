@@ -124,7 +124,7 @@ export async function loadDueReview(db: Db, userId: string, now: Date, levelSubj
 }
 
 export type AnswerResult =
-  | { ok: true; correct: boolean; correctAnswer: number; explanation: string | null; box: number; nextDueDay: string }
+  | { ok: true; registrado: true }
   | { ok: false; status: 403 | 404 | 409; reason: string };
 
 // Corrige en el servidor y reprograma. Solo se puede responder un ítem vencido, una vez por vencimiento.
@@ -152,5 +152,10 @@ export async function answerReviewItem(db: Db, userId: string, itemId: string, a
     .returning({ id: reviewItems.id });
   if (!updated.length) return { ok: false, status: 409, reason: "Este ítem ya se respondió" };
 
-  return { ok: true, correct, correctAnswer: q.correctAnswer, explanation: q.explanation ?? null, box: next.box, nextDueDay: next.dueDay };
+  // Las preguntas del repaso son las de evaluaciones cuyos intentos pueden no estar agotados:
+  // devolver la clave, la explicación, si acertó o la nueva caja/fecha permitiría deducir la
+  // respuesta y volver a rendir con ella. Solo se confirma el registro. La política completa de
+  // revelación depende del límite de intentos (P0-E, pendiente). Riesgo residual: el ítem vuelve
+  // antes si se falló, así que el acierto se puede inferir con días de retraso.
+  return { ok: true, registrado: true };
 }

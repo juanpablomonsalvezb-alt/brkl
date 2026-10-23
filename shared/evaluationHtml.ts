@@ -28,6 +28,9 @@ export interface HtmlConversion {
   format: HtmlFormat;
   questions: ConvertedQuestion[];
   failed: FailedQuestion[];
+  // Máximo de preguntas detectadas en cualquiera de los formatos probados. Si es mayor que
+  // questions.length + failed.length, la conversión elegida dejó preguntas fuera.
+  detected: number;
 }
 
 interface Option { text: string; value?: string; correct?: boolean }
@@ -103,6 +106,13 @@ function finish(format: HtmlFormat, drafts: Draft[]): HtmlConversion {
     const marked = d.options.flatMap((o, j) => (o.correct ? [j] : []));
     let correct: number | null;
     if (d.answer !== undefined && d.answer !== null && d.answer !== "") {
+      // Un número (o texto solo de dígitos que no coincide con el value de una alternativa) no dice
+      // si cuenta desde 0 o desde 1: se rechaza en vez de adivinar. Se aceptan letra, texto exacto,
+      // value del input o marcas explícitas.
+      const numeric = typeof d.answer === "number"
+        || (typeof d.answer === "string" && /^\s*\d+\s*$/.test(d.answer)
+          && !d.options.some((o) => o.value !== undefined && o.value.trim() === String(d.answer).trim()));
+      if (numeric) return fail(`Respuesta numérica ambigua "${String(d.answer)}": no se sabe si cuenta desde 0 o desde 1`);
       correct = resolveAnswer(d.answer, d.options);
       if (correct === null) return fail(`Respuesta "${String(d.answer)}" no corresponde a ninguna alternativa`);
       if (marked.length && !(marked.length === 1 && marked[0] === correct)) return fail("Marcas de respuesta contradictorias");
@@ -119,7 +129,7 @@ function finish(format: HtmlFormat, drafts: Draft[]): HtmlConversion {
       explanation: d.explanation?.trim() ?? "",
     });
   });
-  return { format, questions, failed };
+  return { format, questions, failed, detected: drafts.length };
 }
 
 // ---------- Formato "script": literales JS/JSON ----------
@@ -382,15 +392,19 @@ function addOption(d: Draft, line: string, ok: boolean) {
 
 // Prueba los tres formatos y se queda con el que convierte más preguntas (a igualdad, el de menos fallas).
 export function htmlToQuestions(html: unknown): HtmlConversion {
-  let best: HtmlConversion = { format: "desconocido", questions: [], failed: [] };
+  let best: HtmlConversion = { format: "desconocido", questions: [], failed: [], detected: 0 };
   if (typeof html !== "string" || !html.trim()) return best;
+  // Preguntas en <script> y en el DOM estático son conjuntos distintos (un HTML mixto suma ambos);
+  // formulario y texto leen el mismo DOM, así que entre ellos cuenta el mayor.
+  let inScript = 0, inDom = 0;
   const attempts: [HtmlFormat, () => Draft[] | null][] = [["script", () => fromScripts(html)], ["formulario", () => fromRadios(html)], ["texto", () => fromText(html)]];
   for (const [format, run] of attempts) {
     const drafts = run();
     if (!drafts?.length) continue;
     const r = finish(format, drafts);
+    if (format === "script") inScript = drafts.length; else inDom = Math.max(inDom, drafts.length);
     if (best.format === "desconocido" || r.questions.length > best.questions.length
       || (r.questions.length === best.questions.length && r.failed.length < best.failed.length)) best = r;
   }
-  return best;
+  return { ...best, detected: inScript + inDom };
 }

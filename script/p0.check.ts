@@ -45,7 +45,7 @@ await db.insert(S.moduleEvaluations).values([
   { id: "e1", learningObjectiveId: "m1", evaluationNumber: 1, title: "Eval 1", releaseWeek: 1, questionsJson: JSON.stringify(preguntas), totalQuestions: 2 },
   { id: "e2", learningObjectiveId: "m1", evaluationNumber: 2, title: "Formulario", releaseWeek: 1, formUrl: "https://forms.example/x" },
   { id: "e3", learningObjectiveId: "m1", evaluationNumber: 3, title: "HTML con clave", releaseWeek: 2,
-    htmlContent: '<script>const preguntas=[{pregunta:"¿Capital de Chile?",opciones:["Lima","Santiago"],respuesta:1}];</script>' },
+    htmlContent: '<script>const preguntas=[{pregunta:"¿Capital de Chile?",opciones:["Lima","Santiago"],respuesta:"b"}];</script>' },
 ]);
 await db.insert(S.weeklyResources).values({ id: "r2", learningObjectiveId: "m2", resourceType: "video", title: "Video M2" });
 
@@ -127,6 +127,44 @@ const envio3 = await call("POST", "/api/evaluations/e3/submit", "alumno", { answ
 assert.equal(envio3.status, 200);
 assert.equal(envio3.json.score, 100, "se corrige en el servidor contra la clave convertida");
 assert.ok(!envio3.text.includes("correctAnswer") && !envio3.text.includes("explanation"));
+
+// 5b. Índice numérico ambiguo y conversión parcial (3 de texto + 1 en script): bloqueados, nada se sirve.
+const bloqueados: Record<string, string> = {
+  ambigua: '<script>const preguntas=[{pregunta:"¿A?",opciones:["x","y"],respuesta:1}];</script>',
+  parcial: '<p>1. ¿Uno?</p><p>a) x</p><p>b) y ✓</p><p>2. ¿Dos?</p><p>a) x ✓</p><p>b) y</p><p>3. ¿Tres?</p><p>a) x</p><p>b) y ✓</p>' +
+    '<script>const preguntas=[{pregunta:"¿Cuatro?",opciones:["x","y"],respuesta:1}];</script>',
+};
+for (const [nombre, html] of Object.entries(bloqueados)) {
+  const oa = `mb-${nombre}`, ev = `evb-${nombre}`;
+  await db.insert(S.learningObjectives).values({ id: oa, levelSubjectId: "ls1", code: "MB", title: nombre, weekNumber: 1 });
+  await db.insert(S.moduleEvaluations).values({ id: ev, learningObjectiveId: oa, evaluationNumber: 1, title: nombre, releaseWeek: 1, htmlContent: html });
+  const h = await call("GET", `/api/evaluations/${oa}/1/html`, "alumno");
+  assert.equal(h.status, 409, `${nombre}: bloqueado`);
+  assert.ok(!h.text.includes("<script") && !h.text.includes("✓"), `${nombre}: sin HTML`);
+  assert.equal((await call("GET", `/api/evaluations/${ev}`, "alumno")).status, 404, `${nombre}: sin preguntas`);
+  assert.equal((await call("POST", `/api/evaluations/${ev}/submit`, "alumno", { answers: [] })).status, 404, `${nombre}: no se corrige`);
+}
+
+// 5c. Repaso: tras fallar e1, responder el ítem no devuelve clave, explicación ni acierto.
+await call("GET", "/api/vortice/repaso", "alumno"); // crea los ítems desde el intento
+await db.update(S.reviewItems).set({ dueDay: "2000-01-01" }).where(sql`user_id = 'alumno'`);
+const rep = await call("GET", "/api/vortice/repaso", "alumno");
+assert.ok(rep.json.items.length > 0, "hay ítems vencidos");
+assert.ok(!rep.text.includes("correctAnswer") && !rep.text.includes("CLAVE_SECRETA") && !rep.text.includes("explanation"));
+for (const it of rep.json.items) {
+  const r = await call("POST", `/api/vortice/repaso/${it.id}/responder`, "alumno", { answer: 1 });
+  assert.equal(r.status, 200);
+  assert.deepEqual(r.json, { registrado: true }, "solo acuse de recibo");
+  assert.ok(!r.text.includes("correctAnswer") && !r.text.includes("CLAVE_SECRETA") && !r.text.includes("explanation"));
+}
+assert.equal((await call("POST", `/api/vortice/repaso/${rep.json.items[0].id}/responder`, "ajeno", { answer: 1 })).status, 404, "ítem ajeno");
+
+// 5d. Copiloto: una evaluación HTML activa bloquea la asistencia sobre sus preguntas (sin llamar al proveedor).
+await db.insert(S.moduleEvaluations).values({ id: "ecop", learningObjectiveId: "m1", evaluationNumber: 4, title: "HTML copiloto", releaseWeek: 1,
+  htmlContent: '<p>1. ¿Qué océano baña las costas de Chile continental?</p><p>a) Atlántico</p><p>b) Pacífico ✓</p>' });
+const cop = await call("POST", "/api/academic-copilot/chat", "alumno", { message: "¿Qué océano baña las costas de Chile continental?", evaluationId: "ecop" });
+assert.equal(cop.status, 200);
+assert.equal(cop.json.notice, "evaluation", "bloqueo por evaluación HTML en curso");
 
 // 6. Formulario externo: queda pendiente, ignora score/passed del cliente, no habilita el módulo 2.
 const form = await call("POST", "/api/evaluations/e2/complete", "alumno", { score: 100, passed: true });

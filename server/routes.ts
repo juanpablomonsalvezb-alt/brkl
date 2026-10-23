@@ -2622,7 +2622,8 @@ export async function registerRoutes(
       let evaluationQuestions: string[] | null = null;
       if (typeof evaluationId === "string" && evaluationId) {
         const evaluation = await storage.getModuleEvaluationById(evaluationId);
-        if (evaluation) evaluationQuestions = evaluationQuestionTexts(evaluation.questionsJson);
+        // Mismas preguntas que ve el estudiante: questionsJson o HTML convertido (gradableQuestions).
+        if (evaluation) evaluationQuestions = evaluationQuestionTexts(JSON.stringify(gradableQuestions(evaluation) ?? []));
       }
       // Tramo desde el perfil en servidor (no desde el cliente); sin nivel, tono intermedio.
       const profile = await storage.getUserProfile(userId);
