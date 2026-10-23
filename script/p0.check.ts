@@ -133,7 +133,28 @@ assert.equal(val.status, 200);
 assert.equal(val.json.validadoPor, "admin");
 assert.equal((await call("POST", `/api/admin/evaluation-progress/${form.json.id}/validar`, "admin", { decision: "aprobada_validada" })).status, 409, "no se valida dos veces");
 assert.equal((await call("POST", "/api/progress", "alumno", { resourceId: "r2" })).status, 200, "validada habilita módulo 2");
-// Rechazo: no habilita.
+// Rechazo (rechazada_requiere_correccion): con un estudiante propio, para no depender del caso anterior.
+await db.insert(users).values({ id: "alumno2" });
+await db.insert(S.userProfiles).values({ userId: "alumno2", role: "student" });
+await db.insert(S.enrollments).values({ userId: "alumno2", levelSubjectId: "ls1" });
+const formR = await call("POST", "/api/evaluations/e2/complete", "alumno2", { score: 100, passed: true });
+assert.equal(formR.status, 202);
+assert.equal((await call("POST", `/api/admin/evaluation-progress/${formR.json.id}/validar`, "alumno2", { decision: "rechazada_requiere_correccion" })).status, 403, "estudiante no se rechaza ni aprueba");
+assert.equal((await call("POST", `/api/admin/evaluation-progress/${formR.json.id}/validar`, "admin", { decision: "otra" })).status, 400, "decisión inválida");
+const rech = await call("POST", `/api/admin/evaluation-progress/${formR.json.id}/validar`, "admin", { decision: "rechazada_requiere_correccion", motivo: "Falta la pregunta 3" });
+assert.equal(rech.status, 200);
+assert.equal(rech.json.passed, false);
+assert.equal(rech.json.estado, "rechazada_requiere_correccion");
+const [filaR] = await db.select().from(S.evaluationProgress).where(sql`id = ${formR.json.id}`);
+assert.equal(filaR.passed, false);
+assert.deepEqual(
+  (({ estado, validadoPor, motivo }) => ({ estado, validadoPor, motivo }))(JSON.parse(filaR.answersJson!)),
+  { estado: "rechazada_requiere_correccion", validadoPor: "admin", motivo: "Falta la pregunta 3" },
+);
+assert.equal((await call("POST", `/api/admin/evaluation-progress/${formR.json.id}/validar`, "admin", { decision: "aprobada_validada" })).status, 409, "rechazada no se reabre por esta vía");
+assert.equal((await call("POST", "/api/progress", "alumno2", { resourceId: "r2" })).status, 403, "rechazada no habilita módulo 2");
+
+// Sin matrícula: no puede ni entregar.
 const form2 = await call("POST", "/api/evaluations/e2/complete", "ajeno", { passed: true });
 assert.equal(form2.status, 403, "sin matrícula ni siquiera entrega");
 
