@@ -22,6 +22,7 @@ import {
   saveReflection,
   getReflection,
   setPedagogicalStep,
+  hasActiveEnrollment,
 } from "./vortice";
 import { loadDueReview, answerReviewItem } from "./repaso";
 import { getStudentRubric, createRubricVersion, updateDraftRubric, rubricInputSchema } from "./rubricas";
@@ -169,6 +170,13 @@ const isAdmin: RequestHandler = async (req: any, res, next) => {
     res.status(500).json({ message: "Failed to verify admin status" });
   }
 };
+
+// Lectura de metadatos de una asignatura: admin real o estudiante con matrícula activa.
+async function levelSubjectReader(userId: string, levelSubjectId: string): Promise<"admin" | "estudiante" | null> {
+  const profile = await storage.getUserProfile(userId);
+  if (profile?.role === "admin") return "admin";
+  return (await hasActiveEnrollment(db, userId, levelSubjectId)) ? "estudiante" : null;
+}
 
 // Escrituras administrativas que no viven bajo /api/admin.
 const ADMIN_WRITE_PREFIXES = ["/api/evaluation-links", "/api/textbooks/auto-match"];
@@ -1275,6 +1283,9 @@ export async function registerRoutes(
         return res.status(400).json({ message: "levelSubjectId is required" });
       }
 
+      const reader = await levelSubjectReader(userId, levelSubjectId);
+      if (!reader) return res.status(403).json({ message: "No tienes matrícula activa en esta asignatura" });
+
       const objectives = await storage.getLearningObjectives(levelSubjectId);
       const objective = objectives.find(o => o.weekNumber === moduleNumber);
 
@@ -1283,7 +1294,13 @@ export async function registerRoutes(
       }
 
       // Saneadas: la fila completa traía questionsJson (con correctAnswer/explanation) y htmlContent.
-      const evaluations = (await storage.getModuleEvaluations(objective.id)).map(toPublicEvaluation);
+      // formUrl solo cuando el estudiante ya puede rendirla (liberada y módulo abierto).
+      const evaluations = await Promise.all((await storage.getModuleEvaluations(objective.id)).map(async (e) => {
+        const pub = toPublicEvaluation(e);
+        if (reader === "admin" || !pub.formUrl) return pub;
+        const access = await checkEvaluationAccess(db, userId, e.id, currentDate);
+        return access.ok ? pub : { ...pub, formUrl: null };
+      }));
       const userProgress = await storage.getEvaluationProgressByUser(userId, evaluations.map(e => e.id));
 
       const config = await resolveCalendarConfigForLevelSubject(db, levelSubjectId, currentDate);
@@ -2052,7 +2069,14 @@ export async function registerRoutes(
   // Get module evaluations with generation status
   app.get("/api/learning-objectives/:id/evaluations", async (req: any, res) => {
     try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
       const { id } = req.params;
+      const objective = await storage.getLearningObjectiveById(id);
+      if (!objective) return res.status(404).json({ message: "Learning objective not found" });
+      if (!(await levelSubjectReader(userId, objective.levelSubjectId))) {
+        return res.status(403).json({ message: "No tienes matrícula activa en esta asignatura" });
+      }
       const evaluations = await storage.getModuleEvaluations(id);
 
       const evaluationsWithStatus = evaluations.map(e => { const g = gradableQuestions(e); return {

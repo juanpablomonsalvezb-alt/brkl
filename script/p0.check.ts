@@ -293,6 +293,19 @@ for (const [nombre, html] of Object.entries(formatos)) {
   assert.ok(!meta.text.includes("data-answer") && !meta.text.includes("atob") && !meta.text.includes("<script"), `${nombre}: metadatos sin HTML`);
 }
 
+// 6e. Metadatos: sesión y matrícula; formUrl solo cuando la evaluación ya se puede rendir.
+assert.equal((await call("GET", "/api/learning-objectives/m1/evaluations")).status, 401, "anónimo");
+assert.equal((await call("GET", "/api/learning-objectives/m1/evaluations", "ajeno")).status, 403, "sin matrícula");
+assert.equal((await call("GET", "/api/learning-objectives/m1/evaluations", "alumno")).status, 200, "matriculado");
+assert.equal((await call("GET", "/api/learning-objectives/m1/evaluations", "admin")).status, 200, "admin");
+assert.equal((await call("GET", "/api/learning-objectives/nope/evaluations", "alumno")).status, 404);
+assert.equal((await call("GET", "/api/modules/1/evaluations?levelSubjectId=ls1", "ajeno")).status, 403, "metadatos sin matrícula");
+await db.insert(S.moduleEvaluations).values({ id: "ef2", learningObjectiveId: "m2", evaluationNumber: 2, title: "Form M2", releaseWeek: 2, formUrl: "https://forms.example/m2-secreto" });
+const metaM2 = async (u: string) => (await call("GET", "/api/modules/2/evaluations?levelSubjectId=ls1", u)).json.evaluations.find((e: any) => e.number === 2).evaluation.formUrl;
+assert.equal(await metaM2("alumno2"), null, "módulo 2 cerrado: sin formUrl");
+assert.equal(await metaM2("alumno"), "https://forms.example/m2-secreto", "módulo abierto y liberada: formUrl visible");
+assert.equal(await metaM2("admin"), "https://forms.example/m2-secreto", "admin ve todo");
+
 // 7. Logs: solo método, ruta, estado y duración; sin cuerpos ni claves.
 const todo = logs.join("\n");
 assert.ok(logs.some((l) => l.startsWith("POST /api/evaluations/e1/submit 200")));
