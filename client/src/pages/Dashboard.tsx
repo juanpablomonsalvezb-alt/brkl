@@ -41,6 +41,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
+import { RequiereSesion } from "@/components/RequiereSesion";
 import { useToast } from "@/hooks/use-toast";
 import { useProfile } from "@/hooks/use-profile";
 import { motion } from "framer-motion";
@@ -66,20 +67,6 @@ export default function Dashboard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
-  /* Auth check temporarily disabled for development
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      toast({
-        title: "Acceso Requerido",
-        description: "Ingresa con tu cuenta para acceder al panel...",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        window.location.href = "/api/login";
-      }, 500);
-    }
-  }, [isLoading, isAuthenticated, toast]);
-  */
 
   if (isLoading) {
     return (
@@ -92,10 +79,7 @@ export default function Dashboard() {
     );
   }
 
-  // Allow access even if not authenticated for now
-  // if (!isAuthenticated) {
-  //   return null;
-  // }
+  if (!isAuthenticated) return <RequiereSesion titulo="Inicia sesión para ver tu panel" />;
 
   // All levels together from 7° Básico to 4° Medio
   const allLevels = [

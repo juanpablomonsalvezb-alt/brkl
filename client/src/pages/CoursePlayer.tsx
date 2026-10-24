@@ -31,6 +31,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/use-auth";
+import { RequiereSesion } from "@/components/RequiereSesion";
 import { useToast } from "@/hooks/use-toast";
 import { TextbookViewer } from "@/components/TextbookViewer";
 import { EvaluationQuiz } from "@/components/EvaluationQuiz";
@@ -140,13 +141,14 @@ export default function CoursePlayer() {
     queryKey: ['/api/profile'],
     queryFn: async () => {
       const res = await fetch('/api/profile', { credentials: 'include' });
-      if (!res.ok) return { role: 'student' };
+      if (!res.ok) return { role: 'anonimo' };
       return res.json();
     },
     enabled: isAuthenticated
   });
 
-  const isAdmin = true; // profileData?.role === 'admin';
+  // Solo oculta controles; la autorización real la hace el servidor (isAdmin en /api/admin).
+  const isAdmin = profileData?.role === 'admin';
 
   const { data: moduleInfo } = useQuery<{ moduleOAs: string | null; moduleContents: string | null; moduleDateRange: string | null }>({
     queryKey: ['/api/objectives', currentObjectiveId, 'module-info'],
@@ -239,20 +241,6 @@ export default function CoursePlayer() {
 
   const evaluations = currentModuleData ? getEvaluationDates(currentModuleData.startDate) : [];
 
-  /* Auth check disabled for dev
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      toast({
-        title: "Acceso Requerido",
-        description: "Ingresa con tu cuenta para acceder al curso...",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        window.location.href = "/api/login";
-      }, 500);
-    }
-  }, [isLoading, isAuthenticated, toast]);
-  */
 
   if (isLoading) {
     return (
@@ -265,11 +253,7 @@ export default function CoursePlayer() {
     );
   }
 
-  /*
-  if (!isAuthenticated) {
-    return null;
-  }
-  */
+  if (!isAuthenticated) return <RequiereSesion titulo="Inicia sesión para ver el curso" />;
 
   const handleResourceClick = (res: typeof resources[0]) => {
     setSelectedResource({

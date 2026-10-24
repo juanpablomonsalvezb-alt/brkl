@@ -1,4 +1,9 @@
 // Vórtice: repaso espaciado y micropráctica acumulativa sobre preguntas de evaluaciones ya respondidas.
+// DEPENDENCIA PROVISIONAL (P0-E): hoy los ítems salen de module_evaluations.questions_json, es decir,
+// de las mismas preguntas evaluativas. La especificación pide un banco de práctica distinto, por
+// contenido/OA. Cambio mínimo compatible, pendiente de aprobación: que syncReviewItems tome ítems de
+// un banco de práctica asociado al objetivo cuando exista, y que este archivo deje de leer
+// questions_json; no se implementa sin especificación y migración aprobadas.
 // Recibe la conexión como parámetro para poder probarse contra una base en memoria.
 import { and, desc, eq, isNotNull, lte } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";

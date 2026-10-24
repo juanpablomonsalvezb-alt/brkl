@@ -235,6 +235,26 @@ export async function registerRoutes(
       return null;
     }
   };
+  // Lectura académica: sesión + (admin o matrícula activa) en la asignatura del recurso pedido.
+  // Responde el error y devuelve null si no corresponde.
+  const readerFor = async (req: any, res: any, levelSubjectId: string | null | undefined) => {
+    const userId = currentUserId(req);
+    if (!userId) { res.status(401).json({ message: "Unauthorized" }); return null; }
+    if (!levelSubjectId) { res.status(404).json({ message: "Not found" }); return null; }
+    const reader = await levelSubjectReader(userId, levelSubjectId);
+    if (!reader) { res.status(403).json({ message: "No tienes matrícula activa en esta asignatura" }); return null; }
+    return { userId, reader, levelSubjectId };
+  };
+  const readerForObjective = async (req: any, res: any, objectiveId: string) => {
+    if (!currentUserId(req)) { res.status(401).json({ message: "Unauthorized" }); return null; }
+    const objective = await storage.getLearningObjectiveById(objectiveId);
+    if (!objective) { res.status(404).json({ message: "Learning objective not found" }); return null; }
+    const r = await readerFor(req, res, objective.levelSubjectId);
+    return r && { ...r, objective };
+  };
+  const requireSession: RequestHandler = (req: any, res, next) =>
+    currentUserId(req) ? next() : void res.status(401).json({ message: "Unauthorized" });
+
 
   // Health check endpoint for keep-alive service
   app.get("/api/health", (req, res) => {
@@ -432,7 +452,9 @@ export async function registerRoutes(
   // Get learning objectives for a level-subject combination
   app.get("/api/level-subjects/:id/objectives", async (req, res) => {
     try {
-      const objectives = await storage.getLearningObjectives(req.params.id);
+      const r = await readerFor(req, res, (await resolveLevelSubjectId(req.params.id)) ?? req.params.id);
+      if (!r) return;
+      const objectives = await storage.getLearningObjectives(r.levelSubjectId);
       res.json(objectives);
     } catch (error) {
       console.error("Error fetching objectives:", error);
@@ -443,6 +465,7 @@ export async function registerRoutes(
   // Get resources for a learning objective
   app.get("/api/objectives/:id/resources", async (req, res) => {
     try {
+      if (!(await readerForObjective(req, res, req.params.id))) return;
       const resources = await storage.getResourcesByObjective(req.params.id);
       res.json(resources);
     } catch (error) {
@@ -458,15 +481,7 @@ export async function registerRoutes(
     try {
       // Check if user is authenticated
       const userId = currentUserId(req);
-      if (!userId) {
-        // In development, return a default profile
-        return res.json({ 
-          id: "dev-user",
-          name: "Usuario de Desarrollo",
-          role: "admin",
-          email: "dev@barkley.edu"
-        });
-      }
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
       
       const profile = await storage.getUserProfile(userId);
       res.json(profile || { role: "student" });
@@ -1195,21 +1210,16 @@ export async function registerRoutes(
   // Get all modules schedule for a level-subject (public for development)
   app.get("/api/level-subjects/:id/calendar", async (req: any, res) => {
     try {
-      const userId = currentUserId(req) || "dev-user";
-      const idOrSlug = req.params.id;
       const currentDate = new Date();
-
-      // Resolve slug to UUID if needed
-      const levelSubjectId = await resolveLevelSubjectId(idOrSlug);
-      if (!levelSubjectId) {
-        return res.status(404).json({ message: "Course not found" });
-      }
+      const r = await readerFor(req, res, await resolveLevelSubjectId(req.params.id));
+      if (!r) return;
+      const { userId, levelSubjectId } = r;
 
       const completedModules = await storage.getUserCompletedModules(userId, levelSubjectId);
       const objectives = await storage.getLearningObjectives(levelSubjectId);
 
-      // Admin bypass mode: unlock all modules for development/testing
-      const adminBypass = true;
+      // Solo un admin real ve todos los módulos desbloqueados; el estudiante, su calendario.
+      const adminBypass = r.reader === "admin";
       const config = await resolveCalendarConfigForLevelSubject(db, levelSubjectId, currentDate);
       const modulesSchedule = getAllModulesSchedule(currentDate, completedModules, config, adminBypass);
 
@@ -1251,6 +1261,7 @@ export async function registerRoutes(
       if (!levelSubjectId) {
         return res.status(400).json({ message: "levelSubjectId is required" });
       }
+      if (!(await readerFor(req, res, levelSubjectId))) return;
 
       const currentDate = new Date();
       const completedModules = await storage.getUserCompletedModules(userId, levelSubjectId);
@@ -1550,11 +1561,9 @@ export async function registerRoutes(
   // Get module info for a learning objective
   app.get("/api/objectives/:objectiveId/module-info", async (req: any, res) => {
     try {
-      const { objectiveId } = req.params;
-      const objective = await storage.getLearningObjectiveById(objectiveId);
-      if (!objective) {
-        return res.status(404).json({ message: "Learning objective not found" });
-      }
+      const r = await readerForObjective(req, res, req.params.objectiveId);
+      if (!r) return;
+      const { objective } = r;
       res.json({
         moduleOAs: objective.moduleOAs,
         moduleContents: objective.moduleContents,
@@ -1622,14 +1631,10 @@ export async function registerRoutes(
   // Get textbook info for a module (public for development)
   app.get("/api/level-subjects/:id/textbook", async (req: any, res) => {
     try {
-      const idOrSlug = req.params.id;
       const { moduleNumber } = req.query;
-
-      // Resolve slug to UUID if needed
-      const resolvedId = await resolveLevelSubjectId(idOrSlug);
-      if (!resolvedId) {
-        return res.status(404).json({ message: "Course not found" });
-      }
+      const r = await readerFor(req, res, await resolveLevelSubjectId(req.params.id));
+      if (!r) return;
+      const resolvedId = r.levelSubjectId;
 
       const levelSubject = await storage.getLevelSubjectById(resolvedId);
       if (!levelSubject) {
@@ -1695,7 +1700,7 @@ export async function registerRoutes(
 
   // PDF Proxy - fetches PDF from Google Drive to bypass CORS with page range support
   // Note: Authentication relaxed for iframe embedding
-  app.get("/api/pdf-proxy", async (req: any, res) => {
+  app.get("/api/pdf-proxy", isAdmin, async (req: any, res) => {
     try {
       const { url, startPage, endPage } = req.query;
       console.log(`[PDF-PROXY] Request: url=${url}, startPage=${startPage}, endPage=${endPage}`);
@@ -2110,7 +2115,7 @@ export async function registerRoutes(
   // ===== TEXTBOOK CONFIGURATION ENDPOINTS =====
   
   // List PDF files from a Google Drive folder
-  app.get("/api/drive/folder/:folderId/pdfs", async (req, res) => {
+  app.get("/api/drive/folder/:folderId/pdfs", isAdmin, async (req: any, res) => {
     try {
       const { folderId } = req.params;
       const { listPDFsFromFolder, extractPageRangeFromFilename } = await import("./googleDrive");
@@ -2152,7 +2157,7 @@ export async function registerRoutes(
   });
   
   // Get all textbook configs
-  app.get("/api/textbooks", async (req, res) => {
+  app.get("/api/textbooks", requireSession, async (req: any, res) => {
     try {
       const textbooks = await storage.getAllTextbookConfigs();
       res.json(textbooks);
@@ -2163,7 +2168,7 @@ export async function registerRoutes(
   });
 
   // Get textbook config for a specific subject
-  app.get("/api/textbooks/subject/:subjectId", async (req, res) => {
+  app.get("/api/textbooks/subject/:subjectId", requireSession, async (req: any, res) => {
     try {
       const textbook = await storage.getTextbookConfigBySubject(req.params.subjectId);
       if (!textbook) {
@@ -2180,6 +2185,7 @@ export async function registerRoutes(
   app.get("/api/textbooks/module/:levelSubjectId/:moduleNumber", async (req, res) => {
     try {
       const { levelSubjectId, moduleNumber } = req.params;
+      if (!(await readerFor(req, res, levelSubjectId))) return;
       
       // Get the level-subject to find the subject
       const levelSubject = await storage.getLevelSubjectById(levelSubjectId);
@@ -2666,7 +2672,7 @@ export async function registerRoutes(
   });
 
   // GET: Get all copilots
-  app.get("/api/gemini-copilots", async (req, res) => {
+  app.get("/api/gemini-copilots", requireSession, async (req: any, res) => {
     try {
       const copilots = await storage.getAllGeminiCopilots();
       res.json(copilots);
@@ -2677,7 +2683,7 @@ export async function registerRoutes(
   });
 
   // GET: Get copilot by level ID
-  app.get("/api/gemini-copilots/by-level/:levelId", async (req, res) => {
+  app.get("/api/gemini-copilots/by-level/:levelId", requireSession, async (req: any, res) => {
     try {
       const copilot = await storage.getGeminiCopilotByLevel(req.params.levelId);
       if (!copilot) {
@@ -2691,7 +2697,7 @@ export async function registerRoutes(
   });
 
   // GET: Get copilot by ID
-  app.get("/api/gemini-copilots/:id", async (req, res) => {
+  app.get("/api/gemini-copilots/:id", requireSession, async (req: any, res) => {
     try {
       const copilot = await storage.getGeminiCopilotById(req.params.id);
       if (!copilot) {
