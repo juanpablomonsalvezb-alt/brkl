@@ -42,7 +42,7 @@ Al proponer cambios, ambos asistentes deben leer primero este documento, disting
 - Después de T+48 horas, un envío tardío se rechaza con HTTP 409, sin período de gracia. Las excepciones requieren autorización separada y auditoría.
 
 ### Cierre por vencimiento
-- Al alcanzar T+48 horas, la instancia se marca vencida si aún no está aprobada ni cerrada por agotamiento, aunque queden intentos sin usar.
+- Al alcanzar T+48 horas, la instancia se marca vencida si aún no está aprobada ni cerrada por agotamiento, aunque queden intentos sin usar. **P15 — APROBADO (2026-10-24):** esta regla cierra la instancia original; un intento activo expira sin consumir intento y se registra la causa del cierre. Una excepción autorizada no reabre la instancia original ni un proceso definitivamente cerrado; si procede y aún es admisible, debe tramitarse mediante el flujo de versión alternativa.
 - Un intento activo expira sin consumir intento.
 - La causa del cierre se registra como vencimiento.
 - La pauta se habilita en review_at únicamente si la instancia está cerrada y se cumplen las reglas de revisión.
@@ -73,7 +73,7 @@ Al proponer cambios, ambos asistentes deben leer primero este documento, disting
 - Tutoría solicita; una persona autorizada distinta, de coordinación académica, aprueba.
 - Registrar motivo/referencia, caso, solicitante, aprobador, fechas y ventanas anterior/nueva en UTC. No guardar evidencia sensible en el registro de auditoría.
 - Nunca reabrir un proceso definitivamente cerrado.
-- Si la nueva fecha cabe dentro de la extensión original, puede ampliarse esa ventana. Si excede esa ventana, asignar una versión alternativa para reducir el riesgo de exposición de la pauta.
+- Si la nueva fecha cabe dentro de la extensión original, puede ampliarse esa ventana. Si excede esa ventana, asignar una versión alternativa para reducir el riesgo de exposición de la pauta. **P18 — APROBADO (2026-10-24):** una excepción nunca reabre la evaluación original ni permite responder una versión cuya pauta ya se publicó. Si se autoriza y el proceso sigue abierto y admite una alternativa, se asigna una versión distinta con ventana y revisión propias. Si el proceso está definitivamente cerrado, no se reabre.
 - No se concede extensión automáticamente mientras la excepción esté pendiente; el comportamiento del reloj en ese estado requiere decisión explícita.
 - Límites máximos, motivos admisibles y tratamiento de evidencia sensible requieren validación académica/legal.
 
@@ -124,10 +124,10 @@ Son hallazgos reportados durante la conversación y requieren verificación cont
 |---|---|---|
 | P7 | Tratamiento de registros históricos | PROPUESTA pendiente: intentos históricos no cuentan para límite; aprobados se tratan como cierre por aprobación, con revisión sujeta a ventana; no reescribir filas |
 | P8 | Formularios externos y ventanas | PROPUESTA pendiente: mismas ventanas; validación humana aprobada cierra por aprobación; rechazo no consume intento |\n| P9 | Visibilidad del puntaje interno | PROPUESTA pendiente: solo administradores en vistas internas |\n| P10 | Repaso de evaluaciones abiertas | PROPUESTA pendiente: excluir preguntas hasta review_at y repasar adaptativamente después |\n| P11 | Canal de aviso de 24 horas | Regla de aviso aprobada; canal dentro de plataforma y correo respetando preferencias, pendiente de confirmar detalle operativo |\n| P12 | Segunda recuperación fallida | APROBADO: una única recuperación final por proceso evaluativo |\n| P13 | Ajustes por necesidades especiales | PENDIENTE_ACADÉMICO/LEGAL; definir con Dirección Académica |\n| P14 | Aviso y extensión en ventanas de recuperación | PENDIENTE; sin recomendación cerrada |
-| P15 | Vencimiento de instancia a T+48h y causa vencimiento | Aprobado en consolidación previa |
+| P15 | Vencimiento de instancia a T+48h y causa vencimiento; la excepción no reabre la original | APROBADO (2026-10-24); instancia original cerrada, intento activo expira sin consumir, causa registrada |
 | P16 | E1/E3/E4 formativas o sumativas; recuperación formal o «No logrado» | Pendiente de Dirección Académica y validación normativa |
 | P17 | 2 intentos enviados por recuperación; una recuperación final | Propuesta recomendada; confirmar aprobación formal |
-| P18 | Excepciones, solicitante/aprobador distintos, ventana y auditoría | Regla base aprobada; límites y razones admisibles pendientes |
+| P18 | Excepciones, solicitante/aprobador distintos, ventana y auditoría; evitar responder versión con pauta publicada | APROBADO (2026-10-24): no reabrir original ni proceso definitivamente cerrado; si procede, versión alternativa con ventana/revisión propias. Límites y razones admisibles siguen pendientes |
 | P19 | Condiciones de publicación de pauta por instancia | Aprobado en consolidación previa |
 | P20 | Lotes, retiro de versiones y revisión al cierre | Regla base aprobada; capacidad/frecuencia pendientes |
 | P20-v | Capacidad mínima y frecuencia de lotes | Pendiente |
@@ -149,7 +149,7 @@ Se reportó que la regla actual en server/vortice.ts (aprox. líneas 144–160) 
 
 ## 11. Historial y gobierno
 
-- **2026-10-23 — Consolidación documental inicial:** se recopilan decisiones y propuestas presentes en el historial de trabajo. No constituye aprobación nueva de decisiones académicas pendientes.
+- **2026-10-23 — Consolidación documental inicial:** se recopilan decisiones y propuestas presentes en el historial de trabajo. No constituye aprobación nueva de decisiones académicas pendientes.\n- **2026-10-24 — Ratificación de P15 y P18:** la usuaria aprobó el cierre de la instancia original al vencer, la expiración sin consumo del intento activo y el registro de la causa; además, confirmó que una excepción no reabre la evaluación original ni permite responder una versión cuya pauta se publicó, y que una alternativa autorizada requiere versión, ventana y revisión propias. No se autorizó implementación técnica.
 - Toda modificación debe indicar ID de decisión, estado anterior, propuesta, fundamento, impacto, responsable de validación y fecha.
 - Estados permitidos: APROBADO, PROPUESTA, PENDIENTE_ACADÉMICO, PENDIENTE_LEGAL, PENDIENTE_TÉCNICO y NO_VERIFICADO.
 - No mezclar especificación con implementación. Un cambio de código requiere autorización explícita independiente.
