@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { z } from "zod";
 import { and, eq, gte, isNull } from "drizzle-orm";
 import { storage } from "./storage";
-import { previewTestLogin } from "./previewLogin";
+import { previewTestLogin, registerPreviewLoginPages } from "./previewLogin";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
 import {
   insertLevelSchema, insertSubjectSchema, insertLevelSubjectSchema,
@@ -358,6 +358,7 @@ export async function registerRoutes(
   // Solo Vercel Preview con secreto propio y cuentas ficticias (ver previewLogin.ts).
   const previewLogin = previewTestLogin(process.env);
   if (previewLogin) app.use(previewLogin);
+  registerPreviewLoginPages(app, process.env);
   registerAuthRoutes(app);
 
   // Protección por prefijo: cubre toda ruta /api/admin/* (también las de faqRoutes, paesRoutes

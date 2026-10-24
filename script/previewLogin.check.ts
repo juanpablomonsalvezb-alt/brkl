@@ -26,4 +26,14 @@ assert.equal(run(preview, { ...ok, "x-preview-secret": "" }), null);
 assert.equal(run(preview, { ...ok, "x-preview-user": "admin-real" }), null);
 assert.equal(run(preview, { ...ok, "x-preview-user": "ficticio-x; drop" }), null);
 
+// Cookie firmada (navegador): válida solo con la firma del secreto y cuenta ficticia.
+const { createHmac } = await import("node:crypto");
+const firma = (u: string, s = secret) => createHmac("sha256", s).update(u).digest("hex");
+const conCookie = (valor: string) => run(preview, { cookie: `otra=1; brkl_preview=${encodeURIComponent(valor)}` });
+assert.equal(conCookie(`ficticio-tutor.${firma("ficticio-tutor")}`), "ficticio-tutor");
+assert.equal(conCookie(`ficticio-tutor.${firma("ficticio-tutor", "x".repeat(40))}`), null, "firma con otro secreto");
+assert.equal(conCookie(`ficticio-admin.${firma("ficticio-tutor")}`), null, "firma de otra cuenta");
+assert.equal(conCookie(`admin.${firma("admin")}`), null, "cuenta no ficticia");
+assert.equal(run({ VERCEL_ENV: "production", PREVIEW_TEST_LOGIN_SECRET: secret }, { cookie: `brkl_preview=ficticio-tutor.${firma("ficticio-tutor")}` }), "sin middleware");
+
 console.log("previewLogin: ok");
