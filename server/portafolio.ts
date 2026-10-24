@@ -102,7 +102,7 @@ function selectEvidences(db: Db) {
     createdAt: portfolioEvidences.createdAt,
     updatedAt: portfolioEvidences.updatedAt,
     evaluationTitle: moduleEvaluations.title,
-    evaluationScore: evaluationProgress.score,
+    // Solo el estado (aprobada o no); nunca el puntaje: el portafolio se comparte con tutor y familia.
     evaluationPassed: evaluationProgress.passed,
   })
     .from(portfolioEvidences)

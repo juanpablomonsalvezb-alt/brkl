@@ -87,7 +87,8 @@ assert.ok(t.ok);
 const titles = (t.value as any[]).map((e) => e.title).sort();
 assert.deepEqual(titles, ["Mi explicación", "Mi mini 1"]);
 const ev = (t.value as any[]).find((e) => e.kind === "evaluacion");
-assert.deepEqual([ev.evaluationScore, ev.evaluationPassed, ev.evaluationTitle, "answersJson" in ev], [85, true, "Mini 1", false]);
+assert.deepEqual([ev.evaluationPassed, ev.evaluationTitle, "answersJson" in ev, "evaluationScore" in ev], [true, "Mini 1", false, false]);
+assert.ok(!JSON.stringify(ev).includes("85"), "sin puntaje en la evidencia");
 assert.ok((await listStudentEvidences(db, "admin", "est")).ok);
 denied(await listStudentEvidences(db, "otro", "est"), 403); // estudiante
 denied(await listStudentEvidences(db, "sin-perfil", "est"), 403); // sin perfil = estudiante
