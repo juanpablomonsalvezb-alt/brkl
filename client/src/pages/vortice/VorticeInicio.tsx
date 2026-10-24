@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import type { VorticeOverview, VorticeTrack } from "@shared/vortice";
 import type { BrujulaGoal } from "@shared/brujula";
+import { RobotTutor } from "./RobotTutor";
 import "./vortice.css";
 
 interface Usuario { firstName: string | null; name: string | null }
@@ -276,11 +277,9 @@ pendientesRepaso === 0 ? <p className="vx-empty">No tienes preguntas para repasa
             <section className="vx-card" aria-labelledby="vx-apoyo">
               <header><h2 id="vx-apoyo"><MessageCircle aria-hidden="true" />¿Necesitas apoyo?</h2></header>
               <div className="vx-help">
-                <img src="/images/vortice/robot-apoyo.jpg" alt="" />
-                <div>
-                  <p>Puedes preguntarme lo que necesites. Te explico con otras palabras y te doy pistas.</p>
-                  <Link href="/academic-copilot"><MessageCircle aria-hidden="true" />Hablar con mi tutor virtual</Link>
-                </div>
+                <RobotTutor className="vx-help-robot" />
+                <p>Puedes preguntarme lo que necesites. Te explico con otras palabras y te doy pistas.</p>
+                <Link href="/academic-copilot"><MessageCircle aria-hidden="true" />Hablar con mi tutor virtual</Link>
               </div>
             </section>
           </aside>
