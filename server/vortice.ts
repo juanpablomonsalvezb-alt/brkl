@@ -202,6 +202,49 @@ export async function checkEvaluationAccess(
   return checkModuleAccess(db, userId, row.levelSubjectId, row.weekNumber, now, config);
 }
 
+// Evaluaciones abiertas del estudiante (para bloquear el copiloto sin depender del cliente):
+// matrícula activa, liberada, módulo abierto (misma regla que checkEvaluationAccess) y sin
+// intento aprobado. Sin fin de ventana ni límite de intentos (núcleo P0-E pendiente), una
+// evaluación sigue abierta hasta aprobarla: el bloqueo peca por exceso, no por defecto.
+// ponytail: recorre todas las evaluaciones matriculadas en cada mensaje; cachear si pesa.
+export async function openEvaluationsForStudent(
+  db: LibSQLDatabase<typeof schema>, userId: string, now: Date,
+): Promise<(typeof moduleEvaluations.$inferSelect)[]> {
+  const rows = await db.select({
+    evaluation: moduleEvaluations,
+    levelSubjectId: learningObjectives.levelSubjectId,
+    weekNumber: learningObjectives.weekNumber,
+    levelId: levelSubjects.levelId,
+  })
+    .from(enrollments)
+    .innerJoin(levelSubjects, eq(enrollments.levelSubjectId, levelSubjects.id))
+    .innerJoin(learningObjectives, eq(learningObjectives.levelSubjectId, levelSubjects.id))
+    .innerJoin(moduleEvaluations, eq(moduleEvaluations.learningObjectiveId, learningObjectives.id))
+    .where(and(eq(enrollments.userId, userId), eq(enrollments.isActive, true)));
+  if (!rows.length) return [];
+
+  const passed = new Set((await db.select({ id: evaluationProgress.evaluationId }).from(evaluationProgress)
+    .where(and(eq(evaluationProgress.userId, userId), eq(evaluationProgress.passed, true)))).map((r) => r.id));
+  const configs = new Map<string, CalendarConfig>();
+  const modules = new Map<string, boolean>();
+  const open: (typeof moduleEvaluations.$inferSelect)[] = [];
+  for (const r of rows) {
+    const e = r.evaluation;
+    if (passed.has(e.id) || (!e.questionsJson && !e.htmlContent)) continue;
+    const levelKey = r.levelId ?? "";
+    if (!configs.has(levelKey)) configs.set(levelKey, await resolveCalendarConfig(db, r.levelId, now));
+    const config = configs.get(levelKey)!;
+    const n = e.evaluationNumber;
+    if (n >= 1 && n <= 4 && !isEvaluationAvailable(r.weekNumber, n as 1 | 2 | 3 | 4, now, config)) continue;
+    const moduleKey = `${r.levelSubjectId}:${r.weekNumber}`;
+    if (!modules.has(moduleKey)) {
+      modules.set(moduleKey, (await checkModuleAccess(db, userId, r.levelSubjectId, r.weekNumber, now, config)).ok);
+    }
+    if (modules.get(moduleKey)) open.push(e);
+  }
+  return open;
+}
+
 // Marcar un recurso como visto dos veces no debe duplicar el registro.
 // `created` dice si fue la primera vez (la analítica solo cuenta esa).
 export async function markResourceCompleteOnce(

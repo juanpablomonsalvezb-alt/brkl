@@ -89,4 +89,13 @@ assert.ok(!takeRateToken(store, "u1", 2000, 3, 60_000));
 assert.ok(takeRateToken(store, "u2", 2000, 3, 60_000)); // otro usuario no se ve afectado
 assert.ok(takeRateToken(store, "u1", 61_500, 3, 60_000)); // la ventana se libera
 
+// Bloqueo por texto sin modo estricto (evaluación abierta pero sin cuestionario en pantalla).
+{
+  const qs = ["¿Qué océano baña las costas de Chile continental?"];
+  assert.equal(planCopilotTurn({ message: qs[0], history: [], track: null, evaluationQuestions: qs, evaluationInProgress: false }).kind, "reply");
+  const libre = planCopilotTurn({ message: "explícame la fotosíntesis", history: [], track: null, evaluationQuestions: qs, evaluationInProgress: false });
+  assert.ok(libre.kind === "ask" && !libre.systemPrompt.includes("Hay una evaluación en curso"));
+  const estricto = planCopilotTurn({ message: "explícame la fotosíntesis", history: [], track: null, evaluationQuestions: qs });
+  assert.ok(estricto.kind === "ask" && estricto.systemPrompt.includes("Hay una evaluación en curso"), "por defecto, como antes");
+}
 console.log("iaPolicy: ok");

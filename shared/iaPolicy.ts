@@ -156,7 +156,10 @@ export function planCopilotTurn(input: {
   message: unknown;
   history: unknown;
   track: VorticeTrack | null;
-  evaluationQuestions?: string[] | null; // null/undefined: sin evaluación en curso
+  evaluationQuestions?: string[] | null; // preguntas bloqueadas; null/undefined: ninguna
+  // Cuestionario activo en pantalla: además del bloqueo por texto, el prompt pasa a modo estricto.
+  // Por defecto, hay modo estricto si hay preguntas bloqueadas (comportamiento anterior).
+  evaluationInProgress?: boolean;
 }): CopilotPlan {
   const message = sanitizeMessage(input.message);
   if (!message) return { kind: "invalid" };
@@ -168,7 +171,7 @@ export function planCopilotTurn(input: {
     if (matchesEvaluationQuestion(message, evalQs)) return { kind: "reply", response: EVALUATION_BLOCK_RESPONSE, reason: "evaluation" };
     history = sanitizeHistory(history.filter((t) => !matchesEvaluationQuestion(t.parts, evalQs)));
   }
-  return { kind: "ask", systemPrompt: buildSystemPrompt(input.track, { evaluationInProgress: !!evalQs }), message, history };
+  return { kind: "ask", systemPrompt: buildSystemPrompt(input.track, { evaluationInProgress: input.evaluationInProgress ?? !!evalQs }), message, history };
 }
 
 // Ventana deslizante en memoria. Muta `store`; devuelve false si se excede el límite.

@@ -167,6 +167,15 @@ await db.insert(S.moduleEvaluations).values({ id: "ecop", learningObjectiveId: "
 const cop = await call("POST", "/api/academic-copilot/chat", "alumno", { message: "¿Qué océano baña las costas de Chile continental?", evaluationId: "ecop" });
 assert.equal(cop.status, 200);
 assert.equal(cop.json.notice, "evaluation", "bloqueo por evaluación HTML en curso");
+// Sin evaluationId (cliente que lo omite): el servidor deduce las abiertas y bloquea igual.
+const cop2 = await call("POST", "/api/academic-copilot/chat", "alumno", { message: "¿Qué océano baña las costas de Chile continental?" });
+assert.deepEqual([cop2.status, cop2.json.notice], [200, "evaluation"], "bloqueo sin evaluationId");
+const { openEvaluationsForStudent } = await import("../server/vortice");
+const abiertas = (await openEvaluationsForStudent(db, "alumno", new Date())).map((e) => e.id);
+assert.ok(abiertas.includes("ecop") && abiertas.includes("e1"), "liberadas, módulo abierto, sin aprobar");
+assert.ok(!abiertas.includes("e3"), "aprobada: ya no está abierta");
+assert.ok(!abiertas.includes("e2"), "formulario externo sin preguntas: no aplica");
+assert.deepEqual(await openEvaluationsForStudent(db, "ajeno", new Date()), [], "sin matrícula: ninguna");
 
 // 5e. /complete solo para formularios externos; metadatos coherentes con gradableQuestions; clave fuera de rango bloquea.
 await db.insert(S.learningObjectives).values({ id: "mk", levelSubjectId: "ls1", code: "MK", title: "Claves", weekNumber: 1 });

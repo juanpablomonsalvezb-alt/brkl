@@ -23,6 +23,7 @@ import {
   getReflection,
   setPedagogicalStep,
   hasActiveEnrollment,
+  openEvaluationsForStudent,
 } from "./vortice";
 import { loadDueReview, answerReviewItem } from "./repaso";
 import { getStudentRubric, createRubricVersion, updateDraftRubric, rubricInputSchema } from "./rubricas";
@@ -2625,18 +2626,23 @@ export async function registerRoutes(
       }
 
       const { message, conversationHistory, evaluationId } = req.body ?? {};
-      // Evaluación en curso: sus preguntas (module_evaluations.questions_json) no pueden salir hacia el proveedor.
-      let evaluationQuestions: string[] | null = null;
-      if (typeof evaluationId === "string" && evaluationId) {
+      // Evaluaciones abiertas: sus preguntas no pueden salir hacia el proveedor. El servidor las
+      // determina (openEvaluationsForStudent); evaluationId del cliente solo agrega, nunca quita.
+      const bloqueadas = await openEvaluationsForStudent(db, userId, new Date());
+      if (typeof evaluationId === "string" && evaluationId && !bloqueadas.some((e) => e.id === evaluationId)) {
         const evaluation = await storage.getModuleEvaluationById(evaluationId);
-        // questionsJson tal cual (aunque esté bloqueada por clave inválida) o el HTML convertido.
-        if (evaluation) evaluationQuestions = evaluationQuestionTexts(evaluation.questionsJson ?? JSON.stringify(gradableQuestions(evaluation) ?? []));
+        if (evaluation) bloqueadas.push(evaluation);
       }
+      // questionsJson tal cual (aunque esté bloqueada por clave inválida) o el HTML convertido.
+      const textos = bloqueadas.flatMap((e) => evaluationQuestionTexts(e.questionsJson ?? JSON.stringify(gradableQuestions(e) ?? [])));
+      const evaluationQuestions: string[] | null = textos.length ? textos : null;
       // Tramo desde el perfil en servidor (no desde el cliente); sin nivel, tono intermedio.
       const profile = await storage.getUserProfile(userId);
 
       const plan = planCopilotTurn({
         message, history: conversationHistory, track: trackForLevel(profile?.levelId), evaluationQuestions,
+        // El bloqueo por texto cubre todas las abiertas; el modo estricto, solo el cuestionario en pantalla.
+        evaluationInProgress: typeof evaluationId === "string" && evaluationId !== "",
       });
       if (plan.kind === "invalid") return res.status(400).json({ message: "Message is required" });
       if (plan.kind === "reply") return res.json({ response: plan.response, notice: plan.reason });
