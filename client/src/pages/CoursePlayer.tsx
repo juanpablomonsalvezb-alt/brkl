@@ -38,7 +38,6 @@ import { GeminiCopilotButton } from "@/components/GeminiCopilotButton";
 import {
   AreaChart, Area,
   PieChart, Pie, Cell,
-  BarChart, Bar,
   ResponsiveContainer,
   XAxis, YAxis, Tooltip
 } from "recharts";
@@ -167,6 +166,7 @@ export default function CoursePlayer() {
     hasQuestions: boolean;
     totalQuestions: number | null;
     generatedAt: string | null;
+    aprobada: boolean;
   }>>({
     queryKey: ['/api/learning-objectives', currentObjectiveId, 'evaluations'],
     queryFn: async () => {
@@ -979,28 +979,27 @@ export default function CoursePlayer() {
                   </div>
                 </div>
 
-                {/* Evaluations Average */}
+                {/* Estado de evaluaciones del módulo: datos reales, sin puntajes. */}
                 <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Promedio Evaluaciones</h4>
-                  <ResponsiveContainer width="100%" height={75}>
-                    <BarChart data={[
-                      { eval: 'E1', score: 85 },
-                      { eval: 'E2', score: 72 },
-                      { eval: 'E3', score: 90 },
-                      { eval: 'E4', score: 78 },
-                    ]}>
-                      <XAxis dataKey="eval" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
-                      <Tooltip
-                        contentStyle={{ background: '#0A192F', border: 'none', borderRadius: '8px', fontSize: '12px' }}
-                        formatter={(value: number) => [`${value}%`, 'Nota']}
-                      />
-                      <Bar dataKey="score" fill="#A51C30" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                  <div className="text-center mt-2">
-                    <span className="text-2xl font-bold text-emerald-600">81%</span>
-                    <p className="text-xs text-slate-500">promedio general</p>
-                  </div>
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Estado de evaluaciones</h4>
+                  {moduleEvaluations && moduleEvaluations.length > 0 ? (
+                    <ul className="space-y-2" data-testid="evaluation-status-list">
+                      {[...moduleEvaluations].sort((a, b) => a.evaluationNumber - b.evaluationNumber).map((e) => (
+                        <li key={e.id} className="flex items-center justify-between text-sm">
+                          <span className="text-slate-700">E{e.evaluationNumber}</span>
+                          {e.aprobada ? (
+                            <span className="flex items-center gap-1 font-medium text-emerald-700">
+                              <Check className="w-4 h-4" aria-hidden="true" /> Aprobado
+                            </span>
+                          ) : (
+                            <span className="text-slate-500">Sin resultado</span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-slate-500">Aún no hay evaluaciones registradas en este módulo.</p>
+                  )}
                 </div>
               </div>
             </div>

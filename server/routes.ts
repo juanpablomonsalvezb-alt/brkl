@@ -2079,6 +2079,9 @@ export async function registerRoutes(
         return res.status(403).json({ message: "No tienes matrícula activa en esta asignatura" });
       }
       const evaluations = await storage.getModuleEvaluations(id);
+      // Estado del estudiante: solo si tiene un intento aprobado; nunca puntaje.
+      const aprobadas = new Set((await storage.getEvaluationProgressByUser(userId, evaluations.map(e => e.id)))
+        .filter(p => p.passed).map(p => p.evaluationId));
 
       const evaluationsWithStatus = evaluations.map(e => { const g = gradableQuestions(e); return {
         id: e.id,
@@ -2088,7 +2091,8 @@ export async function registerRoutes(
         releaseWeek: e.releaseWeek,
         hasQuestions: g !== null,
         totalQuestions: g?.length ?? null,
-        generatedAt: e.generatedAt
+        generatedAt: e.generatedAt,
+        aprobada: aprobadas.has(e.id),
       }; });
 
       res.json(evaluationsWithStatus);

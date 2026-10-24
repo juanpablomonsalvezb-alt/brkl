@@ -307,6 +307,10 @@ assert.equal((await call("GET", "/api/learning-objectives/m1/evaluations")).stat
 assert.equal((await call("GET", "/api/learning-objectives/m1/evaluations", "ajeno")).status, 403, "sin matrícula");
 assert.equal((await call("GET", "/api/learning-objectives/m1/evaluations", "alumno")).status, 200, "matriculado");
 assert.equal((await call("GET", "/api/learning-objectives/m1/evaluations", "admin")).status, 200, "admin");
+// Estado real por evaluación (A5): aprobada sí/no, sin puntaje.
+const estados = (await call("GET", "/api/learning-objectives/m1/evaluations", "alumno")).json;
+assert.deepEqual([estados.find((e: any) => e.id === "e3").aprobada, estados.find((e: any) => e.id === "e1").aprobada], [true, false]);
+assert.ok(estados.every((e: any) => !Object.keys(e).some((k) => /score|correct/i.test(k))), "sin puntaje");
 assert.equal((await call("GET", "/api/learning-objectives/nope/evaluations", "alumno")).status, 404);
 assert.equal((await call("GET", "/api/modules/1/evaluations?levelSubjectId=ls1", "ajeno")).status, 403, "metadatos sin matrícula");
 await db.insert(S.moduleEvaluations).values({ id: "ef2", learningObjectiveId: "m2", evaluationNumber: 2, title: "Form M2", releaseWeek: 2, formUrl: "https://forms.example/m2-secreto" });
