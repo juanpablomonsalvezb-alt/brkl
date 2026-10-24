@@ -22,7 +22,9 @@ Al proponer cambios, ambos asistentes deben leer primero este documento, disting
 - Portafolio compartido, familia y tutoría muestran estado, no puntajes exactos.
 - El orden de preguntas y alternativas se mezcla por intento. La permutación exacta se persiste para permitir recarga y revisión. La corrección usa identificadores estables, nunca letras o posiciones.
 - Se registra un intento al iniciarlo, pero se consume al enviarlo. Solo puede existir un intento activo. Recargar retoma el mismo intento y permutación. Abandonar no consume intento; un intento activo expira al final de la ventana sin consumirlo.
-- La extensión automática de 48 horas se aplica a todos. El fin de esa extensión impide enviar intentos de la instancia original.\n- Se envía un aviso 24 horas antes del fin de la ventana ordinaria (decisión reportada como aprobada; canal técnico sujeto a preferencias y confirmación operativa).\n- Los formularios externos requieren validación humana; las reglas de ventana y efecto de aceptación/rechazo se mantienen como detalle P8 pendiente de ratificación.
+- La extensión automática de 48 horas se aplica a todos. El fin de esa extensión impide enviar intentos de la instancia original.
+- Se envía un aviso 24 horas antes del fin de la ventana ordinaria (decisión reportada como aprobada; canal técnico sujeto a preferencias y confirmación operativa).
+- Los formularios externos requieren validación humana; las reglas de ventana y efecto de aceptación/rechazo se mantienen como detalle P8 pendiente de ratificación.
 - Un proceso evaluativo definitivamente cerrado no se reabre. La revisión posterior del contenido es una actividad separada, no una repetición de la evaluación.
 
 ## 3. Intentos, tiempo y revisión
@@ -58,7 +60,9 @@ Al proponer cambios, ambos asistentes deben leer primero este documento, disting
 
 ## 4. Recuperación y lotes
 
-- La evaluación 2 agotada sin aprobar pasa al flujo de recuperación tutorial.\n- Si el estudiante no rinde dentro del plazo, se propone/ha sido reportado como aprobado el flujo de recuperación con versión nueva, solicitud tutorial y autorización administrativa; verificar la formulación exacta del acuerdo antes de implementación.\n- Agotar E2 sin aprobar no desbloquea automáticamente el módulo siguiente. P21 sigue pendiente para definir el tratamiento posterior y cualquier avance excepcional.
+- La evaluación 2 agotada sin aprobar pasa al flujo de recuperación tutorial.
+- Si el estudiante no rinde dentro del plazo, se propone/ha sido reportado como aprobado el flujo de recuperación con versión nueva, solicitud tutorial y autorización administrativa; verificar la formulación exacta del acuerdo antes de implementación.
+- Agotar E2 sin aprobar no desbloquea automáticamente el módulo siguiente. P21 sigue pendiente para definir el tratamiento posterior y cualquier avance excepcional.
 - La recuperación usa una versión diferente de preguntas y ventanas por lote; las versiones deben rotar.
 - La recuperación es la oportunidad final del proceso evaluativo (P12, reportado como APROBADO). Si se agota o vence sin aprobación, el proceso se cierra como «Reprobado» y no se reabre.
 - La recuperación tiene 2 intentos enviados. Recargar o abandonar no consume intento; el intento activo vencido no se consume.
@@ -113,17 +117,25 @@ La revisión posterior no debe repetir las mismas preguntas de evaluación. La p
 - Endpoint de metadatos que podría exponer formUrl.
 - Verificación de matrícula/sesión en endpoints relevantes.
 - Uso de passingScore || 60 en lugar de nullish coalescing.
-- Posible creación duplicada de pending review items en /complete.
+- Posible creación duplicada de entregas pendientes en `evaluation_progress` al llamar varias veces a /complete (no son ítems de repaso).
 - Puntajes ficticios reportados en client/src/pages/CoursePlayer.tsx (E1 85, E2 72, E3 90, E4 78; referencia aproximada líneas 987–997). La instrucción de sustituirlos por estados académicos reales fue reportada como aprobada; el hallazgo en código aún requiere verificación en el commit correcto.
 
-Son hallazgos reportados durante la conversación y requieren verificación contra el código actual antes de tratarlos como hechos confirmados. Claude reporta que algunas referencias corresponden a cinco commits locales P0 no publicados y que las líneas citadas no coinciden con la rama documental basada en otro commit. Por tanto, ninguna referencia de línea se considera verificada contra GitHub hasta identificar el commit de código pertinente.\n\n**Precisión sobre un riesgo:** la posible duplicación en /complete se reportó como duplicación de entregas pendientes en evaluation_progress (server/routes.ts:1348), no como ítems de repaso. La fuga de registros históricos de repaso se reportó reproducida en memoria con funciones reales de server/repaso.ts; el oráculo de puntaje se reprodujo solo con una función simulada, no contra el endpoint. No se probaron endpoints reales ni producción.
+Son hallazgos reportados durante la conversación y requieren verificación contra el código actual antes de tratarlos como hechos confirmados. Claude reporta que algunas referencias corresponden a cinco commits locales P0 no publicados y que las líneas citadas no coinciden con la rama documental basada en otro commit. Por tanto, ninguna referencia de línea se considera verificada contra GitHub hasta identificar el commit de código pertinente.
+
+**Precisión sobre un riesgo:** la posible duplicación en /complete se reportó como duplicación de entregas pendientes en evaluation_progress (server/routes.ts:1348), no como ítems de repaso. La fuga de registros históricos de repaso se reportó reproducida en memoria con funciones reales de server/repaso.ts; el oráculo de puntaje se reprodujo solo con una función simulada, no contra el endpoint. No se probaron endpoints reales ni producción.
 
 ## 9. Decisiones pendientes
 
 | ID | Tema | Estado / siguiente paso |
 |---|---|---|
 | P7 | Tratamiento de registros históricos | PROPUESTA pendiente: intentos históricos no cuentan para límite; aprobados se tratan como cierre por aprobación, con revisión sujeta a ventana; no reescribir filas |
-| P8 | Formularios externos y ventanas | PROPUESTA pendiente: mismas ventanas; validación humana aprobada cierra por aprobación; rechazo no consume intento |\n| P9 | Visibilidad del puntaje interno | PROPUESTA pendiente: solo administradores en vistas internas |\n| P10 | Repaso de evaluaciones abiertas | PROPUESTA pendiente: excluir preguntas hasta review_at y repasar adaptativamente después |\n| P11 | Canal de aviso de 24 horas | Regla de aviso aprobada; canal dentro de plataforma y correo respetando preferencias, pendiente de confirmar detalle operativo |\n| P12 | Segunda recuperación fallida | APROBADO: una única recuperación final por proceso evaluativo |\n| P13 | Ajustes por necesidades especiales | PENDIENTE_ACADÉMICO/LEGAL; definir con Dirección Académica |\n| P14 | Aviso y extensión en ventanas de recuperación | PENDIENTE; sin recomendación cerrada |
+| P8 | Formularios externos y ventanas | PROPUESTA pendiente: mismas ventanas; validación humana aprobada cierra por aprobación; rechazo no consume intento |
+| P9 | Visibilidad del puntaje interno | PROPUESTA pendiente: solo administradores en vistas internas |
+| P10 | Repaso de evaluaciones abiertas | PROPUESTA pendiente: excluir preguntas hasta review_at y repasar adaptativamente después |
+| P11 | Canal de aviso de 24 horas | Regla de aviso aprobada; canal dentro de plataforma y correo respetando preferencias, pendiente de confirmar detalle operativo |
+| P12 | Segunda recuperación fallida | APROBADO: una única recuperación final por proceso evaluativo |
+| P13 | Ajustes por necesidades especiales | PENDIENTE_ACADÉMICO/LEGAL; definir con Dirección Académica |
+| P14 | Aviso y extensión en ventanas de recuperación | PENDIENTE; sin recomendación cerrada |
 | P15 | Vencimiento de instancia a T+48h y causa vencimiento; la excepción no reabre la original | APROBADO (2026-10-24); instancia original cerrada, intento activo expira sin consumir, causa registrada |
 | P16 | E1/E3/E4 formativas o sumativas; recuperación formal o «No logrado» | Pendiente de Dirección Académica y validación normativa |
 | P17 | 2 intentos enviados por recuperación; una recuperación final | Propuesta recomendada; confirmar aprobación formal |
@@ -132,7 +144,9 @@ Son hallazgos reportados durante la conversación y requieren verificación cont
 | P20 | Lotes, retiro de versiones y revisión al cierre | Regla base aprobada; capacidad/frecuencia pendientes |
 | P20-v | Capacidad mínima y frecuencia de lotes | Pendiente |
 | P21 | Desbloqueo/progresión tras fallo definitivo de E2 | Pendiente de validación normativa y académica |
-| P22 | Criterio y responsables de «Repaso pendiente» | PENDIENTE_ACADÉMICO; depende de etiquetado por contenido |\n| P23 | Activación, frecuencia, duración y salida del repaso | PENDIENTE_ACADÉMICO; nunca antes de review_at |\n| P24 | Visibilidad de estados para familia/tutor y tratamiento visual | PENDIENTE académico/de marca; propuesta de rojo semántico distinto del rojo de marca, siempre con texto e icono |
+| P22 | Criterio y responsables de «Repaso pendiente» | PENDIENTE_ACADÉMICO; depende de etiquetado por contenido |
+| P23 | Activación, frecuencia, duración y salida del repaso | PENDIENTE_ACADÉMICO; nunca antes de review_at |
+| P24 | Visibilidad de estados para familia/tutor y tratamiento visual | PENDIENTE académico/de marca; propuesta de rojo semántico distinto del rojo de marca, siempre con texto e icono |
 | P25 | Sustitución de versión, intentos heredados y límites | Propuesta detallada; ratificación pendiente |
 | P16-v | Clasificación y rotulación académica de E1–E4 | Pendiente de Dirección Académica |
 | P18-v | Máximos, razones y evidencia de excepciones | Pendiente de validación académica/legal |
@@ -149,7 +163,8 @@ Se reportó que la regla actual en server/vortice.ts (aprox. líneas 144–160) 
 
 ## 11. Historial y gobierno
 
-- **2026-10-23 — Consolidación documental inicial:** se recopilan decisiones y propuestas presentes en el historial de trabajo. No constituye aprobación nueva de decisiones académicas pendientes.\n- **2026-10-24 — Ratificación de P15 y P18:** la usuaria aprobó el cierre de la instancia original al vencer, la expiración sin consumo del intento activo y el registro de la causa; además, confirmó que una excepción no reabre la evaluación original ni permite responder una versión cuya pauta se publicó, y que una alternativa autorizada requiere versión, ventana y revisión propias. No se autorizó implementación técnica.
+- **2026-10-23 — Consolidación documental inicial:** se recopilan decisiones y propuestas presentes en el historial de trabajo. No constituye aprobación nueva de decisiones académicas pendientes.
+- **2026-10-24 — Ratificación de P15 y P18:** la persona responsable del proyecto aprobó el cierre de la instancia original al vencer, la expiración sin consumo del intento activo y el registro de la causa; además, confirmó que una excepción no reabre la evaluación original ni permite responder una versión cuya pauta se publicó, y que una alternativa autorizada requiere versión, ventana y revisión propias. No se autorizó implementación técnica.
 - Toda modificación debe indicar ID de decisión, estado anterior, propuesta, fundamento, impacto, responsable de validación y fecha.
 - Estados permitidos: APROBADO, PROPUESTA, PENDIENTE_ACADÉMICO, PENDIENTE_LEGAL, PENDIENTE_TÉCNICO y NO_VERIFICADO.
 - No mezclar especificación con implementación. Un cambio de código requiere autorización explícita independiente.
@@ -200,5 +215,7 @@ El informe de Claude compartido el 2026-10-23 señala:
 - Oráculo de puntaje: reproducido únicamente con una función simulada, no contra el endpoint real.
 - Otros hallazgos: lectura de código con rutas/líneas reportadas, pero el commit de referencia no está publicado o no coincide con la rama documental.
 - No se probaron endpoints reales ni producción.
+
+**Base de código de los anexos.** Los anexos de esta rama analizan el código publicado en GitHub (`b8a6897`). Los cinco commits locales P0 (`7a81975`, `a75b348`, `f582ccc`, `7d005fb` y `8a67d49`), aún no publicados, ya modifican parte de lo descrito: `/submit` deja de devolver resultados por pregunta y clave, `GET /api/evaluations/:id` exige acceso, el HTML no se entrega al estudiante, `/complete` deja la entrega pendiente de validación y el repaso usa programación neutra. Siguen vigentes en esos commits: el puntaje exacto en `/submit`, la ausencia de un filtro por `review_at` en el repaso, la vía para omitir el bloqueo del copiloto y los puntajes ficticios del gráfico. Cada hallazgo de los anexos debe volver a verificarse contra el commit que finalmente se publique.
 
 Estas afirmaciones son informes atribuidos a Claude, no una auditoría independiente de ChatGPT. Los cinco commits locales P0 pendientes de publicar no deben subirse sin autorización explícita. Cualquier publicación futura debe ser aislada y revisada.
