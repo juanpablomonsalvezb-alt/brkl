@@ -5,6 +5,7 @@ import { reservations } from "../shared/schema";
 import { eq } from "drizzle-orm";
 import { isValidEmail, getEmailErrorMessage } from "../shared/emailValidation";
 import { enrollFromPaidReservation } from "./matricula";
+import { montoDelPlan } from "../shared/planPrices";
 
 export function registerFlowRoutes(app: Express) {
   /**
@@ -12,11 +13,12 @@ export function registerFlowRoutes(app: Express) {
    */
   app.post("/api/flow/create-payment", async (req, res) => {
     try {
-      const { reservationId, planPrice, studentEmail, studentName } = req.body;
+      // planPrice del cliente se ignora: el monto sale del plan guardado en la reserva.
+      const { reservationId, studentEmail, studentName } = req.body;
 
-      if (!reservationId || !planPrice || !studentEmail || !studentName) {
+      if (!reservationId || !studentEmail || !studentName) {
         return res.status(400).json({ 
-          message: "Faltan datos requeridos: reservationId, planPrice, studentEmail, studentName" 
+          message: "Faltan datos requeridos: reservationId, studentEmail, studentName" 
         });
       }
 
@@ -59,8 +61,11 @@ export function registerFlowRoutes(app: Express) {
         }
       }
 
-      // Convertir el precio chileno a número
-      const amount = flowService.parseChileanAmount(planPrice);
+      // Monto autoritativo del servidor, según el catálogo (shared/planPrices.ts).
+      const amount = montoDelPlan(reservation.selectedPlan);
+      if (!amount) {
+        return res.status(400).json({ message: "El plan de la reserva no es válido" });
+      }
 
       // Crear orden de comercio única (máximo 45 caracteres)
       // Usar solo los primeros 8 caracteres del ID + timestamp corto
@@ -166,7 +171,15 @@ export function registerFlowRoutes(app: Express) {
       let newStatus: "pending" | "confirmed" | "cancelled" = "pending";
       let paymentStatusText: "pending" | "completed" | "failed" | "cancelled" = "pending";
 
-      if (paymentStatus.status === 2) {
+      // El monto pagado debe ser el esperado para el plan; si no, no se confirma ni se matricula.
+      const esperado = montoDelPlan(reservation.selectedPlan);
+      const montoCorrecto = esperado != null && Number(paymentStatus.amount) === esperado;
+
+      if (paymentStatus.status === 2 && !montoCorrecto) {
+        console.error(`Flow: monto pagado distinto del esperado (reserva ${reservation.id})`);
+        newStatus = "pending";
+        paymentStatusText = "failed";
+      } else if (paymentStatus.status === 2) {
         // Pago exitoso
         newStatus = "confirmed";
         paymentStatusText = "completed";

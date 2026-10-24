@@ -54,6 +54,7 @@ export default function CoursePlayer() {
   const subjectLabel = parts.slice(1).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
 
   const levelNames: Record<string, string> = {
+    "1b": "1° Básico", "2b": "2° Básico", "3b": "3° Básico", "4b": "4° Básico", "5b": "5° Básico", "6b": "6° Básico",
     "7b": "7° Básico", "8b": "8° Básico",
     "1m": "1° Medio", "2m": "2° Medio", "3m": "3° Medio", "4m": "4° Medio",
     "nm1": "NM1", "nm2": "NM2"
@@ -90,6 +91,7 @@ export default function CoursePlayer() {
   const queryClient = useQueryClient();
 
   const levels: Record<string, string> = {
+    "1b": "1° Básico", "2b": "2° Básico", "3b": "3° Básico", "4b": "4° Básico", "5b": "5° Básico", "6b": "6° Básico",
     "7b": "7° Básico", "8b": "8° Básico", "1m": "1° Medio", "2m": "2° Medio",
     "3m": "3° Medio", "4m": "4° Medio", "nb1": "NB1 (1-4)", "nb2": "NB2 (5-6)",
     "nb3": "NB3 (7-8)", "nm1": "NM1 (1-2 Media)", "nm2": "NM2 (3-4 Media)", "nm2i": "NM2 Intensivo"

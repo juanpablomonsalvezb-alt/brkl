@@ -124,5 +124,17 @@ await db.insert(S.moduleEvaluations).values({ id: "e30", learningObjectiveId: "o
 await espera("GET", "/api/evaluations/e30", "est", 403, "evaluación no liberada");
 await espera("POST", "/api/evaluations/e30/submit", "est", 403, "envío a evaluación no liberada", { answers: [] });
 
+// Secreto de sesión: sin valor propio (o corto) no se crean sesiones; no hay valor por defecto.
+const { getSession } = await import("../server/replit_integrations/auth/replitAuth");
+const secretoPrevio = process.env.SESSION_SECRET;
+for (const v of [undefined, "", "corto"]) {
+  if (v === undefined) delete process.env.SESSION_SECRET; else process.env.SESSION_SECRET = v;
+  assert.throws(() => getSession(), /SESSION_SECRET/, `secreto ${JSON.stringify(v)} rechazado`);
+}
+process.env.SESSION_SECRET = "s".repeat(40);
+assert.equal(typeof getSession(), "function", "secreto válido crea el middleware");
+if (secretoPrevio === undefined) delete process.env.SESSION_SECRET; else process.env.SESSION_SECRET = secretoPrevio;
+
 server.close();
 console.log("acceso: ok");
+process.exit(0); // getSession deja un setInterval de limpieza activo

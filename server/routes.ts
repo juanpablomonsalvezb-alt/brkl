@@ -201,16 +201,10 @@ export async function registerRoutes(
     const levelCode = parts[0];
     const subjectSlug = parts.slice(1).join("-").toLowerCase();
 
-    // Map level codes to database level IDs
-    const levelMap: Record<string, string> = {
-      "7b": "7b", "8b": "8b",
-      "1m": "1m", "2m": "2m", "3m": "3m", "4m": "4m",
-      "nb1": "nb1", "nb2": "nb2", "nb3": "nb3",
-      "nm1": "nm1", "nm2": "nm2"
-    };
-
-    const levelId = levelMap[levelCode];
-    if (!levelId) return null;
+    // El código de nivel es el id de la tabla levels (1b–8b, 1m–4m, niveles de adultos). Sin mapa
+    // fijo: antes faltaban 1b–6b. Si el nivel no existe, no habrá asignatura que coincida.
+    const levelId = levelCode;
+    if (!/^[a-z0-9]{2,6}$/.test(levelId)) return null;
 
     // Get all level-subjects for this level and find matching subject
     try {
@@ -2321,6 +2315,10 @@ export async function registerRoutes(
   app.post("/api/reservations", uploadAttachment.single("attachment"), async (req, res) => {
     try {
       const body: Record<string, unknown> = { ...req.body };
+      // Los campos de pago solo los escribe el servidor (create-payment y el webhook de Flow).
+      // Si el cliente pudiera fijarlos, marcaría una reserva como pagada o tomaría el flowOrder
+      // de un pago ajeno y el webhook confirmaría (y matricularía) su reserva.
+      for (const campo of ["paymentStatus", "flowOrder", "flowToken", "paymentDate", "paymentAmount", "status"]) delete body[campo];
       if (req.file) {
         body.attachmentName = req.file.originalname;
         body.attachmentMimeType = req.file.mimetype;

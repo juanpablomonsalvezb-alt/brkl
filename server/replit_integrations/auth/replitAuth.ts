@@ -110,8 +110,11 @@ export function getSession() {
     sessionStore.cleanup();
   }, 60 * 60 * 1000); // Every hour
   
+  // Sin secreto propio no se firman sesiones: un valor por defecto público permitiría falsificarlas.
+  const secret = process.env.SESSION_SECRET?.trim();
+  if (!secret || secret.length < 32) throw new Error("SESSION_SECRET ausente o demasiado corto (mínimo 32 caracteres)");
   return session({
-    secret: process.env.SESSION_SECRET || "dev-secret-change-in-production",
+    secret,
     store: sessionStore,
     resave: false,
     saveUninitialized: false,

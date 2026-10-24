@@ -1,3 +1,4 @@
+import { plansByGroup } from "@shared/planPrices";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,37 +54,6 @@ const courseOptions = [
   { value: "paes", label: "Selección de asignaturas", type: "paes", planGroup: "paes" },
 ];
 
-// Planes disponibles según el grupo (precio incluye IVA 19% y Mentor GRATIS)
-const plansByGroup: Record<string, Array<{ value: string; label: string; price: string }>> = {
-  basica: [
-    { value: "basica_plan", label: "Plan Completo (Plataforma + IA + Mentor): $240.000", price: "$240.000" },
-  ],
-  media1: [
-    { value: "media1_plan", label: "Plan Completo (Plataforma + IA + Mentor): $280.000", price: "$280.000" },
-  ],
-  media2: [
-    { value: "media2_plan", label: "Plan Completo (Plataforma + IA + Mentor): $320.000", price: "$320.000" },
-  ],
-  adultos_basica: [
-    { value: "adultos_basica", label: "Plan Básica (1° a 8° Básico) - $360.000", price: "$360.000" },
-    { value: "adultos_basica_mentor", label: "Plan Básica (1° a 8° Básico) + Mentor - $588.480", price: "$588.480" },
-  ],
-  adultos_media1: [
-    { value: "adultos_media1", label: "Plan Media I (1° y 2° Medio) - $400.000", price: "$400.000" },
-    { value: "adultos_media1_mentor", label: "Plan Media I (1° y 2° Medio) + Mentor - $628.480", price: "$628.480" },
-  ],
-  adultos_media2: [
-    { value: "adultos_media2", label: "Plan Media II (3° y 4° Medio) - $440.000", price: "$440.000" },
-    { value: "adultos_media2_mentor", label: "Plan Media II (3° y 4° Medio) + Mentor - $668.480", price: "$668.480" },
-  ],
-  paes: [
-    { value: "paes_lenguaje", label: "Lenguaje - $200.000", price: "$200.000" },
-    { value: "paes_matematica", label: "Matemática (M1) - $200.000", price: "$200.000" },
-    { value: "paes_matematica2", label: "Matemática 2 (M2) - $240.000", price: "$240.000" },
-    { value: "paes_historia", label: "Historia y Ciencias Sociales - $160.000", price: "$160.000" },
-    { value: "paes_ciencias", label: "Ciencias - $160.000", price: "$160.000" },
-  ],
-};
 
 function calculateAge(birthDate: string): { years: number; months: number } {
   if (!birthDate) return { years: 0, months: 0 };
