@@ -492,7 +492,7 @@ export default function CoursePlayer() {
           evaluationId: data.id,
           title: data.title,
           questions: data.questions,
-          passingScore: data.passingScore || 60
+          passingScore: data.passingScore ?? 60
         });
       } else {
         toast({
@@ -1160,9 +1160,8 @@ export default function CoursePlayer() {
             passingScore={quizData.passingScore}
             onComplete={(result) => {
               toast({
-                title: result.passed ? "¡Aprobado!" : "No Aprobado",
-                description: `Obtuviste ${result.score}% (${result.totalCorrect}/${result.totalQuestions} correctas)`,
-                variant: result.passed ? "default" : "destructive"
+                title: result.resultado === "aprobado" ? "Aprobado" : "No aprobado",
+                variant: result.resultado === "aprobado" ? "default" : "destructive"
               });
               queryClient.invalidateQueries({ queryKey: ['/api/learning-objectives', currentObjectiveId, 'evaluations'] });
             }}

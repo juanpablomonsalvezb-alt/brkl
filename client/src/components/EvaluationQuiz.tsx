@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, Check, X, Loader2 } from "lucide-react";
@@ -13,20 +12,9 @@ interface Question {
   options: string[];
 }
 
-interface QuestionResult {
-  questionId: number;
-  correct: boolean;
-  correctAnswer: number;
-  explanation: string;
-}
-
+// El servidor solo informa el resultado; ni puntaje, ni correctas, ni pauta.
 interface EvaluationResult {
-  score: number;
-  totalCorrect: number;
-  totalQuestions: number;
-  passed: boolean;
-  passingScore: number;
-  results: QuestionResult[];
+  resultado: "aprobado" | "no_aprobado";
 }
 
 interface EvaluationQuizProps {
@@ -110,11 +98,8 @@ export function EvaluationQuiz({
     submitMutation.mutate(answers);
   };
 
-  const getQuestionResult = (questionId: number) => {
-    return results?.results?.find(r => r.questionId === questionId);
-  };
-
   if (showResults && results) {
+    const aprobado = results.resultado === "aprobado";
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
         <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white">
@@ -122,85 +107,25 @@ export function EvaluationQuiz({
             <div className="text-center">
               <div className={cn(
                 "w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4",
-                results.passed ? "bg-green-100" : "bg-red-100"
+                aprobado ? "bg-green-100" : "bg-red-100"
               )}>
-                {results.passed ? (
-                  <Check className="w-12 h-12 text-green-600" />
+                {aprobado ? (
+                  <Check className="w-12 h-12 text-green-600" aria-hidden="true" />
                 ) : (
-                  <X className="w-12 h-12 text-red-600" />
+                  <X className="w-12 h-12 text-red-600" aria-hidden="true" />
                 )}
               </div>
-              
-              <h2 className="text-2xl font-bold text-[#0A192F] mb-2">
-                {results.passed ? "¡Aprobado!" : "No Aprobado"}
+
+              <h2 className="text-2xl font-bold text-[#0A192F] mb-2" data-testid="evaluation-result">
+                {aprobado ? "Aprobado" : "No aprobado"}
               </h2>
-              
-              <p className="text-lg text-slate-600 mb-4">
-                Obtuviste <span className="font-bold">{results.score}%</span>
-              </p>
-              
-              <div className="flex justify-center gap-6 text-sm text-slate-500">
-                <div>
-                  <span className="text-green-600 font-bold text-xl">{results.totalCorrect}</span>
-                  <span className="block">Correctas</span>
-                </div>
-                <div>
-                  <span className="text-red-600 font-bold text-xl">{results.totalQuestions - results.totalCorrect}</span>
-                  <span className="block">Incorrectas</span>
-                </div>
-                <div>
-                  <span className="text-slate-600 font-bold text-xl">{results.passingScore}%</span>
-                  <span className="block">Mínimo</span>
-                </div>
-              </div>
             </div>
 
-            {results.results.length === 0 ? (
             <div className="border-t pt-6">
               <p className="text-sm text-slate-600">
-                Las respuestas correctas se mostrarán cuando hayas usado todos tus intentos.
+                Las respuestas correctas y sus explicaciones estarán disponibles cuando termine el período de revisión.
               </p>
             </div>
-            ) : (
-            <div className="border-t pt-6">
-              <h3 className="font-bold text-[#0A192F] mb-4">Revisión de Respuestas</h3>
-              <div className="space-y-4">
-                {questions.map((q, idx) => {
-                  const result = getQuestionResult(q.id);
-                  const userAnswer = answers.find(a => a.questionId === q.id)?.answer;
-                  
-                  return (
-                    <div key={q.id} className={cn(
-                      "p-4 rounded-lg border",
-                      result?.correct ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"
-                    )}>
-                      <div className="flex items-start gap-3">
-                        <Badge className={cn(
-                          "shrink-0",
-                          result?.correct ? "bg-green-500" : "bg-red-500"
-                        )}>
-                          {idx + 1}
-                        </Badge>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-[#0A192F] mb-2">{q.question}</p>
-                          {result && !result.correct && (
-                            <p className="text-xs text-slate-600">
-                              <span className="text-red-600">Tu respuesta:</span> {q.options[userAnswer ?? 0]}
-                              <br />
-                              <span className="text-green-600">Correcta:</span> {q.options[result.correctAnswer]}
-                            </p>
-                          )}
-                          {result?.explanation && (
-                            <p className="text-xs text-slate-500 mt-2 italic">{result.explanation}</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-            )}
 
             <Button
               onClick={onClose}

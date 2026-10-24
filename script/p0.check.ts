@@ -113,8 +113,10 @@ assert.ok(!vista.text.includes("correctAnswer") && !vista.text.includes("CLAVE_S
 const envio = await call("POST", "/api/evaluations/e1/submit", "alumno", { answers: [{ questionId: 1, answer: 0 }] });
 assert.equal(envio.status, 200);
 assert.ok(!envio.text.includes("correctAnswer") && !envio.text.includes("CLAVE_SECRETA"), "envío sin clave");
-assert.equal(envio.json.answersRevealed, false);
-assert.deepEqual(envio.json.results, []);
+// Respuesta inmediata: solo el resultado (lista blanca), sin puntaje, correctas ni pauta.
+assert.deepEqual(envio.json, { resultado: "no_aprobado" });
+const [fila1] = await db.select().from(S.evaluationProgress).where(sql`evaluation_id = 'e1' and user_id = 'alumno'`);
+assert.equal(fila1.score, 0, "el puntaje se guarda solo en el servidor");
 // HTML convertible de forma segura: nunca se entrega el HTML; se ofrece como cuestionario saneado.
 const html3 = await call("GET", "/api/evaluations/m1/3/html", "alumno");
 assert.equal(html3.status, 200);
@@ -125,7 +127,7 @@ assert.deepEqual(vista3.json.questions, [{ id: 1, question: "¿Capital de Chile?
 assert.ok(!vista3.text.includes("correctAnswer") && !vista3.text.includes("respuesta"));
 const envio3 = await call("POST", "/api/evaluations/e3/submit", "alumno", { answers: [{ questionId: 1, answer: 1 }] });
 assert.equal(envio3.status, 200);
-assert.equal(envio3.json.score, 100, "se corrige en el servidor contra la clave convertida");
+assert.deepEqual(envio3.json, { resultado: "aprobado" }, "se corrige en el servidor contra la clave convertida");
 assert.ok(!envio3.text.includes("correctAnswer") && !envio3.text.includes("explanation"));
 
 // 5b. Índice numérico ambiguo y conversión parcial (3 de texto + 1 en script): bloqueados, nada se sirve.

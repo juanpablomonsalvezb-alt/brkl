@@ -2019,23 +2019,13 @@ export async function registerRoutes(
         return res.status(404).json({ message: "Evaluation not found" });
       }
       let correctCount = 0;
-      const results: { questionId: number; correct: boolean; correctAnswer: number; explanation: string }[] = [];
-
       for (const question of questions) {
         const userAnswer = answers.find((a: { questionId: number }) => a.questionId === question.id);
-        const isCorrect = userAnswer && userAnswer.answer === question.correctAnswer;
-        if (isCorrect) correctCount++;
-
-        results.push({
-          questionId: question.id,
-          correct: isCorrect,
-          correctAnswer: question.correctAnswer,
-          explanation: question.explanation
-        });
+        if (userAnswer && userAnswer.answer === question.correctAnswer) correctCount++;
       }
 
       const score = Math.round((correctCount / questions.length) * 100);
-      const passed = score >= (evaluation.passingScore || 60);
+      const passed = score >= (evaluation.passingScore ?? 60);
 
       await storage.saveEvaluationAttempt(
         userId,
@@ -2049,19 +2039,10 @@ export async function registerRoutes(
       await recordEvent(db, { ...evento, tipo: "evaluacion_enviada" });
       if (passed) await recordEvent(db, { ...evento, tipo: "evaluacion_aprobada" });
 
-      // La clave (respuesta correcta y explicación por pregunta) solo se revela al agotar los
-      // intentos permitidos. Hoy no existe un máximo de intentos configurable (requiere cambio de
-      // esquema: etapa P0-E), así que los intentos nunca se agotan y la clave no se entrega.
-      const attemptsExhausted = false;
-      res.json({
-        score,
-        totalCorrect: correctCount,
-        totalQuestions: questions.length,
-        passed,
-        passingScore: evaluation.passingScore || 60,
-        answersRevealed: attemptsExhausted,
-        results: attemptsExhausted ? results : [],
-      });
+      // Resultado inmediato: solo aprobado / no aprobado. El puntaje, el número de correctas y la
+      // pauta quedan en el servidor: con intentos repetidos, el puntaje exacto permite deducir la
+      // clave. La revisión diferida (review_at) depende del núcleo P0-E, pendiente.
+      res.json({ resultado: passed ? "aprobado" : "no_aprobado" });
     } catch (error) {
       console.error("Error submitting evaluation:", error);
       res.status(500).json({ message: "Failed to submit evaluation" });
