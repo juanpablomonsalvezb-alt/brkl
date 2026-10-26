@@ -103,6 +103,8 @@ Cada punto separa lo que **requiere aprobación académica** (A) de lo que es **
 
 ## P21 — Progresión al agotar E2 sin aprobar
 
+> **SUSTITUIDA (2026-10-26).** La dirección comunicó otra regla: continuar al módulo siguiente con E2 «Reprobado», informado de los contenidos pendientes y con repaso. Ver [`PROGRESO_Y_PROGRESION.md`](PROGRESO_Y_PROGRESION.md). El texto siguiente se conserva como historial de la propuesta anterior.
+
 **Problema.** Si un estudiante agota los intentos de E2 (y su recuperación única) sin aprobar, hoy el módulo siguiente queda bloqueado sin salida. El criterio de partida exige que esto no repruebe automáticamente el módulo y que tampoco permita saltarse requisitos.
 
 **Alternativas.**

@@ -131,50 +131,18 @@ Cómo leer cada punto:
 
 ## P21 — Avance tras agotar E2 y su recuperación
 
-**Situación.** Si un estudiante agota E2 y también su recuperación única sin aprobar, hoy el módulo siguiente queda bloqueado sin salida.
+**Estado: COMUNICADA por la dirección (2026-10-26), pendiente de ratificación.** Sustituye la propuesta anterior de este documento: bloquear el módulo siguiente hasta una autorización extraordinaria, que queda **SUSTITUIDA**.
 
-**Qué ocurriría (recomendación):**
-1. Agota los intentos ordinarios de E2 → se abre un caso de tutoría y la recuperación única (P6 y P12, aprobadas).
-2. Aprueba la recuperación → avanza al módulo siguiente (aprobado).
-3. No aprueba la recuperación →
-   - el resultado de E2 queda «Reprobado» (aprobado);
-   - **el módulo siguiente sigue bloqueado**: no se salta el requisito **[A]**;
-   - **el sistema no reprueba automáticamente el módulo ni el curso** **[T]**;
-   - se abre una **revisión académica** del caso **[T]**;
-   - solo **coordinación o dirección**, con una persona distinta de quien solicita, puede autorizar un **avance con acompañamiento**, con motivo y plan de repaso registrados **[A]**;
-   - la promoción del año se decide fuera del sistema, con este registro como evidencia **[A]**.
+**Resumen de la regla comunicada.**
+1. E2 tiene 3 intentos ordinarios y luego una recuperación final única de 2 intentos.
+2. Si el estudiante no alcanza el 70 % en ninguno, E2 queda «Reprobado».
+3. Aun así **puede continuar** al módulo siguiente, después de ser informado de los contenidos que no logró y de recibir enlaces a sus recursos de repaso.
+4. Continuar no cambia el resultado de E2.
+5. Se registran el resultado, los contenidos pendientes y la decisión de continuar.
 
-**Alternativas académicas.**
+**Contradicción a ratificar.** La especificación maestra tiene **aprobada** la regla «agotar E2 sin aprobar no desbloquea automáticamente el módulo siguiente». La regla comunicada la reemplaza; requiere confirmación expresa (decisión **D2**).
 
-| Alternativa | Consecuencia |
-|---|---|
-| Recomendada (bloqueo + revisión + avance excepcional autorizado y registrado) | Nadie avanza sin una decisión humana; nadie queda reprobado del módulo por una regla automática. |
-| Avance automático con acompañamiento | Más simple, pero permite saltarse el requisito, lo que contradice tu criterio. |
-| Bloqueo definitivo, sin vía de salida | Equivale a reprobar de hecho y deja al estudiante sin camino dentro de la plataforma. |
-
-**Autorización necesaria para avanzar excepcionalmente (propuesta).**
-- Solicitud del tutor asignado, con motivo.
-- Aprobación de coordinación o dirección, por una persona distinta de quien solicita.
-- Plan de acompañamiento: contenidos que repasar y fecha de revisión.
-- Todo queda registrado (quién, cuándo, por qué) y no se borra.
-
-**Tu decisión.**
-1. ¿Existe la vía de avance excepcional con acompañamiento? (sí / no)
-2. ¿Quién puede autorizarla? (coordinación, dirección u otro rol)
-3. ¿Qué debe contener como mínimo el plan de acompañamiento?
-4. ¿Encaja con la normativa aplicable a Barkley? (requiere confirmar su régimen legal y el reglamento interno)
-
-**Cambios técnicos.**
-- Una tabla de autorizaciones de avance (estudiante, módulo, solicitante, autorizador, motivo, plan, fecha).
-- La regla de avance aceptaría E2 aprobada o una autorización registrada.
-- Apertura automática del caso de revisión.
-
-Todo esto sería con migración, que requiere tu autorización aparte.
-
-**Riesgos.**
-- **Al aprobar:** depende de que coordinación resuelva las revisiones a tiempo; podría usarse como atajo si no se controla quién autoriza.
-- **Al rechazar (bloqueo sin salida):** estudiantes estancados indefinidamente y posible conflicto normativo.
-- **Al rechazar (avance automático):** se pierde el sentido de E2 como requisito.
+Detalle completo, implicancias, identificación de contenidos no logrados y preguntas abiertas: [`PROGRESO_Y_PROGRESION.md`](PROGRESO_Y_PROGRESION.md).
 
 ---
 
@@ -185,6 +153,6 @@ Todo esto sería con migración, que requiere tu autorización aparte.
 | P7 | Historial intacto; conteo nuevo; aprobación antigua respetada | Tres respuestas sí/no |
 | P8 | Plazo + validación humana; rechazo sin gastar intento; 5 días hábiles para validar | Efecto de aprobar y rechazar; plazo de validación; fin de los formularios |
 | P16 | E2 «Evaluación de cierre»; E1, E3 y E4 «Práctica»; función como dato | Funciones, nota de E2, nombres visibles |
-| P21 | Bloqueo + revisión + avance excepcional autorizado y registrado | Existencia de la vía, quién autoriza, contenido del plan, normativa |
+| P21 | COMUNICADA: continuar tras E2 «Reprobado», informado y con repaso; ver `PROGRESO_Y_PROGRESION.md` | D2 (reemplaza regla aprobada) y preguntas Q5–Q8 |
 
-Todo sigue en estado **PROPUESTA**. No se implementará nada sin tu aprobación expresa de cada decisión, la revisión independiente de ChatGPT y una autorización aparte para la migración.
+P7, P8 y P16 siguen en estado **PROPUESTA**; P21 está **COMUNICADA** y pendiente de ratificación. No se implementará nada sin tu aprobación expresa de cada decisión, la revisión independiente de ChatGPT y una autorización aparte para la migración.
