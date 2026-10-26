@@ -55,6 +55,10 @@ async function enviar(u: string, e: string, attemptId: string, sid: string, pass
               select user_id, evaluation_id, case when passed = 1 then 'aprobacion' else 'agotamiento' end, id
               from t15_attempts where submission_id = ? and (passed = 1 or attempt_no >= ?)
               on conflict do nothing`, args: [sid, max] },
+      // Con la evaluación cerrada no puede quedar ningún intento abierto.
+      { sql: `update t15_attempts set status = 'vencido'
+              where user_id = ? and evaluation_id = ? and status = 'en_curso'
+                and exists (select 1 from t15_closures where user_id = ? and evaluation_id = ?)`, args: [u, e, u, e] },
     ], "write");
     return "ok";
   } catch (e: any) { return /UNIQUE|constraint/i.test(String(e?.message)) ? "conflicto" : `error: ${e?.message}`; }
@@ -98,15 +102,35 @@ for (let i = 0; i < REPS; i++) {
 }
 informe.push(`T2b 20 envíos simultáneos del último intento: ${REPS}/${REPS} con 1 envío, 1 progreso y 1 cierre`);
 
-// T2c: aprobación + intento nuevo simultáneo → ningún intento enviado después del cierre.
+// T2c: aprobación con intentos concurrentes. Tras el cierre por aprobación:
+//  - existe exactamente un cierre, con causa "aprobacion", ligado al intento que aprobó;
+//  - hay un solo intento enviado (el que aprobó) y un solo registro de progreso;
+//  - no queda ningún intento abierto ("en_curso");
+//  - un inicio y un envío posteriores al cierre no registran nada.
+let t2cCarreras = 0;
 for (let i = 0; i < REPS; i++) {
   await reset();
   await iniciar("u", "e", "a1");
-  await Promise.all([enviar("u", "e", "a1", "sa", true, 3), (async () => { await iniciar("u", "e", "a2"); return enviar("u", "e", "a2", "sb", false, 3); })()]);
-  assert.equal(await count("select count(*) from t15_closures"), 1, "T2c: un cierre");
-  assert.equal(await count("select count(*) from t15_attempts where status = 'enviado'"), 1, "T2c: solo el que aprobó");
+  // En paralelo: el envío que aprueba y 10 intentos de abrir y enviar otro intento.
+  await Promise.all([
+    enviar("u", "e", "a1", "sa", true, 3),
+    ...Array.from({ length: 10 }, (_, k) => (async () => { await iniciar("u", "e", `b${k}`); return enviar("u", "e", `b${k}`, `sb${k}`, false, 3); })()),
+  ]);
+  const cierres = (await client.execute("select cause, attempt_id from t15_closures")).rows;
+  assert.equal(cierres.length, 1, "T2c: un cierre");
+  assert.deepEqual([cierres[0].cause, cierres[0].attempt_id], ["aprobacion", "a1"], "T2c: cierre por aprobación del intento a1");
+  assert.equal(await count("select count(*) from t15_attempts where status = 'enviado'"), 1, "T2c: solo el intento que aprobó quedó enviado");
+  assert.equal(await count("select count(*) from t15_progress"), 1, "T2c: un solo registro de progreso");
+  assert.equal(await count("select count(*) from t15_attempts where status = 'en_curso'"), 0, "T2c: ningún intento abierto tras el cierre");
+  t2cCarreras += await count("select count(*) from t15_attempts where status = 'vencido'");
+  // Después del cierre: ni iniciar ni enviar registran nada.
+  await iniciar("u", "e", "post");
+  assert.equal(await count("select count(*) from t15_attempts where id = 'post'"), 0, "T2c: no se puede iniciar tras el cierre");
+  assert.equal(await enviar("u", "e", "a1", "sa-repetido", false, 3), "ok");
+  assert.equal(await count("select count(*) from t15_attempts where status = 'enviado' and user_id = 'u'"), 1, "T2c: ningún envío nuevo tras el cierre");
+  assert.equal(await count("select count(*) from t15_progress"), 1, "T2c: sin progreso nuevo tras el cierre");
 }
-informe.push(`T2c aprobación + envío simultáneo: ${REPS}/${REPS} sin intentos después del cierre`);
+informe.push(`T2c aprobación + 10 intentos concurrentes: ${REPS}/${REPS} con 1 cierre (aprobación, intento a1), 1 enviado, 1 progreso, 0 abiertos, sin inicio ni envío posteriores (${t2cCarreras} intentos abiertos en la carrera quedaron "vencido")`);
 
 // T2d: idempotencia — mismo submission_id 10 veces → una fila.
 for (let i = 0; i < REPS; i++) {
