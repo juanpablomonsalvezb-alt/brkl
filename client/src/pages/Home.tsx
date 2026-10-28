@@ -901,7 +901,7 @@ export default function Home() {
             <div style={{ maxWidth: 780 }}>
               <h1 data-hero="titulo" style={{ fontSize: "clamp(36px,5vw,69px)", fontWeight: 600, margin: 0, lineHeight: 1.05 }}>El colegio online donde nadie avanza sin entender</h1>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 20 }}>
-                <a href="/asi-trabajamos"
+                <a href="/tour-plataforma"
                   style={{ display: "inline-flex", alignItems: "center", gap: 10, fontSize: 16, fontWeight: 600, color: NAVY, background: GOLD, border: "none", borderRadius: 999, padding: "13px 26px", cursor: "pointer", fontFamily: FONT, textDecoration: "none" }}>
                   <span style={{ display: "inline-flex", width: 22, height: 22, borderRadius: "50%", background: NAVY, color: GOLD, alignItems: "center", justifyContent: "center", fontSize: 11 }}>▶</span>
                   Ver cómo funciona

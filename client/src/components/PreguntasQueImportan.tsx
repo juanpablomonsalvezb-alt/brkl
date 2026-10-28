@@ -300,7 +300,7 @@ export default function PreguntasQueImportan() {
             </p>
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-            <a href="/tour-plataforma" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: LIMA, color: NOCHE, textDecoration: "none", fontWeight: 700, fontSize: 15, borderRadius: 999, padding: "15px 26px" }}>
+            <a href="/asi-trabajamos" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: LIMA, color: NOCHE, textDecoration: "none", fontWeight: 700, fontSize: 15, borderRadius: 999, padding: "15px 26px" }}>
               Conoce cómo funciona Barkley <ArrowUpRight size={16} />
             </a>
             <a href="/#metodo" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: MARFIL, textDecoration: "none", fontWeight: 600, fontSize: 15, borderRadius: 999, padding: "14px 24px", border: `1.5px solid rgba(248,245,237,0.35)` }}>
