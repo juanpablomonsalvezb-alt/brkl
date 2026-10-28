@@ -919,7 +919,7 @@ export default function Home() {
           </motion.div>
         </div>
         <div data-hero="panels" style={{ width: 314, display: "flex", flexDirection: "column", gap: 0 }}>
-          <motion.a href="#plataforma" data-hero="panel" whileHover={{ opacity: 0.9 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: BLOCK_BLUE, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+          <motion.a href="/asi-trabajamos" data-hero="panel" whileHover={{ opacity: 0.9 }} transition={{ duration: 0.25 }} style={{ flex: 1, background: BLOCK_BLUE, position: "relative", textDecoration: "none", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
             {/* Doble triángulo SÓLIDO dorado gigante, cortado por el borde derecho — patrón real (▶▶, no chevrón) */}
             <motion.div data-hero="deco" whileHover={{ x: 6 }} transition={{ duration: 0.3 }} style={{ position: "absolute", top: "6%", right: -40 }}>
               <svg width="230" height="190" viewBox="0 0 230 190">
