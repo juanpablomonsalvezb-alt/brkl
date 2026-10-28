@@ -245,6 +245,27 @@ export async function registerRoutes(
     }
   });
 
+  // Consultas: preguntas de familias que NO son una inscripción. Separadas de
+  // /api/waitlist para que el equipo sepa a simple vista quién postula y quién solo pregunta.
+  const consultaSchema = z.object({
+    name: z.string().trim().min(1).max(120),
+    email: z.string().trim().email().max(200),
+    level: z.string().trim().max(60).optional(),
+    message: z.string().trim().min(5).max(2000),
+  });
+  app.post("/api/consultas", async (req, res) => {
+    const parsed = consultaSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ message: "Revisa los datos de tu consulta" });
+    const enviada = await notifyByEmail("Nueva CONSULTA en Barkley (no es una inscripción)", {
+      Nombre: parsed.data.name,
+      Correo: parsed.data.email,
+      Curso: parsed.data.level,
+      Consulta: parsed.data.message,
+    });
+    if (!enviada) return res.status(502).json({ message: "No pudimos enviar tu consulta. Escríbenos a admisiones@barkleyinstituto.cl" });
+    res.status(201).json({ message: "Consulta recibida" });
+  });
+
   // Together — presencia anónima para la sala de estudio en silencio (body
   // doubling). Heartbeat cada ~15s desde el cliente; se considera "conectado"
   // a quien haya latido en los últimos 30s. Sin login: clientId vive solo en

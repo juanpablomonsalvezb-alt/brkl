@@ -41,6 +41,7 @@ const NAV_LINKS = [
   { label: "Preguntas", href: "/preguntas-frecuentes" },
   { label: "Por qué somos distintos", href: "/sin-limites" },
   { label: "Así trabajamos", href: "/asi-trabajamos" },
+  { label: "Consultas", href: "/#consultas" },
 ];
 
 // Barra superior: accesos a portales al centro y redes oficiales a la

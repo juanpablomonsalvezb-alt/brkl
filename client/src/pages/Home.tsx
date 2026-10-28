@@ -285,6 +285,61 @@ function AdmisionSection({ anchorId }: { anchorId?: string }) {
   );
 }
 
+// Consultas: para quien solo quiere preguntar (no postular). Llega al equipo con
+// otro asunto de correo, así se distingue de una inscripción.
+function ConsultaSection() {
+  const [f, setF] = useState({ name: "", email: "", level: "", message: "" });
+  const [st, setSt] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const [err, setErr] = useState("");
+  const inp: React.CSSProperties = { border: "1px solid #d5dbe3", borderRadius: 8, background: "#fff", fontSize: 16, padding: "13px 15px", outline: "none", width: "100%", fontFamily: FONT, color: TEXT, boxSizing: "border-box" };
+  const valido = f.name.trim() && /\S+@\S+\.\S+/.test(f.email) && f.message.trim().length >= 5;
+  const enviar = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!valido || st === "loading") return;
+    setSt("loading"); setErr("");
+    try {
+      const res = await fetch("/api/consultas", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...f, level: f.level || undefined }) });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) { setErr(d.message || "No se pudo enviar. Intenta de nuevo."); setSt("error"); return; }
+      setSt("ok");
+    } catch { setErr("Sin conexión. Intenta de nuevo."); setSt("error"); }
+  };
+  return (
+    <section id="consultas" style={{ background: "#eaf2ff", padding: "72px 24px" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 44, alignItems: "flex-start" }}>
+        <div style={{ flex: "1 1 340px", minWidth: 280 }}>
+          <span style={{ display: "inline-block", background: NAVY, color: "#fff", fontSize: 13, fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase", padding: "7px 18px", borderRadius: 999, marginBottom: 20 }}>Consultas</span>
+          <h2 style={{ fontSize: "clamp(32px,5vw,52px)", fontWeight: 800, color: NAVY, margin: "0 0 14px", lineHeight: 1.08 }}>¿Tienes una pregunta?</h2>
+          <p style={{ fontSize: 18, lineHeight: 1.6, color: TEXT, margin: 0 }}>Escríbenos sin compromiso. Esto es solo una consulta: no te inscribe en Barkley.</p>
+        </div>
+        <div style={{ flex: "1 1 460px", minWidth: 300, maxWidth: 560, background: "#fff", borderRadius: 24, padding: "36px 32px", boxShadow: "0 24px 60px rgba(0,51,102,0.15)" }}>
+          {st === "ok" ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "24px 0" }}>
+              <Check style={{ width: 32, height: 32, color: NAVY }} />
+              <p style={{ fontSize: 24, fontWeight: 700, margin: 0, color: NAVY }}>Consulta recibida.</p>
+              <p style={{ fontSize: 16, opacity: 0.7, margin: 0 }}>Te responderemos al correo que indicaste.</p>
+            </div>
+          ) : (
+            <form onSubmit={enviar} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="Nombre" aria-label="Nombre" maxLength={120} style={inp} data-testid="consulta-name" />
+              <input type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} placeholder="Correo electrónico" aria-label="Correo electrónico" maxLength={200} style={inp} data-testid="consulta-email" />
+              <select value={f.level} onChange={(e) => setF({ ...f, level: e.target.value })} aria-label="Curso" style={{ ...inp, cursor: "pointer" }} data-testid="consulta-level">
+                <option value="">Curso (opcional)</option>
+                {["1° Básico","2° Básico","3° Básico","4° Básico","5° Básico","6° Básico","7° Básico","8° Básico","1° Medio","2° Medio","3° Medio","4° Medio","Validación adulto"].map((l) => <option key={l} value={l}>{l}</option>)}
+              </select>
+              <textarea value={f.message} onChange={(e) => setF({ ...f, message: e.target.value })} placeholder="Tu consulta" aria-label="Tu consulta" rows={4} maxLength={2000} style={{ ...inp, resize: "vertical" }} data-testid="consulta-message" />
+              {st === "error" && <p role="alert" style={{ color: RED, fontSize: 14, margin: 0 }}>{err}</p>}
+              <button type="submit" disabled={!valido || st === "loading"} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, fontSize: 16, fontWeight: 600, background: NAVY, color: "#fff", border: "none", borderRadius: 999, padding: "14px 28px", cursor: valido ? "pointer" : "not-allowed", opacity: valido ? 1 : 0.5, fontFamily: FONT }}>
+                {st === "loading" ? <Loader2 style={{ width: 18, height: 18 }} className="animate-spin" /> : "Enviar consulta"}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /**
  * Medición del embudo. Anónima: el id vive en sessionStorage (se borra al cerrar
  * la pestaña), no hay cookies ni datos personales, así que no requiere banner de
@@ -317,8 +372,8 @@ function medir(step: "llega_pagina" | "ve_formulario" | "empieza_formulario" | "
 // un formulario largo tradicional. El apoderado/estudiante avanza con Enter o
 // clic, ve su progreso, y puede volver atrás. Los campos opcionales (perfil de
 // aprendizaje, consultas) se agrupan al final para no interrumpir el impulso inicial.
-type StepId = "name" | "email" | "level" | "learningProfile" | "confirmYear" | "notes";
-const STEPS: StepId[] = ["name", "email", "level", "learningProfile", "confirmYear", "notes"];
+type StepId = "name" | "email" | "level" | "learningProfile" | "confirmYear";
+const STEPS: StepId[] = ["name", "email", "level", "learningProfile", "confirmYear"];
 
 function InscripcionForm() {
   const [step, setStep] = useState(0);
@@ -327,7 +382,6 @@ function InscripcionForm() {
   const [level, setLevel] = useState("");
   const [learningProfile, setLearningProfile] = useState("");
   const [confirmedYear, setConfirmedYear] = useState(false);
-  const [notes, setNotes] = useState("");
   const [st, setSt] = useState<"idle"|"loading"|"success"|"error"|"duplicate">("idle");
   const [err, setErr] = useState("");
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -360,7 +414,7 @@ function InscripcionForm() {
   const submit = async () => {
     setSt("loading"); setErr("");
     try {
-      const res = await fetch("/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, name: name||undefined, levelInterest: level||undefined, learningProfileInterest: learningProfile||undefined, notes: notes||undefined, cohortYear: "2027" }) });
+      const res = await fetch("/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, name: name||undefined, levelInterest: level||undefined, learningProfileInterest: learningProfile||undefined, cohortYear: "2027" }) });
       const d = await res.json();
       if (!res.ok) { setErr(d.message||"Error"); setSt("error"); return; }
       setSt(d.alreadySubscribed ? "duplicate" : "success");
@@ -389,7 +443,7 @@ function InscripcionForm() {
   };
   const goBack = () => step > 0 && setStep((s) => s - 1);
   const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && stepId !== "notes") { e.preventDefault(); goNext(); }
+    if (e.key === "Enter") { e.preventDefault(); goNext(); }
   };
 
   const QUESTION: Record<StepId, string> = {
@@ -398,7 +452,6 @@ function InscripcionForm() {
     level: "¿Qué nivel te interesa?",
     learningProfile: "¿Tiene TDAH o dislexia?",
     confirmYear: "Antes de continuar",
-    notes: "¿Alguna pregunta para nuestro equipo?",
   };
 
   return (
@@ -429,9 +482,9 @@ function InscripcionForm() {
         >
           <label style={{ fontSize: 30, fontWeight: 800, color: NAVY, lineHeight: 1.2, letterSpacing: "-0.01em" }}>
             {QUESTION[stepId]}
-            {(stepId === "learningProfile" || stepId === "notes") && (
+            {stepId === "learningProfile" && (
               <span style={{ display: "block", fontSize: 15, fontWeight: 400, opacity: 0.6, marginTop: 6 }}>
-                {stepId === "learningProfile" ? "Opcional — apoyos para tu hijo" : "Opcional"}
+                Opcional — apoyos para tu hijo
               </span>
             )}
           </label>
@@ -476,10 +529,6 @@ function InscripcionForm() {
                 <span>Entiendo y confirmo que esta postulación es para <strong>Admisión 2027</strong>, no para el año en curso.</span>
               </label>
             </div>
-          )}
-          {stepId === "notes" && (
-            <textarea autoFocus value={notes} onChange={e=>setNotes(e.target.value)} placeholder="¿Tienes alguna pregunta para nuestro equipo?" rows={3}
-              style={{ ...inp, resize: "vertical", fontFamily: FONT }} data-testid="input-notes" />
           )}
         </motion.div>
       </AnimatePresence>
@@ -1500,6 +1549,9 @@ export default function Home() {
 
       {/* === INSCRIPCIÓN (3 de 3) === */}
       <AdmisionSection anchorId="inscripcion" />
+
+      {/* === CONSULTAS — separado de la inscripción === */}
+      <ConsultaSection />
 
       <ReaccionEnLinea />
 

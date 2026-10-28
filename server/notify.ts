@@ -1,22 +1,24 @@
 // Aviso por correo cuando alguien completa un formulario del sitio (inscripción o reserva).
 // No bloquea la respuesta al usuario: se dispara y se ignoran errores de envío.
-export async function notifyByEmail(subject: string, rows: Record<string, string | undefined>) {
+const esc = (v: string) => v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+export async function notifyByEmail(subject: string, rows: Record<string, string | undefined>): Promise<boolean> {
   // .trim(): un salto de línea invisible al final de la variable de entorno
   // (típico de `echo` al cargarlas en Vercel) rompe el header Authorization y
   // la dirección del destinatario — Resend rechaza el envío sin explicación.
   const apiKey = process.env.RESEND_API_KEY?.trim();
   const to = process.env.NOTIFY_EMAIL?.trim();
-  if (!apiKey || !to) return;
+  if (!apiKey || !to) return false;
 
   const html = `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #003366;">${subject}</h2>
+      <h2 style="color: #003366;">${esc(subject)}</h2>
       <table style="width: 100%; border-collapse: collapse;">
         ${Object.entries(rows)
           .filter(([, v]) => v)
           .map(
             ([k, v]) =>
-              `<tr><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${k}</td><td style="padding:8px;border-bottom:1px solid #eee;">${v}</td></tr>`,
+              `<tr><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${esc(k)}</td><td style="padding:8px;border-bottom:1px solid #eee;white-space:pre-wrap;">${esc(String(v))}</td></tr>`,
           )
           .join("")}
       </table>
@@ -37,8 +39,10 @@ export async function notifyByEmail(subject: string, rows: Record<string, string
     if (!res.ok) {
       console.error("Resend rechazó el envío:", res.status, await res.text());
     }
+    return res.ok;
   } catch (err) {
     console.error("No se pudo enviar la notificación por correo:", err);
+    return false;
   }
 }
 
