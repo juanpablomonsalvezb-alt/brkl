@@ -1426,6 +1426,21 @@ export default function Home() {
         </section>
       )}
 
+      {/* === ASÍ TRABAJAMOS — acceso a la página con las infografías de metodología === */}
+      <section style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px 56px" }}>
+        <Reveal>
+          <a href="/asi-trabajamos" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 20, background: "#eaf2ff", borderRadius: 20, padding: "30px 36px", textDecoration: "none" }}>
+            <div>
+              <p style={{ color: SLATE, fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Un día, un mes, un semestre, un año</p>
+              <p style={{ color: NAVY, fontSize: "clamp(19px,2.6vw,26px)", fontWeight: 700, margin: 0 }}>Así trabajamos en Barkley</p>
+            </div>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 10, background: NAVY, color: "#fff", fontWeight: 700, fontSize: 15, padding: "13px 26px", borderRadius: 999, whiteSpace: "nowrap" }}>
+              Ver cómo funciona →
+            </span>
+          </a>
+        </Reveal>
+      </section>
+
       {/* === SIN LÍMITES — remate del argumento "por qué no hay Zoom" justo antes
           del CTA final, con link a la página dedicada /sin-limites. Antes vivía
           a mitad de scroll, repitiendo el mismo punto que PILARES 20 segundos
