@@ -1,20 +1,20 @@
 # 00. Resumen ejecutivo: diseño técnico del motor de dominio
 
-**Estado:** diseño **PROPUESTO** para auditoría independiente. **Nada de esto está construido ni autorizado.** Rama `vortice/integracion`, sobre `0739541`. Especificación maestra `0e1f64f`, sin cambios.
+**Estado:** diseño **PROPUESTO**, corregido tras auditoría de ChatGPT, para última auditoría. **Nada de esto está construido ni autorizado.** Rama `vortice/integracion`. Especificación maestra `0e1f64f`, sin cambios.
 
-**Clasificación:** APROBADO, COMUNICADO, PROPUESTO, PREGUNTA ABIERTA, EXISTE EN CÓDIGO, NO EXISTE.
+**Clasificación:** APROBADO, COMUNICADO, PROPUESTO, PREGUNTA ABIERTA, EXISTE EN CÓDIGO, NO EXISTE, RIESGO TÉCNICO.
 
 ## La idea en cinco decisiones de diseño
 
 1. **Dos canales independientes.** P0-E produce el *resultado* de una evaluación. El modelo produce el *estado* por contenido. Ninguno se calcula desde el otro: 70 % y K6 no se mezclan.
-2. **Evidencia con fecha de liberación.** Toda evidencia lleva `released_at`. La de E2 se libera en `review_at`. Cada lectura filtra por esa fecha, así que el mapa no puede delatar E2. Se comprueba con una prueba de no interferencia.
-3. **Bancos separados por la base de datos.** Una clave foránea compuesta impide usar preguntas de evaluación en práctica.
-4. **La familia es la unidad de independencia.** K6 cuenta familias de preguntas, asignadas por un revisor, no preguntas.
-5. **Reglas puras y versionadas.** La versión 1 es determinista. Hechos solo de inserción; proyecciones reconstruibles; políticas aprobadas por la dirección.
+2. **Evidencia con fecha de liberación.** Toda evidencia lleva `released_at`. La de E2 se libera en `review_at`. Cada lectura filtra por esa fecha, en un solo componente, y se pone al día sin depender de tareas programadas. Se comprobará con el protocolo de no interferencia ([08](08_SEGURIDAD_Y_GOBIERNO.md) §7), aún sin ejecutar.
+3. **Consistencia en la base de datos.** Claves foráneas compuestas atan cada evidencia a su respuesta y separan bancos ([04](04_MODELO_DE_DATOS.md)). Depende de una prueba aún no hecha (D1).
+4. **La familia es la unidad de independencia.** K6, criterio operativo de evidencia suficiente y no certeza, cuenta familias asignadas por un revisor. Diez escenarios definidos ([03](03_MOTOR_DE_EVIDENCIAS.md) §9).
+5. **Reglas puras y versionadas.** La versión 1 es determinista. Hechos solo de inserción; proyecciones reconstruibles; políticas que la dirección deberá aprobar.
 
 ## Primera versión recomendada
 
-**Práctica + mapa en una unidad de Matemática de 5.º Básico**, en paralelo y sin depender de P0-E. Es medible, no toca resultados académicos y es reversible. Integrar E2 y P21 viene después.
+**Práctica + mapa en una unidad de Matemática de 5.º Básico, aún sin elegir**, sin P0-E y sin copiloto. Ficha de definición: [09](09_PLAN_DE_IMPLEMENTACION.md). Es medible, no toca resultados académicos y es reversible. Integrar E2 y P21 viene después.
 
 ## Hallazgos de la auditoría de código
 
@@ -26,7 +26,7 @@
 | Umbral 60 en código, generador y cliente | C16 |
 | `repaso.ts` usa preguntas evaluativas | C11, ya declarado en el código |
 | Gráfico de horas con datos fijos en `CoursePlayer.tsx` | Retirar |
-| El copiloto existe, pero sin contexto de estudiante; el modo estricto no se activa desde su pantalla | [07](07_COPILOTO_IA.md) |
+| El copiloto existe, sin contexto de estudiante; modo estricto inactivo en su pantalla; riesgo sin aviso a adultos | [07](07_COPILOTO_IA.md), C21, C22 |
 | No aparece `PRAGMA foreign_keys`; solo hay una migración inicial | Verificar antes de confiar en las FK |
 | Falta rol de revisor pedagógico | Requisito de K5, K7, K13 |
 | El documento maestro de máquina de estados dice que `/submit` da puntaje y clave; hoy solo da resultado | Desactualizado |
@@ -35,7 +35,7 @@ No se leyeron bases de datos: la presencia de contenidos de 5.º Básico o el es
 
 ## Decisiones que bloquean
 
-Matriz completa: [10](10_DECISIONES_PENDIENTES.md). Las primeras: **O4, O5, N9** (catálogo); **O1–O3, N1, N2** (política); **D1–D4, C14, C15** (resultados y P21). Conflictos que requieren decidir si se enmienda la maestra: **C3, C6**.
+Matriz completa: [10](10_DECISIONES_PENDIENTES.md). Las primeras: **O4, O5, N9** (catálogo); **O1–O3, N1, N2, N16–N18** (política); **D1–D4, C14, C15** (resultados y P21). Conflictos que requieren decidir si se enmienda la maestra: **C3, C6**.
 
 ## Riesgos principales
 

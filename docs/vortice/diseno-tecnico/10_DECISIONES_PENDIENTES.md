@@ -1,95 +1,102 @@
 # 10. Matriz de decisiones pendientes
 
-**Nada aquí está decidido.** «Recomendación» es una propuesta técnica. Detalle del conflicto: `docs/p0e/CONTRADICCIONES_Y_PREGUNTAS.md`. **Bloquea:** Datos = diseño de esquema; Impl = construir la función; Futuro = solo función posterior.
+**Nada aquí está decidido.** «Recomendación» es técnica, no aprobación. Detalle: `docs/p0e/CONTRADICCIONES_Y_PREGUNTAS.md`. Dirección reserva lo pedagógico.
 
-## 1. Lo que bloquea primero
+**Bloquea:** **Diseño** = cambia el esquema o la arquitectura. **Prog.** = programar la función. **Piloto** = iniciar con estudiantes. Entre paréntesis, la etapa de [09](09_PLAN_DE_IMPLEMENTACION.md).
 
-| Para | Se necesita |
+## 1. Qué se necesita primero
+
+| Para | Falta |
 |---|---|
-| Migrar catálogo y banco (E1) | O4, O5, N9 |
+| Comprobar soporte técnico (E0) | Autorizar base desechable |
+| Catálogo y banco (E1) | O4, O5, N9 y ficha del piloto |
 | Política de dominio (E2) | O1, O2, O3, N1, N2, N16, N17, N18 |
-| Mostrar mapa (E3) | O6, N3 |
-| Núcleo P0-E | P7, P8, P16, P17, P20-v |
-| E2 con evidencia (E5) | N2, C6, C7, N4 |
-| Publicar resultados y P21 (E6) | **D1, D2, D3, D4, C14, C15** |
-| Estudiantes reales (E7) | O10, autenticación, revisión legal |
+| Mapa (E3) | O6, N3 si aplica, N11 |
+| Núcleo P0-E | P7, P8, P16, P17, P20-v, C16 |
+| E2 con evidencia (E5) | N2, C6, C7, N4, C20, C21 |
+| Resultados y P21 (E6) | D1–D4, C14, C15, N14 |
+| Estudiantes reales (E7) | O10, C19, C22, C12, autenticación, revisión legal |
 
-El esquema de §3 de [04](04_MODELO_DE_DATOS.md) tolera casi todas las respuestas por política. **Ninguna decisión pendiente exige rehacerlo**, salvo si se opta por preguntas multi-contenido o por eliminar `incierto` en la capa de datos.
+**Ninguna decisión exige rehacer el esquema**, salvo preguntas multi-contenido o una respuesta que cambie N2 o D2 de forma no prevista. Esto es una evaluación por lectura; las pruebas D1–D8 pueden cambiarlo.
 
 ## 2. Contradicciones
 
-| ID | Conflicto | Consecuencia técnica | Alternativas | Recomendación | Bloquea | Debe decidir |
+| ID | Qué resolver | Alternativas | Recomendación | Consecuencia técnica | Decide | Bloquea |
 |---|---|---|---|---|---|---|
-| C1 | % real vs. solo estado | Qué serializa la API | A: desde `review_at`. B: nunca. C: siempre | A | Impl E6 | D1 |
-| C2 | Banda vs. solo estado | Igual | Igual | A | Impl E6 | D1 |
-| C3 | P21 vs. no desbloquear | Cambia `checkModuleAccess` | A: reemplazar. B: autorización manual. C: mantener | Sin recomendación académica; técnicamente viable A o B | Impl E6 | D2 |
-| C4 | Repaso vs. `review_at` | Filtro de publicación | A: tras `review_at`. B: antes con riesgo | A | Impl E5 | D1 |
-| C5 | Familia/tutor | DTO por rol | A: estado. B: %, tras `review_at`. C: distinto por rol | A hasta decidir | Impl E6 | D4 |
-| C6 | Feedback inmediato vs. estado | `release_policy` | [03](03_MOTOR_DE_EVIDENCIAS.md) §8.2 | A: banco separado | Impl E5 | ¿Enmendar la maestra? |
-| C7 | Mapa delata E2 | `released_at` | Embargo; sin E2; inmediato (inviable) | Embargo | Impl E5 | N2 |
-| C8 | K6 vs. <70 por contenido | Fuente única de «a reforzar» | [03](03_MOTOR_DE_EVIDENCIAS.md) §8.5 | A: del estado | Impl E6 | Criterio |
-| C9 | P21 vs. bloqueado | Estado `requiere base` | A: abierto con aviso. B: bloquea contenidos dentro del módulo. C: ruta previa obligatoria | A | Impl E6 | N3 |
-| C10 | Frontera individual vs. calendario | La recomendación no abre nada | A: orienta. B: calendario flexible en piloto | A | Futuro | Modelo |
-| C11 | Repaso con preguntas evaluativas | Congelar en piloto, retirar luego | A: banco separado. B: mantener | A | Impl E1 | Autorizar retiro |
-| C12 | Textos públicos | Sin efecto técnico; riesgo | A: corregir ya. B: con el lanzamiento | A | No bloquea | N7 |
-| C13 | Copiloto | Nombre y alcance | A: «copiloto». B: desactivar en piloto | Desactivado en piloto hasta evaluarlo | Futuro E8 | Dirección |
-| C14 | Mostrar antes de continuar vs. `review_at` | Cuándo se habilita continuar | A: esperar. B: lista sin detalle antes. C: adelantar con riesgo | A | Impl E6 | D1, D2 |
-| C15 | P21 sin revisión normativa | Puede invalidar el diseño | A: revisar primero. B: decidir y revisar luego | A | Impl E6 | Dirección y asesoría |
-| C16 | 70 vs. 60 | Valor en código y generador | A: 70 a todas. B: solo E2 | Sin recomendación académica | Impl P0 | D3, Q1 |
-| C17 | P17 incoherente | `max_attempts` | Ratificar 2 | Ratificar | Impl P0 | Dirección |
-| C18 | P7 con matices | Regla de migración | Texto maestra o propuesta | Unificar al decidir | Impl P0 | P7 |
+| C1 | ¿% real o solo estado? | A: desde `review_at`. B: nunca. C: siempre | A | Qué serializa la API | Dirección (D1) | Prog. (E6) |
+| C2 | ¿Banda antes de `review_at`? | Igual que C1 | A | Igual | Dirección (D1) | Prog. (E6) |
+| C3 | ¿P21 reemplaza no desbloquear? | A: reemplaza. B: liberación manual. C: mantiene | Sin recomendación académica; técnicamente viables A y B | Cambia `checkModuleAccess` | Dirección (D2) | Prog. (E6) |
+| C4 | ¿Repaso por contenido antes de `review_at`? | A: después. B: antes, con riesgo | A | Filtro de publicación | Dirección (D1) | Prog. (E5) |
+| C5 | ¿Familia y tutor ven %? | A: estado. B: % tras `review_at`. C: distinto por rol | A hasta decidir | DTO por rol | Dirección (D4) | Prog. (E6) |
+| C6 | Feedback inmediato frente a regla aprobada | A: banco separado. B: E1, E3, E4. C: al cerrar la instancia | A | `release_policy` | Dirección; B y C enmiendan maestra | Prog. (E5) |
+| C7 | Mapa delata E2 | Embargo; sin E2; inmediato (inviable) | Embargo | `released_at`, filtro único | Dirección (N2) | Prog. (E5) |
+| C8 | K6 frente a <70 % por contenido | A: del estado. B: % por contenido. C: ambos | A | Fuente de «a reforzar» | Dirección | Prog. (E6) |
+| C9 | Módulo abierto con contenidos sin base | A: abierto con aviso. B: bloquea dentro. C: ruta previa | A | Estado `requiere base` | Dirección (N3) | Prog. (E6) |
+| C10 | Frontera individual frente a calendario | A: orienta. B: calendario flexible | A | Recomendación sin acceso | Dirección | Sin bloqueo inicial |
+| C11 | Repaso usa preguntas evaluativas | A: banco separado. B: mantener | A; fuera del piloto | Retirar `review_items` luego | Dirección | Prog. (E1) |
+| C12 | Textos públicos prometen funciones | A: corregir ahora. B: al lanzar | A | Ninguna en motor | Dirección (N7) | Piloto |
+| C13 | Cómo nombrar el copiloto | A: «copiloto, sin validar». B: tutor | A | Sin cambio ahora | Dirección | Sin bloqueo |
+| C14 | Mostrar pendientes antes de continuar | A: esperar `review_at`. B: lista sin detalle. C: adelantar | A | Cuándo habilitar continuar | Dirección (D1, D2) | Prog. (E6) |
+| C15 | Revisión normativa de P21 | A: primero. B: después | A | Puede invalidar P21 | Dirección y asesoría | Prog. (E6), Piloto |
+| C16 | 70 frente a 60 | A: 70 a todas. B: solo E2 | Sin recomendación académica | Constante y generador | Dirección (D3, Q1) | Prog. (P0) |
+| C17 | P17 incoherente en maestra | Ratificar 2 | Ratificar | `max_attempts` | Dirección | Prog. (P0) |
+| C18 | Matices en P7 | Unificar textos | Unificar | Regla de migración | Dirección | Prog. (P0) |
+
+### Nuevas en esta revisión
+
+| ID | Qué resolver | Alternativas | Recomendación | Consecuencia técnica | Decide | Bloquea |
+|---|---|---|---|---|---|---|
+| **C19** | El copiloto queda fuera del motor, pero su enlace sigue en Vórtice: es ayuda no registrada durante la práctica | A: ocultar enlace a estudiantes del piloto. B: mantener y aceptar límite | B si la ayuda se entiende como límite de K6; A si se quiere una medición más limpia. Requiere decidir | A requiere cambio de interfaz, autorizado aparte | Dirección | Piloto |
+| **C20** | «Todas las respuestas idénticas» choca con el estado inmediato APROBADO | A: dos pruebas, P1 y P2. B: ocultar también el estado (enmienda maestra) | A | Protocolo de [08](08_SEGURIDAD_Y_GOBIERNO.md) §7 | Dirección | Prog. (E5) |
+| **C21** | Al aprobar, una evaluación sale de `openEvaluationsForStudent`: el copiloto deja de bloquearla aunque otros la estén rindiendo | A: bloquear hasta `review_at`. B: mantener | A | Cambio futuro de código, con P0-E | Dirección | Prog. (P0) |
+| **C22** | Riesgo detectado sin aviso a nadie, ya con enlace en Vórtice | A: protocolo y responsables. B: mantener | A | Puede requerir registro y avisos | Dirección y asesoría | Piloto; independiente del motor |
 
 ## 3. Decisiones D
 
-| ID | Conflicto | Consecuencia | Alternativas | Recomendación | Bloquea | Debe decidir |
+| ID | Qué resolver | Alternativas | Recomendación | Consecuencia técnica | Decide | Bloquea |
 |---|---|---|---|---|---|---|
-| D1 | Qué se ve y cuándo | DTO | Ver C1 | Estado; % desde `review_at` | Impl E6 | Dirección |
-| D2 | P21 reemplaza regla | Regla de acceso | Ver C3 | Ratificar solo tras C15 | Impl E6 | Dirección |
-| D3 | Bandas 70/80 | Constantes | Ratificar; ajustar | Ratificar con Q1–Q3 | Impl P0, E6 | Dirección |
-| D4 | Familia y tutor | Permisos | Ver C5 | Estado y contenidos, sin % | Impl E6 | Dirección |
+| D1 | Qué se ve y cuándo | Ver C1 | Estado; % desde `review_at` | DTO | Dirección | Prog. (E6) |
+| D2 | P21 reemplaza regla | Ver C3 | Decidir solo tras C15 | Regla de acceso | Dirección | Prog. (E6) |
+| D3 | Bandas 70/80 | Ratificar; ajustar | Ratificar con Q1–Q3 | Constantes | Dirección | Prog. (P0, E6) |
+| D4 | Familia y tutor | Ver C5 | Estado y contenidos, sin % | Permisos | Dirección | Prog. (E6) |
 
 ## 4. Preguntas O
 
-| ID | Conflicto | Consecuencia | Alternativas | Recomendación | Bloquea | Debe decidir |
+| ID | Qué resolver | Alternativas | Recomendación | Consecuencia técnica | Decide | Bloquea |
 |---|---|---|---|---|---|---|
-| O1 | Qué es «no dominado» | Política | [03](03_MOTOR_DE_EVIDENCIAS.md) §7 | 2 errores en familias distintas | Impl E2 | Pedagogía |
-| O2 | ¿Misma sesión? | Política | A: permitido. B: sesiones distintas. C: días distintos | B: distingue memoria inmediata | Impl E2 | Pedagogía |
-| O3 | Con ayuda | `assistance` | §6 de 03 | No cuenta para K6 | Impl E2 | Pedagogía |
-| O4 | Quién valida | Rol y flujo | A: equipo interno. B: externo | Dos personas distintas, nombradas | **Impl E1** | Dirección |
-| O5 | Unidad | Catálogo | Elegir unidad | Sin recomendación: no se conoce la planificación | **Impl E1** | Pedagogía |
-| O6 | Mostrar incertidumbre | UI | A: «sigue practicando». B: estado propio. C: nada | A | Impl E3 | Pedagogía |
-| O7 | Mapa a familia/tutor | DTO | A: resumen. B: completo | Tutor completo; familia resumen | Impl E3 | D4 |
-| O8 | Retención | Agenda | A: intervalos actuales. B: otros | A como hipótesis a medir | Impl E4 | Pedagogía |
-| O9 | Adaptaciones | `accommodation` | A: registrar y contar. B: revisar caso a caso | A si no altera el constructo | Impl E7 | Pedagogía, P13 |
-| O10 | Conservación | Purga vs. inmutabilidad | A: seudonimizar. B: borrar. C: conservar | A, con revisión legal | Impl E7 | Dirección, legal |
+| O1 | Qué es «no dominado» | Ver [03](03_MOTOR_DE_EVIDENCIAS.md) §7 | 2 errores en familias distintas | Parámetro | Dirección | Prog. (E2) |
+| O2 | ¿2 correctas en misma sesión? | Permitido; sesiones; días | Sesiones distintas | Parámetro | Dirección | Prog. (E2) |
+| O3 | ¿Ayuda cuenta? | Ver §6 de 03 | No cuenta para K6 | Parámetro | Dirección | Prog. (E2) |
+| O4 | Quién valida | Interno; externo | Dos personas nombradas | Rol revisor | Dirección | Prog. (E1) |
+| O5 | Qué unidad | Elegir | Sin recomendación: falta planificación | Catálogo | Dirección | Prog. (E1) |
+| O6 | Mostrar incertidumbre | «Sigue practicando»; estado propio; nada | Primera | UI | Dirección | Prog. (E3) |
+| O7 | Mapa a familia y tutor | Resumen; completo | Tutor completo; familia resumen | DTO | Dirección | Prog. (E3) |
+| O8 | Retención | Intervalos actuales; otros | Actuales, como hipótesis | Agenda | Dirección | Prog. (E4) |
+| O9 | Adaptaciones | Registrar y contar; caso a caso | Primera, si no altera el constructo | `accommodation` | Dirección | Piloto |
+| O10 | Conservación de datos | Seudonimizar; borrar; conservar | Seudonimizar, con revisión | Choca con solo inserción: **puede tocar diseño** | Dirección y legal | Diseño parcial, Piloto |
 
 ## 5. Preguntas N
 
-| ID | Conflicto | Consecuencia | Alternativas | Recomendación | Bloquea | Debe decidir |
+| ID | Qué resolver | Alternativas | Recomendación | Consecuencia técnica | Decide | Bloquea |
 |---|---|---|---|---|---|---|
-| N1 | 70 % y K6 | Independencia de canales | §8.1 de 03 | Independientes | Impl E2 | Dirección |
-| N2 | Evidencia válida | `evidence_sources` | §8.3 de 03 | Práctica ya; E2 con embargo después | Impl E2, E5 | Dirección |
-| N3 | Módulo sin base | UI | Ver C9 | Abierto con aviso | Impl E6 | Dirección |
-| N4 | Dónde el feedback | `release_policy` | Ver C6 | Banco separado | Impl E5 | Dirección |
-| N5 | Cobertura | Con 15–20 preguntas, K6 no se logra en E2 sola | A: K6 sobre todo en práctica. B: más preguntas. C: E2 por contenido clave | A | Impl E1 | Pedagogía |
-| N6 | Histórico | Sin evidencia antigua | A: no cuenta. B: cuenta como pista | A: faltan datos por pregunta | Futuro | P7 |
-| N7 | Textos | Ninguna técnica | Ver C12 | Corregir | No bloquea | Dirección |
-| N8 | Piloto y resto | Interruptor por dominio | A: conviven. B: reglas solo donde hay mapa | A, sin cambios fuera del piloto | Impl E3 | Dirección |
-| N9 | Preguntas distintas | Familias | §5 de 03 | Familia por revisor | **Datos** (ya resuelto en diseño); Impl E1 | Pedagogía |
-| N10 | Modelos | Columna de [05](05_ALGORITMOS_Y_RECOMENDACIONES.md) §6 | Definir criterios | Después del piloto | Futuro | Dirección |
+| N1 | 70 % y K6 | §8.1 de 03 | Independientes | Canales separados | Dirección | Prog. (E2) |
+| N2 | Evidencia válida | §8.3 de 03 | Práctica primero; E2 embargada después | `evidence_sources` | Dirección | Prog. (E2, E5) |
+| N3 | Módulo sin base | Ver C9 | Abierto con aviso | UI | Dirección | Prog. (E6) |
+| N4 | Dónde va el feedback | Ver C6 | Banco separado | `release_policy` | Dirección | Prog. (E5) |
+| N5 | Cobertura de preguntas | K6 en práctica; más preguntas; por contenido clave | Práctica | Tamaño del banco | Dirección | Prog. (E1) |
+| N6 | Evidencia histórica | No cuenta; pista | No cuenta | Sin migrar | Dirección (P7) | Sin bloqueo inicial |
+| N7 | Textos | Ver C12 | Corregir | Ninguna | Dirección | Piloto |
+| N8 | Piloto y resto | Conviven; solo con mapa | Conviven | Interruptor por dominio | Dirección | Prog. (E3) |
+| N9 | Preguntas distintas | §5 de 03 | Familia por revisor | Ya en esquema | Dirección | Prog. (E1) |
+| N10 | Modelos estadísticos | Definir criterios | Después del piloto | Sin efecto | Dirección | Sin bloqueo inicial |
+| N11 | Estado inicial | Vacío; prueba fija | Vacío | Primer mapa | Dirección | Prog. (E3) |
+| N12 | Pregunta defectuosa y resultado P0-E | Proceso aparte; no | Proceso aparte | Sin alterar intentos | Dirección | Prog. (P0) |
+| N13 | Copiloto con evaluación abierta | Por contenido; textual | Por contenido | Futuro | Dirección | Sin bloqueo inicial |
+| N14 | Qué intento da el % | El que cerró; mejor; último | El que cerró | Publicación | Dirección | Prog. (E6) |
+| N15 | Calendario enero 2027 | Piloto después; E3–E4 antes | Sin verificar capacidad | Alcance | Dirección | Plan |
+| N16 | Error con ayuda | No cuenta; cuenta | No cuenta | Parámetro | Dirección | Prog. (E2) |
+| N17 | Pregunta retirada | Sigue contando; no | Sigue | Parámetro | Dirección | Prog. (E2) |
+| N18 | Nueva versión | Caso a caso; reinicia; nunca | Caso a caso | `evidence_continuity` | Dirección | Prog. (E2) |
+| N19 | Corrección docente | Nuevo `source_type`; solo anulación | Solo anulación | Esquema, si cambia | Dirección | Sin bloqueo inicial |
 
-## 6. Preguntas nuevas de esta etapa
-
-| ID | Conflicto | Consecuencia | Alternativas | Recomendación | Bloquea | Debe decidir |
-|---|---|---|---|---|---|---|
-| N11 | Estado inicial | Primer mapa | A: vacío. B: prueba fija | A en la primera versión | Impl E3 | Pedagogía |
-| N12 | Corregir resultado por pregunta defectuosa | Inmutabilidad vs. justicia | A: proceso auditado aparte. B: no | A, por definir | Impl P0 | Dirección |
-| N13 | Copiloto con evaluación abierta | Bloqueo por contenido | A: bloquear contenido. B: solo textual | A | Futuro E8 | Pedagogía |
-| N14 | Qué intento da el porcentaje | Regla de publicación | A: el que cerró (ya propuesto). B: mejor. C: último | A | Impl E6 | Dirección |
-| N15 | Calendario | Alcance enero 2027 | A: piloto después. B: solo E3–E4 antes | B, si hay capacidad | Plan | Dirección |
-| N16 | Error con ayuda | ¿Cuenta como errada? | A: no. B: sí | A | Impl E2 | Pedagogía |
-| N17 | Pregunta retirada sin defecto | ¿Su evidencia cuenta? | A: sí. B: no | A | Impl E2 | Pedagogía |
-| N18 | Nueva versión del contenido | `evidence_continuity` | A: caso a caso. B: reinicia. C: nunca | A | Impl E2 | Pedagogía |
-| N19 | Corrección docente de un estado | No hay fuente en esquema | A: nuevo `source_type` auditado. B: solo anulación | B en la primera versión | Futuro | Dirección |
-
-Las preguntas Q1–Q8 y pendientes P9–P11, P13, P14, P22–P25 siguen en sus documentos, sin cambios.
+Q1–Q8 y P7–P25 pendientes siguen en sus documentos, sin cambios.

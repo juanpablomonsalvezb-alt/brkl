@@ -134,7 +134,7 @@ La purga legal futura (O10) chocaría con «solo inserción»: exige una vía ex
 
 | Tabla | Columna | Notas |
 |---|---|---|
-| `practice_sessions` | `id` PK; `student_id` NN FK; `domain_version_id` NN; `purpose`; `started_at`, `ended_at`, `copilot_used_at` | `practica, retencion`; UNIQUE (id, student_id, purpose) |
+| `practice_sessions` | `id` PK; `student_id` NN FK; `domain_version_id` NN; `purpose`; `started_at`, `ended_at` | `practica, retencion`; UNIQUE (id, student_id, purpose) |
 | `practice_answers` | `id` PK; `session_id`, `student_id`, `purpose` | FK (session, student, purpose) |
 | | `question_version_id`, `family_id`, `item_id`, `bank` | FK a versión; **CHECK `bank='practica'`** |
 | | `selected_option_id`, `is_correct`, `assistance`, `accommodation`, `client_submission_id`, `answered_at` | UNIQUE (student, client_submission_id) |
@@ -153,7 +153,7 @@ La purga legal futura (O10) chocaría con «solo inserción»: exige una vía ex
 | `mastery_policies` | `id` PK; `version` UNIQUE; `rules_json`; `status`; `approved_by`, `approved_at` | Aprobada: sin parámetros nulos (lo valida la aplicación) |
 | `knowledge_state_events` | `id` PK; `student_id`, `item_id`; `from_state`, `to_state`, `from_flag`, `to_flag`; `reason` | `reason`: `evidencia, liberacion, anulacion, nueva_version, cambio_politica, retencion_vencida` |
 | | `trigger_evidence_id`, `trigger_void_id`, `policy_id`, `domain_version_id`, `computed_at`, `effective_at` | CHECK: según `reason` |
-| `student_knowledge_state` | PK (`student_id`, `item_id`); `state`, `flag`, `correct_families`, `wrong_families`, `assisted_count`, `uncertainty_reason`, `mastered_at`, `last_evidence_at`, `policy_id`, `domain_version_id`, `updated_at` | **Proyección** |
+| `student_knowledge_state` | PK (`student_id`, `item_id`); `state`, `flag`, `correct_families`, `wrong_families`, `assisted_count`, `uncertainty_reason`, `mastered_at`, `last_evidence_at`, `policy_id`, `domain_version_id`, `computed_through`, `updated_at` | **Proyección**. `computed_through`: hasta qué `released_at` incluye; ver [08](08_SEGURIDAD_Y_GOBIERNO.md) §7.3 |
 | `retention_schedule` | PK (`student_id`, `item_id`); `step`, `due_at`, `last_checked_at`, `last_result` | **Proyección** |
 | `progression_continuations` | `id` PK; `student_id`, `process_id`; `from_module_id`, `pending_items_json`, `offered_resources_json`, `acknowledged_at` | UNIQUE (process); FK (process, student) |
 | `recommendation_log`, `governance_audit` | Como en la versión previa | |

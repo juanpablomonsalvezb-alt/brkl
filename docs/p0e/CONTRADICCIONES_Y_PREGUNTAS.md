@@ -61,6 +61,10 @@ Verificados en `Home.tsx` de la rama desplegada e infografías de `/asi-trabajam
 | `APRENDIZAJE_TEORICO_VORTICE` | Mensajes como «compatibles con la realidad actual» | Corregido |
 | `APRENDIZAJE_TEORICO_VORTICE` | «Aprobarla abre el módulo siguiente» como consecuencia sin matiz | Añadida la tensión con P21 |
 
+### Agregadas en el diseño técnico
+
+**C19–C22** y **N11–N19**: detalle en [`10_DECISIONES_PENDIENTES.md`](../vortice/diseno-tecnico/10_DECISIONES_PENDIENTES.md).
+
 ## 2. Decisiones pendientes
 
 | ID | Decisión | Documento |

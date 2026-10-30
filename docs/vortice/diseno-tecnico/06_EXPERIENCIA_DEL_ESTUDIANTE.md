@@ -2,6 +2,8 @@
 
 **Estado:** PROPUESTO, sin construir. Requisitos normativos: `docs/p0e/PROGRESO_Y_PROGRESION.md` §5 (CA1–CA10). Piloto: tramo `basica-5-8`. Base visual: diseño de inicio Vórtice aprobado por la dirección (EXISTE EN CÓDIGO: `VorticeInicio.tsx`).
 
+**El piloto funciona sin copiloto:** ninguna pantalla depende de él. El enlace actual «Tutor virtual» de Vórtice sigue sujeto a C19.
+
 **Dato real únicamente.** `{…}` indica valor calculado. EXISTE EN CÓDIGO un gráfico de horas con datos fijos en `CoursePlayer.tsx`, a retirar al implementar.
 
 ## 1. Concepto: una lección, tres lentes
@@ -14,7 +16,14 @@ Sin barras administrativas: el estudiante siempre está **dentro de un camino**,
 | **Mis conocimientos** | ¿Qué sé hacer? | Constelación de contenidos conectados | `student_knowledge_state` | Nada |
 | **Mis resultados** | ¿Cómo me fue? | Tarjetas de evaluación e historial | P0-E | Nada |
 
-Cada lente tiene su etiqueta y su unidad. Completar una estación jamás enciende una estrella por sí sola.
+Cada vista tiene su etiqueta y su unidad. Conceptos y fuentes: [01](01_ARQUITECTURA_GENERAL.md) §2.1.
+
+**Conectadas, no mezcladas:**
+- **Completar una estación jamás enciende una estrella.** Tras terminar una lección, la pantalla invita: «Comprueba si ya lo dominas», sin afirmarlo.
+- Una estrella encendida no marca lección completada, ni habilita nada.
+- Una recomendación aparece como sugerencia («Te sugerimos…»). No es un candado. Los candados de módulo solo vienen de P0-E y calendario, y dicen su motivo.
+- Si hay contradicción aparente (aprobó E2, contenido no dominado), se explica: «Tu evaluación mide el módulo; cada contenido se confirma por separado».
+- Sin total combinado.
 
 ## 2. Navegación
 

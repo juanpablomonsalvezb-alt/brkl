@@ -7,11 +7,11 @@
 | Vector | Control |
 |---|---|
 | Respuesta de API | DTO por lista blanca. EXISTE: `/submit` devuelve solo resultado; `toStudentQuestions` quita clave |
-| Mapa y recomendación | Filtro único `released_at <= ahora`, en una sola función de repositorio. Prohibido consultar `knowledge_evidence` directo |
-| Conteos, tiempos y orden | Prueba de no interferencia. Recomendación sin datos embargados |
+| Mapa y recomendación | Filtro único: §7.3 |
+| Conteos, tiempos y orden | Prueba de no interferencia: §7 |
 | Vistas de familia y tutor | Usan los mismos DTO, más la regla D4 |
 | Notificaciones y exportes | Sin datos embargados |
-| Copiloto | Sin contexto embargado |
+| Copiloto | Fuera del piloto; recibe nada del modelo. Sigue C21 |
 | Repaso existente | `server/repaso.ts` usa preguntas evaluativas (C11). Sin uso en el piloto |
 | Clave en cliente | Nunca. Corrección solo en servidor |
 | Comentario desactualizado en `shared/evaluations.ts`, y documento maestro §9 dice que `/submit` da puntaje | Código actual no lo hace. Corregir al implementar |
@@ -84,3 +84,85 @@ No se afirma que lo siguiente aplique; debe evaluarlo asesoría competente:
 | Decisiones automatizadas | Derecho a revisión humana |
 | Accesibilidad | P13 |
 | Publicidad | Veracidad de textos publicados (C12) |
+
+## 7. No interferencia de E2
+
+**Estado:** protocolo PROPUESTO. **Nada ejecutado**: el núcleo P0-E y el motor no existen. Cuando se ejecute: solo en memoria o `brkl-preview`, con cuentas `ficticio-*`.
+
+### 7.1 Propiedad y salvedad
+
+**Hasta `review_at`, ninguna salida puede depender de E2 más allá del estado permitido.**
+
+**Salvedad (conflicto con una lectura literal, C20).** La regla APROBADA da «Aprobado» o «No aprobado» de inmediato, cerrando la instancia al aprobar. Por eso dos estudiantes con **distinto estado** no pueden tener salidas idénticas. Se necesitan dos pruebas:
+
+| Prueba | A y B | Exigencia |
+|---|---|---|
+| **P1: mismo estado** | Mismo estado, distinto puntaje y contenidos errados. Ejemplos: 70 y 95; 0 y 65 | **Salidas idénticas, byte a byte**, salvo identificadores normalizados |
+| **P2: distinto estado** | Uno aprobado, otro no | Solo difiere lo derivado del estado (lista abajo) |
+| **P3: control** | Mismo escenario tras `review_at` | Deben aparecer las diferencias. Si no, el filtro oculta de más o la prueba no mide |
+
+P1 es la prueba fuerte: detecta puntajes y contenidos. P2 impide que el estado arrastre más información.
+
+**Preparación:** dos cuentas ficticias con matrícula, nivel, recursos completados, evidencias liberadas, reloj simulado y orden de operaciones iguales. Se normalizan: ids propios, fecha de envío. Un cambio de semilla en permutaciones se fija.
+
+### 7.2 Superficies comparadas
+
+| Salida | Se compara | Estado en código hoy | Diferencia permitida en P2 |
+|---|---|---|---|
+| Resultado de evaluación | Cuerpo y cabeceras de `/submit` y lecturas | EXISTE: responde `resultado` | `resultado`, intentos restantes, instancia cerrada |
+| Mapa de conocimientos | DTO completo | NO EXISTE | **Ninguna** |
+| Contenidos pendientes | Conteos y lista | NO EXISTE | **Ninguna** en el módulo evaluado |
+| Recomendaciones | Lista, orden, motivo, `recommendation_log` | NO EXISTE | Solo contenidos del módulo siguiente, si se abrió |
+| Orden de actividades | Ruta, `nextStep`, repaso | EXISTE: `buildOverview` usa `passed` | Derivado de aprobar |
+| Notificaciones | Tipo, fecha, cuerpo | EXISTE: `moduloAbierto` depende de `passed` | `moduloAbierto` |
+| Vistas familia y tutor | DTO por rol | EXISTE: `familia.ts` con «en revisión», sin puntaje | Estado, sujeto a D4 |
+| Portafolio | Evidencias compartidas | EXISTE: expone `evaluationPassed` | Estado |
+| Exportaciones | Cualquier archivo | NO EXISTE para estudiantes; verificado solo por búsqueda en `server` y páginas | **Ninguna** si se crea |
+| Copiloto | **Entrada al proveedor simulado**, no su salida, y bloqueos | EXISTE; ver C21 | Bloqueos derivados del estado, según C21 |
+| Canales laterales | Tamaño de respuesta, `ETag`, cabeceras de caché, códigos, número de consultas | | **Ninguna** en P1. Latencia: medir, sin exigir igualdad |
+
+**El copiloto no se compara por su texto:** el proveedor no es determinista, así que comparar respuestas daría falsos positivos. Se intercepta lo que se le enviaría.
+
+**Es filtración:** cualquier diferencia en P1; en P2, cualquier diferencia fuera de la columna. Incluye porcentaje, banda, total de correctas, contenido errado, orden o tamaño alterados, y un mensaje que cite E2.
+
+```text
+prueba P1:
+  para cada superficie s, para cada rol r, en t = review_at - 1 s:
+    assert normalizar(s(A, r, t)) == normalizar(s(B, r, t))
+  avanzar reloj a review_at
+  assert algún s difiere        # P3
+```
+
+### 7.3 Filtro, cálculo y fallos
+
+**Responsable único:** `server/conocimiento.ts` (PROPUESTO), función `evidenciaLiberada(db, estudiante, ahora)`. Es la única que lee `knowledge_evidence` para producir salidas, y excluye lo anulado.
+
+**Aplicación en todas las consultas:**
+1. Ningún otro archivo importa la tabla. Una prueba `script/*.check.ts` lo revisa con búsqueda de texto.
+2. Toda salida pasa por DTO de lista blanca.
+3. `ahora` lo fija el servidor, una vez por petición; nunca el cliente.
+4. Excepción: el proceso de auditoría interna. Acceso de administrador según P9, registrado.
+5. La proyección jamás incluye evidencia embargada. Puntajes en `evaluation_attempts` no se serializan: columnas excluidas por lista blanca.
+
+**Cálculo al llegar `review_at`: en lectura, no por tarea.**
+
+```text
+función leerEstado(estudiante, ahora):
+  pendientes = evidencias con computed_through < released_at <= ahora
+  si hay pendientes:
+    en una transacción: recalcular contenidos afectados,
+    insertar eventos (reason = liberacion, effective_at = released_at),
+    actualizar con condición computed_through sin cambios     # dos lecturas simultáneas
+  retornar proyección
+```
+
+| Tema | Comportamiento |
+|---|---|
+| Datos desactualizados | La lectura se pone al día antes de responder. Respuestas personales con `Cache-Control: no-store`. El cliente no calcula estados |
+| Recarga en pantalla | Cliente con `review_at` conocido invalida su consulta en esa fecha. Si no lo hace, lo corrige la siguiente lectura |
+| **Falla la tarea programada** | **No afecta el estado.** Solo se atrasan notificaciones y materialización. Reintento idempotente por `notification_log`. Una alerta si hay `review_at` vencidos sin procesar. Nunca se envía antes de `review_at` |
+| Falla el cálculo en lectura | Responde error con reintento. **No** sirve datos sin liberar. No inventa un estado |
+| Reloj | Margen desconocido entre instancias (T5). Una instancia adelantada liberaría antes. Medir en E0 |
+| Infraestructura | EXISTE: `/api/cron/notificaciones` con secreto, para cron externo. `vercel.json` no declara crons. No se verificó que haya un cron externo activo |
+
+**Limitación:** la prueba cubre las superficies listadas. Toda salida nueva debe añadirse; se exige en revisión de código. No demuestra ausencia de canales de tiempo.

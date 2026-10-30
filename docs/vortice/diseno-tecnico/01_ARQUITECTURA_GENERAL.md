@@ -21,7 +21,7 @@ Verificado por lectura en `vortice/integracion`. «Existe» no implica que funci
 | Familia | EXISTE, solo estado | `server/familia.ts` |
 | Tutoría | EXISTE | `tutoring_cases` |
 | Portafolio, Brújula, notificaciones | EXISTE | Fuera de alcance salvo DTO |
-| Copiloto | EXISTE, sin validar | [07](07_COPILOTO_IA.md) |
+| Copiloto | EXISTE, sin validar; **fuera del piloto** | [07](07_COPILOTO_IA.md) |
 | Contenidos, prerrequisitos, estado, fronteras, mapa, motor, banco práctica | NO EXISTE | Este diseño |
 | Diagnóstico con selección dinámica, modelos estadísticos | NO EXISTE | Fuera de la versión 1 |
 
@@ -77,6 +77,18 @@ flowchart TB
 2. El acceso a módulo y evaluación lo decide P0-E y calendario; la recomendación solo orienta.
 3. Toda lectura de evidencia pasa por el filtro `released_at`.
 4. Solo cuatro indicadores: `PROGRESO` §5.4, cada uno con su fuente.
+
+## 2.1 Cinco conceptos que no se confunden
+
+| Concepto | Vista | Fuente única | Lo cambia | No puede |
+|---|---|---|---|---|
+| Avance de lecciones | Mi camino | `student_progress` | Completar recurso | Marcar dominio ni aprobar |
+| Dominio de contenidos | Mis conocimientos | `student_knowledge_state`, desde evidencia | Evidencia liberada | Cambiar resultado ni acceso |
+| Resultados | Mis resultados | Núcleo P0-E (hoy `evaluation_progress`) | Envío de intento | Marcar dominio por sí solo |
+| Recomendación | Mi camino y Mis conocimientos | `recommendation_log` | Motor por reglas | **Abrir, cerrar o bloquear nada** |
+| Continuidad de módulos | Mi camino | `checkModuleAccess`, P0-E y calendario; `progression_continuations` si se ratifica D2 | Reglas P0-E | Depender del mapa o de una recomendación |
+
+Las vistas se conectan **solo con enlaces**: un resultado enlaza a contenidos por reforzar; un contenido enlaza a su lección. Ningún indicador se calcula sumando otro. No existe un «progreso total» que los combine.
 
 ## 3. Módulos de código (propuesta)
 

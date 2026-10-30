@@ -1,71 +1,100 @@
 # 07. Copiloto conversacional
 
-**Estado:** §1–§3 EXISTE EN CÓDIGO, por lectura de esta rama. **No ejecutado ni probado con el proveedor.** No hay validación pedagógica. No es un motor de recomendación. No se modifica en esta etapa.
+**Estado:** lo descrito EXISTE EN CÓDIGO, según lectura de esta rama. **No se ejecutó ni se probó con el proveedor.** Sin validación pedagógica. No se verificó si está activo en algún entorno: requiere `GEMINI_API_KEY`, no consultada. No se modifica en esta etapa.
 
-## 1. Qué hace
+**Decisión de diseño (PROPUESTO, orden de dirección):** el copiloto queda **fuera del primer piloto del motor**. El piloto funciona sin él. No hay contexto, API ni prompt nuevos.
 
-Chat de ayuda escolar en `/academic-copilot`, enlazado como «Tutor virtual» en `VorticeInicio.tsx`.
+## 1. Funciones
 
-| Pieza | Función |
+| Existe en código | Pieza |
 |---|---|
-| `POST /api/academic-copilot/chat` (`server/routes.ts`) | Exige sesión, limita frecuencia, calcula evaluaciones abiertas y llama al proveedor |
-| `shared/iaPolicy.ts` | Política pura: límites, saneo, riesgo, prompt, bloqueo. Con prueba `script/iaPolicy.check.ts` |
-| `server/geminiChat.ts` | Llama a `gemini-2.5-flash`. No persiste ni registra contenido |
-| `client/src/pages/AcademicCopilot.tsx` | Interfaz. Envía `message` y `conversationHistory` |
+| Chat en `/academic-copilot`, enlazado como «Tutor virtual» | `AcademicCopilot.tsx`, `VorticeInicio.tsx` |
+| `POST /api/academic-copilot/chat`: sesión, límite de frecuencia, llamada al proveedor | `server/routes.ts` |
+| Política pura, probada con `script/iaPolicy.check.ts` | `shared/iaPolicy.ts` |
+| Llamada a `gemini-2.5-flash`, sin persistir ni registrar contenido | `server/geminiChat.ts` |
+| Prompt de tutor por tramo: pistas, no respuestas finales | `buildSystemPrompt` |
+| Quita correo, RUT, teléfono y UUID | `redactPII` |
+| Respuesta fija ante palabras de riesgo | `detectRisk`, `riskResponse` |
+| Bloqueo de preguntas de evaluaciones abiertas | `matchesEvaluationQuestion` |
+
+| NO EXISTE |
+|---|
+| Conocimiento del estado, módulo o avance del estudiante |
+| Selección de contenidos o recomendaciones; cambio de ruta |
+| Escritura de evidencia, estado o resultados |
+| Historial guardado o auditoría de conversaciones |
+| Aviso a un adulto o a la institución ante riesgo |
+| Evaluación de la exactitud de sus respuestas |
+| Moderación de la salida del proveedor |
 
 ## 2. Información
 
-| Recibe | Detalle |
+| Recibe hoy | No recibe |
 |---|---|
-| Del cliente | Mensaje (máx. 1500), historial (8 turnos) y `evaluationId` opcional |
-| Del servidor | Nivel del perfil, para el tono; preguntas de evaluaciones abiertas, para bloqueo local |
-| Al proveedor | Prompt del sistema, mensaje saneado e historial saneado. **Sin** nombre, correo o ids agregados por el servidor |
+| Cliente: mensaje (hasta 1500), últimos 8 turnos, `evaluationId` opcional | Evidencias, estados, mapa |
+| Servidor: nivel del perfil, para el tono | Puntajes, resultados, intentos |
+| Servidor: texto de evaluaciones abiertas, **solo para comparar localmente** | Contenidos, recursos, módulo |
+| **Al proveedor:** prompt, mensaje e historial saneados | Nombre, correo o id añadidos por el servidor |
 
-**No recibe** estado de conocimiento, evidencias, puntajes, módulo actual ni recursos. Su historial vive en el navegador.
+El historial vive en el navegador y lo envía el cliente: **no es confiable**, aunque se sanea.
 
-## 3. Restricciones existentes
+## 3. Riesgos del bloqueo por similitud
 
-- Modo tutor: no entrega respuestas finales; pistas graduales.
-- Quita correo, RUT, teléfono y UUID. **No** detecta nombres propios.
-- 20 mensajes por 10 minutos, en memoria **por instancia** (no global).
-- Riesgo (autolesión, abuso, violencia): respuesta fija con contactos, sin llamar al proveedor. Son palabras clave, no un clasificador, y **no avisa a ningún adulto**.
-- Bloquea mensajes que coinciden al 60 % con preguntas de evaluaciones abiertas.
+`matchesEvaluationQuestion` bloquea si coincide ≥ 60 % de las palabras de contenido; ignora preguntas con menos de 3.
 
-## 4. Hallazgos
-
-| Hallazgo | Consecuencia |
+| Riesgo | Efecto |
 |---|---|
-| El cliente no envía `evaluationId`, así que el «modo estricto» del prompt no se activa en este flujo | La protección queda en el bloqueo textual |
-| El bloqueo textual se evade parafraseando | Riesgo de ayuda en evaluación. Límite conocido |
-| Sin control de evaluación tras la ventana (P0-E inexistente) | El código ya bloquea de más, hasta aprobar |
-| Sin verificación de calidad matemática | Respuesta errada posible |
-| Datos de menores enviados a un proveedor externo | Revisión legal: [08](08_SEGURIDAD_Y_GOBIERNO.md) |
-| Conviven `gemini_copilots` (enlaces externos) y `salesChatRoutes` | No confundir: no son este copiloto |
-| Comentario de `Home.tsx` menciona otro servicio (`AiTutorService`) que no está en `server/` | Demo de la landing, no evidencia de función real |
+| Paráfrasis, sinónimos, otro idioma, faltas de ortografía | No bloquea |
+| Dividir la pregunta en varios mensajes | No bloquea |
+| Matemática: números y símbolos; palabras de menos de 4 letras se ignoran | **Especialmente débil en el piloto** |
+| Preguntas cortas | Sin protección |
+| Pregunta legítima de estudio parecida | Bloqueo injusto |
+| El cliente no envía `evaluationId` | El modo estricto del prompt no se activa en esta pantalla |
+| Las evaluaciones aprobadas salen de la lista | C21 |
+| Consulta en cada mensaje sobre todas las evaluaciones | Costo, comentado en el código |
 
-## 5. Lo que le falta para el modelo de conocimiento
+Sirve de barrera básica, no de garantía de integridad.
 
-Contexto del contenido en curso; lista de recursos aprobados; marca `copiloto_en_sesion`; respeto por el embargo; evaluación pedagógica; métricas de calidad; política de aviso a adultos en riesgo; bloqueo robusto.
+## 4. Riesgos de enviar mensajes de menores a un proveedor
 
-## 6. Arquitectura futura (PROPUESTA)
+- Un menor puede escribir datos sensibles (salud, familia, nombres): `redactPII` no detecta nombres ni direcciones.
+- Salen del control de Barkley hacia Google. **No se verificaron** términos contractuales, retención, uso para entrenamiento, ubicación ni tipo de cuenta.
+- Consentimiento de familias y base legal: sin verificar ([08](08_SEGURIDAD_Y_GOBIERNO.md) §6).
+- Respuestas erróneas o inadecuadas sin filtro de salida.
+
+## 5. Límites de la detección de riesgo
+
+- Lista de palabras clave en español, **no un clasificador**. El propio código lo indica.
+- No detecta: lenguaje indirecto, errores de escritura, jerga, riesgo a lo largo de varios turnos.
+- Falsos positivos: frases escolares.
+- **Solo revisa el mensaje actual, y responde con contactos. Nadie se entera.** Al no guardar la conversación, no hay seguimiento.
+- Los teléfonos escritos en el código no se verificaron en esta revisión.
+- Política institucional de protección: sin definir.
+
+Este punto es independiente del piloto, porque el copiloto ya está enlazado: C22.
+
+## 6. Condiciones antes de conectarlo al modelo
+
+Todas, con autorización expresa:
+
+1. Piloto del motor evaluado sin copiloto.
+2. Revisión legal y de proveedor completas.
+3. Protocolo de riesgo institucional, con responsables.
+4. Evaluación pedagógica con preguntas de prueba, revisada por docentes, incluida exactitud matemática.
+5. Pruebas adversas de extracción de respuestas.
+6. Resolución de C21 y N13.
+7. Prueba de no interferencia ampliada: [08](08_SEGURIDAD_Y_GOBIERNO.md) §7.
+8. Definición de cómo cuenta la ayuda (O3).
+
+## 7. Arquitectura futura (solo referencia, NO autorizada)
 
 ```mermaid
 flowchart LR
   U[Estudiante] --> G[Puerta del copiloto]
-  G --> P[iaPolicy actual]
+  G --> P[Política actual]
   G --> CTX[Constructor de contexto]
   CTX --> S[Solo datos liberados por DTO]
-  CTX --> R[Recursos aprobados del contenido]
   P --> L[Proveedor]
-  G --> T[Marca de uso sin contenido]
-  T --> PS[practice_sessions.copilot_used_at]
 ```
 
-**Reglas:**
-1. Contexto mínimo: nombre del contenido y definición. Sin identificadores, puntajes ni evidencia.
-2. Si hay evaluación abierta de ese contenido: sin explicar ese contenido (decisión pendiente, N13, por el riesgo de sobre-bloquear práctica).
-3. **Una sola vía:** el copiloto no escribe evidencia, estado, recomendaciones ni resultados.
-4. No genera preguntas para estudiantes. Generar borradores: flujo editorial con revisión (K13).
-5. Conversación: sin guardar, salvo decisión con revisión de datos.
-
-**Requisitos antes de activarlo en el piloto:** evaluación con preguntas de prueba, revisada por docentes; pruebas adversas; definir qué ocurre en riesgo; revisión legal.
+Principio: **una sola vía**. El copiloto nunca escribe evidencia, estado, recomendaciones ni resultados, y no genera preguntas para estudiantes.

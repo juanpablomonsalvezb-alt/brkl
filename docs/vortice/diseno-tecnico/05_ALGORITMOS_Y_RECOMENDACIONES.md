@@ -6,7 +6,9 @@
 
 Grafo publicado; evidencias con `released_at <= ahora`; política aprobada; agenda de retención; módulo actual y acceso (P0-E); banco aprobado.
 
-**Regla absoluta:** ninguna función de este documento lee evidencia no liberada.
+**Regla absoluta:** ninguna función de este documento lee evidencia no liberada. Reciben la evidencia ya filtrada, por `conocimiento.evidenciaLiberada` ([08](08_SEGURIDAD_Y_GOBIERNO.md) §7.2).
+
+**Motor sin efectos en acceso:** ninguna función escribe en P0-E ni es consultada por `checkModuleAccess` o `checkEvaluationAccess`.
 
 ## 2. Estado de un contenido
 
@@ -40,7 +42,7 @@ función evaluar(evidencias, versión_actual, política):
 
 Cada escenario de [03](03_MOTOR_DE_EVIDENCIAS.md) §9 es una prueba obligatoria de esta función.
 
-Función pura. Con evento `released_at` o respuesta nueva, se recalcula ese contenido y se inserta un evento **solo si cambió**. Liberación de embargo: `released_at` es una fecha, no un trabajo; una lectura calcula perezosamente con filtro, y una tarea diaria materializa. EXISTE EN CÓDIGO el precedente de calcular en lectura (`syncReviewItems`).
+Función pura. Se recalcula por respuesta nueva, anulación o liberación, y se inserta un evento **solo si cambió**. La liberación no depende de una tarea programada: [08](08_SEGURIDAD_Y_GOBIERNO.md) §7.3.
 
 ## 3. Fronteras
 

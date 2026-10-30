@@ -77,7 +77,7 @@ Detector (determinista, solo aviso): normaliza texto, reemplaza números por mar
 
 ## 6. Respuesta asistida y error posterior
 
-**Ayuda (O3).** Campo `assistance`: `ninguna`, `pista`, `explicacion_vista`, `copiloto_en_sesion`, `tutor`. Ajuste de accesibilidad va aparte: `accommodation` (O9). **No se confunde apoyo de accesibilidad con ayuda.**
+**Ayuda (O3).** Campo `assistance`: `ninguna`, `pista`, `explicacion_vista`, `tutor`. Solo registra ayuda ofrecida **por la práctica**. Ajuste de accesibilidad va aparte: `accommodation` (O9). **No se confunde apoyo de accesibilidad con ayuda.**
 
 | Alternativa | Consecuencia |
 |---|---|
@@ -85,7 +85,7 @@ Detector (determinista, solo aviso): normaliza texto, reemplaza números por mar
 | B. Cuenta con peso menor | Requiere pesos sin evidencia |
 | C. Todo cuenta | Dominio inflado |
 
-**Límite:** el servidor no ve ayuda externa (familia, otra pestaña). K6 es evidencia, no certeza. `copiloto_en_sesion` usa solo una marca de tiempo por sesión, sin leer la conversación.
+**Límite:** el servidor no ve ayuda externa (familia, otra pestaña, **ni el copiloto**, que queda desconectado del piloto: C19). `assistance = ninguna` significa «sin ayuda registrada», no «sin ayuda». K6 es evidencia, no certeza.
 
 **Error posterior al dominio.** La evidencia se inserta; no se borra nada.
 
@@ -169,7 +169,7 @@ flowchart TB
 | B. E2 nunca es evidencia | Más simple y seguro; desperdicia datos; K6 depende solo de práctica |
 | C. E2 actualiza de inmediato | **No viable**: filtra la pauta |
 
-**Prueba de no interferencia (obligatoria):** dos estudiantes ficticios idénticos responden distinto en E2. Hasta `review_at`, mapa, recomendaciones, notificaciones y vistas de familia y tutor deben ser **byte a byte iguales** (salvo el estado permitido).
+**Prueba de no interferencia (obligatoria):** protocolo, filtro único, cálculo en `review_at` y fallos: [08](08_SEGURIDAD_Y_GOBIERNO.md) §7.
 
 **Sobre el estudiante con E2 embargada:** si practica mientras, el mapa avanza solo con práctica. No se bloquea el contenido por E2 abierta. P10 sigue pendiente para el repaso de preguntas evaluativas, que aquí no se usa.
 
