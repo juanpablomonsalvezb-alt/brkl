@@ -4,7 +4,7 @@
 **Para quién:** la dirección del proyecto, que decide. ChatGPT revisa este documento de forma independiente.
 **Qué no cambia:** la especificación maestra (`docs/p0-e-maestro`) y las reglas ya aprobadas (P1–P6, P12, P15, P18 base, P19, P20 base). No se modifica el esquema, los registros históricos ni producción.
 **Base de código descrita:** rama `vortice/integracion`, commit `3bfb103` o posterior.
-**Detalle técnico ampliado:** [`DECISIONES_P7_P8_P16_P21.md`](DECISIONES_P7_P8_P16_P21.md).
+**Detalle técnico ampliado:** [`DECISIONES_P7_P8_P16_P21.md`](DECISIONES_P7_P8_P16_P21.md). **Índice y conflictos:** [`README.md`](README.md), [`CONTRADICCIONES_Y_PREGUNTAS.md`](CONTRADICCIONES_Y_PREGUNTAS.md).
 
 Cómo leer cada punto:
 - **Recomendación:** lo que propongo.
@@ -89,6 +89,8 @@ Cómo leer cada punto:
 
 ## P16 — Las cuatro evaluaciones de cada módulo
 
+**Dependencia nueva.** K11 (feedback inmediato en prácticas) se apoya en esta clasificación, aún sin aprobar: C6.
+
 **Situación.** El código llama «Evaluación Formativa» a las cuatro, pero E2 bloquea el avance al módulo siguiente. La etiqueta no puede deducirse del número.
 
 **Recomendación.**
@@ -142,7 +144,7 @@ Cómo leer cada punto:
 
 **Contradicción a ratificar.** La especificación maestra tiene **aprobada** la regla «agotar E2 sin aprobar no desbloquea automáticamente el módulo siguiente». La regla comunicada la reemplaza; requiere confirmación expresa (decisión **D2**).
 
-Detalle completo, implicancias, identificación de contenidos no logrados y preguntas abiertas: [`PROGRESO_Y_PROGRESION.md`](PROGRESO_Y_PROGRESION.md).
+Detalle completo, implicancias, identificación de contenidos no logrados y preguntas abiertas: [`PROGRESO_Y_PROGRESION.md`](PROGRESO_Y_PROGRESION.md). La especificación maestra exige revisar normativa antes de decidir: C15.
 
 ---
 

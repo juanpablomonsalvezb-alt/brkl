@@ -6,6 +6,8 @@ lang: es-CL
 
 # 1. Para qué sirve este documento
 
+**Este resumen no es normativo.** Las reglas viven en los documentos indicados en `README.md`. Versión corregida el 30 de octubre de 2026; ver `CONTRADICCIONES_Y_PREGUNTAS.md`.
+
 Vórtice ha avanzado, en las últimas semanas, mucho más en **claridad conceptual** que en funcionalidades. Este documento reúne lo que hoy sabemos y hemos decidido en teoría, para que el equipo pueda hablar el mismo lenguaje, y distingue con honestidad tres planos:
 
 | Plano | Significado |
@@ -22,7 +24,7 @@ La mayoría de los colegios avanza por calendario: el curso sigue aunque un estu
 
 Esta idea tiene tres consecuencias de diseño:
 
-1. **Progresión condicionada.** Cada módulo termina con una evaluación de cierre; aprobarla abre el módulo siguiente.
+1. **Progresión condicionada.** Cada módulo termina con una evaluación de cierre; aprobarla abre el módulo siguiente. La regla P21 comunicada permitiría continuar tras agotar todos los intentos, por lo que esta consecuencia está pendiente de ratificación (D2).
 2. **Oportunidades limitadas pero reales.** Hay intentos acotados, una recuperación única y repaso dirigido, no castigo.
 3. **Evidencia por sobre tiempo.** Importa qué demostró el estudiante, no cuántas horas estuvo conectado.
 
@@ -62,7 +64,7 @@ Un espacio vacío en el mapa **no equivale** a algo que deba estudiarse hoy. Hay
 
 # 4. Decisiones de la dirección sobre el modelo de conocimiento (K1–K14)
 
-Respondidas «sí» el 30 de octubre de 2026. Pendientes de revisión independiente.
+Respondidas «sí» el 30 de octubre de 2026. Comunicadas, pendientes de revisión independiente. **Ninguna está construida.**
 
 | ID | Decisión |
 |---|---|
@@ -90,32 +92,33 @@ Estas reglas forman la **capa de evidencia** sobre la que se apoya el modelo de 
 | Regla | Contenido |
 |---|---|
 | Resultado binario al estudiante | Se informa «Aprobado» o «No aprobado» durante el proceso, no un puntaje exacto (ver sección 6 sobre cómo conviven con los porcentajes). |
-| Intentos | 2 en las evaluaciones de práctica y 3 en la evaluación de cierre (E2). El intento se consume al entregar. |
+| Intentos | 2 en E1, E3 y E4, y 3 en E2. El intento se consume al entregar. |
 | Plazos | El plazo vence a las 23:59 hora de Chile. Hay una extensión de 48 horas. La revisión (`review_at`) llega 49 horas después del plazo. Las entregas tardías se rechazan con error 409. |
 | Recuperación | Una sola recuperación por proceso, con lotes de recuperación. |
-| Historial | Los intentos antiguos no se reescriben ni se renumeran (P7, propuesta de conservación del historial). |
+
+El tratamiento del historial (P7) **no** es una regla aprobada: es una propuesta (sección 9).
 
 # 6. Umbrales y regla de avance comunicados por la dirección
 
-| Rango de logro | Estado académico | Qué recibe el estudiante |
+| Rango de logro (comunicado, pendiente de D3) | Estado académico | Qué recibe el estudiante |
 |---|---|---|
 | Menos de 70 % | No aprobada | Repaso |
 | 70 % a menos de 80 % | Aprobada, con refuerzo | Refuerzo sobre los contenidos más débiles |
-| 80 % a 100 % | Aprobada | Avance |
+| 80 % a 100 % | Aprobada | Sin aviso especial |
 
 **Regla P21 (comunicada, pendiente de ratificación).** Si el estudiante agota los intentos de la evaluación de cierre y la recuperación sin alcanzar el 70 %, esa evaluación queda «Reprobada», pero el estudiante **puede continuar** al módulo siguiente. Antes se le informa qué contenidos no logró y recibe enlaces a sus recursos de repaso. Continuar no cambia el resultado, y todo queda registrado.
 
 **Aviso importante.** Esta regla reemplaza una regla ya aprobada («agotar la evaluación sin aprobar no desbloquea el siguiente módulo»). Por eso figura como una decisión que la dirección debe ratificar expresamente (D2).
 
-**Cómo convive con el modelo de conocimiento.** Con los contenidos asociados a cada pregunta, la frase «contenidos que no logró» deja de significar «el módulo completo» y pasa a significar «sumar fracciones», «comparar números», etc. El repaso se vuelve específico.
+**Cómo convive con el modelo de conocimiento.** Con contenidos asociados a cada pregunta, «contenidos que no logró» podría pasar de «el módulo completo» a contenidos concretos. **El 70 % de una evaluación y K6 son medidas distintas, y su relación no está definida** (N1).
 
 ## 6.1. Contradicciones detectadas y su compatibilización
 
 | Tensión | Compatibilización propuesta |
 |---|---|
 | El resultado binario contra el porcentaje real y la banda 70–79 | Durante el proceso solo se muestra el estado. Porcentaje, banda y contenidos no logrados aparecen al cierre, desde `review_at`. |
-| Retraso de la pauta contra feedback inmediato por contenido | Las **prácticas** (formativas) dan feedback inmediato. La **evaluación de cierre** mantiene el retraso para que nadie deduzca la pauta. |
-| Compuerta binaria contra frontera de aprendizaje | La compuerta del 70 % queda como política gruesa; el modelo de conocimiento opera por debajo, con más detalle. |
+| Retraso de la pauta contra feedback inmediato por contenido | K11 lo plantea así, pero sigue en conflicto con la regla aprobada y depende de P16 (C6). |
+| Módulo abierto por P21 contra contenido «bloqueado» en el mapa | Sin resolver (C9, N3). |
 
 # 7. Clasificación de las cuatro evaluaciones de cada módulo (propuesta P16)
 
@@ -161,11 +164,9 @@ Mezclarlos produce interpretaciones erróneas: completar una lección no equival
 
 Se recomienda no nombrar marcas ajenas en publicidad ni sugerir alianzas con ellas.
 
-## 10.3. Mensajes compatibles con la realidad actual
+## 10.3. Mensajes
 
-- «Avanzar es aprender.»
-- «Aquí avanzas cuando demuestras que aprendiste.»
-- «Si no lo logras, sabes exactamente qué repasar.»
+Hoy no hay repaso por contenido ni modelo de conocimiento, y P21 cambiaría el sentido de «avanzas cuando demuestras». Frases como «sabes exactamente qué repasar» o «nadie avanza sin entender» deben revisarse antes de usarse (C12, N7).
 
 # 11. Lo que no hacemos todavía (y por qué)
 
@@ -189,18 +190,21 @@ Estas salvaguardas provienen del informe y de las decisiones de la dirección:
 | Modelo de conocimiento (contenidos, prerrequisitos, estados) | Decidido; construcción pendiente |
 | Banco de preguntas por contenido, revisado | No existe |
 | Diagnóstico adaptativo y mapa del estudiante | No existe |
-| Tutor IA | No existe |
+| Copiloto conversacional | Existe en código; sin verificar en uso; no es adaptativo (C13) |
+| Tutor adaptativo | No existe |
 
 # 13. Pendientes que condicionan el avance
 
 **Decisiones de la dirección:** ratificar D1 a D4 (porcentaje al estudiante, reemplazo de la regla de bloqueo por P21, umbrales 70/80 y qué ven familia y tutor), y las decisiones P7, P8 y P16.
 
-**Preguntas abiertas del modelo de conocimiento (O1 a O10):** cuándo un contenido pasa a «no dominado», si cuenta una respuesta con ayuda, quién valida los contenidos y en qué plazo, qué unidad concreta es el piloto, cómo se muestra la incertidumbre, qué ven familia y tutor, cada cuánto se reevalúa la retención, qué adaptaciones son compatibles con la validez, y qué datos se conservan y por cuánto tiempo.
+**Preguntas abiertas del modelo de conocimiento (O1 a O10 y N1 a N10, incluida la relación entre 70 % y K6):** cuándo un contenido pasa a «no dominado», si cuenta una respuesta con ayuda, quién valida los contenidos y en qué plazo, qué unidad concreta es el piloto, cómo se muestra la incertidumbre, qué ven familia y tutor, cada cuánto se reevalúa la retención, qué adaptaciones son compatibles con la validez, y qué datos se conservan y por cuánto tiempo.
 
 **Autorizaciones separadas:** la migración de base de datos, cualquier despliegue y la integración a `main`.
 
 # 14. Documentos de detalle
 
+- `README.md`: índice y documento normativo por materia.
+- `CONTRADICCIONES_Y_PREGUNTAS.md` y `TRAZABILIDAD.md`: conflictos y matriz.
 - `DOMINIO_POR_CONOCIMIENTO.md`: decisiones K1–K14, ficha del contenido, estados, piloto y modelo de datos conceptual.
 - `PROGRESO_Y_PROGRESION.md`: umbrales 70/80, regla P21, contradicciones y los cuatro indicadores.
 - `DECISIONES_PARA_APROBAR.md` y `DECISIONES_P7_P8_P16_P21.md`: propuestas pendientes de aprobación.

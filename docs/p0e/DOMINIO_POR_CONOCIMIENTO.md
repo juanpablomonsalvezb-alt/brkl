@@ -1,171 +1,118 @@
-# Vórtice hacia el dominio por conocimiento (inspirado en ALEKS / KST)
+# Modelo de aprendizaje por dominio de conocimientos pequeños (K1–K14)
 
-**Estado:** decisiones K1–K14 **respondidas «sí» por la dirección en el chat (2026-10-30)**. Pendiente: revisión independiente de ChatGPT.
-**Qué NO autoriza este documento:** implementación, cambios de esquema, migraciones, despliegues ni cambios en producción. Cada uno requiere autorización aparte.
-**Fuente:** `Informe_ALEKS_KST_Vortice_Barkley.docx` (octubre 2026). Lo que el informe dice de ALEKS proviene de documentación pública del proveedor; todo lo demás son decisiones de Barkley.
-**Relación con P0-E:** P0-E (intentos, cierres, ventanas, P7/P8/P16/P21) se mantiene como **capa de evidencia**. Este documento agrega, encima, el **modelo de conocimiento**. No contradice ninguna regla aprobada de P0-E.
+**Estado global:** K1–K14 **COMUNICADAS**: respondidas «sí» por la dirección el 2026-10-30, pendientes de revisión independiente. **Nada de este modelo está construido.**
+**Autorización:** ninguna para implementar, cambiar esquema, migrar o desplegar.
+**Clasificación y documentos normativos:** ver [`README.md`](README.md).
+**Fuente teórica:** `Informe_ALEKS_KST_Vortice_Barkley.docx` (octubre 2026). Lo que dice de ALEKS proviene de documentación pública del proveedor. Sus cifras (30–60 ítems, 3–6 variantes, 30–60 estudiantes) son hipótesis de planificación.
+
+**Corrección a la versión anterior.** Este documento afirmaba que el modelo «no contradice ninguna regla aprobada de P0-E». Era incorrecto: ver C6, C7, C8 y C9 en [`CONTRADICCIONES_Y_PREGUNTAS.md`](CONTRADICCIONES_Y_PREGUNTAS.md). También presentaba como reglas algunos detalles no decididos; ahora están marcados.
 
 ---
 
-## 1. Decisiones respondidas
+## 1. Decisiones comunicadas
 
-| ID | Decisión | Respuesta |
+| ID | Decisión | Observación |
 |---|---|---|
-| K1 | Vórtice evoluciona a dominio por conocimientos pequeños, al estilo ALEKS, y no solo por módulo | Sí |
-| K2 | P0-E se mantiene como capa de evidencia | Sí |
-| K3 | No se promete «adaptativo» ni «IA» en marketing hasta validarlo | Sí |
-| K4 | Cada pregunta queda asociada a un contenido específico | Sí |
-| K5 | El nombre y la definición de cada contenido los valida una persona del equipo pedagógico; no los fija la IA sola | Sí |
-| K6 | «Dominado» exige al menos 2 respuestas correctas en preguntas distintas | Sí |
-| K7 | Cada contenido declara sus prerrequisitos; una persona del equipo valida las relaciones | Sí |
-| K8 | Un contenido puede tener más de una ruta previa válida | Sí (etapa 2, ver sección 6) |
-| K9 | Se empieza con una sola asignatura y un solo nivel | Sí |
-| K10 | El piloto es Matemática de 5º Básico | Sí |
-| K11 | Las prácticas (E1, E3, E4) dan feedback inmediato por contenido; el cierre (E2) conserva el retraso de `review_at` | Sí |
-| K12 | El estudiante ve un mapa de contenidos (dominados, por aprender, bloqueados) además de la ruta de estaciones | Sí |
-| K13 | Las preguntas generadas con IA las revisa una persona antes de usarse | Sí |
-| K14 | Se acepta guardar cada respuesta con su contenido asociado, lo que exigirá una migración posterior, pedida por separado | Sí |
+| K1 | Vórtice evoluciona a dominio por conocimientos pequeños, no solo por módulo | |
+| K2 | P0-E se mantiene como capa de evidencia | Sección 5 |
+| K3 | No se promete «adaptativo» ni «IA» en marketing hasta validarlo | Hay textos publicados en conflicto: C12 |
+| K4 | Cada pregunta queda asociada a un contenido específico | |
+| K5 | Una persona del equipo pedagógico valida nombre y definición de cada contenido | Quién y plazo: O4 |
+| K6 | «Dominado» exige al menos 2 respuestas correctas en preguntas distintas | Detalles abiertos: sección 3 |
+| K7 | Cada contenido declara prerrequisitos, validados por personas | |
+| K8 | Se admiten rutas previas alternativas | **Segunda etapa** |
+| K9 | Una sola asignatura y un solo nivel | |
+| K10 | Piloto: Matemática de 5.º Básico | Unidad: O5 |
+| K11 | Prácticas (E1, E3, E4): feedback inmediato por contenido. E2: retraso hasta `review_at` | Depende de P16 y requiere ratificar C6 |
+| K12 | Mapa de contenidos además de la ruta de estaciones | |
+| K13 | Preguntas generadas con IA: revisión humana antes de usarse | |
+| K14 | Guardar cada respuesta con su contenido; exigirá migración pedida por separado | Sin autorización todavía |
 
----
+## 2. Unidad de conocimiento («contenido»)
 
-## 2. Qué es un «contenido» (ítem de conocimiento)
+Unidad pequeña y observable que se puede enseñar, practicar y evaluar. Se separa del currículo: el OA pertenece a la capa curricular; el contenido, a la capa de conocimiento. Un contenido se vincula a uno o más OA, sin redefinirlos.
 
-Unidad pequeña que se puede **enseñar, practicar y evaluar**. Ejemplo bueno: «Sumar fracciones con distinto denominador». Ejemplo demasiado amplio: «Fracciones». Ejemplo demasiado pequeño: «Recordar el símbolo de la barra».
+Ficha **PROPUESTA** (informe, sección 7.2): código estable; nombre y definición operacional; OA vinculados; prerrequisitos con tipo, justificación y validador; preguntas asociadas; errores frecuentes; recursos de repaso; versión, responsable y estado de validación.
 
-Ficha mínima de cada contenido (según el informe, sección 7.2):
+**Prerrequisitos.** Etapa 1 (PROPUESTA): relaciones necesarias y contributivas. Etapa 2 (K8): rutas alternativas. Una correlación estadística no se convierte en prerrequisito sin revisión humana. Este documento no define ningún prerrequisito ni contenido curricular real.
 
-| Campo | Contenido |
-|---|---|
-| Código estable | No cambia aunque cambie el nombre visible |
-| Nombre y definición operacional | Qué debe poder hacer el estudiante |
-| OA / habilidad | Vínculo con `learning_objectives` (currículo chileno) |
-| Prerrequisitos | Contenidos previos, con tipo de relación (ver sección 5) |
-| Criterio de dominio | Regla de evidencia (ver sección 3) |
-| Preguntas asociadas | Al menos 3 variantes distintas |
-| Errores frecuentes | Para orientar el repaso |
-| Recursos de repaso | Lección, video o actividad existente |
-| Gobernanza | Responsable, fecha, versión y estado de validación |
+## 3. Estados de conocimiento y K6
 
-**Regla de separación (informe 7.1):** el currículo oficial (OA) y el modelo de conocimiento (contenidos) son dos capas distintas. Cada contenido se vincula a uno o más OA; ningún OA se redefine desde el motor.
-
----
-
-## 3. Cuándo un contenido está «dominado» (K6)
-
-Estados de cada contenido para cada estudiante:
-
-| Estado | Significado |
-|---|---|
-| **Dominado** | Al menos 2 respuestas correctas en **preguntas distintas** del mismo contenido |
-| **No dominado** | Evidencia suficiente de que no lo logra (ver pregunta abierta O1) |
-| **Incierto** | Evidencia insuficiente o contradictoria (por ejemplo, 1 acierto y 1 error) |
-
-- Un error aislado **no borra** un dominio ya establecido: marca el contenido como «por comprobar».
-- El historial de intentos **no se sobrescribe**; el estado es una interpretación que puede cambiar (informe 8.1).
-- Un contenido solo se muestra como «no dominado» ante el estudiante cuando corresponda según K11 (ver sección 4).
-
----
-
-## 4. Qué ve el estudiante y cuándo (K11, K12)
-
-| Tipo de evaluación | Feedback por contenido | Razón |
+| Estado | Clasificación | Definición |
 |---|---|---|
-| **Práctica** (E1, E3, E4; P16) | **Inmediato** | Es formativa: ver el error enseña y orienta el repaso |
-| **Cierre** (E2) | **Desde `review_at`** | Mantiene la regla aprobada: evita que cada intento revele la pauta |
+| **Dominado** | COMUNICADA (K6) | Al menos 2 respuestas correctas en preguntas distintas del contenido |
+| **No dominado** | **PREGUNTA ABIERTA (O1)** | Sin definir |
+| **Incierto** | PROPUESTA | Estado sugerido por el informe; su existencia y presentación siguen abiertas (O6) |
 
-**Mapa del estudiante** (K12), además de la ruta de estaciones:
-- **Dominado:** contenidos con evidencia suficiente.
-- **Listo para aprender:** no dominado, con todos sus prerrequisitos dominados (la «frontera externa» del informe).
-- **Bloqueado por una base:** faltan prerrequisitos; se muestra qué base falta, no solo un candado.
+**Detalles de medición de K6 aún abiertos:**
+- Qué respuestas cuentan: prácticas, E2, recuperación o un banco separado (N2).
+- Si deben ocurrir en sesiones distintas (O2).
+- Si una respuesta con ayuda cuenta (O3).
+- Si una respuesta incorrecta posterior revierte el dominio, y cómo (O1, O8). La versión anterior decía que un error aislado no borra el dominio: era una hipótesis del informe, no una decisión.
+- Si K6 basta frente a preguntas muy parecidas: qué hace «distintas» a dos preguntas (N9).
+- Cuánto dura el dominio: retención y reevaluación (O8).
 
-**Consistencia con P21:** al agotar E2 sin aprobar, el estudiante sigue pudiendo continuar y recibe los contenidos no logrados con enlaces de repaso. Con este modelo, esos «contenidos no logrados» pasan de «el módulo completo» a **contenidos concretos**. Esto resuelve el requisito previo Q8 de [`PROGRESO_Y_PROGRESION.md`](PROGRESO_Y_PROGRESION.md).
+**Principio de datos (PROPUESTA, informe 8.1).** La respuesta es un hecho histórico; el estado es una interpretación revisable. El historial no se sobrescribe.
 
----
+**Incertidumbre.** Una regla K6 no mide por sí sola la incertidumbre del modelo. Cómo representarla y comunicarla sigue abierto (O6, N10).
 
-## 5. Prerrequisitos (K7, K8)
+## 4. Mapa individual del estudiante (K12)
 
-Cada relación entre contenidos registra: tipo, justificación, nivel de confianza y quién la validó.
+Tres categorías comunicadas: **dominado**, **por aprender** (listo: sus prerrequisitos están dominados) y **bloqueado** (falta una base, y se muestra cuál). El mapa muestra el estado estimado del modelo; no es diagnóstico adaptativo. Su comportamiento frente a E2 y P21 está en la sección 5. Requisitos de pantalla: `PROGRESO_Y_PROGRESION.md`, sección 5.
 
-| Tipo | Significado | Etapa |
+## 5. Convivencia con P0-E
+
+**P0-E sigue siendo la capa de evidencia:** intentos, plazos, cierres, recuperaciones y revisión. El modelo de conocimiento interpreta evidencia; no cambia intentos, ventanas ni cierres.
+
+### 70 % y K6 son medidas distintas
+
+| | Umbral de evaluación (D3) | Dominio de contenido (K6) |
 |---|---|---|
-| Necesaria | El avanzado requiere el previo | 1 |
-| Contributiva | Ayuda, pero no es indispensable | 1 |
-| Alternativa | Hay más de una combinación válida de previos | **2** |
+| Qué mide | Una evaluación completa | Un contenido |
+| Regla | Porcentaje de correctas | Al menos 2 correctas en preguntas distintas |
+| Efecto | Estado académico de la evaluación | Estado en el mapa |
+| Estado | COMUNICADA, pendiente de D3 | COMUNICADA, detalles abiertos |
 
-- Una correlación estadística **no** se convierte en prerrequisito sin revisión humana (informe 11.4).
-- La etapa 1 usa solo relaciones necesarias y contributivas, con validación humana.
+**La relación entre ambas no está definida (N1) y este documento no la inventa.** Son posibles, y deben contemplarse, casos como aprobar E2 con contenidos sin dominar, o dominar todos los contenidos del mapa y no aprobar E2. El «contenido no logrado» de `PROGRESO_Y_PROGRESION.md` §4 (menos de 70 % por contenido, PROPUESTA) es una tercera medida: ver C8.
 
----
+### Publicación
 
-## 6. Piloto: Matemática de 5º Básico (K9, K10)
-
-- **Alcance:** una unidad de Matemática de 5º Básico, descompuesta en **30–60 contenidos** (hipótesis inicial del informe; no es un estándar científico).
-- **Banco:** 3–6 variantes de pregunta por contenido, todas revisadas por una persona (K13).
-- **Fuera del piloto:** las demás asignaturas y niveles. No se simula cobertura que no existe: Barkley cubre 1º Básico a 4º Medio, pero el modelo de conocimiento solo existirá donde se haya construido y validado.
-- **Éxito del piloto** (informe sección 12): concordancia del diagnóstico con la evaluación docente, ganancia entre antes y después, retención diferida, abandono y equidad por dispositivo y conectividad. No se mide por minutos conectados ni por ejercicios completados.
-
----
-
-## 7. Hoja de ruta (propuesta, sin fechas comprometidas)
-
-| Fase | Trabajo | Autorización necesaria |
+| Evaluación | Durante el proceso | Después |
 |---|---|---|
-| 0 | Catálogo de contenidos de la unidad piloto y criterios de dominio (documento) | Ninguna adicional |
-| 1 | Relaciones de prerrequisito, validadas por el equipo (documento) | Ninguna adicional |
-| 2 | Banco de preguntas: variantes revisadas por una persona | Ninguna adicional |
-| 3 | **Diseño de esquema** (tablas de contenidos, relaciones, respuestas por contenido) | Revisión de ChatGPT |
-| 4 | **Migración** (K14) | **Autorización explícita separada** |
-| 5 | Motor por reglas: estados, frontera, recomendación explicable | Aprobación + pruebas |
-| 6 | Mapa del estudiante y panel de tutor | Aprobación |
-| 7 | Piloto con estudiantes ficticios y luego con grupo acotado | Aprobación |
+| Prácticas (función sujeta a P16) | Feedback inmediato por contenido (K11, sujeto a C6) | Según regla de revisión |
+| E2 y recuperación | Solo estado. Sin puntaje, banda ni información que permita reconstruir la pauta. El mapa no debe delatar el resultado por contenido (C7) | Desde `review_at`: porcentaje real, banda y contenidos no logrados, **sujeto a D1–D4** |
 
-Las fases 0 a 2 son trabajo pedagógico y no tocan código. El informe advierte que la calidad depende más de cómo se definen los contenidos que del algoritmo.
+### P21
 
----
+Abrir el módulo siguiente con E2 «Reprobado» (COMUNICADA, requiere D2) no marca contenidos como dominados y no cambia el resultado. Qué muestra el mapa para contenidos del módulo abierto con base sin dominar: C9, N3.
 
-## 8. Modelo de datos conceptual (para revisión; no es una migración)
+## 6. Piloto (K9, K10)
 
-Entidades nuevas esperadas: **contenido**, **relación entre contenidos**, **vínculo contenido ↔ OA**, **vínculo pregunta ↔ contenido**, **respuesta por pregunta** (hecho histórico), **estimación de dominio** (interpretación revisable, con fecha y versión).
+- **Alcance:** Matemática de 5.º Básico. Unidad por definir (O5).
+- **Hipótesis del informe, no reglas:** 30–60 contenidos; 3–6 variantes por contenido; 30–60 estudiantes.
+- **Fuera del piloto:** rigen solo P0-E y la progresión vigente. Convivencia de ambos regímenes: N8.
+- **Métricas:** el informe sugiere concordancia con evaluación docente, ganancia, retención y equidad. Ninguna está aprobada ni tiene meta; este documento no fija valores.
 
-Principios de diseño:
-- La respuesta es un hecho; la estimación de dominio es una interpretación que puede cambiar. No se sobrescribe el historial.
-- Cada recomendación guarda su motivo («se ofrece este contenido porque A y B, sus prerrequisitos, están dominados»).
-- Lo existente se reutiliza: `learning_objectives` (OA), `learning_events` (eventos sin texto libre), `review_items` (repaso espaciado), `evaluation_progress` y las tablas de intentos de P0-E.
-- El diseño de P0-E debe evitar atar la lógica a `evaluation_number`; ya está contemplado en P16.
+## 7. Lo que no existe y lo que no se copia
 
----
+**No existe (a la fecha de este documento):** contenidos, prerrequisitos, estados, frontera, mapa, diagnóstico adaptativo, motor de recomendación, banco calibrado ni algoritmo tipo ALEKS.
 
-## 9. Lo que NO se automatiza todavía (informe 11.4)
+**Tutor IA, precisión.** Existe en código un copiloto conversacional (`POST /api/academic-copilot/chat`, `shared/iaPolicy.ts`, `server/geminiChat.ts`), con límites y bloqueo de preguntas de evaluaciones abiertas. **No** usa modelo de conocimiento ni adapta la ruta, y no se verificó su funcionamiento real. No debe presentarse como tutor adaptativo. Ver C13.
 
-- El algoritmo **no crea** prerrequisitos curriculares sin revisión humana.
-- No se etiqueta permanentemente a un estudiante a partir de un diagnóstico breve.
-- El tiempo de respuesta no es indicador único de dominio.
-- No se infieren condiciones clínicas a partir del desempeño.
-- No se recomienda automáticamente reducir expectativas curriculares.
+**No se copia de ALEKS:** interfaz, marca, textos, algoritmo propietario ni afirmaciones de precisión.
 
----
+**No se automatiza (informe 11.4):** crear prerrequisitos sin revisión humana; etiquetar permanentemente a un estudiante; usar el tiempo como único indicador; inferir condiciones clínicas; reducir expectativas curriculares.
 
-## 10. Preguntas abiertas (no respondidas por mí)
+## 8. Hoja de ruta (PROPUESTA, sin fechas)
 
-| ID | Pregunta |
-|---|---|
-| O1 | ¿Cuándo un contenido pasa a «no dominado»: tras 2 errores en preguntas distintas, o con otra regla? |
-| O2 | ¿Las 2 respuestas correctas de K6 deben ocurrir en sesiones distintas o pueden ser en la misma práctica? |
-| O3 | ¿Una respuesta con ayuda (pista, explicación del robot, si existiera) cuenta como evidencia de dominio? |
-| O4 | ¿Quién del equipo pedagógico valida contenidos y prerrequisitos, y en qué plazo? |
-| O5 | ¿Qué unidad concreta de Matemática de 5º Básico es el piloto? |
-| O6 | ¿El estudiante ve «incierto» como estado propio, o se le muestra como «por comprobar»? |
-| O7 | ¿Los apoderados y tutores ven el mapa por contenido o solo el resumen? (ver D4 en `PROGRESO_Y_PROGRESION.md`) |
-| O8 | ¿Cada cuánto se reevalúa un contenido dominado para comprobar retención, y con qué política? |
-| O9 | ¿Qué adaptaciones (tiempo, formato) son compatibles con la validez de cada evaluación? |
-| O10 | ¿Qué datos se conservan, por cuánto tiempo y quién accede? Requiere revisión de protección de datos aplicable en Chile antes de escalar. |
+| Fase | Trabajo | Requiere |
+|---|---|---|
+| 0–2 | Catálogo de contenidos, prerrequisitos y banco revisado de la unidad piloto (documentos) | O4, O5 y equipo pedagógico |
+| 3 | Diseño de esquema | Resolver N1, N2, C6, C7 y C9; revisión independiente |
+| 4 | Migración | Autorización nueva y expresa |
+| 5–6 | Motor por reglas, mapa y panel | Autorización nueva y expresa |
+| 7 | Piloto | Autorización nueva y expresa; revisión de datos (O10) |
 
----
+## 9. Preguntas abiertas
 
-## 11. Marketing (K3)
-
-Frases compatibles con lo que existe hoy y con lo que este documento promete a futuro:
-- «Identifica qué aprendió cada estudiante y orienta el siguiente paso.»
-- «Cada evaluación te muestra con precisión qué contenidos dominas y cuáles reforzar.»
-
-Frases que **no** se usan hasta validar el piloto: «inteligencia artificial adaptativa», «conoce exactamente todo lo que sabe tu hijo», «como ALEKS» o cualquier uso de su marca.
+O1–O10 y N1–N10: registro único en [`CONTRADICCIONES_Y_PREGUNTAS.md`](CONTRADICCIONES_Y_PREGUNTAS.md), sección 3.

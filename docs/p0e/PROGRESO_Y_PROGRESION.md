@@ -3,6 +3,8 @@
 **Fecha:** 2026-10-26 · **Rama:** `vortice/integracion` · **Solo documentación:** no cambia código, esquema, pruebas ni producción.
 **Fuente de reglas aprobadas:** `docs/P0-E/ESPECIFICACION_MAESTRA.md` en la rama `docs/p0-e-maestro` (commit `0e1f64f`). El PR #1 de correcciones de formato sigue abierto.
 
+**Documento normativo** de P21, bandas, indicadores y experiencia de progreso (ver [`README.md`](README.md)). Contradicciones C6 en adelante: [`CONTRADICCIONES_Y_PREGUNTAS.md`](CONTRADICCIONES_Y_PREGUNTAS.md).
+
 Estados que usa este documento:
 
 | Estado | Significado |
@@ -37,7 +39,7 @@ Las decisiones comunicadas chocan con reglas ya **APROBADAS** en la especificaci
 |---|---|---|
 | Menos de 70 % | No aprobada | Ruta de repaso personalizada, vinculada a los objetivos no logrados |
 | 70 % a menos de 80 % | Aprobada | Recomendación visible de reforzar contenidos |
-| 80 % a 100 % | Aprobada | Sin advertencia de refuerzo |
+| 80 % a 100 % | Aprobada | Sin aviso especial |
 
 **Reglas de cálculo (REQUISITO).**
 - El porcentaje sale **solo** del resultado real corregido por el servidor: `score` en `evaluation_progress`. Nunca del avance en lecciones ni de cifras de ejemplo.
@@ -81,6 +83,8 @@ Las decisiones comunicadas chocan con reglas ya **APROBADAS** en la especificaci
 ---
 
 ## 4. Cómo se identifican los objetivos no logrados (PROPUESTA)
+
+> **Aviso.** El criterio de esta sección (menos de 70 % por contenido) **no** es K6 (2 correctas en preguntas distintas). Son medidas distintas y su relación no está definida: C8 y N1. El umbral de evaluación (70 %) tampoco equivale a ninguna de ellas.
 
 **Situación actual (verificada en el código).**
 - Cada módulo tiene un objetivo de aprendizaje (`learning_objectives`, uno por `week_number`).
@@ -142,6 +146,39 @@ Cada indicador lleva su propia etiqueta y unidad. El porcentaje de lecciones com
 Ningún número de ejemplo en producción ni en Preview. Si un dato no existe, se muestra un estado vacío explicado («Aún no rindes esta evaluación»). El gráfico de horas con datos inventados que sigue en `CoursePlayer.tsx` se elimina al implementar esta sección.
 
 ---
+
+### 5.6 Mapa de contenidos (K12)
+- Vista complementaria de la ruta: dominado, por aprender y bloqueado, con la base faltante nombrada.
+- Solo donde exista el modelo (piloto). Fuera del piloto no se simula.
+- No se muestra como diagnóstico ni como evaluación académica.
+
+### 5.7 Cuándo se publica cada dato
+
+| Dato | Antes de `review_at` | Desde `review_at` |
+|---|---|---|
+| Avance de lecciones | Visible | Visible |
+| E2 y recuperación: estado | Visible | Visible |
+| E2 y recuperación: porcentaje, banda, contenidos no logrados, efecto en el mapa | **Oculto** | Visible, sujeto a D1–D4 y C7 |
+| Prácticas: feedback por contenido | Inmediato, sujeto a C6 y P16 | Visible |
+| Pauta y respuestas | Oculta | Según P19, en revisión de solo lectura |
+
+### 5.8 Dirección de la experiencia (REQUISITO)
+Moderna, motivadora y persistente dentro de la lección: se ve como una ruta en curso, no como una tabla o barras administrativas. La motivación nunca reemplaza el significado: no hay puntos ni celebraciones que oculten un «Reprobado» o sugieran que continuar equivale a aprobar.
+
+### 5.9 Criterios de aceptación (para una implementación futura, no autorizada)
+
+| ID | Criterio |
+|---|---|
+| CA1 | Ruta, panel, historial y acceso a contenidos por reforzar se pueden usar sin salir de la lección, en escritorio y móvil |
+| CA2 | Los cuatro indicadores aparecen separados, cada uno con etiqueta y unidad; completar lecciones nunca modifica el rendimiento y viceversa |
+| CA3 | Todo porcentaje procede de un resultado real del servidor; sin dato hay estado vacío explicado. Ningún valor ficticio |
+| CA4 | Antes de `review_at`, ninguna respuesta de la API ni elemento de pantalla revela puntaje, banda, contenidos fallados o pauta de E2 o recuperación. Se prueba en API, no solo en pantalla |
+| CA5 | Tras `review_at`, y ratificadas D1–D4, se muestran porcentaje real, banda y contenidos no logrados |
+| CA6 | 69,9 %, 70 %, 79,9 % y 80 % dan la banda correcta; el redondeo sigue Q3 |
+| CA7 | Con P21 ratificada: antes de continuar, se muestran contenidos no logrados y enlaces de repaso; se registran resultado y decisión; E2 sigue «Reprobado» en todas las vistas |
+| CA8 | El mapa solo cambia a «dominado» según K6 y sus reglas abiertas ya definidas |
+| CA9 | Familia y tutor ven únicamente lo que D4 y O7 determinen |
+| CA10 | Estados con texto e icono, teclado, lector de pantalla y `prefers-reduced-motion` |
 
 ## 6. Coherencia verificada
 
