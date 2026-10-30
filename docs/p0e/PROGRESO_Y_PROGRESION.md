@@ -173,6 +173,6 @@ Ningún número de ejemplo en producción ni en Preview. Si un dato no existe, s
 | Q5 | ¿El estudiante puede avanzar mientras espera su lote de recuperación? |
 | Q6 | Si los contenidos no logrados deben mostrarse antes de `review_at`, ¿se acepta el riesgo de deducción de la pauta? |
 | Q7 | ¿Se avisa al tutor o al apoderado cuando el estudiante continúa con contenidos pendientes? |
-| Q8 | ¿Quién etiqueta las preguntas por contenido y en qué plazo? (requisito para la sección 4) |
+| Q8 | ¿Quién etiqueta las preguntas por contenido y en qué plazo? (requisito para la sección 4) — **respondida en parte:** K4/K5 en [`DOMINIO_POR_CONOCIMIENTO.md`](DOMINIO_POR_CONOCIMIENTO.md); falta quién y plazo (O4) |
 
 Nada de esta lista se implementará sin aprobación expresa, revisión de ChatGPT y una autorización aparte para la migración.
