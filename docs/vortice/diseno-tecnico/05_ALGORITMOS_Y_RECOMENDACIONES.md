@@ -11,20 +11,34 @@ Grafo publicado; evidencias con `released_at <= ahora`; política aprobada; agen
 ## 2. Estado de un contenido
 
 ```text
-función evaluar(evidencias, política):
-  válidas   = evidencias sin ayuda si política.assisted_counts = falso
-  correctas = familias distintas con acierto en válidas
-  erradas   = familias distintas con error en válidas, sin acierto posterior en esa familia
+# Entrada ya filtrada: released_at <= ahora. Parámetros nulos en política = no ejecutable.
+función evaluar(evidencias, versión_actual, política):
+  e = evidencias sin anulación                                   # [T] escenario 7
+  e = e con versión compatible con versión_actual, o versión_actual  # [P] escenario 9
+  si e vacío: retorna sin_evidencia
 
-  si sin evidencias: retorna sin_evidencia
-  si |correctas| >= política.k6_min_families:          # K6
-    marca = por_comprobar si retención vencida o |erradas tras dominio| >= 1
-    si |erradas tras dominio| >= política.demote_wrong_families: retorna incierto
+  válidas = e sin ayuda, si política.assisted_counts = falso    # [P] escenarios 5, 6
+
+  # Orden por (occurred_at, id)
+  correctas(t) = familias con acierto en válidas hasta t
+  dominio_en   = primer t con |correctas(t)| >= política.k6_min_families   # [K6]
+                 # política.same_session_allowed = falso: exige sesiones distintas (O2)
+
+  errada(f, desde) = f tiene error en válidas después de desde,
+                     y sin acierto en f posterior a ese error    # [P] escenario 3
+
+  si dominio_en existe:
+    n = |{f : errada(f, dominio_en)}|
+    si n >= política.demote_wrong_families: retorna incierto, contradictoria   # [P] 4, 10
+    marca = por_comprobar si n >= 1, o retención vencida, o ruptura de versión
     retorna dominado, marca
-  si política.not_mastered_wrong_families != nulo
-     y |erradas| >= política.not_mastered_wrong_families: retorna no_dominado   # O1
-  retorna incierto, motivo(válidas)
+
+  n = |{f : errada(f, inicio)}|
+  si política.not_mastered_wrong_families != nulo y n >= ese valor: retorna no_dominado  # O1
+  retorna incierto, motivo(e, válidas)
 ```
+
+Cada escenario de [03](03_MOTOR_DE_EVIDENCIAS.md) §9 es una prueba obligatoria de esta función.
 
 Función pura. Con evento `released_at` o respuesta nueva, se recalcula ese contenido y se inserta un evento **solo si cambió**. Liberación de embargo: `released_at` es una fecha, no un trabajo; una lectura calcula perezosamente con filtro, y una tarea diaria materializa. EXISTE EN CÓDIGO el precedente de calcular en lectura (`syncReviewItems`).
 
@@ -87,7 +101,7 @@ No se describirá como inteligencia artificial o adaptativo nada de esto hasta i
 ## 7. Pruebas del motor
 
 Funciones puras en `shared/`, con el patrón `script/*.check.ts`, solo memoria:
-- Límites K6: 1 familia, 2 familias, misma familia dos veces, con ayuda.
+- Los 10 escenarios de [03](03_MOTOR_DE_EVIDENCIAS.md) §9, con cada alternativa de política.
 - Ciclos y grafos inválidos rechazados al publicar.
 - Fronteras sobre grafos conocidos, incluida coincidencia con enumeración de estados factibles.
 - Determinismo: misma entrada, misma salida.

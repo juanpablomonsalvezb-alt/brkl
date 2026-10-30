@@ -7,7 +7,7 @@
 | Para | Se necesita |
 |---|---|
 | Migrar catálogo y banco (E1) | O4, O5, N9 |
-| Política de dominio (E2) | O1, O2, O3, N1, N2 |
+| Política de dominio (E2) | O1, O2, O3, N1, N2, N16, N17, N18 |
 | Mostrar mapa (E3) | O6, N3 |
 | Núcleo P0-E | P7, P8, P16, P17, P20-v |
 | E2 con evidencia (E5) | N2, C6, C7, N4 |
@@ -87,5 +87,9 @@ El esquema de §3 de [04](04_MODELO_DE_DATOS.md) tolera casi todas las respuesta
 | N13 | Copiloto con evaluación abierta | Bloqueo por contenido | A: bloquear contenido. B: solo textual | A | Futuro E8 | Pedagogía |
 | N14 | Qué intento da el porcentaje | Regla de publicación | A: el que cerró (ya propuesto). B: mejor. C: último | A | Impl E6 | Dirección |
 | N15 | Calendario | Alcance enero 2027 | A: piloto después. B: solo E3–E4 antes | B, si hay capacidad | Plan | Dirección |
+| N16 | Error con ayuda | ¿Cuenta como errada? | A: no. B: sí | A | Impl E2 | Pedagogía |
+| N17 | Pregunta retirada sin defecto | ¿Su evidencia cuenta? | A: sí. B: no | A | Impl E2 | Pedagogía |
+| N18 | Nueva versión del contenido | `evidence_continuity` | A: caso a caso. B: reinicia. C: nunca | A | Impl E2 | Pedagogía |
+| N19 | Corrección docente de un estado | No hay fuente en esquema | A: nuevo `source_type` auditado. B: solo anulación | B en la primera versión | Futuro | Dirección |
 
 Las preguntas Q1–Q8 y pendientes P9–P11, P13, P14, P22–P25 siguen en sus documentos, sin cambios.

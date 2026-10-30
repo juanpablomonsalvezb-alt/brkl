@@ -207,3 +207,38 @@ stateDiagram-v2
 - **No** marca dominados, no reescribe nada. El módulo abierto muestra los contenidos sin base como `requiere base`, y se pueden abrir (C9, alternativa recomendada en [10](10_DECISIONES_PENDIENTES.md)).
 - **C14:** recomendado: continuar solo desde `review_at` de la recuperación, para no adelantar contenidos.
 - Depende del núcleo P0-E. Fuera de piloto la lista es de módulo.
+
+## 9. K6: comportamiento por escenario
+
+**K6 es un criterio operativo de evidencia suficiente, no una certeza de aprendizaje.** «Dominado» significa: el sistema reunió la evidencia acordada. Puede haber azar, ayuda externa u olvido posterior.
+
+**Tipos de regla.** **[T]** técnica: consecuencia del diseño de datos. **[P]** pedagógica: recomendación que la dirección debe aprobar; hasta entonces el parámetro está nulo en `mastery_policies`. Solo K6 (2 correctas, familias distintas) es COMUNICADO.
+
+Supuesto de la tabla: alternativas recomendadas. Todo es evidencia liberada, y sin ayuda salvo que se diga.
+
+| # | Escenario | Evidencia registrada | ¿Cuenta para K6? | Estado | `por_comprobar` | Historial | Revisión humana |
+|---|---|---|---|---|---|---|---|
+| 1 | 2 correctas, familias distintas | 2 filas | Sí **[K6]** | `dominado` | No | 2 evidencias, 1 evento | No |
+| 2 | 2 correctas, misma familia | 2 filas | Solo 1 familia **[T]** | `incierto`, `pocas_evidencias` | No | Se conservan | No; si el banco no tiene otra familia, alerta |
+| 3 | Incorrecta, luego correcta, misma familia | 2 filas | Correcta sí, 1 familia. El error deja de contar como `errada` **[P]** | `incierto` | No | Se conservan | No |
+| 4 | 2 correctas (distintas), luego incorrecta | 3 filas | Las 2 siguen contando **[P]** | `dominado` | Sí | Evento solo de marca | No; 2 errores en familias distintas sin acierto: `incierto` **[P]** |
+| 5 | Correcta con ayuda | 1 fila con `assistance` | No **[P, O3]** | Sin cambio de K6; `solo_con_ayuda` si es todo lo que hay | No | Se conserva | No |
+| 6 | Incorrecta con ayuda | 1 fila | No cuenta para K6 ni como errada para O1 **[P, N16]** | Sin cambio | No | Se conserva | No; patrón repetido: aviso al tutor, D4 |
+| 7 | Pregunta anulada por defecto | Sin borrar; `question_voids` y `evidence_voids` | No **[T]** | Se recalcula: puede dejar de ser `dominado` | Sí si baja | Evento `anulacion` | **Sí**: solicitante y aprobador distintos |
+| 8 | Pregunta retirada, sin defecto | Sin cambios | Sí: retirar no invalida **[P, N17]** | Sin cambio | No | Se conserva; no se sirve más | Sí al retirar |
+| 9 | Nueva versión del contenido | Sin cambios; cita su versión | Según `evidence_continuity` **[P, N18]** | `compatible`: sin cambio. `ruptura`: se recalcula | Con `ruptura`: sí | Evento `nueva_version` | **Sí**, por contenido |
+| 10 | Retención fallida tras dominio | 1 fila `retencion` | Las 2 originales siguen **[P, O8]** | `dominado` | Sí; agenda vuelve al primer paso | Evento de marca | No; 2 fallas distintas: `incierto` y aviso |
+
+### Alternativas para lo no decidido
+
+**Escenarios 4 y 10 (dominio tras error).** Ver §6. Consecuencia de la recomendada: un estudiante puede verse `dominado` con errores recientes; por eso la marca es visible y se comprueba. Alternativa B (un error baja el estado): más prudente, más ruido y más desmotivación. Alternativa C: dominio permanente, descartada porque ignora retención.
+
+**Escenario 3 (error reparado).** A (recomendada): solo cuenta como errada una familia sin acierto posterior; refleja aprendizaje. B: todo error cuenta para siempre; más estricto, y puede impedir salir de `no_dominado`.
+
+**Escenario 6, N16.** A (recomendada): no cuenta como errada, porque la ayuda altera las condiciones. B: cuenta; un error incluso con ayuda es señal fuerte. Consecuencia de A: se pierde esa señal para el estado, pero se conserva para el tutor.
+
+**Escenario 7.** Técnica: la anulación es por inserción. Decisión pendiente: ¿quién aprueba? (O4), ¿se avisa al estudiante cuyo estado baja? Recomendación: sí, sin culpar («revisamos esta pregunta»).
+
+**Escenario 8, N17.** A (recomendada): sigue contando si se retiró por renovación. B: deja de contar. Si hubo defecto, es el escenario 7. Motivo de retiro obligatorio.
+
+**Escenario 9, N18.** A (recomendada): una persona declara `compatible` o `ruptura` por contenido; `ruptura` mueve a `por_comprobar` en vez de borrar el dominio de golpe. B: toda versión reinicia. Simple e injusto ante correcciones menores. C: nunca reinicia; el dominio puede referirse a algo ya distinto.

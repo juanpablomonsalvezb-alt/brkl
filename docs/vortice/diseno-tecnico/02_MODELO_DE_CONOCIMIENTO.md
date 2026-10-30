@@ -17,7 +17,7 @@
 ## 2. Contenido: identidad y almacenamiento
 
 - **Identidad estable:** `knowledge_items.id` (UUID) y `code` legible y único por dominio. El nombre puede cambiar; el id no.
-- **Definición versionada:** cada cambio de nombre, definición operacional o criterio crea fila en `knowledge_item_versions`. Lo publicado no se edita.
+- **Definición versionada:** cada cambio de nombre, definición operacional o criterio crea fila en `knowledge_item_versions`, con `evidence_continuity`. Lo publicado no se edita.
 - **Publicación por dominio completo:** se publica una `knowledge_domain_version` con sus contenidos y aristas. Así un grafo nunca queda a medias. Ciclo: `borrador → en_revision → validada → publicada → retirada`.
 - **Validación (K5, K7):** `validada` exige revisor humano registrado, distinto del autor (PROPUESTO). Quién: O4.
 
@@ -70,9 +70,11 @@ Cada arista guarda: contenido, prerrequisito, tipo, justificación, nivel de con
 | `no_dominado` | PREGUNTA ABIERTA (O1) | Recomendación en [03](03_MOTOR_DE_EVIDENCIAS.md) §7 |
 | `incierto` | PROPUESTO, requiere aprobación (O6) | Hay evidencia, pero no alcanza ninguna de las anteriores |
 
+**K6 es un criterio operativo de evidencia suficiente, no una certeza de aprendizaje.** Comportamiento completo: [03](03_MOTOR_DE_EVIDENCIAS.md) §9.
+
 Marca aparte de `dominado`: `por_comprobar`, si hay un error posterior o retención vencida ([03](03_MOTOR_DE_EVIDENCIAS.md) §6). Si O6 rechaza `incierto`, la implementación lo presenta como `por aprender` sin cambiar los datos.
 
-**Actualización.** El estado no se escribe a mano: `evaluar(evidencias liberadas, política)` lo deriva. Cada cambio agrega una fila a `knowledge_state_events`, y `student_knowledge_state` es una proyección reconstruible. Una corrección docente es una evidencia nueva de tipo `revision_docente`, no una edición. Autorización de esa vía: pendiente.
+**Actualización.** El estado no se escribe a mano: `evaluar(evidencias liberadas, política)` lo deriva. Cada cambio agrega una fila a `knowledge_state_events`, y `student_knowledge_state` es una proyección reconstruible. Las anulaciones se registran por inserción ([04](04_MODELO_DE_DATOS.md) §8). Una corrección docente de un estado **no existe en esta versión**: `source_type` no la admite; incorporarla es una decisión pendiente (N19).
 
 **Historial.** `knowledge_evidence` y `knowledge_state_events` son solo de inserción. Cada estado guarda la versión de dominio y de política con que se calculó.
 
