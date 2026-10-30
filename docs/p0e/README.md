@@ -15,6 +15,7 @@ Cada materia tiene **una sola** fuente normativa. Los demás documentos la citan
 | Registro de contradicciones y preguntas a la dirección | [`CONTRADICCIONES_Y_PREGUNTAS.md`](CONTRADICCIONES_Y_PREGUNTAS.md) | Esta carpeta |
 | Trazabilidad de cada decisión | [`TRAZABILIDAD.md`](TRAZABILIDAD.md) | Esta carpeta |
 | Evidencia de pruebas técnicas | [`RESULTADOS_T1_T5.md`](RESULTADOS_T1_T5.md) | Esta carpeta |
+| Diseño técnico del motor (**PROPUESTO, no normativo**) | [`docs/vortice/diseno-tecnico/`](../vortice/diseno-tecnico/00_RESUMEN_EJECUTIVO.md) | Otra carpeta |
 | Resumen divulgativo (**no normativo**) | [`APRENDIZAJE_TEORICO_VORTICE.md`](APRENDIZAJE_TEORICO_VORTICE.md) y `.docx` | Esta carpeta |
 
 **Si dos documentos se contradicen:** manda la especificación maestra hasta que la dirección ratifique el cambio, y el conflicto se registra en `CONTRADICCIONES_Y_PREGUNTAS.md`.
