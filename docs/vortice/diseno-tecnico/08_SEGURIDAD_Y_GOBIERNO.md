@@ -91,23 +91,26 @@ No se afirma que lo siguiente aplique; debe evaluarlo asesoría competente:
 
 ### 7.1 Propiedad y salvedad
 
-**Hasta `review_at`, ninguna salida puede depender de E2 más allá del estado permitido.**
+**Mientras no se cumpla la condición de publicación ([03](03_MOTOR_DE_EVIDENCIAS.md) §8.3), ninguna salida puede depender de E2 más allá del estado permitido.** `review_at` es necesario, no suficiente.
 
 **Salvedad (conflicto con una lectura literal, C20).** La regla APROBADA da «Aprobado» o «No aprobado» de inmediato, cerrando la instancia al aprobar. Por eso dos estudiantes con **distinto estado** no pueden tener salidas idénticas. Se necesitan dos pruebas:
 
 | Prueba | A y B | Exigencia |
 |---|---|---|
-| **P1: mismo estado** | Mismo estado, distinto puntaje y contenidos errados. Ejemplos: 70 y 95; 0 y 65 | **Salidas idénticas, byte a byte**, salvo identificadores normalizados |
-| **P2: distinto estado** | Uno aprobado, otro no | Solo difiere lo derivado del estado (lista abajo) |
-| **P3: control** | Mismo escenario tras `review_at` | Deben aparecer las diferencias. Si no, el filtro oculta de más o la prueba no mide |
+| **NI1: mismo estado** | Mismo estado, distinto puntaje y contenidos errados. Ejemplos: 70 y 95; 0 y 65 | **Salidas idénticas, byte a byte**, salvo identificadores normalizados |
+| **NI2: distinto estado** | Uno aprobado, otro no | Solo difiere lo derivado del estado (lista abajo) |
+| **NI3: control** | Mismo escenario, condición cumplida | Deben aparecer las diferencias. Si no, el filtro oculta de más o la prueba no mide |
+| **NI4: versión abierta** | A cerró (aprobó, o su `review_at` pasó). C sigue con instancia abierta en **esa misma versión** | A no obtiene pauta, porcentaje, banda, contenidos ni cambio en mapa. Salidas de A iguales a un A′ con otras respuestas. Las salidas de C no cambian porque A cierre |
+| **NI5: liberación** | Se registra la liberación | Antes: nada. Después: A publicable. Instancia nueva sobre esa versión: rechazada. Borrar liberación: rechazado |
+| **NI6: copiloto** | Como P4, con proveedor simulado | Ningún dato de E2 ni pauta en la entrada. Bloqueo de esa versión aún activo para A (hoy NO: C21) |
 
-P1 es la prueba fuerte: detecta puntajes y contenidos. P2 impide que el estado arrastre más información.
+NI1 es la prueba fuerte: detecta puntajes y contenidos. NI2 impide que el estado arrastre más información.
 
 **Preparación:** dos cuentas ficticias con matrícula, nivel, recursos completados, evidencias liberadas, reloj simulado y orden de operaciones iguales. Se normalizan: ids propios, fecha de envío. Un cambio de semilla en permutaciones se fija.
 
 ### 7.2 Superficies comparadas
 
-| Salida | Se compara | Estado en código hoy | Diferencia permitida en P2 |
+| Salida | Se compara | Estado en código hoy | Diferencia permitida en NI2 |
 |---|---|---|---|
 | Resultado de evaluación | Cuerpo y cabeceras de `/submit` y lecturas | EXISTE: responde `resultado` | `resultado`, intentos restantes, instancia cerrada |
 | Mapa de conocimientos | DTO completo | NO EXISTE | **Ninguna** |
@@ -119,18 +122,18 @@ P1 es la prueba fuerte: detecta puntajes y contenidos. P2 impide que el estado a
 | Portafolio | Evidencias compartidas | EXISTE: expone `evaluationPassed` | Estado |
 | Exportaciones | Cualquier archivo | NO EXISTE para estudiantes; verificado solo por búsqueda en `server` y páginas | **Ninguna** si se crea |
 | Copiloto | **Entrada al proveedor simulado**, no su salida, y bloqueos | EXISTE; ver C21 | Bloqueos derivados del estado, según C21 |
-| Canales laterales | Tamaño de respuesta, `ETag`, cabeceras de caché, códigos, número de consultas | | **Ninguna** en P1. Latencia: medir, sin exigir igualdad |
+| Canales laterales | Tamaño de respuesta, `ETag`, cabeceras de caché, códigos, número de consultas | | **Ninguna** en NI1. Latencia: medir, sin exigir igualdad |
 
 **El copiloto no se compara por su texto:** el proveedor no es determinista, así que comparar respuestas daría falsos positivos. Se intercepta lo que se le enviaría.
 
-**Es filtración:** cualquier diferencia en P1; en P2, cualquier diferencia fuera de la columna. Incluye porcentaje, banda, total de correctas, contenido errado, orden o tamaño alterados, y un mensaje que cite E2.
+**Es filtración:** cualquier diferencia en NI1; en NI2, cualquier diferencia fuera de la columna. Incluye porcentaje, banda, total de correctas, contenido errado, orden o tamaño alterados, y un mensaje que cite E2.
 
 ```text
-prueba P1:
-  para cada superficie s, para cada rol r, en t = review_at - 1 s:
+prueba NI1:
+  para cada superficie s, para cada rol r, en t antes de cumplirse la condición:
     assert normalizar(s(A, r, t)) == normalizar(s(B, r, t))
-  avanzar reloj a review_at
-  assert algún s difiere        # P3
+  cumplir la condición de publicación
+  assert algún s difiere        # NI3
 ```
 
 ### 7.3 Filtro, cálculo y fallos
@@ -144,14 +147,16 @@ prueba P1:
 4. Excepción: el proceso de auditoría interna. Acceso de administrador según P9, registrado.
 5. La proyección jamás incluye evidencia embargada. Puntajes en `evaluation_attempts` no se serializan: columnas excluidas por lista blanca.
 
-**Cálculo al llegar `review_at`: en lectura, no por tarea.**
+**Cálculo al cumplirse la condición: en lectura, no por tarea.** Registrar la liberación de versión sí depende de N20.
 
 ```text
 función leerEstado(estudiante, ahora):
-  pendientes = evidencias con computed_through < released_at <= ahora
+  # fecha_efectiva = práctica: practice_released_at;
+  #   evaluación: max(review_at, releases.released_at), con instancia cerrada
+  pendientes = evidencias con computed_through < fecha_efectiva <= ahora
   si hay pendientes:
     en una transacción: recalcular contenidos afectados,
-    insertar eventos (reason = liberacion, effective_at = released_at),
+    insertar eventos (reason = liberacion, effective_at = fecha_efectiva),
     actualizar con condición computed_through sin cambios     # dos lecturas simultáneas
   retornar proyección
 ```
@@ -159,10 +164,10 @@ función leerEstado(estudiante, ahora):
 | Tema | Comportamiento |
 |---|---|
 | Datos desactualizados | La lectura se pone al día antes de responder. Respuestas personales con `Cache-Control: no-store`. El cliente no calcula estados |
-| Recarga en pantalla | Cliente con `review_at` conocido invalida su consulta en esa fecha. Si no lo hace, lo corrige la siguiente lectura |
-| **Falla la tarea programada** | **No afecta el estado.** Solo se atrasan notificaciones y materialización. Reintento idempotente por `notification_log`. Una alerta si hay `review_at` vencidos sin procesar. Nunca se envía antes de `review_at` |
+| Recarga en pantalla | La siguiente lectura corrige. El cliente no conoce la fecha cierta |
+| **Falla la tarea programada** | **No afecta el estado.** Solo se atrasan notificaciones y materialización. Reintento idempotente por `notification_log`. Una alerta si hay versiones sin liberar tras vencer todas sus instancias. Nunca se envía antes de la condición |
 | Falla el cálculo en lectura | Responde error con reintento. **No** sirve datos sin liberar. No inventa un estado |
-| Reloj | Margen desconocido entre instancias (T5). Una instancia adelantada liberaría antes. Medir en E0 |
+| Reloj | Margen desconocido entre instancias (T5). Una instancia adelantada podría publicar antes. Medir en E0 |
 | Infraestructura | EXISTE: `/api/cron/notificaciones` con secreto, para cron externo. `vercel.json` no declara crons. No se verificó que haya un cron externo activo |
 
 **Limitación:** la prueba cubre las superficies listadas. Toda salida nueva debe añadirse; se exige en revisión de código. No demuestra ausencia de canales de tiempo.

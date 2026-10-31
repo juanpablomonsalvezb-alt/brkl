@@ -63,7 +63,7 @@ Verificados en `Home.tsx` de la rama desplegada e infografías de `/asi-trabajam
 
 ### Agregadas en el diseño técnico
 
-**C19–C22** y **N11–N19**: detalle en [`10_DECISIONES_PENDIENTES.md`](../vortice/diseno-tecnico/10_DECISIONES_PENDIENTES.md).
+**C19–C24** y **N11–N21**: detalle en [`10_DECISIONES_PENDIENTES.md`](../vortice/diseno-tecnico/10_DECISIONES_PENDIENTES.md).
 
 ## 2. Decisiones pendientes
 

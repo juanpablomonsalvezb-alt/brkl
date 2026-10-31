@@ -86,7 +86,54 @@ Todas, con autorización expresa:
 7. Prueba de no interferencia ampliada: [08](08_SEGURIDAD_Y_GOBIERNO.md) §7.
 8. Definición de cómo cuenta la ayuda (O3).
 
-## 7. Arquitectura futura (solo referencia, NO autorizada)
+## 7. Acceso durante el piloto
+
+**Dos cosas distintas.** Excluir el copiloto **de la arquitectura** (no recibe ni entrega datos del motor) no impide que un estudiante **lo use**: el enlace «Tutor virtual» sigue en `VorticeInicio.tsx` y la ruta sigue en la aplicación. Esta sección no cambia enlaces ni funciones.
+
+| Escenario | Participantes | Copiloto | Condición |
+|---|---|---|---|
+| **Piloto técnico** | Cuentas ficticias, datos ficticios | Ninguna prueba del motor depende de él. Si se prueba, con proveedor simulado | Sin mensajes hacia el proveedor real, salvo autorización |
+| **Piloto con estudiantes reales** | Alumnos reales | **BLOQUEO:** sin decisión institucional aprobada no se inicia | Decisión de C19 y C22 |
+
+**Decisión pendiente para estudiantes reales (C19):**
+
+| Alternativa | Consecuencia |
+|---|---|
+| A. Oculto y deshabilitado para el grupo piloto, en servidor | Sin riesgo de canal; medición más limpia; requiere programar, con autorización. Ocultar solo el enlace no basta: la ruta sigue |
+| B. Disponible, con los controles de abajo | Ayuda real; exige todos los controles |
+| C. Disponible sin controles | **No recomendado** |
+
+**Recomendación técnica:** A para la primera exposición. **Debe quedar oculto o deshabilitado si falta cualquiera:** protocolo de riesgo, revisión legal, consentimiento, control de evaluaciones abiertas por versión, o decisión de ambas.
+
+**Riesgos de mantener acceso sin supervisión:** mensajes de riesgo sin atención; datos de menores hacia un tercero; ayuda en evaluación por paráfrasis; respuestas erróneas; ayuda no registrada que distorsiona K6; sin registro para investigar un incidente.
+
+**Protocolo requerido ante riesgo (contenidos mínimos; la institución lo define, C22):**
+1. Qué activa una alerta y con qué precisión aceptable.
+2. Responsable y suplente, con horario, incluida fuera de horario.
+3. Plazo de respuesta y escalamiento.
+4. Cuándo se informa a familia, y cuándo no (por ejemplo, si la familia es la fuente del riesgo).
+5. Vínculo con autoridades o servicios, con asesoría.
+6. Registro mínimo: qué se guarda, quién accede, cuánto tiempo. Hoy nada se guarda.
+7. Mensaje al estudiante, revisado por especialistas, incluidos los teléfonos.
+8. Prueba del protocolo antes de usarlo.
+
+Este documento no fija ninguno de esos valores.
+
+**Información:**
+
+| Puede recibir, si se autoriza | No debe recibir |
+|---|---|
+| Mensaje saneado e historial limitado | Identidad, RUT, correo |
+| Tramo de edad | Puntajes, resultados, porcentajes |
+| En el futuro: nombre y definición de un contenido en práctica | Evidencia, estado, mapa |
+| | Pauta, preguntas de evaluación abierta o de versión sin liberar |
+| | Datos clínicos, `accommodation` |
+
+**Evaluaciones compartidas.** El bloqueo debe seguir la condición de versión ([03](03_MOTOR_DE_EVIDENCIAS.md) §8.3): una evaluación sigue protegida hasta que la versión se libere, **aunque ese estudiante la haya aprobado**. Hoy deja de bloquearse al aprobar (C21). No se cambia ahora. Una vez dentro del mensaje, el texto llega al proveedor si la similitud no lo detecta.
+
+**Controles antes de usarlo con estudiantes reales:** los de §6, más decisión de acceso; límite global de frecuencia; filtro de salida; registro acordado; canal de reporte; consentimiento.
+
+## 8. Arquitectura futura (solo referencia, NO autorizada)
 
 ```mermaid
 flowchart LR

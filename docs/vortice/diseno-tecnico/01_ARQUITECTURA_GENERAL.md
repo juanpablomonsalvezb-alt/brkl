@@ -44,7 +44,7 @@ flowchart TB
     POL[Políticas versionadas]
   end
   subgraph Evidencia
-    EV[Evidencias con released_at]
+    EV[Evidencias con embargo]
     PRA[Práctica]
     P0E[Núcleo P0-E]
     BANK[Banco versionado]
@@ -75,7 +75,7 @@ flowchart TB
 **Reglas de dependencia:**
 1. La evidencia alimenta al estado; el estado **nunca** cambia resultados de P0-E.
 2. El acceso a módulo y evaluación lo decide P0-E y calendario; la recomendación solo orienta.
-3. Toda lectura de evidencia pasa por el filtro `released_at`.
+3. Toda lectura de evidencia pasa por el filtro de publicación ([08](08_SEGURIDAD_Y_GOBIERNO.md) §7.3).
 4. Solo cuatro indicadores: `PROGRESO` §5.4, cada uno con su fuente.
 
 ## 2.1 Cinco conceptos que no se confunden

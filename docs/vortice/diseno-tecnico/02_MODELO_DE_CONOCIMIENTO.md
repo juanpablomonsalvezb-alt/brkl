@@ -107,10 +107,10 @@ Política hipotética: recomendaciones de [03](03_MOTOR_DE_EVIDENCIAS.md) (solo 
 | 2 | Práctica | B | F-B1 | Sí | Pista | Registrada; no cuenta para K6 |
 | 2 | Práctica | B | F-B1v2 | Sí | No | Misma familia: B `incierto`, 1 familia |
 | 3 | Práctica | B | F-B2 | Sí | No | B `dominado` |
-| 4 | E2, intento 1 | C | F-EC1 | No | No | **Embargada** hasta `review_at`: el mapa no cambia |
+| 4 | E2, intento 1 | C | F-EC1 | No | No | **Embargada**: el mapa no cambia |
 | 4 | Práctica | C | F-C1 | Sí | No | C `incierto` |
 | 8 | Retención | A | F-A3 | No | No | A sigue `dominado`, marca `por_comprobar` |
-| 9 | `review_at` llega | C | F-EC1 | No | No | Se libera: C `incierto`, 1 correcta y 1 error |
+| 9 | Se cumple la condición de publicación | C | F-EC1 | No | No | Se libera: C `incierto`, 1 correcta y 1 error |
 
 **Situación al día 9.** K = {A, B}. Frontera externa = {C} (D exige C). Frontera interna = {B} (reciente, sin sucesor dominado). Recomendación: comprobar A; luego C. D y E, `bloqueado`.
 

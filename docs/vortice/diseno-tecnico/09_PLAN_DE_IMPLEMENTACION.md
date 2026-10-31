@@ -8,40 +8,67 @@
 
 ```mermaid
 flowchart TD
-  E0[E0 Decisiones y verificaciones] --> E1[E1 Catálogo y banco]
-  E1 --> E2M[E2 Motor en sombra]
-  E2M --> E3[E3 Mapa y práctica]
+  E0[Etapa 1: E0 pruebas desechables] --> M1[Etapa 2: M1 Catálogo y banco]
+  M1 --> M2[M2 Motor en sombra]
+  M2 --> M3[M3 Mapa y práctica]
   E0 --> P0[P0 Núcleo P0-E]
-  E3 --> E5[E5 Integración evidencia E2]
-  P0 --> E5
-  P0 --> E6[E6 P21 y resultados]
-  E5 --> E6
-  E3 --> E4[E4 Retención]
-  E4 --> E7[E7 Piloto con estudiantes]
-  E6 --> E7
-  E7 --> E8[E8 Copiloto y modelos, decisión aparte]
+  M3 --> M5[M5 Integración evidencia E2]
+  P0 --> M5
+  P0 --> M6[M6 P21 y resultados]
+  M5 --> M6
+  M3 --> M4[M4 Retención]
+  M4 --> M7[Etapa 3: M7 Piloto con estudiantes]
+  M6 --> M7
+  M7 --> M8[M8 Copiloto y modelos, decisión aparte]
 ```
 
-Si la dirección quiere empezar antes con estudiantes, E7 puede hacerse solo con E3 y E4, sin E5 ni E6.
+**Nombres.** Las etapas de construcción se llaman M1–M8 (antes E1–E8), porque «E2» se confundía con la evaluación E2. E0 se mantiene.
+
+Si el sostenedor quiere empezar antes con estudiantes, M7 podría hacerse solo con M3 y M4, sin M5 ni M6. Sigue exigiendo todos los requisitos de la Etapa 3.
 
 | Etapa | Objetivo | Componentes | Depende de | Cambios de datos | Riesgos | Pruebas | Aceptación | Dirección aprueba antes |
 |---|---|---|---|---|---|---|---|---|
-| **E0** | Decidir y verificar | Lectura de esquema real; FK, triggers en base desechable; T2 en Turso | | Ninguno en Vórtice; base desechable autorizada | Deriva de esquema | Comparación sin escritura | Informe de deriva; soporte confirmado | O1–O5, N1, N2, N9, D3; autorizar base desechable |
-| **E1** | Catálogo y banco de la unidad | Herramienta admin; flujo editorial; revisor | E0 | Conocimiento y banco (aditivo) | Calidad, carga editorial | Publicación rechaza ciclos; FK de bancos; revisión obligatoria | Unidad publicada, validada por personas; banco suficiente | Unidad, validadores, migración |
-| **E2** | Motor sin mostrar | Evidencia, política, estado, fronteras, log | E1 | Evidencia, estado, retención, log | Reglas erradas | §7 de [05](05_ALGORITMOS_Y_RECOMENDACIONES.md); datos ficticios | Determinista, reconstruible, auditado | Política de dominio, migración |
-| **E3** | Práctica y mapa en Preview | Práctica, feedback, mapa, panel | E2 | Ninguno nuevo | Motivación, claridad, móvil | CA1–CA3, CA8, CA10; accesibilidad | Tres lentes separados; dato real | O6, diseño |
-| **E4** | Retención | Agenda, comprobaciones | E3 | Ninguno nuevo | Carga | Intervalos con reloj simulado | Sin castigo por ausencia; agenda correcta | O8 |
+| **E0** | Demostrar soporte técnico | Pruebas D1–D9 en base desechable; T2 y T5 en Turso | | Ninguno en Vórtice | Conclusiones que obliguen a cambiar el diseño | [04](04_MODELO_DE_DATOS.md) §10 | Evidencia de cada prueba | Autorización expresa del sostenedor para ese entorno |
+| **M1** | Catálogo y banco de la unidad | Herramienta admin; flujo editorial; revisor | E0 | Conocimiento y banco (aditivo) | Calidad, carga editorial | Publicación rechaza ciclos; FK de bancos; revisión obligatoria | Unidad publicada, validada por personas; banco suficiente | Unidad, validadores, migración |
+| **M2** | Motor sin mostrar | Evidencia, política, estado, fronteras, log | M1 | Evidencia, estado, retención, log | Reglas erradas | §7 de [05](05_ALGORITMOS_Y_RECOMENDACIONES.md); datos ficticios | Determinista, reconstruible, auditado | Política de dominio, migración |
+| **M3** | Práctica y mapa en Preview | Práctica, feedback, mapa, panel | M2 | Ninguno nuevo | Motivación, claridad, móvil | CA1–CA3, CA8, CA10; accesibilidad | Tres lentes separados; dato real | O6, diseño |
+| **M4** | Retención | Agenda, comprobaciones | M3 | Ninguno nuevo | Carga | Intervalos con reloj simulado | Sin castigo por ausencia; agenda correcta | O8 |
 | **P0** | Núcleo evaluativo | Instancias, intentos, ventanas, cierres, lotes, versiones | E0 | Migración P0-E | Concurrencia, histórico | T1–T5 reales; invariantes 1–14 | Según maestra | P7, P8, P16, P17, P20-v; migración |
-| **E5** | E2 aporta evidencia | Respuestas por pregunta, embargo | E3, P0 | `evaluation_attempt_answers` | **Filtración** | **No interferencia**, CA4 | Payloads iguales hasta `review_at` | N2, C6, C7, N4 |
-| **E6** | Resultados y P21 | Publicación, bandas, continuación | P0, E5 | `progression_continuations` | Normativo | CA4–CA7; límites 69,9/70/79,9/80 | E2 sigue «Reprobado» | **D1–D4, C14, C15**, Q1–Q3 |
-| **E7** | Piloto real | Medición, acompañamiento | E3, E4 (E5, E6 si aplica) | Ninguno | Privacidad, equidad, muestra pequeña | Protocolo con docentes | Métricas aprobadas; informe | Datos, O10, revisión legal, autenticación real, despliegue |
-| **E8** | Ampliar, solo si se autoriza | Copiloto ([07](07_COPILOTO_IA.md) §6); modelos | E7 con evidencia | Según diseño | Promesas sin evidencia | Validación fuera de muestra | Criterios fijados | N10, K3 |
+| **M5** | E2 aporta evidencia | Respuestas por pregunta, embargo | M3, P0 | `evaluation_attempt_answers` | **Filtración** | **No interferencia**, CA4 | Payloads iguales hasta `review_at` | N2, C6, C7, N4 |
+| **M6** | Resultados y P21 | Publicación, bandas, continuación | P0, M5 | `progression_continuations` | Normativo | CA4–CA7; límites 69,9/70/79,9/80 | E2 sigue «Reprobado» | **D1–D4, C14, C15**, Q1–Q3 |
+| **M7** | Piloto real | Medición, acompañamiento | M3, M4 (M5, M6 si aplica) | Ninguno | Privacidad, equidad, muestra pequeña | Protocolo con docentes | Métricas aprobadas; informe | Datos, O10, revisión legal, autenticación real, despliegue |
+| **M8** | Ampliar, solo si se autoriza | Copiloto ([07](07_COPILOTO_IA.md) §6); modelos | M7 con evidencia | Según diseño | Promesas sin evidencia | Validación fuera de muestra | Criterios fijados | N10, K3 |
 
-**Medir en E7** (propuesta de lo que se mide, sin meta): concordancia con evaluación docente, aciertos diferidos, abandono, claridad, carga docente, y diferencias por dispositivo y conectividad. No minutos conectados.
+**Medir en M7** (propuesta de lo que se mide, sin meta): concordancia con evaluación docente, aciertos diferidos, abandono, claridad, carga docente, y diferencias por dispositivo y conectividad. No minutos conectados.
 
 **Plan de reversión:** cada migración es aditiva. Interruptor por dominio para ocultar mapa y práctica, sin afectar el resto de Vórtice.
 
 **Calendario.** El acceso a la plataforma se anuncia para enero de 2027 (`Home.tsx`). No se verificó que este plan llegue a esa fecha: N15.
+
+## Tres niveles de autorización
+
+**Son independientes. Autorizar uno no autoriza el siguiente. Ninguno está autorizado hoy.**
+
+| | **Etapa 1: E0** | **Etapa 2: piloto de contenidos y catálogo** | **Etapa 3: piloto con estudiantes reales** |
+|---|---|---|---|
+| Qué es | Pruebas técnicas | Unidad, contenidos, banco, validación pedagógica | Alumnos usando el sistema |
+| Datos | Ficticios; base independiente y desechable | Contenido educativo; sin datos de estudiantes | Datos reales de menores |
+| Personas | Equipo técnico; cuentas ficticias | Responsables académicos | Alumnos, familias, tutores |
+| Producción | No | No | Decisión específica |
+| Efecto académico | Ninguno | Ninguno | Sí |
+| Autoriza | Sostenedor, expresamente | Sostenedor y responsables académicos | Sostenedor, tras todos los requisitos |
+| Requiere | Solo esa autorización | O4, O5, N5, N9, K13; ficha de abajo | Ver lista |
+
+**La orden del cierre documental no autoriza E0.** Etapa 2 es trabajo editorial: si necesita herramienta o tablas (M1), programarlas requiere autorización aparte. **Construir el motor (M2–M6) queda entre Etapa 2 y Etapa 3, y requiere su propia autorización de programación.**
+
+**Requisitos de Etapa 3:**
+- Protección de resultados y evaluaciones compartidas, con pruebas NI1–NI6 superadas y N20 decidido (si se usa E2).
+- Integridad de evidencias: D1–D9 superadas.
+- Autenticación y permisos reales. Según lo verificado en esta sesión, producción no tiene login configurado; no se volvió a comprobar.
+- Revisión de textos públicos (C12).
+- Copiloto: decisión de acceso y protocolo (C19, C22).
+- Revisión legal (O10, C15 si aplica P21).
+- Validación con responsables institucionales.
 
 ## Ficha de definición del piloto
 

@@ -7,7 +7,7 @@
 ## La idea en cinco decisiones de diseño
 
 1. **Dos canales independientes.** P0-E produce el *resultado* de una evaluación. El modelo produce el *estado* por contenido. Ninguno se calcula desde el otro: 70 % y K6 no se mezclan.
-2. **Evidencia con fecha de liberación.** Toda evidencia lleva `released_at`. La de E2 se libera en `review_at`. Cada lectura filtra por esa fecha, en un solo componente, y se pone al día sin depender de tareas programadas. Se comprobará con el protocolo de no interferencia ([08](08_SEGURIDAD_Y_GOBIERNO.md) §7), aún sin ejecutar.
+2. **Evidencia con fecha de liberación.** La de E2 se publica solo si la instancia cerró, llegó `review_at` y **la versión compartida cerró para todos**. Quién determina ese cierre sigue pendiente (N20). Un solo componente filtra, en cada lectura, y se pone al día sin depender de tareas programadas. Se comprobará con el protocolo de no interferencia ([08](08_SEGURIDAD_Y_GOBIERNO.md) §7), aún sin ejecutar.
 3. **Consistencia en la base de datos.** Claves foráneas compuestas atan cada evidencia a su respuesta y separan bancos ([04](04_MODELO_DE_DATOS.md)). Depende de una prueba aún no hecha (D1).
 4. **La familia es la unidad de independencia.** K6, criterio operativo de evidencia suficiente y no certeza, cuenta familias asignadas por un revisor. Diez escenarios definidos ([03](03_MOTOR_DE_EVIDENCIAS.md) §9).
 5. **Reglas puras y versionadas.** La versión 1 es determinista. Hechos solo de inserción; proyecciones reconstruibles; políticas que la dirección deberá aprobar.
@@ -46,12 +46,14 @@ Matriz completa: [10](10_DECISIONES_PENDIENTES.md). Las primeras: **O4, O5, N9**
 | Prerrequisitos o preguntas de mala calidad | Validación humana y monitoreo |
 | K6 da falsa certeza (ayuda externa, azar) | Retención, marca `por_comprobar`, sin promesas |
 | P21 con normativa no revisada | C15 antes de D2 |
-| Datos de menores y proveedor externo | Revisión legal antes de E7 |
+| Datos de menores y proveedor externo | Revisión legal antes de la Etapa 3 |
 | Textos públicos ya prometen funciones inexistentes | C12: sigue en producción |
-| Soporte técnico sin verificar (FK, triggers, réplicas) | E0 en base desechable |
+| Soporte técnico sin verificar (FK, triggers, réplicas) | E0, si el sostenedor lo autoriza |
 
 ## Documentos
 
 [01 Arquitectura](01_ARQUITECTURA_GENERAL.md) · [02 Modelo](02_MODELO_DE_CONOCIMIENTO.md) · [03 Evidencias y P0-E](03_MOTOR_DE_EVIDENCIAS.md) · [04 Datos](04_MODELO_DE_DATOS.md) · [05 Algoritmos](05_ALGORITMOS_Y_RECOMENDACIONES.md) · [06 Experiencia](06_EXPERIENCIA_DEL_ESTUDIANTE.md) · [07 Copiloto](07_COPILOTO_IA.md) · [08 Seguridad](08_SEGURIDAD_Y_GOBIERNO.md) · [09 Plan](09_PLAN_DE_IMPLEMENTACION.md) · [10 Decisiones](10_DECISIONES_PENDIENTES.md)
+
+**Tres niveles de autorización separados:** E0, piloto de contenidos, piloto con estudiantes ([09](09_PLAN_DE_IMPLEMENTACION.md)).
 
 **Siguiente paso:** auditoría independiente; después, la dirección decide si autoriza la tercera etapa. No se empieza a programar sin esa autorización.

@@ -68,7 +68,7 @@ Nunca solo color: icono y texto siempre.
 
 ## 4. Panel de rendimiento
 
-| Bloque | Antes de `review_at` | Después (sujeto a D1–D4) |
+| Bloque | Antes de la condición de publicación | Después (sujeto a D1–D4) |
 |---|---|---|
 | Lecciones | «{n} de {m} lecciones» | Igual |
 | E1, E3, E4 | Estado (nombres según P16) | Estado y {porcentaje_real} si procede |
@@ -76,7 +76,7 @@ Nunca solo color: icono y texto siempre.
 | Banda | Nunca | Menos de 70: repaso; 70 a menos de 80: refuerzo; 80 o más: sin aviso |
 | A reforzar | Solo por práctica liberada | Incluye evidencia liberada |
 
-**Copia** para el periodo intermedio: «Tu resultado detallado estará disponible el {fecha_review_at}». La fecha sí se puede mostrar: no revela nada.
+**Copia** para el periodo intermedio: «Tu resultado detallado estará disponible cuando esta evaluación cierre para todos». **No se promete una fecha fija:** `review_at` puede no bastar si la versión sigue abierta (C23).
 
 ## 5. Estados de pantalla
 
@@ -122,7 +122,7 @@ flowchart TD
   E --> F{Recuperación}
   F -->|Aprobado| C
   F -->|Agota o vence| G[Reprobado]
-  G --> H[Espera review_at, según C14]
+  G --> H[Espera publicación, según C14]
   H --> I[Contenidos pendientes con repaso]
   I --> J[Confirma continuar]
   J --> K[Módulo siguiente; E2 sigue Reprobado]

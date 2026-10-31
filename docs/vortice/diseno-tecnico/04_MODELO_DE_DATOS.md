@@ -8,6 +8,8 @@ Una evidencia debe corresponder al mismo estudiante, contenido, familia, versió
 
 **Dependencia crítica (RIESGO TÉCNICO):** requiere `PRAGMA foreign_keys = ON` en cada conexión. No aparece en `server/`, `shared/` ni `script/`. No se verificó el comportamiento en Turso. Si no se aplica, nada de esto protege. Prueba D1.
 
+**Identificadores:** «prueba D1–D9» (esta tabla) y «decisión D1–D4» (`PROGRESO`) son cosas distintas: la coincidencia es histórica (C24). Se conservan.
+
 ## 2. Diagrama
 
 ```mermaid
@@ -17,6 +19,7 @@ erDiagram
   module_evaluations ||--o{ evaluation_versions : versiona
   evaluation_processes ||--o{ evaluation_instances : contiene
   evaluation_versions ||--o{ evaluation_instances : asigna
+  evaluation_versions ||--o| evaluation_version_releases : libera
   evaluation_instances ||--o{ evaluation_attempts : permite
   evaluation_attempts ||--o{ evaluation_attempt_answers : registra
   evaluation_versions ||--o{ evaluation_version_questions : compone
@@ -59,7 +62,7 @@ erDiagram
 
 | Tipo | Tablas | Regla |
 |---|---|---|
-| **Solo inserción** | `knowledge_evidence`, `evidence_voids`, `question_voids`, `knowledge_state_events`, `recommendation_log`, `governance_audit`, `progression_continuations`, `practice_answers`, `evaluation_attempt_answers` | Trigger `BEFORE UPDATE/DELETE → RAISE(ABORT)` |
+| **Solo inserción** | `evaluation_version_releases`, `knowledge_evidence`, `evidence_voids`, `question_voids`, `knowledge_state_events`, `recommendation_log`, `governance_audit`, `progression_continuations`, `practice_answers`, `evaluation_attempt_answers` | Trigger `BEFORE UPDATE/DELETE → RAISE(ABORT)` |
 | **Inmutable tras publicar** | `knowledge_domain_versions` y sus `knowledge_item_versions` y `knowledge_prerequisites`; `question_versions` `aprobada`; `evaluation_versions` `validada`; `mastery_policies` `aprobada` | Trigger: solo permite la transición de `status` |
 | **Máquina de estados** | `evaluation_processes`, `evaluation_instances`, `evaluation_attempts`, `practice_sessions` | Actualizable solo por transiciones; un intento `enviado` no cambia |
 | **Proyección** | `student_knowledge_state`, `retention_schedule` | Actualizable; reconstruible |
@@ -111,6 +114,7 @@ La purga legal futura (O10) chocaría con «solo inserción»: exige una vía ex
 | Tabla | Columna | Notas |
 |---|---|---|
 | `evaluation_versions` | `id` PK; `evaluation_id` NN FK `module_evaluations`; `version`; `status` | `borrador, validada, asignada, retirada`; UNIQUE (evaluation, version) y (id, evaluation_id) |
+| `evaluation_version_releases` | `evaluation_version_id` PK FK; `released_at` NN; `basis`; `declared_by`; `verification_json` | **Mecanismo pendiente (N20).** Sin fila: nada de esa versión se publica. Una fila por versión, sin deshacer. Trigger: no asignar instancia nueva a una versión con fila |
 | `evaluation_version_questions` | `evaluation_version_id`, `question_version_id` | PK compuesta; más `family_id`, `item_id`, `bank`, `position`; **CHECK `bank='evaluacion'`**; FK (qv, family, item, bank) → `question_versions` |
 | `evaluation_processes` | `id` PK; `student_id`, `evaluation_id` NN FK; `status`; `closed_at`; `close_cause` | `abierto, recuperacion_pendiente, recuperacion_abierta, aprobado, reprobado`; UNIQUE (student, evaluation) |
 | `evaluation_instances` | `id` PK; `process_id`, `student_id`, `evaluation_version_id` NN | FK (process, student) |
@@ -125,8 +129,8 @@ La purga legal futura (O10) chocaría con «solo inserción»: exige una vía ex
 | | UNIQUE (id, student_id, evaluation_version_id, evidence_source_type, review_at) | |
 | `evaluation_attempt_answers` | `id` PK; `attempt_id`, `student_id`, `evaluation_version_id`, `evidence_source_type`, `review_at` | FK compuesta a intento |
 | | `question_version_id`, `family_id`, `item_id`, `bank` | FK (version, qv) → `evaluation_version_questions`, garantiza que la pregunta integra la versión; FK (qv, family, item, bank) |
-| | `selected_option_id`, `is_correct`, `answered_at` | UNIQUE (attempt, qv) |
-| | UNIQUE (id, student_id, qv, family, item, is_correct, evidence_source_type, review_at) | Para evidencia |
+| | `selected_option_id`, `is_correct`, `answered_at`, `sequence_no`, `study_day` | UNIQUE (attempt, qv) |
+| | UNIQUE (id, student_id, evaluation_version_id, attempt_id, qv, family, item, is_correct, evidence_source_type, review_at) | Para evidencia |
 
 `module_evaluations` requeriría `evaluation_function` y `release_policy`, ambos nulos (P16). `evaluation_progress` conserva el histórico (P7), con `attempt_id` nulo en filas antiguas. EXISTE EN CÓDIGO: una fila por envío, sin intentos.
 
@@ -137,8 +141,8 @@ La purga legal futura (O10) chocaría con «solo inserción»: exige una vía ex
 | `practice_sessions` | `id` PK; `student_id` NN FK; `domain_version_id` NN; `purpose`; `started_at`, `ended_at` | `practica, retencion`; UNIQUE (id, student_id, purpose) |
 | `practice_answers` | `id` PK; `session_id`, `student_id`, `purpose` | FK (session, student, purpose) |
 | | `question_version_id`, `family_id`, `item_id`, `bank` | FK a versión; **CHECK `bank='practica'`** |
-| | `selected_option_id`, `is_correct`, `assistance`, `accommodation`, `client_submission_id`, `answered_at` | UNIQUE (student, client_submission_id) |
-| | UNIQUE (id, student_id, qv, family, item, is_correct, assistance, purpose) | Para evidencia |
+| | `selected_option_id`, `is_correct`, `assistance`, `accommodation`, `client_submission_id`, `answered_at`, `sequence_no`, `study_day` | UNIQUE (student, client_submission_id); UNIQUE (student, sequence_no). `session_id` es la sesión; [03](03_MOTOR_DE_EVIDENCIAS.md) §9.1 |
+| | UNIQUE (id, student_id, session_id, qv, family, item, is_correct, assistance, purpose) | Para evidencia |
 
 ### 5.5 Evidencia y estado
 
@@ -147,13 +151,14 @@ La purga legal futura (O10) chocaría con «solo inserción»: exige una vía ex
 | `knowledge_evidence` | `id` PK; `student_id`, `item_id`, `family_id`, `question_version_id`, `item_version_id`, `domain_version_id` | NN; FK (item_version, item, domain_version) |
 | | `source_type` | `practica, retencion, evaluacion_practica, evaluacion_cierre, recuperacion` |
 | | `practice_answer_id`, `attempt_answer_id` | Un origen. Únicos parciales: una evidencia por respuesta |
-| | `is_correct`, `assistance`, `accommodation`, `review_at`, `occurred_at`, `released_at` | Copias atadas por FK |
+| | `session_ref`, `sequence_no`, `study_day`, `evaluation_version_id` | Sesión o intento; versión de evaluación si aplica |
+| | `is_correct`, `assistance`, `accommodation`, `review_at`, `occurred_at`, `practice_released_at` | Copias atadas por FK. **La liberación de evaluaciones no se guarda aquí**: cambia con la versión y esta tabla es solo inserción |
 | `question_voids` | `id` PK; `question_version_id` NN; `reason`, `requested_by`, `approved_by`, `at` | UNIQUE (qv); CHECK personas distintas. Decisión de anular |
 | `evidence_voids` | `id` PK; `evidence_id` NN FK; `question_void_id` FK; `reason`, `requested_by`, `approved_by`, `at` | UNIQUE (evidence). CHECK distintos, o con `question_void_id` |
 | `mastery_policies` | `id` PK; `version` UNIQUE; `rules_json`; `status`; `approved_by`, `approved_at` | Aprobada: sin parámetros nulos (lo valida la aplicación) |
 | `knowledge_state_events` | `id` PK; `student_id`, `item_id`; `from_state`, `to_state`, `from_flag`, `to_flag`; `reason` | `reason`: `evidencia, liberacion, anulacion, nueva_version, cambio_politica, retencion_vencida` |
 | | `trigger_evidence_id`, `trigger_void_id`, `policy_id`, `domain_version_id`, `computed_at`, `effective_at` | CHECK: según `reason` |
-| `student_knowledge_state` | PK (`student_id`, `item_id`); `state`, `flag`, `correct_families`, `wrong_families`, `assisted_count`, `uncertainty_reason`, `mastered_at`, `last_evidence_at`, `policy_id`, `domain_version_id`, `computed_through`, `updated_at` | **Proyección**. `computed_through`: hasta qué `released_at` incluye; ver [08](08_SEGURIDAD_Y_GOBIERNO.md) §7.3 |
+| `student_knowledge_state` | PK (`student_id`, `item_id`); `state`, `flag`, `correct_families`, `wrong_families`, `assisted_count`, `uncertainty_reason`, `mastered_at`, `last_evidence_at`, `policy_id`, `domain_version_id`, `computed_through`, `updated_at` | **Proyección**. `computed_through`: hasta qué fecha efectiva de publicación incluye; ver [08](08_SEGURIDAD_Y_GOBIERNO.md) §7.3 |
 | `retention_schedule` | PK (`student_id`, `item_id`); `step`, `due_at`, `last_checked_at`, `last_result` | **Proyección** |
 | `progression_continuations` | `id` PK; `student_id`, `process_id`; `from_module_id`, `pending_items_json`, `offered_resources_json`, `acknowledged_at` | UNIQUE (process); FK (process, student) |
 | `recommendation_log`, `governance_audit` | Como en la versión previa | |
@@ -168,34 +173,43 @@ CREATE TABLE knowledge_evidence (
   source_type TEXT NOT NULL,
   practice_answer_id TEXT, attempt_answer_id TEXT,
   is_correct INTEGER NOT NULL, assistance TEXT NOT NULL, accommodation TEXT,
-  review_at INTEGER, occurred_at INTEGER NOT NULL, released_at INTEGER NOT NULL,
+  session_ref TEXT NOT NULL, sequence_no INTEGER NOT NULL, study_day TEXT NOT NULL,
+  evaluation_version_id TEXT,
+  review_at INTEGER, occurred_at INTEGER NOT NULL, practice_released_at INTEGER,
 
   -- Correspondencia source_type ↔ origen
   CHECK (
     (source_type IN ('practica','retencion')
        AND practice_answer_id IS NOT NULL AND attempt_answer_id IS NULL
-       AND review_at IS NULL AND released_at = occurred_at)
+       AND evaluation_version_id IS NULL AND review_at IS NULL
+       AND practice_released_at = occurred_at)
     OR
     (source_type IN ('evaluacion_practica','evaluacion_cierre','recuperacion')
        AND attempt_answer_id IS NOT NULL AND practice_answer_id IS NULL
        AND assistance = 'ninguna'
-       AND review_at IS NOT NULL AND released_at = review_at)
+       AND evaluation_version_id IS NOT NULL AND review_at IS NOT NULL
+       AND practice_released_at IS NULL)
   ),
   -- Mismos datos que la respuesta de origen
-  FOREIGN KEY (practice_answer_id, student_id, question_version_id, family_id, item_id,
+  FOREIGN KEY (practice_answer_id, student_id, session_ref, question_version_id, family_id, item_id,
                is_correct, assistance, source_type)
-    REFERENCES practice_answers (id, student_id, question_version_id, family_id, item_id,
+    REFERENCES practice_answers (id, student_id, session_id, question_version_id, family_id, item_id,
                is_correct, assistance, purpose),
-  FOREIGN KEY (attempt_answer_id, student_id, question_version_id, family_id, item_id,
-               is_correct, source_type, review_at)
-    REFERENCES evaluation_attempt_answers (id, student_id, question_version_id, family_id, item_id,
-               is_correct, evidence_source_type, review_at),
+  FOREIGN KEY (attempt_answer_id, student_id, evaluation_version_id, session_ref, question_version_id,
+               family_id, item_id, is_correct, source_type, review_at)
+    REFERENCES evaluation_attempt_answers (id, student_id, evaluation_version_id, attempt_id, question_version_id,
+               family_id, item_id, is_correct, evidence_source_type, review_at),
   FOREIGN KEY (item_version_id, item_id, domain_version_id)
     REFERENCES knowledge_item_versions (id, item_id, domain_version_id)
 );
 CREATE UNIQUE INDEX ke_practice_uq ON knowledge_evidence (practice_answer_id) WHERE practice_answer_id IS NOT NULL;
 CREATE UNIQUE INDEX ke_attempt_uq  ON knowledge_evidence (attempt_answer_id)  WHERE attempt_answer_id  IS NOT NULL;
-CREATE INDEX ke_read ON knowledge_evidence (student_id, item_id, released_at);
+CREATE INDEX ke_read ON knowledge_evidence (student_id, item_id, occurred_at);
+
+-- Lectura (ver 08 §7.3): evidencia publicable
+--   práctica:   practice_released_at <= :ahora
+--   evaluación: review_at <= :ahora, instancia cerrada, y fila en evaluation_version_releases
+--               con released_at <= :ahora
 
 CREATE TRIGGER ke_no_update BEFORE UPDATE ON knowledge_evidence
 BEGIN SELECT RAISE(ABORT, 'knowledge_evidence es solo inserción'); END;
@@ -210,7 +224,8 @@ BEGIN SELECT RAISE(ABORT, 'pregunta no aprobada'); END;
 
 **Notas:**
 - `assistance = 'ninguna'` en evaluación: el servidor no puede saber si hubo ayuda externa. Significa «sin ayuda de la plataforma».
-- `review_at` fijo por instancia. Una excepción crea otra instancia (P18). Si una ampliación dentro de la extensión cambiara `review_at`, estas copias fallarían: prueba D6 y decisión técnica.
+- `review_at` se copia al intento y es fijo. Una excepción crea otra instancia (P18). Si una ampliación dentro de la extensión cambiara `review_at`, estas copias fallarían: prueba D6.
+- **`review_at` no publica por sí solo:** falta el cierre de la versión ([03](03_MOTOR_DE_EVIDENCIAS.md) §8.3).
 - `source_type`, `purpose` y `evidence_source_type` comparten valores; por eso la FK funciona (`practica`, `retencion` en práctica).
 - Que el dominio de la evidencia sea el publicado en ese momento lo valida la aplicación, en la transacción.
 - La evidencia se inserta en el mismo `db.batch` que la respuesta. Sin esto podrían quedar respuestas sin evidencia; es detectable por reconciliación.
@@ -227,13 +242,15 @@ BEGIN SELECT RAISE(ABORT, 'pregunta no aprobada'); END;
 ```json
 { "knowledge_evidence": { "id": "ev-1", "student_id": "ficticio-1", "item_id": "item-hip-a", "family_id": "fam-a1",
     "question_version_id": "qv-a1", "source_type": "practica", "practice_answer_id": "pa-1", "attempt_answer_id": null,
-    "is_correct": 1, "assistance": "ninguna", "review_at": null,
-    "occurred_at": 1800000000, "released_at": 1800000000 } }
+    "is_correct": 1, "assistance": "ninguna", "review_at": null, "evaluation_version_id": null,
+    "session_ref": "s-1", "sequence_no": 41, "study_day": "2027-03-01",
+    "occurred_at": 1800000000, "practice_released_at": 1800000000 } }
 ```
 ```json
 { "knowledge_evidence": { "id": "ev-2", "source_type": "evaluacion_cierre", "attempt_answer_id": "aa-77",
     "practice_answer_id": null, "assistance": "ninguna", "is_correct": 0,
-    "review_at": 1800300000, "released_at": 1800300000 } }
+    "evaluation_version_id": "ev-v1", "session_ref": "at-9", "sequence_no": 57, "study_day": "2027-03-10",
+    "review_at": 1800300000, "practice_released_at": null } }
 ```
 
 **Inválidos: la base debe rechazarlos**
@@ -245,7 +262,7 @@ BEGIN SELECT RAISE(ABORT, 'pregunta no aprobada'); END;
 | 3 | `family_id` o `item_id` distintos de la respuesta | FK compuesta |
 | 4 | `source_type='practica'` con `attempt_answer_id` | CHECK |
 | 5 | Sin origen, o con ambos | CHECK |
-| 6 | `evaluacion_cierre` con `released_at` < `review_at` | CHECK y FK |
+| 6 | `evaluacion_cierre` con `practice_released_at` no nulo, o `review_at` distinto al de su intento | CHECK y FK |
 | 7 | `practice_answers` con `bank='evaluacion'` | CHECK |
 | 8 | Pregunta de banco práctica en `evaluation_version_questions` | CHECK |
 | 9 | Respuesta de intento con pregunta ajena a su versión | FK a `evaluation_version_questions` |
@@ -255,6 +272,9 @@ BEGIN SELECT RAISE(ABORT, 'pregunta no aprobada'); END;
 | 13 | `question_versions` `aprobada` sin revisor, o revisor = autor | CHECK |
 | 14 | Segundo intento `activo` en la instancia | Único parcial |
 | 15 | Anulación con solicitante = aprobador | CHECK |
+| 16 | Instancia nueva sobre versión ya liberada | Trigger |
+| 17 | Segunda fila de liberación, o borrarla | PK y trigger |
+| 18 | Evidencia con `session_ref` ajeno | FK compuesta |
 
 **La base no puede impedir:** una familia mal asignada, un contenido mal definido, ayuda externa. Son controles humanos.
 
@@ -268,7 +288,7 @@ Lo decide una persona, por contenido. Comportamiento y alternativas: [03](03_MOT
 **Anulación.** Inserta `evidence_voids` (y `question_voids`, si afecta a todas). No borra. Efecto en la reconstrucción:
 1. `evaluar` excluye evidencia anulada; el dominio puede revertirse.
 2. Se inserta un evento `anulacion` si cambia el estado.
-3. Evidencia embargada: anulada sin efecto visible antes de `released_at`.
+3. Evidencia embargada: anulada sin efecto visible antes de cumplirse su condición de publicación.
 4. **No altera** resultados P0-E, intentos ni `score_pct` (N12).
 5. La anulación no se puede deshacer borrando. Revertirla: decisión pendiente; propuesta: tabla de reversión.
 
@@ -288,17 +308,31 @@ Lo decide una persona, por contenido. Comportamiento y alternativas: [03](03_MOT
 | `user_profiles`, `guardian_links`, `tutoring_cases` | EXISTE | Reutilizar; falta rol revisor |
 | Todo lo demás | NO EXISTE | Migración aditiva, autorización aparte |
 
-## 10. Dependencias que requieren pruebas
+## 10. Pruebas técnicas D1–D9
 
-Todas en base desechable, con autorización. **Ninguna ejecutada.**
+**Ninguna ejecutada.** Solo en etapa E0, con autorización expresa del sostenedor, en base desechable y datos ficticios. Lo que se afirma sobre SQLite es documentación general, **no comprobada en libSQL/Turso**.
 
-| ID | Prueba |
+| ID | Riesgo | Condición inicial | Operación | Resultado esperado | Capa responsable | Evidencia para superarla |
+|---|---|---|---|---|---|---|
+| **D1** | FK inactivas: integridad falsa | Base con padre e hijo, por cada modo de conexión (local, HTTP, réplica) | Leer `PRAGMA foreign_keys`; insertar hijo huérfano, también dentro de `db.batch` y en conexión nueva | Rechazo en todos los modos | Conexión de aplicación y motor | Salida por modo. Si no es posible: decidir triggers o validación propia |
+| **D2** | FK compuesta falla con NULL o versiones | Tablas de §6 | Origen nulo, origen válido, una columna distinta; insertar versión nueva de pregunta y dominio | NULL no activa la FK, y el `CHECK` exige un origen; columna distinta rechazada; versión nueva no afecta evidencia previa | Motor | Casos inválidos 1–5 y 18 de §7; registros antiguos intactos |
+| **D3** | Drizzle no expresa o pierde restricciones | Esquema de prueba en Drizzle 0.39 y `drizzle-kit` | Generar SQL y comparar con §6 | FK compuestas, CHECK e índices parciales presentes | Herramienta de migración | Diferencia de SQL revisada |
+| **D4** | Triggers perdidos; deriva de esquema | Base desechable con triggers; copia de solo lectura del esquema real, si se autoriza | Volver a aplicar con `db:push` y `generate`; `UPDATE`/`DELETE` en solo inserción | Triggers siguen; escritura rechazada | Migraciones SQL propias | Listado de `sqlite_master` antes y después. Informe de deriva |
+| **D5** | Evidencia cruzada: estudiante, pregunta, evaluación | Dos estudiantes, dos versiones | Ejecutar los inválidos 1–18 de §7 y los válidos | Rechazo exacto de cada inválido; válidos aceptados | Motor; aplicación para lo no expresable | Tabla caso → error |
+| **D6** | Publicación anticipada o tardía | Instancias con `review_at` distintos sobre una versión; reloj simulado | Avanzar reloj: antes de `review_at`; después, con versión abierta; con liberación; ampliar ventana | Publica solo con la condición completa; liberación irreversible; instancia nueva rechazada; comportamiento de ampliación documentado | Filtro de servidor y triggers | Salidas por tiempo; pruebas NI4, NI5 de 08 §7 |
+| **D7** | Escrituras parciales y carreras | Sesión activa; varias conexiones; con réplicas | Respuesta + evidencia + evento en `db.batch` con fallo forzado; envíos simultáneos; dos lecturas poniéndose al día | Todo o nada; una evidencia; un evento por cambio; `sequence_no` único; una actualización gana sin perder cambios | Transacción y condición en `UPDATE` | Repeticiones como en T1/T2, en Turso. Local no basta |
+| **D8** | Costo de índices anchos | Volumen simulado, sin meta aprobada | Medir inserción, lectura del mapa y tamaño, con y sin índices | Cifras que permitan decidir | Diseño | Tabla de mediciones. Si es alto: sustituir por validación con trigger, y volver a D5 |
+| **D9** | Proyección inconsistente | Evidencias, anulaciones, liberaciones, cambio de versión | Reconstruir desde cero y comparar; simular fallo tras evidencia | `student_knowledge_state` idéntico al reconstruido; fallo detectado por reconciliación | Motor de estado | Comparación sin diferencias |
+
+| Tema auditado | Prueba |
 |---|---|
-| D1 | `PRAGMA foreign_keys`: ¿se aplica por conexión en libSQL y Turso, incluido `db.batch` y conexiones HTTP? |
-| D2 | FK compuesta a `UNIQUE` con varias columnas y NULL (`MATCH SIMPLE`) |
-| D3 | Declarar FK compuestas y CHECK en Drizzle 0.39 y `drizzle-kit`; triggers solo por SQL propio |
-| D4 | Triggers en Turso y que `db:push` no los elimine. `migrations/` solo tiene `0000`: revisar deriva, sin escribir |
-| D5 | Ejecutar todos los inválidos de §7 |
-| D6 | Efecto de una ampliación de ventana en `review_at` copiado |
-| D7 | Atomicidad respuesta + evidencia + evento, y concurrencia en réplicas (T1/T2) |
-| D8 | Costo de los índices `UNIQUE` anchos |
+| `PRAGMA foreign_keys` | D1 |
+| Drizzle y libSQL/Turso | D1, D3, D4 |
+| Atomicidad | D7 |
+| Evidencias cruzadas | D5 |
+| Proyecciones | D9 |
+| Restricciones y versiones | D2 |
+| `review_at` y publicación | D6 |
+| Concurrencia | D7 |
+| Nulos | D2 |
+| Costos | D8 |

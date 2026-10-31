@@ -4,7 +4,7 @@
 
 ## 1. Entradas
 
-Grafo publicado; evidencias con `released_at <= ahora`; política aprobada; agenda de retención; módulo actual y acceso (P0-E); banco aprobado.
+Grafo publicado; evidencias publicables ([03](03_MOTOR_DE_EVIDENCIAS.md) §8.3); política aprobada; agenda de retención; módulo actual y acceso (P0-E); banco aprobado.
 
 **Regla absoluta:** ninguna función de este documento lee evidencia no liberada. Reciben la evidencia ya filtrada, por `conocimiento.evidenciaLiberada` ([08](08_SEGURIDAD_Y_GOBIERNO.md) §7.2).
 
@@ -13,7 +13,7 @@ Grafo publicado; evidencias con `released_at <= ahora`; política aprobada; agen
 ## 2. Estado de un contenido
 
 ```text
-# Entrada ya filtrada: released_at <= ahora. Parámetros nulos en política = no ejecutable.
+# Entrada ya filtrada: solo evidencia publicable. Parámetros nulos en política = no ejecutable.
 función evaluar(evidencias, versión_actual, política):
   e = evidencias sin anulación                                   # [T] escenario 7
   e = e con versión compatible con versión_actual, o versión_actual  # [P] escenario 9
@@ -21,10 +21,11 @@ función evaluar(evidencias, versión_actual, política):
 
   válidas = e sin ayuda, si política.assisted_counts = falso    # [P] escenarios 5, 6
 
-  # Orden por (occurred_at, id)
+  # Orden por (occurred_at, sequence_no)
   correctas(t) = familias con acierto en válidas hasta t
   dominio_en   = primer t con |correctas(t)| >= política.k6_min_families   # [K6]
-                 # política.same_session_allowed = falso: exige sesiones distintas (O2)
+                 # además: dos aciertos separados según política.k6_separation (O2):
+                 # ninguna | sesion (session_ref) | dia (study_day) | intervalo:<n>
 
   errada(f, desde) = f tiene error en válidas después de desde,
                      y sin acierto en f posterior a ese error    # [P] escenario 3
