@@ -18,6 +18,8 @@ E0 responde una pregunta: **¿la plataforma técnica sostiene las garantías del
 
 **Superar E0 no demuestra que Vórtice no filtre.** Demuestra que el mecanismo es viable.
 
+**Una corrida local no es E0.** Es un resultado parcial del nivel L, y no permite declarar E0 superada: ver §7.
+
 ## 2. Arquitectura y aislamiento
 
 ```mermaid
@@ -43,33 +45,80 @@ flowchart LR
 | Nivel | Qué es | Para qué | Costo y permiso |
 |---|---|---|---|
 | **L** | `turso dev` con archivo en carpeta temporal, como `script/p0e-t15.ts` | Todo lo posible, primero | Local |
-| **R** | Base nueva en Turso, en un **grupo propio**, con varias ubicaciones si el plan lo permite | Lo que L no demuestra: conexión remota, réplicas, concurrencia | Requiere A1. Plan y cupos sin verificar |
-| **V** | Función mínima en un **proyecto Vercel separado**, nunca `brkl` | Reloj entre instancias (T5) | Requiere A2. Opcional |
+| **R** | Base nueva en Turso, en un **grupo propio**, con varias ubicaciones si el plan lo permite | Lo que L no demuestra: conexión remota, réplicas, concurrencia | Requiere A3 y A1. Plan y cupos sin verificar |
+| **V** | Función mínima en un **proyecto Vercel separado**, nunca `brkl` | Reloj entre instancias (T5) | Requiere A3, A1 y A2. Sin V, E0 no se da por superada (§7) |
 
 **Barreras de aislamiento:**
-1. **Lista blanca:** el arnés rechaza cualquier URL que no sea `127.0.0.1`, `localhost` o el host exacto `brkl-e0-*`. Rechaza expresamente `brkl-db` y `brkl-preview`.
+1. **Host exacto:** ver §2.1. Sin comodines ni coincidencias parciales.
 2. **Sentinela:** antes de escribir, exige una tabla `e0_sentinel` con el id de la corrida. Sin ella, se detiene. Las bases reales no la tienen.
 3. **Credenciales:** token solo de esa base, con vencimiento corto, en variables de sesión de `E0_*`. No se lee `.env.local`, `.env` ni variables de Vercel. El arnés se detiene si existe `TURSO_DATABASE_URL` en el entorno.
 4. **`NODE_ENV=production`:** se detiene, como `pagos.check.ts`.
-5. **Sin red saliente** salvo al host permitido. Sin Resend ni Gemini: el copiloto se simula.
+5. **Control de red:** ver §2.2. Sin credenciales de Resend ni Gemini; el copiloto se simula.
 6. **Fuera de `check:vortice`:** los archivos no llevan sufijo `.check.ts`.
 7. **Secretos:** nunca en evidencias.
 
-## 3. Requisitos previos
+### 2.1 Validación del host
 
-| Requisito | Responsable | Estado |
-|---|---|---|
-| Autorizaciones A1–A5 (§10) | Sostenedor | PENDIENTE |
-| Commit del diseño congelado para la corrida | Técnico | Se registra al iniciar |
-| Rama aparte para el arnés, sin merge | Técnico | Requiere A3 |
-| Versiones fijadas: `@libsql/client` y `drizzle-orm` del `package.json`; `turso`, Node, `sqld` | Técnico | Se registran |
-| Cupo de Turso para otra base y grupo | Técnico | Sin verificar |
+**Un patrón como `brkl-e0-*` no sirve:** también coincidiría con otra base. El hostname real de Turso no se conoce hasta crear la base, así que la autorización tiene dos pasos:
 
-**Creación (referencia, solo con A1):**
+1. A1 autoriza crear una base con un nombre concreto y solo ese.
+2. El operador crea la base, obtiene su URL y la anota en `autorizacion.md`. **Antes de la primera conexión**, el sostenedor o quien designe confirma ese hostname exacto por escrito.
+
+| Regla | Definición |
+|---|---|
+| Valor permitido | Una constante `E0_ALLOWED_HOST`, con un hostname completo, de esa corrida |
+| Comparación | `new URL(url).hostname === E0_ALLOWED_HOST`, igualdad exacta tras normalizar a minúsculas. Sin sufijos, prefijos, comodines ni expresiones regulares |
+| Protocolo | Solo los esperados para esa base. Se rechazan credenciales o puerto en la URL no previstos |
+| Nivel L | Solo `127.0.0.1` y el puerto de esa corrida. `localhost` se excluye porque depende de la resolución local |
+| Réplicas | Si probarlas exige otra URL, cada hostname se autoriza igual, uno por uno. Si no, se documenta cómo se comprobó la ubicación servida |
+| Otra corrida | Hostname nuevo y confirmación nueva |
+| Rechazo adicional | Si el valor contiene `brkl-db` o `brkl-preview`, se detiene aunque esté mal configurado |
+
+**Alcance:** esta validación solo limita a qué URL conecta el cliente del arnés. **No es un bloqueo de red.**
+
+### 2.2 Control de red
+
+**Una validación dentro del arnés no bloquea la red:** una dependencia, un error o un proceso externo podrían conectarse igual. El bloqueo debe estar fuera del proceso.
+
+| Nivel | Mecanismo propuesto | Qué impide | Límite |
+|---|---|---|---|
+| **L y TK** | Contenedor sin red externa (por ejemplo `--network none`), con el arnés y `sqld` dentro, comunicados por `127.0.0.1` | Toda salida | Docker u otro equivalente sin verificar en el equipo. Dependencias instaladas antes, desde el archivo de bloqueo |
+| **R** | Contenedor en red interna sin ruta a Internet, cuya única salida es un **proxy de salida con lista de un hostname exacto** (`CONNECT` y SNI) | Salidas directas y a otros hosts | **Riesgo técnico:** el cliente `fetch` de Node no usa proxy de forma automática; debe configurarse y demostrarse en nivel L. Firewall por IP no sirve bien: las IP de Turso pueden cambiar |
+| **V** | **Sin bloqueo de red disponible para nosotros** | Nada a nivel de red | Control solo por contenido: función mínima, sin dependencias, revisada, y sin más credenciales que las de E0. Riesgo residual declarado |
+
+**Además, en R y L:**
+- El contenedor monta solo la carpeta del arnés, **no la raíz del repositorio**: `.env.local` no queda a su alcance.
+- Sesión de la CLI de Turso **fuera del contenedor**. Esa sesión sí tiene alcance sobre toda la organización: crear y destruir son comandos manuales, registrados, y nunca los ejecuta el arnés.
+
+**Prueba previa obligatoria (control negativo):** desde el contenedor, una conexión a un destino no permitido debe fallar a nivel de red, sin pasar por la validación del arnés. No se usan hosts reales del proyecto como destino de prueba. Se conserva la salida.
+
+**Si no se puede implementar el bloqueo en R, el nivel R no comienza**, salvo que el sostenedor acepte por escrito ese riesgo residual. En ese caso, el informe debe decir que no hubo bloqueo de red. La protección principal seguiría siendo que el entorno no contiene credenciales reales.
+
+## 3. Requisitos por nivel
+
+**Fuente única de autorizaciones: §10. Ninguna otorgada.**
+
+| Requisito | L: local | R: Turso | V: Vercel | Publicar evidencias |
+|---|---|---|---|---|
+| A3, arnés en rama aparte | **Sí** | **Sí** | **Sí** | No |
+| A1, base desechable con costo y lecturas de nombres | No | **Sí** | **Sí** (mide contra R) | No |
+| Confirmación de hostname exacto (§2.1) | No | **Sí** | **Sí** | No |
+| A2, proyecto Vercel y lecturas de nombres | No | No | **Sí** | No |
+| A5 | No | No | No | **Sí** |
+| A4 | No | No | No | No: operación aparte (§10) |
+| A6 | No | No | No | No: solo cambia veredictos |
+| Control de red (§2.2) | Contenedor | Proxy demostrado, o riesgo aceptado | No disponible | No |
+| Cupo y costo verificados | No | Sí | Sí | No |
+| Commit del diseño y versiones registradas (`@libsql/client`, `drizzle-orm`, `turso`, Node, `sqld`) | Sí | Sí | Sí | No |
+
+**Sin A5, las evidencias se conservan fuera del repositorio** y se entregan al sostenedor.
+
+**Creación (referencia, nivel R, solo con A1):**
 
 ```text
 turso group create brkl-e0
 turso db create brkl-e0-<AAAAMMDD> --group brkl-e0
+turso db show brkl-e0-<AAAAMMDD> --url
 turso db tokens create brkl-e0-<AAAAMMDD> --expiration 1d
 ```
 
@@ -79,21 +128,35 @@ turso db tokens create brkl-e0-<AAAAMMDD> --expiration 1d
 
 ## 5. Procedimiento
 
-Orden fijo. **Si falla una prueba de la fase 1, se detiene:** lo demás no tendría sentido.
+Orden fijo: las fases se recorren primero en L. R y V solo empiezan si están autorizadas. **Si D1 falla sin alternativa, se detiene.** Si hay alternativa, se detiene igual, se corrige el diseño y se reinicia desde la fase 1 (§7).
+
+| Fase | Pruebas | L | R | V |
+|---|---|---|---|---|
+| 0 | Control negativo de red (§2.2) y sentinela | Sí | Sí | Revisión de la función |
+| 1 | D1 | Sí | Sí | |
+| 2 | D2–D5, D9 | Sí (D3 sin base; D9 solo L) | D2, D4, D5 | |
+| 3 | D7 y T2 | Sí | **Sí: es lo que importa** | |
+| 4 | D6, reloj y publicación | Sí | Casos 5–7 de §5.3 y cierre compartido | T5 |
+| 5 | TK1–TK15 | Sí (sin base) | | |
+| 6 | NI1–NI6 | Sí | | |
+| 7 | D8 | Sí | Sí | |
 
 ```mermaid
 flowchart TD
-  A[Autorización] --> B[Preparar y registrar versiones]
-  B --> F1[Fase 1: D1 FK]
-  F1 -->|Falla sin alternativa| STOP[Detener e informar]
+  A[Autorización del nivel] --> B[Registrar versiones y host]
+  B --> F0[Fase 0: control de red]
+  F0 -->|Falla| STOP[Detener e informar]
+  F0 --> F1[Fase 1: D1 FK]
+  F1 -->|Falla| STOP
   F1 --> F2[Fase 2: D2 a D5 y D9]
   F2 --> F3[Fase 3: D7 y T2]
   F3 --> F4[Fase 4: D6, reloj y publicación]
   F4 --> F5[Fase 5: TK1 a TK15]
   F5 --> F6[Fase 6: NI1 a NI6, capa de datos]
   F6 --> F7[Fase 7: D8 costos]
-  F7 --> G[Informe]
+  F7 --> G[Guardar evidencias e informe preliminar]
   G --> H[Destrucción y verificación]
+  H --> I[Informe final con resultado de §7]
 ```
 
 ### 5.1 D1–D9
@@ -105,9 +168,9 @@ Definición: [04](04_MODELO_DE_DATOS.md) §10. Cómo se ejecuta:
 | D1 | L, R | Por cada modo (`createClient` local, HTTP, `batch`, transacción interactiva, conexión nueva): `PRAGMA foreign_keys`, activarlo si hace falta, volver a leer, insertar huérfano | 1 por modo | `1` y rechazo en **todos** | Algún modo acepta el huérfano. Alternativas: triggers o validación en aplicación, y revisar el diseño |
 | D2 | L, R | Inválidos 1–5, 18; nulos por origen; versión nueva de pregunta y dominio | 1 | Exactamente lo esperado | Un inválido entra, o un válido se rechaza |
 | D3 | Sin base | Esquema en Drizzle; `drizzle-kit generate`; comparar con [04](04_MODELO_DE_DATOS.md) §6 | 1 | Restricciones presentes o suplidas por SQL propio documentado | Pérdida silenciosa de una restricción |
-| D4 | L, R | Aplicar triggers; repetir `push` y `generate`; `UPDATE`/`DELETE`. Deriva real: solo si A4 | 1 | Triggers intactos y escritura rechazada | Herramienta los elimina sin aviso |
+| D4 | L, R | Aplicar triggers; repetir `push` y `generate`; `UPDATE`/`DELETE`. **La deriva del esquema real no forma parte de esta prueba en E0** (§10, A4) | 1 | Triggers intactos y escritura rechazada | Herramienta los elimina sin aviso |
 | D5 | L, R | Inválidos 1–18 y válidos | 1 | 18 rechazos con la causa correcta | Cualquier otro |
-| D6 | L | §5.3 | 1 por caso | Publica solo con la condición completa | Publicación antes de tiempo |
+| D6 | L; casos 5–7 también en R | §5.3 | 1 por caso | Publica solo con la condición completa | Publicación antes de tiempo |
 | D7 | L, R | §5.2 | 50 (como T1–T5) | 50/50 | Una sola escritura parcial o duplicada |
 | D8 | L, R | Volumen simulado: hipótesis de 60 estudiantes, 60 contenidos y 10 000 evidencias | 3 | **Sin umbral aprobado:** se entregan cifras | No aplica; informa |
 | D9 | L | Reconstruir y comparar tras cada escenario TK, anulación y liberación; forzar fallo y reconciliar | Todos | Sin diferencias | Una diferencia |
@@ -177,12 +240,13 @@ Definición: [08](08_SEGURIDAD_Y_GOBIERNO.md) §7. **Alcance E0:** capa de datos
 
 ## 6. Evidencias
 
-Carpeta por corrida, fuera del código de la aplicación, sin secretos. Tras revisión se publica en `docs/vortice/e0/<corrida>/` (no se crea ahora).
+Carpeta por corrida, fuera del código de la aplicación, sin secretos. Se guardan **antes de destruir**. Solo con A5, y tras revisión, se publican en `docs/vortice/e0/<corrida>/` (no se crea ahora).
 
 | Evidencia | Contenido |
 |---|---|
-| `manifest.json` | Commit, versiones, fecha, operador, semilla, nivel, host enmascarado |
-| `autorizacion.md` | Texto y fecha de la autorización |
+| `manifest.json` | Commit, versiones, fecha, operador, semilla, nivel, hostname autorizado |
+| `autorizacion.md` | Texto y fecha de cada autorización; confirmación del hostname exacto |
+| `red/` | Control negativo y registro del proxy, por nivel |
 | `resultados/<id>.json` | Prueba, entrada, esperado, obtenido, repeticiones, veredicto |
 | `sql/` | SQL aplicado y emitido, `sqlite_master` antes y después |
 | `comandos.log` | Comandos con secretos enmascarados |
@@ -191,22 +255,34 @@ Carpeta por corrida, fuera del código de la aplicación, sin secretos. Tras rev
 | `destruccion.md` | §8 |
 | `SHA256SUMS` | Huellas de todo |
 
-**Veredictos:** `APROBADA`, `RECHAZADA`, `INCONCLUSA` (no se pudo ejecutar; nunca cuenta como aprobada), `INFORMATIVA` (sin umbral aprobado).
+**Veredictos, siempre por prueba y por nivel** (por ejemplo, «D1 en L: `APROBADA`; D1 en R: sin ejecutar»): `APROBADA`, `RECHAZADA`, `INCONCLUSA` (se intentó y no se pudo concluir), `SIN EJECUTAR` (nivel no autorizado o no iniciado), `INFORMATIVA` (sin umbral aprobado). `INCONCLUSA` y `SIN EJECUTAR` nunca cuentan como aprobada. Un `APROBADA` en L no se traslada a R.
 
 ## 7. Criterios globales
 
 | Resultado | Condición | Consecuencia |
 |---|---|---|
-| **E0 superada** | D1–D7, D9, TK y NI en `APROBADA`; D8 y reloj con cifras | Permite al sostenedor considerar el siguiente paso. **No autoriza nada** |
-| **E0 con cambios** | Fallo con alternativa viable (por ejemplo, triggers por D1) | Se corrige el diseño, y se repite lo afectado |
+| **Resultado parcial local** | Solo nivel L, cualquier resultado favorable | Se informa con este nombre. **No es E0 superada, ni aprobación parcial de E0.** Da aviso temprano de fallos y demuestra solo el comportamiento local |
+| **Resultado parcial remoto** | L y R, sin V | Igual: **no es E0 superada**. T5 queda `SIN EJECUTAR` |
+| **E0 superada** | **Todo lo siguiente:** D1–D7 y D9, TK y NI en `APROBADA` en sus niveles según §5; D1, D2, D4, D5, D6 (casos 5–7) y **D7 con T2 en `APROBADA` en R**; **réplicas** comprobadas en R; control de red demostrado en L y R, o riesgo de R aceptado por escrito; T5 y D8 medidos, con su veredicto; destrucción verificada | Permite al sostenedor considerar el siguiente paso. **No autoriza nada** |
+| **E0 con cambios** | Fallo con alternativa viable (por ejemplo, triggers por D1) | Se detiene, se corrige el diseño, y se repite lo afectado **en todos los niveles** |
 | **E0 rechazada** | Fallo en integridad, atomicidad o embargo, sin alternativa | No se avanza; se revisa el modelo o la plataforma |
-| **E0 incompleta** | Alguna `INCONCLUSA` en lo crítico | No se declara superada |
+| **E0 incompleta** | Alguna prueba requerida `INCONCLUSA` o `SIN EJECUTAR` | No se declara superada. Si el plan de Turso no permite réplicas, también queda aquí |
 
-**Detener de inmediato:** señal de conexión a un host fuera de lista; un dato no ficticio; un secreto en evidencias. Se destruye, se informa y se revocan credenciales.
+**Solo local, nunca se concluye:** concurrencia real en Turso, FK en conexión remota, réplicas, lectura vieja ni reloj entre instancias.
 
-**Umbrales que el sostenedor puede querer fijar** (D8, desfase de reloj): sin ellos, son informativos.
+**Detener de inmediato:** señal de conexión a un host no autorizado; fallo del control negativo; un dato no ficticio; un secreto en evidencias. Se conservan las evidencias sin secretos, se revocan credenciales, se destruye el entorno y se informa. Un secreto expuesto se elimina de la evidencia y se registra el hecho, y su rotación requiere decisión del sostenedor si es real.
+
+**Umbrales que el sostenedor puede fijar con A6** (D8, desfase de reloj): sin ellos, son `INFORMATIVA`.
 
 ## 8. Destrucción y verificación
+
+Siempre tras guardar evidencias. **Solo se hace lo del nivel ejecutado.**
+
+| Nivel | Destrucción |
+|---|---|
+| L | Borrar contenedor, archivos de `turso dev` y variables `E0_*` |
+| R | Lo anterior, el proxy, y los comandos de abajo |
+| V | Eliminar el proyecto Vercel separado y sus variables |
 
 ```text
 turso db tokens invalidate brkl-e0-<AAAAMMDD>
@@ -214,20 +290,23 @@ turso db destroy brkl-e0-<AAAAMMDD> --yes
 turso group destroy brkl-e0 --yes
 ```
 
-Más: borrar archivos `turso dev`, proyecto Vercel de V y variables `E0_*`.
+**Orden del nivel R:** la prueba del token se hace después de invalidar y **antes de destruir la base**: si no, un rechazo no probaría nada.
 
-| Comprobación | Método, sin conectar a bases reales | Esperado |
-|---|---|---|
-| Base eliminada | `turso db list` antes y después | Solo falta la de E0 |
-| Credenciales | Reintentar con el token | Rechazado |
-| Bases reales | `turso db list`: nombres y existencia. **No se abren** | Sin cambios |
-| Vercel `brkl` | `vercel ls` y `vercel env ls`, solo nombres | Sin despliegues ni variables nuevas por E0 |
-| Repositorio | `git status` y `git diff` en `vortice/integracion`, `main` sin cambios | Solo documentos autorizados |
-| Código | Búsqueda: nada de `server/`, `client/`, `shared/` importa el arnés | Ninguna coincidencia |
-| Registro | `comandos.log`: solo hosts permitidos | Sin otros hosts |
-| Correos e IA | Sin credenciales cargadas, ni Resend ni Gemini | Ningún envío |
+| Comprobación | Nivel | Método, sin conectar a bases reales | Esperado |
+|---|---|---|---|
+| Archivos locales | L | Listar carpeta temporal | Vacía |
+| Credenciales | R | Reintentar con el token invalidado | Rechazado |
+| Base eliminada | R | `turso db list` antes y después; incluida en A1 | Solo falta la de E0 |
+| Bases reales | R | Misma lista: nombres. **No se abren** | Sin cambios |
+| Vercel `brkl` | V | `vercel ls` y `vercel env ls`, solo nombres; incluida en A2 | Sin despliegues ni variables nuevas por E0 |
+| Repositorio | Todos | `git status` y `git diff`; `main` y `vortice/integracion` sin cambios por E0, salvo A5 | Sin cambios fuera de la rama del arnés |
+| Código | Todos | Búsqueda: nada de `server/`, `client/`, `shared/` importa el arnés | Ninguna coincidencia |
+| Registro | Todos | `comandos.log` y registro del proxy | Solo hosts autorizados |
+| Correos e IA | Todos | Sin credenciales cargadas de Resend ni Gemini | Ningún envío |
 
-**Límite:** esto no inspecciona el interior de las bases reales, porque hacerlo exigiría abrirlas. La garantía viene de que el arnés nunca tuvo sus credenciales.
+**La rama del arnés se conserva o se elimina según decida el sostenedor:** nunca se fusiona.
+
+**Límite:** esto no inspecciona el interior de las bases reales, porque hacerlo exigiría abrirlas. La garantía viene de que el entorno nunca tuvo sus credenciales, y no es una demostración absoluta. En V no hubo bloqueo de red.
 
 ## 9. Dependencias y riesgos
 
@@ -237,7 +316,10 @@ Más: borrar archivos `turso dev`, proyecto Vercel de V y variables `E0_*`.
 | D1 falla en HTTP | Diseño de FK no sirve | Triggers o validación; repetir D2 y D5 |
 | Implementación de referencia difiere de la futura | Falsa confianza | Repetir en M2, M5 y M6 |
 | Arnés con errores | Falsos resultados | Controles de eficacia |
-| Cupos de Turso o Vercel | Nivel R o V incompleto | `INCONCLUSA` |
+| Cupos de Turso o Vercel | Nivel R o V incompleto | `SIN EJECUTAR`; E0 incompleta |
+| Proxy de salida no funciona con el cliente | Nivel R sin bloqueo de red | Demostrar en L; si no, R no comienza sin aceptación escrita (§2.2) |
+| Resultado local leído como E0 superada | Falsa confianza | Nombre «resultado parcial local» (§7) |
+| Sesión de CLI con alcance a toda la organización | Un comando equivocado afecta bases reales | Comandos manuales, por nombre exacto y registrados |
 | Costo de cuentas | Sin verificar | Revisar antes de A1 |
 | Réplicas con lectura vieja | Publicación inconsistente | Hallazgo; leer de primaria |
 | Decisiones abiertas (O1, O2, N20) | No se prueba una regla final | Matriz de políticas |
@@ -245,15 +327,19 @@ Más: borrar archivos `turso dev`, proyecto Vercel de V y variables `E0_*`.
 
 ## 10. Autorizaciones que requiere el sostenedor
 
-Independientes. Ninguna otorgada.
+Independientes. Ninguna otorgada. Requisitos por nivel: §3.
 
 | ID | Autorización | Necesaria para |
 |---|---|---|
-| **A1** | Crear y destruir una base desechable en la cuenta de Turso, con su costo | Nivel R |
-| **A2** | Proyecto Vercel separado de prueba | Nivel V (opcional) |
-| **A3** | Escribir el arnés en una rama aparte, sin merge | **Toda E0.** Es escribir código, aunque no de la aplicación |
-| **A4** | Comparar el esquema real, solo lectura de estructura | Deriva en D4 (opcional). Toca bases reales: **puede omitirse**, con esa parte `INCONCLUSA` |
-| **A5** | Publicar evidencias en el repositorio | §6 |
-| A6 | Fijar umbrales de D8 y reloj, si los desea | Pasar de informativo a aprobado o rechazado |
+| **A1** | Crear y destruir una base con nombre exacto en Turso, con su costo; listar nombres de bases para verificar; confirmar el hostname exacto (§2.1) | R y V |
+| **A2** | Proyecto Vercel separado; listar despliegues y nombres de variables de `brkl` para verificar | V |
+| **A3** | Escribir el arnés en una rama aparte, sin merge. Es escribir código, aunque no de la aplicación | L, R y V |
+| **A4** | Comparar el esquema real, solo estructura. **Operación separada, fuera de E0 y fuera del entorno del arnés**, porque toca bases reales | No es requisito de E0. Sigue pendiente antes de cualquier migración real |
+| **A5** | Publicar evidencias en el repositorio | Solo publicar |
+| A6 | Fijar umbrales de D8 y reloj, si los desea | Pasar de `INFORMATIVA` a aprobado o rechazado. No es requisito |
 
-**E0 mínima:** A3, solo con nivel L. Barata y sin nube, pero **no demuestra Turso ni réplicas**: D1, D4 y D7 quedan `INCONCLUSA` en R, y E0 no se daría por superada.
+| Se quiere | Autorizaciones | Resultado máximo posible |
+|---|---|---|
+| Solo local | A3 | **Resultado parcial local.** No es E0 superada |
+| Local y Turso | A3, A1 | **Resultado parcial remoto.** No es E0 superada |
+| **E0 completa** | **A3, A1, A2** | E0 superada, si cumple §7 |

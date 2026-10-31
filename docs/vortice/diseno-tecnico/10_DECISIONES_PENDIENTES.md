@@ -8,14 +8,14 @@
 
 | Para | Falta |
 |---|---|
-| Comprobar soporte técnico (M0) | Autorizar base desechable |
-| Catálogo y banco (M1) | O4, O5, N9 y ficha del piloto |
+| Etapa 1: E0 ([11](11_PLAN_E0.md) §3, §10) | Solo local: A3. Local y Turso: A3, A1. **E0 completa: A3, A1, A2.** Ninguna otorgada |
+| Etapa 2: catálogo y banco (M1) | O4, O5, N5, N9 y ficha del piloto |
 | Política de dominio (M2) | O1, O2, O3, N1, N2, N16, N17, N18 |
 | Mapa (M3) | O6, N3 si aplica, N11 |
 | Núcleo P0-E | P7, P8, P16, P17, P20-v, C16 |
-| E2 con evidencia (M5) | N2, C6, C7, N4, C20, C21 |
-| Resultados y P21 (M6) | D1–D4, C14, C15, N14 |
-| Estudiantes reales (M7) | O10, C19, C22, C12, autenticación, revisión legal |
+| Evaluación E2 con evidencia (M5) | N2, N20, N21, C6, C7, N4, C20, C21 |
+| Resultados y P21 (M6) | Decisiones D1–D4, C14, C15, C23, N14, N20 |
+| Etapa 3: estudiantes reales (M7) | O10, C19, C22, C12, E0 superada, autenticación, revisión legal |
 
 **Ninguna decisión exige rehacer el esquema**, salvo preguntas multi-contenido o una respuesta que cambie N2 o D2 de forma no prevista. Esto es una evaluación por lectura; las pruebas D1–D8 pueden cambiarlo.
 

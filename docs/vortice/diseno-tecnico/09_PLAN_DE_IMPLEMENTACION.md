@@ -28,7 +28,7 @@ Si el sostenedor quiere empezar antes con estudiantes, M7 podría hacerse solo c
 
 | Etapa | Objetivo | Componentes | Depende de | Cambios de datos | Riesgos | Pruebas | Aceptación | Dirección aprueba antes |
 |---|---|---|---|---|---|---|---|---|
-| **E0** | Demostrar soporte técnico | Pruebas D1–D9 en base desechable; T2 y T5 en Turso | | Ninguno en Vórtice | Conclusiones que obliguen a cambiar el diseño | [04](04_MODELO_DE_DATOS.md) §10 | Evidencia de cada prueba | Autorización expresa del sostenedor para ese entorno |
+| **E0** | Demostrar soporte técnico | [11](11_PLAN_E0.md): niveles local, Turso y Vercel | | Ninguno en Vórtice | Conclusiones que obliguen a cambiar el diseño | D1–D9, TK, NI (capa de datos), T2, T5 | [11](11_PLAN_E0.md) §7. **Una corrida local no es E0 superada** | A3, A1 y A2 para E0 completa ([11](11_PLAN_E0.md) §10) |
 | **M1** | Catálogo y banco de la unidad | Herramienta admin; flujo editorial; revisor | E0 | Conocimiento y banco (aditivo) | Calidad, carga editorial | Publicación rechaza ciclos; FK de bancos; revisión obligatoria | Unidad publicada, validada por personas; banco suficiente | Unidad, validadores, migración |
 | **M2** | Motor sin mostrar | Evidencia, política, estado, fronteras, log | M1 | Evidencia, estado, retención, log | Reglas erradas | §7 de [05](05_ALGORITMOS_Y_RECOMENDACIONES.md); datos ficticios | Determinista, reconstruible, auditado | Política de dominio, migración |
 | **M3** | Práctica y mapa en Preview | Práctica, feedback, mapa, panel | M2 | Ninguno nuevo | Motivación, claridad, móvil | CA1–CA3, CA8, CA10; accesibilidad | Tres lentes separados; dato real | O6, diseño |
@@ -59,7 +59,7 @@ Plan técnico de la Etapa 1: [11](11_PLAN_E0.md).
 | Producción | No | No | Decisión específica |
 | Efecto académico | Ninguno | Ninguno | Sí |
 | Autoriza | Sostenedor, expresamente | Sostenedor y responsables académicos | Sostenedor, tras todos los requisitos |
-| Requiere | Solo esa autorización | O4, O5, N5, N9, K13; ficha de abajo | Ver lista |
+| Requiere | Autorizaciones por nivel: [11](11_PLAN_E0.md) §3 | O4, O5, N5, N9, K13; ficha de abajo | Ver lista |
 
 **La orden del cierre documental no autoriza E0.** Etapa 2 es trabajo editorial: si necesita herramienta o tablas (M1), programarlas requiere autorización aparte. **Construir el motor (M2–M6) queda entre Etapa 2 y Etapa 3, y requiere su propia autorización de programación.**
 
