@@ -78,7 +78,7 @@ Respondidas «sí» el 30 de octubre de 2026. Comunicadas, pendientes de revisi�
 | K8 | Se admiten rutas previas alternativas (en una segunda etapa). |
 | K9 | Se empieza con una sola asignatura y un solo nivel. |
 | K10 | El piloto es Matemática de 5º Básico. |
-| K11 | Las prácticas dan feedback inmediato por contenido; el cierre conserva el retraso hasta `review_at`. |
+| K11 | Las prácticas dan feedback inmediato por contenido; el cierre conserva el retraso hasta la publicación (`review_at` y versión cerrada). |
 | K12 | El estudiante ve un mapa de contenidos, además de la ruta de estaciones. |
 | K13 | Las preguntas generadas con IA las revisa una persona antes de usarse. |
 | K14 | Se acepta guardar cada respuesta con su contenido, lo que requerirá una migración pedida por separado. |
@@ -116,7 +116,7 @@ El tratamiento del historial (P7) **no** es una regla aprobada: es una propuesta
 
 | Tensión | Compatibilización propuesta |
 |---|---|
-| El resultado binario contra el porcentaje real y la banda 70–79 | Durante el proceso solo se muestra el estado. Porcentaje, banda y contenidos no logrados aparecen al cierre, desde `review_at`. |
+| El resultado binario contra el porcentaje real y la banda 70–79 | Durante el proceso solo se muestra el estado. Porcentaje, banda y contenidos no logrados aparecen al cierre, al publicarse (`review_at` y versión cerrada). |
 | Retraso de la pauta contra feedback inmediato por contenido | K11 lo plantea así, pero sigue en conflicto con la regla aprobada y depende de P16 (C6). |
 | Módulo abierto por P21 contra contenido «bloqueado» en el mapa | Sin resolver (C9, N3). |
 

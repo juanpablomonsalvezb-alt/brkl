@@ -23,11 +23,11 @@
 
 | ID | Qué resolver | Alternativas | Recomendación | Consecuencia técnica | Decide | Bloquea |
 |---|---|---|---|---|---|---|
-| C1 | ¿% real o solo estado? | A: desde `review_at`. B: nunca. C: siempre | A | Qué serializa la API | Dirección (D1) | Prog. (M6) |
-| C2 | ¿Banda antes de `review_at`? | Igual que C1 | A | Igual | Dirección (D1) | Prog. (M6) |
+| C1 | ¿% real o solo estado? | A: al cumplirse la condición de publicación. B: nunca. C: siempre | A | Qué serializa la API | Dirección (D1) | Prog. (M6) |
+| C2 | ¿Banda antes de la condición de publicación? | Igual que C1 | A | Igual | Dirección (D1) | Prog. (M6) |
 | C3 | ¿P21 reemplaza no desbloquear? | A: reemplaza. B: liberación manual. C: mantiene | Sin recomendación académica; técnicamente viables A y B | Cambia `checkModuleAccess` | Dirección (D2) | Prog. (M6) |
-| C4 | ¿Repaso por contenido antes de `review_at`? | A: después. B: antes, con riesgo | A | Filtro de publicación | Dirección (D1) | Prog. (M5) |
-| C5 | ¿Familia y tutor ven %? | A: estado. B: % tras `review_at`. C: distinto por rol | A hasta decidir | DTO por rol | Dirección (D4) | Prog. (M6) |
+| C4 | ¿Repaso por contenido antes de la condición de publicación? | A: después. B: antes, con riesgo | A | Filtro de publicación | Dirección (D1) | Prog. (M5) |
+| C5 | ¿Familia y tutor ven %? | A: estado. B: % tras la condición de publicación. C: distinto por rol | A hasta decidir | DTO por rol | Dirección (D4) | Prog. (M6) |
 | C6 | Feedback inmediato frente a regla aprobada | A: banco separado. B: E1, E3, E4. C: al cerrar la instancia | A | `release_policy` | Dirección; B y C enmiendan maestra | Prog. (M5) |
 | C7 | Mapa delata E2 | Embargo; sin E2; inmediato (inviable) | Embargo | Condición de publicación, filtro único | Dirección (N2) | Prog. (M5) |
 | C8 | K6 frente a <70 % por contenido | A: del estado. B: % por contenido. C: ambos | A | Fuente de «a reforzar» | Dirección | Prog. (M6) |
@@ -36,7 +36,7 @@
 | C11 | Repaso usa preguntas evaluativas | A: banco separado. B: mantener | A; fuera del piloto | Retirar `review_items` luego | Dirección | Prog. (M1) |
 | C12 | Textos públicos prometen funciones | A: corregir ahora. B: al lanzar | A | Ninguna en motor | Dirección (N7) | Piloto |
 | C13 | Cómo nombrar el copiloto | A: «copiloto, sin validar». B: tutor | A | Sin cambio ahora | Dirección | Sin bloqueo |
-| C14 | Mostrar pendientes antes de continuar | A: esperar `review_at`. B: lista sin detalle. C: adelantar | A | Cuándo habilitar continuar | Dirección (D1, D2) | Prog. (M6) |
+| C14 | Mostrar pendientes antes de continuar | A: esperar la condición de publicación. B: lista sin detalle. C: adelantar | A | Cuándo habilitar continuar | Dirección (D1, D2) | Prog. (M6) |
 | C15 | Revisión normativa de P21 | A: primero. B: después | A | Puede invalidar P21 | Dirección y asesoría | Prog. (M6), Piloto |
 | C16 | 70 frente a 60 | A: 70 a todas. B: solo E2 | Sin recomendación académica | Constante y generador | Dirección (D3, Q1) | Prog. (P0) |
 | C17 | P17 incoherente en maestra | Ratificar 2 | Ratificar | `max_attempts` | Dirección | Prog. (P0) |
@@ -58,7 +58,7 @@
 
 | ID | Qué resolver | Alternativas | Recomendación | Consecuencia técnica | Decide | Bloquea |
 |---|---|---|---|---|---|---|
-| D1 | Qué se ve y cuándo | Ver C1 | Estado; % desde `review_at` | DTO | Dirección | Prog. (M6) |
+| D1 | Qué se ve y cuándo | Ver C1 | Estado; % al cumplirse la condición de publicación | DTO | Dirección | Prog. (M6) |
 | D2 | P21 reemplaza regla | Ver C3 | Decidir solo tras C15 | Regla de acceso | Dirección | Prog. (M6) |
 | D3 | Bandas 70/80 | Ratificar; ajustar | Ratificar con Q1–Q3 | Constantes | Dirección | Prog. (P0, M6) |
 | D4 | Familia y tutor | Ver C5 | Estado y contenidos, sin % | Permisos | Dirección | Prog. (M6) |
@@ -194,5 +194,7 @@
 | P17 | PENDIENTE | 2 intentos en recuperación | Sostenedor | Decisión; maestra §9 | Construcción | Sostenedor |
 | P20-v | PENDIENTE | Capacidad y frecuencia de lotes | Sostenedor | Decisión; maestra §9 | Construcción | Sostenedor |
 | P21 | COMUNICADO | Continuar con E2 reprobada; reemplaza regla aprobada | Sostenedor | Decisión D2, C15 | Construcción | Sostenedor, Legal |
+
+**E0:** autorizaciones A1–A6, todas PENDIENTES: [11](11_PLAN_E0.md) §10.
 
 Detalle de Q1–Q8: `docs/p0e/PROGRESO_Y_PROGRESION.md` §7. P7–P25: especificación maestra §9 y `docs/p0e/DECISIONES_PARA_APROBAR.md`.

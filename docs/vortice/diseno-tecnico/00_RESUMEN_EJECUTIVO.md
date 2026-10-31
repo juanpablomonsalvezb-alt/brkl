@@ -52,7 +52,7 @@ Matriz completa: [10](10_DECISIONES_PENDIENTES.md). Las primeras: **O4, O5, N9**
 
 ## Documentos
 
-[01 Arquitectura](01_ARQUITECTURA_GENERAL.md) · [02 Modelo](02_MODELO_DE_CONOCIMIENTO.md) · [03 Evidencias y P0-E](03_MOTOR_DE_EVIDENCIAS.md) · [04 Datos](04_MODELO_DE_DATOS.md) · [05 Algoritmos](05_ALGORITMOS_Y_RECOMENDACIONES.md) · [06 Experiencia](06_EXPERIENCIA_DEL_ESTUDIANTE.md) · [07 Copiloto](07_COPILOTO_IA.md) · [08 Seguridad](08_SEGURIDAD_Y_GOBIERNO.md) · [09 Plan](09_PLAN_DE_IMPLEMENTACION.md) · [10 Decisiones](10_DECISIONES_PENDIENTES.md)
+[01 Arquitectura](01_ARQUITECTURA_GENERAL.md) · [02 Modelo](02_MODELO_DE_CONOCIMIENTO.md) · [03 Evidencias y P0-E](03_MOTOR_DE_EVIDENCIAS.md) · [04 Datos](04_MODELO_DE_DATOS.md) · [05 Algoritmos](05_ALGORITMOS_Y_RECOMENDACIONES.md) · [06 Experiencia](06_EXPERIENCIA_DEL_ESTUDIANTE.md) · [07 Copiloto](07_COPILOTO_IA.md) · [08 Seguridad](08_SEGURIDAD_Y_GOBIERNO.md) · [09 Plan](09_PLAN_DE_IMPLEMENTACION.md) · [10 Decisiones](10_DECISIONES_PENDIENTES.md) · [11 Plan E0](11_PLAN_E0.md)
 
 **Tres niveles de autorización separados:** E0, piloto de contenidos, piloto con estudiantes ([09](09_PLAN_DE_IMPLEMENTACION.md)).
 

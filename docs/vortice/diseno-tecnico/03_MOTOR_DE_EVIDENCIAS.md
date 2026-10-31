@@ -49,7 +49,7 @@ La respuesta apunta a `question_version_id`; esta, a su familia; la familia, a u
 |---|---|---|
 | Propósito | Aprender | Certificar |
 | Intentos | Sin límite P0-E (ritmo: política) | 2/3/2/2 y recuperación con 2 |
-| Feedback | Inmediato por contenido | Solo estado, hasta `review_at` |
+| Feedback | Inmediato por contenido | Solo estado, hasta la condición de publicación (§8.3) |
 | Banco | `bank = practica` | `bank = evaluacion` |
 | Registro | `practice_attempts` | `evaluation_attempts` |
 
@@ -124,7 +124,7 @@ flowchart TB
   S[Envío de intento] --> R[Canal resultado<br/>evaluation_attempts]
   S --> X[Canal evidencia<br/>knowledge_evidence con embargo]
   R --> ST[Estado Aprobado o No aprobado]
-  R --> PC[Porcentaje y banda desde review_at]
+  R --> PC[Porcentaje y banda al cumplirse la condición]
   X --> K[Estado por contenido K6]
   ST -.-> P[Progresión de módulo]
   K -.-> MAP[Mapa y recomendación]
@@ -155,7 +155,7 @@ flowchart TB
 
 | Alternativa | Cumple K11 | Cumple regla aprobada |
 |---|---|---|
-| **A. Feedback inmediato en banco de práctica separado; E1, E3, E4 conservan estado hasta `review_at` (recomendada)** | Parcial: mismo fin, otro lugar | Sí |
+| **A. Feedback inmediato en banco de práctica separado; E1, E3, E4 conservan estado hasta la condición de publicación (recomendada)** | Parcial: mismo fin, otro lugar | Sí |
 | B. Feedback por contenido inmediato en E1, E3, E4 | Sí | No: requiere enmendar la maestra y aceptar riesgo, sobre todo si otros siguen respondiendo la versión |
 | C. Como B, solo al cerrar la instancia del estudiante | Parcial | No sin enmienda: la ventana sigue abierta para otros |
 
@@ -210,11 +210,11 @@ Sin recomendación cerrada: depende de la operación de matrículas, no verifica
 | B. E2 nunca es evidencia | Más simple y seguro; desperdicia datos; K6 depende solo de práctica |
 | C. E2 actualiza de inmediato | **No viable**: filtra la pauta |
 
-**Prueba de no interferencia (obligatoria):** protocolo, filtro único, cálculo en `review_at` y fallos: [08](08_SEGURIDAD_Y_GOBIERNO.md) §7.
+**Prueba de no interferencia (obligatoria):** protocolo, filtro único, cálculo al cumplirse la condición y fallos: [08](08_SEGURIDAD_Y_GOBIERNO.md) §7.
 
 **Sobre el estudiante con E2 embargada:** si practica mientras, el mapa avanza solo con práctica. No se bloquea el contenido por E2 abierta. P10 sigue pendiente para el repaso de preguntas evaluativas, que aquí no se usa.
 
-### 8.4 Publicación tras `review_at`
+### 8.4 Publicación
 
 Sujeto a D1–D4 y a la condición de §8.3: porcentaje real del intento que cuenta (Q: mejor o último, sin definir; la maestra no lo fija: N14), banda y contenidos a reforzar. La pauta sigue P19, de solo lectura. Durante el proceso solo estado. `review_at` por sí solo no publica.
 

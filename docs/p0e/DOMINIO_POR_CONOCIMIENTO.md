@@ -23,7 +23,7 @@
 | K8 | Se admiten rutas previas alternativas | **Segunda etapa** |
 | K9 | Una sola asignatura y un solo nivel | |
 | K10 | Piloto: Matemática de 5.º Básico | Unidad: O5 |
-| K11 | Prácticas (E1, E3, E4): feedback inmediato por contenido. E2: retraso hasta `review_at` | Depende de P16 y requiere ratificar C6 |
+| K11 | Prácticas (E1, E3, E4): feedback inmediato por contenido. E2: retraso hasta la publicación (`review_at` y versión cerrada) | Depende de P16 y requiere ratificar C6 |
 | K12 | Mapa de contenidos además de la ruta de estaciones | |
 | K13 | Preguntas generadas con IA: revisión humana antes de usarse | |
 | K14 | Guardar cada respuesta con su contenido; exigirá migración pedida por separado | Sin autorización todavía |
@@ -80,7 +80,7 @@ Tres categorías comunicadas: **dominado**, **por aprender** (listo: sus prerreq
 | Evaluación | Durante el proceso | Después |
 |---|---|---|
 | Prácticas (función sujeta a P16) | Feedback inmediato por contenido (K11, sujeto a C6) | Según regla de revisión |
-| E2 y recuperación | Solo estado. Sin puntaje, banda ni información que permita reconstruir la pauta. El mapa no debe delatar el resultado por contenido (C7) | Desde `review_at`: porcentaje real, banda y contenidos no logrados, **sujeto a D1–D4** |
+| E2 y recuperación | Solo estado. Sin puntaje, banda ni información que permita reconstruir la pauta. El mapa no debe delatar el resultado por contenido (C7) | Al cumplirse la condición de publicación: porcentaje real, banda y contenidos no logrados, **sujeto a D1–D4** |
 
 ### P21
 

@@ -33,7 +33,7 @@
 |---|---|---|---|---|---|
 | Mapa propio | Sí | D4, O7 | D4, O7 | Agregado | Sí, auditado |
 | Evidencia detallada | Lo liberado | No | Lo liberado, D4 | Anónimo | Sí, auditado |
-| Porcentaje de evaluación | Tras `review_at`, D1 | D4 | D4 | No | P9 |
+| Porcentaje de evaluación | Tras la condición de publicación, decisión D1 | D4 | D4 | No | P9 |
 | Pauta | Según P19 | No | Según P19 | Sí | Sí |
 | Catálogo y grafo: editar | No | No | No | Sí | Sí |
 | Publicar dominio | No | No | No | Validador ≠ autor | No por sí solo |

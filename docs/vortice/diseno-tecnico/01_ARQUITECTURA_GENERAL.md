@@ -106,4 +106,4 @@ Sigue el patrón actual: lógica pura en `shared/`, datos en `server/`, prueba e
 
 ## 4. Índice
 
-[00 Resumen](00_RESUMEN_EJECUTIVO.md) · [02 Modelo](02_MODELO_DE_CONOCIMIENTO.md) · [03 Evidencias](03_MOTOR_DE_EVIDENCIAS.md) · [04 Datos](04_MODELO_DE_DATOS.md) · [05 Algoritmos](05_ALGORITMOS_Y_RECOMENDACIONES.md) · [06 Experiencia](06_EXPERIENCIA_DEL_ESTUDIANTE.md) · [07 Copiloto](07_COPILOTO_IA.md) · [08 Seguridad](08_SEGURIDAD_Y_GOBIERNO.md) · [09 Plan](09_PLAN_DE_IMPLEMENTACION.md) · [10 Decisiones](10_DECISIONES_PENDIENTES.md)
+[00 Resumen](00_RESUMEN_EJECUTIVO.md) · [02 Modelo](02_MODELO_DE_CONOCIMIENTO.md) · [03 Evidencias](03_MOTOR_DE_EVIDENCIAS.md) · [04 Datos](04_MODELO_DE_DATOS.md) · [05 Algoritmos](05_ALGORITMOS_Y_RECOMENDACIONES.md) · [06 Experiencia](06_EXPERIENCIA_DEL_ESTUDIANTE.md) · [07 Copiloto](07_COPILOTO_IA.md) · [08 Seguridad](08_SEGURIDAD_Y_GOBIERNO.md) · [09 Plan](09_PLAN_DE_IMPLEMENTACION.md) · [10 Decisiones](10_DECISIONES_PENDIENTES.md) · [11 Plan E0](11_PLAN_E0.md)

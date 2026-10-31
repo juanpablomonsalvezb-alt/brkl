@@ -20,7 +20,7 @@ Toda implementación, migración o despliegue requiere además autorización nue
 | P17 2 intentos de recuperación | Orden de dirección; Maestra §9 | COMUNICADA | `PROGRESO` §3 | Recuperación | Ratificar; C17 |
 | P21 continuar con E2 «Reprobado» | Dirección, 2026-10-26 | COMUNICADA; reemplaza regla aprobada | `PROGRESO` §3 | Avance registrado, sin cambiar resultado | **D2**, C3, C14, C15 |
 | Bandas 70/80 | Dirección, 2026-10-26 | COMUNICADA | `PROGRESO` §2 | Estado y aviso | **D3**, Q1–Q3, C16 |
-| Porcentaje desde `review_at` | Propuesta | PROPUESTA | `PROGRESO` §1 | Publicación diferida | **D1** |
+| Porcentaje desde la condición de publicación | Propuesta | PROPUESTA | `PROGRESO` §1 | Publicación diferida | **D1** |
 | P7 histórico | `DECISIONES_*` | PROPUESTA | `DECISIONES_PARA_APROBAR` | Sin reescritura | Dirección; C18 |
 | P8 formularios | `DECISIONES_*` | PROPUESTA | `DECISIONES_PARA_APROBAR` | Plazo y validación | Dirección |
 | P16 función E1–E4 | `DECISIONES_*` | PROPUESTA | `DECISIONES_PARA_APROBAR` | Rótulos; base de K11 | Dirección |
