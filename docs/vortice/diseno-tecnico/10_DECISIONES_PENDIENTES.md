@@ -47,7 +47,7 @@
 | ID | Qué resolver | Alternativas | Recomendación | Consecuencia técnica | Decide | Bloquea |
 |---|---|---|---|---|---|---|
 | **C19** | Copiloto fuera del motor, pero accesible: ayuda sin registro ni supervisión | [07](07_COPILOTO_IA.md) §7: A oculto y deshabilitado. B con controles. C sin controles | A para primera exposición | A requiere programar, autorizado aparte | Sostenedor | **Etapa 3** |
-| **C20** | «Todas las respuestas idénticas» choca con el estado inmediato APROBADO | A: dos pruebas, P1 y P2. B: ocultar también el estado (enmienda maestra) | A | Protocolo de [08](08_SEGURIDAD_Y_GOBIERNO.md) §7 | Dirección | Prog. (M5) |
+| **C20** | «Todas las respuestas idénticas» choca con el estado inmediato APROBADO | A: pruebas NI1 y NI2. B: ocultar también el estado (enmienda maestra) | A | Protocolo de [08](08_SEGURIDAD_Y_GOBIERNO.md) §7 | Dirección | Prog. (M5) |
 | **C21** | Al aprobar, una evaluación sale de `openEvaluationsForStudent`: el copiloto deja de bloquearla aunque otros la estén rindiendo | A: bloquear hasta liberar la versión. B: mantener | A | Cambio futuro de código, con P0-E | Dirección | Prog. (P0) |
 | **C22** | Riesgo detectado sin aviso a nadie, ya con enlace en Vórtice | A: protocolo y responsables. B: mantener | A | Puede requerir registro y avisos | Dirección y asesoría | Piloto; independiente del motor |
 

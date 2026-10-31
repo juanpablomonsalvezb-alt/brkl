@@ -102,7 +102,7 @@ No se afirma que lo siguiente aplique; debe evaluarlo asesoría competente:
 | **NI3: control** | Mismo escenario, condición cumplida | Deben aparecer las diferencias. Si no, el filtro oculta de más o la prueba no mide |
 | **NI4: versión abierta** | A cerró (aprobó, o su `review_at` pasó). C sigue con instancia abierta en **esa misma versión** | A no obtiene pauta, porcentaje, banda, contenidos ni cambio en mapa. Salidas de A iguales a un A′ con otras respuestas. Las salidas de C no cambian porque A cierre |
 | **NI5: liberación** | Se registra la liberación | Antes: nada. Después: A publicable. Instancia nueva sobre esa versión: rechazada. Borrar liberación: rechazado |
-| **NI6: copiloto** | Como P4, con proveedor simulado | Ningún dato de E2 ni pauta en la entrada. Bloqueo de esa versión aún activo para A (hoy NO: C21) |
+| **NI6: copiloto** | Como NI4, con proveedor simulado | Ningún dato de E2 ni pauta en la entrada. Bloqueo de esa versión aún activo para A (hoy NO: C21) |
 
 NI1 es la prueba fuerte: detecta puntajes y contenidos. NI2 impide que el estado arrastre más información.
 
