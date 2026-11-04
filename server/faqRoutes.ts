@@ -20,6 +20,9 @@ export function registerFaqRoutes(app: Express) {
         .where(eq(faqs.isActive, true))
         .orderBy(faqs.sortOrder, faqs.createdAt);
 
+      // Contenido público que cambia poco: la CDN lo sirve 5 min sin ejecutar la función.
+      // Un cambio hecho desde el admin puede tardar hasta ese tiempo en verse.
+      res.setHeader("Cache-Control", "public, max-age=0, s-maxage=300, stale-while-revalidate=3600");
       // Las respuestas pueden usar {{precio_escolar}}, etc. (ver shared/precios.ts).
       return res.json(
         allFaqs.map((f) => ({ ...f, question: aplicarPrecios(f.question), answer: aplicarPrecios(f.answer) })),

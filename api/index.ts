@@ -89,9 +89,11 @@ const app = express();
 
 for (const [ruta, html] of paginas) {
   app.get(ruta, (_req, res) => {
-    // no-cache (no no-store): revalida en cada visita, así nunca sirve un build
-    // viejo, pero no bloquea el back/forward cache del navegador.
-    res.setHeader("Cache-Control", "no-cache");
+    // max-age=0: el navegador siempre revalida (nunca queda con un build viejo y no
+    // se bloquea el back/forward cache). s-maxage: la CDN de Vercel sirve la página
+    // sin ejecutar esta función; la caché de la CDN es por deploy, así que un deploy
+    // nuevo la invalida sola. Antes era "no-cache": cada visita corría la función.
+    res.setHeader("Cache-Control", "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400");
     res.type("html").send(html);
   });
 }
