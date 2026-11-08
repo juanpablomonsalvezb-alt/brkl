@@ -87,9 +87,11 @@ async function auditarPrerender(rutas) {
       ? ok(A, `${ruta} entrega contenido renderizado`, `${textoBot.length} caracteres`)
       : fallo(A, `${ruta} entrega contenido renderizado`, `solo ${textoBot.length} caracteres`);
 
-    bot.html.length !== hum.html.length
-      ? ok(A, `${ruta} distingue bot de humano`)
-      : fallo(A, `${ruta} distingue bot de humano`, "misma respuesta para ambos");
+    // Desde que api/index.ts sirve el mismo HTML a bots y personas (evita el cloaking),
+    // lo correcto es que NO difieran. Antes este control exigía lo contrario.
+    bot.html.length === hum.html.length
+      ? ok(A, `${ruta} misma respuesta para bot y humano`)
+      : fallo(A, `${ruta} misma respuesta para bot y humano`, "bots y personas reciben HTML distinto (riesgo de cloaking)");
 
     // Scripts referenciados que dan 404: el snapshot se versiona y los hashes de
     // assets cambian en cada build, así que se desincroniza sin avisar.
