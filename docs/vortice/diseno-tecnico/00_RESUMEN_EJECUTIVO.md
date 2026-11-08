@@ -7,7 +7,7 @@
 ## La idea en cinco decisiones de diseño
 
 1. **Dos canales independientes.** P0-E produce el *resultado* de una evaluación. El modelo produce el *estado* por contenido. Ninguno se calcula desde el otro: 70 % y K6 no se mezclan.
-2. **Evidencia con fecha de liberación.** La de E2 se publica solo si la instancia cerró, llegó `review_at` y **la versión compartida cerró para todos**. Quién determina ese cierre sigue pendiente (N20). Un solo componente filtra, en cada lectura, y se pone al día sin depender de tareas programadas. Se comprobará con el protocolo de no interferencia ([08](08_SEGURIDAD_Y_GOBIERNO.md) §7), aún sin ejecutar.
+2. **Evidencia con fecha de liberación.** La de E2 se publica cuando la instancia cerró y llegó su `review_at`, sin esperar a los demás (enmienda P19-E1 de la maestra, 2026-11-08). La versión queda entonces expuesta y no se asigna a nadie más (P18). Un solo componente filtra, en cada lectura, y se pone al día sin depender de tareas programadas. Se comprobará con el protocolo de no interferencia ([08](08_SEGURIDAD_Y_GOBIERNO.md) §7), aún sin ejecutar.
 3. **Consistencia en la base de datos.** Claves foráneas compuestas atan cada evidencia a su respuesta y separan bancos ([04](04_MODELO_DE_DATOS.md)). Depende de una prueba aún no hecha (D1).
 4. **La familia es la unidad de independencia.** K6, criterio operativo de evidencia suficiente y no certeza, cuenta familias asignadas por un revisor. Diez escenarios definidos ([03](03_MOTOR_DE_EVIDENCIAS.md) §9).
 5. **Reglas puras y versionadas.** La versión 1 es determinista. Hechos solo de inserción; proyecciones reconstruibles; políticas que la dirección deberá aprobar.

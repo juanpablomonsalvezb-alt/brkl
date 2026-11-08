@@ -197,18 +197,18 @@ Reloj inyectado en el arnés. Casos, con A y C en una versión compartida:
 
 | # | Situación | Esperado |
 |---|---|---|
-| 1 | Antes de `review_at`, sin liberación | No publicable |
-| 2 | `review_at` pasado, C abierta | **No publicable** |
-| 3 | A aprobada hace días, C abierta | No publicable |
-| 4 | Liberación registrada, `review_at` futuro | No publicable |
-| 5 | Ambos cumplidos, instancia cerrada | Publicable, fecha efectiva correcta |
-| 6 | Instancia nueva sobre versión liberada | Rechazada |
-| 7 | Borrar o duplicar liberación | Rechazado |
+| 1 | Antes de `review_at` | No publicable |
+| 2 | `review_at` pasado, A cerrada, C abierta | **Publicable para A** (P19-E1) |
+| 3 | `review_at` pasado, instancia de A sin cerrar | No publicable |
+| 4 | C sigue respondiendo cuando A publica | Salidas de C sin cambio |
+| 5 | A publicable | Fecha efectiva = `review_at`; versión expuesta |
+| 6 | Instancia nueva sobre versión expuesta | Rechazada |
+| 7 | Borrar o duplicar exposición | Rechazado |
 | 8 | Cambio de horario (fechas de T4) | Coherente con P3 |
 | 9 | Ampliación dentro de la extensión | Se documenta el efecto en `review_at` copiado |
 | 10 | Salto de reloj de una instancia ±N s | Se cuantifica: margen de publicación anticipada |
 
-El mecanismo que registra la liberación es N20, **sin decidir**: el arnés inserta la fila directamente y prueba solo sus efectos.
+Regla vigente: P19-E1 (2026-11-08). Los casos 2 y 4 sustituyen a los que exigían esperar a la versión.
 
 **Reloj real (T5, nivel V):** varias invocaciones comparan su reloj con el de la base. Se informa desfase máximo. Sin umbral aprobado.
 

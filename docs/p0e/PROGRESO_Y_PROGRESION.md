@@ -29,7 +29,7 @@ Las decisiones comunicadas chocan con reglas ya **APROBADAS** en la especificaci
 | **C4** | La pauta y el repaso dirigido no se muestran antes de `review_at`, y el repaso se organiza por contenido (§3 y §7; P10 y P23). | Ruta de repaso **personalizada por objetivos no logrados** al obtener menos de 70 %. | Si se muestran los objetivos fallados **mientras quedan intentos**, cada intento revela qué contenidos están bien o mal: un oráculo por objetivo. |
 | **C5** | Portafolio compartido, familia y tutoría muestran estado, no puntajes (§2, línea 22). | El panel de rendimiento muestra porcentajes. | No se indica si apoderado y tutor también ven porcentajes. |
 
-**Propuesta para compatibilizar C1, C2 y C4 (PROPUESTA, no aprobada).** Mostrar porcentaje, banda y objetivos no logrados **solo cuando el proceso evaluativo está cerrado, llegó su `review_at` y la versión cerró para todos**. Antes de esa fecha, el panel muestra solo el estado («Aprobado», «No aprobado» o «En curso»). Así se cumplen las dos cosas: el estudiante ve su porcentaje real, y nadie puede deducir la pauta mientras otros siguen rindiendo. Requiere la decisión **D1**.
+**Propuesta para compatibilizar C1, C2 y C4 (PROPUESTA, no aprobada).** Mostrar porcentaje, banda y objetivos no logrados **solo cuando el proceso evaluativo está cerrado, y llegó su `review_at`** (P19-E1). Antes de esa fecha, el panel muestra solo el estado («Aprobado», «No aprobado» o «En curso»). Así el estudiante ve su porcentaje real. Con P19-E1 ya no se espera a quienes siguen rindiendo; el sostenedor asume ese riesgo. Requiere la decisión **D1**.
 
 ---
 
@@ -174,7 +174,7 @@ Moderna, motivadora y persistente dentro de la lección: se ve como una ruta en 
 | CA1 | Ruta, panel, historial y acceso a contenidos por reforzar se pueden usar sin salir de la lección, en escritorio y móvil |
 | CA2 | Los cuatro indicadores aparecen separados, cada uno con etiqueta y unidad; completar lecciones nunca modifica el rendimiento y viceversa |
 | CA3 | Todo porcentaje procede de un resultado real del servidor; sin dato hay estado vacío explicado. Ningún valor ficticio |
-| CA4 | Antes de cumplirse la condición de publicación (instancia cerrada, `review_at` y versión cerrada para todos; maestra §3), ninguna respuesta de la API ni elemento de pantalla revela puntaje, banda, contenidos fallados o pauta de E2 o recuperación. Se prueba en API, no solo en pantalla |
+| CA4 | Antes de cumplirse la condición de publicación (instancia cerrada y `review_at`; maestra §3, P19-E1), ninguna respuesta de la API ni elemento de pantalla revela puntaje, banda, contenidos fallados o pauta de E2 o recuperación. Se prueba en API, no solo en pantalla |
 | CA5 | Cumplida esa condición, y ratificadas D1–D4, se muestran porcentaje real, banda y contenidos no logrados |
 | CA6 | 69,9 %, 70 %, 79,9 % y 80 % dan la banda correcta; el redondeo sigue Q3 |
 | CA7 | Con P21 ratificada: antes de continuar, se muestran contenidos no logrados y enlaces de repaso; se registran resultado y decisión; E2 sigue «Reprobado» en todas las vistas |
@@ -201,7 +201,7 @@ Moderna, motivadora y persistente dentro de la lección: se ve como una ruta en 
 
 | ID | Decisión o pregunta |
 |---|---|
-| **D1** | ¿Se reemplaza la regla «solo Aprobado/No aprobado» por «estado durante la evaluación; porcentaje, banda y contenidos no logrados al cerrar el proceso, llegar `review_at` y cerrar la versión para todos»? (C1, C2, C4) |
+| **D1** | ¿Se reemplaza la regla «solo Aprobado/No aprobado» por «estado durante la evaluación; porcentaje, banda y contenidos no logrados al cerrar el proceso y llegar `review_at`»? (C1, C2, C4) |
 | **D2** | ¿Se ratifica que la P21 actualizada **reemplaza** la regla aprobada «agotar E2 sin aprobar no desbloquea el módulo siguiente»? (C3) |
 | **D3** | ¿Se ratifican los umbrales 70/80 y que 70 % es el mínimo de aprobación? |
 | **D4** | ¿Apoderado y tutor ven porcentajes o solo estados? (C5) |

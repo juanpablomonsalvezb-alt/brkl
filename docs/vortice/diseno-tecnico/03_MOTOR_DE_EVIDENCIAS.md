@@ -161,44 +161,29 @@ flowchart TB
 
 ### 8.3 Embargo: que el mapa no revele E2
 
-**Corrección tras auditoría.** La versión anterior fijaba la liberación en `review_at` de la instancia. **Era insuficiente:** la especificación maestra §3 (APROBADO, P19) exige además que la instancia esté cerrada y que **ningún otro estudiante pueda seguir respondiendo esa misma versión**.
+**Historia.** Una versión anterior exigía además que ningún otro estudiante pudiera seguir respondiendo la misma versión (P19 original). Esa condición se eliminó con la enmienda P19-E1.
 
-**Dos cierres distintos:**
+**Enmienda (P19-E1, maestra §3, aprobada el 2026-11-08).** Ya no se espera a que la versión cierre para todos. El sostenedor considera bajo el riesgo de traspaso de pauta entre estudiantes, que están dispersos por el país y no se conocen.
 
-| | Cierre de instancia | Cierre de versión compartida |
-|---|---|---|
-| Alcance | Un estudiante | Todos los asignados a esa versión |
-| Ocurre | Aprueba, agota o vence | Nadie puede responderla ya |
-| Efecto en él | No más intentos; solo estado | Habilita, junto a lo demás, la publicación |
-| Libera información | **No, por sí solo** | Solo con la condición completa |
-
-**Condición de publicación (la más restrictiva):**
+**Condición de publicación:**
 
 ```text
 publicable(instancia, ahora) =
      instancia cerrada
   y  ahora >= instancia.review_at
-  y  versión(instancia) cerrada para todos   # N20
 ```
 
-Aplica por igual a pauta, respuestas correctas, explicaciones, porcentaje, banda, contenidos no logrados y evidencia por contenido. Fecha efectiva: la mayor entre `review_at` y `evaluation_version_releases.released_at`.
+Aplica por igual a pauta, respuestas correctas, explicaciones, porcentaje, banda, contenidos no logrados y evidencia por contenido. Fecha efectiva: `review_at`.
 
-**Quién determina que una versión ya no puede responderse: NO ESTÁ DEFINIDO (N20).** La maestra lo define para lotes de recuperación (§4: ventana terminada, instancias cerradas, sin intentos activos), pero no da un mecanismo para versiones ordinarias.
+**P18 se mantiene:** nadie responde una versión cuya pauta ya se publicó para algún estudiante. Desde ese momento la versión queda **expuesta**: no se asigna a instancias nuevas, y quien entre tarde o requiera excepción recibe una versión alternativa (N21 queda resuelta por esta vía).
 
-| Alternativa | Funcionamiento | Consecuencia |
-|---|---|---|
-| A. Derivada | El sistema comprueba que toda instancia de la versión esté cerrada, sin intentos activos, y registra la liberación | Automática. Sensible a matrícula tardía (N21) |
-| B. Acto humano | Una persona autorizada declara el cierre, con verificación | Controlada. Puede atrasar resultados |
-| C. Derivada más confirmación | A propone; una persona confirma | Más segura; más carga |
+**Mecanismo propuesto para P18 (PROPUESTO, a probar en E0):**
+1. Antes de asignar una versión, el servidor comprueba con su reloj si alguna instancia de esa versión es publicable.
+2. La primera lectura o asignación que detecta una instancia publicable inserta una fila en `evaluation_version_releases`, que pasa a significar «versión expuesta». Es de una sola vía.
+3. Un trigger rechaza instancias nuevas sobre una versión expuesta. La exposición no espera a que cierren las demás instancias.
+4. Límite: entre que vence un `review_at` y la primera lectura que lo detecta, solo el paso 1 protege. Por eso la asignación siempre comprueba con el reloj del servidor.
 
-Sin recomendación cerrada: depende de la operación de matrículas, no verificada. **Mientras no se decida, nada se publica por esta vía.**
-
-**Invariantes técnicas (PROPUESTO):**
-1. La liberación es de una sola vía: no se deshace.
-2. No se asigna una versión ya liberada a una instancia nueva (P18: nadie responde una versión con pauta publicada).
-3. Si una versión queda abierta por una instancia sin cerrar, **todos** esperan.
-
-**Estudiante que aprueba mientras otros responden:** ve «Aprobado» (regla aprobada) y su instancia cierra. Nada más: sin porcentaje, pauta, cambio en el mapa ni contenidos fallados, aunque su propio `review_at` ya haya pasado. No puede reabrir ni acelerar la liberación de nadie.
+**Estudiante que aprueba mientras otros responden:** ve «Aprobado» al instante. Cuando llega su propio `review_at`, ve pauta, porcentaje, banda y contenidos, aunque otros sigan respondiendo esa versión.
 
 **Límite:** el sistema no evita que un estudiante cuente de memoria las preguntas a otro.
 
@@ -267,7 +252,7 @@ Supuesto de la tabla: alternativas recomendadas. Todo es evidencia liberada, y s
 | 6 | Incorrecta con ayuda | 1 fila | No cuenta para K6 ni como errada para O1 **[P, N16]** | Sin cambio | No | Se conserva | No; patrón repetido: aviso al tutor, D4 |
 | 7 | Pregunta anulada por defecto | Sin borrar; `question_voids` y `evidence_voids` | No **[T]** | Se recalcula: puede dejar de ser `dominado` | Sí si baja | Evento `anulacion` | **Sí**: solicitante y aprobador distintos |
 | 8 | Pregunta retirada, sin defecto | Sin cambios | Sí: retirar no invalida **[P, N17]** | Sin cambio | No | Se conserva; no se sirve más | Sí al retirar |
-| 9 | Nueva versión del contenido | Sin cambios; cita su versión | Según `evidence_continuity` **[P, N18]** | `compatible`: sin cambio. `ruptura`: se recalcula | Con `ruptura`: sí | Evento `nueva_version` | **Sí**, por contenido |
+| 9 | Nueva versión del contenido | Sin cambios; cita su versión | `compatible`: sí. `ruptura`: no suma con evidencia nueva **[N18 = A]** | `compatible`: sin cambio. `ruptura`: sigue `dominado` con `por_comprobar` | Con `ruptura`: sí | Evento `nueva_version` | **Sí**, por contenido |
 | 10 | Retención fallida tras dominio | 1 fila `retencion` | Las 2 originales siguen **[P, O8]** | `dominado` | Sí; agenda vuelve al primer paso | Evento de marca | No; 2 fallas distintas: `incierto` y aviso |
 
 ### Alternativas para lo no decidido
@@ -282,7 +267,7 @@ Supuesto de la tabla: alternativas recomendadas. Todo es evidencia liberada, y s
 
 **Escenario 8, N17.** A (recomendada): sigue contando si se retiró por renovación. B: deja de contar. Si hubo defecto, es el escenario 7. Motivo de retiro obligatorio.
 
-**Escenario 9, N18.** A (recomendada): una persona declara `compatible` o `ruptura` por contenido; `ruptura` mueve a `por_comprobar` en vez de borrar el dominio de golpe. B: toda versión reinicia. Simple e injusto ante correcciones menores. C: nunca reinicia; el dominio puede referirse a algo ya distinto.
+**Escenario 9, N18: DECIDIDA, opción A (sostenedor, 2026-11-08).** Una persona declara `compatible` o `ruptura` por contenido. Con `ruptura`, quien dominaba la versión anterior sigue `dominado` con `por_comprobar`. Reglas: la evidencia anterior **nunca se suma** con la nueva para K6; la marca se retira al cumplir K6 solo con evidencia de la versión nueva; dos familias erradas en la versión nueva llevan a `no_dominado`. Alternativas descartadas: B (toda versión reinicia) y excluir la evidencia anterior sin conservar el dominio.
 
 ### 9.1 Sesión e identidad temporal
 
@@ -299,7 +284,7 @@ Supuesto de la tabla: alternativas recomendadas. Todo es evidencia liberada, y s
 | Secuencia | `session_ref` y `sequence_no` (contador del servidor, por estudiante), más `occurred_at`. Orden: (`occurred_at`, `sequence_no`). El reloj del cliente no se usa |
 | Día | `study_day`, fecha en hora de Chile, calculable con `dayKey` (EXISTE en `shared/repaso.ts`) |
 
-La evidencia embargada entra en su orden real al liberarse (`occurred_at`), con evento `effective_at` en la liberación. Lo ocurrido antes no se reescribe.
+La evidencia embargada entra en su orden real al cumplirse su condición de publicación (`occurred_at`), con evento `effective_at` en esa fecha. Lo ocurrido antes no se reescribe.
 
 **Requiere decisión académica (O2): ¿cuándo son «sesiones distintas» para K6?**
 

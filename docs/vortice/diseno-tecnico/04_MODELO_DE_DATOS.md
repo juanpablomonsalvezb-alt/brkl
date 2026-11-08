@@ -19,7 +19,7 @@ erDiagram
   module_evaluations ||--o{ evaluation_versions : versiona
   evaluation_processes ||--o{ evaluation_instances : contiene
   evaluation_versions ||--o{ evaluation_instances : asigna
-  evaluation_versions ||--o| evaluation_version_releases : libera
+  evaluation_versions ||--o| evaluation_version_releases : expone
   evaluation_instances ||--o{ evaluation_attempts : permite
   evaluation_attempts ||--o{ evaluation_attempt_answers : registra
   evaluation_versions ||--o{ evaluation_version_questions : compone
@@ -114,7 +114,7 @@ La purga legal futura (O10) chocaría con «solo inserción»: exige una vía ex
 | Tabla | Columna | Notas |
 |---|---|---|
 | `evaluation_versions` | `id` PK; `evaluation_id` NN FK `module_evaluations`; `version`; `status` | `borrador, validada, asignada, retirada`; UNIQUE (evaluation, version) y (id, evaluation_id) |
-| `evaluation_version_releases` | `evaluation_version_id` PK FK; `released_at` NN; `basis`; `declared_by`; `verification_json` | **Mecanismo pendiente (N20).** Sin fila: nada de esa versión se publica. Una fila por versión, sin deshacer. Trigger: no asignar instancia nueva a una versión con fila |
+| `evaluation_version_releases` | `evaluation_version_id` PK FK; `released_at` NN; `basis`; `declared_by`; `verification_json` | **Significa «versión expuesta»** (P19-E1, P18): alguna instancia ya es publicable. No condiciona la publicación. Una fila por versión, sin deshacer. Trigger: no asignar instancia nueva a una versión con fila. Mecanismo en [03](03_MOTOR_DE_EVIDENCIAS.md) §8.3 |
 | `evaluation_version_questions` | `evaluation_version_id`, `question_version_id` | PK compuesta; más `family_id`, `item_id`, `bank`, `position`; **CHECK `bank='evaluacion'`**; FK (qv, family, item, bank) → `question_versions` |
 | `evaluation_processes` | `id` PK; `student_id`, `evaluation_id` NN FK; `status`; `closed_at`; `close_cause` | `abierto, recuperacion_pendiente, recuperacion_abierta, aprobado, reprobado`; UNIQUE (student, evaluation) |
 | `evaluation_instances` | `id` PK; `process_id`, `student_id`, `evaluation_version_id` NN | FK (process, student) |
@@ -152,7 +152,7 @@ La purga legal futura (O10) chocaría con «solo inserción»: exige una vía ex
 | | `source_type` | `practica, retencion, evaluacion_practica, evaluacion_cierre, recuperacion` |
 | | `practice_answer_id`, `attempt_answer_id` | Un origen. Únicos parciales: una evidencia por respuesta |
 | | `session_ref`, `sequence_no`, `study_day`, `evaluation_version_id` | Sesión o intento; versión de evaluación si aplica |
-| | `is_correct`, `assistance`, `accommodation`, `review_at`, `occurred_at`, `practice_released_at` | Copias atadas por FK. **La liberación de evaluaciones no se guarda aquí**: cambia con la versión y esta tabla es solo inserción |
+| | `is_correct`, `assistance`, `accommodation`, `review_at`, `occurred_at`, `practice_released_at` | Copias atadas por FK. **La publicación de evaluaciones no se guarda aquí**: se deriva de la instancia (cierre y `review_at`) |
 | `question_voids` | `id` PK; `question_version_id` NN; `reason`, `requested_by`, `approved_by`, `at` | UNIQUE (qv); CHECK personas distintas. Decisión de anular |
 | `evidence_voids` | `id` PK; `evidence_id` NN FK; `question_void_id` FK; `reason`, `requested_by`, `approved_by`, `at` | UNIQUE (evidence). CHECK distintos, o con `question_void_id` |
 | `mastery_policies` | `id` PK; `version` UNIQUE; `rules_json`; `status`; `approved_by`, `approved_at` | Aprobada: sin parámetros nulos (lo valida la aplicación) |
@@ -208,7 +208,7 @@ CREATE INDEX ke_read ON knowledge_evidence (student_id, item_id, occurred_at);
 
 -- Lectura (ver 08 §7.3): evidencia publicable
 --   práctica:   practice_released_at <= :ahora
---   evaluación: review_at <= :ahora, instancia cerrada, y fila en evaluation_version_releases
+--   evaluación: review_at <= :ahora e instancia cerrada (P19-E1)
 --               con released_at <= :ahora
 
 CREATE TRIGGER ke_no_update BEFORE UPDATE ON knowledge_evidence
@@ -273,7 +273,7 @@ BEGIN SELECT RAISE(ABORT, 'pregunta no aprobada'); END;
 | 14 | Segundo intento `activo` en la instancia | Único parcial |
 | 15 | Anulación con solicitante = aprobador | CHECK |
 | 16 | Instancia nueva sobre versión ya liberada | Trigger |
-| 17 | Segunda fila de liberación, o borrarla | PK y trigger |
+| 17 | Segunda fila de exposición, o borrarla | PK y trigger |
 | 18 | Evidencia con `session_ref` ajeno | FK compuesta |
 
 **La base no puede impedir:** una familia mal asignada, un contenido mal definido, ayuda externa. Son controles humanos.
@@ -282,7 +282,7 @@ BEGIN SELECT RAISE(ABORT, 'pregunta no aprobada'); END;
 
 **Nueva versión de contenido o dominio.** Evidencias y eventos no cambian; siguen citando su `item_version_id`. Al publicar:
 - `evidence_continuity = compatible`: la evidencia anterior sigue contando.
-- `ruptura`: no cuenta para K6. Recálculo con eventos `nueva_version`.
+- `ruptura` (N18 = A): la evidencia anterior no se suma con la nueva para K6. Quien dominaba sigue `dominado` con `por_comprobar` hasta cumplir K6 con la versión nueva; dos familias erradas en la nueva llevan a `no_dominado`. Recálculo con eventos `nueva_version`.
 Lo decide una persona, por contenido. Comportamiento y alternativas: [03](03_MOTOR_DE_EVIDENCIAS.md) §9, escenario 9.
 
 **Anulación.** Inserta `evidence_voids` (y `question_voids`, si afecta a todas). No borra. Efecto en la reconstrucción:
@@ -319,7 +319,7 @@ Lo decide una persona, por contenido. Comportamiento y alternativas: [03](03_MOT
 | **D3** | Drizzle no expresa o pierde restricciones | Esquema de prueba en Drizzle 0.39 y `drizzle-kit` | Generar SQL y comparar con §6 | FK compuestas, CHECK e índices parciales presentes | Herramienta de migración | Diferencia de SQL revisada |
 | **D4** | Triggers perdidos; deriva de esquema | Base desechable con triggers; copia de solo lectura del esquema real, si se autoriza | Volver a aplicar con `db:push` y `generate`; `UPDATE`/`DELETE` en solo inserción | Triggers siguen; escritura rechazada | Migraciones SQL propias | Listado de `sqlite_master` antes y después. Informe de deriva |
 | **D5** | Evidencia cruzada: estudiante, pregunta, evaluación | Dos estudiantes, dos versiones | Ejecutar los inválidos 1–18 de §7 y los válidos | Rechazo exacto de cada inválido; válidos aceptados | Motor; aplicación para lo no expresable | Tabla caso → error |
-| **D6** | Publicación anticipada o tardía | Instancias con `review_at` distintos sobre una versión; reloj simulado | Avanzar reloj: antes de `review_at`; después, con versión abierta; con liberación; ampliar ventana | Publica solo con la condición completa; liberación irreversible; instancia nueva rechazada; comportamiento de ampliación documentado | Filtro de servidor y triggers | Salidas por tiempo; pruebas NI4, NI5 de 08 §7 |
+| **D6** | Publicación anticipada o tardía | Instancias con `review_at` distintos sobre una versión; reloj simulado | Avanzar reloj: antes de `review_at`; después, con otras instancias abiertas; ampliar ventana | Publica al cumplirse cierre y `review_at` (P19-E1), aunque otros sigan; versión expuesta no admite instancia nueva; ampliación documentada | Filtro de servidor y triggers | Salidas por tiempo; pruebas NI4, NI5 de 08 §7 |
 | **D7** | Escrituras parciales y carreras | Sesión activa; varias conexiones; con réplicas | Respuesta + evidencia + evento en `db.batch` con fallo forzado; envíos simultáneos; dos lecturas poniéndose al día | Todo o nada; una evidencia; un evento por cambio; `sequence_no` único; una actualización gana sin perder cambios | Transacción y condición en `UPDATE` | Repeticiones como en T1/T2, en Turso. Local no basta |
 | **D8** | Costo de índices anchos | Volumen simulado, sin meta aprobada | Medir inserción, lectura del mapa y tamaño, con y sin índices | Cifras que permitan decidir | Diseño | Tabla de mediciones. Si es alto: sustituir por validación con trigger, y volver a D5 |
 | **D9** | Proyección inconsistente | Evidencias, anulaciones, liberaciones, cambio de versión | Reconstruir desde cero y comparar; simular fallo tras evidencia | `student_knowledge_state` idéntico al reconstruido; fallo detectado por reconciliación | Motor de estado | Comparación sin diferencias |

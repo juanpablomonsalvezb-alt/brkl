@@ -51,7 +51,7 @@
 | **C21** | Al aprobar, una evaluación sale de `openEvaluationsForStudent`: el copiloto deja de bloquearla aunque otros la estén rindiendo | A: bloquear hasta liberar la versión. B: mantener | A | Cambio futuro de código, con P0-E | Dirección | Prog. (P0) |
 | **C22** | Riesgo detectado sin aviso a nadie, ya con enlace en Vórtice | A: protocolo y responsables. B: mantener | A | Puede requerir registro y avisos | Dirección y asesoría | Piloto; independiente del motor |
 
-| **C23** | Maestra P4 define `review_at` = T+49 h, pero P19 exige versión cerrada: la fecha puede no ser la real | A: comunicar «cuando cierre para todos». B: enmendar | A | Sin fecha prometida en UI | Sostenedor | Prog. (M6) |
+| **C23** | Maestra P4 define `review_at` = T+49 h, pero P19 exige versión cerrada: la fecha puede no ser la real | A: comunicar «cuando cierre para todos». B: enmendar | **RESUELTA: B** (P19-E1, 2026-11-08) | Fecha fija en UI | Sostenedor | Prog. (M6) |
 | **C24** | «D1–D4» (decisiones) y «D1–D9» (pruebas) comparten sigla. «E2» etapa se renombró a M2; pruebas de no interferencia, a NI1–NI6, para no chocar con P1–P6 de la maestra | A: citar siempre «decisión» o «prueba» | A | Ninguna | Técnica | Sin bloqueo |
 
 ## 3. Decisiones D
@@ -99,10 +99,10 @@
 | N15 | Calendario enero 2027 | Piloto después; M3–M4 antes | Sin verificar capacidad | Alcance | Dirección | Plan |
 | N16 | Error con ayuda | No cuenta; cuenta | No cuenta | Parámetro | Dirección | Prog. (M2) |
 | N17 | Pregunta retirada | Sigue contando; no | Sigue | Parámetro | Dirección | Prog. (M2) |
-| N18 | Nueva versión | Caso a caso; reinicia; nunca | Caso a caso | `evidence_continuity` | Dirección | Prog. (M2) |
+| N18 | Nueva versión | Caso a caso; reinicia; nunca | **DECIDIDA: A** (2026-11-08). Con `ruptura`: `dominado` + `por_comprobar`, sin sumar evidencia; ver 03 §9 | `evidence_continuity` | Dirección | Prog. (M2) |
 | N19 | Corrección docente | Nuevo `source_type`; solo anulación | Solo anulación | Esquema, si cambia | Dirección | Sin bloqueo inicial |
-| N20 | Quién o qué determina que una versión ya no puede responderse | Derivada; acto humano; ambas (03 §8.3) | Sin recomendación cerrada | `evaluation_version_releases` | Sostenedor y académica | Prog. (M5, M6) |
-| N21 | Estudiante que entra después: ¿qué versión recibe? ¿Mantiene abierta la anterior? | Versión nueva; misma con ventana; esperar | Versión nueva: no retrasa a otros | Asignación de instancias | Sostenedor y académica | Prog. (P0) |
+| N20 | Quién o qué determina que una versión ya no puede responderse | Derivada; acto humano; ambas (03 §8.3) | **RESUELTA por P19-E1** (2026-11-08): la publicación ya no espera a la versión | `evaluation_version_releases` = versión expuesta | Sostenedor | Prog. (M5, M6) |
+| N21 | Estudiante que entra después: ¿qué versión recibe? ¿Mantiene abierta la anterior? | Versión nueva; misma con ventana; esperar | **RESUELTA: versión nueva** (consecuencia de P18 con P19-E1) | Asignación de instancias | Sostenedor | Prog. (P0) |
 
 
 
@@ -176,10 +176,10 @@
 | N15 | ABIERTA | Calendario | Sostenedor | Capacidad real, sin verificar | Plan | Sostenedor |
 | N16 | ABIERTA | Error con ayuda | Académica | Parámetro | Construcción | Académica |
 | N17 | ABIERTA | Pregunta retirada | Académica | Parámetro | Construcción | Académica |
-| N18 | ABIERTA | Nueva versión | Académica | Parámetro | Construcción | Académica |
+| N18 | DECIDIDA (A) | Nueva versión | Sostenedor | Parámetro | Construcción | Académica |
 | N19 | ABIERTA | Corrección docente | Sostenedor | Decisión | Sin bloqueo inicial | Sostenedor |
-| N20 | ABIERTA | Cierre de versión | Sostenedor | Decisión; NI4, NI5 | Construcción | Sostenedor, Académica |
-| N21 | ABIERTA | Entrada tardía | Sostenedor | Decisión | Construcción | Sostenedor, Académica |
+| N20 | RESUELTA (P19-E1) | Cierre de versión | Sostenedor | NI4, NI5 | Construcción | Sostenedor |
+| N21 | RESUELTA (versión nueva) | Entrada tardía | Sostenedor | Versiones alternativas suficientes | Construcción | Sostenedor, Académica |
 | Q1 | ABIERTA | ¿70 % a E1–E4? | Académica | Decisión; ver `PROGRESO` §7 | Construcción | Académica |
 | Q2 | ABIERTA | Etiquetas de prácticas | Académica | Decisión; ver `PROGRESO` §7 | Construcción | Académica |
 | Q3 | ABIERTA | Redondeo | Académica | Decisión; ver `PROGRESO` §7 | Construcción | Académica |

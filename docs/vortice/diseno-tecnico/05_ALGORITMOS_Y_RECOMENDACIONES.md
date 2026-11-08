@@ -16,8 +16,9 @@ Grafo publicado; evidencias publicables ([03](03_MOTOR_DE_EVIDENCIAS.md) §8.3);
 # Entrada ya filtrada: solo evidencia publicable. Parámetros nulos en política = no ejecutable.
 función evaluar(evidencias, versión_actual, política):
   e = evidencias sin anulación                                   # [T] escenario 7
-  e = e con versión compatible con versión_actual, o versión_actual  # [P] escenario 9
-  si e vacío: retorna sin_evidencia
+  previa = e  # N18 = A: se conserva para el dominio heredado
+  e = e con versión compatible con versión_actual, o versión_actual  # escenario 9
+  si e vacío y no dominio(previa): retorna sin_evidencia
 
   válidas = e sin ayuda, si política.assisted_counts = falso    # [P] escenarios 5, 6
 
@@ -33,8 +34,13 @@ función evaluar(evidencias, versión_actual, política):
   si dominio_en existe:
     n = |{f : errada(f, dominio_en)}|
     si n >= política.demote_wrong_families: retorna incierto, contradictoria   # [P] 4, 10
-    marca = por_comprobar si n >= 1, o retención vencida, o ruptura de versión
+    marca = por_comprobar si n >= 1, o retención vencida
     retorna dominado, marca
+
+  # N18 = A (DECIDIDA): dominio de una versión anterior con ruptura.
+  # La evidencia anterior no se suma con la nueva; solo conserva el dominio con marca.
+  si dominio(previa) y |{f : errada(f, inicio)}| < política.not_mastered_wrong_families:
+    retorna dominado, por_comprobar
 
   n = |{f : errada(f, inicio)}|
   si política.not_mastered_wrong_families != nulo y n >= ese valor: retorna no_dominado  # O1
@@ -43,7 +49,7 @@ función evaluar(evidencias, versión_actual, política):
 
 Cada escenario de [03](03_MOTOR_DE_EVIDENCIAS.md) §9 es una prueba obligatoria de esta función.
 
-Función pura. Se recalcula por respuesta nueva, anulación o liberación, y se inserta un evento **solo si cambió**. La liberación no depende de una tarea programada: [08](08_SEGURIDAD_Y_GOBIERNO.md) §7.3.
+Función pura. Se recalcula por respuesta nueva, anulación o publicación, y se inserta un evento **solo si cambió**. La publicación no depende de una tarea programada: [08](08_SEGURIDAD_Y_GOBIERNO.md) §7.3.
 
 ## 3. Fronteras
 

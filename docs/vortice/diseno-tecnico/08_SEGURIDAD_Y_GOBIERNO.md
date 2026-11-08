@@ -100,8 +100,8 @@ No se afirma que lo siguiente aplique; debe evaluarlo asesoría competente:
 | **NI1: mismo estado** | Mismo estado, distinto puntaje y contenidos errados. Ejemplos: 70 y 95; 0 y 65 | **Salidas idénticas, byte a byte**, salvo identificadores normalizados |
 | **NI2: distinto estado** | Uno aprobado, otro no | Solo difiere lo derivado del estado (lista abajo) |
 | **NI3: control** | Mismo escenario, condición cumplida | Deben aparecer las diferencias. Si no, el filtro oculta de más o la prueba no mide |
-| **NI4: versión abierta** | A cerró (aprobó, o su `review_at` pasó). C sigue con instancia abierta en **esa misma versión** | A no obtiene pauta, porcentaje, banda, contenidos ni cambio en mapa. Salidas de A iguales a un A′ con otras respuestas. Las salidas de C no cambian porque A cierre |
-| **NI5: liberación** | Se registra la liberación | Antes: nada. Después: A publicable. Instancia nueva sobre esa versión: rechazada. Borrar liberación: rechazado |
+| **NI4: antes de su `review_at`** | A cerró (aprobó o agotó intentos), su `review_at` no llega. C sigue en la misma versión | A no obtiene pauta, porcentaje, banda, contenidos ni cambio en mapa. Salidas de A iguales a un A′ con otras respuestas. Las salidas de C no cambian porque A cierre. Al llegar el `review_at` de A, A publica aunque C siga (P19-E1) |
+| **NI5: versión expuesta** | La instancia de A pasa a publicable | Las salidas de C, que sigue respondiendo, no cambian. Instancia nueva sobre esa versión: rechazada. Borrar la exposición: rechazado |
 | **NI6: copiloto** | Como NI4, con proveedor simulado | Ningún dato de E2 ni pauta en la entrada. Bloqueo de esa versión aún activo para A (hoy NO: C21) |
 
 NI1 es la prueba fuerte: detecta puntajes y contenidos. NI2 impide que el estado arrastre más información.
@@ -147,16 +147,17 @@ prueba NI1:
 4. Excepción: el proceso de auditoría interna. Acceso de administrador según P9, registrado.
 5. La proyección jamás incluye evidencia embargada. Puntajes en `evaluation_attempts` no se serializan: columnas excluidas por lista blanca.
 
-**Cálculo al cumplirse la condición: en lectura, no por tarea.** Registrar la liberación de versión sí depende de N20.
+**Cálculo al cumplirse la condición: en lectura, no por tarea** (P19-E1: cierre de instancia y `review_at`).
 
 ```text
 función leerEstado(estudiante, ahora):
   # fecha_efectiva = práctica: practice_released_at;
-  #   evaluación: max(review_at, releases.released_at), con instancia cerrada
+  #   evaluación: review_at, con instancia cerrada
   pendientes = evidencias con computed_through < fecha_efectiva <= ahora
   si hay pendientes:
     en una transacción: recalcular contenidos afectados,
     insertar eventos (reason = liberacion, effective_at = fecha_efectiva),
+    registrar la versión como expuesta si aún no lo está (P18),
     actualizar con condición computed_through sin cambios     # dos lecturas simultáneas
   retornar proyección
 ```

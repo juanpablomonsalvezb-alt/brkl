@@ -76,7 +76,7 @@ Nunca solo color: icono y texto siempre.
 | Banda | Nunca | Menos de 70: repaso; 70 a menos de 80: refuerzo; 80 o más: sin aviso |
 | A reforzar | Solo por práctica liberada | Incluye evidencia liberada |
 
-**Copia** para el periodo intermedio: «Tu resultado detallado estará disponible cuando esta evaluación cierre para todos». **No se promete una fecha fija:** `review_at` puede no bastar si la versión sigue abierta (C23).
+**Copia** para el periodo intermedio: «Tu resultado detallado estará disponible el {fecha de `review_at`}». Con P19-E1 la fecha es fija (C23 resuelta).
 
 ## 5. Estados de pantalla
 

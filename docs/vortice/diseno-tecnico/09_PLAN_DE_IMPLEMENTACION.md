@@ -34,7 +34,7 @@ Si el sostenedor quiere empezar antes con estudiantes, M7 podría hacerse solo c
 | **M3** | Práctica y mapa en Preview | Práctica, feedback, mapa, panel | M2 | Ninguno nuevo | Motivación, claridad, móvil | CA1–CA3, CA8, CA10; accesibilidad | Tres lentes separados; dato real | O6, diseño |
 | **M4** | Retención | Agenda, comprobaciones | M3 | Ninguno nuevo | Carga | Intervalos con reloj simulado | Sin castigo por ausencia; agenda correcta | O8 |
 | **P0** | Núcleo evaluativo | Instancias, intentos, ventanas, cierres, lotes, versiones | E0 | Migración P0-E | Concurrencia, histórico | T1–T5 reales; invariantes 1–14 | Según maestra | P7, P8, P16, P17, P20-v; migración |
-| **M5** | E2 aporta evidencia | Respuestas por pregunta, embargo | M3, P0 | `evaluation_attempt_answers` | **Filtración** | **No interferencia**, CA4 | Salidas iguales mientras no se cumpla la condición completa de publicación ([03](03_MOTOR_DE_EVIDENCIAS.md) §8.3), incluida la liberación de la versión compartida. NI1–NI6 sobre superficies reales | N2, C6, C7, N4 |
+| **M5** | E2 aporta evidencia | Respuestas por pregunta, embargo | M3, P0 | `evaluation_attempt_answers` | **Filtración** | **No interferencia**, CA4 | Salidas iguales mientras no se cumpla la condición completa de publicación ([03](03_MOTOR_DE_EVIDENCIAS.md) §8.3): cierre de la instancia y `review_at` (P19-E1). NI1–NI6 sobre superficies reales | N2, C6, C7, N4 |
 | **M6** | Resultados y P21 | Publicación, bandas, continuación | P0, M5 | `progression_continuations` | Normativo | CA4–CA7; límites 69,9/70/79,9/80 | E2 sigue «Reprobado» | **D1–D4, C14, C15**, Q1–Q3 |
 | **M7** | Piloto real | Medición, acompañamiento | M3, M4 (M5, M6 si aplica) | Ninguno | Privacidad, equidad, muestra pequeña | Protocolo con docentes | Métricas aprobadas; informe | Datos, O10, revisión legal, autenticación real, despliegue |
 | **M8** | Ampliar, solo si se autoriza | Copiloto ([07](07_COPILOTO_IA.md) §6); modelos | M7 con evidencia | Según diseño | Promesas sin evidencia | Validación fuera de muestra | Criterios fijados | N10, K3 |
@@ -64,7 +64,7 @@ Plan técnico de la Etapa 1: [11](11_PLAN_E0.md).
 **La orden del cierre documental no autoriza E0.** Etapa 2 es trabajo editorial: si necesita herramienta o tablas (M1), programarlas requiere autorización aparte. **Construir el motor (M2–M6) queda entre Etapa 2 y Etapa 3, y requiere su propia autorización de programación.**
 
 **Requisitos de Etapa 3:**
-- Protección de resultados y evaluaciones compartidas, con pruebas NI1–NI6 superadas y N20 decidido (si se usa E2).
+- Protección de resultados y evaluaciones compartidas, con pruebas NI1–NI6 superadas (si se usa E2).
 - Integridad de evidencias: D1–D9 superadas.
 - Autenticación y permisos reales. Según lo verificado en esta sesión, producción no tiene login configurado; no se volvió a comprobar.
 - Revisión de textos públicos (C12).
