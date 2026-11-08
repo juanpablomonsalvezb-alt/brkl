@@ -50,7 +50,8 @@ Al proponer cambios, ambos asistentes deben leer primero este documento, disting
 
 ### Revisión de pauta
 - Cada instancia tiene su propio review_at.
-- Solo se publica la pauta si la instancia está cerrada, el reloj del servidor ha alcanzado review_at y ningún otro estudiante puede seguir respondiendo esa misma versión.
+- Solo se publica la pauta si la instancia está cerrada y el reloj del servidor ha alcanzado su review_at. No se espera a que otros estudiantes terminen la misma versión. **(P19-E1, APROBADO 2026-11-08; reemplaza la condición «ningún otro estudiante puede seguir respondiendo esa misma versión».)**
+- Consecuencia de P18: desde que la pauta de una versión se publica para cualquier estudiante, esa versión no se asigna a nadie más. Quien entre después o requiera excepción recibe una versión alternativa con ventana y revisión propias.
 - Las versiones de recuperación tienen sus propias ventanas y tiempos de revisión.
 - Cada versión de recuperación se usa en un solo lote. Una versión usada en un lote se retira permanentemente una vez habilitada su pauta.
 - No se abre un lote de recuperación sin suficientes versiones validadas y sin uso previo.
@@ -128,7 +129,7 @@ Son hallazgos reportados durante la conversación y requieren verificación cont
 | P16 | E1/E3/E4 formativas o sumativas; recuperación formal o «No logrado» | Pendiente de Dirección Académica y validación normativa |
 | P17 | 2 intentos enviados por recuperación; una recuperación final | Propuesta recomendada; confirmar aprobación formal |
 | P18 | Excepciones, solicitante/aprobador distintos, ventana y auditoría; evitar responder versión con pauta publicada | APROBADO (2026-10-24): no reabrir original ni proceso definitivamente cerrado; si procede, versión alternativa con ventana/revisión propias. Límites y razones admisibles siguen pendientes |
-| P19 | Condiciones de publicación de pauta por instancia | Aprobado en consolidación previa |
+| P19 | Condiciones de publicación de pauta por instancia | Aprobado en consolidación previa. **Enmendado por P19-E1 (2026-11-08):** basta instancia cerrada y review_at; ya no se espera el cierre de la versión para todos |
 | P20 | Lotes, retiro de versiones y revisión al cierre | Regla base aprobada; capacidad/frecuencia pendientes |
 | P20-v | Capacidad mínima y frecuencia de lotes | Pendiente |
 | P21 | Desbloqueo/progresión tras fallo definitivo de E2 | Pendiente de validación normativa y académica |
@@ -150,6 +151,7 @@ Se reportó que la regla actual en server/vortice.ts (aprox. líneas 144–160) 
 ## 11. Historial y gobierno
 
 - **2026-10-23 — Consolidación documental inicial:** se recopilan decisiones y propuestas presentes en el historial de trabajo. No constituye aprobación nueva de decisiones académicas pendientes.\n- **2026-10-24 — Ratificación de P15 y P18:** la usuaria aprobó el cierre de la instancia original al vencer, la expiración sin consumo del intento activo y el registro de la causa; además, confirmó que una excepción no reabre la evaluación original ni permite responder una versión cuya pauta se publicó, y que una alternativa autorizada requiere versión, ventana y revisión propias. No se autorizó implementación técnica.
+- **2026-11-08 — Enmienda P19-E1:** estado anterior: APROBADO (publicación solo cuando ningún otro estudiante puede responder la misma versión). Nuevo: APROBADO; publicación por instancia al cumplirse cierre y review_at. Fundamento: el sostenedor considera bajo el riesgo de traspaso de pauta entre estudiantes, que están dispersos por el país y no se conocen; la espera retrasaba resultados de forma indefinida (C23). Impacto: P18 se mantiene, así que una versión con pauta publicada para cualquier estudiante no se asigna a nadie más; el riesgo residual es la difusión pública de la pauta. Responsable de validación: sostenedor. Fecha: 2026-11-08.
 - Toda modificación debe indicar ID de decisión, estado anterior, propuesta, fundamento, impacto, responsable de validación y fecha.
 - Estados permitidos: APROBADO, PROPUESTA, PENDIENTE_ACADÉMICO, PENDIENTE_LEGAL, PENDIENTE_TÉCNICO y NO_VERIFICADO.
 - No mezclar especificación con implementación. Un cambio de código requiere autorización explícita independiente.
