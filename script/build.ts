@@ -1,6 +1,6 @@
 import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
-import { rm, readFile, rename, writeFile } from "fs/promises";
+import { rm, readFile, rename, writeFile, copyFile } from "fs/promises";
 import { existsSync, readFileSync } from "fs";
 import type { Plugin } from "esbuild";
 import { PRERENDER_ROUTES, snapshotFile } from "../shared/prerender-routes";
@@ -155,6 +155,12 @@ async function buildAll() {
     await rename("dist/public/index.html", "dist/public/app.html");
     await writeFile("dist/public/app.html", limpiarFallback(await readFile("dist/public/app.html", "utf-8")));
     console.log("dist/public/index.html → app.html (Vercel): '/' la sirve api/handler.js, el resto del SPA cae en app.html");
+    // Rutas inexistentes: Vercel sirve 404.html con estado 404 real (antes el catch-all
+    // devolvía 200 con el shell: Google lo trata como soft 404). Es el mismo shell, así que
+    // wouter pinta la página "no encontrada" (con noindex) y, si alguna ruta legítima del SPA
+    // faltara en la lista de vercel.json, la persona igual la ve; solo cambia el código HTTP.
+    await copyFile("dist/public/app.html", "dist/public/404.html");
+    console.log("dist/public/app.html → 404.html: las rutas fuera de la lista del SPA responden 404 real");
   }
 }
 

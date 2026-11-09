@@ -269,7 +269,7 @@
       "destination": "/api/handler.js"
     },
     {
-      "source": "/((?!api/|assets/|images/|videos/|docs/|fonts/|prerendered/|.*\\.\\w+$).*)",
+      "source": "/(dashboard|course|drive-sync|textbook-config|textbook-config-new|reservations|plan-settings|level-plan-settings|planes-2026|barkley-admin|evaluation-links-admin|gemini-copilots-admin|faq-admin|paes-admin|reservations-admin|academic-copilot|payment-result|plataforma|together|asi-trabajamos|vortice)(/.*)?",
       "destination": "/app.html"
     }
   ]
