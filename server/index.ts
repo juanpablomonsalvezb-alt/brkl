@@ -6,6 +6,8 @@ import { serveStatic } from "./static";
 import { createServer } from "http";
 import { startKeepAlive } from "./keepAlive";
 import { initializeDatabase } from "./initDatabase";
+import { client } from "./db";
+import { asegurarIntegridad } from "./migrar";
 
 const app = express();
 const httpServer = createServer(app);
@@ -40,6 +42,10 @@ export function log(message: string, source = "express") {
 app.use(requestLogger((line) => log(line)));
 
 (async () => {
+  // Integridad antes de escribir nada: claves foráneas activas y sin deriva del esquema del motor
+  // (IMP-001, IMP-003). Solo lee. En producción solo registra, hasta verificar Turso (A1).
+  await asegurarIntegridad(client, { estricto: process.env.NODE_ENV !== "production" });
+
   // Initialize database with default data
   await initializeDatabase();
   
