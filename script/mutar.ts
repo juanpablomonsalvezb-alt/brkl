@@ -20,7 +20,27 @@ export const MUTACIONES: Record<string, Mutacion[]> = {
     { id: "estados cerrados sin vencida", archivo: "shared/p0e-estados.ts", de: '"cerrada_agotada", "vencida"]', a: '"cerrada_agotada"]', check: "estados-cerrados" },
     { id: "reloj del sistema en el motor", archivo: "server/reloj.ts", de: "return Number(r.rows[0][0]);", a: "return Date.now() / 1000;", check: "reloj" },
   ],
-  h1: [],
+  h1: [
+    { id: "K6 sin familias distintas", archivo: "shared/dominio.ts", de: "a.familia !== x.familia && separados(a, x)", a: "separados(a, x)", check: "dominio" },
+    { id: "O2 separación ignorada", archivo: "shared/dominio.ts", de: 'pol.k6_separation === "ninguna" ||', a: "true ||", check: "dominio" },
+    { id: "O3 ayuda cuenta siempre", archivo: "shared/dominio.ts", de: "const validas = pol.assisted_counts ? e : e.filter((x) => !x.conAyuda);", a: "const validas = e;", check: "dominio" },
+    { id: "N16 error con ayuda cuenta siempre", archivo: "shared/dominio.ts", de: "const fuenteErrores = e.filter((x) => !x.conAyuda || (x.correcta ? pol.assisted_counts : pol.wrong_with_help_counts));", a: "const fuenteErrores = e;", check: "dominio" },
+    { id: "N16 atado a O3 (como E0)", archivo: "shared/dominio.ts", de: "const fuenteErrores = e.filter((x) => !x.conAyuda || (x.correcta ? pol.assisted_counts : pol.wrong_with_help_counts));", a: "const fuenteErrores = pol.wrong_with_help_counts ? e : validas;", check: "dominio" },
+    { id: "Escenario 3 sin reparación", archivo: "shared/dominio.ts", de: "if (!reparada || pol.error_repaired_counts)", a: "if (true)", check: "dominio" },
+    { id: "Escenario 7 anuladas cuentan", archivo: "shared/dominio.ts", de: "orden.filter((x) => !x.anulada)", a: "orden.filter(() => true)", check: "dominio" },
+    { id: "N17 retiradas siempre cuentan", archivo: "shared/dominio.ts", de: "if (!pol.retired_counts) vivas", a: "if (false) vivas", check: "dominio" },
+    { id: "Escenario 4 umbral desplazado", archivo: "shared/dominio.ts", de: "if (n >= pol.demote_wrong_families)", a: "if (n > pol.demote_wrong_families)", check: "dominio" },
+    { id: "Escenario 10 retención vencida ignorada", archivo: "shared/dominio.ts", de: "n >= 1 || retencionVencida", a: "n >= 1", check: "dominio" },
+    { id: "N18 evidencia anterior se suma", archivo: "shared/dominio.ts", de: "const actuales = vivas.filter((x) => vigente(x.versionContenido));", a: "const actuales = vivas;", check: "dominio" },
+    { id: "N18 sin herencia", archivo: "shared/dominio.ts", de: "const heredado = [...anteriores.values()].some(", a: "const heredado = false && [...anteriores.values()].some(", check: "dominio" },
+    { id: "N18 herencia mezclada con la vigente (como E0)", archivo: "shared/dominio.ts", de: "const heredado = [...anteriores.values()].some(", a: "const heredado = [vivas].some(", check: "dominio" },
+    { id: "N18 versiones anteriores sumadas entre sí", archivo: "shared/dominio.ts", de: "const heredado = [...anteriores.values()].some(", a: "const heredado = [[...anteriores.values()].flat()].some(", check: "dominio" },
+    { id: "Orden por llegada (no determinista)", archivo: "shared/dominio.ts", de: "[...evidencias].sort((a, b) => a.ocurrida - b.ocurrida || a.secuencia - b.secuencia ||", a: "[...evidencias].sort(() => 0 ||", check: "dominio" },
+    { id: "TK12 fuente libre", archivo: "shared/dominio.ts", de: "if (!(FUENTES as readonly string[]).includes(x.fuente)) throw", a: "if (false) throw", check: "dominio" },
+    { id: "TK15 política nula se ejecuta (evaluar)", archivo: "shared/dominio.ts", de: "if (!esPoliticaEjecutable(pol)) throw", a: "if (false) throw", check: "dominio" },
+    { id: "TK15 nulos aceptados (política)", archivo: "shared/politica.ts", de: "const nulos = CAMPOS.filter((k) => p[k] === null || p[k] === undefined);", a: "const nulos: typeof CAMPOS = [];", check: "politica" },
+    { id: "K6 admite otro número", archivo: "shared/politica.ts", de: "k6_min_families: (v) => v === K6_FAMILIAS,", a: "k6_min_families: entero,", check: "politica" },
+  ],
 };
 
 const suma = (f: string) => createHash("sha256").update(fs.readFileSync(f)).digest("hex");
