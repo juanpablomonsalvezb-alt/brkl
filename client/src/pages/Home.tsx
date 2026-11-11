@@ -1241,7 +1241,7 @@ export default function Home() {
               { fecha: "Enero 2027", titulo: "Primer pago", texto: "Confirmas tu plan (mensual o anual con 15% dcto) y activas la cuenta. El arancel se paga a partir de enero 2027." },
               { fecha: "Marzo 2027", titulo: "Inicio del año de preparación", texto: "Acceso completo a la plataforma: video, pódcast, tutor y asesor." },
               { fecha: "Marzo – octubre", texto: "8 meses de avance a tu ritmo con Aprendizaje por Dominio, acompañado por tu tutor y monitoreado por tu asesor.", titulo: "Año lectivo" },
-              { fecha: "31 de octubre 2027", titulo: "Exámenes libres MINEDUC", texto: "Rindes tus exámenes libres ante el Ministerio de Educación de Chile." },
+              { fecha: "31 de octubre 2027", titulo: "Exámenes libres MINEDUC", texto: <>Rindes tus exámenes libres ante el Ministerio de Educación de Chile. <a href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11" target="_blank" rel="noopener noreferrer" style={{ color: NAVY, fontWeight: 700 }}>Ver cómo inscribirte en Ayuda Mineduc</a>.</> },
             ].map((h, i) => (
               <Reveal key={h.titulo} delay={i * 0.06}>
                 <div style={{ display: "flex", gap: 24, marginBottom: 36, position: "relative" }}>
@@ -1282,7 +1282,7 @@ export default function Home() {
                 </div>
               </div>
               <p style={{ fontSize: 14, color: TEXT, margin: "0 0 18px" }}>
-                Inscripción gratuita a través del Portal de Ayuda Mineduc. Quien necesite validar 4° medio o presente NEE solo puede inscribirse en el primer o segundo período (junio o septiembre) para asegurar la certificación a tiempo. <a href="/blog/como-inscribirse-examenes-libres-mineduc/" style={{ color: NAVY, fontWeight: 700 }}>Ver guía paso a paso →</a>
+                Inscripción gratuita a través del <a href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11" target="_blank" rel="noopener noreferrer" style={{ color: NAVY, fontWeight: 700 }}>Portal de Ayuda Mineduc</a>. Quien necesite validar 4° medio o presente NEE solo puede inscribirse en el primer o segundo período (junio o septiembre) para asegurar la certificación a tiempo. <a href="/blog/como-inscribirse-examenes-libres-mineduc/" style={{ color: NAVY, fontWeight: 700 }}>Ver guía paso a paso →</a>
               </p>
               <a href="https://epja.mineduc.cl/wp-content/uploads/sites/43/2026/03/plazos-oficiales-2026-menores.pdf"
                 target="_blank" rel="noopener noreferrer"
