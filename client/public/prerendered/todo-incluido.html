@@ -50,9 +50,9 @@
          renderizado hasta que la hoja de Google Fonts termina de descargar.
          Con media="print" el navegador la baja en paralelo sin bloquear, y el
          onload la activa para pantalla — ahorro medido en PageSpeed: ~1s de LCP. -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&amp;display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&amp;display=swap" rel="stylesheet" media="all" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=Newsreader:ital,wght@0,400..700;1,400..700&amp;display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=Newsreader:ital,wght@0,400..700;1,400..700&amp;display=swap" rel="stylesheet" media="all" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Newsreader:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"></noscript>
     <!-- Precarga la foto del hero: es el elemento LCP y sin esto solo empieza
          a descargarse cuando React monta, ya con el JS descargado y ejecutado. -->
     <!-- href apunta al 900w, no al original: los navegadores que ignoran
