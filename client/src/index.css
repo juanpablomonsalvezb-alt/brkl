@@ -46,10 +46,10 @@
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
-  --font-sans: 'Poppins', sans-serif;
-  --font-display: 'Poppins', sans-serif;
-  --font-serif: 'Poppins', sans-serif;
-  --font-mono: 'Poppins', sans-serif;
+  --font-sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 :root {
@@ -116,19 +116,19 @@
   h4,
   h5,
   h6 {
-    font-family: 'Poppins', sans-serif;
-    letter-spacing: -0.02em;
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
     /* color: hereda del contenedor — NUNCA forzar aquí, rompe headings sobre fondos oscuros */
-    font-weight: 300;
+    font-weight: 400;
     text-wrap: balance;
   }
 
   .font-sans-safe {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-sans);
   }
 
   .font-label {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;

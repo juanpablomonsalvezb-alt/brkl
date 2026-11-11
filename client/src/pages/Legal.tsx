@@ -5,7 +5,7 @@ import { usePageMeta } from "@/lib/usePageMeta";
 const NAVY = "#003366";
 const GOLD = "#FFC548";
 const TEXT = "#525252";
-const FONT = "'Poppins', sans-serif";
+const FONT = "'Instrument Sans', system-ui, sans-serif";
 
 function LegalPage({ title, description, updated, children }: { title: string; description: string; updated: string; children: React.ReactNode }) {
   usePageMeta({ title: `${title} | Barkley Online`, description });

@@ -391,13 +391,14 @@ function pageHtml(n) {
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap" rel="stylesheet">
   <script type="application/ld+json">${JSON.stringify(schema)}</script>
   <script type="application/ld+json">${JSON.stringify(faqSchema)}</script>
   <script type="application/ld+json">${JSON.stringify(crumbs)}</script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Poppins', system-ui, sans-serif; color: ${TEXT}; background: #fff; line-height: 1.65; }
+    h1, h2, h3 { font-family: 'Newsreader', Georgia, 'Times New Roman', serif; }
+    body { font-family: 'Instrument Sans', system-ui, sans-serif; color: ${TEXT}; background: #fff; line-height: 1.65; }
     a { color: inherit; }
     .nav { background: #fff; border-bottom: 1px solid #e8e8e8; padding: 14px 24px; }
     .nav-inner { max-width: 1080px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }

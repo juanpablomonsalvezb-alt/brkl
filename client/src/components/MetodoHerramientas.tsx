@@ -12,7 +12,7 @@ type Herramienta = {
 };
 
 const INK = "#10231f";
-const SANS = "'Poppins', system-ui, sans-serif";
+const SANS = "'Instrument Sans', system-ui, sans-serif";
 
 function useLoop() {
   const reduce = useReducedMotion();

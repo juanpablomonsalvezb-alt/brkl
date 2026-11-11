@@ -16,7 +16,7 @@ const GOLD = "#FFC548";
 const RED = "#FF3D37";
 const SLATE = "#5b7ba3";
 const TEXT = "#525252";
-const FONT = "'Poppins', sans-serif";
+const FONT = "'Instrument Sans', system-ui, sans-serif";
 
 interface Faq { id: string; question: string; answer: string; sortOrder: number; isActive?: boolean; }
 

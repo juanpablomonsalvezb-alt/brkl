@@ -184,7 +184,7 @@ const PURPLE = "#861fce";
 const GREEN = "#00b273";
 const PINK = "#fe76b4";
 const TEXT = "#525252";
-const FONT = "'Poppins', sans-serif";
+const FONT = "'Instrument Sans', system-ui, sans-serif";
 // Azul apagado real usado en titulares grandes e intro (no el navy puro de marca)
 const SLATE = "#5b7ba3";
 // Paneles de color sólido reales del hero (más claros que navy/morado de marca)

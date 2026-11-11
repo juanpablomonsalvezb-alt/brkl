@@ -16,7 +16,7 @@ const LIMA = "#D6F36A";
 const SALVIA = "#52634D";
 const AZUL = "#24364A";
 const AZUL_2 = "#30445A";
-const FONT = "'Poppins', sans-serif";
+const FONT = "'Instrument Sans', system-ui, sans-serif";
 
 type Pregunta = {
   tema: string;

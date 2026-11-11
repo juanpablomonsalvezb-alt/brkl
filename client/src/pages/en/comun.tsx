@@ -15,7 +15,7 @@ export const GOLD = "#FFC548";
 export const TEXT = "#525252";
 export const SLATE = "#5b7ba3";
 export const VIVID_BLUE = "#0b63e5";
-export const FONT = "'Poppins', sans-serif";
+export const FONT = "'Instrument Sans', system-ui, sans-serif";
 
 export const CONTACTO = "admisiones@barkleyinstituto.cl";
 

@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const NAVY = "#003366";
 const RED = "#FF3D37";
-const FONT = "'Poppins', sans-serif";
+const FONT = "'Instrument Sans', system-ui, sans-serif";
 
 type Idioma = "es" | "en";
 

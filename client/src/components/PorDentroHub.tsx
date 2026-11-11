@@ -21,7 +21,7 @@ const NAVY_DEEP = "#00264d";
 const GOLD = "#FFC548";
 const TEXT = "#525252";
 const SLATE = "#5b7ba3";
-const FONT = "'Poppins', sans-serif";
+const FONT = "'Instrument Sans', system-ui, sans-serif";
 
 export const POR_DENTRO = [
   {

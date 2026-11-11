@@ -14,7 +14,7 @@ const NAVY = "#003366";
 const GOLD = "#FFC548";
 const TEXT = "#525252";
 const SLATE = "#5b7ba3";
-const FONT = "'Poppins', sans-serif";
+const FONT = "'Instrument Sans', system-ui, sans-serif";
 
 function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   return (
