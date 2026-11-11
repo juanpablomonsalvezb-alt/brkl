@@ -71,6 +71,18 @@ const casos = (): Caso[] => { n = 0; return [
     { alt: "N18 = A", pol: {}, estado: "sin_evidencia" }] },
   { id: "TK11i", origen: "H1", nombre: "Dos rupturas: v1 dominada por sí sola sí hereda", ev: [ev("F1", true), ev("F2", true), ev("F3", true, { versionContenido: "v2" })], ctx: { versionActual: "v3" }, variantes: [
     { alt: "N18 = A", pol: {}, estado: "dominado", marca: "por_comprobar", motivo: "ruptura" }] },
+  // Decisión A-1 (2026-11-11): tras ruptura, dos familias erradas nuevas dan no_dominado con cualquier O1.
+  { id: "A1a", origen: "H1", nombre: "A-1: ruptura + 2 errores nuevos, O1 = 3", ev: [ev("F1", true), ev("F2", true), ev("F3", false, { versionContenido: "v2" }), ev("F4", false, { versionContenido: "v2" })], ctx: { versionActual: "v2" }, variantes: [
+    { alt: "O1 = 3", pol: { not_mastered_wrong_families: 3 }, estado: "no_dominado" }, { alt: "O1 = 2", pol: { not_mastered_wrong_families: 2 }, estado: "no_dominado" }] },
+  { id: "A1b", origen: "H1", nombre: "A-1: ruptura + 1 error nuevo, O1 = 1", ev: [ev("F1", true), ev("F2", true), ev("F3", false, { versionContenido: "v2" })], ctx: { versionActual: "v2" }, variantes: [
+    { alt: "O1 = 1", pol: { not_mastered_wrong_families: 1 }, estado: "dominado", marca: "por_comprobar", motivo: "ruptura" }] },
+  { id: "A1c", origen: "H1", nombre: "A-1 no toca O1 sin ruptura: 2 errores, O1 = 3", ev: [ev("F1", false), ev("F2", false)], variantes: [
+    { alt: "O1 = 3", pol: { not_mastered_wrong_families: 3 }, estado: "incierto" }] },
+  // Decisión D-2 (2026-11-11): hereda solo si la versión anterior terminó en `dominado` (TK11g: no).
+  { id: "D2a", origen: "H1", nombre: "D-2: v1 dominada con 1 error posterior (sigue dominada) hereda", ev: [ev("F1", true), ev("F2", true), ev("F3", false)], ctx: { versionActual: "v2" }, variantes: [
+    { alt: "N18 = A", pol: {}, estado: "dominado", marca: "por_comprobar", motivo: "ruptura" }] },
+  { id: "D2b", origen: "H1", nombre: "D-2: v1 cumplió K6 y terminó incierto (escenario 4 B) no hereda", ev: [ev("F1", true), ev("F2", true), ev("F3", false), ev("F4", false)], ctx: { versionActual: "v2" }, variantes: [
+    { alt: "escenario 4 B", pol: { demote_wrong_families: 1 }, estado: "sin_evidencia" }] },
   // O3 y N16 son independientes (diferencia D-3 con E0).
   { id: "N16b", origen: "H1", nombre: "O3 = sí, N16 = no: errores con ayuda no cuentan", ev: [ev("F1", true), ev("F2", true), ev("F3", false, { conAyuda: true }), ev("F4", false, { conAyuda: true })], variantes: [
     { alt: "O3 C, N16 A", pol: { assisted_counts: true, wrong_with_help_counts: false }, estado: "dominado", marca: null }] },

@@ -51,6 +51,9 @@ export interface EstadoContenido {
   motivo: Motivo | null;
 }
 
+// N18 = A (decisión A-1, 2026-11-11): tras una ruptura, dos familias erradas en la versión nueva.
+export const N18_FAMILIAS_ERRADAS = 2;
+
 const posterior = (a: number, b: number) => a > b; // por posición en el orden total
 // ponytail: indexOf dentro de bucles es O(n²) por contenido; basta para decenas de evidencias por
 // estudiante y contenido. Indexar posiciones si D8 o la proyección (H3) lo muestran lento.
@@ -92,9 +95,16 @@ function calcular(e: Evidencia[], pol: PoliticaEjecutable, retencionVencida: boo
     if (n >= pol.demote_wrong_families) return { estado: "incierto", marca: null, motivo: "contradictoria" };
     return { estado: "dominado", marca: n >= 1 || retencionVencida ? "por_comprobar" : null, motivo: null };
   }
-  if (erradas(-1) >= pol.not_mastered_wrong_families) return { estado: "no_dominado", marca: null, motivo: null };
+  const errores = erradas(-1);
   // N18 = A: quien dominaba la versión anterior lo conserva, con marca, hasta cumplir K6 en la nueva.
-  if (heredado) return { estado: "dominado", marca: "por_comprobar", motivo: "ruptura" };
+  // Decisión A-1 (2026-11-11): con ruptura, dos familias erradas en la versión nueva dan no_dominado.
+  // El umbral es fijo (N18) y no depende de O1, que sigue abierta.
+  if (heredado) {
+    return errores >= N18_FAMILIAS_ERRADAS
+      ? { estado: "no_dominado", marca: null, motivo: null }
+      : { estado: "dominado", marca: "por_comprobar", motivo: "ruptura" };
+  }
+  if (errores >= pol.not_mastered_wrong_families) return { estado: "no_dominado", marca: null, motivo: null };
   return { estado: "incierto", marca: null, motivo: validas.length === 0 ? "solo_con_ayuda" : "pocas_evidencias" };
 }
 
@@ -114,6 +124,8 @@ export function evaluar(evidencias: readonly Evidencia[], ctx: ContextoVersion, 
   // ponytail: sin el linaje de versiones (catálogo, H2) cada versión anterior se evalúa sola. Si dos
   // versiones anteriores eran compatibles entre sí, esto puede no heredar un dominio que las abarcaba
   // (error conservador: nunca hereda de más). Usar el linaje cuando exista `supersedes_version_id`.
+  // Decisión D-2 (2026-11-11): hereda solo si la versión anterior TERMINÓ en `dominado`. Haber
+  // cumplido K6 en algún momento no basta si después quedó en otro estado.
   const vigente = (v: string) => v === ctx.versionActual || ctx.compatibles.includes(v);
   const actuales = vivas.filter((x) => vigente(x.versionContenido));
   const anteriores = new Map<string, Evidencia[]>();
