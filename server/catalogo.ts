@@ -53,8 +53,14 @@ async function crearVersionEn(c: Transaction, domainId: string, actor: string): 
   if (pub) {
     const items = (await c.execute({ sql: "SELECT id, item_id, name, operational_definition FROM knowledge_item_versions WHERE domain_version_id = ? ORDER BY item_id", args: [pub.id] })).rows;
     for (const v of items) {
+      const nueva = randomUUID();
       sentencias.push({ sql: "INSERT INTO knowledge_item_versions (id, item_id, domain_version_id, domain_id, name, operational_definition, supersedes_version_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        args: [randomUUID(), String(v.item_id), id, domainId, String(v.name), String(v.operational_definition), String(v.id)] as any });
+        args: [nueva, String(v.item_id), id, domainId, String(v.name), String(v.operational_definition), String(v.id)] as any });
+      // P-H2-4: la versión nueva parte con una COPIA de las asociaciones de la anterior; puede cambiarlas
+      // mientras sea editable sin tocar las de la versión anterior.
+      for (const [tabla, cols] of VINCULOS) {
+        sentencias.push({ sql: `INSERT INTO ${tabla} (item_version_id, ${cols}) SELECT ?, ${cols} FROM ${tabla} WHERE item_version_id = ?`, args: [nueva, String(v.id)] });
+      }
     }
     const aristas = (await c.execute({ sql: "SELECT item_id, prerequisite_item_id, relation, alt_group, justification, confidence, validated_by, validated_at FROM knowledge_prerequisites WHERE domain_version_id = ? ORDER BY item_id, prerequisite_item_id", args: [pub.id] })).rows;
     for (const a of aristas) {
@@ -108,14 +114,28 @@ export async function validarArista(c: Ejecutor, prerequisiteId: string, actor: 
   if (r.rowsAffected !== 1) throw new CatalogoError("Arista inexistente o ya validada");
 }
 
-export async function vincularOA(c: Ejecutor, itemId: string, curriculumObjectiveId: string): Promise<void> {
-  await c.execute({ sql: "INSERT INTO knowledge_item_oas (item_id, curriculum_objective_id) VALUES (?, ?)", args: [itemId, curriculumObjectiveId] });
+// Asociaciones curriculares de UNA versión del contenido (P-H2-4). La base las bloquea desde `validada`
+// y exige que sean de la misma asignatura y nivel que el dominio.
+const VINCULOS = [["knowledge_item_oas", "curriculum_objective_id"], ["knowledge_item_modules", "learning_objective_id"], ["knowledge_item_resources", "resource_id, role"]] as const;
+export type RolRecurso = "explicacion" | "ejemplo" | "repaso";
+export async function vincularOA(c: Ejecutor, itemVersionId: string, curriculumObjectiveId: string): Promise<void> {
+  await c.execute({ sql: "INSERT INTO knowledge_item_oas (item_version_id, curriculum_objective_id) VALUES (?, ?)", args: [itemVersionId, curriculumObjectiveId] });
 }
-export async function vincularModulo(c: Ejecutor, itemId: string, learningObjectiveId: string): Promise<void> {
-  await c.execute({ sql: "INSERT INTO knowledge_item_modules (item_id, learning_objective_id) VALUES (?, ?)", args: [itemId, learningObjectiveId] });
+export async function vincularModulo(c: Ejecutor, itemVersionId: string, learningObjectiveId: string): Promise<void> {
+  await c.execute({ sql: "INSERT INTO knowledge_item_modules (item_version_id, learning_objective_id) VALUES (?, ?)", args: [itemVersionId, learningObjectiveId] });
 }
-export async function vincularRecurso(c: Ejecutor, itemId: string, resourceId: string, role: "explicacion" | "ejemplo" | "repaso"): Promise<void> {
-  await c.execute({ sql: "INSERT INTO knowledge_item_resources (item_id, resource_id, role) VALUES (?, ?, ?)", args: [itemId, resourceId, role] });
+export async function vincularRecurso(c: Ejecutor, itemVersionId: string, resourceId: string, role: RolRecurso): Promise<void> {
+  await c.execute({ sql: "INSERT INTO knowledge_item_resources (item_version_id, resource_id, role) VALUES (?, ?, ?)", args: [itemVersionId, resourceId, role] });
+}
+const exigirBorrado = (r: { rowsAffected: number }) => { if (r.rowsAffected === 0) throw new Error("El vínculo no existe"); };
+export async function desvincularOA(c: Ejecutor, itemVersionId: string, curriculumObjectiveId: string): Promise<void> {
+  exigirBorrado(await c.execute({ sql: "DELETE FROM knowledge_item_oas WHERE item_version_id = ? AND curriculum_objective_id = ?", args: [itemVersionId, curriculumObjectiveId] }));
+}
+export async function desvincularModulo(c: Ejecutor, itemVersionId: string, learningObjectiveId: string): Promise<void> {
+  exigirBorrado(await c.execute({ sql: "DELETE FROM knowledge_item_modules WHERE item_version_id = ? AND learning_objective_id = ?", args: [itemVersionId, learningObjectiveId] }));
+}
+export async function desvincularRecurso(c: Ejecutor, itemVersionId: string, resourceId: string, role: RolRecurso): Promise<void> {
+  exigirBorrado(await c.execute({ sql: "DELETE FROM knowledge_item_resources WHERE item_version_id = ? AND resource_id = ? AND role = ?", args: [itemVersionId, resourceId, role] }));
 }
 
 // Transiciones del ciclo de vida. `validada` registra al validador (distinto del autor: lo exige la
@@ -190,6 +210,8 @@ export async function contextoVersion(c: Ejecutor, itemId: string, retencionVenc
 export interface Diferencias {
   agregados: string[]; retirados: string[]; modificados: string[]; sinCambios: string[];
   aristasAgregadas: string[]; aristasRetiradas: string[]; aristasModificadas: string[];
+  // P-H2-4: asociaciones como «código → oa:id», «código → modulo:id» o «código → recurso:id:rol».
+  vinculosAgregados: string[]; vinculosRetirados: string[];
 }
 
 // Cambios entre dos versiones de un mismo dominio, por código de contenido. Una arista se identifica
@@ -203,7 +225,12 @@ export async function diferencias(c: Ejecutor, versionA: string, versionB: strin
   const filas = (await c.execute({ sql: "SELECT id, domain_id FROM knowledge_domain_versions WHERE id IN (?, ?)", args: [versionA, versionB] })).rows;
   if (filas.length !== (versionA === versionB ? 1 : 2)) throw new CatalogoError("Versión de dominio inexistente");
   if (new Set(filas.map((x) => String(x.domain_id))).size !== 1) throw new CatalogoError("Las versiones deben ser del mismo dominio");
-  const [ca, cb, aa, ab] = await Promise.all([contenidos(versionA), contenidos(versionB), aristas(versionA), aristas(versionB)]);
+  const vinculos = async (id: string) => new Set((await c.execute({ sql: `
+    SELECT i.code || ' → oa:' || o.curriculum_objective_id AS k FROM knowledge_item_oas o JOIN knowledge_item_versions v ON v.id = o.item_version_id JOIN knowledge_items i ON i.id = v.item_id WHERE v.domain_version_id = ?
+    UNION ALL SELECT i.code || ' → modulo:' || m.learning_objective_id FROM knowledge_item_modules m JOIN knowledge_item_versions v ON v.id = m.item_version_id JOIN knowledge_items i ON i.id = v.item_id WHERE v.domain_version_id = ?
+    UNION ALL SELECT i.code || ' → recurso:' || r.resource_id || ':' || r.role FROM knowledge_item_resources r JOIN knowledge_item_versions v ON v.id = r.item_version_id JOIN knowledge_items i ON i.id = v.item_id WHERE v.domain_version_id = ?`,
+    args: [id, id, id] })).rows.map((x) => String(x.k)));
+  const [ca, cb, aa, ab, va, vb] = await Promise.all([contenidos(versionA), contenidos(versionB), aristas(versionA), aristas(versionB), vinculos(versionA), vinculos(versionB)]);
   const orden = (s: string[]) => s.sort();
   return {
     agregados: orden([...cb.keys()].filter((k) => !ca.has(k))),
@@ -213,5 +240,7 @@ export async function diferencias(c: Ejecutor, versionA: string, versionB: strin
     aristasAgregadas: orden([...ab.keys()].filter((k) => !aa.has(k))),
     aristasRetiradas: orden([...aa.keys()].filter((k) => !ab.has(k))),
     aristasModificadas: orden([...ab.keys()].filter((k) => aa.has(k) && aa.get(k) !== ab.get(k))),
+    vinculosAgregados: orden([...vb].filter((k) => !va.has(k))),
+    vinculosRetirados: orden([...va].filter((k) => !vb.has(k))),
   };
 }

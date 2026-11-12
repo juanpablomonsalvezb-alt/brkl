@@ -75,14 +75,13 @@ try {
   await caso("borrador → publicada directo", () => falla("UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 1 WHERE id = 'v1'", /transición no permitida/, "salto"));
   await ok("UPDATE knowledge_domain_versions SET status = 'en_revision' WHERE id = 'v1'");
   await caso("validar con contenido sin OA", () => falla("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v1'", /contenido sin OA/, "OA al validar"));
-  await ok("INSERT INTO knowledge_item_oas (item_id, curriculum_objective_id) VALUES ('A', 'oa1'), ('B', 'oa1')");
+  await ok("INSERT INTO knowledge_item_oas (item_version_id, curriculum_objective_id) VALUES ('A1', 'oa1'), ('B1', 'oa1')");
   await caso("validador igual al autor", () => falla("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-autor' WHERE id = 'v1'", /CHECK/, "autor=validador"));
   await caso("validada sin validador", () => falla("UPDATE knowledge_domain_versions SET status = 'validada' WHERE id = 'v1'", /CHECK/, "sin validador"));
   await ok("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v1'");
-  await caso("publicar con contenido sin OA (OA quitado tras validar)", async () => {
-    await ok("DELETE FROM knowledge_item_oas WHERE item_id = 'B'");
-    await falla("UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 1 WHERE id = 'v1'", /contenido sin OA/, "OA al publicar");
-    await ok("INSERT INTO knowledge_item_oas (item_id, curriculum_objective_id) VALUES ('B', 'oa1')");
+  await caso("P-H2-4: vínculos bloqueados desde validada (no se quita ni agrega OA)", async () => {
+    await falla("DELETE FROM knowledge_item_oas WHERE item_version_id = 'B1'", /no es editable/, "quitar OA en validada");
+    await falla("INSERT INTO knowledge_item_modules (item_version_id, learning_objective_id) VALUES ('A1', 'lo-mat')", /no es editable/, "agregar módulo en validada");
   });
   await caso("publicada sin fecha", () => falla("UPDATE knowledge_domain_versions SET status = 'publicada' WHERE id = 'v1'", /CHECK/, "fecha"));
   await ok("UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 1 WHERE id = 'v1'");
@@ -107,6 +106,15 @@ try {
   await ok("INSERT INTO knowledge_domain_versions (id, domain_id, version, status, created_by) VALUES ('v2', 'dom', 2, 'borrador', 'ficticio-autor')");
   await caso("reemplazar a una versión de otro contenido", () => falla("INSERT INTO knowledge_item_versions (id, item_id, domain_version_id, domain_id, name, operational_definition, supersedes_version_id) VALUES ('A2x', 'A', 'v2', 'dom', 'a', 'a', 'B1')", /FOREIGN KEY/, "otro contenido"));
   await ok("INSERT INTO knowledge_item_versions (id, item_id, domain_version_id, domain_id, name, operational_definition, supersedes_version_id) VALUES ('A2', 'A', 'v2', 'dom', 'a', 'a', 'A1'), ('B2', 'B', 'v2', 'dom', 'b2', 'nueva def', 'B1')");
+  await caso("P-H2-4: la versión nueva declara sus vínculos sin tocar los de la anterior", async () => {
+    await ok("INSERT INTO knowledge_item_oas (item_version_id, curriculum_objective_id) VALUES ('A2', 'oa1'), ('B2', 'oa1')");
+    await ok("INSERT INTO knowledge_item_modules (item_version_id, learning_objective_id) VALUES ('B2', 'lo-mat')");
+    await ok("INSERT INTO knowledge_item_resources (item_version_id, resource_id, role) VALUES ('B2', 'wr-mat', 'repaso')");
+    const n = async (t: string, v: string) => Number((await c.execute({ sql: `SELECT COUNT(*) AS n FROM ${t} WHERE item_version_id = ?`, args: [v] })).rows[0].n);
+    assert.deepEqual([await n("knowledge_item_oas", "B1"), await n("knowledge_item_modules", "B1"), await n("knowledge_item_resources", "B1")], [1, 0, 0], "B1 conserva sus vínculos");
+    await ok("DELETE FROM knowledge_item_resources WHERE item_version_id = 'B2'");
+    assert.equal(await n("knowledge_item_oas", "B1"), 1, "quitar en B2 no toca B1");
+  });
   await caso("reemplazar a una versión no publicada o posterior", async () => {
     await ok("INSERT INTO knowledge_domain_versions (id, domain_id, version, status, created_by) VALUES ('v3', 'dom', 3, 'borrador', 'ficticio-autor')");
     await falla("INSERT INTO knowledge_item_versions (id, item_id, domain_version_id, domain_id, name, operational_definition, supersedes_version_id) VALUES ('A3', 'A', 'v3', 'dom', 'a', 'a', 'A2')", /solo reemplaza una versión publicada anterior/, "borrador");
@@ -155,6 +163,7 @@ try {
   // Correcciones de la revisión de código.
   await caso("cambiar el reemplazado exige volver a declarar la continuidad", async () => {
     await ok("INSERT INTO knowledge_item_versions (id, item_id, domain_version_id, domain_id, name, operational_definition, supersedes_version_id, evidence_continuity, continuity_decided_by) VALUES ('A3', 'A', 'v3', 'dom', 'a', 'a', 'A2', 'compatible', 'ficticio-autor')");
+    await ok("INSERT INTO knowledge_item_oas (item_version_id, curriculum_objective_id) VALUES ('A3', 'oa1')");
     await falla("UPDATE knowledge_item_versions SET supersedes_version_id = 'A1' WHERE id = 'A3'", /debe declararse de nuevo/, "continuidad heredada");
     await ok("UPDATE knowledge_item_versions SET supersedes_version_id = 'A1', evidence_continuity = NULL, continuity_decided_by = NULL WHERE id = 'A3'");
   });
@@ -174,27 +183,52 @@ try {
     assert.equal(estado, "publicada", "el lote rechazado no retira v2");
   });
   await caso("vínculos: no se reescriben; la asignatura de un OA no cambia", async () => {
-    await falla("UPDATE knowledge_item_oas SET curriculum_objective_id = 'oa1' WHERE item_id = 'A'", /no se modifica/, "update OA");
+    await falla("UPDATE knowledge_item_oas SET curriculum_objective_id = 'oa1' WHERE item_version_id = 'A1'", /no se modifica/, "update OA");
     await falla("UPDATE curriculum_objectives SET level_subject_id = 'ls-len-6b' WHERE id = 'oa1'", /asignatura no cambia/, "asignatura del OA");
   });
-  await caso("no se quita el último OA de un contenido publicado", async () => {
-    await falla("DELETE FROM knowledge_item_oas WHERE item_id = 'A'", /al menos un OA/, "último OA");
+  await caso("P-H2-4: vínculos de versiones publicadas o retiradas no cambian", async () => {
     await ok("INSERT INTO curriculum_objectives (id, level_subject_id, official_code, text, source_url, source_year) VALUES ('oa2', 'ls-mat-5b', 'MA05 OA 08', 't', 'https://ejemplo.test/oa', 2018)");
-    await ok("INSERT INTO knowledge_item_oas (item_id, curriculum_objective_id) VALUES ('A', 'oa2')");
-    await ok("DELETE FROM knowledge_item_oas WHERE item_id = 'A' AND curriculum_objective_id = 'oa2'");
+    await falla("DELETE FROM knowledge_item_oas WHERE item_version_id = 'A1'", /no es editable/, "quitar OA retirado");
+    await falla("INSERT INTO knowledge_item_oas (item_version_id, curriculum_objective_id) VALUES ('A2', 'oa2')", /no es editable/, "agregar OA publicado");
+    await falla("DELETE FROM knowledge_item_modules WHERE item_version_id = 'B2'", /no es editable/, "quitar módulo publicado");
+    const filas = (await c.execute("SELECT item_version_id || ':' || curriculum_objective_id AS k FROM knowledge_item_oas WHERE item_version_id IN ('A1','B1','A2','B2') ORDER BY k")).rows.map((x) => x.k);
+    assert.deepEqual(filas, ["A1:oa1", "A2:oa1", "B1:oa1", "B2:oa1"], "asociaciones históricas intactas");
   });
 
-  // Aislamiento entre asignaturas.
+  // Aislamiento entre asignaturas, sobre una versión editable (v4 en borrador).
+  await ok("INSERT INTO knowledge_domain_versions (id, domain_id, version, status, created_by) VALUES ('v4', 'dom', 4, 'borrador', 'ficticio-autor')");
+  await ok("INSERT INTO knowledge_item_versions (id, item_id, domain_version_id, domain_id, name, operational_definition, supersedes_version_id, evidence_continuity, continuity_decided_by) VALUES ('A4', 'A', 'v4', 'dom', 'a', 'a', 'A2', 'compatible', 'ficticio-autor')");
   await caso("OA de otra asignatura", async () => {
     await ok("INSERT INTO curriculum_objectives (id, level_subject_id, official_code, text, source_url, source_year) VALUES ('oa-len', 'ls-len-6b', 'LE06 OA 01', 't', 'https://ejemplo.test/len', 2018)");
-    await falla("INSERT INTO knowledge_item_oas (item_id, curriculum_objective_id) VALUES ('A', 'oa-len')", /otra asignatura/, "OA cruzado");
+    await falla("INSERT INTO knowledge_item_oas (item_version_id, curriculum_objective_id) VALUES ('A4', 'oa-len')", /otra asignatura/, "OA cruzado");
   });
-  await caso("módulo de otra asignatura", () => falla("INSERT INTO knowledge_item_modules (item_id, learning_objective_id) VALUES ('A', 'lo-len')", /otra asignatura/, "módulo cruzado"));
-  await caso("recurso de otra asignatura", () => falla("INSERT INTO knowledge_item_resources (item_id, resource_id, role) VALUES ('A', 'wr-len', 'repaso')", /otra asignatura/, "recurso cruzado"));
+  await caso("módulo de otra asignatura", () => falla("INSERT INTO knowledge_item_modules (item_version_id, learning_objective_id) VALUES ('A4', 'lo-len')", /otra asignatura/, "módulo cruzado"));
+  await caso("recurso de otra asignatura", () => falla("INSERT INTO knowledge_item_resources (item_version_id, resource_id, role) VALUES ('A4', 'wr-len', 'repaso')", /otra asignatura/, "recurso cruzado"));
   await caso("vínculos de la misma asignatura: permitidos", async () => {
-    await ok("INSERT INTO knowledge_item_modules (item_id, learning_objective_id) VALUES ('A', 'lo-mat')");
-    await ok("INSERT INTO knowledge_item_resources (item_id, resource_id, role) VALUES ('A', 'wr-mat', 'explicacion')");
-    await falla("INSERT INTO knowledge_item_resources (item_id, resource_id, role) VALUES ('A', 'wr-mat', 'otro')", /CHECK/, "rol");
+    await ok("INSERT INTO knowledge_item_oas (item_version_id, curriculum_objective_id) VALUES ('A4', 'oa1')");
+    await ok("INSERT INTO knowledge_item_modules (item_version_id, learning_objective_id) VALUES ('A4', 'lo-mat')");
+    await ok("INSERT INTO knowledge_item_resources (item_version_id, resource_id, role) VALUES ('A4', 'wr-mat', 'explicacion')");
+    await falla("INSERT INTO knowledge_item_resources (item_version_id, resource_id, role) VALUES ('A4', 'wr-mat', 'otro')", /CHECK/, "rol");
+  });
+  await caso("P-H2-4: validar y publicar revisan la integridad de las asociaciones", async () => {
+    // Se salta la barrera de inserción para simular una asociación corrupta; luego se restaura.
+    const sqlTrigger = String((await c.execute("SELECT sql FROM sqlite_master WHERE name = 'kio_misma_asignatura'")).rows[0].sql);
+    await ok("DROP TRIGGER kio_misma_asignatura");
+    await ok("INSERT INTO knowledge_item_oas (item_version_id, curriculum_objective_id) VALUES ('A4', 'oa-len')");
+    await ok("UPDATE knowledge_domain_versions SET status = 'en_revision' WHERE id = 'v4'");
+    await falla("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v4'", /asociación de otra asignatura/, "integridad al validar");
+    await ok("DELETE FROM knowledge_item_oas WHERE item_version_id = 'A4' AND curriculum_objective_id = 'oa-len'");
+    await ok("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v4'");
+    // Corrupción después de validar (saltando también el bloqueo): publicar la detecta.
+    const sqlBloqueo = String((await c.execute("SELECT sql FROM sqlite_master WHERE name = 'kio_bloqueo_insert'")).rows[0].sql);
+    await ok("DROP TRIGGER kio_bloqueo_insert");
+    await ok("INSERT INTO knowledge_item_oas (item_version_id, curriculum_objective_id) VALUES ('A4', 'oa-len')");
+    await falla("UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 4 WHERE id = 'v4'", /asociación de otra asignatura/, "integridad al publicar");
+    await ok("UPDATE knowledge_domain_versions SET status = 'en_revision', validated_by = NULL WHERE id = 'v4'");
+    await ok("DELETE FROM knowledge_item_oas WHERE item_version_id = 'A4' AND curriculum_objective_id = 'oa-len'");
+    await ok(sqlBloqueo);
+    await ok(sqlTrigger);
+    await ok("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v4'");
   });
 
   // Identidad estable.
@@ -204,9 +238,6 @@ try {
 
   // Una sola publicada por dominio (índice parcial), probada con otra versión que sí cumple todo.
   await caso("dos publicadas a la vez", async () => {
-    await ok("INSERT INTO knowledge_domain_versions (id, domain_id, version, status, created_by) VALUES ('v4', 'dom', 4, 'borrador', 'ficticio-autor')");
-    await ok("UPDATE knowledge_domain_versions SET status = 'en_revision' WHERE id = 'v4'");
-    await ok("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v4'");
     await falla("UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 4 WHERE id = 'v4'", /UNIQUE/, "una publicada");
   });
 

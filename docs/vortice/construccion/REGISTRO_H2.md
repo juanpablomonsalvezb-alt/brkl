@@ -178,9 +178,39 @@ La migración `0001` se corrigió en el mismo archivo porque **no se ha aplicado
 
 | ID | Conflicto | Opciones |
 |---|---|---|
-| **P-H2-4** | P-H2-1 exige que lo validado sea exactamente lo publicado. Pero en 04 §5.1 los vínculos con OA, módulo y recurso cuelgan del **contenido**, no de su versión. Por eso pueden cambiar después de validar e incluso después de publicar, y el cambio afecta a todas las versiones del contenido. Hoy solo se impide quitar el último OA de un contenido publicado | (a) Llevar los vínculos a la versión del contenido. Cambia el modelo de 04 §5.1. (b) Bloquear los vínculos mientras el contenido tenga una versión en `validada` y aceptar que lo publicado puede cambiar de vínculos después. (c) Dejarlo como está. **No se aplicó ninguna: decide la usuaria** |
+| **P-H2-4** | P-H2-1 exige que lo validado sea exactamente lo publicado. Pero en 04 §5.1 los vínculos con OA, módulo y recurso cuelgan del **contenido**, no de su versión. Por eso pueden cambiar después de validar e incluso después de publicar, y el cambio afecta a todas las versiones del contenido. Hoy solo se impide quitar el último OA de un contenido publicado | (a) Llevar los vínculos a la versión del contenido. Cambia el modelo de 04 §5.1. (b) Bloquear los vínculos mientras el contenido tenga una versión en `validada` y aceptar que lo publicado puede cambiar de vínculos después. (c) Dejarlo como está. **Resuelto con la alternativa (a): ver sección P-H2-4** |
 
 ### Riesgos actualizados
 
 - **R-H2-1, concurrencia:** en libSQL embebido, las transacciones simultáneas pueden fallar todas con `SQLITE_BUSY`, no solo la perdedora. Nunca quedan datos a medias, ni números repetidos, ni dos publicadas. Falta una política de reintento para la herramienta editorial (M1).
 - **R-H2-5, grupos de `alternativa`:** si una arista de un grupo cambia o se borra, el resto del grupo conserva su validación. No aplica en la etapa 1, porque `alternativa` no se publica. Resolver con K8, en la etapa 2.
+
+## P-H2-4 — Vínculos por versión de contenido (alternativa A)
+
+**Decisión.** La usuaria aprobó la alternativa (a): los vínculos con OA, módulos y recursos se asocian a cada **versión** del contenido, no al contenido estable.
+
+**Desviación respecto de 04 §5.1.** El diseño técnico colgaba `knowledge_item_oas`, `knowledge_item_modules` y `knowledge_item_resources` de `knowledge_items` (`item_id`). Ahora cuelgan de `knowledge_item_versions` (`item_version_id`). No se modificó la especificación maestra ni ningún documento normativo; la desviación queda solo aquí.
+
+**Razón.** P-H2-1 exige que lo validado sea exactamente lo publicado. Con vínculos globales por contenido, una asociación podía cambiar después de validar o publicar y alterar de forma retroactiva todas las versiones del contenido.
+
+**Modelo nuevo.**
+- Claves primarias: `(item_version_id, curriculum_objective_id)`, `(item_version_id, learning_objective_id)` y `(item_version_id, resource_id, role)`. FK a `knowledge_item_versions` con `ON DELETE RESTRICT`.
+- Aislamiento de asignatura y nivel: los triggers `kio/kim/kir_misma_asignatura` comparan contra el dominio de la versión del contenido.
+- Se eliminó el trigger `kio_ultimo_oa_publicado`: ya no tiene sentido, porque lo publicado no admite ningún cambio de vínculos.
+
+**Protección.** Desde que la versión de dominio está `validada` (y en `publicada` o `retirada`), los triggers `kio/kim/kir_bloqueo_insert` y `_delete` impiden agregar o quitar vínculos; `*_sin_update` impide reescribirlos. Una versión nueva declara los suyos sin tocar los de las anteriores.
+
+**Copia inicial.** `crearVersionEn` copia, por versión de contenido, los vínculos de la versión publicada (`INSERT … SELECT`). La versión nueva puede después agregar o quitar con `vincular*` y `desvincular*`. Quitar un vínculo inexistente lanza error (no es silencioso).
+
+**Integridad al validar y publicar.** `kdv_validar_requisitos` y `kdv_publicar_requisitos` revisan que todas las asociaciones de ESA versión sean de la misma asignatura y nivel que el dominio (`asociación de otra asignatura o nivel`). Publicar mantiene además la exigencia de al menos un OA por contenido.
+
+**Comparación entre versiones.** `diferencias` agrega `vinculosAgregados` y `vinculosRetirados` con claves `código → oa:id`, `→ modulo:id`, `→ recurso:id:rol`.
+
+**Dependencias para H3 y H5.** Todo consumidor debe leer los vínculos desde la **versión de contenido de la versión de dominio publicada** (join por `item_version_id`), nunca por `item_id`. `contextoVersion` y `evaluar` no cambian (P-H2-3 no autorizada). Consecuencia de datos: los vínculos se duplican por versión.
+
+**Migración.** `0001_catalogo.sql` se editó en su sitio porque no se ha aplicado en ningún entorno real.
+
+**Revisión de coherencia.** Búsqueda de `item_id` junto a las tablas de vínculos en `server/`, `migrations/` y `script/`: sin usos residuales; las consultas de `diferencias` unen por `item_version_id`.
+
+### Verificación (ver informe de aceptación)
+Comandos y resultados en el informe final de la entrega; limitaciones: sin roles mientras las funciones no estén expuestas; concurrencia R-H2-1 sin cambios.

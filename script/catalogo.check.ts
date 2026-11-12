@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import type { Client } from "@libsql/client";
 import {
   agregarContenido, agregarPrerrequisito, cambiarEstado, CatalogoError, contextoVersion, crearDominio, crearVersionDominio,
-  declararContinuidad, diferencias, editarContenido, linaje, validarArista, versionPublicada, vincularOA,
+  declararContinuidad, diferencias, editarContenido, linaje, validarArista, versionPublicada, vincularOA, desvincularOA,
 } from "../server/catalogo";
 import { migrar } from "../server/migrar";
 import { evaluar, type ContextoVersion, type Evidencia } from "../shared/dominio";
@@ -41,7 +41,7 @@ try {
   const A = await agregarContenido(c, v1.id, { code: "HIP-A", name: "Representar fracciones", operationalDefinition: "def A" });
   const B = await agregarContenido(c, v1.id, { code: "HIP-B", name: "Fracciones equivalentes", operationalDefinition: "def B" });
   const C = await agregarContenido(c, v1.id, { code: "HIP-C", name: "Sumar igual denominador", operationalDefinition: "def C" });
-  for (const x of [A, B, C]) await vincularOA(c, x.itemId, "oa1");
+  for (const x of [A, B, C]) await vincularOA(c, x.itemVersionId, "oa1");
   await agregarPrerrequisito(c, v1.id, prueba({ itemId: B.itemId, prerequisiteItemId: A.itemId }));
   await agregarPrerrequisito(c, v1.id, prueba({ itemId: C.itemId, prerequisiteItemId: B.itemId }));
   assert.equal(await versionPublicada(c, dom), null, "nada publicado aún");
@@ -65,7 +65,7 @@ try {
   const w1 = await crearVersionDominio(c, dom2, AUTOR);
   const X = await agregarContenido(c, w1.id, { code: "X", name: "x", operationalDefinition: "x" });
   const Y = await agregarContenido(c, w1.id, { code: "Y", name: "y", operationalDefinition: "y" });
-  for (const x of [X, Y]) await vincularOA(c, x.itemId, "oa1");
+  for (const x of [X, Y]) await vincularOA(c, x.itemVersionId, "oa1");
   await agregarPrerrequisito(c, w1.id, prueba({ itemId: Y.itemId, prerequisiteItemId: X.itemId }));
   const ciclo = await agregarPrerrequisito(c, w1.id, prueba({ itemId: X.itemId, prerequisiteItemId: Y.itemId }));
   for (const id of await aristasSinValidar(w1.id)) await validarArista(c, id, VALIDADOR, 1);
@@ -88,6 +88,17 @@ try {
   const [A2, B2, C2] = [await enV(v2.id, A.itemId), await enV(v2.id, B.itemId), await enV(v2.id, C.itemId)];
   assert.equal((await linaje(c, A2)).map((e) => e.itemVersionId).join(), [A2, A.itemVersionId].join(), "la copia reemplaza a la versión publicada");
   await editarContenido(c, B2, { name: "Fracciones equivalentes", operationalDefinition: "def B revisada: ahora incluye amplificar y simplificar" });
+  // P-H2-4: los vínculos se copiaron a cada versión; B2 cambia los suyos sin tocar los de B1.
+  const oasDe = async (iv: string) => (await c.execute({ sql: "SELECT curriculum_objective_id AS o FROM knowledge_item_oas WHERE item_version_id = ? ORDER BY o", args: [iv] })).rows.map((x) => String(x.o));
+  assert.deepEqual(await oasDe(B2), ["oa1"], "la copia trae los vínculos de la versión publicada");
+  await c.execute("INSERT INTO curriculum_objectives (id, level_subject_id, official_code, text, source_url, source_year) VALUES ('oa2', 'ls-mat-5b', 'MA05 OA 08', 't', 'https://ejemplo.test/oa', 2018)");
+  await vincularOA(c, B2, "oa2");
+  await desvincularOA(c, B2, "oa1");
+  assert.deepEqual(await oasDe(B2), ["oa2"]);
+  await assert.rejects(desvincularOA(c, B2, "oa1"), /El vínculo no existe/, "quitar un vínculo inexistente falla, no es silencioso");
+  await assert.rejects(desvincularOA(c, "no-existe", "oa2"), /El vínculo no existe/, "versión inexistente");
+  assert.deepEqual(await oasDe(B.itemVersionId), ["oa1"], "B1 (publicada) conserva su asociación");
+  await assert.rejects(vincularOA(c, B.itemVersionId, "oa2"), /no es editable/, "la versión publicada no recibe vínculos");
   await cambiarEstado(c, v2.id, "en_revision", AUTOR, 2);
   await assert.rejects(cambiarEstado(c, v2.id, "validada", VALIDADOR, 2), /sin continuidad declarada/);
   await assert.rejects(declararContinuidad(c, A.itemVersionId, "compatible", AUTOR), /no editable|Solo una versión que reemplaza/, "la versión publicada no cambia");
@@ -102,6 +113,7 @@ try {
   await cambiarEstado(c, v2.id, "validada", VALIDADOR, 2);
   // P-H2-1: validada bloquea; para cambiar algo se vuelve a revisión y la validación se anula.
   await assert.rejects(editarContenido(c, B2, { name: "Fracciones equivalentes", operationalDefinition: "cambio tras validar" }), /no editable/);
+  await assert.rejects(desvincularOA(c, B2, "oa2"), /no es editable/, "P-H2-4: validada bloquea vínculos");
   await cambiarEstado(c, v2.id, "en_revision", AUTOR, 2);
   const validador = (await c.execute({ sql: "SELECT validated_by FROM knowledge_domain_versions WHERE id = ?", args: [v2.id] })).rows[0].validated_by;
   assert.equal(validador, null, "volver a revisión anula la validación");
@@ -115,6 +127,7 @@ try {
   const d12 = await diferencias(c, v1.id, v2.id);
   assert.deepEqual({ mod: d12.modificados, sin: d12.sinCambios, ag: d12.agregados, ret: d12.retirados, aa: d12.aristasAgregadas, ar: d12.aristasRetiradas },
     { mod: ["HIP-B"], sin: ["HIP-A", "HIP-C"], ag: [], ret: [], aa: [], ar: [] });
+  assert.deepEqual([d12.vinculosAgregados, d12.vinculosRetirados], [["HIP-B → oa:oa2"], ["HIP-B → oa:oa1"]], "P-H2-4: diferencias de vínculos");
   await cambiarEstado(c, v2.id, "publicada", VALIDADOR, 2);
   assert.deepEqual(await versionPublicada(c, dom), { id: v2.id, version: 2 });
   const estadoV1 = (await c.execute({ sql: "SELECT status FROM knowledge_domain_versions WHERE id = ?", args: [v1.id] })).rows[0].status;
@@ -125,7 +138,7 @@ try {
   const v3 = await crearVersionDominio(c, dom, AUTOR);
   const [A3, B3, C3] = [await enV(v3.id, A.itemId), await enV(v3.id, B.itemId), await enV(v3.id, C.itemId)];
   const D = await agregarContenido(c, v3.id, { code: "HIP-D", name: "Sumar distinto denominador", operationalDefinition: "def D" });
-  await vincularOA(c, D.itemId, "oa1");
+  await vincularOA(c, D.itemVersionId, "oa1");
   await c.execute({ sql: "DELETE FROM knowledge_prerequisites WHERE domain_version_id = ? AND item_id = ? AND prerequisite_item_id = ?", args: [v3.id, C.itemId, B.itemId] });
   await agregarPrerrequisito(c, v3.id, prueba({ itemId: D.itemId, prerequisiteItemId: B.itemId }));
   await agregarPrerrequisito(c, v3.id, prueba({ itemId: C.itemId, prerequisiteItemId: D.itemId, relation: "contributiva" }));

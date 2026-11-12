@@ -92,23 +92,25 @@ CREATE TABLE knowledge_prerequisites (
   CHECK ((validated_by IS NULL) = (validated_at IS NULL))
 );
 --> statement-breakpoint
+-- P-H2-4 (2026-11-12): los vínculos cuelgan de cada VERSIÓN del contenido (desviación de 04 §5.1, que los
+-- colgaba del contenido): lo validado y publicado conserva exactamente sus asociaciones curriculares.
 CREATE TABLE knowledge_item_oas (
-  item_id TEXT NOT NULL REFERENCES knowledge_items(id) ON DELETE RESTRICT,
+  item_version_id TEXT NOT NULL REFERENCES knowledge_item_versions(id) ON DELETE RESTRICT,
   curriculum_objective_id TEXT NOT NULL REFERENCES curriculum_objectives(id) ON DELETE RESTRICT,
-  PRIMARY KEY (item_id, curriculum_objective_id)
+  PRIMARY KEY (item_version_id, curriculum_objective_id)
 );
 --> statement-breakpoint
 CREATE TABLE knowledge_item_modules (
-  item_id TEXT NOT NULL REFERENCES knowledge_items(id) ON DELETE RESTRICT,
+  item_version_id TEXT NOT NULL REFERENCES knowledge_item_versions(id) ON DELETE RESTRICT,
   learning_objective_id TEXT NOT NULL REFERENCES learning_objectives(id) ON DELETE RESTRICT,
-  PRIMARY KEY (item_id, learning_objective_id)
+  PRIMARY KEY (item_version_id, learning_objective_id)
 );
 --> statement-breakpoint
 CREATE TABLE knowledge_item_resources (
-  item_id TEXT NOT NULL REFERENCES knowledge_items(id) ON DELETE RESTRICT,
+  item_version_id TEXT NOT NULL REFERENCES knowledge_item_versions(id) ON DELETE RESTRICT,
   resource_id TEXT NOT NULL REFERENCES weekly_resources(id) ON DELETE RESTRICT,
   role TEXT NOT NULL CHECK (role IN ('explicacion', 'ejemplo', 'repaso')),
-  PRIMARY KEY (item_id, resource_id, role)
+  PRIMARY KEY (item_version_id, resource_id, role)
 );
 --> statement-breakpoint
 -- Ciclo de vida de la versión de dominio (02 §2): borrador → en_revision → validada → publicada →
@@ -130,20 +132,30 @@ CREATE TRIGGER kdv_sin_delete BEFORE DELETE ON knowledge_domain_versions
 WHEN OLD.status <> 'borrador'
 BEGIN SELECT RAISE(ABORT, 'knowledge_domain_versions: solo se puede descartar un borrador'); END;
 --> statement-breakpoint
--- Al publicar: continuidad declarada por una persona en cada contenido con versión anterior (04 §8)
--- y al menos un OA por contenido (02 §3).
+-- Al publicar se vuelven a comprobar las asociaciones de ESA versión (P-H2-4, requisito 6): al menos un OA
+-- por contenido (02 §3) y todas de la misma asignatura y nivel que el dominio.
 CREATE TRIGGER kdv_publicar_requisitos BEFORE UPDATE OF status ON knowledge_domain_versions
 WHEN NEW.status = 'publicada' AND OLD.status = 'validada'
 BEGIN
-  -- La continuidad se exige al validar (kdv_validar_requisitos) y desde ahí el contenido queda bloqueado.
-  -- El OA se revisa también aquí porque los vínculos cuelgan del contenido, no de la versión (P-H2-4).
+  -- La continuidad se exige al validar (kdv_validar_requisitos) y desde ahí todo queda bloqueado.
   SELECT RAISE(ABORT, 'knowledge_domain_versions: contenido sin OA')
   WHERE EXISTS (SELECT 1 FROM knowledge_item_versions v WHERE v.domain_version_id = NEW.id
-                AND NOT EXISTS (SELECT 1 FROM knowledge_item_oas o WHERE o.item_id = v.item_id));
+                AND NOT EXISTS (SELECT 1 FROM knowledge_item_oas o WHERE o.item_version_id = v.id));
+  SELECT RAISE(ABORT, 'knowledge_domain_versions: asociación de otra asignatura o nivel')
+  WHERE EXISTS (SELECT 1 FROM knowledge_item_oas o JOIN knowledge_item_versions v ON v.id = o.item_version_id
+                JOIN knowledge_domains d ON d.id = v.domain_id JOIN curriculum_objectives co ON co.id = o.curriculum_objective_id
+                WHERE v.domain_version_id = NEW.id AND co.level_subject_id IS NOT d.level_subject_id)
+     OR EXISTS (SELECT 1 FROM knowledge_item_modules m JOIN knowledge_item_versions v ON v.id = m.item_version_id
+                JOIN knowledge_domains d ON d.id = v.domain_id JOIN learning_objectives lo ON lo.id = m.learning_objective_id
+                WHERE v.domain_version_id = NEW.id AND lo.level_subject_id IS NOT d.level_subject_id)
+     OR EXISTS (SELECT 1 FROM knowledge_item_resources r JOIN knowledge_item_versions v ON v.id = r.item_version_id
+                JOIN knowledge_domains d ON d.id = v.domain_id JOIN weekly_resources w ON w.id = r.resource_id
+                JOIN learning_objectives lo ON lo.id = w.learning_objective_id
+                WHERE v.domain_version_id = NEW.id AND lo.level_subject_id IS NOT d.level_subject_id);
 END;
 --> statement-breakpoint
 -- Lo publicado no se edita (04 §4: «inmutable tras publicar»): contenidos y aristas de una versión
--- publicada o retirada no se agregan, cambian ni borran. Antes de publicar (incluida `validada`) sí.
+-- validada, publicada o retirada no se agregan, cambian ni borran (P-H2-1 adelantó el bloqueo a `validada`).
 CREATE TRIGGER kiv_bloqueo_insert BEFORE INSERT ON knowledge_item_versions
 WHEN (SELECT status FROM knowledge_domain_versions WHERE id = NEW.domain_version_id) IN ('validada', 'publicada', 'retirada')
 BEGIN SELECT RAISE(ABORT, 'knowledge_item_versions: la versión del dominio no es editable'); END;
@@ -199,17 +211,17 @@ BEGIN SELECT RAISE(ABORT, 'knowledge_domains: identidad inmutable'); END;
 --> statement-breakpoint
 -- Aislamiento: OA, módulo y recurso vinculados deben ser de la misma asignatura y nivel que el dominio.
 CREATE TRIGGER kio_misma_asignatura BEFORE INSERT ON knowledge_item_oas
-WHEN (SELECT d.level_subject_id FROM knowledge_items i JOIN knowledge_domains d ON d.id = i.domain_id WHERE i.id = NEW.item_id)
+WHEN (SELECT d.level_subject_id FROM knowledge_item_versions v JOIN knowledge_domains d ON d.id = v.domain_id WHERE v.id = NEW.item_version_id)
   IS NOT (SELECT level_subject_id FROM curriculum_objectives WHERE id = NEW.curriculum_objective_id)
 BEGIN SELECT RAISE(ABORT, 'knowledge_item_oas: el OA es de otra asignatura o nivel'); END;
 --> statement-breakpoint
 CREATE TRIGGER kim_misma_asignatura BEFORE INSERT ON knowledge_item_modules
-WHEN (SELECT d.level_subject_id FROM knowledge_items i JOIN knowledge_domains d ON d.id = i.domain_id WHERE i.id = NEW.item_id)
+WHEN (SELECT d.level_subject_id FROM knowledge_item_versions v JOIN knowledge_domains d ON d.id = v.domain_id WHERE v.id = NEW.item_version_id)
   IS NOT (SELECT level_subject_id FROM learning_objectives WHERE id = NEW.learning_objective_id)
 BEGIN SELECT RAISE(ABORT, 'knowledge_item_modules: el módulo es de otra asignatura o nivel'); END;
 --> statement-breakpoint
 CREATE TRIGGER kir_misma_asignatura BEFORE INSERT ON knowledge_item_resources
-WHEN (SELECT d.level_subject_id FROM knowledge_items i JOIN knowledge_domains d ON d.id = i.domain_id WHERE i.id = NEW.item_id)
+WHEN (SELECT d.level_subject_id FROM knowledge_item_versions v JOIN knowledge_domains d ON d.id = v.domain_id WHERE v.id = NEW.item_version_id)
   IS NOT (SELECT lo.level_subject_id FROM weekly_resources r JOIN learning_objectives lo ON lo.id = r.learning_objective_id WHERE r.id = NEW.resource_id)
 BEGIN SELECT RAISE(ABORT, 'knowledge_item_resources: el recurso es de otra asignatura o nivel'); END;
 --> statement-breakpoint
@@ -249,12 +261,31 @@ CREATE TRIGGER co_asignatura_fija BEFORE UPDATE OF level_subject_id ON curriculu
 WHEN NEW.level_subject_id IS NOT OLD.level_subject_id
 BEGIN SELECT RAISE(ABORT, 'curriculum_objectives: la asignatura no cambia'); END;
 --> statement-breakpoint
--- 02 §3: todo contenido publicado tiene al menos un OA; no se le puede quitar el último.
-CREATE TRIGGER kio_ultimo_oa_publicado BEFORE DELETE ON knowledge_item_oas
-WHEN EXISTS (SELECT 1 FROM knowledge_item_versions v JOIN knowledge_domain_versions d ON d.id = v.domain_version_id
-             WHERE v.item_id = OLD.item_id AND d.status = 'publicada')
-  AND (SELECT COUNT(*) FROM knowledge_item_oas WHERE item_id = OLD.item_id) = 1
-BEGIN SELECT RAISE(ABORT, 'knowledge_item_oas: un contenido publicado necesita al menos un OA'); END;
+-- P-H2-4: los vínculos de una versión validada, publicada o retirada no se agregan ni se borran
+-- (tampoco se reescriben: kio/kim/kir_sin_update). Una versión nueva declara los suyos.
+CREATE TRIGGER kio_bloqueo_insert BEFORE INSERT ON knowledge_item_oas
+WHEN (SELECT d.status FROM knowledge_item_versions v JOIN knowledge_domain_versions d ON d.id = v.domain_version_id WHERE v.id = NEW.item_version_id) IN ('validada', 'publicada', 'retirada')
+BEGIN SELECT RAISE(ABORT, 'knowledge_item_oas: la versión del contenido no es editable'); END;
+--> statement-breakpoint
+CREATE TRIGGER kio_bloqueo_delete BEFORE DELETE ON knowledge_item_oas
+WHEN (SELECT d.status FROM knowledge_item_versions v JOIN knowledge_domain_versions d ON d.id = v.domain_version_id WHERE v.id = OLD.item_version_id) IN ('validada', 'publicada', 'retirada')
+BEGIN SELECT RAISE(ABORT, 'knowledge_item_oas: la versión del contenido no es editable'); END;
+--> statement-breakpoint
+CREATE TRIGGER kim_bloqueo_insert BEFORE INSERT ON knowledge_item_modules
+WHEN (SELECT d.status FROM knowledge_item_versions v JOIN knowledge_domain_versions d ON d.id = v.domain_version_id WHERE v.id = NEW.item_version_id) IN ('validada', 'publicada', 'retirada')
+BEGIN SELECT RAISE(ABORT, 'knowledge_item_modules: la versión del contenido no es editable'); END;
+--> statement-breakpoint
+CREATE TRIGGER kim_bloqueo_delete BEFORE DELETE ON knowledge_item_modules
+WHEN (SELECT d.status FROM knowledge_item_versions v JOIN knowledge_domain_versions d ON d.id = v.domain_version_id WHERE v.id = OLD.item_version_id) IN ('validada', 'publicada', 'retirada')
+BEGIN SELECT RAISE(ABORT, 'knowledge_item_modules: la versión del contenido no es editable'); END;
+--> statement-breakpoint
+CREATE TRIGGER kir_bloqueo_insert BEFORE INSERT ON knowledge_item_resources
+WHEN (SELECT d.status FROM knowledge_item_versions v JOIN knowledge_domain_versions d ON d.id = v.domain_version_id WHERE v.id = NEW.item_version_id) IN ('validada', 'publicada', 'retirada')
+BEGIN SELECT RAISE(ABORT, 'knowledge_item_resources: la versión del contenido no es editable'); END;
+--> statement-breakpoint
+CREATE TRIGGER kir_bloqueo_delete BEFORE DELETE ON knowledge_item_resources
+WHEN (SELECT d.status FROM knowledge_item_versions v JOIN knowledge_domain_versions d ON d.id = v.domain_version_id WHERE v.id = OLD.item_version_id) IN ('validada', 'publicada', 'retirada')
+BEGIN SELECT RAISE(ABORT, 'knowledge_item_resources: la versión del contenido no es editable'); END;
 --> statement-breakpoint
 -- P-H2-1 y P-H2-2 (2026-11-12): la validación corresponde exactamente a lo que se publica. Desde
 -- `validada` el contenido queda bloqueado (kiv_*, kp_*); para cambiarlo se vuelve a `en_revision`, lo que
@@ -267,9 +298,20 @@ BEGIN
   WHERE EXISTS (SELECT 1 FROM knowledge_item_versions WHERE domain_version_id = NEW.id AND supersedes_version_id IS NOT NULL AND evidence_continuity IS NULL);
   SELECT RAISE(ABORT, 'knowledge_domain_versions: contenido sin OA')
   WHERE EXISTS (SELECT 1 FROM knowledge_item_versions v WHERE v.domain_version_id = NEW.id
-                AND NOT EXISTS (SELECT 1 FROM knowledge_item_oas o WHERE o.item_id = v.item_id));
+                AND NOT EXISTS (SELECT 1 FROM knowledge_item_oas o WHERE o.item_version_id = v.id));
   SELECT RAISE(ABORT, 'knowledge_domain_versions: arista sin validar')
   WHERE EXISTS (SELECT 1 FROM knowledge_prerequisites WHERE domain_version_id = NEW.id AND validated_by IS NULL);
+  SELECT RAISE(ABORT, 'knowledge_domain_versions: asociación de otra asignatura o nivel')
+  WHERE EXISTS (SELECT 1 FROM knowledge_item_oas o JOIN knowledge_item_versions v ON v.id = o.item_version_id
+                JOIN knowledge_domains d ON d.id = v.domain_id JOIN curriculum_objectives co ON co.id = o.curriculum_objective_id
+                WHERE v.domain_version_id = NEW.id AND co.level_subject_id IS NOT d.level_subject_id)
+     OR EXISTS (SELECT 1 FROM knowledge_item_modules m JOIN knowledge_item_versions v ON v.id = m.item_version_id
+                JOIN knowledge_domains d ON d.id = v.domain_id JOIN learning_objectives lo ON lo.id = m.learning_objective_id
+                WHERE v.domain_version_id = NEW.id AND lo.level_subject_id IS NOT d.level_subject_id)
+     OR EXISTS (SELECT 1 FROM knowledge_item_resources r JOIN knowledge_item_versions v ON v.id = r.item_version_id
+                JOIN knowledge_domains d ON d.id = v.domain_id JOIN weekly_resources w ON w.id = r.resource_id
+                JOIN learning_objectives lo ON lo.id = w.learning_objective_id
+                WHERE v.domain_version_id = NEW.id AND lo.level_subject_id IS NOT d.level_subject_id);
 END;
 --> statement-breakpoint
 -- P-H2-2, cerrada con la revisión de código: ninguna arista nace validada. La validación es siempre un
