@@ -34,7 +34,7 @@ assert.equal(await s.ahora(), 5);
 
 // Módulos del motor: sin Date.now() ni new Date() fuera de comentarios. La lista crece con cada hito.
 const MODULOS_MOTOR = ["server/reloj.ts", "server/migrar.ts", "server/cliente.ts", "shared/p0e-estados.ts"]
-  .concat(["shared/politica.ts", "shared/dominio.ts"].filter((f) => fs.existsSync(f)));
+  .concat(["shared/politica.ts", "shared/dominio.ts", "shared/grafo.ts", "server/catalogo.ts"].filter((f) => fs.existsSync(f)));
 const lecturaDeReloj = (texto: string) => texto.split("\n")
   .map((l) => l.replace(/\/\/.*$/, ""))
   .filter((l) => /Date\.now\s*\(|new Date\s*\(/.test(l));

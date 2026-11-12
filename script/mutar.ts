@@ -44,6 +44,34 @@ export const MUTACIONES: Record<string, Mutacion[]> = {
     { id: "TK15 nulos aceptados (política)", archivo: "shared/politica.ts", de: "const nulos = CAMPOS.filter((k) => p[k] === null || p[k] === undefined);", a: "const nulos: typeof CAMPOS = [];", check: "politica" },
     { id: "K6 admite otro número", archivo: "shared/politica.ts", de: "k6_min_families: (v) => v === K6_FAMILIAS,", a: "k6_min_families: entero,", check: "politica" },
   ],
+  h2: [
+    // Grafo (shared/grafo.ts)
+    { id: "grafo sin detectar ciclos", archivo: "shared/grafo.ts", de: "if (orden.length < codigo.size) {", a: "if (false) {", check: "grafo" },
+    { id: "grafo acepta alternativa en etapa 1", archivo: "shared/grafo.ts", de: 'if (a.relation === "alternativa" && etapa === 1)', a: "if (false)", check: "grafo" },
+    { id: "grafo acepta arista sin validador", archivo: "shared/grafo.ts", de: 'if (!a.validatedBy) errores.push({ tipo: "sin_validador", ...par });', a: "", check: "grafo" },
+    { id: "grafo desempata sin código", archivo: "shared/grafo.ts", de: "listos.sort((x, y) => porCodigo(codigo.get(x)!, codigo.get(y)!)); }", a: "}", check: "grafo" },
+    // Base (migrations/vortice/0001_catalogo.sql)
+    { id: "base deja editar lo publicado", archivo: "migrations/vortice/0001_catalogo.sql", de: "kiv_bloqueo_update BEFORE UPDATE ON knowledge_item_versions", a: "kiv_bloqueo_update BEFORE UPDATE OF supersedes_version_id ON knowledge_item_versions", check: "catalogo-db" },
+    { id: "base publica sin continuidad", archivo: "migrations/vortice/0001_catalogo.sql", de: "supersedes_version_id IS NOT NULL AND evidence_continuity IS NULL);", a: "0);", check: "catalogo-db" },
+    { id: "base admite dos publicadas", archivo: "migrations/vortice/0001_catalogo.sql", de: "(domain_id) WHERE status = 'publicada';", a: "(domain_id) WHERE status = 'nunca';", check: "catalogo-db" },
+    { id: "base admite arista externa", archivo: "migrations/vortice/0001_catalogo.sql", de: "  FOREIGN KEY (domain_version_id, prerequisite_item_id) REFERENCES knowledge_item_versions (domain_version_id, item_id) ON DELETE RESTRICT,\n", a: "", check: "catalogo-db" },
+    { id: "base admite validador = autor", archivo: "migrations/vortice/0001_catalogo.sql", de: "CHECK (validated_by IS NULL OR validated_by <> created_by),", a: "CHECK (1),", check: "catalogo-db" },
+    { id: "base admite OA de otra asignatura", archivo: "migrations/vortice/0001_catalogo.sql", de: "IS NOT (SELECT level_subject_id FROM curriculum_objectives WHERE id = NEW.curriculum_objective_id)", a: "IS NOT (SELECT d2.level_subject_id FROM knowledge_items i2 JOIN knowledge_domains d2 ON d2.id = i2.domain_id WHERE i2.id = NEW.item_id)", check: "catalogo-db" },
+    { id: "base deja reemplazar un borrador", archivo: "migrations/vortice/0001_catalogo.sql", de: "da.status IN ('publicada', 'retirada') AND da.version < dn.version)\nBEGIN SELECT RAISE(ABORT, 'knowledge_item_versions: solo reemplaza una versión publicada anterior'); END;\n--> statement-breakpoint\nCREATE TRIGGER kiv_linaje_update", a: "1)\nBEGIN SELECT RAISE(ABORT, 'knowledge_item_versions: solo reemplaza una versión publicada anterior'); END;\n--> statement-breakpoint\nCREATE TRIGGER kiv_linaje_update", check: "catalogo-db" },
+    // Servicio (server/catalogo.ts)
+    { id: "contexto cruza la ruptura", archivo: "server/catalogo.ts", de: 'cadena[i].continuidad === "compatible"', a: "cadena[i].continuidad !== null", check: "catalogo" },
+    { id: "publica sin validar el grafo", archivo: "server/catalogo.ts", de: 'if (!r.ok) throw new CatalogoError("El grafo no se puede publicar", r.errores);', a: "", check: "catalogo" },
+    { id: "publica sin retirar la anterior", archivo: "server/catalogo.ts", de: "await t.execute({ sql: \"UPDATE knowledge_domain_versions SET status = 'retirada' WHERE domain_id = ? AND status = 'publicada'\", args: [String(dv.domain_id)] });", a: "", check: "catalogo" },
+    { id: "publica sin leer el grafo de la versión", archivo: "server/catalogo.ts", de: "const r = validarGrafo(await grafoDeVersion(t, domainVersionId), 1);", a: "const r = validarGrafo({ nodos: [], aristas: [] }, 1);", check: "catalogo" },
+    { id: "diferencias acepta versión inexistente", archivo: "server/catalogo.ts", de: 'if (filas.length !== (versionA === versionB ? 1 : 2)) throw new CatalogoError("Versión de dominio inexistente");', a: "", check: "catalogo" },
+    { id: "base publica sobre una base vieja", archivo: "migrations/vortice/0001_catalogo.sql", de: "OR (enBase.id IS NOT NULL AND v.supersedes_version_id IS NOT enBase.id)", a: "OR 0", check: "catalogo-db" },
+    { id: "base publica una versión anterior", archivo: "migrations/vortice/0001_catalogo.sql", de: "AND p.status IN ('publicada', 'retirada') AND p.version >= NEW.version);", a: "AND 0);", check: "catalogo" },
+    { id: "base conserva continuidad al cambiar el reemplazado", archivo: "migrations/vortice/0001_catalogo.sql", de: "WHEN NEW.supersedes_version_id IS NOT OLD.supersedes_version_id AND NEW.evidence_continuity IS NOT NULL", a: "WHEN 0", check: "catalogo-db" },
+    { id: "base deja quitar el último OA publicado", archivo: "migrations/vortice/0001_catalogo.sql", de: "AND (SELECT COUNT(*) FROM knowledge_item_oas WHERE item_id = OLD.item_id) = 1", a: "AND 0", check: "catalogo-db" },
+    { id: "base deja reescribir vínculos de OA", archivo: "migrations/vortice/0001_catalogo.sql", de: "CREATE TRIGGER kio_sin_update BEFORE UPDATE ON knowledge_item_oas BEGIN", a: "CREATE TRIGGER kio_sin_update BEFORE UPDATE ON knowledge_item_oas WHEN 0 BEGIN", check: "catalogo-db" },
+    { id: "diferencias no ve modificados", archivo: "server/catalogo.ts", de: "ca.has(k) && ca.get(k) !== cb.get(k)", a: "false", check: "catalogo" },
+    { id: "nueva versión sin linaje", archivo: "server/catalogo.ts", de: "String(v.operational_definition), String(v.id)] as any", a: "String(v.operational_definition), null] as any", check: "catalogo" },
+  ],
 };
 
 const suma = (f: string) => createHash("sha256").update(fs.readFileSync(f)).digest("hex");
