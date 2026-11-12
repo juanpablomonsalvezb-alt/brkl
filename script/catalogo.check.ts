@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import type { Client } from "@libsql/client";
 import {
   agregarContenido, agregarPrerrequisito, cambiarEstado, CatalogoError, contextoVersion, crearDominio, crearVersionDominio,
-  declararContinuidad, diferencias, editarContenido, linaje, versionPublicada, vincularOA,
+  declararContinuidad, diferencias, editarContenido, linaje, validarArista, versionPublicada, vincularOA,
 } from "../server/catalogo";
 import { migrar } from "../server/migrar";
 import { evaluar, type ContextoVersion, type Evidencia } from "../shared/dominio";
@@ -17,12 +17,14 @@ const AUTOR = "ficticio-autor", VALIDADOR = "ficticio-validador";
 const b = baseArchivo();
 const c: Client = b.client;
 const prueba = (p: Partial<Parameters<typeof agregarPrerrequisito>[2]> & { itemId: string; prerequisiteItemId: string }) =>
-  ({ relation: "necesaria" as const, justification: "requiere representar antes", confidence: "alta", validatedBy: VALIDADOR, validatedAt: 1, ...p });
+  ({ relation: "necesaria" as const, justification: "requiere representar antes", confidence: "alta", ...p });
 const publicar = async (dv: string, t: number) => {
   await cambiarEstado(c, dv, "en_revision", AUTOR, t);
   await cambiarEstado(c, dv, "validada", VALIDADOR, t);
   await cambiarEstado(c, dv, "publicada", VALIDADOR, t);
 };
+// En las pruebas, «el validador» revisa una por una las aristas que siguen sin validar.
+const aristasSinValidar = async (dv: string) => (await c.execute({ sql: "SELECT id FROM knowledge_prerequisites WHERE domain_version_id = ? AND validated_by IS NULL ORDER BY id", args: [dv] })).rows.map((x) => String(x.id));
 const resultados: string[] = [];
 const hecho = (s: string) => resultados.push(s);
 
@@ -45,6 +47,11 @@ try {
   assert.equal(await versionPublicada(c, dom), null, "nada publicado aún");
   assert.equal(await contextoVersion(c, A.itemId, false), null, "sin versión publicada no hay contexto");
 
+  // P-H2-2: las aristas nacen sin validar; las valida otra persona que la autora, una sola vez.
+  const [aristaV1] = await aristasSinValidar(v1.id);
+  await assert.rejects(validarArista(c, aristaV1, AUTOR, 1), /no valida sus aristas/);
+  for (const id of await aristasSinValidar(v1.id)) await validarArista(c, id, VALIDADOR, 1);
+  await assert.rejects(validarArista(c, aristaV1, VALIDADOR, 1), /ya validada/, "una validación hecha no se sobrescribe");
   // Validador distinto del autor (la base lo exige).
   await cambiarEstado(c, v1.id, "en_revision", AUTOR, 1);
   await assert.rejects(cambiarEstado(c, v1.id, "validada", AUTOR, 1), /CHECK/);
@@ -61,12 +68,17 @@ try {
   for (const x of [X, Y]) await vincularOA(c, x.itemId, "oa1");
   await agregarPrerrequisito(c, w1.id, prueba({ itemId: Y.itemId, prerequisiteItemId: X.itemId }));
   const ciclo = await agregarPrerrequisito(c, w1.id, prueba({ itemId: X.itemId, prerequisiteItemId: Y.itemId }));
+  for (const id of await aristasSinValidar(w1.id)) await validarArista(c, id, VALIDADOR, 1);
   await cambiarEstado(c, w1.id, "en_revision", AUTOR, 1);
   await cambiarEstado(c, w1.id, "validada", VALIDADOR, 1);
   await assert.rejects(cambiarEstado(c, w1.id, "publicada", VALIDADOR, 1), (e: unknown) => e instanceof CatalogoError && e.errores.some((x) => x.tipo === "ciclo"));
   assert.equal(await versionPublicada(c, dom2), null, "el ciclo impide publicar y nada queda a medias");
+  // Corregir exige volver a revisión (P-H2-1) y validar de nuevo.
+  await cambiarEstado(c, w1.id, "en_revision", AUTOR, 1);
   await c.execute({ sql: "DELETE FROM knowledge_prerequisites WHERE id = ?", args: [ciclo] });
   await agregarPrerrequisito(c, w1.id, prueba({ itemId: X.itemId, prerequisiteItemId: Y.itemId, relation: "alternativa", altGroup: "g1" }));
+  for (const id of await aristasSinValidar(w1.id)) await validarArista(c, id, VALIDADOR, 1);
+  await cambiarEstado(c, w1.id, "validada", VALIDADOR, 1);
   await assert.rejects(cambiarEstado(c, w1.id, "publicada", VALIDADOR, 1), (e: unknown) => e instanceof CatalogoError && e.errores.some((x) => x.tipo === "alternativa_en_etapa_1"));
   hecho("ciclo y alternativa en etapa 1 rechazados al publicar");
 
@@ -77,12 +89,28 @@ try {
   assert.equal((await linaje(c, A2)).map((e) => e.itemVersionId).join(), [A2, A.itemVersionId].join(), "la copia reemplaza a la versión publicada");
   await editarContenido(c, B2, { name: "Fracciones equivalentes", operationalDefinition: "def B revisada: ahora incluye amplificar y simplificar" });
   await cambiarEstado(c, v2.id, "en_revision", AUTOR, 2);
-  await cambiarEstado(c, v2.id, "validada", VALIDADOR, 2);
-  await assert.rejects(cambiarEstado(c, v2.id, "publicada", VALIDADOR, 2), /sin continuidad declarada/);
+  await assert.rejects(cambiarEstado(c, v2.id, "validada", VALIDADOR, 2), /sin continuidad declarada/);
   await assert.rejects(declararContinuidad(c, A.itemVersionId, "compatible", AUTOR), /no editable|Solo una versión que reemplaza/, "la versión publicada no cambia");
   await declararContinuidad(c, A2, "compatible", AUTOR);
   await declararContinuidad(c, B2, "ruptura", AUTOR);
   await declararContinuidad(c, C2, "compatible", AUTOR);
+  // P-H2-2: las aristas copiadas llegan sin validar; ninguna se publica sin una validación nueva.
+  const pendientesV2 = await aristasSinValidar(v2.id);
+  assert.equal(pendientesV2.length, 2, "las dos aristas de v1 se copiaron sin su validación");
+  await assert.rejects(cambiarEstado(c, v2.id, "validada", VALIDADOR, 2), /arista sin validar/);
+  for (const id of pendientesV2) await validarArista(c, id, VALIDADOR, 2);
+  await cambiarEstado(c, v2.id, "validada", VALIDADOR, 2);
+  // P-H2-1: validada bloquea; para cambiar algo se vuelve a revisión y la validación se anula.
+  await assert.rejects(editarContenido(c, B2, { name: "Fracciones equivalentes", operationalDefinition: "cambio tras validar" }), /no editable/);
+  await cambiarEstado(c, v2.id, "en_revision", AUTOR, 2);
+  const validador = (await c.execute({ sql: "SELECT validated_by FROM knowledge_domain_versions WHERE id = ?", args: [v2.id] })).rows[0].validated_by;
+  assert.equal(validador, null, "volver a revisión anula la validación");
+  await editarContenido(c, B2, { name: "Fracciones equivalentes", operationalDefinition: "def B revisada tras observación: amplificar, simplificar y comparar" });
+  await assert.rejects(cambiarEstado(c, v2.id, "publicada", VALIDADOR, 2), /transición no permitida|El grafo no se puede publicar/, "sin nueva validación no se publica");
+  // El cambio de B anuló las aristas que lo tocan: hay que revisarlas antes de validar de nuevo.
+  await assert.rejects(cambiarEstado(c, v2.id, "validada", VALIDADOR, 2), /arista sin validar/);
+  for (const id of await aristasSinValidar(v2.id)) await validarArista(c, id, VALIDADOR, 2);
+  await cambiarEstado(c, v2.id, "validada", VALIDADOR, 2);
   // Cambios entre versiones (antes de publicar).
   const d12 = await diferencias(c, v1.id, v2.id);
   assert.deepEqual({ mod: d12.modificados, sin: d12.sinCambios, ag: d12.agregados, ret: d12.retirados, aa: d12.aristasAgregadas, ar: d12.aristasRetiradas },
@@ -91,7 +119,7 @@ try {
   assert.deepEqual(await versionPublicada(c, dom), { id: v2.id, version: 2 });
   const estadoV1 = (await c.execute({ sql: "SELECT status FROM knowledge_domain_versions WHERE id = ?", args: [v1.id] })).rows[0].status;
   assert.equal(estadoV1, "retirada", "publicar v2 retira v1 en el mismo lote");
-  hecho("v2: continuidad obligatoria, diferencias y retiro de v1");
+  hecho("v2: continuidad, P-H2-2 (aristas copiadas sin validar), P-H2-1 (revisión anula la validación), diferencias y retiro de v1");
 
   // ── Versión 3: agrega D; B compatible con v2; se retira la arista C ← B y se pone C ← D. ──
   const v3 = await crearVersionDominio(c, dom, AUTOR);
@@ -102,6 +130,7 @@ try {
   await agregarPrerrequisito(c, v3.id, prueba({ itemId: D.itemId, prerequisiteItemId: B.itemId }));
   await agregarPrerrequisito(c, v3.id, prueba({ itemId: C.itemId, prerequisiteItemId: D.itemId, relation: "contributiva" }));
   for (const [v, k] of [[A3, "compatible"], [B3, "compatible"], [C3, "ruptura"]] as const) await declararContinuidad(c, v, k, AUTOR);
+  for (const id of await aristasSinValidar(v3.id)) await validarArista(c, id, VALIDADOR, 3);
   const d23 = await diferencias(c, v2.id, v3.id);
   assert.deepEqual({ ag: d23.agregados, aa: d23.aristasAgregadas, ar: d23.aristasRetiradas }, { ag: ["HIP-D"], aa: ["HIP-C ← HIP-D", "HIP-D ← HIP-B"], ar: ["HIP-C ← HIP-B"] });
   await publicar(v3.id, 3);
@@ -149,6 +178,7 @@ try {
   const v5 = await crearVersionDominio(c, dom, AUTOR);
   assert.deepEqual([v4.version, v5.version], [4, 5]);
   for (const dv of [v4.id, v5.id]) for (const item of [A.itemId, B.itemId, C.itemId, D.itemId]) await declararContinuidad(c, await enV(dv, item), "compatible", AUTOR);
+  for (const dv of [v4.id, v5.id]) for (const id of await aristasSinValidar(dv)) await validarArista(c, id, VALIDADOR, 5);
   await publicar(v5.id, 5);
   await cambiarEstado(c, v4.id, "en_revision", AUTOR, 6);
   await cambiarEstado(c, v4.id, "validada", VALIDADOR, 6);
@@ -157,9 +187,27 @@ try {
   const v6 = await crearVersionDominio(c, dom, AUTOR);
   const v7 = await crearVersionDominio(c, dom, AUTOR);
   for (const dv of [v6.id, v7.id]) for (const item of [A.itemId, B.itemId, C.itemId, D.itemId]) await declararContinuidad(c, await enV(dv, item), "compatible", AUTOR);
+  for (const dv of [v6.id, v7.id]) for (const id of await aristasSinValidar(dv)) await validarArista(c, id, VALIDADOR, 5);
   await publicar(v6.id, 7);
   await assert.rejects(publicar(v7.id, 8), /no reemplaza a su versión en la última publicada/, "v7 se construyó sobre v5, no sobre v6");
   hecho("borradores en paralelo: el linaje se protege al publicar");
+
+  // Publicaciones simultáneas de dos versiones validadas sobre la misma base: a lo más una gana; la
+  // otra falla entera (ocupado o linaje). Nunca dos publicadas, nunca un estado a medias.
+  const v8 = await crearVersionDominio(c, dom, AUTOR);
+  const v9 = await crearVersionDominio(c, dom, AUTOR);
+  for (const dv of [v8.id, v9.id]) {
+    for (const item of [A.itemId, B.itemId, C.itemId, D.itemId]) await declararContinuidad(c, await enV(dv, item), "compatible", AUTOR);
+    for (const id of await aristasSinValidar(dv)) await validarArista(c, id, VALIDADOR, 9);
+    await cambiarEstado(c, dv, "en_revision", AUTOR, 9);
+    await cambiarEstado(c, dv, "validada", VALIDADOR, 9);
+  }
+  const carrera = await Promise.allSettled([cambiarEstado(c, v8.id, "publicada", VALIDADOR, 10), cambiarEstado(c, v9.id, "publicada", VALIDADOR, 10)]);
+  for (const x of carrera) if (x.status === "rejected") assert.match(String((x.reason as Error).message), /SQLITE_BUSY|igual o posterior|no reemplaza/);
+  const publicadas = (await c.execute({ sql: "SELECT COUNT(*) AS n FROM knowledge_domain_versions WHERE domain_id = ? AND status = 'publicada'", args: [dom] })).rows[0].n;
+  assert.equal(Number(publicadas), 1, "una sola publicada");
+  assert.ok(carrera.filter((x) => x.status === "fulfilled").length <= 1, "a lo más una publicación gana");
+  hecho("publicaciones simultáneas: una sola publicada, sin estados a medias");
 
   // Concurrencia al crear versiones: o se crean con números distintos, o la transacción perdedora
   // falla entera (SQLITE_BUSY en libSQL embebido, sin espera). Nunca un número repetido ni filas a medias.
@@ -167,7 +215,6 @@ try {
   const creadas = intentos.flatMap((x) => (x.status === "fulfilled" ? [x.value.version] : []));
   for (const x of intentos) if (x.status === "rejected") assert.match(String((x.reason as Error).message), /SQLITE_BUSY|UNIQUE/);
   const enBase = (await c.execute({ sql: "SELECT version FROM knowledge_domain_versions WHERE domain_id = ? AND version > 1 ORDER BY version", args: [dom2] })).rows.map((x) => Number(x.version));
-  assert.ok(creadas.length >= 1);
   assert.deepEqual(enBase, [...creadas].sort((a, b) => a - b), "en la base solo están las versiones que respondieron bien");
   assert.equal(new Set(enBase).size, enBase.length, "sin números repetidos");
   hecho("versiones creadas a la vez: sin números repetidos ni escrituras a medias");

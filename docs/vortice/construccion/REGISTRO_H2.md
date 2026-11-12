@@ -143,3 +143,44 @@ Son las tablas de 04 §5.1: `curriculum_objectives`, `knowledge_domains`, `knowl
 | R-H2-2 | Sin roles | Cualquier código del servidor puede publicar. Solo se exige validador distinto del autor | IMP-022 con O4 |
 | R-H2-3 | Rendimiento | Copiar una versión es una sentencia por fila, y la búsqueda de ciclos es O(V·(V+E)) sobre lo que queda fuera del orden | Basta para un piloto de 30 a 60 contenidos (09). Medir con la unidad real |
 | R-H2-4 | Tablas heredadas | Cambiar `weekly_resources.learning_objective_id` o la asignatura de un módulo elude el aislamiento | Esas tablas no se tocan en H2 (esquema heredado) |
+
+---
+
+## 10. Cierre de H2 (2026-11-12): decisiones P-H2-1, P-H2-2 y P-H2-3
+
+### Decisiones de la usuaria
+
+| ID | Decisión | Implementación |
+|---|---|---|
+| **P-H2-1** | **A.** Desde `validada` se bloquean las modificaciones. Para cambiar algo, la versión vuelve a `en_revision`, la validación anterior queda anulada y hace falta una nueva. La validación debe corresponder exactamente a lo que se publica | Los triggers `kiv_*` y `kp_*` bloquean desde `validada`. `kdv_transicion` admite `validada → en_revision` solo con `validated_by` en NULL, y no admite `en_revision → publicada`. `kdv_validar_requisitos` exige al validar la continuidad, al menos un OA y todas las aristas validadas. El servicio anula `validated_by` al volver a `en_revision` o a `borrador` |
+| **P-H2-2** | **A.** Las aristas copiadas a una versión nueva llegan sin su validación, y todas se validan de nuevo antes de publicar | `crearVersionDominio` copia las aristas con `validated_by` y `validated_at` en NULL. `validarArista` valida una sola vez y solo aristas pendientes. Con la revisión de código se agregó: ninguna arista nace validada (`kp_nace_sin_validar`); la autora de la versión no valida sus aristas (`kp_validador_distinto`, 08 §5); modificar una arista exige anular su validación (`kp_cambio_anula_validacion`); cambiar el nombre o la definición de un contenido anula las aristas que lo tocan (`kiv_cambio_anula_aristas`) |
+| **P-H2-3** | **No autorizada.** `evaluar` y D-2b no cambian | No se tocó `shared/dominio.ts` ni `shared/politica.ts`: 0 líneas de diferencia con `8dfdbf2`. El uso del linaje de versiones compatibles queda como propuesta pedagógica |
+
+Se quitaron dos controles que ya no se podían alcanzar: la revisión de aristas al publicar y la de continuidad al publicar. Ambas se exigen al validar, y desde `validada` el contenido está bloqueado. El chequeo de OA al publicar se mantiene, porque los vínculos se pueden cambiar (P-H2-4).
+
+La migración `0001` se corrigió en el mismo archivo porque **no se ha aplicado en ningún entorno**: solo en bases desechables de prueba. Desde la primera aplicación real, el runner la protege por su suma, y todo cambio irá en una migración nueva.
+
+### Resultados
+
+| Verificación | Resultado |
+|---|---|
+| `catalogo-db.check` | 55 casos OK. Incluyen: contenido y aristas bloqueados en `validada`; volver a revisión conservando la validación, rechazado; validación anulada al volver; no se publica sin validar de nuevo; arista copiada sin validar que bloquea la validación; arista que nace validada, rechazada; autovalidación, rechazada; modificar una arista validada, rechazado; cambiar la definición anula las aristas que la tocan |
+| `catalogo.check` | 10 bloques OK, estable en 3 corridas. Incluyen el flujo de P-H2-1 y P-H2-2 por el servicio, las publicaciones simultáneas (una sola publicada, sin estados a medias) y la creación simultánea (sin números repetidos ni escrituras a medias) |
+| Mutaciones | H2 **33/33**, más 10 por las decisiones. H0 10/10 y H1 22/22 |
+| Regresión de H0, H1 y H2 | `check:vortice`: 33 «ok», en dos corridas idénticas byte a byte |
+| H1 | `shared/dominio.ts`, `shared/politica.ts` y sus pruebas sin cambios frente a `8dfdbf2`, y la salida de `dominio.check` es la misma (47 variantes) |
+| `tsc` / build | Sin errores. Compila |
+| E0 | `2edf702`, sin cambios |
+| Revisión de código | Primera pasada: 9 hallazgos; se corrigieron 6, 2 quedaron explicados y 1 es un conflicto (P-H2-4). Segunda pasada: sin fallos; queda una limitación para la etapa 2 (grupos de `alternativa`) |
+| Revisión de seguridad | Sin hallazgos. Limitación: no hay roles mientras las funciones no se expongan en rutas |
+
+### Conflicto que requiere decisión
+
+| ID | Conflicto | Opciones |
+|---|---|---|
+| **P-H2-4** | P-H2-1 exige que lo validado sea exactamente lo publicado. Pero en 04 §5.1 los vínculos con OA, módulo y recurso cuelgan del **contenido**, no de su versión. Por eso pueden cambiar después de validar e incluso después de publicar, y el cambio afecta a todas las versiones del contenido. Hoy solo se impide quitar el último OA de un contenido publicado | (a) Llevar los vínculos a la versión del contenido. Cambia el modelo de 04 §5.1. (b) Bloquear los vínculos mientras el contenido tenga una versión en `validada` y aceptar que lo publicado puede cambiar de vínculos después. (c) Dejarlo como está. **No se aplicó ninguna: decide la usuaria** |
+
+### Riesgos actualizados
+
+- **R-H2-1, concurrencia:** en libSQL embebido, las transacciones simultáneas pueden fallar todas con `SQLITE_BUSY`, no solo la perdedora. Nunca quedan datos a medias, ni números repetidos, ni dos publicadas. Falta una política de reintento para la herramienta editorial (M1).
+- **R-H2-5, grupos de `alternativa`:** si una arista de un grupo cambia o se borra, el resto del grupo conserva su validación. No aplica en la etapa 1, porque `alternativa` no se publica. Resolver con K8, en la etapa 2.

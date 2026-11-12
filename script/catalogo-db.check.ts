@@ -26,7 +26,7 @@ try {
   await ok("INSERT INTO knowledge_items (id, domain_id, code) VALUES ('A', 'dom', 'HIP-A'), ('B', 'dom', 'HIP-B'), ('L', 'dom-len', 'LEC-1')");
   await ok("INSERT INTO knowledge_item_versions (id, item_id, domain_version_id, domain_id, name, operational_definition) VALUES ('A1', 'A', 'v1', 'dom', 'Representar fracciones', 'def A'), ('B1', 'B', 'v1', 'dom', 'Equivalentes', 'def B'), ('L1', 'L', 'vl1', 'dom-len', 'Leer', 'def L')");
   const arista = (id: string, dv: string, item: string, pre: string, extra = "'necesaria', NULL") =>
-    `INSERT INTO knowledge_prerequisites (id, domain_version_id, item_id, prerequisite_item_id, relation, alt_group, justification, confidence, validated_by, validated_at) VALUES ('${id}', '${dv}', '${item}', '${pre}', ${extra}, 'j', 'alta', 'ficticio-validador', 1)`;
+    `INSERT INTO knowledge_prerequisites (id, domain_version_id, item_id, prerequisite_item_id, relation, alt_group, justification, confidence) VALUES ('${id}', '${dv}', '${item}', '${pre}', ${extra}, 'j', 'alta')`;
   await ok(arista("p1", "v1", "B", "A"));
 
   // Identificadores únicos.
@@ -49,17 +49,41 @@ try {
     await falla(arista("p4", "v1", "A", "B", "'alternativa', NULL"), /CHECK/, "alternativa sin grupo");
     await falla(arista("p5", "v1", "A", "B", "'necesaria', 'g1'"), /CHECK/, "grupo sin alternativa");
   });
-  await caso("arista sin validador", () => falla("INSERT INTO knowledge_prerequisites (id, domain_version_id, item_id, prerequisite_item_id, relation, justification, confidence, validated_at) VALUES ('p6', 'v1', 'A', 'B', 'necesaria', 'j', 'alta', 1)", /NOT NULL/, "validador"));
+  await caso("fecha de validación sin validador (y al revés)", async () => {
+    await falla("INSERT INTO knowledge_prerequisites (id, domain_version_id, item_id, prerequisite_item_id, relation, justification, confidence, validated_at) VALUES ('p6', 'v1', 'A', 'B', 'necesaria', 'j', 'alta', 1)", /CHECK/, "fecha sin validador");
+    await falla("UPDATE knowledge_prerequisites SET validated_by = 'ficticio-validador' WHERE id = 'p1'", /CHECK/, "validador sin fecha");
+  });
+  // P-H2-2 (cierre): ninguna arista nace validada; la valida otra persona que la autora de la versión.
+  await caso("P-H2-2: una arista no nace validada", () => falla("INSERT INTO knowledge_prerequisites (id, domain_version_id, item_id, prerequisite_item_id, relation, justification, confidence, validated_by, validated_at) VALUES ('p6c', 'v1', 'A', 'B', 'necesaria', 'j', 'alta', 'ficticio-validador', 1)", /se crea sin validar/, "nace validada"));
+  await caso("P-H2-2: la autora de la versión no valida sus aristas", () => falla("UPDATE knowledge_prerequisites SET validated_by = 'ficticio-autor', validated_at = 1 WHERE id = 'p1'", /no valida sus aristas/, "autovalidación"));
+  await ok("UPDATE knowledge_prerequisites SET validated_by = 'ficticio-validador', validated_at = 1 WHERE id = 'p1'");
+  await caso("P-H2-2: modificar una arista validada sin anular su validación", async () => {
+    await falla("UPDATE knowledge_prerequisites SET relation = 'contributiva' WHERE id = 'p1'", /su validación se anula/, "cambio con validación");
+    await ok("UPDATE knowledge_prerequisites SET relation = 'contributiva', validated_by = NULL, validated_at = NULL WHERE id = 'p1'");
+    await ok("UPDATE knowledge_prerequisites SET relation = 'necesaria' WHERE id = 'p1'");
+    await ok("UPDATE knowledge_prerequisites SET validated_by = 'ficticio-validador', validated_at = 1 WHERE id = 'p1'");
+  });
+  await caso("P-H2-2: cambiar la definición de un contenido anula las aristas que lo tocan", async () => {
+    await ok("UPDATE knowledge_item_versions SET operational_definition = 'def A precisada' WHERE id = 'A1'");
+    const v = (await c.execute("SELECT validated_by FROM knowledge_prerequisites WHERE id = 'p1'")).rows[0].validated_by;
+    assert.equal(v, null, "la arista B ← A perdió su validación");
+    await ok("UPDATE knowledge_prerequisites SET validated_by = 'ficticio-validador', validated_at = 1 WHERE id = 'p1'");
+  });
   await caso("continuidad sin versión anterior", () => falla("UPDATE knowledge_item_versions SET evidence_continuity = 'compatible', continuity_decided_by = 'ficticio-autor' WHERE id = 'A1'", /CHECK/, "continuidad sin anterior"));
 
   // Ciclo de vida.
   await caso("borrador → publicada directo", () => falla("UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 1 WHERE id = 'v1'", /transición no permitida/, "salto"));
   await ok("UPDATE knowledge_domain_versions SET status = 'en_revision' WHERE id = 'v1'");
+  await caso("validar con contenido sin OA", () => falla("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v1'", /contenido sin OA/, "OA al validar"));
+  await ok("INSERT INTO knowledge_item_oas (item_id, curriculum_objective_id) VALUES ('A', 'oa1'), ('B', 'oa1')");
   await caso("validador igual al autor", () => falla("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-autor' WHERE id = 'v1'", /CHECK/, "autor=validador"));
   await caso("validada sin validador", () => falla("UPDATE knowledge_domain_versions SET status = 'validada' WHERE id = 'v1'", /CHECK/, "sin validador"));
   await ok("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v1'");
-  await caso("publicar con contenido sin OA", () => falla("UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 1 WHERE id = 'v1'", /contenido sin OA/, "OA"));
-  await ok("INSERT INTO knowledge_item_oas (item_id, curriculum_objective_id) VALUES ('A', 'oa1'), ('B', 'oa1')");
+  await caso("publicar con contenido sin OA (OA quitado tras validar)", async () => {
+    await ok("DELETE FROM knowledge_item_oas WHERE item_id = 'B'");
+    await falla("UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 1 WHERE id = 'v1'", /contenido sin OA/, "OA al publicar");
+    await ok("INSERT INTO knowledge_item_oas (item_id, curriculum_objective_id) VALUES ('B', 'oa1')");
+  });
   await caso("publicada sin fecha", () => falla("UPDATE knowledge_domain_versions SET status = 'publicada' WHERE id = 'v1'", /CHECK/, "fecha"));
   await ok("UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 1 WHERE id = 'v1'");
   await caso("validada → borrador", () => falla("UPDATE knowledge_domain_versions SET status = 'borrador', validated_by = NULL, published_at = NULL WHERE id = 'v1'", /transición no permitida/, "retroceso"));
@@ -90,13 +114,36 @@ try {
   });
   await caso("continuidad sin quien decide", () => falla("UPDATE knowledge_item_versions SET evidence_continuity = 'ruptura' WHERE id = 'B2'", /CHECK/, "decidido por"));
   await ok("UPDATE knowledge_domain_versions SET status = 'en_revision' WHERE id = 'v2'");
-  await ok("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v2'");
-  await caso("publicar sin declarar continuidad", () => falla("UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 2 WHERE id = 'v2'", /sin continuidad declarada/, "continuidad"));
-  // `validada` aún es editable (04 §4: inmutable tras publicar). Se declara la continuidad y se publica,
-  // retirando v1 en el mismo lote (una sola publicada por dominio).
+  await caso("validar sin declarar continuidad", () => falla("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v2'", /sin continuidad declarada/, "continuidad"));
   await ok("UPDATE knowledge_item_versions SET evidence_continuity = 'compatible', continuity_decided_by = 'ficticio-autor' WHERE id = 'A2'");
   await ok("UPDATE knowledge_item_versions SET evidence_continuity = 'ruptura', continuity_decided_by = 'ficticio-autor' WHERE id = 'B2'");
-  await ok("INSERT INTO knowledge_prerequisites (id, domain_version_id, item_id, prerequisite_item_id, relation, alt_group, justification, confidence, validated_by, validated_at) VALUES ('p2v', 'v2', 'B', 'A', 'necesaria', NULL, 'j', 'alta', 'ficticio-validador', 2)");
+  // P-H2-2: una arista copiada llega sin validar y bloquea la validación de la versión.
+  await ok("INSERT INTO knowledge_prerequisites (id, domain_version_id, item_id, prerequisite_item_id, relation, alt_group, justification, confidence) VALUES ('p2v', 'v2', 'B', 'A', 'necesaria', NULL, 'j', 'alta')");
+  await caso("P-H2-2: validar la versión con una arista sin validar", () => falla("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v2'", /arista sin validar/, "arista sin validar"));
+  await caso("P-H2-2: la autora de v2 no valida la arista copiada", () => falla("UPDATE knowledge_prerequisites SET validated_by = 'ficticio-autor', validated_at = 2 WHERE id = 'p2v'", /no valida sus aristas/, "autovalidación copia"));
+  await ok("UPDATE knowledge_prerequisites SET validated_by = 'ficticio-validador', validated_at = 2 WHERE id = 'p2v'");
+  await ok("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v2'");
+  // P-H2-1: desde `validada` nada se edita; volver a revisión anula la validación y obliga a validar de nuevo.
+  await caso("P-H2-1: validada bloquea contenidos y aristas", async () => {
+    await falla("UPDATE knowledge_item_versions SET name = 'cambio tardío' WHERE id = 'A2'", /no editable/, "editar contenido validado");
+    await falla("INSERT INTO knowledge_item_versions (id, item_id, domain_version_id, domain_id, name, operational_definition) VALUES ('C2x', 'C', 'v2', 'dom', 'c', 'c')", /no es editable/, "agregar contenido validado");
+    await falla("DELETE FROM knowledge_item_versions WHERE id = 'B2'", /no es editable/, "borrar contenido validado");
+    await falla("UPDATE knowledge_item_versions SET evidence_continuity = 'compatible' WHERE id = 'B2'", /no editable/, "continuidad validada");
+    await falla("UPDATE knowledge_prerequisites SET relation = 'contributiva' WHERE id = 'p2v'", /no es editable/, "editar arista validada");
+    await falla("UPDATE knowledge_prerequisites SET validated_by = NULL, validated_at = NULL WHERE id = 'p2v'", /no es editable/, "desvalidar arista");
+  });
+  await caso("P-H2-1: volver a revisión conservando la validación", () => falla("UPDATE knowledge_domain_versions SET status = 'en_revision' WHERE id = 'v2'", /transición no permitida/, "validación conservada"));
+  await caso("P-H2-1: la validación anterior no sirve tras modificar", async () => {
+    await ok("UPDATE knowledge_domain_versions SET status = 'en_revision', validated_by = NULL WHERE id = 'v2'");
+    await ok("UPDATE knowledge_item_versions SET operational_definition = 'nueva def corregida' WHERE id = 'B2'");
+    await falla("UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 2 WHERE id = 'v2'", /transición no permitida/, "publicar sin revalidar");
+    const v = (await c.execute("SELECT validated_by FROM knowledge_domain_versions WHERE id = 'v2'")).rows[0].validated_by;
+    assert.equal(v, null, "la validación anterior quedó anulada");
+    // Cambió B: la arista B ← A perdió su validación y bloquea la nueva validación hasta revisarla.
+    await falla("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v2'", /arista sin validar/, "arista tocada por el cambio");
+    await ok("UPDATE knowledge_prerequisites SET validated_by = 'ficticio-validador', validated_at = 3 WHERE id = 'p2v'");
+    await ok("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v2'");
+  });
   await caso("publicar v2 retirando v1 en un lote", () => c.batch([
     "UPDATE knowledge_domain_versions SET status = 'retirada' WHERE id = 'v1'",
     "UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 2 WHERE id = 'v2'",
@@ -117,8 +164,11 @@ try {
     await ok("UPDATE knowledge_domain_versions SET status = 'en_revision' WHERE id = 'v3'");
     await ok("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v3'");
     await assert.rejects(c.batch(["UPDATE knowledge_domain_versions SET status = 'retirada' WHERE id = 'v2'", "UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 3 WHERE id = 'v3'"], "write"), /no reemplaza a su versión en la última publicada/);
-    // Un contenido que existía en la base y aparece sin reemplazarla también se rechaza.
+    // Un contenido que existía en la base y aparece sin reemplazarla también se rechaza
+    // (para editar, v3 vuelve a revisión y se valida de nuevo: P-H2-1).
+    await ok("UPDATE knowledge_domain_versions SET status = 'en_revision', validated_by = NULL WHERE id = 'v3'");
     await ok("UPDATE knowledge_item_versions SET supersedes_version_id = NULL, evidence_continuity = NULL, continuity_decided_by = NULL WHERE id = 'A3'");
+    await ok("UPDATE knowledge_domain_versions SET status = 'validada', validated_by = 'ficticio-validador' WHERE id = 'v3'");
     await assert.rejects(c.batch(["UPDATE knowledge_domain_versions SET status = 'retirada' WHERE id = 'v2'", "UPDATE knowledge_domain_versions SET status = 'publicada', published_at = 3 WHERE id = 'v3'"], "write"), /no reemplaza a su versión en la última publicada/);
     const estado = (await c.execute("SELECT status FROM knowledge_domain_versions WHERE id = 'v2'")).rows[0].status;
     assert.equal(estado, "publicada", "el lote rechazado no retira v2");

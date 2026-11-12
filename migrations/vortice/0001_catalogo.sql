@@ -79,14 +79,17 @@ CREATE TABLE knowledge_prerequisites (
   alt_group TEXT,
   justification TEXT NOT NULL,
   confidence TEXT NOT NULL,
-  validated_by TEXT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
-  validated_at REAL NOT NULL,
+  -- P-H2-2 (2026-11-12): una arista copiada a una versión nueva llega sin validar (NULL) y debe
+  -- validarse de nuevo antes de validar la versión.
+  validated_by TEXT REFERENCES users(id) ON DELETE RESTRICT,
+  validated_at REAL,
   -- Ambos extremos deben ser contenidos de ESTA versión del dominio (02 §4: sin referencias externas).
   FOREIGN KEY (domain_version_id, item_id) REFERENCES knowledge_item_versions (domain_version_id, item_id) ON DELETE RESTRICT,
   FOREIGN KEY (domain_version_id, prerequisite_item_id) REFERENCES knowledge_item_versions (domain_version_id, item_id) ON DELETE RESTRICT,
   UNIQUE (domain_version_id, item_id, prerequisite_item_id),
   CHECK (item_id <> prerequisite_item_id),
-  CHECK ((relation = 'alternativa') = (alt_group IS NOT NULL))
+  CHECK ((relation = 'alternativa') = (alt_group IS NOT NULL)),
+  CHECK ((validated_by IS NULL) = (validated_at IS NULL))
 );
 --> statement-breakpoint
 CREATE TABLE knowledge_item_oas (
@@ -116,6 +119,7 @@ WHEN NOT (
     (OLD.status = 'borrador' AND NEW.status = 'en_revision' AND NEW.validated_by IS OLD.validated_by AND NEW.published_at IS OLD.published_at) OR
     (OLD.status = 'en_revision' AND NEW.status = 'borrador' AND NEW.validated_by IS NULL AND NEW.published_at IS NULL) OR
     (OLD.status = 'en_revision' AND NEW.status = 'validada' AND NEW.published_at IS NULL) OR
+    (OLD.status = 'validada' AND NEW.status = 'en_revision' AND NEW.validated_by IS NULL AND NEW.published_at IS NULL) OR
     (OLD.status = 'validada' AND NEW.status = 'publicada' AND NEW.validated_by IS OLD.validated_by) OR
     (OLD.status = 'publicada' AND NEW.status = 'retirada' AND NEW.validated_by IS OLD.validated_by AND NEW.published_at IS OLD.published_at)
   )
@@ -131,8 +135,8 @@ BEGIN SELECT RAISE(ABORT, 'knowledge_domain_versions: solo se puede descartar un
 CREATE TRIGGER kdv_publicar_requisitos BEFORE UPDATE OF status ON knowledge_domain_versions
 WHEN NEW.status = 'publicada' AND OLD.status = 'validada'
 BEGIN
-  SELECT RAISE(ABORT, 'knowledge_domain_versions: contenido con versión anterior sin continuidad declarada')
-  WHERE EXISTS (SELECT 1 FROM knowledge_item_versions WHERE domain_version_id = NEW.id AND supersedes_version_id IS NOT NULL AND evidence_continuity IS NULL);
+  -- La continuidad se exige al validar (kdv_validar_requisitos) y desde ahí el contenido queda bloqueado.
+  -- El OA se revisa también aquí porque los vínculos cuelgan del contenido, no de la versión (P-H2-4).
   SELECT RAISE(ABORT, 'knowledge_domain_versions: contenido sin OA')
   WHERE EXISTS (SELECT 1 FROM knowledge_item_versions v WHERE v.domain_version_id = NEW.id
                 AND NOT EXISTS (SELECT 1 FROM knowledge_item_oas o WHERE o.item_id = v.item_id));
@@ -141,16 +145,16 @@ END;
 -- Lo publicado no se edita (04 §4: «inmutable tras publicar»): contenidos y aristas de una versión
 -- publicada o retirada no se agregan, cambian ni borran. Antes de publicar (incluida `validada`) sí.
 CREATE TRIGGER kiv_bloqueo_insert BEFORE INSERT ON knowledge_item_versions
-WHEN (SELECT status FROM knowledge_domain_versions WHERE id = NEW.domain_version_id) IN ('publicada', 'retirada')
+WHEN (SELECT status FROM knowledge_domain_versions WHERE id = NEW.domain_version_id) IN ('validada', 'publicada', 'retirada')
 BEGIN SELECT RAISE(ABORT, 'knowledge_item_versions: la versión del dominio no es editable'); END;
 --> statement-breakpoint
 CREATE TRIGGER kiv_bloqueo_update BEFORE UPDATE ON knowledge_item_versions
-WHEN (SELECT status FROM knowledge_domain_versions WHERE id = OLD.domain_version_id) IN ('publicada', 'retirada')
+WHEN (SELECT status FROM knowledge_domain_versions WHERE id = OLD.domain_version_id) IN ('validada', 'publicada', 'retirada')
   OR NEW.id <> OLD.id OR NEW.item_id <> OLD.item_id OR NEW.domain_version_id <> OLD.domain_version_id OR NEW.domain_id <> OLD.domain_id
 BEGIN SELECT RAISE(ABORT, 'knowledge_item_versions: versión no editable o cambio de identidad'); END;
 --> statement-breakpoint
 CREATE TRIGGER kiv_bloqueo_delete BEFORE DELETE ON knowledge_item_versions
-WHEN (SELECT status FROM knowledge_domain_versions WHERE id = OLD.domain_version_id) IN ('publicada', 'retirada')
+WHEN (SELECT status FROM knowledge_domain_versions WHERE id = OLD.domain_version_id) IN ('validada', 'publicada', 'retirada')
 BEGIN SELECT RAISE(ABORT, 'knowledge_item_versions: la versión del dominio no es editable'); END;
 --> statement-breakpoint
 -- Linaje (04 §5.1 `supersedes_version_id`): solo se reemplaza una versión ya publicada (o retirada) de
@@ -172,16 +176,16 @@ WHEN NEW.supersedes_version_id IS NOT NULL AND NOT EXISTS (
 BEGIN SELECT RAISE(ABORT, 'knowledge_item_versions: solo reemplaza una versión publicada anterior'); END;
 --> statement-breakpoint
 CREATE TRIGGER kp_bloqueo_insert BEFORE INSERT ON knowledge_prerequisites
-WHEN (SELECT status FROM knowledge_domain_versions WHERE id = NEW.domain_version_id) IN ('publicada', 'retirada')
+WHEN (SELECT status FROM knowledge_domain_versions WHERE id = NEW.domain_version_id) IN ('validada', 'publicada', 'retirada')
 BEGIN SELECT RAISE(ABORT, 'knowledge_prerequisites: la versión del dominio no es editable'); END;
 --> statement-breakpoint
 CREATE TRIGGER kp_bloqueo_update BEFORE UPDATE ON knowledge_prerequisites
-WHEN (SELECT status FROM knowledge_domain_versions WHERE id = OLD.domain_version_id) IN ('publicada', 'retirada')
+WHEN (SELECT status FROM knowledge_domain_versions WHERE id = OLD.domain_version_id) IN ('validada', 'publicada', 'retirada')
   OR NEW.domain_version_id <> OLD.domain_version_id
 BEGIN SELECT RAISE(ABORT, 'knowledge_prerequisites: la versión del dominio no es editable'); END;
 --> statement-breakpoint
 CREATE TRIGGER kp_bloqueo_delete BEFORE DELETE ON knowledge_prerequisites
-WHEN (SELECT status FROM knowledge_domain_versions WHERE id = OLD.domain_version_id) IN ('publicada', 'retirada')
+WHEN (SELECT status FROM knowledge_domain_versions WHERE id = OLD.domain_version_id) IN ('validada', 'publicada', 'retirada')
 BEGIN SELECT RAISE(ABORT, 'knowledge_prerequisites: la versión del dominio no es editable'); END;
 --> statement-breakpoint
 -- Identidad estable (02 §2): el id y el dominio de un contenido no cambian; un dominio no cambia de asignatura.
@@ -251,3 +255,45 @@ WHEN EXISTS (SELECT 1 FROM knowledge_item_versions v JOIN knowledge_domain_versi
              WHERE v.item_id = OLD.item_id AND d.status = 'publicada')
   AND (SELECT COUNT(*) FROM knowledge_item_oas WHERE item_id = OLD.item_id) = 1
 BEGIN SELECT RAISE(ABORT, 'knowledge_item_oas: un contenido publicado necesita al menos un OA'); END;
+--> statement-breakpoint
+-- P-H2-1 y P-H2-2 (2026-11-12): la validación corresponde exactamente a lo que se publica. Desde
+-- `validada` el contenido queda bloqueado (kiv_*, kp_*); para cambiarlo se vuelve a `en_revision`, lo que
+-- anula la validación (kdv_transicion). Al validar se exige que todo esté listo: continuidad declarada,
+-- al menos un OA y todas las aristas validadas, incluidas las copiadas de la versión anterior.
+CREATE TRIGGER kdv_validar_requisitos BEFORE UPDATE OF status ON knowledge_domain_versions
+WHEN NEW.status = 'validada' AND OLD.status = 'en_revision'
+BEGIN
+  SELECT RAISE(ABORT, 'knowledge_domain_versions: contenido con versión anterior sin continuidad declarada')
+  WHERE EXISTS (SELECT 1 FROM knowledge_item_versions WHERE domain_version_id = NEW.id AND supersedes_version_id IS NOT NULL AND evidence_continuity IS NULL);
+  SELECT RAISE(ABORT, 'knowledge_domain_versions: contenido sin OA')
+  WHERE EXISTS (SELECT 1 FROM knowledge_item_versions v WHERE v.domain_version_id = NEW.id
+                AND NOT EXISTS (SELECT 1 FROM knowledge_item_oas o WHERE o.item_id = v.item_id));
+  SELECT RAISE(ABORT, 'knowledge_domain_versions: arista sin validar')
+  WHERE EXISTS (SELECT 1 FROM knowledge_prerequisites WHERE domain_version_id = NEW.id AND validated_by IS NULL);
+END;
+--> statement-breakpoint
+-- P-H2-2, cerrada con la revisión de código: ninguna arista nace validada. La validación es siempre un
+-- acto aparte, de otra persona que la autora de la versión (08 §5: «validado por otra persona»).
+CREATE TRIGGER kp_nace_sin_validar BEFORE INSERT ON knowledge_prerequisites
+WHEN NEW.validated_by IS NOT NULL
+BEGIN SELECT RAISE(ABORT, 'knowledge_prerequisites: una arista se crea sin validar y se valida aparte'); END;
+--> statement-breakpoint
+CREATE TRIGGER kp_validador_distinto BEFORE UPDATE OF validated_by ON knowledge_prerequisites
+WHEN NEW.validated_by IS NOT NULL
+  AND NEW.validated_by = (SELECT created_by FROM knowledge_domain_versions WHERE id = NEW.domain_version_id)
+BEGIN SELECT RAISE(ABORT, 'knowledge_prerequisites: la autora de la versión no valida sus aristas'); END;
+--> statement-breakpoint
+-- Si cambia la arista, su validación anterior ya no corresponde: debe anularse en el mismo cambio.
+CREATE TRIGGER kp_cambio_anula_validacion BEFORE UPDATE ON knowledge_prerequisites
+WHEN NEW.validated_by IS NOT NULL AND (SELECT status FROM knowledge_domain_versions WHERE id = OLD.domain_version_id) IN ('borrador', 'en_revision') AND (
+  NEW.item_id IS NOT OLD.item_id OR NEW.prerequisite_item_id IS NOT OLD.prerequisite_item_id OR NEW.relation IS NOT OLD.relation
+  OR NEW.alt_group IS NOT OLD.alt_group OR NEW.justification IS NOT OLD.justification OR NEW.confidence IS NOT OLD.confidence)
+BEGIN SELECT RAISE(ABORT, 'knowledge_prerequisites: al modificar una arista su validación se anula'); END;
+--> statement-breakpoint
+-- Si cambia la definición de un contenido, las aristas que lo tocan en esa versión pierden su validación.
+CREATE TRIGGER kiv_cambio_anula_aristas AFTER UPDATE OF name, operational_definition ON knowledge_item_versions
+WHEN NEW.name IS NOT OLD.name OR NEW.operational_definition IS NOT OLD.operational_definition
+BEGIN
+  UPDATE knowledge_prerequisites SET validated_by = NULL, validated_at = NULL
+  WHERE domain_version_id = NEW.domain_version_id AND (item_id = NEW.item_id OR prerequisite_item_id = NEW.item_id);
+END;

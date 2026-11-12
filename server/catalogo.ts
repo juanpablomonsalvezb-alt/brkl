@@ -29,7 +29,7 @@ export async function crearDominio(c: Ejecutor, d: { levelSubjectId: string; nam
 }
 
 // Nueva versión de dominio en borrador. Si hay una publicada, copia sus contenidos (cada uno
-// reemplaza a su versión publicada, con continuidad SIN declarar) y sus aristas. La continuidad la
+// reemplaza a su versión publicada, con continuidad SIN declarar) y sus aristas SIN validar (P-H2-2: cada arista se valida de nuevo). La continuidad la
 // declara una persona por contenido (04 §8); sin ella no se publica.
 // Lectura y escritura en una sola transacción de escritura: dos llamadas simultáneas no leen el
 // mismo número de versión ni copian una publicada que otra transacción acaba de retirar.
@@ -59,7 +59,7 @@ async function crearVersionEn(c: Transaction, domainId: string, actor: string): 
     const aristas = (await c.execute({ sql: "SELECT item_id, prerequisite_item_id, relation, alt_group, justification, confidence, validated_by, validated_at FROM knowledge_prerequisites WHERE domain_version_id = ? ORDER BY item_id, prerequisite_item_id", args: [pub.id] })).rows;
     for (const a of aristas) {
       sentencias.push({ sql: "INSERT INTO knowledge_prerequisites (id, domain_version_id, item_id, prerequisite_item_id, relation, alt_group, justification, confidence, validated_by, validated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        args: [randomUUID(), id, a.item_id, a.prerequisite_item_id, a.relation, a.alt_group, a.justification, a.confidence, a.validated_by, a.validated_at] as any });
+        args: [randomUUID(), id, a.item_id, a.prerequisite_item_id, a.relation, a.alt_group, a.justification, a.confidence, null, null] as any });
     }
   }
   for (const s of sentencias) await c.execute(s);
@@ -91,12 +91,21 @@ export async function declararContinuidad(c: Ejecutor, itemVersionId: string, co
 
 export async function agregarPrerrequisito(c: Ejecutor, domainVersionId: string, a: {
   itemId: string; prerequisiteItemId: string; relation: Relacion; altGroup?: string | null;
-  justification: string; confidence: string; validatedBy: string; validatedAt: number;
+  justification: string; confidence: string;
 }): Promise<string> {
   const id = randomUUID();
   await c.execute({ sql: "INSERT INTO knowledge_prerequisites (id, domain_version_id, item_id, prerequisite_item_id, relation, alt_group, justification, confidence, validated_by, validated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    args: [id, domainVersionId, a.itemId, a.prerequisiteItemId, a.relation, a.altGroup ?? null, a.justification, a.confidence, a.validatedBy, a.validatedAt] });
+    args: [id, domainVersionId, a.itemId, a.prerequisiteItemId, a.relation, a.altGroup ?? null, a.justification, a.confidence, null, null] });
   return id;
+}
+
+// Valida una arista de una versión editable (P-H2-2). Toda arista nace sin validar; la valida otra
+// persona que la autora de la versión. La base rechaza validar una versión con aristas
+// sin validar, y bloquea las aristas desde `validada` (P-H2-1).
+export async function validarArista(c: Ejecutor, prerequisiteId: string, actor: string, ahora: number): Promise<void> {
+  // Solo valida una arista pendiente: una validación hecha no se sobrescribe.
+  const r = await c.execute({ sql: "UPDATE knowledge_prerequisites SET validated_by = ?, validated_at = ? WHERE id = ? AND validated_by IS NULL", args: [actor, ahora, prerequisiteId] });
+  if (r.rowsAffected !== 1) throw new CatalogoError("Arista inexistente o ya validada");
 }
 
 export async function vincularOA(c: Ejecutor, itemId: string, curriculumObjectiveId: string): Promise<void> {
@@ -129,7 +138,8 @@ export async function cambiarEstado(c: Client, domainVersionId: string, a: Estad
     });
     return;
   }
-  const extra = a === "borrador" ? ", validated_by = NULL" : "";
+  // Volver a revisión o a borrador anula la validación (P-H2-1): hay que validar de nuevo.
+  const extra = a === "borrador" || a === "en_revision" ? ", validated_by = NULL" : "";
   await c.execute({ sql: `UPDATE knowledge_domain_versions SET status = ?${extra} WHERE id = ?`, args: [a, domainVersionId] });
 }
 
