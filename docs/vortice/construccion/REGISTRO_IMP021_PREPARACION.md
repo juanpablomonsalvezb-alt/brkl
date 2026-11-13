@@ -58,7 +58,7 @@ Ninguna migración, código ni prueba de IMP-021. H3 y H4 no iniciadas.
 | 2 | Columnas `retired_kind`, `retired_reason`, `retired_by`, `retired_at` | Q-5 (clasificación `renovacion`/`defecto`/`otro` + motivo) y Q-7 (una persona) |
 | 3 | `question_voids` está en `0002`, no con la evidencia | Deja el banco autocontenido; solo depende de `question_versions` |
 | 4 | **Añadido por la revisión de código:** el contenido y la procedencia no se editan en `en_revision`, ni en el UPDATE que aprueba | Sin esto, lo aprobado podía diferir de lo revisado y una pregunta de IA podía reetiquetarse como humana. **No estaba en la matriz: confirmar** |
-| 5 | **Añadido por la revisión de código:** triggers que rechazan todo INSERT que sustituya una versión o una familia existente (y la anulación) | `INSERT OR REPLACE` y `ON CONFLICT DO UPDATE` sustituyen filas sin pasar por los triggers de UPDATE ni DELETE (comprobado: sustituía una aprobada). Consecuencia: un duplicado falla por el trigger y no por el UNIQUE, que queda como declaración |
+| 5 | **Añadido por la revisión de código:** triggers que rechazan todo INSERT que sustituya una versión o una familia existente (y la anulación) | `INSERT OR REPLACE` borra la fila en conflicto sin disparar los triggers de DELETE y no pasa por los de UPDATE (comprobado: sustituía una aprobada). **Corrección de la dirección:** el UPSERT (`ON CONFLICT DO UPDATE`) sí dispara los triggers de UPDATE y ya estaba cubierto por `qv_congelada` y `qf_identidad`; el vector demostrado era solo `INSERT OR REPLACE`, y el rechazo del UPSERT es defensa en profundidad. Consecuencia: un duplicado falla por el trigger y no por el UNIQUE, que queda como declaración. La dirección aceptó que las reinserciones idempotentes de registros existentes fallen (las semillas e importaciones deben comprobar antes la existencia) |
 | 6 | Fechas `REAL` y `content_hash` opcional | Convención de `0001` (DB-5 sigue abierta); la matriz no exigió hash |
 | 7 | Índice `qf_item` | FK de la familia hacia el contenido |
 
@@ -76,10 +76,14 @@ B1, B2, B3, B4, B4b, B4c, B5, B6, B7a, B7b, B7c, B7d, B7e, B8, B9, B9b, B10, B11
 | `git diff 8dfdbf2 -- shared/dominio.ts shared/politica.ts script/dominio.check.ts script/politica.check.ts` | 0 líneas |
 | `git rev-parse e0/revalidacion-local` | `2edf702`; ningún archivo de `e0/` tocado |
 
+### Fe de erratas (directiva de la dirección, tras la revisión final)
+
+M1, M2 y M3 quedaron **ratificadas** por la dirección. Se corrigió la explicación técnica sobre UPSERT (en el comentario de `0002_banco.sql` y en este registro): el bypass demostrado era `INSERT OR REPLACE`, no `ON CONFLICT DO UPDATE`. Es una corrección solo de texto; no cambia ninguna tabla, trigger ni comportamiento. La suma de control del archivo `0002_banco.sql` cambió por los comentarios; la migración no se ha aplicado en ningún entorno real.
+
 ### Revisión de código y seguridad
 
-- **`/code-review`** (medio): 8 hallazgos. Corregidos: opciones con textos que contienen JSON (se validaba con `json_type(value)`; ahora con la columna `type` de `json_each`), contenido editable en revisión, `INSERT OR REPLACE`/UPSERT sobre identidad y versiones, aserción de B19 atada a la hoja de ruta, cobertura de mutaciones (de 30 a 39), índice. **No corregidos, aceptados:** el revisor solo es un usuario distinto del autor (la base no sabe si es una persona: IMP-022 y O4); una pregunta anulada sigue `aprobada` y el consumidor debe excluirla (H3/H4).
-- **Seguridad** (revisión manual: la skill calcula el diff de otra rama): sin SQL dinámico ni entrada externa; los triggers usan `RAISE(ABORT)` con condiciones seguras frente a NULL; vías de bypass comprobadas: `INSERT OR REPLACE`, UPSERT, edición en revisión, tipos JSON. **Limitación aceptada:** quien tenga permiso de DDL puede borrar triggers o desactivar claves foráneas (riesgo R-01, ya aceptado en D4).
+- **`/code-review`** (medio): 8 hallazgos. Corregidos: opciones con textos que contienen JSON (se validaba con `json_type(value)`; ahora con la columna `type` de `json_each`), contenido editable en revisión, `INSERT OR REPLACE` sobre identidad y versiones (el UPSERT ya estaba cubierto), aserción de B19 atada a la hoja de ruta, cobertura de mutaciones (de 30 a 39), índice. **No corregidos, aceptados:** el revisor solo es un usuario distinto del autor (la base no sabe si es una persona: IMP-022 y O4); una pregunta anulada sigue `aprobada` y el consumidor debe excluirla (H3/H4).
+- **Seguridad** (revisión manual: la skill calcula el diff de otra rama): sin SQL dinámico ni entrada externa; los triggers usan `RAISE(ABORT)` con condiciones seguras frente a NULL; vías de bypass comprobadas: `INSERT OR REPLACE` (el vector real), UPSERT (ya cubierto por los triggers de UPDATE), edición en revisión, tipos JSON. **Limitación aceptada:** quien tenga permiso de DDL puede borrar triggers o desactivar claves foráneas (riesgo R-01, ya aceptado en D4).
 
 ### Hallazgo fuera de alcance (H2, `0001`)
 

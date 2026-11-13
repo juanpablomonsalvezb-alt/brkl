@@ -13,9 +13,10 @@
 -- «reviewed_by <> authored_by»); retired_kind/reason/by/at (Q-5, Q-7); question_voids vive aquí y no con
 -- la evidencia; las fechas son REAL como en 0001 (la unidad de tiempo, DB-5, sigue abierta); el máximo
 -- de opciones y el patrón de los ids de opción NO se fijan (decisión abierta); content_hash es opcional.
--- Añadido por la revisión de código, a confirmar: el contenido tampoco se edita en `en_revision` (lo que la
--- persona revisa es lo que se aprueba) y se rechaza todo INSERT que sustituya una fila existente
--- (INSERT OR REPLACE y UPSERT eluden los triggers de UPDATE y DELETE).
+-- Añadido por la revisión de código y ratificado por la dirección: el contenido tampoco se edita en
+-- `en_revision` (lo que la persona revisa es lo que se aprueba) y se rechaza todo INSERT que choque con una
+-- fila existente (INSERT OR REPLACE borra la fila en conflicto sin disparar los triggers de DELETE y no pasa
+-- por los de UPDATE; el UPSERT sí dispara los de UPDATE y ya estaba cubierto).
 -- Fuera de esta migración: respuestas, evidencia y evidence_voids (H3), uso del banco por evaluaciones (H4).
 
 CREATE TABLE question_families (
@@ -135,10 +136,12 @@ CREATE TRIGGER qv_sin_delete BEFORE DELETE ON question_versions
 WHEN OLD.status <> 'borrador'
 BEGIN SELECT RAISE(ABORT, 'question_versions: solo se puede descartar un borrador'); END;
 --> statement-breakpoint
--- INSERT OR REPLACE (y ON CONFLICT DO UPDATE) sustituyen la fila en conflicto sin pasar por los triggers de
--- UPDATE ni de DELETE (recursive_triggers está apagado por omisión): una versión aprobada se cambiaría por otra
--- y la identidad de una familia o de un borrador se eludiría. Se rechaza todo INSERT que choque con una fila
--- existente; un duplicado cualquiera falla aquí (o en el UNIQUE, que se mantiene como declaración).
+-- INSERT OR REPLACE borra la fila en conflicto sin disparar los triggers de DELETE (recursive_triggers está
+-- apagado por omisión) y tampoco pasa por los de UPDATE: una versión aprobada se cambiaría por otra y la
+-- identidad de una familia o de un borrador se eludiría. Se rechaza todo INSERT que choque con una fila
+-- existente. Un UPSERT (ON CONFLICT DO UPDATE) sí dispara los triggers de UPDATE y ya estaba cubierto por
+-- qv_congelada y qf_identidad: aquí su rechazo es defensa en profundidad. Un duplicado cualquiera falla en
+-- este trigger o en el UNIQUE, que se mantiene como declaración.
 CREATE TRIGGER qv_no_sustituir BEFORE INSERT ON question_versions
 WHEN EXISTS (SELECT 1 FROM question_versions WHERE id = NEW.id OR (family_id = NEW.family_id AND version = NEW.version))
 BEGIN SELECT RAISE(ABORT, 'question_versions: no se sustituye una versión existente'); END;
