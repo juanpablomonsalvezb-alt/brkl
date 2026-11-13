@@ -3,6 +3,7 @@
 // N18 = A; determinismo. Ejecutar: npm run check:vortice
 import assert from "node:assert/strict";
 import { evaluar, type ContextoVersion, type Evidencia } from "../shared/dominio";
+import type { EvidenciaLiberada } from "../shared/evidencia";
 import { politicaEjecutable, type PoliticaEjecutable } from "../shared/politica";
 
 // Política SOLO DE PRUEBA (alternativas recomendadas del diseño; ninguna aprobada salvo K6 y N18).
@@ -19,13 +20,13 @@ const CTX: ContextoVersion = { versionActual: "v1", compatibles: [], retencionVe
 
 const D1 = "2027-03-01", D2 = "2027-03-02";
 let n = 0;
-const ev = (familia: string, correcta: boolean, o: Partial<Evidencia> = {}): Evidencia => ({
+const ev = (familia: string, correcta: boolean, o: Partial<Evidencia> = {}): EvidenciaLiberada => ({
   id: `e${++n}`, familia, correcta, conAyuda: false, sesion: "S1", dia: D1, ocurrida: 1000 + n, secuencia: n,
   fuente: "practica", versionContenido: "v1", anulada: false, familiaRetirada: false, ...o,
-});
+}) as EvidenciaLiberada; // D3/IMP-012: el motor solo recibe evidencia liberada; aquí el dato de prueba la simula.
 
 type Variante = { alt: string; pol: Partial<PoliticaEjecutable>; estado: string; marca?: "por_comprobar" | null; motivo?: string };
-type Caso = { id: string; nombre: string; ev: Evidencia[]; ctx?: Partial<ContextoVersion>; variantes: Variante[]; origen: "E0" | "H1" };
+type Caso = { id: string; nombre: string; ev: EvidenciaLiberada[]; ctx?: Partial<ContextoVersion>; variantes: Variante[]; origen: "E0" | "H1" };
 
 // Mismos datos y esperados que E0. Donde E0 no fija `marca`, aquí se fija y se indica.
 const casos = (): Caso[] => { n = 0; return [

@@ -4,10 +4,12 @@
 // (shared/politica.ts), sin valores por omisión.
 //
 // Límites de responsabilidad:
-// - Recibe evidencia YA LIBERADA. Filtrar lo embargado (P19-E1) es del filtro único, que no es
-//   parte de H1 (IMP-012, IMP-032). Esta función no sabe de publicación.
+// - Recibe evidencia YA LIBERADA: el tipo `EvidenciaLiberada` (shared/evidencia.ts, IMP-012) solo lo
+//   produce el filtro único (server/conocimiento.ts, IMP-032), que aplica la publicación (P19-E1). Esta
+//   función no sabe de publicación.
 // - No escribe nada ni lee el reloj: el orden sale de (ocurrida, secuencia), que fija el servidor.
 // - El estado de un contenido nunca cambia resultados de evaluación (dos canales, 01 §2.1).
+import type { EvidenciaLiberada } from "./evidencia";
 import { esPoliticaEjecutable, K6_FAMILIAS, type PoliticaEjecutable } from "./politica";
 
 // Fuentes de evidencia admitidas (04 §5.5). Una corrección docente no es fuente (N19, TK12).
@@ -108,7 +110,7 @@ function calcular(e: Evidencia[], pol: PoliticaEjecutable, retencionVencida: boo
   return { estado: "incierto", marca: null, motivo: validas.length === 0 ? "solo_con_ayuda" : "pocas_evidencias" };
 }
 
-export function evaluar(evidencias: readonly Evidencia[], ctx: ContextoVersion, pol: PoliticaEjecutable): EstadoContenido {
+export function evaluar(evidencias: readonly EvidenciaLiberada[], ctx: ContextoVersion, pol: PoliticaEjecutable): EstadoContenido {
   if (!esPoliticaEjecutable(pol)) throw new Error("Política no ejecutable: parámetros nulos o inválidos (TK15)");
   if (pol.k6_min_families !== K6_FAMILIAS) throw new Error("K6 exige 2 familias");
   for (const x of evidencias) {

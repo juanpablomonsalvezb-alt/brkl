@@ -28,6 +28,10 @@ const VACIAS: Record<string, string> = { borrador: "eB", en_revision: "eR", vali
 const dirAntes = fs.mkdtempSync(path.join(os.tmpdir(), "vortice-mig-antes-"));
 for (const f of ["0001_catalogo.sql", "0002_banco.sql"]) fs.copyFileSync(path.join("migrations/vortice", f), path.join(dirAntes, f));
 const DIR_DESPUES = "migrations/vortice";
+// Directorio con 0001, 0002 y 0003: el escenario histórico de I4 (0003 sobre una base ya poblada). Las
+// migraciones posteriores (0004 en adelante) no son parte de ese escenario.
+const dirHasta0003 = fs.mkdtempSync(path.join(os.tmpdir(), "vortice-mig-hasta0003-"));
+for (const f of ["0001_catalogo.sql", "0002_banco.sql", "0003_integridad_catalogo.sql"]) fs.copyFileSync(path.join("migrations/vortice", f), path.join(dirHasta0003, f));
 
 type Modo = { fk: boolean; rt: boolean };
 // Cada base se arma UNA vez por estado de migración (plantilla) y se copia como archivo en cada prueba.
@@ -273,10 +277,10 @@ try {
   await caso("I4", "0003 se aplica sobre una base ya poblada; sin deriva; segunda aplicación vacía", async () => {
     const { b, c } = await fixture(dirAntes);
     const antes = await huella(c);
-    assert.deepEqual(await migrar(c, DIR_DESPUES), { aplicadas: ["0003_integridad_catalogo.sql"] });
+    assert.deepEqual(await migrar(c, dirHasta0003), { aplicadas: ["0003_integridad_catalogo.sql"] });
     assert.equal(await huella(c), antes, "los datos no cambian al migrar");
     assert.equal((await verificarDeriva(c)).ok, true);
-    assert.deepEqual(await migrar(c, DIR_DESPUES), { aplicadas: [] });
+    assert.deepEqual(await migrar(c, dirHasta0003), { aplicadas: [] });
     const r = await intento(c, BYPASS_ARISTA.sql);
     assert.match(r.error, /no se sustituye/);
     assert.equal(r.ok, false, "tras migrar, el bypass ya no se reproduce");
@@ -390,7 +394,7 @@ try {
     await b.cerrar();
   });
   await caso("I10", "los 12 triggers de la migración están en el manifiesto", async () => {
-    const { b, c } = await fixture(DIR_DESPUES);
+    const { b, c } = await fixture(dirHasta0003);
     const triggers = (await c.execute("SELECT name FROM sqlite_master WHERE type='trigger' ORDER BY name")).rows.map((r) => String(r.name));
     for (const n of ["kp_no_sustituir", "kdv_no_sustituir", "ki_no_sustituir", "kd_no_sustituir", "co_no_sustituir", "kiv_no_sustituir", "kdv_nace_borrador",
       "ki_codigo_unico", "co_clave_unica", "co_id_inmutable", "kp_clave_unica", "kp_id_inmutable"]) assert.ok(triggers.includes(n), n);
@@ -399,6 +403,7 @@ try {
   });
 } finally {
   fs.rmSync(dirAntes, { recursive: true, force: true });
+  fs.rmSync(dirHasta0003, { recursive: true, force: true });
   fs.rmSync(RAIZ, { recursive: true, force: true });
   await liberarNativos();
 }
