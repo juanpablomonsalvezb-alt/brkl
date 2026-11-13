@@ -198,3 +198,12 @@
 **E0:** autorizaciones A1–A6, todas PENDIENTES: [11](11_PLAN_E0.md) §10.
 
 Detalle de Q1–Q8: `docs/p0e/PROGRESO_Y_PROGRESION.md` §7. P7–P25: especificación maestra §9 y `docs/p0e/DECISIONES_PARA_APROBAR.md`.
+
+## 8. Registro de decisiones de construcción (entrada agregada el 2026-11-13)
+
+Sección **de solo agregado**: no modifica ninguna fila anterior de este documento. Las decisiones de construcción se registran en `docs/vortice/construccion/REGISTRO_DECISIONES_CONSTRUCCION.md`.
+
+- **Decisión D6/D7** (mecanismo de publicación de la pauta): **APROBADA** por la usuaria el 2026-11-10, 18:54 UTC (15:54 hora de Chile): mecanismo C (reloj más registro transaccional), reloj de la base de datos como autoridad temporal, base ocupada = no revelar y permitir reintento, registro anticipado mediante tarea idempotente, y sin versión de reserva = rechazar la asignación y registrar el motivo. Pendientes y fuera de la aprobación: texto del aviso, presupuesto de espera de `revelar` (A1) y umbrales A6. Detalle y trazabilidad: entrada E-001. No confundir con la «prueba D6/D7» de la fila de §10 de `04_MODELO_DE_DATOS.md`, cuyo estado SIN EJECUTAR de §7 de este documento se refiere a la prueba.
+- **H3a:** decisiones D1–D7 y D5.1–D5.5, y aceptación formal (commit `0fd4324`, 2026-11-13): entradas E-002, E-003 y E-005.
+- **Siguen ABIERTAS** (columna «Dirección»/«Académica» de las filas anteriores, sin cambio): O1, O2, O3, N16, N17, escenario 3, escenarios 4 y 10, O4.
+
