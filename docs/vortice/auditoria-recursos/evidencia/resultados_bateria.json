@@ -1,0 +1,362 @@
+[
+ {
+  "id": "A01",
+  "titulo": "Mover un recurso VINCULADO a un módulo de otra asignatura",
+  "entrada": "PATCH wr-mat {learningObjectiveId:'lo-len'}",
+  "status": 200,
+  "resp": "{\"id\":\"wr-mat\",\"learningObjectiveId\":\"lo-len\",\"resourceType\":\"video\",\"title\":\"Fracciones\",\"notebookLmUrl\":null,\"barkleyFoundation\":null,\"studentHelp\":null,\"peda",
+  "cambiadas": "weekly_resources",
+  "antes": "[\"wr-mat\",\"lo-mat\",\"video\",\"Fracciones\",0,1,null]",
+  "despues": "[\"wr-mat\",\"lo-len\",\"video\",\"Fracciones\",0,1,null]"
+ },
+ {
+  "id": "A02",
+  "titulo": "Mover un recurso NO vinculado a un módulo de otra asignatura",
+  "entrada": "PATCH wr-free {learningObjectiveId:'lo-len'}",
+  "status": 200,
+  "resp": "{\"id\":\"wr-free\",\"learningObjectiveId\":\"lo-len\",\"resourceType\":\"video\",\"title\":\"Libre\",\"notebookLmUrl\":null,\"barkleyFoundation\":null,\"studentHelp\":null,\"pedagogi",
+  "cambiadas": "weekly_resources",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-len\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A03",
+  "titulo": "Mover un recurso a otro módulo de la MISMA asignatura",
+  "entrada": "PATCH wr-free {learningObjectiveId:'lo-mat2'}",
+  "status": 200,
+  "resp": "{\"id\":\"wr-free\",\"learningObjectiveId\":\"lo-mat2\",\"resourceType\":\"video\",\"title\":\"Libre\",\"notebookLmUrl\":null,\"barkleyFoundation\":null,\"studentHelp\":null,\"pedagog",
+  "cambiadas": "weekly_resources",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat2\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A04",
+  "titulo": "Mover a un objetivo inexistente",
+  "entrada": "PATCH wr-free {learningObjectiveId:'no-existe'}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to update resource\"}",
+  "cambiadas": "ninguna",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A05",
+  "titulo": "Cambiar el id de un recurso con progreso de estudiantes",
+  "entrada": "PATCH wr-free {id:'otro-id'}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to update resource\"}",
+  "cambiadas": "ninguna",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A06",
+  "titulo": "Cambiar el id de un recurso vinculado a una versión publicada",
+  "entrada": "PATCH wr-mat {id:'otro-id'}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to update resource\"}",
+  "cambiadas": "ninguna",
+  "antes": "[\"wr-mat\",\"lo-mat\",\"video\",\"Fracciones\",0,1,null]",
+  "despues": "[\"wr-mat\",\"lo-mat\",\"video\",\"Fracciones\",0,1,null]"
+ },
+ {
+  "id": "A07",
+  "titulo": "Cambiar campos de auditoría (createdAt, updatedAt) como texto",
+  "entrada": "PATCH wr-free {createdAt:'2000-01-01', updatedAt:'2000-01-01'}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to update resource\"}",
+  "cambiadas": "ninguna",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A08",
+  "titulo": "Cambiar createdAt con un número",
+  "entrada": "PATCH wr-free {createdAt: 946684800}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to update resource\"}",
+  "cambiadas": "ninguna",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A09",
+  "titulo": "Campo desconocido junto con uno válido",
+  "entrada": "PATCH wr-free {campoDesconocido:'x', title:'Titulo B'}",
+  "status": 200,
+  "resp": "{\"id\":\"wr-free\",\"learningObjectiveId\":\"lo-mat\",\"resourceType\":\"video\",\"title\":\"Titulo B\",\"notebookLmUrl\":null,\"barkleyFoundation\":null,\"studentHelp\":null,\"pedag",
+  "cambiadas": "weekly_resources",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Titulo B\",0,1,null]"
+ },
+ {
+  "id": "A10",
+  "titulo": "Nulo en una columna obligatoria (title)",
+  "entrada": "PATCH wr-free {title:null}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to update resource\"}",
+  "cambiadas": "ninguna",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A11",
+  "titulo": "Nulo en learningObjectiveId",
+  "entrada": "PATCH wr-free {learningObjectiveId:null}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to update resource\"}",
+  "cambiadas": "ninguna",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A12",
+  "titulo": "Tipo de recurso fuera de la lista",
+  "entrada": "PATCH wr-free {resourceType:'ejecutable'}",
+  "status": 200,
+  "resp": "{\"id\":\"wr-free\",\"learningObjectiveId\":\"lo-mat\",\"resourceType\":\"ejecutable\",\"title\":\"Libre\",\"notebookLmUrl\":null,\"barkleyFoundation\":null,\"studentHelp\":null,\"ped",
+  "cambiadas": "weekly_resources",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"ejecutable\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A13",
+  "titulo": "Paso pedagógico fuera de la lista",
+  "entrada": "PATCH wr-free {pedagogicalStep:'inventado'}",
+  "status": 200,
+  "resp": "{\"id\":\"wr-free\",\"learningObjectiveId\":\"lo-mat\",\"resourceType\":\"video\",\"title\":\"Libre\",\"notebookLmUrl\":null,\"barkleyFoundation\":null,\"studentHelp\":null,\"pedagogi",
+  "cambiadas": "weekly_resources",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,\"inventado\"]"
+ },
+ {
+  "id": "A14",
+  "titulo": "Objeto donde se espera texto (title)",
+  "entrada": "PATCH wr-free {title:{a:1}}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to update resource\"}",
+  "cambiadas": "ninguna",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A15",
+  "titulo": "Arreglo donde se espera texto (title)",
+  "entrada": "PATCH wr-free {title:['x','y']}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to update resource\"}",
+  "cambiadas": "ninguna",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A16",
+  "titulo": "Texto donde se espera número (sortOrder) y booleano (isActive)",
+  "entrada": "PATCH wr-free {sortOrder:'abc', isActive:'no'}",
+  "status": 200,
+  "resp": "{\"id\":\"wr-free\",\"learningObjectiveId\":\"lo-mat\",\"resourceType\":\"video\",\"title\":\"Libre\",\"notebookLmUrl\":null,\"barkleyFoundation\":null,\"studentHelp\":null,\"pedagogi",
+  "cambiadas": "weekly_resources",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",\"abc\",1,null]"
+ },
+ {
+  "id": "A17",
+  "titulo": "Valor válido y prohibido a la vez",
+  "entrada": "PATCH wr-free {title:'Valido', learningObjectiveId:'lo-len'}",
+  "status": 200,
+  "resp": "{\"id\":\"wr-free\",\"learningObjectiveId\":\"lo-len\",\"resourceType\":\"video\",\"title\":\"Valido\",\"notebookLmUrl\":null,\"barkleyFoundation\":null,\"studentHelp\":null,\"pedagog",
+  "cambiadas": "weekly_resources",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-len\",\"video\",\"Valido\",0,1,null]"
+ },
+ {
+  "id": "A18",
+  "titulo": "Recurso inexistente",
+  "entrada": "PATCH no-existe {title:'x'}",
+  "status": 404,
+  "resp": "{\"message\":\"Resource not found\"}",
+  "cambiadas": "ninguna",
+  "antes": "",
+  "despues": ""
+ },
+ {
+  "id": "A19",
+  "titulo": "Cuerpo vacío",
+  "entrada": "PATCH wr-free {}",
+  "status": 200,
+  "resp": "{\"id\":\"wr-free\",\"learningObjectiveId\":\"lo-mat\",\"resourceType\":\"video\",\"title\":\"Libre\",\"notebookLmUrl\":null,\"barkleyFoundation\":null,\"studentHelp\":null,\"pedagogi",
+  "cambiadas": "ninguna",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A20",
+  "titulo": "Sin sesión y con un estudiante",
+  "entrada": "PATCH wr-free sin sesión / como estudiante",
+  "status": "401/403",
+  "resp": "",
+  "cambiadas": "ninguna",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A21",
+  "titulo": "Dos movimientos simultáneos del mismo recurso",
+  "entrada": "PATCH wr-free {lo-len} y {lo-mat2} a la vez",
+  "status": "200/200",
+  "resp": "",
+  "cambiadas": "weekly_resources",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat2\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "A22",
+  "titulo": "Error en el servidor tras un cuerpo válido a medias (título nulo y movimiento)",
+  "entrada": "PATCH wr-free {learningObjectiveId:'lo-len', title:null}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to update resource\"}",
+  "cambiadas": "ninguna",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "B01",
+  "titulo": "Crear recurso con objetivo inexistente",
+  "entrada": "POST /api/admin/resources {learningObjectiveId:'no-existe',...}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to create resource\"}",
+  "cambiadas": "ninguna",
+  "antes": "",
+  "despues": ""
+ },
+ {
+  "id": "B02",
+  "titulo": "Crear recurso con campos extra (id propio, sortOrder)",
+  "entrada": "POST /api/admin/resources {id:'impuesto',...}",
+  "status": 200,
+  "resp": "{\"id\":\"08c278af-52b1-4505-9985-ecc54a4700af\",\"learningObjectiveId\":\"lo-mat2\",\"resourceType\":\"video\",\"title\":\"x\",\"notebookLmUrl\":null,\"barkleyFoundation\":null,\"s",
+  "cambiadas": "weekly_resources",
+  "antes": "",
+  "despues": ""
+ },
+ {
+  "id": "C01",
+  "titulo": "Sincronización con Drive de un módulo SIN recursos vinculados (borra y luego falla al leer Drive)",
+  "entrada": "POST /api/admin/drive/sync {folderId, learningObjectiveId:'lo-mat2'}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to sync resources\"}",
+  "cambiadas": "weekly_resources",
+  "antes": "",
+  "despues": ""
+ },
+ {
+  "id": "C02",
+  "titulo": "Sincronización con Drive de un módulo con un recurso vinculado a una versión publicada",
+  "entrada": "POST /api/admin/drive/sync {learningObjectiveId:'lo-mat'}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to sync resources\"}",
+  "cambiadas": "ninguna",
+  "antes": "",
+  "despues": ""
+ },
+ {
+  "id": "C03",
+  "titulo": "Sincronización sobre un objetivo inexistente",
+  "entrada": "POST /api/admin/drive/sync {learningObjectiveId:'no-existe'}",
+  "status": 500,
+  "resp": "{\"message\":\"Failed to sync resources\"}",
+  "cambiadas": "ninguna",
+  "antes": "",
+  "despues": ""
+ },
+ {
+  "id": "G01",
+  "titulo": "Rutas con comentario «temporary public»: sin sesión y como estudiante",
+  "entrada": "POST /api/admin/seed, POST /api/admin/level-subjects/ls-len-6b/create-modules",
+  "status": "401/403/401/403/401/403",
+  "resp": "(sin sesión/estudiante) por ruta",
+  "cambiadas": "ninguna",
+  "antes": "",
+  "despues": ""
+ },
+ {
+  "id": "D01",
+  "titulo": "Página del libro con campos extra de identidad",
+  "entrada": "PUT /api/admin/learning-objectives/lo-mat/pages {levelSubjectId:'ls-len-6b', textbookStartPage:3}",
+  "status": 200,
+  "resp": "{\"id\":\"lo-mat\",\"levelSubjectId\":\"ls-mat-5b\",\"code\":\"M1\",\"title\":\"Fracciones\",\"description\":null,\"weekNumber\":1,\"sortOrder\":0,\"textbookStartPage\":3,\"textbookEndP",
+  "cambiadas": "learning_objectives",
+  "antes": "",
+  "despues": ""
+ },
+ {
+  "id": "D02",
+  "titulo": "Paso pedagógico con campo de relación en el cuerpo",
+  "entrada": "PATCH /api/admin/resources/wr-free/pedagogical-step {pedagogicalStep:'x', learningObjectiveId:'lo-len'}",
+  "status": 400,
+  "resp": "{\"message\":\"Datos inválidos\"}",
+  "cambiadas": "ninguna",
+  "antes": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]",
+  "despues": "[\"wr-free\",\"lo-mat\",\"video\",\"Libre\",0,1,null]"
+ },
+ {
+  "id": "E01",
+  "titulo": "SQL directo: cambiar la asignatura de un módulo vinculado",
+  "entrada": "UPDATE learning_objectives SET level_subject_id='ls-len-6b' WHERE id='lo-mat'",
+  "status": "SQL",
+  "resp": "aceptada",
+  "cambiadas": "learning_objectives",
+  "antes": "",
+  "despues": ""
+ },
+ {
+  "id": "E02",
+  "titulo": "SQL directo: INSERT OR REPLACE de un recurso vinculado",
+  "entrada": "INSERT OR REPLACE INTO weekly_resources ... id='wr-mat' otro módulo",
+  "status": "SQL",
+  "resp": "rechazada: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed",
+  "cambiadas": "ninguna",
+  "antes": "",
+  "despues": ""
+ },
+ {
+  "id": "E03",
+  "titulo": "SQL directo: INSERT OR REPLACE de un recurso no vinculado",
+  "entrada": "INSERT OR REPLACE INTO weekly_resources ... id='wr-free2' otro módulo",
+  "status": "SQL",
+  "resp": "aceptada",
+  "cambiadas": "weekly_resources",
+  "antes": "[\"wr-free2\",\"lo-mat\",\"audio\",\"Libre 2\",0,1,null]",
+  "despues": "[\"wr-free2\",\"lo-len\",\"video\",\"R\",0,1,null]"
+ },
+ {
+  "id": "E04",
+  "titulo": "SQL directo: borrar un módulo con recursos vinculados",
+  "entrada": "DELETE FROM learning_objectives WHERE id='lo-mat'",
+  "status": "SQL",
+  "resp": "rechazada: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed",
+  "cambiadas": "ninguna",
+  "antes": "",
+  "despues": ""
+ },
+ {
+  "id": "F01",
+  "titulo": "Consecuencia de A01: crear la versión 2 del dominio",
+  "entrada": "crearVersionDominio(d)",
+  "status": "falla",
+  "resp": "SQLITE_CONSTRAINT: knowledge_item_resources: el recurso es de otra asignatura o nivel",
+  "cambiadas": "ninguna",
+  "antes": "",
+  "despues": ""
+ },
+ {
+  "id": "R01",
+  "titulo": "Reconciliación (solo lectura) sobre el estado final",
+  "entrada": "consulta de vínculos incoherentes",
+  "status": "consulta",
+  "resp": "[[\"recurso\",\"av1\",\"wr-mat\",\"lo-len\",\"ls-len-6b\",\"ls-mat-5b\"]]",
+  "cambiadas": "ninguna",
+  "antes": "",
+  "despues": ""
+ }
+]

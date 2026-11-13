@@ -1,0 +1,110 @@
+// TEMPORAL (se borra): batería adversarial de la auditoría de recursos heredados.
+import fs from "node:fs"; import os from "node:os"; import path from "node:path"; import { createHash } from "node:crypto";
+import express from "express"; import { createServer } from "node:http"; import type { AddressInfo } from "node:net";
+delete process.env.REPL_IDENTITY; delete process.env.WEB_REPL_RENEWAL; delete process.env.REPLIT_CONNECTORS_HOSTNAME;
+if (process.env.NODE_ENV === "production") throw new Error("no producción");
+const dir = fs.mkdtempSync(path.join(os.tmpdir(), "aud-")); process.env.TEST_DATABASE_URL = `file:${path.join(dir, "a.db")}`;
+const { sql, eq } = await import("drizzle-orm");
+const { generateSQLiteDrizzleJson, generateSQLiteMigration } = await import("drizzle-kit/api");
+const S = await import("../shared/schema");
+const { db } = await import("../server/db");
+for (const st of await generateSQLiteMigration(await generateSQLiteDrizzleJson({}), await generateSQLiteDrizzleJson(S as any))) await db.run(sql.raw(st));
+const client: any = (db as any).$client;
+const { migrar } = await import("../server/migrar");
+const { sembrarFicticios } = await import("./lib/esquemaHeredado");
+const { users } = await import("../shared/models/auth");
+await migrar(client, "migrations/vortice");
+await sembrarFicticios(client);
+await db.insert(users).values([{ id: "admin" }, { id: "est" }]);
+await db.insert(S.userProfiles).values([{ userId: "admin", role: "admin" }, { userId: "est", role: "student" }]);
+const x = (s: string, a: any[] = []) => client.execute({ sql: s, args: a });
+await x("INSERT INTO learning_objectives (id, level_subject_id, code, title, week_number) VALUES ('lo-mat2','ls-mat-5b','M2','Mod 2',2)");
+await x("INSERT INTO weekly_resources (id, learning_objective_id, resource_type, title) VALUES ('wr-free','lo-mat','video','Libre'),('wr-sync','lo-mat2','video','Para sync'),('wr-free2','lo-mat','audio','Libre 2')");
+await x("INSERT INTO student_progress (id, user_id, resource_id) VALUES ('sp1','est','wr-free')");
+await x("INSERT INTO curriculum_objectives (id, level_subject_id, official_code, text, source_url, source_year) VALUES ('oa1','ls-mat-5b','M1','t','https://e.test',2018)");
+await x("INSERT INTO knowledge_domains (id, level_subject_id, name) VALUES ('d','ls-mat-5b','d')");
+await x("INSERT INTO knowledge_domain_versions (id, domain_id, version, status, created_by) VALUES ('dv1','d',1,'borrador','ficticio-autor')");
+await x("INSERT INTO knowledge_items (id, domain_id, code) VALUES ('a','d','A')");
+await x("INSERT INTO knowledge_item_versions (id,item_id,domain_version_id,domain_id,name,operational_definition) VALUES ('av1','a','dv1','d','n','d')");
+await x("INSERT INTO knowledge_item_oas (item_version_id, curriculum_objective_id) VALUES ('av1','oa1')");
+await x("INSERT INTO knowledge_item_modules (item_version_id, learning_objective_id) VALUES ('av1','lo-mat')");
+await x("INSERT INTO knowledge_item_resources (item_version_id, resource_id, role) VALUES ('av1','wr-mat','explicacion')");
+await x("UPDATE knowledge_domain_versions SET status='en_revision' WHERE id='dv1'");
+await x("UPDATE knowledge_domain_versions SET status='validada', validated_by='ficticio-validador' WHERE id='dv1'");
+await x("UPDATE knowledge_domain_versions SET status='publicada', published_at=1 WHERE id='dv1'");
+const { registerRoutes } = await import("../server/routes");
+const app = express(); app.use(express.json());
+app.use((req: any, _r, next) => { const u = req.header("x-test-user"); req.isAuthenticated = () => !!u; if (u) req.user = { id: u, claims: { sub: u } }; next(); });
+const server = createServer(app); await registerRoutes(server, app); await new Promise<void>((r) => server.listen(0, r));
+const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+const http = async (method: string, p: string, user: string | undefined, body?: unknown) => {
+  const r = await fetch(base + p, { method, headers: { "content-type": "application/json", ...(user ? { "x-test-user": user } : {}) }, body: body === undefined ? undefined : JSON.stringify(body) });
+  return { status: r.status, text: (await r.text()).slice(0, 160).replace(/\s+/g, " ") };
+};
+const tablas = (await x("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'libsql_%' AND name <> 'vortice_migraciones' ORDER BY name")).rows.map((r: any) => String(r.name));
+const snap = async () => { const o: Record<string, string> = {}; for (const t of tablas) o[t] = createHash("sha256").update(JSON.stringify((await x(`SELECT * FROM ${t}`)).rows.map((r: any) => JSON.stringify(Object.values(r))).sort())).digest("hex").slice(0, 8); return o; };
+const fila = async (id: string) => JSON.stringify((await x("SELECT id, learning_objective_id AS lo, resource_type AS tipo, title, sort_order AS orden, is_active AS act, pedagogical_step AS paso FROM weekly_resources WHERE id=?", [id])).rows.map((r: any) => Object.values(r))[0] ?? null);
+const out: any[] = [];
+async function caso(id: string, titulo: string, entrada: string, f: () => Promise<{ status?: number | string; resp?: string }>, limpiar?: () => Promise<void>, filaId?: string) {
+  const a = await snap(); const fa = filaId ? await fila(filaId) : "";
+  let r: any; try { r = await f(); } catch (e: any) { r = { status: "excepción", resp: String(e.message).slice(0, 120) }; }
+  const d = await snap(); const fd = filaId ? await fila(filaId) : "";
+  const cambiadas = tablas.filter((t) => a[t] !== d[t]);
+  out.push({ id, titulo, entrada, status: r.status, resp: r.resp ?? "", cambiadas: cambiadas.join(",") || "ninguna", antes: fa, despues: fd });
+  if (limpiar) await limpiar();
+}
+const restaurar = (id: string, lo: string, extra = "") => async () => { await x(`UPDATE weekly_resources SET learning_objective_id=?, title=?, resource_type=?, sort_order=0, is_active=1, pedagogical_step=NULL ${extra} WHERE id=?`, [lo, id === "wr-mat" ? "Fracciones" : id === "wr-free" ? "Libre" : id === "wr-free2" ? "Libre 2" : "Para sync", id === "wr-free2" ? "audio" : "video", id]); };
+const P = (id: string, body: any, user: string | null = "admin") => http("PATCH", `/api/admin/resources/${id}`, user ?? undefined, body);
+const R = (r: any) => ({ status: r.status, resp: r.text });
+
+await caso("A01", "Mover un recurso VINCULADO a un módulo de otra asignatura", "PATCH wr-mat {learningObjectiveId:'lo-len'}", async () => R(await P("wr-mat", { learningObjectiveId: "lo-len" })), restaurar("wr-mat", "lo-mat"), "wr-mat");
+await caso("A02", "Mover un recurso NO vinculado a un módulo de otra asignatura", "PATCH wr-free {learningObjectiveId:'lo-len'}", async () => R(await P("wr-free", { learningObjectiveId: "lo-len" })), restaurar("wr-free", "lo-mat"), "wr-free");
+await caso("A03", "Mover un recurso a otro módulo de la MISMA asignatura", "PATCH wr-free {learningObjectiveId:'lo-mat2'}", async () => R(await P("wr-free", { learningObjectiveId: "lo-mat2" })), restaurar("wr-free", "lo-mat"), "wr-free");
+await caso("A04", "Mover a un objetivo inexistente", "PATCH wr-free {learningObjectiveId:'no-existe'}", async () => R(await P("wr-free", { learningObjectiveId: "no-existe" })), restaurar("wr-free", "lo-mat"), "wr-free");
+await caso("A05", "Cambiar el id de un recurso con progreso de estudiantes", "PATCH wr-free {id:'otro-id'}", async () => R(await P("wr-free", { id: "otro-id" })), async () => { await x("UPDATE weekly_resources SET id='wr-free' WHERE id='otro-id'").catch(() => {}); }, "wr-free");
+await caso("A06", "Cambiar el id de un recurso vinculado a una versión publicada", "PATCH wr-mat {id:'otro-id'}", async () => R(await P("wr-mat", { id: "otro-id" })), undefined, "wr-mat");
+await caso("A07", "Cambiar campos de auditoría (createdAt, updatedAt) como texto", "PATCH wr-free {createdAt:'2000-01-01', updatedAt:'2000-01-01'}", async () => R(await P("wr-free", { createdAt: "2000-01-01", updatedAt: "2000-01-01" })), undefined, "wr-free");
+await caso("A08", "Cambiar createdAt con un número", "PATCH wr-free {createdAt: 946684800}", async () => R(await P("wr-free", { createdAt: 946684800 })), undefined, "wr-free");
+await caso("A09", "Campo desconocido junto con uno válido", "PATCH wr-free {campoDesconocido:'x', title:'Titulo B'}", async () => R(await P("wr-free", { campoDesconocido: "x", title: "Titulo B" })), restaurar("wr-free", "lo-mat"), "wr-free");
+await caso("A10", "Nulo en una columna obligatoria (title)", "PATCH wr-free {title:null}", async () => R(await P("wr-free", { title: null })), undefined, "wr-free");
+await caso("A11", "Nulo en learningObjectiveId", "PATCH wr-free {learningObjectiveId:null}", async () => R(await P("wr-free", { learningObjectiveId: null })), undefined, "wr-free");
+await caso("A12", "Tipo de recurso fuera de la lista", "PATCH wr-free {resourceType:'ejecutable'}", async () => R(await P("wr-free", { resourceType: "ejecutable" })), restaurar("wr-free", "lo-mat"), "wr-free");
+await caso("A13", "Paso pedagógico fuera de la lista", "PATCH wr-free {pedagogicalStep:'inventado'}", async () => R(await P("wr-free", { pedagogicalStep: "inventado" })), restaurar("wr-free", "lo-mat"), "wr-free");
+await caso("A14", "Objeto donde se espera texto (title)", "PATCH wr-free {title:{a:1}}", async () => R(await P("wr-free", { title: { a: 1 } })), restaurar("wr-free", "lo-mat"), "wr-free");
+await caso("A15", "Arreglo donde se espera texto (title)", "PATCH wr-free {title:['x','y']}", async () => R(await P("wr-free", { title: ["x", "y"] })), restaurar("wr-free", "lo-mat"), "wr-free");
+await caso("A16", "Texto donde se espera número (sortOrder) y booleano (isActive)", "PATCH wr-free {sortOrder:'abc', isActive:'no'}", async () => R(await P("wr-free", { sortOrder: "abc", isActive: "no" })), restaurar("wr-free", "lo-mat"), "wr-free");
+await caso("A17", "Valor válido y prohibido a la vez", "PATCH wr-free {title:'Valido', learningObjectiveId:'lo-len'}", async () => R(await P("wr-free", { title: "Valido", learningObjectiveId: "lo-len" })), restaurar("wr-free", "lo-mat"), "wr-free");
+await caso("A18", "Recurso inexistente", "PATCH no-existe {title:'x'}", async () => R(await P("no-existe", { title: "x" })));
+await caso("A19", "Cuerpo vacío", "PATCH wr-free {}", async () => R(await P("wr-free", {})), undefined, "wr-free");
+await caso("A20", "Sin sesión y con un estudiante", "PATCH wr-free sin sesión / como estudiante", async () => { const a = await P("wr-free", { title: "x" }, null); const b = await P("wr-free", { title: "x" }, "est"); return { status: `${a.status}/${b.status}`, resp: "" }; }, undefined, "wr-free");
+await caso("A21", "Dos movimientos simultáneos del mismo recurso", "PATCH wr-free {lo-len} y {lo-mat2} a la vez", async () => { const [a, b] = await Promise.all([P("wr-free", { learningObjectiveId: "lo-len" }), P("wr-free", { learningObjectiveId: "lo-mat2" })]); return { status: `${a.status}/${b.status}`, resp: "" }; }, restaurar("wr-free", "lo-mat"), "wr-free");
+await caso("A22", "Error en el servidor tras un cuerpo válido a medias (título nulo y movimiento)", "PATCH wr-free {learningObjectiveId:'lo-len', title:null}", async () => R(await P("wr-free", { learningObjectiveId: "lo-len", title: null })), restaurar("wr-free", "lo-mat"), "wr-free");
+await caso("B01", "Crear recurso con objetivo inexistente", "POST /api/admin/resources {learningObjectiveId:'no-existe',...}", async () => R(await http("POST", "/api/admin/resources", "admin", { learningObjectiveId: "no-existe", resourceType: "video", title: "x" })));
+await caso("B02", "Crear recurso con campos extra (id propio, sortOrder)", "POST /api/admin/resources {id:'impuesto',...}", async () => R(await http("POST", "/api/admin/resources", "admin", { id: "impuesto", learningObjectiveId: "lo-mat2", resourceType: "video", title: "x", campoExtra: 1 })), async () => { await x("DELETE FROM weekly_resources WHERE title='x'").catch(() => {}); });
+await caso("C01", "Sincronización con Drive de un módulo SIN recursos vinculados (borra y luego falla al leer Drive)", "POST /api/admin/drive/sync {folderId, learningObjectiveId:'lo-mat2'}", async () => R(await http("POST", "/api/admin/drive/sync", "admin", { folderId: "f", learningObjectiveId: "lo-mat2" })), async () => { await x("INSERT OR IGNORE INTO weekly_resources (id, learning_objective_id, resource_type, title) VALUES ('wr-sync','lo-mat2','video','Para sync')"); });
+await caso("C02", "Sincronización con Drive de un módulo con un recurso vinculado a una versión publicada", "POST /api/admin/drive/sync {learningObjectiveId:'lo-mat'}", async () => R(await http("POST", "/api/admin/drive/sync", "admin", { folderId: "f", learningObjectiveId: "lo-mat" })));
+await caso("C03", "Sincronización sobre un objetivo inexistente", "POST /api/admin/drive/sync {learningObjectiveId:'no-existe'}", async () => R(await http("POST", "/api/admin/drive/sync", "admin", { folderId: "f", learningObjectiveId: "no-existe" })));
+await caso("G01", "Rutas con comentario «temporary public»: sin sesión y como estudiante", "POST /api/admin/seed, POST /api/admin/level-subjects/ls-len-6b/create-modules", async () => { const r = []; for (const [m, p] of [["POST", "/api/admin/seed"], ["POST", "/api/admin/level-subjects/ls-len-6b/create-modules"], ["POST", "/api/admin/drive/sync"]] as const) { r.push((await http(m, p, undefined, {})).status, (await http(m, p, "est", {})).status); } return { status: r.join("/"), resp: "(sin sesión/estudiante) por ruta" }; });
+await caso("D01", "Página del libro con campos extra de identidad", "PUT /api/admin/learning-objectives/lo-mat/pages {levelSubjectId:'ls-len-6b', textbookStartPage:3}", async () => R(await http("PUT", "/api/admin/learning-objectives/lo-mat/pages", "admin", { levelSubjectId: "ls-len-6b", textbookStartPage: 3 })), async () => { await x("UPDATE learning_objectives SET textbook_start_page=NULL WHERE id='lo-mat'"); });
+await caso("D02", "Paso pedagógico con campo de relación en el cuerpo", "PATCH /api/admin/resources/wr-free/pedagogical-step {pedagogicalStep:'x', learningObjectiveId:'lo-len'}", async () => R(await http("PATCH", "/api/admin/resources/wr-free/pedagogical-step", "admin", { pedagogicalStep: "x", learningObjectiveId: "lo-len" })), undefined, "wr-free");
+await caso("E01", "SQL directo: cambiar la asignatura de un módulo vinculado", "UPDATE learning_objectives SET level_subject_id='ls-len-6b' WHERE id='lo-mat'", async () => { await x("UPDATE learning_objectives SET level_subject_id='ls-len-6b' WHERE id='lo-mat'"); return { status: "SQL", resp: "aceptada" }; }, async () => { await x("UPDATE learning_objectives SET level_subject_id='ls-mat-5b' WHERE id='lo-mat'"); });
+await caso("E02", "SQL directo: INSERT OR REPLACE de un recurso vinculado", "INSERT OR REPLACE INTO weekly_resources ... id='wr-mat' otro módulo", async () => { try { await x("INSERT OR REPLACE INTO weekly_resources (id, learning_objective_id, resource_type, title) VALUES ('wr-mat','lo-len','video','R')"); return { status: "SQL", resp: "aceptada" }; } catch (e: any) { return { status: "SQL", resp: "rechazada: " + String(e.message).slice(0, 60) }; } });
+await caso("E03", "SQL directo: INSERT OR REPLACE de un recurso no vinculado", "INSERT OR REPLACE INTO weekly_resources ... id='wr-free2' otro módulo", async () => { try { await x("INSERT OR REPLACE INTO weekly_resources (id, learning_objective_id, resource_type, title) VALUES ('wr-free2','lo-len','video','R')"); return { status: "SQL", resp: "aceptada" }; } catch (e: any) { return { status: "SQL", resp: "rechazada: " + String(e.message).slice(0, 60) }; } }, restaurar("wr-free2", "lo-mat"), "wr-free2");
+await caso("E04", "SQL directo: borrar un módulo con recursos vinculados", "DELETE FROM learning_objectives WHERE id='lo-mat'", async () => { try { await x("DELETE FROM learning_objectives WHERE id='lo-mat'"); return { status: "SQL", resp: "aceptada" }; } catch (e: any) { return { status: "SQL", resp: "rechazada: " + String(e.message).slice(0, 60) }; } });
+// consecuencia: dejar el vínculo incoherente y crear una versión nueva
+await P("wr-mat", { learningObjectiveId: "lo-len" });
+const { crearVersionDominio } = await import("../server/catalogo");
+await caso("F01", "Consecuencia de A01: crear la versión 2 del dominio", "crearVersionDominio(d)", async () => { try { const v = await crearVersionDominio(client, "d", "ficticio-autor"); return { status: "ok", resp: `versión ${v.version}` }; } catch (e: any) { return { status: "falla", resp: String(e.message).slice(0, 110) }; } });
+// reconciliación (solo lectura)
+const recon = await x(`
+SELECT 'recurso' AS vinculo, l.item_version_id AS iv, l.resource_id AS id, w.learning_objective_id AS modulo, lo.level_subject_id AS asig_vinculo, d.level_subject_id AS asig_dominio
+FROM knowledge_item_resources l JOIN knowledge_item_versions v ON v.id=l.item_version_id JOIN knowledge_domains d ON d.id=v.domain_id
+LEFT JOIN weekly_resources w ON w.id=l.resource_id LEFT JOIN learning_objectives lo ON lo.id=w.learning_objective_id
+WHERE lo.level_subject_id IS NOT d.level_subject_id
+UNION ALL SELECT 'modulo', l.item_version_id, l.learning_objective_id, l.learning_objective_id, lo.level_subject_id, d.level_subject_id
+FROM knowledge_item_modules l JOIN knowledge_item_versions v ON v.id=l.item_version_id JOIN knowledge_domains d ON d.id=v.domain_id
+LEFT JOIN learning_objectives lo ON lo.id=l.learning_objective_id WHERE lo.level_subject_id IS NOT d.level_subject_id`);
+out.push({ id: "R01", titulo: "Reconciliación (solo lectura) sobre el estado final", entrada: "consulta de vínculos incoherentes", status: "consulta", resp: JSON.stringify(recon.rows.map((r: any) => Object.values(r))), cambiadas: "ninguna", antes: "", despues: "" });
+fs.writeFileSync(process.argv[2] ?? "/tmp/aud.json", JSON.stringify(out, null, 1));
+console.log(out.map((o) => `${o.id} | ${o.status} | cambios: ${o.cambiadas} | ${o.antes && o.antes !== o.despues ? "FILA CAMBIÓ" : o.antes ? "fila igual" : ""} | ${o.resp.slice(0, 70)}`).join("\n"));
+process.exit(0);

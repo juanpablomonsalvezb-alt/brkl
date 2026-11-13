@@ -1,0 +1,209 @@
+## levels
+cols: id TEXT NN PK; name TEXT NN; program_type TEXT NN; total_weeks INTEGER NN =30; cadence_per_oa TEXT; sort_order INTEGER NN =0
+fk: -
+unique: 1; indices: -
+triggers(0): -
+entrantes: level_subjects.level_id
+
+## subjects
+cols: id TEXT NN PK; name TEXT NN; slug TEXT NN; description TEXT; created_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer)
+fk: -
+unique: 2; indices: subjects_slug_unique
+triggers(0): -
+entrantes: level_subjects.subject_id, textbook_configs.subject_id
+
+## level_subjects
+cols: id TEXT NN PK; level_id TEXT NN; subject_id TEXT NN; total_oas INTEGER =0; textbook_pdf_url TEXT; textbook_title TEXT
+fk: subject_id->subjects.id(NO ACTION); level_id->levels.id(NO ACTION)
+unique: 1; indices: -
+triggers(0): -
+entrantes: learning_objectives.level_subject_id, learning_events.level_subject_id, enrollments.level_subject_id, curriculum_objectives.level_subject_id, knowledge_domains.level_subject_id
+
+## learning_objectives
+cols: id TEXT NN PK; level_subject_id TEXT NN; code TEXT NN; title TEXT NN; description TEXT; week_number INTEGER NN; sort_order INTEGER NN =0; textbook_start_page INTEGER; textbook_end_page INTEGER; module_oas TEXT; module_contents TEXT; module_date_range TEXT; word_doc_url TEXT
+fk: level_subject_id->level_subjects.id(NO ACTION)
+unique: 1; indices: -
+triggers(0): -
+entrantes: weekly_resources.learning_objective_id, module_evaluations.learning_objective_id, portfolio_evidences.learning_objective_id, weekly_completion.learning_objective_id, rubrics.learning_objective_id, tutoring_cases.learning_objective_id, knowledge_item_modules.learning_objective_id
+
+## weekly_resources
+cols: id TEXT NN PK; learning_objective_id TEXT NN; resource_type TEXT NN; title TEXT NN; notebook_lm_url TEXT; barkley_foundation TEXT; student_help TEXT; pedagogical_objective TEXT; pedagogical_step TEXT; reflection_prompts TEXT; sort_order INTEGER NN =0; is_active INTEGER =true; created_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer); updated_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer)
+fk: learning_objective_id->learning_objectives.id(NO ACTION)
+unique: 1; indices: -
+triggers(0): -
+entrantes: student_progress.resource_id, reflection_responses.resource_id, tutoring_cases.resource_id, knowledge_item_resources.resource_id
+
+## module_evaluations
+cols: id TEXT NN PK; learning_objective_id TEXT NN; evaluation_number INTEGER NN; title TEXT NN; description TEXT; release_day INTEGER NN =5; release_week INTEGER NN; form_url TEXT; html_content TEXT; questions_json TEXT; total_questions INTEGER; passing_score INTEGER =60; generated_at INTEGER; is_required INTEGER =true; created_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer)
+fk: learning_objective_id->learning_objectives.id(NO ACTION)
+unique: 1; indices: -
+triggers(0): -
+entrantes: evaluation_progress.evaluation_id, review_items.evaluation_id
+
+## evaluation_progress
+cols: id TEXT NN PK; user_id TEXT NN; evaluation_id TEXT NN; completed_at INTEGER; score INTEGER; total_correct INTEGER; total_questions INTEGER; answers_json TEXT; passed INTEGER =false
+fk: evaluation_id->module_evaluations.id(NO ACTION); user_id->users.id(NO ACTION)
+unique: 1; indices: -
+triggers(0): -
+entrantes: portfolio_evidences.evaluation_progress_id
+
+## student_progress
+cols: id TEXT NN PK; user_id TEXT NN; resource_id TEXT NN; completed_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer); score INTEGER
+fk: resource_id->weekly_resources.id(NO ACTION); user_id->users.id(NO ACTION)
+unique: 1; indices: -
+triggers(0): -
+entrantes: -
+
+## reflection_responses
+cols: id TEXT NN PK; user_id TEXT NN; resource_id TEXT NN; answers_json TEXT NN; created_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer); updated_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer)
+fk: resource_id->weekly_resources.id(NO ACTION); user_id->users.id(NO ACTION)
+unique: 2; indices: reflection_responses_user_resource_idx
+triggers(0): -
+entrantes: -
+
+## review_items
+cols: id TEXT NN PK; user_id TEXT NN; evaluation_id TEXT NN; question_id INTEGER NN; box INTEGER NN =0; due_day TEXT NN; reviews INTEGER NN =0; last_reviewed_at INTEGER; created_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer)
+fk: evaluation_id->module_evaluations.id(NO ACTION); user_id->users.id(NO ACTION)
+unique: 2; indices: review_items_user_question_idx
+triggers(0): -
+entrantes: -
+
+## learning_events
+cols: id TEXT NN PK; user_id TEXT NN; tipo TEXT NN; referencia TEXT NN; level_subject_id TEXT NN; created_at INTEGER NN
+fk: level_subject_id->level_subjects.id(NO ACTION); user_id->users.id(NO ACTION)
+unique: 1; indices: idx_learning_events_user_fecha,idx_learning_events_ls_fecha
+triggers(0): -
+entrantes: -
+
+## portfolio_evidences
+cols: id TEXT NN PK; user_id TEXT NN; learning_objective_id TEXT NN; kind TEXT NN; title TEXT NN; reflection TEXT NN =''; content TEXT; url TEXT; evaluation_progress_id TEXT; visibility TEXT NN ='privada'; created_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer); updated_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer)
+fk: evaluation_progress_id->evaluation_progress.id(NO ACTION); learning_objective_id->learning_objectives.id(NO ACTION); user_id->users.id(NO ACTION)
+unique: 1; indices: portfolio_evidences_user_idx
+triggers(0): -
+entrantes: -
+
+## weekly_completion
+cols: id TEXT NN PK; user_id TEXT NN; learning_objective_id TEXT NN; is_complete INTEGER =false; completed_at INTEGER; exam_score INTEGER
+fk: learning_objective_id->learning_objectives.id(NO ACTION); user_id->users.id(NO ACTION)
+unique: 1; indices: -
+triggers(0): -
+entrantes: -
+
+## rubrics
+cols: id TEXT NN PK; learning_objective_id TEXT NN; title TEXT NN; version INTEGER NN; is_published INTEGER NN =false; created_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer)
+fk: learning_objective_id->learning_objectives.id(NO ACTION)
+unique: 2; indices: rubrics_objective_version_uq
+triggers(0): -
+entrantes: -
+
+## tutoring_cases
+cols: id TEXT NN PK; student_id TEXT NN; tutor_id TEXT; learning_objective_id TEXT NN; resource_id TEXT; question TEXT NN; response TEXT; closing_note TEXT; status TEXT NN ='abierto'; created_at INTEGER NN; assigned_at INTEGER; responded_at INTEGER; closed_at INTEGER
+fk: resource_id->weekly_resources.id(NO ACTION); learning_objective_id->learning_objectives.id(NO ACTION); tutor_id->users.id(NO ACTION); student_id->users.id(NO ACTION)
+unique: 1; indices: idx_tutoring_cases_tutor_status,idx_tutoring_cases_student
+triggers(0): -
+entrantes: -
+
+## brujula_weeks
+cols: id TEXT NN PK; user_id TEXT NN; week_start TEXT NN; goals_json TEXT NN; difficulty TEXT; note TEXT; closed_at INTEGER; created_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer); updated_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer)
+fk: user_id->users.id(NO ACTION)
+unique: 2; indices: brujula_weeks_user_week
+triggers(0): -
+entrantes: -
+
+## textbook_configs
+cols: id TEXT NN PK; subject_id TEXT NN; drive_folder_id TEXT; pdf_url TEXT; pdf_name TEXT NN; total_pages INTEGER; module_pages_config TEXT NN ='{}'; module_pdfs_map TEXT ='{}'; created_at INTEGER; updated_at INTEGER
+fk: subject_id->subjects.id(NO ACTION)
+unique: 1; indices: -
+triggers(0): -
+entrantes: -
+
+## enrollments
+cols: id TEXT NN PK; user_id TEXT NN; level_subject_id TEXT NN; enrolled_at INTEGER =cast((julianday('now') - 2440587.5)*86400000 as integer); is_active INTEGER =true
+fk: level_subject_id->level_subjects.id(NO ACTION); user_id->users.id(NO ACTION)
+unique: 1; indices: -
+triggers(0): -
+entrantes: -
+
+## curriculum_objectives
+cols: id TEXT PK; level_subject_id TEXT NN; official_code TEXT NN; text TEXT NN; source_url TEXT NN; source_year INTEGER NN; verified_by TEXT; verified_at REAL
+fk: verified_by->users.id(RESTRICT); level_subject_id->level_subjects.id(RESTRICT)
+unique: 2; indices: -
+triggers(4): co_asignatura_fija,co_clave_unica,co_id_inmutable,co_no_sustituir
+entrantes: knowledge_item_oas.curriculum_objective_id
+
+## knowledge_domains
+cols: id TEXT PK; level_subject_id TEXT NN; name TEXT NN
+fk: level_subject_id->level_subjects.id(RESTRICT)
+unique: 1; indices: -
+triggers(2): kd_identidad,kd_no_sustituir
+entrantes: knowledge_domain_versions.domain_id, knowledge_items.domain_id
+
+## knowledge_domain_versions
+cols: id TEXT PK; domain_id TEXT NN; version INTEGER NN; status TEXT NN; created_by TEXT NN; validated_by TEXT; published_at REAL
+fk: validated_by->users.id(RESTRICT); created_by->users.id(RESTRICT); domain_id->knowledge_domains.id(RESTRICT)
+unique: 4; indices: kdv_una_publicada
+triggers(7): kdv_nace_borrador,kdv_no_sustituir,kdv_publicar_linaje,kdv_publicar_requisitos,kdv_sin_delete,kdv_transicion,kdv_validar_requisitos
+entrantes: knowledge_item_versions.domain_version_id, knowledge_item_versions.domain_id
+
+## knowledge_items
+cols: id TEXT PK; domain_id TEXT NN; code TEXT NN
+fk: domain_id->knowledge_domains.id(RESTRICT)
+unique: 3; indices: -
+triggers(3): ki_codigo_unico,ki_identidad,ki_no_sustituir
+entrantes: knowledge_item_versions.item_id, knowledge_item_versions.domain_id, question_families.item_id
+
+## knowledge_item_versions
+cols: id TEXT PK; item_id TEXT NN; domain_version_id TEXT NN; domain_id TEXT NN; name TEXT NN; operational_definition TEXT NN; supersedes_version_id TEXT; evidence_continuity TEXT; continuity_decided_by TEXT
+fk: supersedes_version_id->knowledge_item_versions.id(RESTRICT); item_id->knowledge_item_versions.item_id(RESTRICT); domain_version_id->knowledge_domain_versions.id(RESTRICT); domain_id->knowledge_domain_versions.domain_id(RESTRICT); item_id->knowledge_items.id(RESTRICT); domain_id->knowledge_items.domain_id(RESTRICT); continuity_decided_by->users.id(RESTRICT)
+unique: 4; indices: -
+triggers(8): kiv_bloqueo_delete,kiv_bloqueo_insert,kiv_bloqueo_update,kiv_cambio_anula_aristas,kiv_continuidad_vigente,kiv_linaje_insert,kiv_linaje_update,kiv_no_sustituir
+entrantes: knowledge_item_versions.supersedes_version_id, knowledge_item_versions.item_id, knowledge_prerequisites.domain_version_id, knowledge_prerequisites.prerequisite_item_id, knowledge_prerequisites.domain_version_id, knowledge_prerequisites.item_id, knowledge_item_oas.item_version_id, knowledge_item_modules.item_version_id, knowledge_item_resources.item_version_id
+
+## knowledge_prerequisites
+cols: id TEXT PK; domain_version_id TEXT NN; item_id TEXT NN; prerequisite_item_id TEXT NN; relation TEXT NN; alt_group TEXT; justification TEXT NN; confidence TEXT NN; validated_by TEXT; validated_at REAL
+fk: domain_version_id->knowledge_item_versions.domain_version_id(RESTRICT); prerequisite_item_id->knowledge_item_versions.item_id(RESTRICT); domain_version_id->knowledge_item_versions.domain_version_id(RESTRICT); item_id->knowledge_item_versions.item_id(RESTRICT); validated_by->users.id(RESTRICT)
+unique: 2; indices: -
+triggers(9): kp_bloqueo_delete,kp_bloqueo_insert,kp_bloqueo_update,kp_cambio_anula_validacion,kp_clave_unica,kp_id_inmutable,kp_nace_sin_validar,kp_no_sustituir,kp_validador_distinto
+entrantes: -
+
+## knowledge_item_oas
+cols: item_version_id TEXT NN PK; curriculum_objective_id TEXT NN PK
+fk: curriculum_objective_id->curriculum_objectives.id(RESTRICT); item_version_id->knowledge_item_versions.id(RESTRICT)
+unique: 1; indices: -
+triggers(4): kio_bloqueo_delete,kio_bloqueo_insert,kio_misma_asignatura,kio_sin_update
+entrantes: -
+
+## knowledge_item_modules
+cols: item_version_id TEXT NN PK; learning_objective_id TEXT NN PK
+fk: learning_objective_id->learning_objectives.id(RESTRICT); item_version_id->knowledge_item_versions.id(RESTRICT)
+unique: 1; indices: -
+triggers(4): kim_bloqueo_delete,kim_bloqueo_insert,kim_misma_asignatura,kim_sin_update
+entrantes: -
+
+## knowledge_item_resources
+cols: item_version_id TEXT NN PK; resource_id TEXT NN PK; role TEXT NN PK
+fk: resource_id->weekly_resources.id(RESTRICT); item_version_id->knowledge_item_versions.id(RESTRICT)
+unique: 1; indices: -
+triggers(4): kir_bloqueo_delete,kir_bloqueo_insert,kir_misma_asignatura,kir_sin_update
+entrantes: -
+
+## question_families
+cols: id TEXT PK; item_id TEXT NN; bank TEXT NN; label TEXT
+fk: item_id->knowledge_items.id(RESTRICT)
+unique: 2; indices: qf_item
+triggers(2): qf_identidad,qf_no_sustituir
+entrantes: question_versions.family_id, question_versions.item_id, question_versions.bank
+
+## question_versions
+cols: id TEXT PK; family_id TEXT NN; item_id TEXT NN; bank TEXT NN; version INTEGER NN; status TEXT NN; stem TEXT NN; options_json TEXT NN; correct_option_id TEXT NN; explanation TEXT; origin TEXT NN; ai_model TEXT; prompt_hash TEXT; content_hash TEXT; authored_by TEXT NN; reviewed_by TEXT; reviewed_at REAL; retired_kind TEXT; retired_reason TEXT; retired_by TEXT; retired_at REAL
+fk: family_id->question_families.id(RESTRICT); item_id->question_families.item_id(RESTRICT); bank->question_families.bank(RESTRICT); retired_by->users.id(RESTRICT); reviewed_by->users.id(RESTRICT); authored_by->users.id(RESTRICT)
+unique: 3; indices: -
+triggers(10): qv_aprobar_contenido,qv_congelada,qv_identidad,qv_nace_borrador,qv_no_sustituir,qv_opciones_insert,qv_opciones_update,qv_revision_congelada,qv_sin_delete,qv_transicion
+entrantes: question_voids.question_version_id
+
+## question_voids
+cols: id TEXT PK; question_version_id TEXT NN; reason TEXT NN; requested_by TEXT NN; approved_by TEXT NN; at REAL NN
+fk: approved_by->users.id(RESTRICT); requested_by->users.id(RESTRICT); question_version_id->question_versions.id(RESTRICT)
+unique: 2; indices: -
+triggers(4): qvoid_no_sustituir,qvoid_requiere_vigente,qvoid_sin_delete,qvoid_sin_update
+entrantes: -
