@@ -40,3 +40,13 @@ Ver `AUDITORIA_RECURSOS_HEREDADOS.md` (hallazgos H-1 a H-9), `PRUEBAS_RECURSOS_H
 ## Archivos generados
 
 `docs/vortice/auditoria-recursos/`: `AUDITORIA_RECURSOS_HEREDADOS.md`, `PRUEBAS_RECURSOS_HEREDADOS.md`, `PROPUESTA_PROTECCION_RECURSOS.md`, `MAPA_RELACIONES_RECURSOS.md`, este registro y `evidencia/` (`bateria_adversarial.ts.txt`, `inventario_esquema.ts.txt`, `inventario_esquema.txt`, `resultados_bateria.json`). Resumen para dirección en la respuesta de entrega.
+
+## Fase de cierre de decisiones (tras `975579c` y `da3f203`)
+
+| Comando | Para qué |
+|---|---|
+| `git show --stat 975579c`, `git show --stat da3f203`, `git status --short` | Integridad de la evidencia (8 + 1 archivos; árbol limpio) |
+| Lectura de `server/googleDrive.ts`, `server/routes.ts`, `shared/schema.ts`, `client/src/pages/CoursePlayer.tsx`, `DriveSync.tsx` | Identificación de recursos de Drive; controles de `notebookLmUrl` |
+| `npx tsx script/zz_recon.ts` ×2 (copia en `evidencia/pruebas_reconciliacion.ts.txt`) | Pruebas de V-1 a V-5: salida 0 las dos, salidas idénticas |
+
+Resultados: `CIERRE_DECISIONES_RECURSOS.md`. Archivos nuevos: ese documento, `evidencia/reconciliacion_consultas.sql`, `evidencia/pruebas_reconciliacion.ts.txt`, `evidencia/resultados_reconciliacion.txt`. El script temporal se ejecutó desde `script/` y se eliminó antes del commit. **No se modificó código de aplicación, migraciones ni tablas.** Corrección: el mapa de relaciones no estaba en `975579c`; está en `da3f203` (ver el cierre §0).

@@ -1,0 +1,73 @@
+// TEMPORAL: pruebas independientes de la reconciliación V-1…V-5 (solo lectura). Se copia a evidencia/ y se borra de script/.
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import fs from "node:fs"; import os from "node:os"; import path from "node:path";
+import type { Client } from "@libsql/client";
+import { migrar } from "../server/migrar"; import { crearClienteDb } from "../server/cliente"; import { assertBaseLocal } from "../server/dbGuard";
+import { baseArchivo } from "./lib/basePrueba";
+import { aplicarEsquemaHeredado, sembrarFicticios } from "./lib/esquemaHeredado";
+const CONSULTA = fs.readFileSync("docs/vortice/auditoria-recursos/evidencia/reconciliacion_consultas.sql", "utf8");
+const RAIZ = fs.mkdtempSync(path.join(os.tmpdir(), "recon-"));
+const AU = "ficticio-autor", VA = "ficticio-validador", OT = "ficticio-otro";
+// Escenario CORRECTO: todo consistente.
+const tpl = await (async () => {
+  const b = baseArchivo(); const c = b.client; const x = (s: string, a: any[] = []) => c.execute({ sql: s, args: a });
+  await aplicarEsquemaHeredado(c); await sembrarFicticios(c); await migrar(c, "migrations/vortice");
+  await x("INSERT INTO learning_objectives (id, level_subject_id, code, title, week_number) VALUES ('lo-x','ls-mat-5b','M3','x',3),('lo-y','ls-mat-5b','M4','y',4)");
+  await x("INSERT INTO weekly_resources (id, learning_objective_id, resource_type, title, sort_order) VALUES ('wr-r','lo-mat','video','R',1),('wr-free','lo-mat','audio','Libre',2),('wr-free2','lo-mat','infografia','Libre2',3),('wr-free3','lo-mat','presentacion','Libre3',4),('wr-t','lo-mat','video','T1',5),('wr-t3','lo-mat','audio','T3',6)");
+  await x("INSERT INTO weekly_resources (id, learning_objective_id, resource_type, title, reflection_prompts, pedagogical_step) VALUES ('wr-refl','lo-y','reflexion','Refl','[\"¿Qué aprendí?\"]','reflexion'),('wr-refl2','lo-y','reflexion','Refl2',NULL,NULL)");
+  await x("INSERT INTO tutoring_cases (id, student_id, tutor_id, learning_objective_id, resource_id, question, status, created_at) VALUES ('tc1',?,?,'lo-mat','wr-t','d','abierto',1),('tc2',?,?,'lo-y',NULL,'d','abierto',1),('tc3',?,?,'lo-mat','wr-t3','d','abierto',1)", [AU, OT, AU, OT, AU, OT]);
+  await x("INSERT INTO curriculum_objectives (id, level_subject_id, official_code, text, source_url, source_year) VALUES ('oa1','ls-mat-5b','M1','t','https://e.test',2018)");
+  await x("INSERT INTO knowledge_domains (id, level_subject_id, name) VALUES ('d','ls-mat-5b','d')");
+  await x("INSERT INTO knowledge_domain_versions (id, domain_id, version, status, created_by) VALUES ('dv1','d',1,'borrador',?),('dv9','d',9,'borrador',?)", [AU, AU]);
+  await x("INSERT INTO knowledge_items (id, domain_id, code) VALUES ('a','d','A')");
+  await x("INSERT INTO knowledge_item_versions (id,item_id,domain_version_id,domain_id,name,operational_definition) VALUES ('av1','a','dv1','d','n','d'),('av9','a','dv9','d','n','d')");
+  for (const v of ["av1", "av9"]) await x("INSERT INTO knowledge_item_oas (item_version_id, curriculum_objective_id) VALUES (?, 'oa1')", [v]);
+  await x("INSERT INTO knowledge_item_modules (item_version_id, learning_objective_id) VALUES ('av1','lo-x'),('av9','lo-y')");
+  await x("INSERT INTO knowledge_item_resources (item_version_id, resource_id, role) VALUES ('av1','wr-r','explicacion'),('av9','wr-free','explicacion')");
+  await x("UPDATE knowledge_domain_versions SET status='en_revision' WHERE id='dv1'");
+  await x("UPDATE knowledge_domain_versions SET status='validada', validated_by=? WHERE id='dv1'", [VA]);
+  await x("UPDATE knowledge_domain_versions SET status='publicada', published_at=1 WHERE id='dv1'");
+  const f = path.join(RAIZ, "plantilla.db"); fs.copyFileSync(b.url.replace(/^file:/, ""), f); await b.cerrar(); return f;
+})();
+const abrir = () => {
+  const carpeta = fs.mkdtempSync(path.join(RAIZ, "b-")); const f = path.join(carpeta, "base.db"); fs.copyFileSync(tpl, f);
+  const url = `file:${f}`; assertBaseLocal(process.env, url); const c: Client = crearClienteDb(url);
+  return { c, x: (s: string, a: any[] = []) => c.execute({ sql: s, args: a }), cerrar: () => { c.close(); fs.rmSync(carpeta, { recursive: true, force: true }); } };
+};
+const huella = async (c: Client) => {
+  const ts = (await c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'libsql_%' ORDER BY name")).rows.map((r) => String(r.name));
+  const h = createHash("sha256"); for (const t of ts) h.update(t + JSON.stringify((await c.execute(`SELECT * FROM ${t}`)).rows.map((r) => JSON.stringify(Object.values(r))).sort()));
+  return h.digest("hex");
+};
+const reconciliar = async (c: Client) => (await c.execute(CONSULTA)).rows.map((r) => JSON.stringify(Object.values(r)));
+const resumen: string[] = [];
+async function prueba(id: string, introducir: string[], esperado: (filas: string[]) => void, extra?: string) {
+  // 1) escenario correcto: sin falsos positivos
+  const ok = abrir(); const sana = await reconciliar(ok.c); assert.deepEqual(sana, [], `${id}: falso positivo en el escenario correcto: ${sana.join(" | ")}`);
+  // 2) inconsistencia deliberada
+  for (const s of introducir) await ok.x(s);
+  const antes = await huella(ok.c); const f1 = await reconciliar(ok.c); const f2 = await reconciliar(ok.c);
+  assert.equal(await huella(ok.c), antes, `${id}: la reconciliación modificó la base`);      // 3) sin modificaciones
+  assert.deepEqual(f1, f2, `${id}: resultado no determinista en la misma base`);              // 4) determinista
+  esperado(f1);
+  // 5) reproducible: otra base desde cero, mismas inconsistencias, mismo resultado
+  const otra = abrir(); for (const s of introducir) await otra.x(s);
+  assert.deepEqual(await reconciliar(otra.c), f1, `${id}: no reproducible en otra base`);
+  ok.cerrar(); otra.cerrar();
+  resumen.push(`  ✓ ${id}  ${f1.length} fila(s): ${f1.join(" ; ").slice(0, 300)}`);
+}
+const solo = (codigo: string, n: number) => (filas: string[]) => {
+  const propias = filas.filter((f) => JSON.parse(f)[0] === codigo); assert.equal(propias.length, n, `${codigo}: filas propias ${propias.length} esperadas ${n}`);
+  assert.equal(filas.length, n, `${codigo}: otra verificación se activó: ${filas.join(" | ")}`);
+};
+await prueba("V-1", ["UPDATE weekly_resources SET learning_objective_id='lo-len' WHERE id IN ('wr-r','wr-free')"], (f) => { solo("V-1", 2)(f); assert.ok(f.some((r) => r.includes('"alta"') && r.includes('"wr-r"')) && f.some((r) => r.includes('"media"') && r.includes('"wr-free"')), "severidades alta (publicada) y media (borrador)"); });
+await prueba("V-2", ["UPDATE learning_objectives SET level_subject_id='ls-len-6b' WHERE id IN ('lo-x','lo-y')"], (f) => { solo("V-2", 2)(f); assert.ok(f.some((r) => r.includes('"alta"') && r.includes('"lo-x"')) && f.some((r) => r.includes('"media"') && r.includes('"lo-y"')), "severidades"); });
+await prueba("V-3", ["UPDATE tutoring_cases SET learning_objective_id='lo-y' WHERE id='tc1'"], solo("V-3", 1));
+await prueba("V-4", ["UPDATE weekly_resources SET resource_type='ejecutable' WHERE id='wr-free'", "UPDATE weekly_resources SET sort_order='abc' WHERE id='wr-free2'", "UPDATE weekly_resources SET is_active='no' WHERE id='wr-free3'", "UPDATE weekly_resources SET pedagogical_step='inventado' WHERE id='wr-r'"], solo("V-4", 4));
+await prueba("V-5", ["UPDATE weekly_resources SET reflection_prompts='[\"x\"]' WHERE id='wr-r'"], solo("V-5", 1));
+// Combinada: las cinco a la vez y sin interferencia entre sí.
+await prueba("TODAS", ["UPDATE weekly_resources SET learning_objective_id='lo-len' WHERE id='wr-r'", "UPDATE learning_objectives SET level_subject_id='ls-len-6b' WHERE id='lo-x'", "UPDATE tutoring_cases SET learning_objective_id='lo-y' WHERE id='tc3'", "UPDATE weekly_resources SET resource_type='ejecutable' WHERE id='wr-free2'", "UPDATE weekly_resources SET reflection_prompts='[\"x\"]' WHERE id='wr-free3'"], (f) => { const c = f.map((r) => JSON.parse(r)[0]); assert.deepEqual([...new Set(c)].sort(), ["V-1", "V-2", "V-3", "V-4", "V-5"], f.join(" | ")); });
+fs.rmSync(RAIZ, { recursive: true, force: true });
+console.log(resumen.join("\n")); console.log("reconciliacion: ok");
+process.exit(0);

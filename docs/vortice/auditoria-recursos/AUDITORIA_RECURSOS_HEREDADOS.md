@@ -71,6 +71,8 @@ Además de `PATCH /api/admin/resources/:id`: `createPlanConfiguration`, `upsertS
 
 `client/src` llama a `/api/admin/drive/sync` y `/api/admin/level-subjects/:id/create-modules` (`DriveSync.tsx`), a `.../textbook` (`TextbookConfig.tsx`) y a `.../word-upload` (`CoursePlayer.tsx`). **Ninguna llama a `PATCH /api/admin/resources/:id`**: la ruta no tiene consumidor conocido en el cliente. Puede usarse desde fuera (scripts o herramientas administrativas), por lo que **no se asume que pueda eliminarse**.
 
+> **Actualización:** la lista blanca y las exclusiones definitivas, tras las decisiones de dirección, están en `CIERRE_DECISIONES_RECURSOS.md` §2. En particular, `pedagogicalStep` y `reflectionPrompts` quedan fuera del `PATCH` general (sus rutas propias) y `learningObjectiveId` no se edita por ninguna vía de la aplicación.
+
 ## 3. Matriz de campos editables de `weekly_resources` (Fase III)
 
 Columnas reales (`PRAGMA table_info`): 13. Clases: **A** editable directo, **B** editable con validación, **C** no editable por `PATCH`, **D** derivado.

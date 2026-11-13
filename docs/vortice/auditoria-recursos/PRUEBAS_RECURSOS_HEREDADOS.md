@@ -56,6 +56,10 @@
 | Casos protegidos por la base (claves foráneas, NOT NULL, driver) | A04, A05, A06, A07, A08, A10, A11, A14, A15, B01, C02, E02, E04 |
 | Casos protegidos por la aplicación | A18, A20, B02, D01, D02, G01 |
 
+## Corrección sobre V-2
+
+La auditoría decía que la consulta de reconciliación para V-2 estaba «probada con la misma consulta». **No era cierto:** el caso R01 ejercitó solo la rama de recursos (V-1). V-2, V-3, V-4 y V-5 se prueban de forma independiente en `CIERRE_DECISIONES_RECURSOS.md` §4.
+
 ## Observaciones
 
 - **Modificación parcial.** Los errores de una sola sentencia no dejan nada a medias (A22: título nulo más movimiento → sin cambios). **Sí hay modificación parcial entre sentencias en `drive/sync` (C01)**: borra, luego falla.

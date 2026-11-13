@@ -1,6 +1,6 @@
 # Propuesta de protección de recursos heredados
 
-**Estado:** diseño. No se implementó nada. Todo lo que sigue es **propuesta técnica**; ninguna regla es pedagógica ni está aprobada. Lo que se afirma como funcionamiento está respaldado por `PRUEBAS_RECURSOS_HEREDADOS.md`; lo demás se marca como no ejecutado.
+**Estado:** diseño. No se implementó nada. **Superada en lo decidido por `CIERRE_DECISIONES_RECURSOS.md`** (B + C aprobadas; sin `move`; sin triggers; Drive por tabla de mapeo, pendiente de aprobación). Todo lo que sigue es **propuesta técnica**; ninguna regla es pedagógica ni está aprobada. Lo que se afirma como funcionamiento está respaldado por `PRUEBAS_RECURSOS_HEREDADOS.md`; lo demás se marca como no ejecutado.
 
 ## 1. Problema
 

@@ -1,0 +1,7 @@
+  ✓ V-1  2 fila(s): ["V-1","media","wr-free","lo-len","ls-len-6b","d/v9","ls-mat-5b","version borrador; contenido a"] ; ["V-1","alta","wr-r","lo-len","ls-len-6b","d/v1","ls-mat-5b","version publicada; contenido a"]
+  ✓ V-2  2 fila(s): ["V-2","alta",null,"lo-x","ls-len-6b","d/v1","ls-mat-5b","version publicada; contenido a"] ; ["V-2","media",null,"lo-y","ls-len-6b","d/v9","ls-mat-5b","version borrador; contenido a"]
+  ✓ V-3  1 fila(s): ["V-3","media","wr-t","lo-mat","ls-mat-5b","caso tc1",null,"objetivo del caso lo-y / módulo del recurso lo-mat"]
+  ✓ V-4  4 fila(s): ["V-4","media","wr-free","lo-mat",null,null,null,"resource_type=ejecutable"] ; ["V-4","media","wr-free2","lo-mat",null,null,null,"sort_order(text)=abc"] ; ["V-4","media","wr-free3","lo-mat",null,null,null,"is_active(text)=no"] ; ["V-4","media","wr-r","lo-mat",null,null,null,"pedagogical_step=inventa
+  ✓ V-5  1 fila(s): ["V-5","baja","wr-r","lo-mat",null,null,null,"tipo video con reflection_prompts"]
+  ✓ TODAS  5 fila(s): ["V-1","alta","wr-r","lo-len","ls-len-6b","d/v1","ls-mat-5b","version publicada; contenido a"] ; ["V-2","alta",null,"lo-x","ls-len-6b","d/v1","ls-mat-5b","version publicada; contenido a"] ; ["V-3","media","wr-t3","lo-mat","ls-mat-5b","caso tc3",null,"objetivo del caso lo-y / módulo del recurso lo-ma
+reconciliacion: ok
