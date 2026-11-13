@@ -1,6 +1,6 @@
 // Control de eficacia de las pruebas: cada mutación rompe una regla en el código real y su *check*
 // debe fallar. Restaura siempre el archivo y verifica que quedó idéntico.
-// Ejecutar: npx tsx script/mutar.ts [h0|h1|h2|banco|integridad|r1]
+// Ejecutar: npx tsx script/mutar.ts [h0|h1|h2|banco|integridad|r1|r2]
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import fs from "node:fs";
@@ -181,6 +181,43 @@ export const MUTACIONES: Record<string, Mutacion[]> = {
     { id: "storage: solo desde reflexión", archivo: "server/storage.ts", de: "(${weeklyResources.resourceType} = 'reflexion' OR ${nuevo} = 'reflexion'))`;", a: "(${weeklyResources.resourceType} = 'reflexion'))`;", check: "recursos-patch" },
     { id: "storage: bloquea también el mismo tipo", archivo: "server/storage.ts", de: "(${weeklyResources.resourceType} <> ${nuevo} AND (${weeklyResources.resourceType} = 'reflexion'", a: "(1 = 1 AND (${weeklyResources.resourceType} = 'reflexion'", check: "recursos-patch" },
     { id: "storage: preguntas '[]' cuentan", archivo: "server/storage.ts", de: "trim(${weeklyResources.reflectionPrompts}) IN ('', '[]', 'null')", a: "trim(${weeklyResources.reflectionPrompts}) IN ('')", check: "recursos-patch" },
+  ],
+  // R2: reconciliación de recursos (solo lectura).
+  r2: [
+    { id: "V-1 sin comparar asignaturas", archivo: "server/reconciliacionRecursos.ts", de: "JOIN learning_objectives lo ON lo.id = w.learning_objective_id\n    WHERE lo.level_subject_id IS NOT kd.level_subject_id", a: "JOIN learning_objectives lo ON lo.id = w.learning_objective_id\n    WHERE 1 = 0", check: "reconciliacion" },
+    { id: "V-1 reporta también las coincidentes", archivo: "server/reconciliacionRecursos.ts", de: "JOIN learning_objectives lo ON lo.id = w.learning_objective_id\n    WHERE lo.level_subject_id IS NOT kd.level_subject_id", a: "JOIN learning_objectives lo ON lo.id = w.learning_objective_id\n    WHERE 1 = 1", check: "reconciliacion" },
+    { id: "V-2 sin comparar asignaturas", archivo: "server/reconciliacionRecursos.ts", de: "JOIN learning_objectives lo ON lo.id = l.learning_objective_id\n    WHERE lo.level_subject_id IS NOT kd.level_subject_id", a: "JOIN learning_objectives lo ON lo.id = l.learning_objective_id\n    WHERE 1 = 0", check: "reconciliacion" },
+    { id: "V-2 reporta también las coincidentes", archivo: "server/reconciliacionRecursos.ts", de: "JOIN learning_objectives lo ON lo.id = l.learning_objective_id\n    WHERE lo.level_subject_id IS NOT kd.level_subject_id", a: "JOIN learning_objectives lo ON lo.id = l.learning_objective_id\n    WHERE 1 = 1", check: "reconciliacion" },
+    { id: "severidad alta sin 'retirada'", archivo: "server/reconciliacionRecursos.ts", de: "IN ('validada','publicada','retirada')", a: "IN ('validada','publicada')", check: "reconciliacion" },
+    { id: "severidad alta sin 'validada'", archivo: "server/reconciliacionRecursos.ts", de: "IN ('validada','publicada','retirada')", a: "IN ('publicada','retirada')", check: "reconciliacion" },
+    { id: "severidad alta sin 'publicada'", archivo: "server/reconciliacionRecursos.ts", de: "IN ('validada','publicada','retirada')", a: "IN ('validada','retirada')", check: "reconciliacion" },
+    { id: "severidad alta también en borrador/revisión", archivo: "server/reconciliacionRecursos.ts", de: "IN ('validada','publicada','retirada')", a: "IN ('validada','publicada','retirada','borrador','en_revision')", check: "reconciliacion" },
+    { id: "severidad siempre media", archivo: "server/reconciliacionRecursos.ts", de: "THEN 'alta' ELSE 'media' END", a: "THEN 'media' ELSE 'media' END", check: "reconciliacion" },
+    { id: "V-3 sin comparar módulos", archivo: "server/reconciliacionRecursos.ts", de: "AND w.learning_objective_id <> c.learning_objective_id", a: "AND 1 = 0", check: "reconciliacion" },
+    { id: "V-3 reporta también los coincidentes", archivo: "server/reconciliacionRecursos.ts", de: "AND w.learning_objective_id <> c.learning_objective_id", a: "AND 1 = 1", check: "reconciliacion" },
+    { id: "V-4 tipo 'ejecutable' permitido", archivo: "server/reconciliacionRecursos.ts", de: "NOT IN ('video','infografia','audio','presentacion','reflexion')", a: "NOT IN ('video','infografia','audio','presentacion','reflexion','ejecutable')", check: "reconciliacion" },
+    { id: "V-4 'reflexion' no permitido", archivo: "server/reconciliacionRecursos.ts", de: "NOT IN ('video','infografia','audio','presentacion','reflexion')", a: "NOT IN ('video','infografia','audio','presentacion')", check: "reconciliacion" },
+    { id: "V-4 paso inventado permitido", archivo: "server/reconciliacionRecursos.ts", de: "NOT IN ('ejemplo','practica_guiada','practica_independiente','reflexion')", a: "NOT IN ('ejemplo','practica_guiada','practica_independiente','reflexion','inventado')", check: "reconciliacion" },
+    { id: "V-4 paso 'ejemplo' no permitido", archivo: "server/reconciliacionRecursos.ts", de: "NOT IN ('ejemplo','practica_guiada','practica_independiente','reflexion')", a: "NOT IN ('practica_guiada','practica_independiente','reflexion')", check: "reconciliacion" },
+    { id: "V-4 sort_order sin comprobar el tipo", archivo: "server/reconciliacionRecursos.ts", de: "WHERE typeof(w.sort_order) <> 'integer'", a: "WHERE 1 = 0", check: "reconciliacion" },
+    { id: "V-4 is_active 2 permitido", archivo: "server/reconciliacionRecursos.ts", de: "w.is_active NOT IN (0, 1))", a: "w.is_active NOT IN (0, 1, 2))", check: "reconciliacion" },
+    { id: "V-5 sin filtrar por tipo", archivo: "server/reconciliacionRecursos.ts", de: "AND w.resource_type <> 'reflexion'", a: "", check: "reconciliacion" },
+    { id: "V-5 invertida", archivo: "server/reconciliacionRecursos.ts", de: "AND w.resource_type <> 'reflexion'", a: "AND w.resource_type = 'reflexion'", check: "reconciliacion" },
+    { id: "V-5 severidad media", archivo: "server/reconciliacionRecursos.ts", de: "SELECT 'V-5', 'baja'", a: "SELECT 'V-5', 'media'", check: "reconciliacion" },
+    { id: "V-3 severidad alta", archivo: "server/reconciliacionRecursos.ts", de: "SELECT 'V-3', 'media'", a: "SELECT 'V-3', 'alta'", check: "reconciliacion" },
+    { id: "sin orden determinista", archivo: "server/reconciliacionRecursos.ts", de: "  hallazgos.sort(comparar);\n", a: "", check: "reconciliacion" },
+    { id: "orden por locale", archivo: "server/reconciliacionRecursos.ts", de: "if (x[i] !== y[i]) return x[i] < y[i] ? -1 : 1;", a: "if (x[i] !== y[i]) return x[i] < y[i] ? 1 : -1;", check: "reconciliacion" },
+    { id: "error de consulta presentado como ok", archivo: "server/reconciliacionRecursos.ts", de: 'consultas.push({ consulta: c.id, estado: "error", hallazgos: 0, error: (e as Error).message });', a: 'consultas.push({ consulta: c.id, estado: "ok", hallazgos: 0 });', check: "reconciliacion" },
+    { id: "ejecución incompleta presentada como completa", archivo: "server/reconciliacionRecursos.ts", de: 'estado: completa ? "completa" : "incompleta"', a: 'estado: "completa"', check: "reconciliacion" },
+    { id: "hallazgos parciales entregados si es incompleta", archivo: "server/reconciliacionRecursos.ts", de: "hallazgos: completa ? hallazgos : [] }", a: "hallazgos }", check: "reconciliacion" },
+    { id: "sin solo lectura", archivo: "server/reconciliacionRecursos.ts", de: 'await client.execute("PRAGMA query_only = 1");', a: 'await client.execute("PRAGMA query_only = 0");', check: "reconciliacion" },
+    { id: "query_only no se restaura", archivo: "server/reconciliacionRecursos.ts", de: "try { await client.execute(`PRAGMA query_only = ${previo === \"1\" ? 1 : 0}`); }", a: "try { await client.execute(`PRAGMA query_only = 1`); }", check: "reconciliacion" },
+    { id: "salida 0 con ejecución incompleta", archivo: "server/reconciliacionRecursos.ts", de: '(r.estado === "incompleta" ? 2 : r.hallazgos.length ? 1 : 0)', a: "(r.hallazgos.length ? 1 : 0)", check: "reconciliacion" },
+    { id: "salida 0 con hallazgos", archivo: "server/reconciliacionRecursos.ts", de: '(r.estado === "incompleta" ? 2 : r.hallazgos.length ? 1 : 0)', a: '(r.estado === "incompleta" ? 2 : 0)', check: "reconciliacion" },
+    { id: "salida sin neutralizar caracteres de control", archivo: "server/reconciliacionRecursos.ts", de: ".map(limpio).join(\" | \")", a: ".join(\" | \")", check: "reconciliacion" },
+    { id: "CLI crea la base si no existe", archivo: "server/reconciliacionRecursos.ts", de: "if (!fs.existsSync(ruta)) throw", a: "if (false) throw", check: "reconciliacion" },
+    { id: "CLI acepta bases remotas", archivo: "server/reconciliacionRecursos.ts", de: '!url || !url.startsWith("file:")', a: "!url", check: "reconciliacion" },
+    { id: "CLI sin guarda de base local", archivo: "server/reconciliacionRecursos.ts", de: "    assertBaseLocal(process.env, url);\n    const ruta", a: "    const ruta", check: "reconciliacion" },
   ],
 };
 
