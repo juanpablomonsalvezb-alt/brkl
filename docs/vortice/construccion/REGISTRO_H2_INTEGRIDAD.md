@@ -51,7 +51,31 @@ Límites: el trigger `kdv_nace_borrador` cláusula `published_at` es redundante 
 
 ## Limitaciones
 
-- **`integridad-db.check.ts` termina con `process.exit(0)`** tras vaciar la salida: sin esto el proceso moría con SIGSEGV (salida 139) en más de la mitad de las corridas, después de pasar todas las aserciones. La causa no se aisló (libSQL nativo con cientos de conexiones). Las aserciones corren antes; un fallo previo sale con código 1.
+- **Terminación del proceso:** corregida en el commit siguiente (ver la sección «Terminación del proceso»). Ya no se usa `process.exit(0)`.
 - Solo libSQL embebido en archivos locales.
 - Módulos y recursos heredados: **no modificados**; informe aparte (LG2 y LG3 siguen reproduciéndose).
 - No cubre `INSERT OR REPLACE` sobre los vínculos de OA, módulo y recurso (su fila solo tiene columnas de clave y `bloqueo_insert` los protege; probado en I9).
+
+## Terminación del proceso de `integridad-db.check.ts` (SIGSEGV intermitente)
+
+**Síntoma.** Con la versión de `249e233`, el proceso terminaba a veces con salida 139 (SIGSEGV) después de pasar todas las aserciones; esa versión lo ocultaba con `process.exit(0)`, que se retiró.
+
+**Causa identificada (con evidencia, sin pruebas sobre el código fuente nativo):**
+
+1. El informe de caída de macOS (`.ips`) muestra el fallo en el **hilo principal, dentro de un finalizador N-API del addon nativo de libSQL** (`index.node`), ejecutado desde el bucle de eventos (`RunAndClearNativeImmediates` → `Reference::Finalize`). No es una aserción ni la lógica de la migración: es la liberación de un objeto nativo por el recolector de basura.
+2. `@libsql/client` 0.17.0 abre, en modo embebido, **una conexión nativa nueva por cada `client.transaction()`**, y `Transaction.close()` solo hace `ROLLBACK`: **no cierra esa conexión**. Queda viva hasta que el recolector la finaliza. `server/migrar.ts` usa una transacción por migración, y la prueba armaba decenas de bases (decenas de migraciones).
+3. Evidencia experimental (libsql 0.5.22, Node 20.20, darwin-x64): una prueba que arma 45 bases con las migraciones se cae en 2 de 8 corridas; **sin las migraciones, 0 de 6**; forzando los finalizadores tras cerrar cada base, **0 de 8** (contra 4 de 8 sin forzarlos). Las pruebas de aserciones aisladas (cada caso por separado) no se caen. Experimentos de control (miles de sentencias, errores de triggers, `PRAGMA`, `UNION`, 150 bases sin transacciones) **no** reproducen la caída.
+4. Conclusión: la causa está en **libSQL (cierre incompleto de las conexiones de transacción y finalizadores tardíos)**, activada por el volumen de bases y migraciones de esta prueba. No está en la migración `0003`, en las claves foráneas ni en el diseño de las pruebas de ataque. **No se identificó el objeto exacto ni el defecto en el código nativo.**
+
+**Corrección (solo en la prueba, sin cambiar `0003`):**
+
+- Las bases se arman **una vez por estado de migración** (plantilla: antes y después de `0003`) y cada prueba trabaja sobre una copia del archivo. Se pasó de decenas de migraciones a cuatro aplicaciones del ejecutor (las dos plantillas, una sobre base poblada en I4 y la verificación de deriva), y de unos 50 s a unos 10 s.
+- Tras cerrar cada base y al final se **fuerzan los finalizadores** (`gc` más dos vueltas del bucle de eventos), para que las conexiones colgadas se liberen con el proceso sano.
+- Sin `process.exit(0)`: el código de salida es el del proceso. Un fallo de aserción o una excepción termina con salida 1.
+
+**Resultados.** Antes: 1 caída en 30 corridas con solo las plantillas, y entre el 50 y el 75 % de las corridas con la versión anterior. Después de forzar los finalizadores: **40 corridas, 40 con salida 0**. Un fallo provocado en una copia (se quitó el trigger `kp_no_sustituir`) termina con salida 1 y el mensaje de la aserción; una excepción en un caso termina con salida 1.
+
+**Endurecimiento de las mutaciones.** `script/mutar.ts` contaba como «detectada» cualquier salida distinta de cero, de modo que una caída (139) habría pasado por detección. Ahora exige salida 1 (aserción) y avisa de cualquier otra.
+
+**Límite.** La causa sigue siendo del componente nativo: no se corrigió libSQL. Si reaparece una caída, el código de salida será 139, no 0, y `check:vortice` fallará.
+

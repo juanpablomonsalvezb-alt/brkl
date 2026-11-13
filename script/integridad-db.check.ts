@@ -9,12 +9,14 @@ import { createHash } from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import v8 from "node:v8";
+import vm from "node:vm";
 import type { Client } from "@libsql/client";
 import { migrar, verificarDeriva } from "../server/migrar";
 import { baseArchivo } from "./lib/basePrueba";
-import { generateSQLiteDrizzleJson, generateSQLiteMigration } from "drizzle-kit/api";
-import * as esquema from "../shared/schema";
-import { sembrarFicticios } from "./lib/esquemaHeredado";
+import { crearClienteDb } from "../server/cliente";
+import { assertBaseLocal } from "../server/dbGuard";
+import { aplicarEsquemaHeredado, sembrarFicticios } from "./lib/esquemaHeredado";
 
 const AU = "ficticio-autor", VA = "ficticio-validador";
 const ESTADOS = ["borrador", "en_revision", "validada", "publicada", "retirada"] as const;
@@ -27,18 +29,14 @@ const dirAntes = fs.mkdtempSync(path.join(os.tmpdir(), "vortice-mig-antes-"));
 for (const f of ["0001_catalogo.sql", "0002_banco.sql"]) fs.copyFileSync(path.join("migrations/vortice", f), path.join(dirAntes, f));
 const DIR_DESPUES = "migrations/vortice";
 
-// El DDL heredado se genera una sola vez y se reutiliza en las decenas de bases de esta prueba.
-let DDL_HEREDADO: string[] | null = null;
-async function aplicarEsquemaHeredado(c: Client) {
-  DDL_HEREDADO ??= await generateSQLiteMigration(await generateSQLiteDrizzleJson({}), await generateSQLiteDrizzleJson(esquema as any));
-  for (const s of DDL_HEREDADO) await c.execute(s);
-}
-
 type Modo = { fk: boolean; rt: boolean };
-async function fixture(dir: string, modo: Modo = { fk: true, rt: false }, migrarHasta = true) {
+// Cada base se arma UNA vez por estado de migración (plantilla) y se copia como archivo en cada prueba.
+// Aplicar las migraciones en decenas de bases abre decenas de conexiones nativas por `client.transaction()`
+// que la API de libSQL no cierra (ver REGISTRO_H2_INTEGRIDAD.md, «Terminación del proceso»).
+async function construir(dir: string) {
   const b = baseArchivo(); const c = b.client;
   await aplicarEsquemaHeredado(c); await sembrarFicticios(c);
-  if (migrarHasta) await migrar(c, dir);
+  await migrar(c, dir);
   const x = (s: string, a: any[] = []) => c.execute({ sql: s, args: a });
   await x("INSERT INTO curriculum_objectives (id, level_subject_id, official_code, text, source_url, source_year) VALUES ('oa1','ls-mat-5b','M1','t','https://e.test',2018),('oa2','ls-len-6b','L1','t','https://e.test',2018),('oa3','ls-mat-5b','M3','t','https://e.test',2018)");
   const arista = (id: string, dv: string, i: string, p: string) => x("INSERT INTO knowledge_prerequisites (id,domain_version_id,item_id,prerequisite_item_id,relation,justification,confidence) VALUES (?,?,?,?, 'necesaria','j','alta')", [id, dv, i, p]);
@@ -74,10 +72,44 @@ async function fixture(dir: string, modo: Modo = { fk: true, rt: false }, migrar
   await x("INSERT INTO knowledge_items (id, domain_id, code) VALUES ('z','dB','Z'),('zq','dB','ZQ')");
   await x("INSERT INTO knowledge_item_versions (id,item_id,domain_version_id,domain_id,name,operational_definition) VALUES ('zq1','zq','dB9','dB','n','d')");
   await arista("dBy9", "dB9", "dBb", "dBa");
+  return { b, c, x };
+}
+
+// libSQL (0.5.22, addon nativo) no cierra la conexión que abre `client.transaction()`: queda viva hasta que el
+// recolector de basura la finaliza, y esas finalizaciones tardías fallaban a veces con SIGSEGV (ver el
+// registro). Se fuerzan los finalizadores mientras el proceso aún está sano, tras cerrar cada base.
+v8.setFlagsFromString("--expose-gc");
+const gc = vm.runInNewContext("gc") as () => void;
+const liberarNativos = async () => { for (let i = 0; i < 2; i++) { gc(); await new Promise((r) => setImmediate(r)); await new Promise((r) => setTimeout(r, 0)); } };
+
+const RAIZ = fs.mkdtempSync(path.join(os.tmpdir(), "vortice-integridad-"));
+const PLANTILLAS = new Map<string, string>();
+async function plantilla(dir: string): Promise<string> {
+  const hecha = PLANTILLAS.get(dir);
+  if (hecha) return hecha;
+  const { b, c } = await construir(dir);
+  const archivo = path.join(RAIZ, `plantilla-${PLANTILLAS.size}.db`);
+  assert.equal(String((await c.execute("PRAGMA journal_mode")).rows[0][0]), "delete", "la copia de archivo exige un solo archivo de base");
+  fs.copyFileSync(b.url.replace(/^file:/, ""), archivo);
+  await b.cerrar();
+  await liberarNativos();
+  PLANTILLAS.set(dir, archivo);
+  return archivo;
+}
+async function fixture(dir: string, modo: Modo = { fk: true, rt: false }) {
+  const origen = await plantilla(dir);
+  const carpeta = fs.mkdtempSync(path.join(RAIZ, "base-"));
+  const archivo = path.join(carpeta, "base.db");
+  fs.copyFileSync(origen, archivo);
+  const url = `file:${archivo}`;
+  assertBaseLocal(process.env, url);
+  const c = crearClienteDb(url);
+  const x = (s: string, a: any[] = []) => c.execute({ sql: s, args: a });
   await x(`PRAGMA foreign_keys = ${modo.fk ? "ON" : "OFF"}`);
   await x(`PRAGMA recursive_triggers = ${modo.rt ? "ON" : "OFF"}`);
   assert.equal(Number((await x("PRAGMA foreign_keys")).rows[0][0]), modo.fk ? 1 : 0);
   assert.equal(Number((await x("PRAGMA recursive_triggers")).rows[0][0]), modo.rt ? 1 : 0);
+  const b = { async cerrar() { c.close(); fs.rmSync(carpeta, { recursive: true, force: true }); await liberarNativos(); } };
   return { b, c, x };
 }
 
@@ -367,9 +399,8 @@ try {
   });
 } finally {
   fs.rmSync(dirAntes, { recursive: true, force: true });
+  fs.rmSync(RAIZ, { recursive: true, force: true });
+  await liberarNativos();
 }
-// Observado: tras pasar todas las comprobaciones, el proceso terminaba a veces con SIGSEGV (salida 139) al
-// liberar los cientos de conexiones libSQL nativas de esta prueba (más de la mitad de las corridas). No se
-// aisló la causa en libSQL. Las aserciones ya corrieron: cualquier fallo anterior sale con código 1 por la
-// excepción; aquí solo se evita la liberación nativa al salir, vaciando antes la salida.
-process.stdout.write(`${salida.join("\n")}\nintegridad-db: ok (${casos} casos, ${ataques().length} ataques por modo)\n`, () => process.exit(0));
+console.log(salida.join("\n"));
+console.log(`integridad-db: ok (${casos} casos, ${ataques().length} ataques por modo)`);

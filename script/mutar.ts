@@ -177,7 +177,10 @@ for (const m of lista) {
     fs.writeFileSync(m.archivo, original);
   }
   if (suma(m.archivo) !== antes) throw new Error(`${m.archivo} no quedó restaurado`);
-  const detectada = estado !== 0;
+  // Una mutación solo cuenta como detectada si el check falla por una aserción (salida 1). Una caída del
+  // proceso (por ejemplo SIGSEGV, salida 139) o un tiempo agotado no demuestran nada y no se aceptan.
+  const detectada = estado === 1;
+  if (estado !== 0 && estado !== 1) console.log(`  salida inesperada ${estado} en ${m.id}`);
   if (!detectada) fallas++;
   console.log(`${detectada ? "DETECTADA " : "NO DETECTADA"}  ${m.id}  (${m.check}.check, salida ${estado})`);
 }
