@@ -17,7 +17,7 @@ const caso = async (nombre: string, f: () => Promise<unknown>) => { await f(); c
 try {
   await aplicarEsquemaHeredado(c);
   await sembrarFicticios(c);
-  assert.deepEqual(await migrar(c, "migrations/vortice"), { aplicadas: ["0001_catalogo.sql"] });
+  assert.deepEqual(await migrar(c, "migrations/vortice"), { aplicadas: ["0001_catalogo.sql", "0002_banco.sql"] });
   assert.equal((await verificarDeriva(c)).ok, true);
 
   // Dominio de Matemática 5° (ls-mat-5b), versión 1 en borrador con A y B; B requiere A.
