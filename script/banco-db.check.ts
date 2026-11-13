@@ -79,7 +79,7 @@ const retiradas = async () => (await c.execute("SELECT id FROM question_families
 try {
   await aplicarEsquemaHeredado(c);
   await sembrarFicticios(c);
-  assert.deepEqual(await migrar(c, "migrations/vortice"), { aplicadas: ["0001_catalogo.sql", "0002_banco.sql"] });
+  assert.deepEqual(await migrar(c, "migrations/vortice"), { aplicadas: ["0001_catalogo.sql", "0002_banco.sql", "0003_integridad_catalogo.sql"] });
   await ok("INSERT INTO curriculum_objectives (id, level_subject_id, official_code, text, source_url, source_year) VALUES ('oa1', 'ls-mat-5b', 'MA05 OA 07', 't', 'https://ejemplo.test/oa', 2018)");
 
   // Contenidos en cada estado de su dominio (Q-11): A validada, P publicada, N borrador, R en revisión.

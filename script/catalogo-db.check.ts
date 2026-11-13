@@ -17,7 +17,7 @@ const caso = async (nombre: string, f: () => Promise<unknown>) => { await f(); c
 try {
   await aplicarEsquemaHeredado(c);
   await sembrarFicticios(c);
-  assert.deepEqual(await migrar(c, "migrations/vortice"), { aplicadas: ["0001_catalogo.sql", "0002_banco.sql"] });
+  assert.deepEqual(await migrar(c, "migrations/vortice"), { aplicadas: ["0001_catalogo.sql", "0002_banco.sql", "0003_integridad_catalogo.sql"] });
   assert.equal((await verificarDeriva(c)).ok, true);
 
   // Dominio de Matemática 5° (ls-mat-5b), versión 1 en borrador con A y B; B requiere A.
@@ -30,14 +30,14 @@ try {
   await ok(arista("p1", "v1", "B", "A"));
 
   // Identificadores únicos.
-  await caso("código duplicado en el dominio", () => falla("INSERT INTO knowledge_items (id, domain_id, code) VALUES ('A2x', 'dom', 'HIP-A')", /UNIQUE/, "código"));
+  await caso("código duplicado en el dominio", () => falla("INSERT INTO knowledge_items (id, domain_id, code) VALUES ('A2x', 'dom', 'HIP-A')", /UNIQUE|no se sustituye/, "código"));
   await caso("mismo código en otro dominio: permitido", () => ok("INSERT INTO knowledge_items (id, domain_id, code) VALUES ('L2', 'dom-len', 'HIP-A')"));
-  await caso("número de versión repetido", () => falla("INSERT INTO knowledge_domain_versions (id, domain_id, version, status, created_by) VALUES ('v1b', 'dom', 1, 'borrador', 'ficticio-autor')", /UNIQUE/, "versión"));
-  await caso("dos versiones del contenido en la misma versión de dominio", () => falla("INSERT INTO knowledge_item_versions (id, item_id, domain_version_id, domain_id, name, operational_definition) VALUES ('A1b', 'A', 'v1', 'dom', 'x', 'y')", /UNIQUE/, "item×versión"));
-  await caso("arista repetida", () => falla(arista("p1b", "v1", "B", "A"), /UNIQUE/, "arista"));
+  await caso("número de versión repetido", () => falla("INSERT INTO knowledge_domain_versions (id, domain_id, version, status, created_by) VALUES ('v1b', 'dom', 1, 'borrador', 'ficticio-autor')", /UNIQUE|no se sustituye/, "versión"));
+  await caso("dos versiones del contenido en la misma versión de dominio", () => falla("INSERT INTO knowledge_item_versions (id, item_id, domain_version_id, domain_id, name, operational_definition) VALUES ('A1b', 'A', 'v1', 'dom', 'x', 'y')", /UNIQUE|no se sustituye/, "item×versión"));
+  await caso("arista repetida", () => falla(arista("p1b", "v1", "B", "A"), /UNIQUE|no se sustituye/, "arista"));
   await caso("OA repetido (asignatura, código, año)", async () => {
     await ok("INSERT INTO curriculum_objectives (id, level_subject_id, official_code, text, source_url, source_year) VALUES ('oa1', 'ls-mat-5b', 'MA05 OA 07', 'texto', 'https://ejemplo.test/oa', 2018)");
-    await falla("INSERT INTO curriculum_objectives (id, level_subject_id, official_code, text, source_url, source_year) VALUES ('oa1b', 'ls-mat-5b', 'MA05 OA 07', 'otro', 'https://ejemplo.test/oa', 2018)", /UNIQUE/, "OA");
+    await falla("INSERT INTO curriculum_objectives (id, level_subject_id, official_code, text, source_url, source_year) VALUES ('oa1b', 'ls-mat-5b', 'MA05 OA 07', 'otro', 'https://ejemplo.test/oa', 2018)", /UNIQUE|no se sustituye/, "OA");
   });
 
   // Integridad referencial.
