@@ -1,0 +1,143 @@
+// IMP-015 (H1b-1): máquina de estados pura de una instancia ordinaria. Invariantes 1–5 en memoria, escenarios
+// de la maestra §2–§3 y P15, comprobación exhaustiva de todas las secuencias de eventos hasta una profundidad, y
+// que ningún estado ni comportamiento pendiente se haya implementado. Ejecutar: npm run check:vortice
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import {
+  consumidos, enviarIntento, esFinal, INTENTOS_ORDINARIOS, iniciarIntento, nuevaInstancia, vencer, violaciones,
+  type InstanciaP0E, type Resultado,
+} from "../shared/p0e";
+import { ESTADOS_CERRADOS } from "../shared/p0e-estados";
+
+let casos = 0; const salida: string[] = [];
+const caso = (id: string, nombre: string, f: () => void) => { f(); casos++; salida.push(`  ✓ ${id.padEnd(4)} ${nombre}`); };
+const FIN = 1000;
+const nueva = (max = 2) => nuevaInstancia({ maxIntentos: max, finExtension: FIN });
+const ok = (r: Resultado) => { assert.ok(r.ok, JSON.stringify(r)); return r; };
+const iniciar = (i: InstanciaP0E, id: string, t = 0) => ok(iniciarIntento(i, id, t)).instancia;
+const enviar = (i: InstanciaP0E, id: string, envio: string, aprobado: boolean, t = 0) => ok(enviarIntento(i, { intentoId: id, envioId: envio, aprobado }, t)).instancia;
+const sano = (i: InstanciaP0E) => assert.deepEqual(violaciones(i), [], JSON.stringify(i));
+
+caso("M1", "intentos ordinarios de la maestra §3: E1, E3 y E4 = 2; E2 = 3", () => {
+  assert.deepEqual({ ...INTENTOS_ORDINARIOS }, { E1: 2, E2: 3, E3: 2, E4: 2 });
+});
+caso("M2", "aprobar cierra la instancia de inmediato y el proceso queda aprobado", () => {
+  let i = iniciar(nueva(), "a1");
+  assert.equal(i.estado, "en_curso");
+  const r = ok(enviarIntento(i, { intentoId: "a1", envioId: "e1", aprobado: true }, 10));
+  assert.deepEqual([r.instancia.estado, r.instancia.causaCierre, r.efectoProceso, consumidos(r.instancia)], ["cerrada_aprobada", "aprobacion", "aprobado", 1]); sano(r.instancia);
+  assert.deepEqual(iniciarIntento(r.instancia, "a2", 11), { ok: false, motivo: "instancia_cerrada" }, "no se abre otro intento tras aprobar");
+});
+caso("M3", "el intento se consume al ENVIAR, no al abrir; recargar retoma el mismo intento; abandonar no consume", () => {
+  let i = iniciar(nueva(), "a1");
+  assert.equal(consumidos(i), 0);
+  const r = ok(iniciarIntento(i, "otro-id", 5));
+  assert.deepEqual([r.repetido, r.intento.id, r.instancia.intentos.length], [true, "a1", 1], "retoma el activo; no crea uno nuevo");
+  i = vencer(i, FIN).instancia; assert.equal(consumidos(i), 0, "abandonado y vencido: ningún intento consumido");
+});
+caso("M4", "no aprobar con intentos restantes deja la instancia disponible; agotarlos la cierra", () => {
+  let i = enviar(iniciar(nueva(2), "a1"), "a1", "e1", false);
+  assert.deepEqual([i.estado, consumidos(i), i.causaCierre], ["disponible", 1, null]); sano(i);
+  const r = ok(enviarIntento(iniciar(i, "a2"), { intentoId: "a2", envioId: "e2", aprobado: false }, 20));
+  assert.deepEqual([r.instancia.estado, r.instancia.causaCierre, r.efectoProceso], ["cerrada_agotada", "agotamiento", "sin_definir"]); sano(r.instancia);
+  const e2 = (() => { let x = nueva(3); for (const k of ["1", "2", "3"]) x = enviar(iniciar(x, `a${k}`), `a${k}`, `e${k}`, false); return x; })();
+  assert.deepEqual([e2.estado, consumidos(e2)], ["cerrada_agotada", 3], "E2: tres intentos");
+});
+caso("M5", "P15: al alcanzar T+48 h la instancia vence aunque queden intentos; el activo expira sin consumir", () => {
+  const i = iniciar(enviar(iniciar(nueva(3), "a1"), "a1", "e1", false), "a2");
+  assert.equal(vencer(i, FIN - 0.001).cambio, false, "antes de T+48 h no vence");
+  const v = vencer(i, FIN);
+  assert.deepEqual([v.cambio, v.instancia.estado, v.instancia.causaCierre, v.efectoProceso, consumidos(v.instancia)], [true, "vencida", "vencimiento", "sin_definir", 1]);
+  assert.deepEqual(v.instancia.intentos.map((x) => x.estado), ["enviado", "expirado"]); sano(v.instancia);
+  assert.deepEqual(vencer(v.instancia, FIN + 5), { instancia: v.instancia, cambio: false, efectoProceso: null }, "idempotente");
+  const sinActivo = vencer(nueva(), FIN + 1); assert.equal(sinActivo.instancia.estado, "vencida"); assert.equal(sinActivo.instancia.intentos.length, 0);
+});
+caso("M6", "fuera de la extensión no se aceptan envíos ni inicios (409): el intento activo sigue activo hasta vencer", () => {
+  const i = iniciar(nueva(), "a1");
+  assert.deepEqual(enviarIntento(i, { intentoId: "a1", envioId: "e1", aprobado: true }, FIN), { ok: false, motivo: "ventana_cerrada" });
+  assert.deepEqual(enviarIntento(i, { intentoId: "a1", envioId: "e1", aprobado: true }, FIN + 100), { ok: false, motivo: "ventana_cerrada" });
+  assert.deepEqual(iniciarIntento(nueva(), "z", FIN), { ok: false, motivo: "ventana_cerrada" });
+  assert.deepEqual(iniciarIntento(i, "a1", FIN), { ok: false, motivo: "ventana_cerrada" }, "tampoco se retoma");
+  ok(enviarIntento(i, { intentoId: "a1", envioId: "e1", aprobado: true }, FIN - 0.001)); // un instante antes sí
+  const v = vencer(i, FIN).instancia;
+  assert.deepEqual(enviarIntento(v, { intentoId: "a1", envioId: "e1", aprobado: true }, FIN), { ok: false, motivo: "intento_expirado" });
+});
+caso("M7", "envío repetido: mismo resultado, un solo consumo; otro envío sobre el mismo intento es conflicto", () => {
+  const a = ok(enviarIntento(iniciar(nueva(), "a1"), { intentoId: "a1", envioId: "e1", aprobado: false }, 3));
+  const b = ok(enviarIntento(a.instancia, { intentoId: "a1", envioId: "e1", aprobado: false }, 4));
+  assert.deepEqual([b.repetido, b.instancia, consumidos(b.instancia)], [true, a.instancia, 1]);
+  assert.deepEqual(enviarIntento(a.instancia, { intentoId: "a1", envioId: "e2", aprobado: true }, 4), { ok: false, motivo: "conflicto_idempotencia" });
+  assert.deepEqual(enviarIntento(a.instancia, { intentoId: "no", envioId: "e1", aprobado: true }, 4), { ok: false, motivo: "intento_inexistente" });
+  const cierre = ok(enviarIntento(iniciar(nueva(), "a1"), { intentoId: "a1", envioId: "e1", aprobado: true }, 3));
+  const rep = ok(enviarIntento(cierre.instancia, { intentoId: "a1", envioId: "e1", aprobado: true }, 99));
+  assert.deepEqual([rep.repetido, rep.efectoProceso, rep.instancia.estado], [true, "aprobado", "cerrada_aprobada"], "el reenvío del envío que cerró sigue idempotente aun fuera de ventana");
+});
+caso("M8", "sin resurrección: ningún estado final vuelve a disponible o en_curso", () => {
+  for (const f of [(): InstanciaP0E => enviar(iniciar(nueva(), "a1"), "a1", "e1", true), (): InstanciaP0E => vencer(nueva(), FIN).instancia,
+    (): InstanciaP0E => { let x = nueva(1); x = enviar(iniciar(x, "a1"), "a1", "e1", false); return x; }]) {
+    const i = f(); assert.ok(esFinal(i.estado), i.estado);
+    assert.deepEqual(iniciarIntento(i, "nuevo", 0), { ok: false, motivo: "instancia_cerrada" });
+    assert.equal(vencer(i, FIN * 2).cambio, false);
+    assert.equal(esFinal(vencer(i, FIN * 2).instancia.estado), true);
+  }
+});
+caso("M9", "un solo intento activo; no se excede el máximo", () => {
+  let i = iniciar(nueva(2), "a1");
+  assert.equal(ok(iniciarIntento(i, "a2", 1)).instancia.intentos.length, 1);
+  i = enviar(i, "a1", "e1", false); i = enviar(iniciar(i, "a2"), "a2", "e2", false);
+  assert.equal(i.estado, "cerrada_agotada"); assert.deepEqual(iniciarIntento(i, "a3", 1), { ok: false, motivo: "instancia_cerrada" });
+  assert.throws(() => nuevaInstancia({ maxIntentos: 0, finExtension: 1 }), RangeError); assert.throws(() => nuevaInstancia({ maxIntentos: 1.5, finExtension: 1 }), RangeError);
+});
+
+// Comprobación exhaustiva: todas las secuencias de eventos (iniciar, enviar ±, repetir, conflicto, vencer) con
+// tiempos antes, en y después de T+48 h, hasta profundidad 7, para 1, 2 y 3 intentos.
+caso("X1", "exhaustivo: todas las secuencias respetan los invariantes y los estados finales son absorbentes", () => {
+  let estados = 0, transiciones = 0;
+  for (const max of [1, 2, 3]) {
+    const vistos = new Set<string>(); let frontera: InstanciaP0E[] = [nuevaInstancia({ maxIntentos: max, finExtension: FIN })];
+    for (let prof = 0; prof < 7; prof++) {
+      const sig: InstanciaP0E[] = [];
+      for (const i of frontera) {
+        const k = JSON.stringify(i); if (vistos.has(k)) continue; vistos.add(k); estados++;
+        assert.deepEqual(violaciones(i), [], k);
+        const ids = ["a1", "a2", "a3", "a4"], envios = ["e1", "e2", "e3"];
+        for (const t of [0, FIN - 1, FIN, FIN + 1]) {
+          const eventos: (() => Resultado | { instancia: InstanciaP0E; cambio: boolean })[] = [
+            ...ids.map((id) => () => iniciarIntento(i, id, t)),
+            ...ids.flatMap((id) => envios.flatMap((e) => [true, false].map((ap) => () => enviarIntento(i, { intentoId: id, envioId: e, aprobado: ap }, t)))),
+            () => vencer(i, t),
+          ];
+          for (const ev of eventos) {
+            transiciones++;
+            const r = ev() as Resultado & { cambio?: boolean };
+            const nuevaI = "instancia" in r ? r.instancia : i;
+            assert.deepEqual(violaciones(nuevaI), [], `tras evento desde ${k}`);
+            // sin resurrección y consumo monótono
+            if (esFinal(i.estado)) assert.ok(esFinal(nuevaI.estado), "un final no deja de serlo");
+            assert.ok(consumidos(nuevaI) >= consumidos(i) && consumidos(nuevaI) <= consumidos(i) + 1, "el consumo crece como mucho en 1");
+            assert.ok(nuevaI.intentos.length >= i.intentos.length && nuevaI.intentos.length <= i.intentos.length + 1);
+            // consumir solo al enviar con éxito; nunca fuera de ventana
+            if (consumidos(nuevaI) > consumidos(i)) assert.ok(t < FIN, "no se consume fuera de la extensión");
+            if (esFinal(i.estado) && "instancia" in r && !(r as { repetido?: boolean }).repetido && "ok" in r) assert.equal(consumidos(nuevaI), consumidos(i));
+            sig.push(nuevaI);
+          }
+        }
+      }
+      frontera = sig;
+    }
+  }
+  assert.ok(estados > 100 && transiciones > 50_000, `cobertura: ${estados} estados, ${transiciones} transiciones`);
+  salida.push(`        (${estados} estados distintos, ${transiciones} transiciones comprobadas)`);
+});
+
+caso("B1", "lo pendiente NO está implementado: sin estados ni transiciones inventados", () => {
+  const codigo = fs.readFileSync("shared/p0e.ts", "utf8").split("\n").map((l) => l.replace(/\/\/.*$/, "")).join("\n");
+  for (const prohibido of ["cerrada_por_excepcion", "cerrado_sin_resolucion", "en_espera_excepcion", "cancelado_por_cierre", "recuperacion_pendiente", "recuperacion_abierta", "reprobado", "revision_disponible", "en_revision"]) {
+    assert.ok(!codigo.includes(prohibido), `${prohibido} sigue pendiente y no debe aparecer en el código`);
+  }
+  assert.deepEqual([...ESTADOS_CERRADOS], ["cerrada_aprobada", "cerrada_agotada", "vencida"], "el conjunto de H0 no cambió");
+  assert.ok(!/Date\.now\s*\(|new Date\s*\(\s*\)/.test(codigo), "sin reloj del sistema");
+  for (const efecto of ["sin_definir"]) assert.ok(codigo.includes(efecto));
+});
+
+console.log(salida.join("\n")); console.log(`p0e: ok (${casos} casos)`);

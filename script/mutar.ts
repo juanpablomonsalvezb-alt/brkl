@@ -1,6 +1,6 @@
 // Control de eficacia de las pruebas: cada mutación rompe una regla en el código real y su *check*
 // debe fallar. Restaura siempre el archivo y verifica que quedó idéntico.
-// Ejecutar: npx tsx script/mutar.ts [h0|h1|h2|banco|integridad|r1|r2|h3a]
+// Ejecutar: npx tsx script/mutar.ts [h0|h1|h2|banco|integridad|r1|r2|h3a|h1b1]
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import fs from "node:fs";
@@ -334,6 +334,53 @@ export const MUTACIONES: Record<string, Mutacion[]> = {
     { id: "tipos: la marca no existe", archivo: "shared/evidencia.ts", de: "export type EvidenciaLiberada = Evidencia & { readonly [liberada]: true };", a: "export type EvidenciaLiberada = Evidencia;", check: "conocimiento" },
     { id: "acceso: otro archivo nombra la tabla de evidencia", archivo: "server/practica.ts", de: "// Atomicidad: una respuesta es UN lote", a: "// knowledge_evidence directo\n// Atomicidad: una respuesta es UN lote", check: "conocimiento" },
     { id: "acceso: conversión a EvidenciaLiberada fuera del filtro único", archivo: "server/reconstruccion.ts", de: "export const reconstruir =", a: "export const reconstruir0 = (x: unknown) => x as EvidenciaLiberada;\nexport const reconstruir =", check: "conocimiento" },
+  ],
+  // H1b-1: ventanas, publicabilidad y máquina de estados puras (IMP-015, 016, 017).
+  h1b1: [
+    { id: "ventanas: extensión de 24 h", archivo: "shared/ventanas.ts", de: "export const HORAS_EXTENSION = 48;", a: "export const HORAS_EXTENSION = 24;", check: "ventanas" },
+    { id: "ventanas: extensión de 72 h", archivo: "shared/ventanas.ts", de: "export const HORAS_EXTENSION = 48;", a: "export const HORAS_EXTENSION = 72;", check: "ventanas" },
+    { id: "ventanas: revisión sin hora adicional", archivo: "shared/ventanas.ts", de: "export const HORAS_REVISION_TRAS_EXTENSION = 1;", a: "export const HORAS_REVISION_TRAS_EXTENSION = 0;", check: "ventanas" },
+    { id: "ventanas: revisión con dos horas", archivo: "shared/ventanas.ts", de: "export const HORAS_REVISION_TRAS_EXTENSION = 1;", a: "export const HORAS_REVISION_TRAS_EXTENSION = 2;", check: "ventanas" },
+    { id: "ventanas: la hora de T es 23:58", archivo: "shared/ventanas.ts", de: "return instanteLocal(diaFin, 23, 59, zona);", a: "return instanteLocal(diaFin, 23, 58, zona);", check: "ventanas" },
+    { id: "ventanas: la hora de T es medianoche", archivo: "shared/ventanas.ts", de: "return instanteLocal(diaFin, 23, 59, zona);", a: "return instanteLocal(diaFin, 0, 0, zona);", check: "ventanas" },
+    { id: "ventanas: zona UTC", archivo: "shared/ventanas.ts", de: "export const ZONA_CHILE = \"America/Santiago\";", a: "export const ZONA_CHILE = \"UTC\";", check: "ventanas" },
+    { id: "ventanas: hora hacia el lado equivocado", archivo: "shared/ventanas.ts", de: "const t = objetivo - (localComoUtc(sonda, zona) - sonda);", a: "const t = objetivo + (localComoUtc(sonda, zona) - sonda);", check: "ventanas" },
+    { id: "ventanas: la hora ambigua se acepta", archivo: "shared/ventanas.ts", de: "if (lista.length > 1) throw", a: "if (lista.length > 2) throw", check: "ventanas" },
+    { id: "ventanas: la hora inexistente se acepta", archivo: "shared/ventanas.ts", de: "if (lista.length === 0) throw", a: "if (false) throw", check: "ventanas" },
+    { id: "ventanas: formato de día relajado", archivo: "shared/ventanas.ts", de: "/^(\\d{4})-(\\d{2})-(\\d{2})$/", a: "/(\\d{4})-(\\d{2})-(\\d{2})/", check: "ventanas" },
+    { id: "ventanas: la revisión se cuenta desde T", archivo: "shared/ventanas.ts", de: "revisionDesde: finExtension + HORAS_REVISION_TRAS_EXTENSION * SEG_POR_HORA", a: "revisionDesde: finModulo + HORAS_REVISION_TRAS_EXTENSION * SEG_POR_HORA", check: "ventanas" },
+    { id: "ventanas: la hora tiene 3601 s", archivo: "shared/ventanas.ts", de: "const SEG_POR_HORA = 3600;", a: "const SEG_POR_HORA = 3601;", check: "ventanas" },
+    { id: "ventanas: se acepta el envío en T+48 h", archivo: "shared/ventanas.ts", de: "return ahora < v.finExtension;", a: "return ahora <= v.finExtension;", check: "ventanas" },
+    { id: "ventanas: la extensión se agota después", archivo: "shared/ventanas.ts", de: "return ahora >= v.finExtension;", a: "return ahora > v.finExtension;", check: "ventanas" },
+    { id: "ventanas: la zona no se persiste", archivo: "shared/ventanas.ts", de: "return { zonaHoraria: zona, diaFin,", a: "return { zonaHoraria: \"\", diaFin,", check: "ventanas" },
+    { id: "publicable: estado cerrado invertido", archivo: "shared/publicable.ts", de: "if (!esEstadoCerrado(instancia.estado)) return false;", a: "if (esEstadoCerrado(instancia.estado)) return false;", check: "publicable" },
+    { id: "publicable: sin comprobar el estado", archivo: "shared/publicable.ts", de: "if (!esEstadoCerrado(instancia.estado)) return false;", a: "", check: "publicable" },
+    { id: "publicable: el borde de review_at no publica", archivo: "shared/publicable.ts", de: "return ahora >= instancia.reviewAt;", a: "return ahora > instancia.reviewAt;", check: "publicable" },
+    { id: "publicable: publica siempre tras review_at sin estado", archivo: "shared/publicable.ts", de: "return ahora >= instancia.reviewAt;", a: "return true;", check: "publicable" },
+    { id: "publicable: review_at ausente publica", archivo: "shared/publicable.ts", de: "if (typeof instancia.reviewAt !== \"number\" || !Number.isFinite(instancia.reviewAt) || !Number.isFinite(ahora)) return false;", a: "if (instancia.reviewAt === null) return true;", check: "publicable" },
+    { id: "publicable: ahora no finito publica", archivo: "shared/publicable.ts", de: "|| !Number.isFinite(ahora)) return false;", a: ") return false;", check: "publicable" },
+    { id: "publicable: review_at no finito", archivo: "shared/publicable.ts", de: "|| !Number.isFinite(instancia.reviewAt)", a: "", check: "publicable" },
+    { id: "p0e: E2 con 2 intentos", archivo: "shared/p0e.ts", de: "E2: 3,", a: "E2: 2,", check: "p0e" },
+    { id: "p0e: E1 con 3 intentos", archivo: "shared/p0e.ts", de: "{ E1: 2,", a: "{ E1: 3,", check: "p0e" },
+    { id: "p0e: iniciar fuera de ventana", archivo: "shared/p0e.ts", de: "if (ahora >= i.finExtension) return { ok: false, motivo: \"ventana_cerrada\" };\n  const a = activo(i);", a: "const a = activo(i);", check: "p0e" },
+    { id: "p0e: enviar fuera de ventana", archivo: "shared/p0e.ts", de: "if (ahora >= i.finExtension) return { ok: false, motivo: \"ventana_cerrada\" };\n  const enviado", a: "const enviado", check: "p0e" },
+    { id: "p0e: recargar crea otro intento", archivo: "shared/p0e.ts", de: "if (a) return { ok: true, instancia: i,", a: "if (false) return { ok: true, instancia: i,", check: "p0e" },
+    { id: "p0e: se reutiliza el id de intento", archivo: "shared/p0e.ts", de: "if (i.intentos.some((x) => x.id === intentoId)) return", a: "if (false) return", check: "p0e" },
+    { id: "p0e: un envío repetido distinto no es conflicto", archivo: "shared/p0e.ts", de: "return t.envioId === e.envioId\n", a: "return true\n", check: "p0e" },
+    { id: "p0e: un intento expirado se envía", archivo: "shared/p0e.ts", de: "if (t.estado === \"expirado\") return { ok: false, motivo: \"intento_expirado\" };", a: "", check: "p0e" },
+    { id: "p0e: aprobar no cierra", archivo: "shared/p0e.ts", de: "if (e.aprobado) return { ok: true, instancia: { ...i, estado: \"cerrada_aprobada\"", a: "if (false) return { ok: true, instancia: { ...i, estado: \"cerrada_aprobada\"", check: "p0e" },
+    { id: "p0e: agotar un intento más tarde", archivo: "shared/p0e.ts", de: "if (usados >= i.maxIntentos) return { ok: true,", a: "if (usados > i.maxIntentos) return { ok: true,", check: "p0e" },
+    { id: "p0e: enviar sin agotar deja en curso", archivo: "shared/p0e.ts", de: "estado: \"disponible\", intentos }, efectoProceso: null, repetido: false, intento: enviado };", a: "estado: \"en_curso\", intentos }, efectoProceso: null, repetido: false, intento: enviado };", check: "p0e" },
+    { id: "p0e: iniciar deja disponible", archivo: "shared/p0e.ts", de: "instancia: { ...i, estado: \"en_curso\", intentos: [...i.intentos, nuevo] }", a: "instancia: { ...i, estado: \"disponible\", intentos: [...i.intentos, nuevo] }", check: "p0e" },
+    { id: "p0e: vence antes de T+48 h", archivo: "shared/p0e.ts", de: "ahora < i.finExtension) return { instancia: i, cambio: false", a: "ahora <= i.finExtension) return { instancia: i, cambio: false", check: "p0e" },
+    { id: "p0e: el intento activo no expira al vencer", archivo: "shared/p0e.ts", de: "x.estado === \"activo\" ? { ...x, estado: \"expirado\" } : x", a: "x", check: "p0e" },
+    { id: "p0e: el intento activo se consume al vencer", archivo: "shared/p0e.ts", de: "{ ...x, estado: \"expirado\" }", a: "{ ...x, estado: \"enviado\", envioId: \"v\", aprobado: false }", check: "p0e" },
+    { id: "p0e: causa de vencimiento mal registrada", archivo: "shared/p0e.ts", de: "causaCierre: \"vencimiento\" }, cambio: true", a: "causaCierre: \"agotamiento\" }, cambio: true", check: "p0e" },
+    { id: "p0e: aprobar no deja el proceso aprobado", archivo: "shared/p0e.ts", de: "causaCierre: \"aprobacion\" }, efectoProceso: \"aprobado\"", a: "causaCierre: \"aprobacion\" }, efectoProceso: \"sin_definir\"", check: "p0e" },
+    { id: "p0e: el agotamiento decide el proceso", archivo: "shared/p0e.ts", de: "causaCierre: \"agotamiento\" }, efectoProceso: \"sin_definir\"", a: "causaCierre: \"agotamiento\" }, efectoProceso: null", check: "p0e" },
+    { id: "p0e: el vencimiento decide el proceso", archivo: "shared/p0e.ts", de: "cambio: true, efectoProceso: \"sin_definir\" }", a: "cambio: true, efectoProceso: null }", check: "p0e" },
+    { id: "p0e: máximo de intentos sin validar", archivo: "shared/p0e.ts", de: "p.maxIntentos < 1) throw", a: "false) throw", check: "p0e" },
+    { id: "p0e: id de intento inexistente aceptado", archivo: "shared/p0e.ts", de: "if (!t) return { ok: false, motivo: \"intento_inexistente\" };", a: "if (!t) return { ok: false, motivo: \"intento_expirado\" };", check: "p0e" },
   ],
 };
 
