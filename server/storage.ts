@@ -1,11 +1,12 @@
 import { 
   levels, subjects, levelSubjects, learningObjectives, weeklyResources,
   enrollments, studentProgress, weeklyCompletion, userProfiles,
+  reflectionResponses,
 moduleEvaluations, evaluationProgress, textbookConfigs, reservations, planConfigurations,
   siteConfiguration, adultCycleConfigurations, geminiCopilots, levelPlanConfigurations,
   type Level, type InsertLevel, type Subject, type InsertSubject,
   type LevelSubject, type InsertLevelSubject, type LearningObjective, type InsertLearningObjective,
-  type WeeklyResource, type InsertWeeklyResource, type Enrollment, type InsertEnrollment,
+  type WeeklyResource, type InsertWeeklyResource, type UpdateWeeklyResource, type Enrollment, type InsertEnrollment,
   type StudentProgress, type InsertStudentProgress, type UserProfile, type InsertUserProfile,
 type ModuleEvaluation, type InsertModuleEvaluation,
   type EvaluationProgress, type InsertEvaluationProgress, type TextbookConfig, type InsertTextbookConfig,
@@ -15,7 +16,12 @@ type ModuleEvaluation, type InsertModuleEvaluation,
   insertLevelPlanConfigurationSchema
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, inArray, desc, getTableColumns } from "drizzle-orm";
+import { eq, and, inArray, desc, getTableColumns, sql } from "drizzle-orm";
+
+// R1: `reflexion` si el cambio de tipo desde o hacia `reflexion` toparía con preguntas o respuestas de reflexión.
+export type ResultadoActualizarRecurso =
+  | { ok: true; resource: WeeklyResource }
+  | { ok: false; motivo: "no_encontrado" | "reflexion" };
 
 export interface IStorage {
   // Levels
@@ -45,7 +51,7 @@ export interface IStorage {
   getResourcesByObjective(learningObjectiveId: string): Promise<WeeklyResource[]>;
   getResourceById(id: string): Promise<WeeklyResource | undefined>;
   createResource(resource: InsertWeeklyResource): Promise<WeeklyResource>;
-  updateResource(id: string, resource: Partial<InsertWeeklyResource>): Promise<WeeklyResource | undefined>;
+  updateResource(id: string, data: UpdateWeeklyResource): Promise<ResultadoActualizarRecurso>;
   deleteResourcesByObjective(learningObjectiveId: string): Promise<void>;
   
   // Enrollments
@@ -277,13 +283,25 @@ export class DatabaseStorage implements IStorage {
     return created;
   }
 
-  async updateResource(id: string, resource: Partial<InsertWeeklyResource>): Promise<WeeklyResource | undefined> {
-    const [updated] = await db
-      .update(weeklyResources)
-      .set({ ...resource, updatedAt: new Date() })
-      .where(eq(weeklyResources.id, id))
-      .returning();
-    return updated;
+  // `data` ya viene validado por updateWeeklyResourceSchema (solo metadatos; el módulo no se mueve).
+  // D-3: cambiar el tipo desde o hacia `reflexion` solo si el recurso no tiene preguntas ni respuestas de
+  // reflexión. La condición, incluida la comparación con el tipo ACTUAL, va dentro del propio UPDATE: una
+  // sola sentencia, sin ventana entre leer el tipo, comprobar y escribir. Unas preguntas vacías (NULL, texto
+  // en blanco, `[]` o `null`) no cuentan como preguntas existentes.
+  async updateResource(id: string, data: UpdateWeeklyResource): Promise<ResultadoActualizarRecurso> {
+    let condicion = eq(weeklyResources.id, id);
+    if (data.resourceType !== undefined) {
+      const nuevo = data.resourceType;
+      const cambiaReflexion = sql`(${weeklyResources.resourceType} <> ${nuevo} AND (${weeklyResources.resourceType} = 'reflexion' OR ${nuevo} = 'reflexion'))`;
+      const sinReflexion = sql`((${weeklyResources.reflectionPrompts} IS NULL OR trim(${weeklyResources.reflectionPrompts}) IN ('', '[]', 'null'))
+        AND NOT EXISTS (SELECT 1 FROM ${reflectionResponses} WHERE ${reflectionResponses.resourceId} = ${weeklyResources.id}))`;
+      condicion = and(condicion, sql`(NOT ${cambiaReflexion} OR ${sinReflexion})`)!;
+    }
+    const [updated] = await db.update(weeklyResources).set({ ...data, updatedAt: new Date() }).where(condicion).returning();
+    if (updated) return { ok: true, resource: updated };
+    // Sin fila actualizada: o no existe (404) o la condición de reflexión lo impidió (409).
+    const [existe] = await db.select({ id: weeklyResources.id }).from(weeklyResources).where(eq(weeklyResources.id, id));
+    return { ok: false, motivo: existe ? "reflexion" : "no_encontrado" };
   }
 
   async deleteResourcesByObjective(learningObjectiveId: string): Promise<void> {

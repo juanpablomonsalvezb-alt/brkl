@@ -1,6 +1,6 @@
 // Control de eficacia de las pruebas: cada mutación rompe una regla en el código real y su *check*
 // debe fallar. Restaura siempre el archivo y verifica que quedó idéntico.
-// Ejecutar: npx tsx script/mutar.ts [h0|h1|h2|banco|integridad]
+// Ejecutar: npx tsx script/mutar.ts [h0|h1|h2|banco|integridad|r1]
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import fs from "node:fs";
@@ -157,6 +157,30 @@ export const MUTACIONES: Record<string, Mutacion[]> = {
     { id: "0003 co_no_sustituir sin la clave primaria", archivo: "migrations/vortice/0003_integridad_catalogo.sql", de: "WHERE id = NEW.id OR (level_subject_id = NEW.level_subject_id AND official_code = NEW.official_code", a: "WHERE (level_subject_id = NEW.level_subject_id AND official_code = NEW.official_code", check: "integridad-db" },
     { id: "0003 kiv_no_sustituir sin la clave única", archivo: "migrations/vortice/0003_integridad_catalogo.sql", de: "WHERE id = NEW.id OR (domain_version_id = NEW.domain_version_id AND item_id = NEW.item_id))", a: "WHERE id = NEW.id)", check: "integridad-db" },
     { id: "0003 kiv_no_sustituir sin la clave primaria", archivo: "migrations/vortice/0003_integridad_catalogo.sql", de: "WHERE id = NEW.id OR (domain_version_id = NEW.domain_version_id AND item_id = NEW.item_id))", a: "WHERE (domain_version_id = NEW.domain_version_id AND item_id = NEW.item_id))", check: "integridad-db" },
+  ],
+  // R1: lista blanca del PATCH de recursos.
+  r1: [
+    { id: "schema: cuerpo no estricto", archivo: "shared/schema.ts", de: "}).partial().strict().refine(", a: "}).partial().refine(", check: "recursos-patch" },
+    { id: "schema: cuerpo vacío aceptado", archivo: "shared/schema.ts", de: "(v) => Object.keys(v).length > 0", a: "() => true", check: "recursos-patch" },
+    { id: "schema: learningObjectiveId permitido", archivo: "shared/schema.ts", de: "export const updateWeeklyResourceSchema = z.object({\n  title: z.string(),", a: "export const updateWeeklyResourceSchema = z.object({\n  learningObjectiveId: z.string(),\n  title: z.string(),", check: "recursos-patch" },
+    { id: "schema: pedagogicalStep permitido", archivo: "shared/schema.ts", de: "export const updateWeeklyResourceSchema = z.object({\n  title: z.string(),", a: "export const updateWeeklyResourceSchema = z.object({\n  pedagogicalStep: z.string(),\n  title: z.string(),", check: "recursos-patch" },
+    { id: "schema: id permitido", archivo: "shared/schema.ts", de: "export const updateWeeklyResourceSchema = z.object({\n  title: z.string(),", a: "export const updateWeeklyResourceSchema = z.object({\n  id: z.string(),\n  title: z.string(),", check: "recursos-patch" },
+    { id: "schema: resourceType sin lista", archivo: "shared/schema.ts", de: "resourceType: z.enum(weeklyResources.resourceType.enumValues),\n}).partial()", a: "resourceType: z.string(),\n}).partial()", check: "recursos-patch" },
+    { id: "schema: sortOrder sin entero", archivo: "shared/schema.ts", de: "pedagogicalObjective: z.string().nullable(),\n  sortOrder: z.number().int(),\n  isActive: z.boolean(),\n  resourceType: z.enum", a: "pedagogicalObjective: z.string().nullable(),\n  sortOrder: z.any(),\n  isActive: z.boolean(),\n  resourceType: z.enum", check: "recursos-patch" },
+    { id: "schema: isActive sin booleano", archivo: "shared/schema.ts", de: "isActive: z.boolean(),\n  resourceType: z.enum", a: "isActive: z.any(),\n  resourceType: z.enum", check: "recursos-patch" },
+    { id: "schema: title nulo permitido", archivo: "shared/schema.ts", de: "export const updateWeeklyResourceSchema = z.object({\n  title: z.string(),", a: "export const updateWeeklyResourceSchema = z.object({\n  title: z.string().nullable(),", check: "recursos-patch" },
+    { id: "schema: textos anulables sin tipo", archivo: "shared/schema.ts", de: "  studentHelp: z.string().nullable(),\n  pedagogicalObjective: z.string().nullable(),\n  sortOrder", a: "  studentHelp: z.string().nullable(),\n  pedagogicalObjective: z.any(),\n  sortOrder", check: "recursos-patch" },
+    { id: "ruta: cuerpo sin validar", archivo: "server/routes.ts", de: "updateWeeklyResourceSchema.safeParse(req.body)", a: "({ success: true, data: req.body } as any)", check: "recursos-patch" },
+    { id: "ruta: 409 como 400", archivo: "server/routes.ts", de: "          return res.status(409).json(", a: "          return res.status(400).json(", check: "recursos-patch" },
+    { id: "ruta: inexistente como 409", archivo: "server/routes.ts", de: "        return res.status(404).json({ message: \"Resource not found\" });\n      }\n      res.json(result.resource);", a: "        return res.status(409).json({ message: \"Resource not found\" });\n      }\n      res.json(result.resource);", check: "recursos-patch" },
+    { id: "storage: sin guarda de reflexión", archivo: "server/storage.ts", de: "condicion = and(condicion, sql`(NOT ${cambiaReflexion} OR ${sinReflexion})`)!;", a: "condicion = and(condicion)!;", check: "recursos-patch" },
+    { id: "storage: ignora las preguntas", archivo: "server/storage.ts", de: "trim(${weeklyResources.reflectionPrompts}) IN ('', '[]', 'null'))\n        AND NOT EXISTS", a: "trim(${weeklyResources.reflectionPrompts}) IN ('', '[]', 'null') OR 1 = 1)\n        AND NOT EXISTS", check: "recursos-patch" },
+    { id: "storage: ignora las respuestas", archivo: "server/storage.ts", de: "AND NOT EXISTS (SELECT 1 FROM ${reflectionResponses} WHERE ${reflectionResponses.resourceId} = ${weeklyResources.id}))`;", a: "AND 1 = 1)`;", check: "recursos-patch" },
+    { id: "storage: nunca detecta el cambio de tipo", archivo: "server/storage.ts", de: "const cambiaReflexion = sql`(${weeklyResources.resourceType} <> ${nuevo} AND", a: "const cambiaReflexion = sql`(1 = 0 AND", check: "recursos-patch" },
+    { id: "storage: solo hacia reflexión", archivo: "server/storage.ts", de: "(${weeklyResources.resourceType} = 'reflexion' OR ${nuevo} = 'reflexion'))`;", a: "(${nuevo} = 'reflexion'))`;", check: "recursos-patch" },
+    { id: "storage: solo desde reflexión", archivo: "server/storage.ts", de: "(${weeklyResources.resourceType} = 'reflexion' OR ${nuevo} = 'reflexion'))`;", a: "(${weeklyResources.resourceType} = 'reflexion'))`;", check: "recursos-patch" },
+    { id: "storage: bloquea también el mismo tipo", archivo: "server/storage.ts", de: "(${weeklyResources.resourceType} <> ${nuevo} AND (${weeklyResources.resourceType} = 'reflexion'", a: "(1 = 1 AND (${weeklyResources.resourceType} = 'reflexion'", check: "recursos-patch" },
+    { id: "storage: preguntas '[]' cuentan", archivo: "server/storage.ts", de: "trim(${weeklyResources.reflectionPrompts}) IN ('', '[]', 'null')", a: "trim(${weeklyResources.reflectionPrompts}) IN ('')", check: "recursos-patch" },
   ],
 };
 

@@ -449,6 +449,21 @@ export const insertSubjectSchema = createInsertSchema(subjects).omit({ id: true,
 export const insertLevelSubjectSchema = createInsertSchema(levelSubjects).omit({ id: true });
 export const insertLearningObjectiveSchema = createInsertSchema(learningObjectives).omit({ id: true });
 export const insertWeeklyResourceSchema = createInsertSchema(weeklyResources).omit({ id: true, createdAt: true, updatedAt: true });
+// R1: PATCH general de un recurso. Lista blanca estricta de metadatos: cualquier otra propiedad (id,
+// learningObjectiveId, createdAt, updatedAt, pedagogicalStep, reflectionPrompts o desconocida) rechaza el
+// cuerpo completo. El módulo no se mueve por aquí; el paso pedagógico y las preguntas de reflexión tienen su
+// ruta propia (updatePedagogicalStepSchema). `title` conserva la exigencia del esquema de creación; no se
+// agrega validación de formato a `notebookLmUrl`.
+export const updateWeeklyResourceSchema = z.object({
+  title: z.string(),
+  notebookLmUrl: z.string().nullable(),
+  barkleyFoundation: z.string().nullable(),
+  studentHelp: z.string().nullable(),
+  pedagogicalObjective: z.string().nullable(),
+  sortOrder: z.number().int(),
+  isActive: z.boolean(),
+  resourceType: z.enum(weeklyResources.resourceType.enumValues),
+}).partial().strict().refine((v) => Object.keys(v).length > 0, { message: "Sin campos para actualizar" });
 export const insertEnrollmentSchema = createInsertSchema(enrollments).omit({ id: true, enrolledAt: true });
 export const insertStudentProgressSchema = createInsertSchema(studentProgress).omit({ id: true, completedAt: true });
 export const insertUserProfileSchema = createInsertSchema(userProfiles).omit({ id: true, createdAt: true });
@@ -528,6 +543,7 @@ export type LearningObjective = typeof learningObjectives.$inferSelect;
 export type InsertLearningObjective = z.infer<typeof insertLearningObjectiveSchema>;
 export type WeeklyResource = typeof weeklyResources.$inferSelect;
 export type InsertWeeklyResource = z.infer<typeof insertWeeklyResourceSchema>;
+export type UpdateWeeklyResource = z.infer<typeof updateWeeklyResourceSchema>;
 export type Enrollment = typeof enrollments.$inferSelect;
 export type InsertEnrollment = z.infer<typeof insertEnrollmentSchema>;
 export type StudentProgress = typeof studentProgress.$inferSelect;

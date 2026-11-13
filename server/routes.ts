@@ -7,7 +7,7 @@ import { previewTestLogin, registerPreviewLoginPages } from "./previewLogin";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
 import {
   insertLevelSchema, insertSubjectSchema, insertLevelSubjectSchema,
-  insertLearningObjectiveSchema, insertWeeklyResourceSchema, insertStudentProgressSchema,
+  insertLearningObjectiveSchema, insertWeeklyResourceSchema, updateWeeklyResourceSchema, insertStudentProgressSchema,
   insertEvaluationProgressSchema, updateLevelSubjectTextbookSchema, updateLearningObjectivePagesSchema,
   insertReservationSchema, insertWaitlistSchema, waitlistSignups,
   insertFunnelEventSchema, funnelEvents,
@@ -994,11 +994,19 @@ export async function registerRoutes(
   // Update resource (admin only)
   app.patch("/api/admin/resources/:id", isAdmin, async (req: any, res) => {
     try {
-      const resource = await storage.updateResource(req.params.id, req.body);
-      if (!resource) {
+      // Todo el cuerpo se valida antes de escribir: una propiedad no permitida lo rechaza entero (400).
+      const parsed = updateWeeklyResourceSchema.safeParse(req.body);
+      if (!parsed.success) {
+        return res.status(400).json({ message: "Datos inválidos", errors: parsed.error.flatten() });
+      }
+      const result = await storage.updateResource(getStringParam(req.params.id), parsed.data);
+      if (!result.ok) {
+        if (result.motivo === "reflexion") {
+          return res.status(409).json({ message: "El recurso tiene preguntas o respuestas de reflexión: no se puede cambiar su tipo desde o hacia reflexión" });
+        }
         return res.status(404).json({ message: "Resource not found" });
       }
-      res.json(resource);
+      res.json(result.resource);
     } catch (error) {
       console.error("Error updating resource:", error);
       res.status(500).json({ message: "Failed to update resource" });
