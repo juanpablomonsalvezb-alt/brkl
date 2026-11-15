@@ -40,6 +40,8 @@ const NAV_LINKS = [
   { label: "Cómo Funciona (Tour)", href: "/tour-plataforma" },
   { label: "Preguntas", href: "/preguntas-frecuentes" },
   { label: "Por qué somos distintos", href: "/sin-limites" },
+  { label: "Por qué Barkley", href: "/por-que-barkley" },
+  { label: "Resultados y temarios", href: "/examenes-libres-y-resultados" },
   { label: "Consultas", href: "/#consultas" },
 ];
 
