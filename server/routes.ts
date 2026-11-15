@@ -229,7 +229,6 @@ export async function registerRoutes(
         Correo: parsed.data.email,
         Nivel: parsed.data.levelInterest,
         "Perfil Adaptativo": parsed.data.learningProfileInterest,
-        Consultas: parsed.data.notes,
       });
       sendConfirmationEmail(parsed.data.email, parsed.data.name || "");
       if (yaInscrito) {
