@@ -11,6 +11,8 @@ export const PRERENDER_ROUTES = [
   "/todo-incluido",
   "/herramientas-de-estudio",
   "/preguntas-frecuentes",
+  "/examenes-libres-y-resultados",
+  "/por-que-barkley",
   "/prepara-tus-examenes",
   "/together",
   "/electivos",

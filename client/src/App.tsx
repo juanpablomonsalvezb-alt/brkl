@@ -21,6 +21,8 @@ const Neurodivergentes = lazyRoute(() => import("@/pages/Neurodivergentes"));
 const PorDentro = lazyRoute(() => import("@/pages/PorDentro"));
 const TourPlataforma = lazyRoute(() => import("@/pages/TourPlataforma"));
 const PreguntasFrecuentes = lazyRoute(() => import("@/pages/PreguntasFrecuentes"));
+const ExamenesLibresResultados = lazyRoute(() => import("@/pages/ExamenesLibresResultados"));
+const PorQueBarkley = lazyRoute(() => import("@/pages/PorQueBarkley"));
 const Electivos = lazyRoute(() => import("@/pages/Electivos"));
 const PlataformaNivel = lazyRoute(() => import("@/pages/PlataformaNivel"));
 const HomeEn = lazyRoute(() => import("@/pages/en/HomeEn"));
@@ -41,6 +43,8 @@ const PRECARGA: Record<string, () => Promise<void>> = {
   "/herramientas-de-estudio": PorDentro.preload,
   "/tour-plataforma": TourPlataforma.preload,
   "/preguntas-frecuentes": PreguntasFrecuentes.preload,
+  "/examenes-libres-y-resultados": ExamenesLibresResultados.preload,
+  "/por-que-barkley": PorQueBarkley.preload,
   "/electivos": Electivos.preload,
   "/privacidad": PrivacyPolicy.preload,
   "/terminos": TermsOfUse.preload,
@@ -115,6 +119,8 @@ function Router() {
       <Route path="/herramientas-de-estudio">{() => <PorDentro ruta="/herramientas-de-estudio" />}</Route>
       <Route path="/tour-plataforma" component={TourPlataforma} />
       <Route path="/preguntas-frecuentes" component={PreguntasFrecuentes} />
+      <Route path="/examenes-libres-y-resultados" component={ExamenesLibresResultados} />
+      <Route path="/por-que-barkley" component={PorQueBarkley} />
       <Route path="/electivos" component={Electivos} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/course/:id" component={CoursePlayer} />

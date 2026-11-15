@@ -233,6 +233,14 @@
       "destination": "/api/handler.js"
     },
     {
+      "source": "/examenes-libres-y-resultados",
+      "destination": "/api/handler.js"
+    },
+    {
+      "source": "/por-que-barkley",
+      "destination": "/api/handler.js"
+    },
+    {
       "source": "/prepara-tus-examenes",
       "destination": "/api/handler.js"
     },
