@@ -3,6 +3,8 @@ import { build as viteBuild } from "vite";
 import { rm, readFile, rename, writeFile, copyFile } from "fs/promises";
 import { existsSync, readFileSync } from "fs";
 import type { Plugin } from "esbuild";
+import { snapshotSourceHash } from "./snapshot-source";
+import { privateFallback, assertSnapshot } from "../shared/seo-policy";
 import { PRERENDER_ROUTES, snapshotFile } from "../shared/prerender-routes";
 import { aplicarPrecios, marcadoresDesconocidos } from "../shared/precios";
 import { readdir } from "fs/promises";
@@ -35,10 +37,22 @@ const snapshotsPlugin: Plugin = {
     build.onResolve({ filter: /^virtual:prerendered$/ }, (args) => ({ path: args.path, namespace: "prerendered" }));
     build.onLoad({ filter: /.*/, namespace: "prerendered" }, () => {
       const mapa: Record<string, string> = {};
+      const sourceHash = snapshotSourceHash();
       for (const ruta of PRERENDER_ROUTES) {
         const archivo = `client/public/prerendered/${snapshotFile(ruta)}`;
-        if (existsSync(archivo)) mapa[ruta] = readFileSync(archivo, "utf-8");
-        else console.warn(`sin snapshot para ${ruta} (correr npm run prerender)`);
+        if (!existsSync(archivo)) {
+          if (process.env.npm_lifecycle_event === "prerender") continue;
+          throw new Error(`Sin snapshot para ${ruta}: generar antes de publicar`);
+        }
+        const html = aplicarPrecios(readFileSync(archivo, "utf-8"));
+        // npm run prerender compila primero para generar nuevos snapshots.
+        // Esa salida intermedia nunca se considera publicable: build normal
+        // siempre valida completitud y huella de las fuentes.
+        if (process.env.npm_lifecycle_event !== "prerender") assertSnapshot(html, ruta);
+        if (process.env.npm_lifecycle_event !== "prerender" && !html.includes(`name="barkley:snapshot-source" content="${sourceHash}"`)) {
+          throw new Error(`Snapshot obsoleto: ${ruta}. Ejecutar npx vite build y npx tsx script/prerender.ts; copiar snapshots antes de publicar.`);
+        }
+        mapa[ruta] = html;
       }
       return { contents: `export default ${JSON.stringify(mapa)};`, loader: "js" };
     });
@@ -51,13 +65,7 @@ const snapshotsPlugin: Plugin = {
  * home: cada una de esas URLs le decía a Google "soy la home". Sin canónica,
  * Google asume la propia URL.
  */
-function limpiarFallback(html: string): string {
-  return html
-    .replace(/\s*<link rel="canonical"[^>]*>/i, "")
-    .replace(/\s*<meta property="og:url"[^>]*>/i, "")
-    .replace(/\s*<link rel="preload" as="image"[^>]*>/gi, "")
-    .replace(/\s*<script type="application\/ld\+json">(?:(?!<\/script>)[\s\S])*?"FAQPage"[\s\S]*?<\/script>/gi, "");
-}
+const limpiarFallback = privateFallback;
 
 // server deps to bundle to reduce openat(2) syscalls
 // which helps cold start times

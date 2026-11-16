@@ -1,11 +1,6 @@
-/**
- * Página dedicada a las preguntas frecuentes — antes vivía como sección
- * inline en Home.tsx (Accordion + useQuery), pesando en el bundle inicial
- * de la home sin aportar nada al LCP. El FAQPage JSON-LD para buscadores/IA
- * queda en Home.tsx (ya lo consumen sin cargar JS); esta página es la
- * versión visual completa, con URL propia indexable.
- */
+/** Respuestas públicas y FAQPage juntos, con respaldo renderizable sin API. */
 import { useEffect } from "react";
+import { PUBLIC_FAQS } from "@shared/public-faqs";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -23,7 +18,7 @@ interface Faq { id: string; question: string; answer: string; sortOrder: number;
 function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 28 }}
+      initial={false}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15, margin: "0px 0px -80px 0px" }}
       transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
@@ -56,7 +51,9 @@ function useDocumentMeta() {
 
 export default function PreguntasFrecuentes() {
   useDocumentMeta();
-  const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5 * 60 * 1000 });
+  const { data: remoteFaqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5 * 60 * 1000 });
+  const activeFaqs = remoteFaqs?.filter((f) => f.isActive !== false);
+  const faqs = activeFaqs?.length ? activeFaqs : PUBLIC_FAQS;
 
   return (
     <div style={{ backgroundColor: "#fff", color: TEXT, fontFamily: FONT, fontSize: 16, lineHeight: 1.8, overflowX: "hidden" }}>
@@ -95,7 +92,7 @@ export default function PreguntasFrecuentes() {
       <section style={{ maxWidth: 900, margin: "0 auto", padding: "56px 24px 80px" }}>
         {faqs && faqs.length > 0 ? (
           <Reveal>
-            <Accordion type="single" collapsible>
+            <Accordion type="single" collapsible data-public-faqs>
               {faqs.map((f) => (
                 <AccordionItem key={f.id} value={f.id} style={{ borderTop: "1px solid #eef1f5", borderBottom: "none" }}>
                   <AccordionTrigger style={{ fontSize: 16, fontWeight: 600, color: NAVY, padding: "16px 0", textAlign: "left" }} className="hover:no-underline">

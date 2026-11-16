@@ -87,9 +87,10 @@ async function auditarPrerender(rutas) {
       ? ok(A, `${ruta} entrega contenido renderizado`, `${textoBot.length} caracteres`)
       : fallo(A, `${ruta} entrega contenido renderizado`, `solo ${textoBot.length} caracteres`);
 
-    bot.html.length !== hum.html.length
-      ? ok(A, `${ruta} distingue bot de humano`)
-      : fallo(A, `${ruta} distingue bot de humano`, "misma respuesta para ambos");
+    const textoHum = hum.html.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+    textoBot.replace(/\s+/g, " ") === textoHum
+      ? ok(A, `${ruta} contenido público equivalente para bots y personas`)
+      : fallo(A, `${ruta} contenido público equivalente para bots y personas`, "revisar diferencia de contenido; no exigir versiones por User-Agent");
 
     // Scripts referenciados que dan 404: el snapshot se versiona y los hashes de
     // assets cambian en cada build, así que se desincroniza sin avisar.

@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/lib/usePageMeta";
 /**
  * Página única para familias de estudiantes con TEA, dislexia y TDAH.
  * Contenido base: guía "Cómo trabajamos con estudiantes con TEA, dislexia y TDAH"
@@ -222,13 +223,10 @@ const COMPARA = [
 ];
 
 export default function Neurodivergentes() {
-  useEffect(() => {
-    const prev = document.title;
-    document.title = "Cómo trabajamos con TEA, dislexia y TDAH — Barkley Instituto";
-    return () => {
-      document.title = prev;
-    };
-  }, []);
+  usePageMeta({
+    title: "Cómo trabajamos con TEA, dislexia y TDAH — Barkley Instituto",
+    description: "Cómo organiza Barkley el aprendizaje de estudiantes con TEA, dislexia y TDAH: secuencias claras, apoyos disponibles y límites de la educación asincrónica.",
+  });
 
   return (
     <div style={{ backgroundColor: "#fff", color: TEXT, fontFamily: FONT, fontSize: 16, lineHeight: 1.8, overflowX: "hidden" }}>

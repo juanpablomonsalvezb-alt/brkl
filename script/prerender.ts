@@ -2,14 +2,14 @@ import { spawn, type ChildProcess } from "child_process";
 import { mkdir, writeFile } from "fs/promises";
 import { dirname, resolve } from "path";
 import puppeteer from "puppeteer";
+import { assertSnapshot } from "../shared/seo-policy";
+import { aplicarPrecios } from "../shared/precios";
+import { snapshotSourceHash } from "./snapshot-source";
 import { PRERENDER_ROUTES, SITE_URL, snapshotFile } from "../shared/prerender-routes";
 
-// Prerender estático para bots que no ejecutan JS (GPTBot, ClaudeBot,
-// PerplexityBot, CCBot, la mayoría de crawlers de IA). El sitio es un SPA
-// Vite/React puro (sin SSR) — sin esto, esos bots ven <div id="root"></div>
-// vacío. Este script levanta el server ya buildeado, renderiza cada ruta
-// con Chromium headless y guarda el HTML final. vercel.json enruta a los
-// bots hacia estos archivos en vez del index.html vacío.
+// Renderiza exclusivamente el cliente estático. Nunca inicia Express ni abre
+// una base de datos. Todas las peticiones API y externas se bloquean al capturar.
+// Uso: npx vite build && npx tsx script/prerender.ts
 
 const PORT = 4790;
 const ROUTES = PRERENDER_ROUTES.map((path) => ({
@@ -41,9 +41,6 @@ function fijarIdentidad(args: { url: string; esHome: boolean }) {
     el.setAttribute(attr, args.url);
   }
   if (!args.esHome) {
-    document.head.querySelectorAll('script[type="application/ld+json"]').forEach((s) => {
-      if (/"@type"\s*:\s*"FAQPage"/.test(s.textContent || "")) s.remove();
-    });
     // La imagen del hero de la home competía por ancho de banda con el LCP real de cada página.
     document.head.querySelectorAll('link[rel="preload"][as="image"]').forEach((l) => l.remove());
   }
@@ -80,8 +77,9 @@ function waitForServer(url: string, timeoutMs = 20000): Promise<void> {
 }
 
 async function main() {
-  const server: ChildProcess = spawn("node", ["dist/index.cjs"], {
-    env: { ...process.env, PORT: String(PORT), NODE_ENV: "production" },
+  const sourceHash = snapshotSourceHash();
+  const server: ChildProcess = spawn(process.execPath, ["node_modules/vite/bin/vite.js", "preview", "--host", "127.0.0.1", "--port", String(PORT), "--strictPort"], {
+    env: { ...process.env, NODE_ENV: "production" },
     stdio: "inherit",
   });
 
@@ -102,6 +100,17 @@ async function main() {
     try {
       for (const route of ROUTES) {
         const page = await browser.newPage();
+        await page.setViewport({ width: 1280, height: 800 });
+        await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]);
+        await page.setRequestInterception(true);
+        page.on("request", (request) => {
+          const url = new URL(request.url());
+          if (url.origin === `http://127.0.0.1:${PORT}` && !url.pathname.startsWith("/api/")) {
+            void request.continue();
+          } else {
+            void request.abort();
+          }
+        });
         // networkidle0/networkidle2 nunca se cumplían — algo en la página deja
         // conexiones activas indefinidamente (más de 2 a la vez), así que el
         // timeout se agotaba siempre, hasta en una máquina limpia de CI sin
@@ -111,20 +120,38 @@ async function main() {
           waitUntil: "domcontentloaded",
           timeout: 30000,
         });
-        // Deja que React termine de hidratar/renderizar contenido async (FAQ, etc.)
-        // — antes esto se apoyaba en networkidle0/2 para "saber cuándo terminó",
-        // ahora es la única señal de espera, así que va con más margen.
-        await new Promise((r) => setTimeout(r, 3000));
+        await page.waitForSelector("h1", { timeout: 15000 });
+        if (route.path === "/preguntas-frecuentes") {
+          await page.waitForSelector("[data-public-faqs]", { timeout: 15000 });
+        }
+        // Ejecuta los reveals sin red externa. No basta con un sleep fijo para
+        // saber si hay contenido; los selectores anteriores son obligatorios.
+        await page.evaluate(async () => {
+          for (let y = 0; y < document.body.scrollHeight; y += 700) {
+            window.scrollTo(0, y);
+            await new Promise((done) => setTimeout(done, 60));
+          }
+          window.scrollTo(0, 0);
+        });
+        await new Promise((done) => setTimeout(done, 700));
         await page.evaluate(fijarIdentidad, {
           url: route.path === "/" ? `${SITE_URL}/` : `${SITE_URL}${route.path}`,
           esHome: route.path === "/",
         });
-        const html = limpiarParaBots(await page.content());
+        const html = aplicarPrecios(limpiarParaBots(await page.content())).replace(
+          "</head>", `<meta name="barkley:snapshot-source" content="${sourceHash}"></head>`,
+        );
+        assertSnapshot(html, route.path);
         await page.close();
 
         const outPath = resolve(process.cwd(), route.out);
         await mkdir(dirname(outPath), { recursive: true });
         await writeFile(outPath, html, "utf-8");
+        // Incluye rutas anidadas como /en/support: el antiguo cp *.html no
+        // actualizaba esas páginas y dejaba mezcladas versiones de fuentes.
+        const versioned = resolve(process.cwd(), "client/public/prerendered", snapshotFile(route.path));
+        await mkdir(dirname(versioned), { recursive: true });
+        await writeFile(versioned, html, "utf-8");
         console.log(`Prerenderizado: ${route.path} -> ${route.out} (${html.length} bytes)`);
       }
     } finally {
