@@ -57,6 +57,7 @@ export default function PreguntasFrecuentes() {
 
   return (
     <div style={{ backgroundColor: "#fff", color: TEXT, fontFamily: FONT, fontSize: 16, lineHeight: 1.8, overflowX: "hidden" }}>
+      <style>{'[data-public-faqs] [role="region"][data-state="closed"] { display: none; }'}</style>
       <SiteHeader overlay={false} />
 
       {faqs && faqs.length > 0 && (

@@ -180,10 +180,10 @@ export function SiteHeader({ overlay = true, idioma = "es" }: { overlay?: boolea
       `}</style>
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
         <a href={en ? "/en" : "/"} data-hdr="logo" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none", padding: "30px 0 0 45px" }}>
-          <div data-hdr="logo-box" style={{ width: 84, height: 84, background: "rgba(0,32,61,0.45)", border: "2px solid #fff", borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 12 }}>
+          <div data-hdr="logo-box" style={{ width: 84, height: 84, background: overlay ? "rgba(0,32,61,0.45)" : NAVY, border: "2px solid #fff", borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 12 }}>
             <img src="/logos/barkley_isotipo_B_navy.svg" alt="Barkley" style={{ width: "100%", height: "100%", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
           </div>
-          <span data-hdr="logo-text" style={{ color: "#fff", fontWeight: 600, fontSize: 19, lineHeight: 1.35, textShadow: "0 1px 10px rgba(0,20,50,0.55)" }}>Barkley<br />{en ? "Online School" : "Colegio Online"}</span>
+          <span data-hdr="logo-text" style={{ color: overlay ? "#fff" : NAVY, fontWeight: 600, fontSize: 19, lineHeight: 1.35, textShadow: overlay ? "0 1px 10px rgba(0,20,50,0.55)" : "none" }}>Barkley<br />{en ? "Online School" : "Colegio Online"}</span>
         </a>
         <div data-hdr="controls" style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 14, background: "#fff", padding: "26px 30px 26px 20px", width: 344, boxSizing: "border-box", flexShrink: 0 }}>
           <a href={en ? "/en/support" : "/#inscripcion"} data-hdr="solo-desktop" style={{ fontSize: 14, fontWeight: 600, color: NAVY, textDecoration: "none", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}>{en ? "GIVE" : "MI BARKLEY"}</a>

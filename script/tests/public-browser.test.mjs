@@ -38,8 +38,11 @@ test('FAQ sin backend, menú accesible y metadatos al navegar', async () => {
       await page.goto(origin + '/preguntas-frecuentes', { waitUntil: 'domcontentloaded' });
       await page.waitForSelector('[data-public-faqs]');
       assert.equal(await page.$$eval('[data-public-faqs] h3', (els) => els.length), 6);
+      assert.equal(await page.$eval('[data-public-faqs] [role="region"]', (el) => getComputedStyle(el).display), 'none');
       await page.click('[data-public-faqs] button');
       await page.waitForFunction(() => document.querySelector('[data-public-faqs] button')?.getAttribute('aria-expanded') === 'true');
+      assert.notEqual(await page.$eval('[data-public-faqs] [role="region"]', (el) => getComputedStyle(el).display), 'none');
+      assert.equal(await page.$eval('[data-hdr="logo-text"]', (el) => getComputedStyle(el).color), 'rgb(0, 51, 102)');
       await page.click('[aria-controls="site-menu"]');
       await page.waitForFunction(() => document.activeElement?.getAttribute('aria-label') === 'Cerrar menú');
       await page.keyboard.down('Shift'); await page.keyboard.press('Tab'); await page.keyboard.up('Shift');
