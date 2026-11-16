@@ -4,7 +4,7 @@
  * CIFRAS NACIONALES QUE DEBE RESPALDAR LA DIRECCIÓN ANTES DE PUBLICAR EN PRODUCCIÓN
  * (vienen de la especificación del equipo; el código no las puede verificar): «más del 70 %» de las denuncias
  * (Superintendencia de Educación), «más del 60 %» de padres con ansiedad percibida, «más del 80 %» de
- * preocupación por seguridad, y el resto de datos de la columna «Realidad en Chile».
+ * preocupación por seguridad, y el resto de datos de la columna «Realidad en Chile», y el 92 % de aprobación promedio.
  * Cada miedo guarda su dato en `dato`, para actualizarlo o citarlo con su fuente exacta sin tocar el componente.
  */
 export interface Miedo {
@@ -23,78 +23,73 @@ export const MIEDOS: readonly Miedo[] = [
   {
     id: "bullying",
     corto: "Bullying y violencia",
-    titulo: "Bullying, violencia y convivencia escolar",
+    titulo: "Bullying, violencia y ciberacoso",
     cifra: "> 70 %",
-    dato: "de las denuncias en la Superintendencia de Educación son por maltrato físico o psicológico y problemas de convivencia escolar.",
-    anguloA: "La impotencia de pedir ayuda en el colegio y que todo quede en reuniones y protocolos que no cambian nada mientras tu hijo sufre.",
-    anguloB: "Cuando un niño entra a clases con miedo a las burlas o a la exclusión, su cerebro se bloquea y es imposible que aprenda.",
-    solucion:
-      "Entorno 100 % online, asincrónico y seguro desde casa. Cero maltrato, cero humillaciones y acompañamiento positivo que le devuelve la sonrisa y la confianza para aprender.",
+    dato: "de las denuncias en la Superintendencia de Educación son por maltrato y convivencia escolar.",
+    anguloA: "El dolor de ver a tu hijo sufrir y que el colegio se quede en reuniones y protocolos que no cambian nada.",
+    anguloB: "Cómo el miedo a las burlas o a la exclusión bloquea su mente e impide que aprenda.",
+    solucion: "Entorno 100 % online, asincrónico y seguro en casa, donde recupera su autoestima y vuelve a sonreír.",
   },
   {
     id: "salud-mental",
     corto: "Ansiedad y estrés",
     titulo: "Salud mental, ansiedad y estrés escolar",
     cifra: "> 60 %",
-    dato: "de los padres chilenos percibe síntomas de ansiedad, desmotivación o somatización asociados al colegio post-pandemia.",
-    anguloA: "El dolor de estómago los domingos en la noche, el insomnio o el llanto antes de entrar a clases.",
-    anguloB: "Estudiar toda la semana y bloquearse en una prueba de una hora por la presión tóxica del sistema tradicional.",
+    dato: "de los padres percibe ansiedad, estrés o somatización escolar en sus hijos.",
+    anguloA: "El dolor de estómago los domingos en la noche, el insomnio o la angustia antes de ir al colegio.",
+    anguloB: "El bloqueo emocional frente a pruebas tradicionales por la presión tóxica de la sala.",
     solucion:
-      "Un modelo sin timbres ni gritos, a su propio ritmo. Con Umbral™, tu hijo avanza por progreso diario y dominio real, cambiando el miedo a las pruebas por confianza genuina.",
+      "Estudio sin timbres ni gritos, a su propio ritmo. Con Umbral™, el alumno avanza superando actividades formativas e internas al 70 % de exigencia paso a paso, ganando ritmo y seguridad real sin terror escénico.",
     motor: "Umbral™",
   },
   {
     id: "seguridad",
     corto: "Seguridad y trayectos",
-    titulo: "Inseguridad en trayectos y malas influencias",
+    titulo: "Inseguridad en los trayectos y malas influencias",
     cifra: "> 80 %",
-    dato: "de preocupación nacional por seguridad ciudadana: robos a la salida de clases, transporte público y exposición temprana a drogas o peleas.",
-    anguloA: "Quedar con el corazón en la mano desde que tu hijo sale en la mañana a tomar la micro hasta que regresa a oscuras.",
-    anguloB: "El temor en el paso a 7° Básico y Media por las malas juntas y presiones de grupo fuera de la sala.",
-    solucion:
-      "Colegio de vanguardia directo en la seguridad de tu hogar. Cero traslados peligrosos en la calle y tardes libres para socializar en entornos sanos (deporte, música, familia).",
+    dato: "de preocupación nacional por seguridad en calles, transporte público y riesgos a la salida de clases.",
+    anguloA: "La intranquilidad diaria desde que sale en la mañana hasta que vuelve a oscuras en la tarde.",
+    anguloB: "El temor a las malas juntas, peleas o presiones de grupo en el paso a 7° Básico y Enseñanza Media.",
+    solucion: "Educación de excelencia sin salir de la seguridad de tu hogar y tardes libres para compartir con amigos sanos en el deporte o en sus pasiones.",
   },
   {
     id: "vacios",
     corto: "Vacíos y clases perdidas",
     titulo: "Vacíos de aprendizaje y pérdida de clases",
-    dato: "Brechas críticas en Comprensión Lectora y Matemática en diagnósticos nacionales, agravadas por rotación docente y paros.",
-    anguloA: "El miedo silencioso a que pase de curso con notas infladas pero llegue a 4° Medio o a la PAES lleno de lagunas.",
-    anguloB: "Meses perdidos por licencias médicas de profesores, cambios de docentes o suspensiones de clases.",
+    dato: "Brechas severas en Comprensión Lectora y Matemática por rotación de profesores, licencias y clases interrumpidas.",
+    anguloA: "Que pase de curso por inercia pero llegue a 4° Medio o a la universidad lleno de lagunas.",
+    anguloB: "Meses perdidos cuando faltan profesores o se suspenden clases en el colegio presencial.",
     solucion:
-      "Con Umbral™ ningún alumno avanza con vacíos (requiere dominio verificado para desbloquear el siguiente módulo), con Sókra™ tiene tutoría activa las 24 horas los 365 días del año y cuenta con el respaldo de una tasa de aprobación que ha superado el 92 % entre 2023 y 2025.",
+      "Continuidad 24/7 todo el año con Sókra™ y exigencia interna del 70 % en Umbral™ para pasar cada contenido (superando el 60 % que pide el MINEDUC), logrando que el 92 % promedio de nuestros inscritos apruebe sus exámenes.",
     motor: "Umbral™ y Sókra™",
   },
   {
     id: "neurodivergencia",
     corto: "Neurodivergencia",
-    titulo: "Exclusión o incomprensión de hijos neurodivergentes (TDAH, TEA, DEA)",
-    dato: "Alza sostenida de denuncias por falta de adecuaciones reales en salas sobrepobladas de 35 a 45 alumnos.",
-    anguloA: "El miedo a que suene el teléfono con otra citación de inspectoría etiquetando a tu hijo como «el niño problema» porque la sala lo sobreestimula.",
-    anguloB: "Colegios que prometen inclusión en marzo, pero en la práctica el profesor no da abasto y tu hijo pierde su autoestima.",
-    solucion:
-      "Nuestro sistema Brújula™ diseña una ruta neuroafirmativa y a su medida, respetando sus tiempos sensoriales, mientras nuestra IA le explica con paciencia infinita de diez formas distintas hasta que triunfe.",
+    titulo: "Incomprensión y exclusión de hijos neurodivergentes (TDAH, TEA, DEA)",
+    dato: "Aumento sostenido de denuncias por falta de adaptación real en salas con 35 a 45 alumnos.",
+    anguloA: "El cansancio de recibir llamadas semanales de inspectoría porque «no se adapta a la sala».",
+    anguloB: "Cuando la inclusión queda solo en el papel porque un profesor no da abasto con cuarenta niños.",
+    solucion: "Nuestro sistema Brújula™ adapta el ritmo y la ruta de aprendizaje sin etiquetas, explicándole con paciencia infinita hasta que logra dominar cada tema.",
     motor: "Brújula™",
   },
   {
     id: "tombola",
     corto: "La tómbola (SAE)",
-    titulo: "Incertidumbre de la «tómbola» (SAE) y falta de colegios confiables cerca",
-    dato: "Miles de familias cada año quedan sin cupo en sus colegios de preferencia o dependen de un sorteo aleatorio.",
-    anguloA: "Sentir que el futuro y los valores de tu hijo dependen del azar de una tómbola o de listas de espera eternas.",
-    anguloB: "Mirar los colegios de tu comuna y que ninguno te dé confianza, ni académica ni en su ambiente.",
-    solucion:
-      "Matrícula directa, sin sorteos ni barreras geográficas. Tú recuperas el derecho a elegir hoy mismo una educación de excelencia desde casa, vivas donde vivas en Chile.",
+    titulo: "La incertidumbre de la «tómbola» y no poder elegir",
+    dato: "Miles de familias sufren cada año por el sorteo escolar o por no tener colegios confiables en su comuna.",
+    anguloA: "Sentir que la educación y el ambiente de tu hijo dependen del azar de una lista de espera.",
+    anguloB: "Mirar los colegios cercanos a tu casa y que ninguno te dé tranquilidad.",
+    solucion: "Matrícula directa, sin sorteos ni barreras geográficas, desde cualquier lugar de Chile.",
   },
   {
     id: "economia",
     corto: "Gastos de marzo",
-    titulo: "Agobio económico de marzo y gastos ocultos",
-    dato: "El gasto escolar presencial (mensualidades en UF, furgón escolar, uniformes exclusivos y listas de útiles) es una de las mayores causas de endeudamiento familiar en marzo.",
-    anguloA: "Pagar colegio, furgón y uniformes carísimos, para que a mitad de semestre igual tengas que pagar un profesor particular porque no entendió en clases.",
-    anguloB: "Endeudarse en marzo en ropa escolar y textos que no hacen que tu hijo aprenda mejor.",
-    solucion:
-      "Inversión inteligente en lo que sí educa: 0 gasto en furgón escolar, 0 gasto en uniformes o útiles redundantes, y tutoría inteligente 24/7 incluida para que nunca más pagues clases particulares.",
+    titulo: "El agobio económico de marzo y los gastos ocultos",
+    dato: "El gasto en furgón escolar, uniformes exclusivos, listas de útiles y clases particulares dispara el endeudamiento familiar.",
+    anguloA: "Pagar mensualidad, furgón y uniformes para terminar pagando además un profesor particular en la tarde.",
+    anguloB: "Endeudarse en marzo en ropa escolar y materiales que no mejoran su aprendizaje.",
+    solucion: "Cero gasto en locomoción o uniformes, y tutoría inteligente 24/7 incluida para que aprenda todo dentro de la plataforma.",
   },
 ];
 
@@ -106,7 +101,7 @@ export interface Motor {
 }
 
 export const MOTORES: readonly Motor[] = [
-  { id: "umbral", nombre: "Umbral™", lema: "Dominio garantizado", descripcion: "Avance por maestría (80 % o más): cero vacíos académicos de un año a otro." },
+  { id: "umbral", nombre: "Umbral™", lema: "Dominio garantizado", descripcion: "Avance por maestría (70 % de exigencia en cada contenido): cero vacíos académicos de un año a otro." },
   {
     id: "sokra",
     nombre: "Sókra™",

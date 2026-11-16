@@ -1,54 +1,58 @@
 /**
- * Contenido de /examenes-libres-y-resultados.
+ * Contenido de /examenes-libres-y-resultados (especificación corregida y calibrada).
  *
- * CIFRAS QUE DEBE RESPALDAR LA DIRECCIÓN ANTES DE PUBLICAR EN PRODUCCIÓN
- * (vienen de la especificación del equipo; el código no las puede verificar):
- *   - APROBACION_MINIMA: «más de 92 %» de aprobación en Exámenes Libres, cohortes 2023, 2024 y 2025.
- *   - DOMINIO_UMBRAL: avance por dominio de 80 % a 100 % por módulo (regla de Umbral™).
- *   - COMPRENSION_ZOOM: 55 % de comprensión del colegio online tradicional (cifra ilustrativa de la especificación).
- * La exigencia oficial del 60 % para la nota 4,0 sí es el estándar chileno.
+ * DOS MÉTRICAS DISTINTAS, NUNCA MEZCLAR:
+ *   A) Tasa de aprobación de los inscritos en Exámenes Libres (resultado histórico): 91,2 % (2023), 92,1 % (2024), 93,4 % (2025); promedio 92 %.
+ *   B) Escala de exigencia: MINEDUC pide 60 % para la nota 4,0; Barkley (Umbral™) pide 70 % para avanzar de contenido (colchón de +10 puntos).
+ *
+ * Cifras que debe respaldar la dirección (vienen de la especificación, el código no las puede verificar):
+ * los tres resultados anuales, el promedio y el 70 % interno. El 60 % oficial sí es el estándar chileno.
  */
-export const APROBACION_MINIMA = 92;
-export const ANIOS_RESULTADOS = [2023, 2024, 2025] as const;
+export const RESULTADOS = [
+  { anio: 2023, valor: 91.2 },
+  { anio: 2024, valor: 92.1 },
+  { anio: 2025, valor: 93.4 },
+] as const;
+export const PROMEDIO_APROBACION = 92;
 export const EXIGENCIA_MINEDUC = 60;
-export const DOMINIO_UMBRAL = { desde: 80, hasta: 100 } as const;
-export const COMPRENSION_ZOOM = 55;
+export const EXIGENCIA_UMBRAL = 70;
+export const COLCHON = EXIGENCIA_UMBRAL - EXIGENCIA_MINEDUC;
+
+export const pct1 = (n: number) => n.toLocaleString("es-CL", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
 export interface Escenario {
-  id: "zoom" | "solitario" | "barkley";
+  id: "zoom" | "libre" | "barkley";
   etiqueta: string;
   subetiqueta: string;
-  descripcion: string;
-  riesgo: string;
-  mensaje?: string;
+  funciona: string;
+  octubre: string;
+  impacto?: string;
 }
 
 export const ESCENARIOS: readonly Escenario[] = [
   {
     id: "zoom",
     etiqueta: "Colegio online tradicional",
-    subetiqueta: "Clases por Zoom",
-    descripcion:
-      "El profesor pasa la materia al ritmo del grupo. El alumno entiende el 55 %, acumula lagunas silenciosas y llega a octubre jugándose el año al azar en una sola prueba.",
-    riesgo: "Riesgo alto de reprobación o nota mínima.",
+    subetiqueta: "Solo clases por Zoom",
+    funciona: "El profesor avanza con el calendario aunque el alumno no haya entendido. No se exige aprobar cada contenido para pasar al siguiente.",
+    octubre: "El alumno llega al examen de exigencia 60 % con lagunas acumuladas de meses anteriores.",
   },
   {
-    id: "solitario",
-    etiqueta: "Estudio solitario",
-    subetiqueta: "Con guías en PDF",
-    descripcion:
-      "Sin retroalimentación inmediata ni control de dominio. El alumno estudia temas de relleno que no entran en el temario oficial y deja vacíos en los indicadores clave.",
-    riesgo: "Nadie mide qué sabe realmente: el resultado se descubre recién en el examen.",
+    id: "libre",
+    etiqueta: "Estudio libre sin plataforma",
+    subetiqueta: "Guías sueltas",
+    funciona: "Sin evaluaciones formativas calibradas ni control de exigencia paso a paso.",
+    octubre: "Incertidumbre total frente a la escala del 60 % del Ministerio.",
   },
   {
     id: "barkley",
-    etiqueta: "Ecosistema Barkley",
+    etiqueta: "Método Barkley",
     subetiqueta: "Sistema Umbral™",
-    descripcion:
-      "El alumno no puede desbloquear el módulo N+1 si no demuestra un dominio real de entre el 80 % y el 100 % en el módulo N, asistido las 24 horas por el tutor socrático Sókra™.",
-    riesgo: "Cada módulo se aprueba sobre el estándar antes de avanzar.",
-    mensaje:
-      "Resultado comprobado (2023–2024–2025): más del 92 % de tasa de aprobación. Cuando tu hijo se sienta a rendir el Examen Libre del MINEDUC (que pide 60 %), ya lleva meses aprobando evaluaciones internas sobre el 80 %. El examen oficial se siente fácil porque entrenó en un estándar superior.",
+    funciona:
+      "Para aprobar actividades, evaluaciones formativas y evaluaciones internas, y así desbloquear el siguiente contenido, el estudiante debe superar un 70 % de exigencia.",
+    impacto: "Esa exigencia del 70 % paso a paso mejora su ritmo de estudio, consolida la comprensión real y elimina vacíos en el momento.",
+    octubre:
+      "Cuando rinde el Examen Libre del MINEDUC, que pide 60 %, viene acostumbrado todo el año a responder al 70 %. Va sobrado de preparación y aprueba con seguridad.",
   },
 ];
 
@@ -68,106 +72,66 @@ export const NIVELES_TEMARIO: readonly NivelTemario[] = [
     detalle: "4 asignaturas",
     asignaturas: ["Lenguaje y Comunicación", "Matemática", "Ciencias Naturales", "Historia, Geografía y Ciencias Sociales"],
     barkley:
-      "Mapeo exacto de los Objetivos de Aprendizaje (OA) nucleares del temario de Validación de Estudios, más lectoescritura y pensamiento lógico, sin sobrecarga de tareas inútiles para los padres.",
+      "100 % enfocado en los Objetivos de Aprendizaje (OA) que mide la Validación de Estudios del MINEDUC. Actividades formativas con exigencia del 70 % que aseguran lectura comprensiva y cálculo base sin sobrecargar a la familia.",
   },
   {
     id: "basica-5-8",
     etiqueta: "5° a 8° Básico",
     detalle: "5 asignaturas",
-    asignaturas: ["Lenguaje y Comunicación", "Matemática", "Ciencias Naturales", "Historia, Geografía y Ciencias Sociales", "Idioma Extranjero: Inglés"],
+    asignaturas: ["Lenguaje", "Matemática", "Ciencias Naturales", "Historia", "Idioma Extranjero: Inglés"],
     barkley:
-      "Cobertura del 100 % de los indicadores del temario oficial del MINEDUC y nivelación automática de los vacíos arrastrados de años anteriores mediante diagnóstico adaptativo.",
+      "Mapeo directo de cada indicador oficial publicado por el Ministerio. Cada unidad se valida internamente al 70 % de exigencia antes de avanzar.",
     nota: "Se suma Inglés a las cuatro troncales.",
   },
   {
     id: "media-1-4",
     etiqueta: "1° a 4° Medio",
-    detalle: "Con proyección a la PAES",
+    detalle: "Con base para la PAES",
     asignaturas: [
       "Lengua y Literatura",
       "Matemática",
       "Ciencias Naturales (Biología, Física y Química)",
-      "Historia, Educación Ciudadana y Filosofía (según nivel)",
+      "Historia / Educación Ciudadana / Filosofía (según curso)",
       "Inglés",
     ],
     barkley:
-      "Doble blindaje académico: preparación exacta para el temario del colegio examinador asignado y una base sólida de habilidades para la PAES y la Educación Superior.",
+      "Preparación exacta sobre los temarios oficiales del MINEDUC y alineación con el colegio examinador asignado, construyendo al mismo tiempo la base para la PAES.",
   },
 ];
 
 export interface Fase {
   id: string;
   numero: string;
-  periodo: string;
   titulo: string;
   texto: string;
 }
 
 export const FASES: readonly Fase[] = [
   {
-    id: "mapeo",
+    id: "temario",
     numero: "1",
-    periodo: "Marzo a julio",
-    titulo: "Mapeo oficial MINEDUC",
-    texto:
-      "El estudiante avanza a su ritmo por los módulos construidos directamente sobre las Bases Curriculares y los Temarios Oficiales del Ministerio. Cero materia de relleno.",
+    titulo: "Contenidos 100 % basados en el temario MINEDUC",
+    texto: "Estudias exactamente las asignaturas y objetivos que evalúa el Ministerio en Exámenes Libres, sin relleno innecesario.",
   },
   {
-    id: "dominio",
+    id: "umbral",
     numero: "2",
-    periodo: "Todo el año",
-    titulo: "Dominio continuo con Umbral™ y Sókra™",
+    titulo: "Avance progresivo con exigencia del 70 % (Umbral™)",
     texto:
-      "Nadie pasa de tema con dudas. Si un concepto cuesta, nuestra IA pedagógica Sókra™ lo explica de diez formas distintas hasta lograr al menos un 80 % de dominio verificado.",
+      "Cada actividad y evaluación formativa interna se aprueba con un 70 % de exigencia, apoyado las 24 horas por nuestra tutoría inteligente Sókra™ para mejorar el ritmo y asegurar que cada tema quede aprendido.",
   },
   {
     id: "examinador",
     numero: "3",
-    periodo: "Agosto a septiembre",
-    titulo: "Ajuste quirúrgico al colegio examinador",
+    titulo: "Alineación con tu colegio examinador asignado",
     texto:
-      "Apenas te asignan el colegio examinador y recibes su temario específico, nuestro motor Vórtice™ alinea los repasos y ensayos exactamente a los indicadores que ese establecimiento evaluará.",
+      "Cuando la Seremi asigna el establecimiento examinador y se publica el desglose específico de tu prueba, enfocamos los repasos directamente en esos indicadores.",
   },
   {
-    id: "simulacros",
+    id: "ensayos",
     numero: "4",
-    periodo: "Octubre",
-    titulo: "Simulacros oficiales y rendición segura",
+    titulo: "Ensayos finales y aprobación segura",
     texto:
-      "Tu hijo rinde ensayos cronometrados idénticos a la prueba real. Llega al día del examen tranquilo, sin ansiedad y con el respaldo de un modelo que ya ha superado el 92 % de aprobación en 2023, 2024 y 2025.",
-  },
-];
-
-export const CONTEXTO_EXAMINADOR =
-  "En Chile, para menores de 18 años, el MINEDUC publica el temario marco, pero la Seremi asigna un colegio examinador presencial en la comuna de la familia, y ese establecimiento entrega su propio desglose o énfasis semanas antes de la prueba. Ahí fallan otras opciones; Barkley lo convierte en ventaja.";
-
-export interface TarjetaTransparencia {
-  id: string;
-  titulo: string;
-  resumen: string;
-  cuerpo: string;
-}
-
-export const TARJETAS_TRANSPARENCIA: readonly TarjetaTransparencia[] = [
-  {
-    id: "tasa",
-    titulo: "Tasa de aprobación superior al 92 % (cohortes 2023, 2024 y 2025)",
-    resumen: "Tres temporadas consecutivas sobre el 92 %.",
-    cuerpo:
-      "Nuestras tres temporadas consecutivas superaron el 92 % de aprobación en Exámenes Libres. Antes de que el alumno se presente ante el colegio examinador, medimos su Índice de Preparación Real (IPR), para saber con anticipación si está listo y no descubrirlo en octubre.",
-  },
-  {
-    id: "dominar",
-    titulo: "Diferencia entre «pasar la materia» y «dominar el temario»",
-    resumen: "Entrenar sobre 80 % para superar con holgura el 60 %.",
-    cuerpo:
-      "Un alumno que entrena bajo la regla del 80 % o más de Umbral™ supera con holgura la barrera del 60 % (nota 4,0) que exige el MINEDUC. Pasar la materia es avanzar porque se acabó la unidad; dominar el temario es demostrar, módulo a módulo, que se entendió.",
-  },
-  {
-    id: "panel",
-    titulo: "Panel en tiempo real para apoderados",
-    resumen: "El avance, todos los días, desde el celular.",
-    cuerpo:
-      "El papá no tiene que esperar a octubre para saber si su hijo sabe: ve el porcentaje exacto de cobertura del temario MINEDUC todos los días desde su celular.",
+      "Rindes simulacros calibrados al 70 % de exigencia para llegar a octubre a superar con total tranquilidad el 60 % que pide el MINEDUC.",
   },
 ];

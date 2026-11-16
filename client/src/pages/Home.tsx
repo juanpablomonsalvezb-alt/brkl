@@ -769,8 +769,8 @@ function ResultadosModule() {
           <h2 style={{ fontFamily: "'Newsreader', Georgia, serif", fontSize: "clamp(24px,3.6vw,36px)", fontWeight: 500, color: "#fff", margin: 0, lineHeight: 1.15 }}>Resultados y temario, a la vista</h2>
         </div>
         <div>
-          <div style={dato}>&gt;92%</div>
-          <p style={rotulo}>de aprobación en Exámenes Libres, 2023, 2024 y 2025.</p>
+          <div style={dato}>92%</div>
+          <p style={rotulo}>de los inscritos aprueba sus Exámenes Libres (promedio 2023–2025).</p>
         </div>
         <div>
           <div style={dato}>100%</div>

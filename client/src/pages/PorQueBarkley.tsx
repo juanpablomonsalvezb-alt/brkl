@@ -51,11 +51,11 @@ function Hero() {
           <p style={{ fontFamily: FONT_UI, fontSize: 13, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.gold, margin: "0 0 16px" }}>
             Entendemos lo que sientes cada marzo
           </p>
-          <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: "clamp(34px,5.6vw,58px)", fontWeight: 500, lineHeight: 1.07, letterSpacing: "-0.02em", color: "#fff", margin: "0 0 20px", textWrap: "balance" as React.CSSProperties["textWrap"] }}>
-            Tu hijo merece aprender sin miedo, sin vacíos y sin que tu familia pague de más.
+          <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: "clamp(27px,4.5vw,46px)", fontWeight: 500, lineHeight: 1.07, letterSpacing: "-0.02em", color: "#fff", margin: "0 0 20px", textWrap: "balance" as React.CSSProperties["textWrap"] }}>
+            De la angustia escolar a la tranquilidad de aprender en casa, con 92 % de aprobación promedio en Exámenes Libres.
           </h1>
           <p style={{ fontFamily: FONT_UI, fontSize: "clamp(16px,1.9vw,19px)", lineHeight: 1.65, color: "#cfe0f5", margin: "0 0 26px", maxWidth: 560 }}>
-            Siete preocupaciones se repiten en las familias chilenas. Toca cada una, mira qué dice la realidad del país y cómo la resuelve Barkley. Después calcula cuánto te ahorrarías y cuánto tiempo recuperarías.
+            Más del 70 % de las denuncias escolares en Chile son por violencia y maltrato, y más del 60 % de los padres nota ansiedad escolar en sus hijos. Descubre cómo Barkley resuelve de raíz los 7 grandes miedos de las familias chilenas.
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 28 }}>
             <Insignia tono="oscuro"><Heart size={16} aria-hidden /> Aprendizaje sin miedo</Insignia>
@@ -262,7 +262,7 @@ function Cierre() {
 
 export default function PorQueBarkley() {
   usePageMeta(
-    "Por qué Barkley: sin bullying, sin vacíos y sin gastos ocultos",
+    "Por qué Barkley: 7 miedos escolares y su solución",
     "Los siete miedos de las familias chilenas, cómo los resuelve Barkley y una calculadora de ahorro y tiempo recuperado frente al colegio presencial.",
     "/por-que-barkley",
   );
