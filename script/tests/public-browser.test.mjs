@@ -66,6 +66,20 @@ test('FAQ sin backend, menú accesible y metadatos al navegar', async () => {
     await page.waitForFunction(() => document.querySelector('link[rel="canonical"]')?.href === 'https://www.barkleyinstituto.cl/');
     await page.waitForFunction(() => document.title === 'Barkley Online — Colegio 100% asincrónico e inclusivo en Chile');
     assert.equal(await page.$eval('meta[name="robots"]', (el) => el.content), 'index, follow');
+    for (const width of [1280, 390]) {
+      await page.setViewport({ width, height: 800 });
+      for (const [path, selector] of [
+        ['/guia-examenes-libres/', '#dudas'],
+        ['/examenes-libres-1-basico/', '#orientacion-del-nivel'],
+        ['/examenes-libres-8-basico/', '#orientacion-del-nivel'],
+        ['/tour-plataforma', '#ejemplo-vortice'],
+      ]) {
+        await page.goto(origin + path, { waitUntil: 'domcontentloaded' });
+        await page.waitForSelector(selector);
+        assert.equal(await page.$$eval('h1', (els) => els.length), 1, path);
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true, `${width}: ${path}`);
+      }
+    }
     assert.equal(pageErrors.length, 0, pageErrors.join('\n'));
   } finally {
     if (browser) await browser.close();
