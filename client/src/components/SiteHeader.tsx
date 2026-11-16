@@ -179,12 +179,12 @@ export function SiteHeader({ overlay = true, idioma = "es" }: { overlay?: boolea
         {menuOpen && (
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}
-            style={{ position: "fixed", inset: 0, background: NAVY, zIndex: 40, padding: "60px 40px", display: "flex", flexDirection: "column", gap: 24, overflowY: "auto" }}>
+            style={{ position: "fixed", inset: 0, background: NAVY, zIndex: 40, padding: "60px 40px", display: "flex", flexDirection: "column", gap: 19, overflowY: "auto" }}>
             <button aria-label={en ? "Close menu" : "Cerrar menú"} onClick={() => setMenuOpen(false)} style={{ alignSelf: "flex-end", background: "none", border: "none", color: "#fff", cursor: "pointer" }}><X style={{ width: 32, height: 32 }} /></button>
             {links.map((l, i) => (
               <motion.a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.06 * i }}
-                style={{ color: "#fff", textDecoration: "none", fontSize: "clamp(22px,5vw,40px)", fontWeight: 600 }}>{l.label}</motion.a>
+                style={{ color: "#fff", textDecoration: "none", fontSize: "clamp(18px,4vw,32px)", fontWeight: 600 }}>{l.label}</motion.a>
             ))}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.06 * links.length + 0.1 }} style={{ display: "flex", gap: 14, marginTop: 20 }}>
               <a href={en ? "/en/support" : "/#inscripcion"} style={{ textDecoration: "none", background: RED, color: "#fff", borderRadius: 999, padding: "12px 24px", fontSize: 16, fontWeight: 600 }}>{en ? "Support our mission" : "Postular"}</a>
