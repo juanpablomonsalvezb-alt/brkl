@@ -26,6 +26,7 @@ const NAV_LINKS_EN = [
 ];
 
 const NAV_LINKS = [
+  { label: "Inicio", href: "/" },
   { label: "Nosotros", href: "/#nosotros" },
   { label: "El Método", href: "/#metodo-barkley" },
   { label: "Admisión", href: "/#inscripcion" },
