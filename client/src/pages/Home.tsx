@@ -757,6 +757,31 @@ function MetodoModule() {
    formulario queda a mitad de camino. Aparece tras el hero y se esconde
    mientras hay un formulario de admisión a la vista. Mientras está visible,
    --cta-bar sube los flotantes de abajo (volver arriba, chat) para no taparlos. */
+function ResultadosModule() {
+  const dato = { fontFamily: "'Newsreader', Georgia, serif", fontSize: "clamp(52px,8vw,84px)", lineHeight: 1, color: "#fff", fontWeight: 500, letterSpacing: "-0.03em", fontVariantNumeric: "tabular-nums lining-nums" } as const;
+  const rotulo = { fontFamily: FONT, fontSize: 15, lineHeight: 1.5, color: "#cfe0f5", margin: "10px 0 0", maxWidth: 300 } as const;
+  return (
+    <section id="resultados-modulo" style={{ background: NAVY, padding: "clamp(48px,6vw,72px) 24px" }}>
+      <a href="/examenes-libres-y-resultados" data-testid="modulo-resultados"
+        style={{ display: "grid", gap: 28, maxWidth: 1080, margin: "0 auto", textDecoration: "none", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", alignItems: "end" }}>
+        <div style={{ gridColumn: "1 / -1" }}>
+          <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: GOLD, margin: "0 0 8px" }}>Cero sorpresas</p>
+          <h2 style={{ fontFamily: "'Newsreader', Georgia, serif", fontSize: "clamp(24px,3.6vw,36px)", fontWeight: 500, color: "#fff", margin: 0, lineHeight: 1.15 }}>Resultados y temario, a la vista</h2>
+        </div>
+        <div>
+          <div style={dato}>&gt;92%</div>
+          <p style={rotulo}>de aprobación en Exámenes Libres, 2023, 2024 y 2025.</p>
+        </div>
+        <div>
+          <div style={dato}>100%</div>
+          <p style={rotulo}>alineado a los temarios oficiales del MINEDUC, de 1° Básico a 4° Medio.</p>
+        </div>
+        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: NAVY, background: GOLD, padding: "13px 20px", borderRadius: 10, justifySelf: "start", minHeight: 46, display: "inline-flex", alignItems: "center" }}>Ver el detalle →</span>
+      </a>
+    </section>
+  );
+}
+
 function BarraInscripcion() {
   const [pasoHero, setPasoHero] = useState(false);
   const [formVisible, setFormVisible] = useState(false);
@@ -1194,6 +1219,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <ResultadosModule />
 
       {/* === PROGRAMAS === */}
       <section id="plataforma" style={{ background: "#f5f5f5", padding: "64px 24px" }}>
