@@ -1,4 +1,3 @@
-import { levelEditorialHtml } from "./lib/level-editorial.mjs";
 import { EXAM_PERIODS_2026 } from "../shared/exam-calendar.mjs";
 /**
  * Genera las landings estáticas de exámenes libres por nivel
@@ -492,8 +491,6 @@ function pageHtml(n) {
   </section>
 
   ${temarioHtml(n.slug, n.nombre)}
-
-  ${levelEditorialHtml(n.slug)}
 
   <section style="background:#f5f5f5;">
     <div class="inner">

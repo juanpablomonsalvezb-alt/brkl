@@ -70,13 +70,16 @@ test('FAQ sin backend, menú accesible y metadatos al navegar', async () => {
       await page.setViewport({ width, height: 800 });
       for (const [path, selector] of [
         ['/guia-examenes-libres/', '#dudas'],
-        ['/examenes-libres-1-basico/', '#orientacion-del-nivel'],
-        ['/examenes-libres-8-basico/', '#orientacion-del-nivel'],
-        ['/tour-plataforma', '#ejemplo-vortice'],
+        ['/examenes-libres-1-basico/', 'h1'],
+        ['/examenes-libres-8-basico/', 'h1'],
+        ['/tour-plataforma', 'h1'],
       ]) {
         await page.goto(origin + path, { waitUntil: 'domcontentloaded' });
         await page.waitForSelector(selector);
         assert.equal(await page.$$eval('h1', (els) => els.length), 1, path);
+        if (path !== '/guia-examenes-libres/') {
+          assert.equal(await page.$('#ejemplo-vortice, #orientacion-del-nivel'), null, path);
+        }
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true, `${width}: ${path}`);
       }
     }

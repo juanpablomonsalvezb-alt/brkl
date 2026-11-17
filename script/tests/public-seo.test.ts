@@ -92,7 +92,7 @@ test("los 12 niveles no repiten fechas antiguas ni el indicador corrupto conocid
 test("regenerar niveles conserva el calendario correcto (aislado del repositorio)", () => {
   const dir = mkdtempSync(join(tmpdir(), "barkley-landings-"));
   try {
-    for (const path of ["scripts/generate-landings.mjs", "scripts/lib/level-editorial.mjs", "shared/exam-calendar.mjs", "scripts/data/mineduc-temarios-manifest.json"]) {
+    for (const path of ["scripts/generate-landings.mjs", "shared/exam-calendar.mjs", "scripts/data/mineduc-temarios-manifest.json"]) {
       mkdirSync(join(dir, path, ".."), { recursive: true });
       copyFileSync(path, join(dir, path));
     }
@@ -102,19 +102,6 @@ test("regenerar niveles conserva el calendario correcto (aislado del repositorio
     assert.doesNotMatch(html, /3-7 de junio|7-11 de octubre|eventos de la temporales/);
     for (const period of EXAM_PERIODS_2026) assert.ok(html.includes(period.registration));
   } finally { rmSync(dir, { recursive: true, force: true }); }
-});
-
-test("pilotos diferenciados, fuente generadora compartida y sin supuestos datos reales", async () => {
-  const { levelEditorialHtml } = await import("../../scripts/lib/level-editorial.mjs");
-  for (const slug of ["1-basico", "8-basico"]) {
-    const html = read(`client/public/examenes-libres-${slug}/index.html`);
-    assert.ok(html.includes(levelEditorialHtml(slug)));
-    assert.ok(html.includes('id="orientacion-del-nivel"'));
-    assert.match(html, /no pregunta oficial MINEDUC ni evaluación interna/);
-    assert.match(html, /\/tour-plataforma#ejemplo-vortice/);
-  }
-  assert.notEqual(levelEditorialHtml("1-basico"), levelEditorialHtml("8-basico"));
-  assert.equal(levelEditorialHtml("2-basico"), "");
 });
 
 test("guía distingue procesos y la FAQ coincide con texto público", () => {
@@ -128,11 +115,14 @@ test("guía distingue procesos y la FAQ coincide con texto público", () => {
   }
 });
 
-test("tour inicial explica un ejemplo ficticio y enlaza orientación pública", () => {
-  const html = snapshot("/tour-plataforma");
-  assert.match(html, /id="ejemplo-vortice"/);
-  assert.match(html, /Ejemplo ficticio e ilustrativo/);
-  assert.match(html, /no reproduce una sesión real/);
-  assert.match(html, /href="\/guia-examenes-libres\/"/);
-  assert.match(html, /href="\/examenes-libres-8-basico\/"/);
+test("las tres páginas conservan contenido original sin ejemplos añadidos", () => {
+  for (const slug of ["1-basico", "8-basico"]) {
+    const html = read(`client/public/examenes-libres-${slug}/index.html`);
+    assert.doesNotMatch(html, /orientacion-del-nivel|Ilustración educativa|Ejemplo original de práctica/);
+    assert.match(html, /Temario oficial/);
+  }
+  const tour = snapshot("/tour-plataforma");
+  assert.doesNotMatch(tour, /ejemplo-vortice|Ejemplo ficticio e ilustrativo|antes-de-elegir/);
+  assert.match(tour, /Así es Barkley por dentro/);
+  assert.match(tour, /Tu escritorio: siempre sabes qué sigue/);
 });

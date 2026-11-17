@@ -1899,8 +1899,8 @@
         "changefreq": "monthly",
         "priority": "0.7"
       },
-      "title": "Vórtice: cómo se estudia en la plataforma Barkley",
-      "description": "Conoce Vórtice con un recorrido público de estudio y un ejemplo ficticio resuelto. Distingue práctica, avance por dominio y certificación MINEDUC.",
+      "title": "Tour de la Plataforma: Así Es Barkley por Dentro",
+      "description": "Recorre la plataforma real de Barkley paso a paso: el escritorio del estudiante, el avance por dominio, cada lección con video y pódcast.",
       "canonical": "https://www.barkleyinstituto.cl/tour-plataforma",
       "schemaTypes": [
         "EducationalOrganization"
@@ -1908,8 +1908,8 @@
       "editorialReview": null,
       "intent": "orientacion-institucional",
       "openGraph": {
-        "og:title": "Vórtice: cómo se estudia en la plataforma Barkley",
-        "og:description": "Conoce Vórtice con un recorrido público de estudio y un ejemplo ficticio resuelto. Distingue práctica, avance por dominio y certificación MINEDUC.",
+        "og:title": "Tour de la Plataforma: Así Es Barkley por Dentro",
+        "og:description": "Recorre la plataforma real de Barkley paso a paso: el escritorio del estudiante, el avance por dominio, cada lección con video y pódcast.",
         "og:url": "https://www.barkleyinstituto.cl/tour-plataforma"
       }
     },
