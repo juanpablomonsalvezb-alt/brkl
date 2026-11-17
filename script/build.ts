@@ -1,3 +1,4 @@
+import { readManifest, validateManifest, generateSitemap } from "../scripts/lib/public-seo-contract.mjs";
 import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
 import { rm, readFile, rename, writeFile, copyFile } from "fs/promises";
@@ -98,11 +99,21 @@ const allowlist = [
 ];
 
 async function buildAll() {
+  // Control offline: nunca ejecuta el backend ni consulta páginas privadas.
+  // Durante el prerender puede haber snapshots intermedios pendientes; el build
+  // publicable normal siempre exige que el contrato y el HTML coincidan.
+  const seoManifest = readManifest();
+  if (process.env.npm_lifecycle_event !== "prerender") {
+    const seoReport = validateManifest(process.cwd(), seoManifest);
+    if (seoReport.errors.length) throw new Error(`Contrato SEO inválido:\n${seoReport.errors.join("\n")}`);
+    console.log(`Contrato SEO: ${seoReport.summary.pages} páginas, ${seoReport.summary.sitemapPages} en sitemap, ${seoReport.warnings.length} avisos (ver node scripts/public-seo.mjs)`);
+  }
   await rm("dist", { recursive: true, force: true });
 
   console.log("building client...");
   await viteBuild();
   await aplicarPreciosEnDist();
+  await writeFile("dist/public/sitemap.xml", generateSitemap(seoManifest));
 
   console.log("building server...");
   const pkg = JSON.parse(await readFile("package.json", "utf-8"));
