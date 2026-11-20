@@ -1,3 +1,5 @@
+import { usePageMeta } from "@/lib/usePageMeta";
+import { EXAM_PERIODS_2026 } from "@shared/exam-calendar.mjs";
 /**
  * Clon estructural + visual de https://www.isb.be/ (International School of Brussels).
  * Colores EXACTOS extraídos del CSS fuente real (main.css, tema Finalsite default_25):
@@ -33,7 +35,7 @@ function TikTokIcon({ style }: { style?: React.CSSProperties }) {
     </svg>
   );
 }
-import { useQuery } from "@tanstack/react-query";
+import { PUBLIC_FAQS } from "@shared/public-faqs";
 import { motion, AnimatePresence } from "framer-motion";
 import { ReservationDialog } from "@/components/ReservationDialog";
 import SalesChatbot, { abrirChat } from "@/components/SalesChatbot";
@@ -255,7 +257,6 @@ const PROGRAMAS = [
 // presentan en presente porque forman parte del programa 2027 al que la familia
 // se está inscribiendo — el acceso a la plataforma abre en enero de 2027.
 
-interface Faq { id: string; question: string; answer: string; sortOrder: number; isActive?: boolean; }
 
 function AdmisionSection({ anchorId }: { anchorId?: string }) {
   return (
@@ -847,12 +848,16 @@ function BarraInscripcion() {
 }
 
 export default function Home() {
+  usePageMeta({
+    title: "Barkley Online — Colegio 100% asincrónico e inclusivo en Chile",
+    description: `Colegio online 100% asincrónico en Chile, de 1° básico a 4° medio. Matrícula ${PRECIOS.matricula} (gratis antes del 30 de noviembre). Preparación completa para Exámenes Libres MINEDUC, a tu propio ritmo.`,
+  });
   useIdioma("es", "/");
   const [callOpen, setCallOpen] = useState(false);
   const [showBackTop, setShowBackTop] = useState(false);
   // En móvil ya están la barra de reserva y el chat; en escritorio va sobre la burbuja del chat.
   const esMovil = useIsMobile();
-  const { data: faqs } = useQuery<Faq[]>({ queryKey: ["/api/faqs"], staleTime: 5*60*1000 });
+  const faqs = PUBLIC_FAQS;
 
   // Botón flotante de volver arriba: aparece tras pasar una pantalla de scroll,
   // visible en toda la página (no solo al llegar al footer) y en cualquier dispositivo.
@@ -888,49 +893,8 @@ export default function Home() {
 
       <ReactionWidget />
 
-      {/* Organization schema: le da a buscadores e IA una entidad de marca clara
-          (nombre, logo) en vez de solo texto — mejora que te citen por nombre. */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "EducationalOrganization",
-            name: "Barkley Online",
-            alternateName: "Barkley",
-            url: "https://www.barkleyinstituto.cl/",
-            logo: "https://www.barkleyinstituto.cl/og-image.jpg",
-            description: "Colegio 100% online y asíncrono en Chile, de 1° básico a 4° medio, con validación oficial MINEDUC.",
-            address: { "@type": "PostalAddress", addressCountry: "CL" },
-            areaServed: { "@type": "Country", name: "Chile" },
-            sameAs: [INSTAGRAM_URL, TIKTOK_URL, "https://www.youtube.com/@barkleyonline1"],
-          }),
-        }}
-      />
-
-      {faqs && faqs.length > 0 && (
-        // FAQPage schema: permite a buscadores e IA (ChatGPT, Perplexity, Google AI
-        // Overviews) extraer preguntas/respuestas directamente sin tener que
-        // interpretar el acordeón visual.
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              mainEntity: faqs
-                .filter((f) => f.isActive)
-                .map((f) => ({
-                  "@type": "Question",
-                  name: f.question,
-                  acceptedAnswer: { "@type": "Answer", text: f.answer },
-                })),
-            }),
-          }}
-        />
-      )}
-
       <SiteHeader />
+      <main id="main-content">
 
       {/* === HERO — como el real: marco blanco de 15px alrededor, foto a la izquierda,
           columna derecha con bloque azul (doble triángulo dorado cortado por el borde)
@@ -1317,7 +1281,7 @@ export default function Home() {
               { fecha: "Enero 2027", titulo: "Primer pago", texto: "Confirmas tu plan (mensual o anual con 15% dcto) y activas la cuenta. El arancel se paga a partir de enero 2027." },
               { fecha: "Marzo 2027", titulo: "Inicio del año de preparación", texto: "Acceso completo a la plataforma: video, pódcast, tutor y asesor." },
               { fecha: "Marzo – octubre", texto: "8 meses de avance a tu ritmo con Aprendizaje por Dominio, acompañado por tu tutor y monitoreado por tu asesor.", titulo: "Año lectivo" },
-              { fecha: "31 de octubre 2027", titulo: "Exámenes libres MINEDUC", texto: <>Rindes tus exámenes libres ante el Ministerio de Educación de Chile. <a href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11" target="_blank" rel="noopener noreferrer" style={{ color: NAVY, fontWeight: 700 }}>Ver cómo inscribirte en Ayuda Mineduc</a>.</> },
+              { fecha: "Según calendario MINEDUC 2027", titulo: "Exámenes libres MINEDUC", texto: <>Rindes tus exámenes libres ante el Ministerio de Educación de Chile. <a href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11" target="_blank" rel="noopener noreferrer" style={{ color: NAVY, fontWeight: 700 }}>Ver cómo inscribirte en Ayuda Mineduc</a>.</> },
             ].map((h, i) => (
               <Reveal key={h.titulo} delay={i * 0.06}>
                 <div style={{ display: "flex", gap: 24, marginBottom: 36, position: "relative" }}>
@@ -1338,24 +1302,14 @@ export default function Home() {
               <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 6px" }}>Fechas oficiales MINEDUC 2026</p>
               <p style={{ fontSize: 20, fontWeight: 700, color: NAVY, margin: "0 0 18px" }}>Períodos de inscripción y rendición de Exámenes Libres (menores de 18 años)</p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 20, marginBottom: 22 }}>
-                <div style={{ flex: "1 1 260px", background: "#fff", borderRadius: 14, padding: "20px 22px" }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: "#b5892a", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Primer período · todos los cursos y NEE</p>
-                  <p style={{ fontSize: 15, color: TEXT, margin: "0 0 4px" }}><strong style={{ color: NAVY }}>Inscripción:</strong> 6 al 29 de abril de 2026</p>
-                  <p style={{ fontSize: 15, color: TEXT, margin: "0 0 4px" }}><strong style={{ color: NAVY }}>Rendición:</strong> 8 al 19 de junio de 2026</p>
-                  <p style={{ fontSize: 15, color: TEXT, margin: 0 }}><strong style={{ color: NAVY }}>Resultados:</strong> 27 de julio de 2026</p>
+                {EXAM_PERIODS_2026.map((period) => (
+                <div key={period.label} style={{ flex: "1 1 260px", background: "#fff", borderRadius: 14, padding: "20px 22px" }}>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: "#b5892a", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>{period.label}</p>
+                  <p style={{ fontSize: 15, color: TEXT, margin: "0 0 4px" }}><strong style={{ color: NAVY }}>Inscripción:</strong> {period.registration}</p>
+                  <p style={{ fontSize: 15, color: TEXT, margin: "0 0 4px" }}><strong style={{ color: NAVY }}>Rendición:</strong> {period.exams}</p>
+                  <p style={{ fontSize: 15, color: TEXT, margin: 0 }}><strong style={{ color: NAVY }}>Resultados:</strong> {period.results}</p>
                 </div>
-                <div style={{ flex: "1 1 260px", background: "#fff", borderRadius: 14, padding: "20px 22px" }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: "#b5892a", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Segundo período · solo 4° medio y NEE</p>
-                  <p style={{ fontSize: 15, color: TEXT, margin: "0 0 4px" }}><strong style={{ color: NAVY }}>Inscripción:</strong> 12 de mayo al 17 de julio de 2026</p>
-                  <p style={{ fontSize: 15, color: TEXT, margin: "0 0 4px" }}><strong style={{ color: NAVY }}>Rendición:</strong> 21 de septiembre al 2 de octubre de 2026</p>
-                  <p style={{ fontSize: 15, color: TEXT, margin: 0 }}><strong style={{ color: NAVY }}>Resultados:</strong> 27 de octubre de 2026</p>
-                </div>
-                <div style={{ flex: "1 1 260px", background: "#fff", borderRadius: 14, padding: "20px 22px" }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: "#b5892a", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 8px" }}>Tercer período · todos los cursos excepto 4° medio y NEE</p>
-                  <p style={{ fontSize: 15, color: TEXT, margin: "0 0 4px" }}><strong style={{ color: NAVY }}>Inscripción:</strong> mismo plazo del primer período (6 al 29 de abril)</p>
-                  <p style={{ fontSize: 15, color: TEXT, margin: "0 0 4px" }}><strong style={{ color: NAVY }}>Rendición:</strong> 19 al 30 de octubre de 2026</p>
-                  <p style={{ fontSize: 15, color: TEXT, margin: 0 }}><strong style={{ color: NAVY }}>Resultados:</strong> 20 de noviembre de 2026</p>
-                </div>
+                ))}
               </div>
               <p style={{ fontSize: 14, color: TEXT, margin: "0 0 18px" }}>
                 Inscripción gratuita a través del <a href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11" target="_blank" rel="noopener noreferrer" style={{ color: NAVY, fontWeight: 700 }}>Portal de Ayuda Mineduc</a>. Quien necesite validar 4° medio o presente NEE solo puede inscribirse en el primer o segundo período (junio o septiembre) para asegurar la certificación a tiempo. <a href="/blog/como-inscribirse-examenes-libres-mineduc/" style={{ color: NAVY, fontWeight: 700 }}>Ver guía paso a paso →</a>
@@ -1484,8 +1438,7 @@ export default function Home() {
 
       {/* === FAQ — banner a la página dedicada /preguntas-frecuentes ===
           El acordeón completo se movió a su propia ruta (perf: no aportaba
-          al LCP y pesaba el bundle inicial). El FAQPage JSON-LD arriba en
-          este archivo se mantiene para SEO/IA, no depende de este banner. === */}
+          al LCP y pesaba el bundle inicial). El FAQPage se publica junto a las respuestas en la página dedicada. === */}
       {faqs && faqs.length > 0 && (
         <section style={{ maxWidth: 1180, margin: "0 auto", padding: "0 24px 56px" }}>
           <Reveal>
@@ -1568,6 +1521,7 @@ export default function Home() {
       <ReaccionEnLinea />
 
       {/* === FOOTER — navy sólido + formas orgánicas, como el real === */}
+      </main>
       <footer style={{ backgroundColor: NAVY, color: "#fff", padding: "56px 24px 24px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 30, left: -30, opacity: 0.5 }}><ShapeFlower color="#00b27355" size={120} /></div>
         <div style={{ position: "absolute", bottom: 40, left: 60, opacity: 0.6 }}><ShapeCircle color="#00b27377" size={40} /></div>

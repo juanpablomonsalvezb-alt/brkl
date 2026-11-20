@@ -1,3 +1,4 @@
+import { EXAM_PERIODS_2026 } from "../shared/exam-calendar.mjs";
 /**
  * Genera las landings estáticas de exámenes libres por nivel
  * (client/public/examenes-libres-<slug>/index.html).
@@ -58,6 +59,7 @@ function indicadorUtilizable(texto) {
   if (!/[.]$/.test(t)) return false;                 // truncado a media frase
   if (/(^|\s)(el|la|los|las|su|de|del|y|o|con|para|por|un|una)\.$/i.test(t)) return false;
   if (/(por ejemplo|ejemplo:|:)$/i.test(t)) return false;
+  if (/eventos de la temporales/.test(t)) return false;
   if (/•/.test(t)) return false;                     // viñeta partida
   return /^[A-ZÁÉÍÓÚÑ]/.test(t);                     // empieza como oración
 }
@@ -275,7 +277,7 @@ function faqsFor(n) {
   return [
     {
       q: `¿Cuánto dura la preparación de ${n.nombre} en Barkley?`,
-      a: `Se estudia a tu propio ritmo durante el año lectivo (marzo a octubre). Las fechas de rendición oficial MINEDUC 2026 son el 3-7 de junio (1er período) y 7-11 de octubre (2do período).`,
+      a: `Se estudia a tu propio ritmo durante el año lectivo (marzo a octubre). Consulta el calendario oficial de esta página: las fechas y los períodos habilitados dependen del curso y de si el estudiante presenta NEE.`,
     },
     {
       q: `¿Qué asignaturas se rinden en ${n.nombre}?`,
@@ -510,8 +512,7 @@ function pageHtml(n) {
     <div class="inner">
       <h2>Fechas oficiales MINEDUC 2026</h2>
       <div class="grid3">
-        <div class="card"><b>Primer período</b><p>Inscripción: 6 al 24 de abril de 2026<br>Rendición: 3 al 7 de junio de 2026</p></div>
-        <div class="card"><b>Segundo período</b><p>Inscripción: 1 al 22 de julio de 2026<br>Rendición: 7 al 11 de octubre de 2026</p></div>
+        ${EXAM_PERIODS_2026.map((p) => `<div class="card"><b>${p.label}</b><p>Inscripción: ${p.registration}<br>Rendición: ${p.exams}<br>Resultados: ${p.results}</p></div>`).join("\n")}
         <div class="card"><b>Inscripción gratuita</b><p>Se realiza en el Portal de Ayuda MINEDUC. Para menores de 18 años, revisa la <a class="mineduc" href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11" target="_blank" rel="noopener noreferrer">ficha oficial</a>.</p></div>
       </div>
     </div>

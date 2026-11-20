@@ -198,7 +198,7 @@ const POSTS = [
       <h2>Los pasos generales</h2>
       <p>1) Verificar el nivel que corresponde validar (el estudiante debe haber completado el nivel anterior). 2) Ingresar al Portal de Ayuda MINEDUC dentro del período de inscripción oficial. 3) Completar los datos del estudiante y el nivel a rendir. 4) Guardar el comprobante de inscripción. 5) Presentarse a rendir en la fecha y sede asignada.</p>
       <h2>Fechas oficiales 2026</h2>
-      <p>Primer período: inscripción del 6 al 24 de abril, rendición del 3 al 7 de junio. Segundo período: inscripción del 1 al 22 de julio, rendición del 7 al 11 de octubre.</p>
+      <p>Primer período (todos los cursos y NEE): inscripción del 6 al 29 de abril, rendición del 8 al 19 de junio. Segundo período (solo 4° medio y NEE): inscripción del 12 de mayo al 17 de julio, rendición del 21 de septiembre al 2 de octubre. Tercer período (excepto 4° medio y NEE): inscripción del 12 de mayo al 17 de julio, rendición del 19 al 30 de octubre.</p>
       <h2>Dónde pedir ayuda con el trámite</h2>
       <p>En Barkley entregamos charlas y asesoría personalizada para hacer correctamente la inscripción, aunque el trámite en sí siempre lo completa el apoderado directamente ante el MINEDUC.</p>
     `,

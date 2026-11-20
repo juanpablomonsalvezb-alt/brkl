@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Home from "@/pages/Home";
+import { PageSeo } from "@/components/PageSeo";
 import { lazyRoute } from "@/lib/lazyRoute";
 import Lenis from 'lenis';
 import { useEffect, lazy, Suspense } from "react";
@@ -155,6 +156,7 @@ function App() {
         {/* <SmoothScroll /> */}
         <TooltipProvider>
           <Toaster />
+          <PageSeo />
           <Router />
         </TooltipProvider>
       </QueryClientProvider>

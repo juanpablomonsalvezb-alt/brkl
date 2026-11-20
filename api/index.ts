@@ -1,7 +1,6 @@
 // Vercel serverless function entry point
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import express from "express";
-import { registerRoutes } from "../server/routes";
 // Inlineados en el bundle vía esbuild (loader "text" y el módulo virtual que
 // arma script/build.ts) para no depender de rutas de filesystem en runtime.
 // El HTML COMPILADO (con el bundle JS real /assets/index-HASH.js), no el
@@ -87,15 +86,6 @@ for (const ruta of PRERENDER_ROUTES) {
 // Create Express app for Vercel
 const app = express();
 
-for (const [ruta, html] of paginas) {
-  app.get(ruta, (_req, res) => {
-    // no-cache (no no-store): revalida en cada visita, así nunca sirve un build
-    // viejo, pero no bloquea el back/forward cache del navegador.
-    res.setHeader("Cache-Control", "no-cache");
-    res.type("html").send(html);
-  });
-}
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -110,6 +100,7 @@ async function initializeApp() {
   const { createServer } = await import("http");
   const httpServer = createServer(app);
   
+  const { registerRoutes } = await import("../server/routes");
   await registerRoutes(httpServer, app);
   
   // Error handler
@@ -135,8 +126,16 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
+  const pathname = new URL(req.url ?? "/", "https://www.barkleyinstituto.cl").pathname.replace(/\/+$/, "") || "/";
+  const publicHtml = paginas.get(pathname);
+  if ((req.method === "GET" || req.method === "HEAD") && publicHtml) {
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    res.status(200).send(req.method === "HEAD" ? "" : publicHtml);
+    return;
+  }
   await initializeApp();
-  
+
   // Delegate to Express app
   return app(req as any, res as any, () => {
     res.status(404).json({ message: "Not found" });

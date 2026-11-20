@@ -5,9 +5,9 @@
  * o en cualquier otra página: navegan de vuelta al home y hacen scroll a
  * la sección. Sin esto, una página secundaria queda sin forma de volver.
  */
-import { useState } from "react";
-import { Search, Menu, X, User, Instagram, Youtube } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { Menu, X, User, Instagram, Youtube } from "lucide-react";
+import { motion } from "framer-motion";
 
 const NAVY = "#003366";
 const RED = "#FF3D37";
@@ -140,6 +140,29 @@ function PortalBar({ idioma }: { idioma: Idioma }) {
 
 export function SiteHeader({ overlay = true, idioma = "es" }: { overlay?: boolean; idioma?: Idioma }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const menuPanel = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    menuPanel.current?.querySelector<HTMLButtonElement>("button")?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); setMenuOpen(false); return; }
+      if (event.key !== "Tab") return;
+      const focusable = menuPanel.current?.querySelectorAll<HTMLElement>('button, a[href]');
+      if (!focusable?.length) return;
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+      menuButton.current?.focus();
+    };
+  }, [menuOpen]);
   const en = idioma === "en";
   const links = en ? NAV_LINKS_EN : NAV_LINKS;
   return (
@@ -157,42 +180,34 @@ export function SiteHeader({ overlay = true, idioma = "es" }: { overlay?: boolea
       `}</style>
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
         <a href={en ? "/en" : "/"} data-hdr="logo" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none", padding: "30px 0 0 45px" }}>
-          <div data-hdr="logo-box" style={{ width: 84, height: 84, background: "rgba(0,32,61,0.45)", border: "2px solid #fff", borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 12 }}>
+          <div data-hdr="logo-box" style={{ width: 84, height: 84, background: overlay ? "rgba(0,32,61,0.45)" : NAVY, border: "2px solid #fff", borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, padding: 12 }}>
             <img src="/logos/barkley_isotipo_B_navy.svg" alt="Barkley" style={{ width: "100%", height: "100%", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
           </div>
-          <span data-hdr="logo-text" style={{ color: "#fff", fontWeight: 600, fontSize: 19, lineHeight: 1.35, textShadow: "0 1px 10px rgba(0,20,50,0.55)" }}>Barkley<br />{en ? "Online School" : "Colegio Online"}</span>
+          <span data-hdr="logo-text" style={{ color: overlay ? "#fff" : NAVY, fontWeight: 600, fontSize: 19, lineHeight: 1.35, textShadow: overlay ? "0 1px 10px rgba(0,20,50,0.55)" : "none" }}>Barkley<br />{en ? "Online School" : "Colegio Online"}</span>
         </a>
         <div data-hdr="controls" style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 14, background: "#fff", padding: "26px 30px 26px 20px", width: 344, boxSizing: "border-box", flexShrink: 0 }}>
-          <button aria-label={en ? "Search" : "Buscar"} data-hdr="solo-desktop" style={{ width: 40, height: 40, borderRadius: "50%", background: "#f1f4f8", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-            <Search style={{ width: 17, height: 17, color: NAVY }} />
-          </button>
-          <span data-hdr="solo-desktop" style={{ width: 1, height: 22, background: "#d8dee6" }} />
           <a href={en ? "/en/support" : "/#inscripcion"} data-hdr="solo-desktop" style={{ fontSize: 14, fontWeight: 600, color: NAVY, textDecoration: "none", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 6 }}>{en ? "GIVE" : "MI BARKLEY"}</a>
           <span data-hdr="solo-desktop" style={{ width: 1, height: 22, background: "#d8dee6" }} />
-          <button aria-label={en ? (menuOpen ? "Close menu" : "Open menu") : menuOpen ? "Cerrar menú" : "Abrir menú"} onClick={() => setMenuOpen(o => !o)}
+          <button ref={menuButton} aria-expanded={menuOpen} aria-controls="site-menu" aria-label={en ? (menuOpen ? "Close menu" : "Open menu") : menuOpen ? "Cerrar menú" : "Abrir menú"} onClick={() => setMenuOpen(o => !o)}
             style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: NAVY, fontFamily: FONT, fontSize: 14, fontWeight: 600, letterSpacing: "0.05em" }}>
             {menuOpen ? <X style={{ width: 22, height: 22 }} /> : <Menu style={{ width: 22, height: 22 }} />}
             {en ? "MENU" : "MENÚ"}
           </button>
         </div>
       </div>
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}
-            style={{ position: "fixed", inset: 0, background: NAVY, zIndex: 40, padding: "60px 40px", display: "flex", flexDirection: "column", gap: 19, overflowY: "auto" }}>
+          <div id="site-menu" ref={menuPanel} hidden={!menuOpen} role={menuOpen ? "dialog" : undefined} aria-modal={menuOpen ? true : undefined} aria-label={en ? "Site navigation" : "Navegación del sitio"}
+            style={{ position: "fixed", inset: 0, background: NAVY, zIndex: 40, padding: "60px 40px", display: menuOpen ? "flex" : "none", flexDirection: "column", gap: 19, overflowY: "auto" }}>
             <button aria-label={en ? "Close menu" : "Cerrar menú"} onClick={() => setMenuOpen(false)} style={{ alignSelf: "flex-end", background: "none", border: "none", color: "#fff", cursor: "pointer" }}><X style={{ width: 32, height: 32 }} /></button>
-            {links.map((l, i) => (
-              <motion.a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.06 * i }}
-                style={{ color: "#fff", textDecoration: "none", fontSize: "clamp(18px,4vw,32px)", fontWeight: 600 }}>{l.label}</motion.a>
+            <nav aria-label={en ? "Main navigation" : "Navegación principal"} style={{ display: "flex", flexDirection: "column", gap: 19 }}>
+            {links.map((l) => (
+              <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}
+                style={{ color: "#fff", textDecoration: "none", fontSize: "clamp(18px,4vw,32px)", fontWeight: 600 }}>{l.label}</a>
             ))}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.06 * links.length + 0.1 }} style={{ display: "flex", gap: 14, marginTop: 20 }}>
+            </nav>
+            <motion.div initial={false} style={{ display: "flex", gap: 14, marginTop: 20 }}>
               <a href={en ? "/en/support" : "/#inscripcion"} style={{ textDecoration: "none", background: RED, color: "#fff", borderRadius: 999, padding: "12px 24px", fontSize: 16, fontWeight: 600 }}>{en ? "Support our mission" : "Postular"}</a>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
       </header>
     </div>
   );

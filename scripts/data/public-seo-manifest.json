@@ -1,0 +1,1943 @@
+{
+  "version": 1,
+  "origin": "https://www.barkleyinstituto.cl",
+  "pages": [
+    {
+      "path": "/barkley-vs-otros-colegios-online/",
+      "source": "client/public/barkley-vs-otros-colegios-online/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-26",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Barkley vs Otros Colegios Online en Chile: Comparativa de Precios | Barkley",
+      "description": "Brincus, Think Academy, Colegio en Línea Chile: cómo se comparan sus planes y precios con Barkley. Sin inflar cifras, con lo que cada uno realmente cobra e incluye.",
+      "canonical": "https://www.barkleyinstituto.cl/barkley-vs-otros-colegios-online/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Barkley vs Otros Colegios Online en Chile: Comparativa de Precios | Barkley",
+        "og:description": "Cómo se comparan los planes y precios de Brincus, Think Academy y Colegio en Línea Chile con Barkley — sin inflar cifras.",
+        "og:url": "https://www.barkleyinstituto.cl/barkley-vs-otros-colegios-online/"
+      }
+    },
+    {
+      "path": "/blog/adulto-acompanante-examenes-libres-basica/",
+      "source": "client/public/blog/adulto-acompanante-examenes-libres-basica/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-29",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "Adulto Acompañante en exámenes libres de básica | Barkley Online",
+      "description": "En los primeros niveles de básica, el Adulto Acompañante cumple un rol clave. Qué se espera de esa persona y cómo cambia con los años.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/adulto-acompanante-examenes-libres-basica/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Adulto Acompañante en exámenes libres de básica | Barkley Online",
+        "og:description": "En los primeros niveles de básica, el Adulto Acompañante cumple un rol clave. Qué se espera de esa persona y cómo cambia con los años.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/adulto-acompanante-examenes-libres-basica/"
+      }
+    },
+    {
+      "path": "/blog/ansiedad-escolar-y-aula-tradicional/",
+      "source": "client/public/blog/ansiedad-escolar-y-aula-tradicional/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "Ansiedad escolar: rendir mejor sin exposición constante",
+      "description": "Para algunos estudiantes, la exposición social permanente del aula es un costo diario que no tiene relación con cuánto saben. Qué cambia en un formato sin esa exposición.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/ansiedad-escolar-y-aula-tradicional/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Ansiedad escolar: rendir mejor sin exposición constante",
+        "og:description": "Para algunos estudiantes, la exposición social permanente del aula es un costo diario que no tiene relación con cuánto saben. Qué cambia en un formato sin esa exposición.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/ansiedad-escolar-y-aula-tradicional/"
+      }
+    },
+    {
+      "path": "/blog/aprendizaje-por-dominio-que-es/",
+      "source": "client/public/blog/aprendizaje-por-dominio-que-es/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-09",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "Aprendizaje por Dominio: nadie avanza sin entender",
+      "description": "Qué es el Aprendizaje por Dominio (Mastery Learning), el método detrás de Barkley, y por qué evita que un estudiante arrastre vacíos hasta el examen.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/aprendizaje-por-dominio-que-es/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Aprendizaje por Dominio: nadie avanza sin entender",
+        "og:description": "Qué es el Aprendizaje por Dominio (Mastery Learning), el método detrás de Barkley, y por qué evita que un estudiante arrastre vacíos hasta el examen.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/aprendizaje-por-dominio-que-es/"
+      }
+    },
+    {
+      "path": "/blog/clase-sincronica-vs-asincronica/",
+      "source": "client/public/blog/clase-sincronica-vs-asincronica/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-11",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "Clase Sincrónica vs Asincrónica: la Diferencia Real (con Tabla)",
+      "description": "Sincrónico vs asincrónico explicado con ejemplos y tabla comparativa: qué cambia en horario, ritmo, evaluación y rol del profesor entre una clase en vivo y una clase asincrónica.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/clase-sincronica-vs-asincronica/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Clase Sincrónica vs Asincrónica: la Diferencia Real (con Tabla)",
+        "og:description": "Sincrónico vs asincrónico explicado con ejemplos y tabla comparativa: qué cambia en horario, ritmo, evaluación y rol del profesor.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/clase-sincronica-vs-asincronica/"
+      }
+    },
+    {
+      "path": "/blog/colegio-online-gratis-chile/",
+      "source": "client/public/blog/colegio-online-gratis-chile/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-29",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "¿Existe un colegio online gratis en Chile? La respuesta real",
+      "description": "Lo gratuito y lo pagado en la educación online chilena, sin letra chica: qué cubre el MINEDUC sin costo y qué es lo que realmente pagas en una plataforma como Barkley.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/colegio-online-gratis-chile/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "¿Existe un colegio online gratis en Chile? La respuesta real",
+        "og:description": "Lo gratuito y lo pagado en la educación online chilena, sin letra chica: qué cubre el MINEDUC sin costo y qué es lo que realmente pagas en una plataforma como Barkley.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/colegio-online-gratis-chile/"
+      }
+    },
+    {
+      "path": "/blog/colegio-para-deportistas-alto-rendimiento/",
+      "source": "client/public/blog/colegio-para-deportistas-alto-rendimiento/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-29",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "Colegio para deportistas de alto rendimiento | Barkley Online",
+      "description": "Giras, entrenamientos y competencias no calzan con un horario escolar fijo. Cómo un formato asincrónico resuelve ese conflicto real.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/colegio-para-deportistas-alto-rendimiento/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Colegio para deportistas de alto rendimiento | Barkley Online",
+        "og:description": "Giras, entrenamientos y competencias no calzan con un horario escolar fijo. Cómo un formato asincrónico resuelve ese conflicto real.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/colegio-para-deportistas-alto-rendimiento/"
+      }
+    },
+    {
+      "path": "/blog/colegio-para-ninos-superdotados/",
+      "source": "client/public/blog/colegio-para-ninos-superdotados/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "¿Dónde estudian los niños con altas capacidades? Colegio y ritmo real",
+      "description": "Un estudiante con altas capacidades (superdotado) no necesita más contenido, necesita avanzar a su propio ritmo. Por qué el aula tradicional lo frena y qué cambia en un formato por dominio.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/colegio-para-ninos-superdotados/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "¿Dónde estudian los niños con altas capacidades? Colegio y ritmo real",
+        "og:description": "Un estudiante con altas capacidades (superdotado) no necesita más contenido, necesita avanzar a su propio ritmo. Por qué el aula tradicional lo frena y qué cambia en un formato por dominio.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/colegio-para-ninos-superdotados/"
+      }
+    },
+    {
+      "path": "/blog/como-inscribirse-examenes-libres-mineduc/",
+      "source": "client/public/blog/como-inscribirse-examenes-libres-mineduc/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-29",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "Cómo inscribirse a exámenes libres MINEDUC paso a paso",
+      "description": "Guía práctica y gratuita para inscribir a exámenes libres en el Portal de Ayuda MINEDUC, con fechas oficiales 2026.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/como-inscribirse-examenes-libres-mineduc/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Cómo inscribirse a exámenes libres MINEDUC paso a paso",
+        "og:description": "Guía práctica y gratuita para inscribir a exámenes libres en el Portal de Ayuda MINEDUC, con fechas oficiales 2026.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/como-inscribirse-examenes-libres-mineduc/"
+      }
+    },
+    {
+      "path": "/blog/diferencia-examen-libre-colegio-online/",
+      "source": "client/public/blog/diferencia-examen-libre-colegio-online/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-29",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "Examen libre o colegio online: la diferencia real",
+      "description": "Examen libre y colegio online no son lo mismo en Chile. Te explicamos la diferencia real y cómo Barkley combina ambos.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/diferencia-examen-libre-colegio-online/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Examen libre o colegio online: la diferencia real",
+        "og:description": "Examen libre y colegio online no son lo mismo en Chile. Te explicamos la diferencia real y cómo Barkley combina ambos.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/diferencia-examen-libre-colegio-online/"
+      }
+    },
+    {
+      "path": "/blog/dislexia-estudiar-en-casa/",
+      "source": "client/public/blog/dislexia-estudiar-en-casa/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "Dislexia y estudio en casa: menos presión, mismo nivel",
+      "description": "Cómo adaptar el estudio en casa cuando leer cuesta más, sin reducir la exigencia académica ni la comprensión del contenido.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/dislexia-estudiar-en-casa/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Dislexia y estudio en casa: menos presión, mismo nivel",
+        "og:description": "Cómo adaptar el estudio en casa cuando leer cuesta más, sin reducir la exigencia académica ni la comprensión del contenido.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/dislexia-estudiar-en-casa/"
+      }
+    },
+    {
+      "path": "/blog/educacion-asincronica-que-es/",
+      "source": "client/public/blog/educacion-asincronica-que-es/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-11",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "Clase Asincrónica: Significado y Definición (Explicado Simple)",
+      "description": "Definición simple: una clase asincrónica es aquella sin horario fijo de conexión, donde el contenido queda grabado (video, guía, pódcast) y se ve cuando cada estudiante puede. Qué significan las “horas asincrónicas” y en qué se diferencia de una clase en vivo.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/educacion-asincronica-que-es/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Clase Asincrónica: Significado y Definición (Explicado Simple)",
+        "og:description": "Definición simple: una clase asincrónica es aquella sin horario fijo de conexión, donde el contenido queda grabado (video, guía, pódcast) y se ve cuando cada estudiante puede. Qué significan las “horas asincrónicas” y en qué se diferencia de una clase en vivo.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/educacion-asincronica-que-es/"
+      }
+    },
+    {
+      "path": "/blog/examenes-libres-2026-calendario-completo/",
+      "source": "client/public/blog/examenes-libres-2026-calendario-completo/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-29",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Exámenes Libres 2026: calendario completo, los 3 períodos",
+      "description": "Calendario oficial MINEDUC 2026 de Exámenes Libres para menores de 18 años: los 3 períodos, inscripción, rendición y resultados, explicado sin vueltas.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/examenes-libres-2026-calendario-completo/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Exámenes Libres 2026: calendario completo, los 3 períodos",
+        "og:description": "Calendario oficial MINEDUC 2026 de Exámenes Libres para menores de 18 años: los 3 períodos, inscripción, rendición y resultados, explicado sin vueltas.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/examenes-libres-2026-calendario-completo/"
+      }
+    },
+    {
+      "path": "/blog/",
+      "source": "client/public/blog/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "weekly",
+        "priority": "0.8"
+      },
+      "title": "Blog — Exámenes libres, TDAH y dislexia | Barkley",
+      "description": "Artículos sobre exámenes libres MINEDUC, TDAH, dislexia, Aprendizaje por Dominio y educación asincrónica en Chile.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/",
+      "schemaTypes": [
+        "Blog",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Blog — Exámenes libres, TDAH y dislexia | Barkley",
+        "og:description": "Artículos sobre exámenes libres MINEDUC, TDAH, dislexia, Aprendizaje por Dominio y educación asincrónica en Chile.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/"
+      }
+    },
+    {
+      "path": "/blog/mejor-colegio-online-chile/",
+      "source": "client/public/blog/mejor-colegio-online-chile/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-26",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "Mejor colegio online en Chile: cómo elegir (guía 2027)",
+      "description": "No hay un solo 'mejor' colegio online en Chile — hay criterios objetivos para comparar: modalidad, metodología, transparencia de precio y validación oficial. Guía para decidir bien.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/mejor-colegio-online-chile/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Mejor colegio online en Chile: cómo elegir (guía 2027)",
+        "og:description": "No hay un solo 'mejor' colegio online en Chile — hay criterios objetivos para comparar: modalidad, metodología, transparencia de precio y validación oficial. Guía para decidir bien.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/mejor-colegio-online-chile/"
+      }
+    },
+    {
+      "path": "/blog/mineduc-hoja-de-ruta-menos-burocracia/",
+      "source": "client/public/blog/mineduc-hoja-de-ruta-menos-burocracia/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-12",
+        "changefreq": "monthly",
+        "priority": "0.7"
+      },
+      "title": "Mineduc Quiere Menos Burocracia y Más Familia: Ya Existe",
+      "description": "La nueva hoja de ruta del Mineduc (20 medidas, 2026-2030) apunta a menos burocracia y más participación de las familias. Qué dice el diagnóstico oficial y cómo se ve esto ya funcionando en la práctica.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/mineduc-hoja-de-ruta-menos-burocracia/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Mineduc Quiere Menos Burocracia y Más Familia: Ya Existe",
+        "og:description": "La nueva hoja de ruta del Mineduc apunta a menos burocracia y más participación de las familias. Qué dice el diagnóstico oficial.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/mineduc-hoja-de-ruta-menos-burocracia/"
+      }
+    },
+    {
+      "path": "/blog/mitos-vs-realidad-colegio-online/",
+      "source": "client/public/blog/mitos-vs-realidad-colegio-online/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-29",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "8 Mitos vs. Realidad sobre el Colegio Online en Chile",
+      "description": "Los mitos más comunes sobre educación online y homeschool en Chile, contrastados con la realidad: exámenes libres, TDAH, aprobación, validez oficial y más.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/mitos-vs-realidad-colegio-online/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "8 Mitos vs. Realidad sobre el Colegio Online en Chile",
+        "og:description": "Los mitos más comunes sobre educación online y homeschool en Chile, contrastados con la realidad: exámenes libres, TDAH, aprobación, validez oficial y más.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/mitos-vs-realidad-colegio-online/"
+      }
+    },
+    {
+      "path": "/blog/paes-despues-de-cuarto-medio/",
+      "source": "client/public/blog/paes-despues-de-cuarto-medio/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-29",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "PAES después de 4° medio: qué necesitas y cuándo | Barkley Online",
+      "description": "Con la licencia de enseñanza media en mano, la PAES es el siguiente paso. Qué se necesita y cuándo conviene empezar a prepararla.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/paes-despues-de-cuarto-medio/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "PAES después de 4° medio: qué necesitas y cuándo | Barkley Online",
+        "og:description": "Con la licencia de enseñanza media en mano, la PAES es el siguiente paso. Qué se necesita y cuándo conviene empezar a prepararla.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/paes-despues-de-cuarto-medio/"
+      }
+    },
+    {
+      "path": "/blog/programa-acsa-violencia-escolar-mineduc/",
+      "source": "client/public/blog/programa-acsa-violencia-escolar-mineduc/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-04",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "El MINEDUC Redujo la Violencia Escolar 20 Puntos — Pero Solo en 156 Comunas | Barkley",
+      "description": "El programa ACSA del MINEDUC bajó la violencia escolar de 61,3% a 41,3% y el bullying a la mitad. Buena noticia real, con un límite honesto: cubre 156 de 346 comunas de Chile. Qué hacer si la tuya no está.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/programa-acsa-violencia-escolar-mineduc/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "El MINEDUC Redujo la Violencia Escolar 20 Puntos — Pero Solo en 156 Comunas",
+        "og:description": "El programa ACSA funciona donde se aplica. El problema: no se aplica en todas partes todavía.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/programa-acsa-violencia-escolar-mineduc/"
+      }
+    },
+    {
+      "path": "/blog/reforma-admision-escolar-sae-2026/",
+      "source": "client/public/blog/reforma-admision-escolar-sae-2026/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-12",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Reforma al SAE 2026: colegios podrán volver a seleccionar",
+      "description": "El proyecto que reforma el Sistema de Admisión Escolar avanza en el Senado tras ser aprobado en la Cámara. Qué cambia, qué significa el fin de la selección aleatoria pura y qué alternativa existe si tu hijo no entra.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/reforma-admision-escolar-sae-2026/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Reforma al SAE 2026: colegios podrán volver a seleccionar",
+        "og:description": "El proyecto que reforma el Sistema de Admisión Escolar avanza en el Senado tras ser aprobado en la Cámara. Qué cambia, qué significa el fin de la selección aleatoria pura y qué alternativa existe si tu hijo no entra.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/reforma-admision-escolar-sae-2026/"
+      }
+    },
+    {
+      "path": "/blog/reprobar-examen-libre-que-hacer/",
+      "source": "client/public/blog/reprobar-examen-libre-que-hacer/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-29",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "¿Reprobé un examen libre? Qué hacer y cuándo se puede repetir",
+      "description": "Si tu hijo reprobó un examen libre MINEDUC, esto es lo que dice la normativa: opciones de recorrección, plazos y cuándo se puede volver a inscribir.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/reprobar-examen-libre-que-hacer/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "¿Reprobé un examen libre? Qué hacer y cuándo se puede repetir",
+        "og:description": "Si tu hijo reprobó un examen libre MINEDUC, esto es lo que dice la normativa: opciones de recorrección, plazos y cuándo se puede volver a inscribir.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/reprobar-examen-libre-que-hacer/"
+      }
+    },
+    {
+      "path": "/blog/resultados-examenes-libres-2026/",
+      "source": "client/public/blog/resultados-examenes-libres-2026/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-29",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Resultados Exámenes Libres 2026: cómo y cuándo verlos",
+      "description": "Dónde consultar los resultados de Exámenes Libres MINEDUC 2026, qué necesitas para entrar, y las fechas oficiales de publicación para menores de 18 años.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/resultados-examenes-libres-2026/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Resultados Exámenes Libres 2026: cómo y cuándo verlos",
+        "og:description": "Dónde consultar los resultados de Exámenes Libres MINEDUC 2026, qué necesitas para entrar, y las fechas oficiales de publicación para menores de 18 años.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/resultados-examenes-libres-2026/"
+      }
+    },
+    {
+      "path": "/blog/resultados-pisa-chile-2025/",
+      "source": "client/public/blog/resultados-pisa-chile-2025/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Resultados PISA 2025 Chile: qué dicen los números y qué no",
+      "description": "Chile bajó a 403 puntos en Matemática y 436 en Lectura en PISA 2025, por debajo del promedio OCDE. Qué mide realmente esta prueba y qué significa el resultado para cada estudiante.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/resultados-pisa-chile-2025/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Resultados PISA 2025 Chile: qué dicen los números y qué no",
+        "og:description": "Chile bajó a 403 puntos en Matemática y 436 en Lectura en PISA 2025, por debajo del promedio OCDE. Qué mide realmente esta prueba y qué significa el resultado para cada estudiante.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/resultados-pisa-chile-2025/"
+      }
+    },
+    {
+      "path": "/blog/sindrome-de-down-y-colegio-online/",
+      "source": "client/public/blog/sindrome-de-down-y-colegio-online/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "Síndrome de Down y colegio online: qué considerar antes de elegir",
+      "description": "Qué preguntar antes de matricular a un estudiante con síndrome de Down en un colegio online, y por qué la respuesta depende del apoyo real detrás de la plataforma, no solo del formato.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/sindrome-de-down-y-colegio-online/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Síndrome de Down y colegio online: qué considerar antes de elegir",
+        "og:description": "Qué preguntar antes de matricular a un estudiante con síndrome de Down en un colegio online, y por qué la respuesta depende del apoyo real detrás de la plataforma, no solo del formato.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/sindrome-de-down-y-colegio-online/"
+      }
+    },
+    {
+      "path": "/blog/tdah-y-colegio-presencial/",
+      "source": "client/public/blog/tdah-y-colegio-presencial/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "yearly",
+        "priority": "0.7"
+      },
+      "title": "TDAH y colegio presencial: por qué el aula complica más",
+      "description": "El horario fijo y el aula ruidosa no son neutros para un estudiante con TDAH. Explicamos por qué, y qué cambia con un formato asincrónico.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/tdah-y-colegio-presencial/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "TDAH y colegio presencial: por qué el aula complica más",
+        "og:description": "El horario fijo y el aula ruidosa no son neutros para un estudiante con TDAH. Explicamos por qué, y qué cambia con un formato asincrónico.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/tdah-y-colegio-presencial/"
+      }
+    },
+    {
+      "path": "/blog/terminar-el-colegio-siendo-adulto/",
+      "source": "client/public/blog/terminar-el-colegio-siendo-adulto/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-26",
+        "changefreq": "monthly",
+        "priority": "0.7"
+      },
+      "title": "Terminar el colegio siendo adulto, en Chile | Barkley Online",
+      "description": "Completa tu Educación Básica o Media de Adultos por exámenes libres MINEDUC, a tu ritmo. Temario, valor y postulación.",
+      "canonical": "https://www.barkleyinstituto.cl/blog/terminar-el-colegio-siendo-adulto/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "articulo-informativo",
+      "openGraph": {
+        "og:title": "Terminar el colegio siendo adulto, en Chile | Barkley Online",
+        "og:description": "Completa tu Educación Básica o Media de Adultos por exámenes libres MINEDUC, a tu ritmo. Temario, valor y postulación.",
+        "og:url": "https://www.barkleyinstituto.cl/blog/terminar-el-colegio-siendo-adulto/"
+      }
+    },
+    {
+      "path": "/bullying-y-colegio-online/",
+      "source": "client/public/bullying-y-colegio-online/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-30",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Bullying y Colegio Online: Qué Cambia Realmente | Barkley",
+      "description": "Si estás considerando sacar a tu hijo del colegio por bullying, esto es lo que un formato asincrónico cambia de verdad — sin promesas falsas de 'libre de bullying'.",
+      "canonical": "https://www.barkleyinstituto.cl/bullying-y-colegio-online/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Bullying y Colegio Online: Qué Cambia Realmente | Barkley",
+        "og:description": "Si estás considerando sacar a tu hijo del colegio por bullying, esto es lo que un formato asincrónico cambia de verdad — sin promesas falsas.",
+        "og:url": "https://www.barkleyinstituto.cl/bullying-y-colegio-online/"
+      }
+    },
+    {
+      "path": "/cambiar-de-colegio-ano-nuevo/",
+      "source": "client/public/cambiar-de-colegio-ano-nuevo/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-04",
+        "changefreq": "monthly",
+        "priority": "0.7"
+      },
+      "title": "Año Nuevo, ¿Nuevo Colegio? Por Qué Marzo No Es la Única Fecha | Barkley",
+      "description": "La creencia de que solo se puede cambiar de colegio al inicio del año escolar es un mito extendido, no una regla oficial. Cuándo tiene sentido cambiar y cuándo no.",
+      "canonical": "https://www.barkleyinstituto.cl/cambiar-de-colegio-ano-nuevo/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Año Nuevo, ¿Nuevo Colegio? Por Qué Marzo No Es la Única Fecha | Barkley",
+        "og:description": "La creencia de que solo se puede cambiar de colegio en marzo es un mito extendido, no una regla oficial.",
+        "og:url": "https://www.barkleyinstituto.cl/cambiar-de-colegio-ano-nuevo/"
+      }
+    },
+    {
+      "path": "/colegio-online-chile/",
+      "source": "client/public/colegio-online-chile/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-24",
+        "changefreq": "monthly",
+        "priority": "0.6"
+      },
+      "title": "Colegio Online en Chile: funciona igual en todas las regiones | Barkley",
+      "description": "Barkley es un colegio 100% online que funciona igual de Arica a Puerto Montt. Qué es igual en todo Chile, qué cambia según tu región y cómo se rinde el Examen Libre.",
+      "canonical": "https://www.barkleyinstituto.cl/colegio-online-chile/",
+      "schemaTypes": [
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Colegio Online en Chile: funciona igual en todas las regiones | Barkley",
+        "og:description": "Barkley es un colegio 100% online que funciona igual de Arica a Puerto Montt. Qué es igual en todo Chile, qué cambia según tu región y cómo se rinde el Examen Libre.",
+        "og:url": "https://www.barkleyinstituto.cl/colegio-online-chile/"
+      }
+    },
+    {
+      "path": "/colegio-online-expatriados-fijos/",
+      "source": "client/public/colegio-online-expatriados-fijos/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-30",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Colegio Online para Expatriados Fijos | Barkley",
+      "description": "Si tu familia vive fuera de Chile por contrato fijo (2-4 años) pero quiere que tu hijo termine la enseñanza media con validez oficial chilena: Barkley funciona donde vivas.",
+      "canonical": "https://www.barkleyinstituto.cl/colegio-online-expatriados-fijos/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Colegio Online para Expatriados Fijos | Barkley",
+        "og:description": "Educación chilena oficial desde cualquier país — para trabajadores y familias que viven en el extranjero con contrato fijo.",
+        "og:url": "https://www.barkleyinstituto.cl/colegio-online-expatriados-fijos/"
+      }
+    },
+    {
+      "path": "/colegio-online-familias-viajeras/",
+      "source": "client/public/colegio-online-familias-viajeras/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-30",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Colegio Online para Familias Viajeras | Barkley",
+      "description": "Si tu familia viaja, se muda, o vive en el extranjero pero quiere que tu hijo estudie con validez oficial en Chile, Barkley funciona desde cualquier lugar del mundo.",
+      "canonical": "https://www.barkleyinstituto.cl/colegio-online-familias-viajeras/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Colegio Online para Familias Viajeras | Barkley",
+        "og:description": "Educación chilena con validez oficial desde cualquier país — para familias que viajan, expatriados, y nómadas digitales.",
+        "og:url": "https://www.barkleyinstituto.cl/colegio-online-familias-viajeras/"
+      }
+    },
+    {
+      "path": "/colegio-online-homeschool/",
+      "source": "client/public/colegio-online-homeschool/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Homeschool en Chile: Currículum Oficial ya Armado | Barkley",
+      "description": "Homeschooling sin diseñar el plan de estudio desde cero: currículum oficial MINEDUC ya armado, con video, tutor y validación real por Exámenes Libres.",
+      "canonical": "https://www.barkleyinstituto.cl/colegio-online-homeschool/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Homeschool en Chile: Currículum Oficial ya Armado | Barkley",
+        "og:description": "El plan de estudio, los videos, la corrección y la validación oficial ya están armados — tú no tienes que construir el homeschool desde cero.",
+        "og:url": "https://www.barkleyinstituto.cl/colegio-online-homeschool/"
+      }
+    },
+    {
+      "path": "/colegio-online-madres-adolescentes/",
+      "source": "client/public/colegio-online-madres-adolescentes/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-02",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Colegio Online para Madres y Padres Adolescentes en Chile | Barkley",
+      "description": "La ley protege tu matrícula, pero seguir asistiendo presencialmente con un bebé es otra historia. Cómo terminar el colegio siendo madre o padre adolescente, sin dejar la educación de lado.",
+      "canonical": "https://www.barkleyinstituto.cl/colegio-online-madres-adolescentes/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Colegio Online para Madres y Padres Adolescentes en Chile | Barkley",
+        "og:description": "La ley protege tu matrícula. Seguir asistiendo presencialmente con un bebé es otra historia. Cómo terminar el colegio siendo madre o padre adolescente.",
+        "og:url": "https://www.barkleyinstituto.cl/colegio-online-madres-adolescentes/"
+      }
+    },
+    {
+      "path": "/colegio-online-miedos-frecuentes/",
+      "source": "client/public/colegio-online-miedos-frecuentes/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-26",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Miedos Reales de los Apoderados al Elegir Colegio Online | Barkley",
+      "description": "¿Es legal? ¿Va a socializar? ¿Le va a servir para la universidad? Respondemos con la verdad, sin vender humo, los miedos reales que tienen los padres antes de matricular a su hijo en un colegio online.",
+      "canonical": "https://www.barkleyinstituto.cl/colegio-online-miedos-frecuentes/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Miedos Reales de los Apoderados al Elegir Colegio Online | Barkley",
+        "og:description": "Respondemos con la verdad, sin vender humo, los miedos reales de los padres antes de matricular a su hijo en un colegio online.",
+        "og:url": "https://www.barkleyinstituto.cl/colegio-online-miedos-frecuentes/"
+      }
+    },
+    {
+      "path": "/colegio-online-movilidad-reducida/",
+      "source": "client/public/colegio-online-movilidad-reducida/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Colegio Online para Estudiantes con Movilidad Reducida | Barkley",
+      "description": "Estudiantes con discapacidad motora, problemas de locomoción o dificultades para asistir presencialmente: en Barkley estudian desde donde puedan conectarse, sin presión de desplazamiento.",
+      "canonical": "https://www.barkleyinstituto.cl/colegio-online-movilidad-reducida/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Colegio Online para Estudiantes con Movilidad Reducida | Barkley",
+        "og:description": "Educación sin presión de desplazamiento — para estudiantes con discapacidad motora o problemas de locomoción.",
+        "og:url": "https://www.barkleyinstituto.cl/colegio-online-movilidad-reducida/"
+      }
+    },
+    {
+      "path": "/colegio-online-portal-padres/",
+      "source": "client/public/colegio-online-portal-padres/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-30",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Portal Familia: Seguimiento Real-Time del Aprendizaje | Barkley",
+      "description": "Portal de padres en tiempo real: ves exactamente qué está estudiando tu hijo, su avance, dónde está atascado, y cuándo necesita ayuda — sin entrar a espiar, con transparencia.",
+      "canonical": "https://www.barkleyinstituto.cl/colegio-online-portal-padres/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Portal Familia: Seguimiento Real-Time del Aprendizaje | Barkley",
+        "og:description": "Visibilidad real-time del progreso académico — padres saben qué, dónde y cómo está aprendiendo su hijo.",
+        "og:url": "https://www.barkleyinstituto.cl/colegio-online-portal-padres/"
+      }
+    },
+    {
+      "path": "/colegio-online-salud-cronica/",
+      "source": "client/public/colegio-online-salud-cronica/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-26",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Colegio Online para Estudiantes con Enfermedad Crónica | Barkley",
+      "description": "Si tu hijo tiene enfermedad crónica, ausencias médicas frecuentes o tratamientos prolongados, aquí explica cómo funciona un colegio online que se adapta al ritmo de la salud, no al calendario.",
+      "canonical": "https://www.barkleyinstituto.cl/colegio-online-salud-cronica/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Colegio Online para Estudiantes con Enfermedad Crónica | Barkley",
+        "og:description": "Colegio online que se adapta al ritmo de la salud, no al calendario escolar — para estudiantes con enfermedades crónicas o tratamientos prolongados.",
+        "og:url": "https://www.barkleyinstituto.cl/colegio-online-salud-cronica/"
+      }
+    },
+    {
+      "path": "/colegio-online-tea-autismo/",
+      "source": "client/public/colegio-online-tea-autismo/index.html",
+      "delivery": "static",
+      "indexable": false,
+      "sitemap": null,
+      "title": "Colegio Online para Estudiantes con TEA (Autismo) | Barkley",
+      "description": "Sin ruido de sala, sin presión social constante, sin cambios de rutina impredecibles. Cómo el Programa Adaptativo de Barkley funciona para estudiantes con TEA.",
+      "canonical": "https://www.barkleyinstituto.cl/colegio-online-tea-autismo/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Colegio Online para Estudiantes con TEA (Autismo) | Barkley",
+        "og:description": "Rutina predecible, sin sobreestimulación de sala, con el mismo currículum oficial — para estudiantes dentro del espectro autista.",
+        "og:url": "https://www.barkleyinstituto.cl/colegio-online-tea-autismo/"
+      }
+    },
+    {
+      "path": "/colegio-presencial-vs-online/",
+      "source": "client/public/colegio-presencial-vs-online/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-30",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Colegio Presencial vs Online: Diferencias Reales | Barkley",
+      "description": "Presencial tiene socialización y deportes; online tiene flexibilidad y Aprendizaje por Dominio. Cuál funciona mejor depende de tu hijo.",
+      "canonical": "https://www.barkleyinstituto.cl/colegio-presencial-vs-online/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Colegio Presencial vs Online: Diferencias Reales | Barkley",
+        "og:description": "Comparación honesta: qué ofrece presencial, qué ofrece online, y cuál es mejor según el estudiante.",
+        "og:url": "https://www.barkleyinstituto.cl/colegio-presencial-vs-online/"
+      }
+    },
+    {
+      "path": "/como-funciona-brujula/",
+      "source": "client/public/como-funciona-brujula/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-06",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Cómo Funciona Brújula™: Saber si Vas a Tiempo | Barkley",
+      "description": "Umbral™ te dice cuándo has entendido de verdad. Brújula™ te dice si vas a tiempo para llegar al Examen Libre. Cómo funciona el calendario de ritmo sugerido, recalculable cuando lo necesites.",
+      "canonical": "https://www.barkleyinstituto.cl/como-funciona-brujula/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Cómo Funciona Brújula™: Saber si Vas a Tiempo | Barkley",
+        "og:description": "El calendario de ritmo sugerido que se recalcula cuando lo necesitas, siempre anclado a la fecha real del Examen Libre.",
+        "og:url": "https://www.barkleyinstituto.cl/como-funciona-brujula/"
+      }
+    },
+    {
+      "path": "/como-funciona-umbral/",
+      "source": "client/public/como-funciona-umbral/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Cómo Funciona Umbral™: El Motor que No Deja Avanzar sin Entender | Barkley",
+      "description": "Umbral™ bloquea la unidad siguiente hasta que el estudiante demuestra 70% o más de dominio. Así funciona paso a paso, sin marketing vago — el mecanismo real.",
+      "canonical": "https://www.barkleyinstituto.cl/como-funciona-umbral/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Cómo Funciona Umbral™: El Motor que No Deja Avanzar sin Entender | Barkley",
+        "og:description": "Umbral™ bloquea la unidad siguiente hasta que el estudiante demuestra 70% o más de dominio. El mecanismo real, paso a paso.",
+        "og:url": "https://www.barkleyinstituto.cl/como-funciona-umbral/"
+      }
+    },
+    {
+      "path": "/demo-brujula/",
+      "source": "client/public/demo-brujula/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-06",
+        "changefreq": "monthly",
+        "priority": "0.7"
+      },
+      "title": "Prueba Brújula™: Simulación Interactiva | Barkley",
+      "description": "Simulación interactiva paso a paso de cómo funciona Brújula™: calcula tu calendario, simula un imprevisto y mira cómo se recalcula. Datos de ejemplo, no tu cuenta real.",
+      "canonical": "https://www.barkleyinstituto.cl/demo-brujula/",
+      "schemaTypes": [],
+      "editorialReview": null,
+      "intent": "herramienta-publica",
+      "openGraph": {
+        "og:title": "Prueba Brújula™: Simulación Interactiva",
+        "og:description": "Un paso a paso con ejemplo de cómo Brújula™ calcula y recalcula tu ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/demo-brujula/"
+      }
+    },
+    {
+      "path": "/es-para-mi-hijo/",
+      "source": "client/public/es-para-mi-hijo/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-10",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "¿Es Barkley para tu Hijo? Test de 3 Minutos | Barkley",
+      "description": "Responde 5 preguntas y descubre si el colegio online asincrónico es la opción correcta para tu hijo, con recomendación personalizada según su situación real.",
+      "canonical": "https://www.barkleyinstituto.cl/es-para-mi-hijo/",
+      "schemaTypes": [],
+      "editorialReview": null,
+      "intent": "herramienta-publica",
+      "openGraph": {
+        "og:title": "¿Es Barkley para tu Hijo? Test de 3 Minutos",
+        "og:description": "Responde 5 preguntas y descubre si el colegio online asincrónico es la opción correcta para tu hijo.",
+        "og:url": "https://www.barkleyinstituto.cl/es-para-mi-hijo/"
+      }
+    },
+    {
+      "path": "/examenes-libres-1-basico/",
+      "source": "client/public/examenes-libres-1-basico/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-11-16",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "Temario Exámenes Libres 1° Básico 2026 — Oficial MINEDUC",
+      "description": "Temario oficial completo de 1° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+      "canonical": "https://www.barkleyinstituto.cl/examenes-libres-1-basico/",
+      "schemaTypes": [
+        "Course",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "preparacion-por-nivel",
+      "openGraph": {
+        "og:title": "Temario Exámenes Libres 1° Básico 2026 — Oficial MINEDUC",
+        "og:description": "Temario oficial completo de 1° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/examenes-libres-1-basico/"
+      }
+    },
+    {
+      "path": "/examenes-libres-1-medio/",
+      "source": "client/public/examenes-libres-1-medio/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "Temario Exámenes Libres 1° Medio 2026 — Oficial MINEDUC",
+      "description": "Temario oficial completo de 1° Medio para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+      "canonical": "https://www.barkleyinstituto.cl/examenes-libres-1-medio/",
+      "schemaTypes": [
+        "Course",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "preparacion-por-nivel",
+      "openGraph": {
+        "og:title": "Temario Exámenes Libres 1° Medio 2026 — Oficial MINEDUC",
+        "og:description": "Temario oficial completo de 1° Medio para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/examenes-libres-1-medio/"
+      }
+    },
+    {
+      "path": "/examenes-libres-2-basico/",
+      "source": "client/public/examenes-libres-2-basico/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "Temario Exámenes Libres 2° Básico 2026 — Oficial MINEDUC",
+      "description": "Temario oficial completo de 2° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+      "canonical": "https://www.barkleyinstituto.cl/examenes-libres-2-basico/",
+      "schemaTypes": [
+        "Course",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "preparacion-por-nivel",
+      "openGraph": {
+        "og:title": "Temario Exámenes Libres 2° Básico 2026 — Oficial MINEDUC",
+        "og:description": "Temario oficial completo de 2° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/examenes-libres-2-basico/"
+      }
+    },
+    {
+      "path": "/examenes-libres-2-medio/",
+      "source": "client/public/examenes-libres-2-medio/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-26",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "Temario Exámenes Libres 2° Medio 2026 — Oficial MINEDUC",
+      "description": "Temario oficial completo de 2° Medio para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+      "canonical": "https://www.barkleyinstituto.cl/examenes-libres-2-medio/",
+      "schemaTypes": [
+        "Course",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "preparacion-por-nivel",
+      "openGraph": {
+        "og:title": "Temario Exámenes Libres 2° Medio 2026 — Oficial MINEDUC",
+        "og:description": "Temario oficial completo de 2° Medio para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/examenes-libres-2-medio/"
+      }
+    },
+    {
+      "path": "/examenes-libres-3-basico/",
+      "source": "client/public/examenes-libres-3-basico/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "Temario Exámenes Libres 3° Básico 2026 — Oficial MINEDUC",
+      "description": "Temario oficial completo de 3° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+      "canonical": "https://www.barkleyinstituto.cl/examenes-libres-3-basico/",
+      "schemaTypes": [
+        "Course",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "preparacion-por-nivel",
+      "openGraph": {
+        "og:title": "Temario Exámenes Libres 3° Básico 2026 — Oficial MINEDUC",
+        "og:description": "Temario oficial completo de 3° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/examenes-libres-3-basico/"
+      }
+    },
+    {
+      "path": "/examenes-libres-3-medio/",
+      "source": "client/public/examenes-libres-3-medio/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-26",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "Temario Exámenes Libres 3° Medio 2026 — Oficial MINEDUC",
+      "description": "Temario oficial completo de 3° Medio para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+      "canonical": "https://www.barkleyinstituto.cl/examenes-libres-3-medio/",
+      "schemaTypes": [
+        "Course",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "preparacion-por-nivel",
+      "openGraph": {
+        "og:title": "Temario Exámenes Libres 3° Medio 2026 — Oficial MINEDUC",
+        "og:description": "Temario oficial completo de 3° Medio para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/examenes-libres-3-medio/"
+      }
+    },
+    {
+      "path": "/examenes-libres-4-basico/",
+      "source": "client/public/examenes-libres-4-basico/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "Temario Exámenes Libres 4° Básico 2026 — Oficial MINEDUC",
+      "description": "Temario oficial completo de 4° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+      "canonical": "https://www.barkleyinstituto.cl/examenes-libres-4-basico/",
+      "schemaTypes": [
+        "Course",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "preparacion-por-nivel",
+      "openGraph": {
+        "og:title": "Temario Exámenes Libres 4° Básico 2026 — Oficial MINEDUC",
+        "og:description": "Temario oficial completo de 4° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/examenes-libres-4-basico/"
+      }
+    },
+    {
+      "path": "/examenes-libres-4-medio/",
+      "source": "client/public/examenes-libres-4-medio/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-26",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "Temario Exámenes Libres 4° Medio 2026 — Oficial MINEDUC",
+      "description": "Temario oficial completo de 4° Medio para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+      "canonical": "https://www.barkleyinstituto.cl/examenes-libres-4-medio/",
+      "schemaTypes": [
+        "Course",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "preparacion-por-nivel",
+      "openGraph": {
+        "og:title": "Temario Exámenes Libres 4° Medio 2026 — Oficial MINEDUC",
+        "og:description": "Temario oficial completo de 4° Medio para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/examenes-libres-4-medio/"
+      }
+    },
+    {
+      "path": "/examenes-libres-5-basico/",
+      "source": "client/public/examenes-libres-5-basico/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "Temario Exámenes Libres 5° Básico 2026 — Oficial MINEDUC",
+      "description": "Temario oficial completo de 5° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+      "canonical": "https://www.barkleyinstituto.cl/examenes-libres-5-basico/",
+      "schemaTypes": [
+        "Course",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "preparacion-por-nivel",
+      "openGraph": {
+        "og:title": "Temario Exámenes Libres 5° Básico 2026 — Oficial MINEDUC",
+        "og:description": "Temario oficial completo de 5° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/examenes-libres-5-basico/"
+      }
+    },
+    {
+      "path": "/examenes-libres-6-basico/",
+      "source": "client/public/examenes-libres-6-basico/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "Temario Exámenes Libres 6° Básico 2026 — Oficial MINEDUC",
+      "description": "Temario oficial completo de 6° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+      "canonical": "https://www.barkleyinstituto.cl/examenes-libres-6-basico/",
+      "schemaTypes": [
+        "Course",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "preparacion-por-nivel",
+      "openGraph": {
+        "og:title": "Temario Exámenes Libres 6° Básico 2026 — Oficial MINEDUC",
+        "og:description": "Temario oficial completo de 6° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/examenes-libres-6-basico/"
+      }
+    },
+    {
+      "path": "/examenes-libres-7-basico/",
+      "source": "client/public/examenes-libres-7-basico/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "Temario Exámenes Libres 7° Básico 2026 — Oficial MINEDUC",
+      "description": "Temario oficial completo de 7° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+      "canonical": "https://www.barkleyinstituto.cl/examenes-libres-7-basico/",
+      "schemaTypes": [
+        "Course",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "preparacion-por-nivel",
+      "openGraph": {
+        "og:title": "Temario Exámenes Libres 7° Básico 2026 — Oficial MINEDUC",
+        "og:description": "Temario oficial completo de 7° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/examenes-libres-7-basico/"
+      }
+    },
+    {
+      "path": "/examenes-libres-8-basico/",
+      "source": "client/public/examenes-libres-8-basico/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-11-16",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "Temario Exámenes Libres 8° Básico 2026 — Oficial MINEDUC",
+      "description": "Temario oficial completo de 8° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+      "canonical": "https://www.barkleyinstituto.cl/examenes-libres-8-basico/",
+      "schemaTypes": [
+        "Course",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "preparacion-por-nivel",
+      "openGraph": {
+        "og:title": "Temario Exámenes Libres 8° Básico 2026 — Oficial MINEDUC",
+        "og:description": "Temario oficial completo de 8° Básico para exámenes libres MINEDUC: todos los objetivos de aprendizaje evaluados, por asignatura. Prepáralo online y a tu ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/examenes-libres-8-basico/"
+      }
+    },
+    {
+      "path": "/guia-examenes-libres/",
+      "source": "client/public/guia-examenes-libres/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-11-16",
+        "changefreq": "monthly",
+        "priority": "0.9"
+      },
+      "title": "Exámenes Libres en Chile: requisitos y temarios | Barkley",
+      "description": "Cómo validar estudios en Chile con exámenes libres: fechas oficiales, requisitos por nivel y cómo inscribirse paso a paso ante el MINEDUC.",
+      "canonical": "https://www.barkleyinstituto.cl/guia-examenes-libres/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Exámenes Libres en Chile: requisitos, temarios y preparación",
+        "og:description": "Requisitos de menores y adultos, temarios y preparación. Calendario de menores 2026 y fuentes oficiales; sin extrapolar fechas a 2027.",
+        "og:url": "https://www.barkleyinstituto.cl/guia-examenes-libres/"
+      }
+    },
+    {
+      "path": "/por-que-familias-dejan-colegio-presencial/",
+      "source": "client/public/por-que-familias-dejan-colegio-presencial/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Por Qué las Familias Dejan el Colegio Presencial: Datos Reales | Barkley",
+      "description": "No es una sensación: violencia escolar +14,2%, agresiones a docentes +39%, consultas de salud mental adolescente al alza. Los datos oficiales detrás de por qué cada vez más familias buscan una alternativa.",
+      "canonical": "https://www.barkleyinstituto.cl/por-que-familias-dejan-colegio-presencial/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Por Qué las Familias Dejan el Colegio Presencial: Datos Reales | Barkley",
+        "og:description": "Violencia escolar +14,2%, agresiones a docentes +39%, salud mental adolescente al alza. Los datos oficiales detrás de la migración a educación online.",
+        "og:url": "https://www.barkleyinstituto.cl/por-que-familias-dejan-colegio-presencial/"
+      }
+    },
+    {
+      "path": "/adulto-acompanante",
+      "source": "client/public/prerendered/adulto-acompanante.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-24",
+        "changefreq": "monthly",
+        "priority": "0.7"
+      },
+      "title": "Adulto Acompañante: cómo se acompaña a un niño en un colegio online | Barkley",
+      "description": "Cuántas horas diarias acompaña un adulto en casa de 1° básico a 4° medio, qué hace y qué no, y cómo lo hacen K12, Laurel Springs y Wolsey Hall.",
+      "canonical": "https://www.barkleyinstituto.cl/adulto-acompanante",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Adulto Acompañante: cómo se acompaña a un niño en un colegio online | Barkley",
+        "og:description": "Cuántas horas diarias acompaña un adulto en casa de 1° básico a 4° medio, qué hace y qué no, y cómo lo hacen K12, Laurel Springs y Wolsey Hall.",
+        "og:url": "https://www.barkleyinstituto.cl/adulto-acompanante"
+      }
+    },
+    {
+      "path": "/asi-esta-construido",
+      "source": "client/public/prerendered/asi-esta-construido.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-24",
+        "changefreq": "monthly",
+        "priority": "0.7"
+      },
+      "title": "Así está construido Barkley: asignaturas, unidades y lecciones | Barkley",
+      "description": "El mismo esquema de 1° básico a 4° medio: unidades que se desbloquean con 70%, lecciones con video, pódcast, infografía, guía y evaluación.",
+      "canonical": "https://www.barkleyinstituto.cl/asi-esta-construido",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Así está construido Barkley: asignaturas, unidades y lecciones | Barkley",
+        "og:description": "El mismo esquema de 1° básico a 4° medio: unidades que se desbloquean con 70%, lecciones con video, pódcast, infografía, guía y evaluación.",
+        "og:url": "https://www.barkleyinstituto.cl/asi-esta-construido"
+      }
+    },
+    {
+      "path": "/electivos",
+      "source": "client/public/prerendered/electivos.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-18",
+        "changefreq": "monthly",
+        "priority": "0.7"
+      },
+      "title": "Electivos Barkley: Programación, IA, Ajedrez y Más",
+      "description": "Los electivos de Barkley Online, separados por ciclo: creatividad digital y programación para básica, IA, ajedrez, finanzas e historia del arte para media.",
+      "canonical": "https://www.barkleyinstituto.cl/electivos",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Electivos Barkley: Programación, IA, Ajedrez y Más",
+        "og:description": "Los electivos de Barkley Online, separados por ciclo: creatividad digital y programación para básica, IA, ajedrez, finanzas e historia del arte para media.",
+        "og:url": "https://www.barkleyinstituto.cl/electivos"
+      }
+    },
+    {
+      "path": "/en/support",
+      "source": "client/public/prerendered/en/support.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-29",
+        "changefreq": "monthly",
+        "priority": "0.6"
+      },
+      "title": "Support Barkley · Help every child learn their own way",
+      "description": "Barkley is a 100% asynchronous online school in Chile designed for every learner. Sponsor a student, fund scholarships or partner with us from our first school year in 2027.",
+      "canonical": "https://www.barkleyinstituto.cl/en/support",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Support Barkley · Help every child learn their own way",
+        "og:description": "Barkley is a 100% asynchronous online school in Chile designed for every learner. Sponsor a student, fund scholarships or partner with us from our first school year in 2027.",
+        "og:url": "https://www.barkleyinstituto.cl/en/support"
+      }
+    },
+    {
+      "path": "/en",
+      "source": "client/public/prerendered/en.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-29",
+        "changefreq": "monthly",
+        "priority": "0.6"
+      },
+      "title": "Barkley Online School · Chile's 100% asynchronous online school",
+      "description": "Barkley is a 100% asynchronous online school in Chile for grades 1–12 and adults, built on mastery learning and designed for every learner — including students with ADHD, dyslexia and autism.",
+      "canonical": "https://www.barkleyinstituto.cl/en",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Barkley Online School · Chile's 100% asynchronous online school",
+        "og:description": "Barkley is a 100% asynchronous online school in Chile for grades 1–12 and adults, built on mastery learning and designed for every learner — including students with ADHD, dyslexia and autism.",
+        "og:url": "https://www.barkleyinstituto.cl/en"
+      }
+    },
+    {
+      "path": "/examenes-libres-y-resultados",
+      "source": "client/public/prerendered/examenes-libres-y-resultados.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-11-15",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Exámenes Libres: 92 % de aprobación y temarios MINEDUC | Barkley",
+      "description": "92 % de aprobación promedio en Exámenes Libres (2023–2025), exigencia Umbral™ del 70 % frente al 60 % del MINEDUC y apego a los temarios oficiales por ciclo.",
+      "canonical": "https://www.barkleyinstituto.cl/examenes-libres-y-resultados",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Exámenes Libres: 92 % de aprobación y temarios MINEDUC | Barkley",
+        "og:description": "92 % de aprobación promedio en Exámenes Libres (2023–2025), exigencia Umbral™ del 70 % frente al 60 % del MINEDUC y apego a los temarios oficiales por ciclo.",
+        "og:url": "https://www.barkleyinstituto.cl/examenes-libres-y-resultados"
+      }
+    },
+    {
+      "path": "/herramientas-de-estudio",
+      "source": "client/public/prerendered/herramientas-de-estudio.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-24",
+        "changefreq": "monthly",
+        "priority": "0.7"
+      },
+      "title": "Herramientas de estudio en Barkley: Google Workspace, GeoGebra y más | Barkley",
+      "description": "Las aplicaciones reales que complementan la plataforma Barkley: Google Workspace, WhatsApp, GeoGebra, Canva y Quizlet.",
+      "canonical": "https://www.barkleyinstituto.cl/herramientas-de-estudio",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Herramientas de estudio en Barkley: Google Workspace, GeoGebra y más | Barkley",
+        "og:description": "Las aplicaciones reales que complementan la plataforma Barkley: Google Workspace, WhatsApp, GeoGebra, Canva y Quizlet.",
+        "og:url": "https://www.barkleyinstituto.cl/herramientas-de-estudio"
+      }
+    },
+    {
+      "path": "/",
+      "source": "client/public/prerendered/index.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-08-21",
+        "changefreq": "weekly",
+        "priority": "1.0"
+      },
+      "title": "Barkley Online — Colegio 100% asincrónico e inclusivo en Chile",
+      "description": "Colegio online 100% asincrónico en Chile, de 1° básico a 4° medio. Matrícula $30.000 (gratis antes del 30 de noviembre). Preparación completa para Exámenes Libres MINEDUC, a tu propio ritmo.",
+      "canonical": "https://www.barkleyinstituto.cl/",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Barkley Online — Colegio 100% asincrónico e inclusivo en Chile",
+        "og:description": "Colegio online 100% asincrónico en Chile, de 1° básico a 4° medio. Matrícula $30.000 (gratis antes del 30 de noviembre). Preparación completa para Exámenes Libres MINEDUC, a tu propio ritmo.",
+        "og:url": "https://www.barkleyinstituto.cl/"
+      }
+    },
+    {
+      "path": "/neurodivergentes",
+      "source": "client/public/prerendered/neurodivergentes.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-10-15",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Cómo trabajamos con TEA, dislexia y TDAH — Barkley Instituto",
+      "description": "Cómo organiza Barkley el aprendizaje de estudiantes con TEA, dislexia y TDAH: secuencias claras, apoyos disponibles y límites de la educación asincrónica.",
+      "canonical": "https://www.barkleyinstituto.cl/neurodivergentes",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Cómo trabajamos con TEA, dislexia y TDAH — Barkley Instituto",
+        "og:description": "Cómo organiza Barkley el aprendizaje de estudiantes con TEA, dislexia y TDAH: secuencias claras, apoyos disponibles y límites de la educación asincrónica.",
+        "og:url": "https://www.barkleyinstituto.cl/neurodivergentes"
+      }
+    },
+    {
+      "path": "/por-que-barkley",
+      "source": "client/public/prerendered/por-que-barkley.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-11-15",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Por qué Barkley: 7 miedos escolares y su solución",
+      "description": "Los siete miedos de las familias chilenas, cómo los resuelve Barkley y una calculadora de ahorro y tiempo recuperado frente al colegio presencial.",
+      "canonical": "https://www.barkleyinstituto.cl/por-que-barkley",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Por qué Barkley: 7 miedos escolares y su solución",
+        "og:description": "Los siete miedos de las familias chilenas, cómo los resuelve Barkley y una calculadora de ahorro y tiempo recuperado frente al colegio presencial.",
+        "og:url": "https://www.barkleyinstituto.cl/por-que-barkley"
+      }
+    },
+    {
+      "path": "/preguntas-frecuentes",
+      "source": "client/public/prerendered/preguntas-frecuentes.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-26",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Preguntas Frecuentes | Barkley Online",
+      "description": "Todas las preguntas frecuentes sobre Barkley Online: exámenes libres, costos, ritmo de estudio, requisitos y cómo funciona la validación MINEDUC.",
+      "canonical": "https://www.barkleyinstituto.cl/preguntas-frecuentes",
+      "schemaTypes": [
+        "EducationalOrganization",
+        "FAQPage"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Preguntas Frecuentes | Barkley Online",
+        "og:description": "Todas las preguntas frecuentes sobre Barkley Online: exámenes libres, costos, ritmo de estudio, requisitos y cómo funciona la validación MINEDUC.",
+        "og:url": "https://www.barkleyinstituto.cl/preguntas-frecuentes"
+      }
+    },
+    {
+      "path": "/prepara-tus-examenes",
+      "source": "client/public/prerendered/prepara-tus-examenes.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-23",
+        "changefreq": "monthly",
+        "priority": "0.8"
+      },
+      "title": "Prepara tus Exámenes — Exámenes Libres, PAES y pruebas globales | Barkley",
+      "description": "Cuenta regresiva a fechas oficiales, generador de plan de estudio y técnicas con evidencia real (Dunlosky et al.) para Exámenes Libres MINEDUC, PAES y pruebas globales.",
+      "canonical": "https://www.barkleyinstituto.cl/prepara-tus-examenes",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Prepara tus Exámenes — Exámenes Libres, PAES y pruebas globales | Barkley",
+        "og:description": "Cuenta regresiva a fechas oficiales, generador de plan de estudio y técnicas con evidencia real (Dunlosky et al.) para Exámenes Libres MINEDUC, PAES y pruebas globales.",
+        "og:url": "https://www.barkleyinstituto.cl/prepara-tus-examenes"
+      }
+    },
+    {
+      "path": "/privacidad",
+      "source": "client/public/prerendered/privacidad.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": null,
+      "title": "Política de privacidad | Barkley Online",
+      "description": "Cómo Barkley Online recopila, usa y protege los datos personales de estudiantes y apoderados.",
+      "canonical": "https://www.barkleyinstituto.cl/privacidad",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "legal",
+      "openGraph": {
+        "og:title": "Política de privacidad | Barkley Online",
+        "og:description": "Cómo Barkley Online recopila, usa y protege los datos personales de estudiantes y apoderados.",
+        "og:url": "https://www.barkleyinstituto.cl/privacidad"
+      }
+    },
+    {
+      "path": "/reembolso",
+      "source": "client/public/prerendered/reembolso.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": null,
+      "title": "Política de reembolso y cancelación | Barkley Online",
+      "description": "Condiciones de reserva de cupo, cancelación y reembolso en Barkley Online.",
+      "canonical": "https://www.barkleyinstituto.cl/reembolso",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "legal",
+      "openGraph": {
+        "og:title": "Política de reembolso y cancelación | Barkley Online",
+        "og:description": "Condiciones de reserva de cupo, cancelación y reembolso en Barkley Online.",
+        "og:url": "https://www.barkleyinstituto.cl/reembolso"
+      }
+    },
+    {
+      "path": "/sin-limites",
+      "source": "client/public/prerendered/sin-limites.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-26",
+        "changefreq": "monthly",
+        "priority": "0.7"
+      },
+      "title": "Aprende sin estar atrapado — Por qué Barkley no tiene clases en vivo",
+      "description": "Por qué Barkley es 100% asincrónico: sin Zoom, sin horario fijo. El fundamento completo, comparado con colegios sincrónicos, y cómo funciona el rol del tutor.",
+      "canonical": "https://www.barkleyinstituto.cl/sin-limites",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Aprende sin estar atrapado — Por qué Barkley no tiene clases en vivo",
+        "og:description": "Por qué Barkley es 100% asincrónico: sin Zoom, sin horario fijo. El fundamento completo, comparado con colegios sincrónicos, y cómo funciona el rol del tutor.",
+        "og:url": "https://www.barkleyinstituto.cl/sin-limites"
+      }
+    },
+    {
+      "path": "/terminos",
+      "source": "client/public/prerendered/terminos.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": null,
+      "title": "Términos de uso | Barkley Online",
+      "description": "Términos que regulan el uso de la plataforma y el servicio de preparación para exámenes libres de Barkley Online.",
+      "canonical": "https://www.barkleyinstituto.cl/terminos",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "legal",
+      "openGraph": {
+        "og:title": "Términos de uso | Barkley Online",
+        "og:description": "Términos que regulan el uso de la plataforma y el servicio de preparación para exámenes libres de Barkley Online.",
+        "og:url": "https://www.barkleyinstituto.cl/terminos"
+      }
+    },
+    {
+      "path": "/todo-incluido",
+      "source": "client/public/prerendered/todo-incluido.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-24",
+        "changefreq": "monthly",
+        "priority": "0.7"
+      },
+      "title": "Qué incluye la mensualidad de Barkley: 7 servicios | Barkley",
+      "description": "Diagnóstico de partida, corrección humana de escritura, orientación vocacional, certificados, Barkley En Vivo, Verano Barkley, electivos y ensayos PAES mensuales.",
+      "canonical": "https://www.barkleyinstituto.cl/todo-incluido",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Qué incluye la mensualidad de Barkley: 7 servicios | Barkley",
+        "og:description": "Diagnóstico de partida, corrección humana de escritura, orientación vocacional, certificados, Barkley En Vivo, Verano Barkley, electivos y ensayos PAES mensuales.",
+        "og:url": "https://www.barkleyinstituto.cl/todo-incluido"
+      }
+    },
+    {
+      "path": "/together",
+      "source": "client/public/prerendered/together.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-23",
+        "changefreq": "weekly",
+        "priority": "0.8"
+      },
+      "title": "Together — Sala de estudio en silencio | Barkley",
+      "description": "Estudia acompañado sin clases en vivo. Video ambiental, cronómetro, lista de tareas y presencia real de otros estudiantes — el mismo principio de body doubling que ayuda a sostener el foco en TDAH.",
+      "canonical": "https://www.barkleyinstituto.cl/together",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "herramienta-publica",
+      "openGraph": {
+        "og:title": "Together — Sala de estudio en silencio | Barkley",
+        "og:description": "Estudia acompañado sin clases en vivo. Video ambiental, cronómetro, lista de tareas y presencia real de otros estudiantes — el mismo principio de body doubling que ayuda a sostener el foco en TDAH.",
+        "og:url": "https://www.barkleyinstituto.cl/together"
+      }
+    },
+    {
+      "path": "/tour-plataforma",
+      "source": "client/public/prerendered/tour-plataforma.html",
+      "delivery": "snapshot",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-11-16",
+        "changefreq": "monthly",
+        "priority": "0.7"
+      },
+      "title": "Tour de la Plataforma: Así Es Barkley por Dentro",
+      "description": "Recorre la plataforma real de Barkley paso a paso: el escritorio del estudiante, el avance por dominio, cada lección con video y pódcast.",
+      "canonical": "https://www.barkleyinstituto.cl/tour-plataforma",
+      "schemaTypes": [
+        "EducationalOrganization"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Tour de la Plataforma: Así Es Barkley por Dentro",
+        "og:description": "Recorre la plataforma real de Barkley paso a paso: el escritorio del estudiante, el avance por dominio, cada lección con video y pódcast.",
+        "og:url": "https://www.barkleyinstituto.cl/tour-plataforma"
+      }
+    },
+    {
+      "path": "/vacaciones-retroceso-academico/",
+      "source": "client/public/vacaciones-retroceso-academico/index.html",
+      "delivery": "static",
+      "indexable": true,
+      "sitemap": {
+        "lastmod": "2026-09-06",
+        "changefreq": "monthly",
+        "priority": "0.7"
+      },
+      "title": "Vacaciones de Verano: Cómo Evitar el Retroceso Académico | Barkley",
+      "description": "Semanas sin estudiar generan un retroceso real y medible. Qué es el 'summer slide', por qué afecta más a algunos estudiantes que a otros, y cómo un formato asincrónico ayuda a sostener el ritmo sin sacrificar el descanso.",
+      "canonical": "https://www.barkleyinstituto.cl/vacaciones-retroceso-academico/",
+      "schemaTypes": [
+        "Article",
+        "FAQPage",
+        "BreadcrumbList"
+      ],
+      "editorialReview": null,
+      "intent": "orientacion-institucional",
+      "openGraph": {
+        "og:title": "Vacaciones de Verano: Cómo Evitar el Retroceso Académico | Barkley",
+        "og:description": "Qué es el retroceso académico de verano, por qué ocurre, y cómo sostener el ritmo sin sacrificar el descanso.",
+        "og:url": "https://www.barkleyinstituto.cl/vacaciones-retroceso-academico/"
+      }
+    }
+  ]
+}
