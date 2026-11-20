@@ -342,40 +342,53 @@
   },
   {
     "id": "mat5u3-oa7-09",
-    "tipo": "comparar_distinto_den",
+    "tipo": "ordenar_distinto_den",
     "numeros": {
-      "a_num": 1,
-      "a_den": 4,
-      "b_num": 1,
-      "b_den": 3,
-      "comun_den": 12,
-      "a_amplificado": 3,
-      "b_amplificado": 4
+      "fracciones": [
+        [
+          3,
+          4
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          5,
+          8
+        ]
+      ],
+      "comun_den": 24,
+      "amplificadas": [
+        18,
+        16,
+        15
+      ]
     },
-    "enunciado": "En un experimento, el vaso A tiene 1/4 de litro de agua y el vaso B tiene 1/3 de litro. ¿Cuál vaso tiene más agua?",
+    "enunciado": "Tres cintas miden 3/4 m, 2/3 m y 5/8 m. ¿Cuál opción las ordena de menor a mayor?",
     "alternativas": [
       {
         "id": "A",
-        "texto": "Vaso A, porque 1/4 > 1/3"
+        "texto": "5/8, 2/3, 3/4"
       },
       {
         "id": "B",
-        "texto": "El vaso B, porque 1/3 > 1/4 (3/12 < 4/12)"
+        "texto": "2/3, 3/4, 5/8"
       },
       {
         "id": "C",
-        "texto": "Ambos tienen lo mismo porque el numerador es 1"
+        "texto": "3/4, 2/3, 5/8"
       },
       {
         "id": "D",
-        "texto": "No se pueden comparar porque tienen distinto denominador"
+        "texto": "2/3, 5/8, 3/4"
       }
     ],
-    "respuesta_correcta": "B",
+    "respuesta_correcta": "A",
     "explicacion_distractores": {
-      "A": "Compara solo los denominadores: como 4 > 3, cree que 1/4 > 1/3. Pero con igual numerador, a mayor denominador, menor fracción. 1/4 = 3/12 < 4/12 = 1/3.",
-      "C": "Cree que igual numerador implica igual fracción. Pero los denominadores son distintos.",
-      "D": "Sí se pueden: se llevan a denominador común, 1/3 = 4/12 y 1/4 = 3/12."
+      "B": "Ordenó solo por los numeradores (2, 3, 5) sin llevar a denominador común.",
+      "C": "Ordenó de mayor a menor en vez de menor a mayor.",
+      "D": "No comparó con denominador común: 2/3 = 16/24 es mayor que 5/8 = 15/24."
     },
     "nivel": "medio",
     "fuente": {

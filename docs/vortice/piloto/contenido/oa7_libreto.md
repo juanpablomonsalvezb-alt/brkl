@@ -114,6 +114,16 @@ Observa que 2/8 cae en el mismo punto que 1/4, y 4/8 cae en el mismo punto que 1
 | 5 | Comparamos: 18/24 < 20/24 | 18 < 20 |
 | 6 | Resultado: **3/4 < 5/6** | Tres cuartos es menos que cinco sextos |
 
+### Ejemplo 6: Ordenar de menor a mayor 2/3, 3/4 y 5/8
+
+| Paso | Qué hacemos | Razón |
+|---|---|---|
+| 1 | Fracciones: 2/3, 3/4 y 5/8 | Tienen distinto denominador |
+| 2 | Denominador común: 24 | Es múltiplo de 3, 4 y 8 |
+| 3 | 2/3 = 16/24, 3/4 = 18/24, 5/8 = 15/24 | Amplificamos cada una |
+| 4 | Ordenamos los numeradores: 15 < 16 < 18 | Con igual denominador, el mayor numerador es la mayor fracción |
+| 5 | Resultado: **5/8 < 2/3 < 3/4** | De menor a mayor |
+
 ---
 
 ## 5. Errores frecuentes
@@ -176,6 +186,11 @@ Observa que 2/8 cae en el mismo punto que 1/4, y 4/8 cae en el mismo punto que 1
 28. 2/5 = 8/20
 29. 3/4 = 15/20
 30. 3/5 ≠ 1/3
+31. 2/3 = 16/24
+32. 3/4 = 18/24
+33. 5/8 = 15/24
+34. 5/8 < 2/3
+35. 2/3 < 3/4
 
 ---
 

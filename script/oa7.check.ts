@@ -187,6 +187,20 @@ for (const p of preguntas) {
       if (!sonEquivalentes(c, d, bAmp, comun)) {
         falla(`${p.id}: ${c}/${d} ≠ ${bAmp}/${comun}`);
       }
+    } else if (p.tipo === "ordenar_distinto_den") {
+      // Ordena las fracciones con productos cruzados enteros y exige que SOLO la alternativa marcada traiga ese orden
+      const fr = n.fracciones as number[][];
+      const comun = n.comun_den as number;
+      const amp = n.amplificadas as number[];
+      fr.forEach(([a, b], k) => {
+        if (!sonEquivalentes(a, b, amp[k], comun)) falla(`${p.id}: ${a}/${b} ≠ ${amp[k]}/${comun}`);
+      });
+      const orden = [...fr].sort((x, y) => x[0] * y[1] - y[0] * x[1]);
+      const esperado = orden.map(([a, b]) => `${a}/${b}`).join(", ");
+      const coinciden = p.alternativas.filter((alt) => alt.texto.trim() === esperado).map((alt) => alt.id);
+      if (coinciden.length !== 1 || coinciden[0] !== p.respuesta_correcta) {
+        falla(`${p.id}: el orden correcto es "${esperado}" y coincide con [${coinciden.join(",")}], no con la marcada ${p.respuesta_correcta}`);
+      }
     } else if (p.tipo === "simplificar") {
       const a = n.numerador, b = n.denominador;
       const c = n.simplificada_num, d = n.simplificada_den;
@@ -647,6 +661,8 @@ salida.push("=== PASO 7: Alternativas sin conclusiones duplicadas ===");
  */
 function conclusionClave(texto: string): string {
   const t = texto.trim().toLowerCase();
+  // Lista ordenada de fracciones («a/b, c/d, e/f»): la conclusión es el orden completo
+  if (/^\d+\/\d+(\s*,\s*\d+\/\d+)+$/.test(t)) return `orden|${t.replace(/\s+/g, "")}`;
   // Extrae la primera palabra significativa
   const primera = t.split(/[,\s]+/)[0];
 
