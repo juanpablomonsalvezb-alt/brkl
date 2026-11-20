@@ -1,0 +1,388 @@
+[
+  {
+    "id": "mat5u3-oa7-01",
+    "tipo": "representar",
+    "numeros": {
+      "numerador": 3,
+      "denominador": 4,
+      "equivalente_num": 6,
+      "equivalente_den": 8
+    },
+    "enunciado": "Una barra se divide en 4 partes iguales y se pintan 3. Si la misma barra se divide en 8 partes iguales, ¿cuántas partes se deben pintar para representar la misma fracción?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "6 partes (porque 3/4 = 6/8)"
+      },
+      {
+        "id": "B",
+        "texto": "3 partes (porque el numerador no cambia)"
+      },
+      {
+        "id": "C",
+        "texto": "4 partes (porque el denominador es 8 y 8 ÷ 2 = 4)"
+      },
+      {
+        "id": "D",
+        "texto": "8 partes (porque el denominador es 8)"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Piensa que el numerador siempre se mantiene. Pero al amplificar, tanto numerador como denominador se multiplican por 2: 3/4 = 6/8.",
+      "C": "Divide el denominador nuevo por 2 en vez de multiplicar el numerador por 2. 3/4 = 6/8.",
+      "D": "Confunde el denominador con el numerador. 3/4 = 6/8, no 8/8."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8 «Fracciones», Clase 3 (Fracciones equivalentes)"
+    }
+  },
+  {
+    "id": "mat5u3-oa7-02",
+    "tipo": "equivalentes",
+    "numeros": {
+      "numerador": 2,
+      "denominador": 6,
+      "simplificada_num": 1,
+      "simplificada_den": 3
+    },
+    "enunciado": "Sofía dice que 2/6 es lo mismo que 1/3. ¿Tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, porque 2 ÷ 2 = 1 y 6 ÷ 2 = 3, entonces 2/6 = 1/3"
+      },
+      {
+        "id": "B",
+        "texto": "No, porque 2/6 es mayor que 1/3"
+      },
+      {
+        "id": "C",
+        "texto": "No, porque 2/6 = 2/3"
+      },
+      {
+        "id": "D",
+        "texto": "No, porque 2/6 = 1/6 (se restó 1 al numerador)"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Cree que 2/6 > 1/3 comparando solo numeradores. Pero 2/6 = 1/3 al simplificar.",
+      "C": "Mantiene el numerador y cambia el denominador incorrectamente. 2/6 = 1/3, no 2/3.",
+      "D": "Resta en vez de dividir: 2/6 no es 1/6. Para simplificar se divide numerador y denominador por el mismo número."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8 «Fracciones», Clase 4 (Fracciones equivalentes)"
+    }
+  },
+  {
+    "id": "mat5u3-oa7-03",
+    "tipo": "error",
+    "numeros": {
+      "numerador": 1,
+      "denominador": 3,
+      "factor": 2,
+      "correcto_num": 2,
+      "correcto_den": 6
+    },
+    "enunciado": "Pedro quiere amplificar 1/3 por 2 y escribe: (1 + 2) / (3 + 2) = 3/5. ¿Pedro tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, 3/5 es equivalente a 1/3"
+      },
+      {
+        "id": "B",
+        "texto": "No, hay que multiplicar: (1 × 2) / (3 × 2) = 2/6"
+      },
+      {
+        "id": "C",
+        "texto": "No, hay que dividir: (1 ÷ 2) / (3 ÷ 2) = 1/6"
+      },
+      {
+        "id": "D",
+        "texto": "No, hay que sumar al numerador: 3/6 porque 1 + 2 = 3"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Acepta el error de Pedro. 3/5 ≠ 1/3. Para verificar: 1 × 5 = 5 y 3 × 3 = 9, no son iguales.",
+      "C": "Sabe que está mal sumar, pero propone dividir en vez de multiplicar. Amplificar significa multiplicar.",
+      "D": "Propone sumar al numerador y mantener el denominador en 6, lo cual también es incorrecto. Se multiplica: 1/3 = 2/6."
+    },
+    "nivel": "reto",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8 «Fracciones», Clase 3 (Fracciones equivalentes)"
+    }
+  },
+  {
+    "id": "mat5u3-oa7-04",
+    "tipo": "comparar_igual_den",
+    "numeros": {
+      "a_num": 2,
+      "a_den": 7,
+      "b_num": 5,
+      "b_den": 7
+    },
+    "enunciado": "Una barra se divide en 7 partes iguales. Ana pinta 2 partes y Bruno pinta 5 partes. ¿Quién pintó más?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Ana, porque 2/7 > 5/7"
+      },
+      {
+        "id": "B",
+        "texto": "Bruno, porque 5/7 > 2/7"
+      },
+      {
+        "id": "C",
+        "texto": "Ambos pintaron lo mismo"
+      },
+      {
+        "id": "D",
+        "texto": "No se puede comparar sin dibujar las barras"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Invierte la comparación. Con igual denominador, el mayor numerador indica la mayor fracción: 5 > 2, entonces 5/7 > 2/7.",
+      "C": "Cree que son iguales sin comparar. 2/7 ≠ 5/7.",
+      "D": "Piensa que se necesita un dibujo. Con igual denominador, basta comparar los numeradores: 5 > 2."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8 «Fracciones», Clase 5 (Comparación de fracciones)"
+    }
+  },
+  {
+    "id": "mat5u3-oa7-05",
+    "tipo": "comparar_distinto_den",
+    "numeros": {
+      "a_num": 2,
+      "a_den": 3,
+      "b_num": 3,
+      "b_den": 4,
+      "comun_den": 12,
+      "a_amplificado": 8,
+      "b_amplificado": 9
+    },
+    "enunciado": "María tiene 2/3 de litro de jugo y Juan tiene 3/4 de litro. ¿Quién tiene más jugo?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "María, porque 2/3 > 3/4"
+      },
+      {
+        "id": "B",
+        "texto": "Juan, porque 3/4 > 2/3 (8/12 < 9/12)"
+      },
+      {
+        "id": "C",
+        "texto": "Ambos tienen lo mismo"
+      },
+      {
+        "id": "D",
+        "texto": "No se puede saber sin dibujar las barras"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Compara solo los numeradores (2 < 3) sin llevar a denominador común. 2/3 = 8/12 y 3/4 = 9/12, entonces 3/4 > 2/3.",
+      "C": "Cree que son iguales sin verificar. 8/12 ≠ 9/12.",
+      "D": "Sí se puede: se llevan a denominador común, 2/3 = 8/12 y 3/4 = 9/12."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8 «Fracciones», Clase 5 (Comparación de fracciones)"
+    }
+  },
+  {
+    "id": "mat5u3-oa7-06",
+    "tipo": "simplificar",
+    "numeros": {
+      "numerador": 6,
+      "denominador": 12,
+      "simplificada_num": 1,
+      "simplificada_den": 2
+    },
+    "enunciado": "Una cuadrícula de 12 cuadritos tiene 6 pintados de azul. ¿Qué fracción simplificada representa la parte pintada?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "6/12 (no se puede simplificar)"
+      },
+      {
+        "id": "B",
+        "texto": "3/6 (solo se simplificó por 2)"
+      },
+      {
+        "id": "C",
+        "texto": "1/2 (se simplificó dividiendo por 6)"
+      },
+      {
+        "id": "D",
+        "texto": "2/6 (se restó 4 al numerador y denominador)"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "A": "No simplifica la fracción. 6/12 = 1/2 dividiendo por 6.",
+      "B": "Simplifica solo una vez (por 2): 6/12 = 3/6, pero 3/6 aún se puede simplificar a 1/2.",
+      "D": "Resta en vez de dividir. Simplificar se hace dividiendo numerador y denominador por el mismo número."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8 «Fracciones», Clase 4 (Simplificar fracciones)"
+    }
+  },
+  {
+    "id": "mat5u3-oa7-07",
+    "tipo": "error",
+    "numeros": {
+      "a_num": 3,
+      "a_den": 5,
+      "b_num": 2,
+      "b_den": 5
+    },
+    "enunciado": "Andrés dice: «3/5 es menor que 2/5 porque con igual denominador, a mayor numerador, menor fracción». ¿Andrés tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, 3/5 < 2/5"
+      },
+      {
+        "id": "B",
+        "texto": "No, 3/5 > 2/5 porque con igual denominador, el mayor numerador da la mayor fracción"
+      },
+      {
+        "id": "C",
+        "texto": "No, son iguales porque tienen el mismo denominador"
+      },
+      {
+        "id": "D",
+        "texto": "No se pueden comparar porque los numeradores son distintos"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Confunde la regla: con igual denominador, mayor numerador = mayor fracción. 3/5 > 2/5.",
+      "C": "Cree que igual denominador implica igual fracción. Pero los numeradores son distintos: 3 ≠ 2.",
+      "D": "Sí se pueden comparar: con igual denominador se comparan los numeradores, y 3 > 2."
+    },
+    "nivel": "reto",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8 «Fracciones», Clase 5 (Comparación de fracciones)"
+    }
+  },
+  {
+    "id": "mat5u3-oa7-08",
+    "tipo": "amplificar",
+    "numeros": {
+      "numerador": 5,
+      "denominador": 6,
+      "factor": 2,
+      "amplificado_num": 10,
+      "amplificado_den": 12
+    },
+    "enunciado": "Una cuadrícula tiene 6 partes iguales y 5 pintadas (5/6). Se divide cada parte en 2 partes iguales. ¿Cuántas partes pintadas hay entre las 12 nuevas?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "10 de 12 (porque 5/6 = 10/12)"
+      },
+      {
+        "id": "B",
+        "texto": "Solo 10 partes, porque se multiplica el numerador por 2"
+      },
+      {
+        "id": "C",
+        "texto": "5 de 12 (porque el numerador no cambia)"
+      },
+      {
+        "id": "D",
+        "texto": "7 de 8 (porque se suma 2 al numerador y al denominador)"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Solo multiplica el numerador por 2, pero el denominador también se multiplica: 5/6 = 10/12. Se necesitan 10 de 12.",
+      "C": "Cree que el numerador no cambia al dividir cada parte. Pero cada parte pintada se divide en 2, entonces 5 × 2 = 10 partes pintadas de 12.",
+      "D": "Suma en vez de multiplicar. Al dividir cada parte en 2, se multiplica numerador y denominador por 2: 5/6 = 10/12."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8 «Fracciones», Clase 3 (Fracciones equivalentes)"
+    }
+  },
+  {
+    "id": "mat5u3-oa7-09",
+    "tipo": "comparar_distinto_den",
+    "numeros": {
+      "a_num": 1,
+      "a_den": 4,
+      "b_num": 1,
+      "b_den": 3,
+      "comun_den": 12,
+      "a_amplificado": 3,
+      "b_amplificado": 4
+    },
+    "enunciado": "En un experimento, el vaso A tiene 1/4 de litro de agua y el vaso B tiene 1/3 de litro. ¿Cuál vaso tiene más agua?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Vaso A, porque 1/4 > 1/3"
+      },
+      {
+        "id": "B",
+        "texto": "El vaso B, porque 1/3 > 1/4 (3/12 < 4/12)"
+      },
+      {
+        "id": "C",
+        "texto": "Ambos tienen lo mismo porque el numerador es 1"
+      },
+      {
+        "id": "D",
+        "texto": "No se pueden comparar porque tienen distinto denominador"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Compara solo los denominadores: como 4 > 3, cree que 1/4 > 1/3. Pero con igual numerador, a mayor denominador, menor fracción. 1/4 = 3/12 < 4/12 = 1/3.",
+      "C": "Cree que igual numerador implica igual fracción. Pero los denominadores son distintos.",
+      "D": "Sí se pueden: se llevan a denominador común, 1/3 = 4/12 y 1/4 = 3/12."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8 «Fracciones», Clase 5 (Comparación de fracciones)"
+    }
+  }
+]
