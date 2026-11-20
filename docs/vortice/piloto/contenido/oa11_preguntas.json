@@ -1,0 +1,367 @@
+[
+  {
+    "id": "mat5u3-oa11-01",
+    "tipo": "mayor",
+    "numeros": [
+      "0,7",
+      "0,69"
+    ],
+    "enunciado": "María compró 0,7 litros de jugo y Pedro compró 0,69 litros. ¿Quién compró más jugo?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "María, porque 0,7 > 0,69"
+      },
+      {
+        "id": "B",
+        "texto": "Pedro, porque 0,69 > 0,7"
+      },
+      {
+        "id": "C",
+        "texto": "Compraron la misma cantidad"
+      },
+      {
+        "id": "D",
+        "texto": "No se puede comparar porque tienen distinta cantidad de cifras"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Confunde más cifras con número mayor: 69 parece más grande que 7, pero en los décimos 6 < 7.",
+      "C": "Piensa erróneamente que 0,7 y 0,69 son iguales.",
+      "D": "Cree que no se pueden comparar decimales con distinta cantidad de cifras."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa11-02",
+    "tipo": "ordenar",
+    "numeros": [
+      "2,340",
+      "2,304",
+      "2,403"
+    ],
+    "enunciado": "Tres estudiantes pesaron sus mochilas en kilogramos: 2,340 ; 2,304 ; 2,403. Ordena los pesos de menor a mayor.",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "2,304 < 2,340 < 2,403"
+      },
+      {
+        "id": "B",
+        "texto": "2,340 < 2,304 < 2,403"
+      },
+      {
+        "id": "C",
+        "texto": "2,403 < 2,340 < 2,304"
+      },
+      {
+        "id": "D",
+        "texto": "2,304 < 2,403 < 2,340"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Confunde 2,340 con menor que 2,304, posiblemente comparando 340 con 304 como naturales.",
+      "C": "Ordena de mayor a menor en vez de de menor a mayor.",
+      "D": "Coloca 2,403 en el medio, sin comparar correctamente los décimos."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa11-03",
+    "tipo": "error",
+    "numeros": [
+      "0,15",
+      "0,9"
+    ],
+    "enunciado": "Camila dice: «0,15 es mayor que 0,9 porque 15 es mayor que 9». ¿Camila tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, porque 15 > 9"
+      },
+      {
+        "id": "B",
+        "texto": "No, porque 0,15 < 0,9: en los décimos, 1 < 9"
+      },
+      {
+        "id": "C",
+        "texto": "No, porque 0,15 = 0,9"
+      },
+      {
+        "id": "D",
+        "texto": "Sí, porque 0,15 tiene más cifras que 0,9"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Comete el mismo error que Camila: compara las cifras decimales como un número natural (15 vs 9).",
+      "C": "Cree erróneamente que los dos números son iguales.",
+      "D": "Justifica con el error de que más cifras implica mayor valor."
+    },
+    "nivel": "reto",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa11-04",
+    "tipo": "igual",
+    "numeros": [
+      "0,40",
+      "0,4"
+    ],
+    "enunciado": "En el supermercado, una botella tiene 0,40 litros y otra tiene 0,4 litros. ¿Cuál botella tiene más líquido?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "La de 0,40 litros, porque 40 > 4"
+      },
+      {
+        "id": "B",
+        "texto": "La de 0,4 litros, porque tiene menos cifras"
+      },
+      {
+        "id": "C",
+        "texto": "Ambas tienen la misma cantidad: 0,40 = 0,4"
+      },
+      {
+        "id": "D",
+        "texto": "No se puede saber sin más información"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "A": "Compara 40 con 4 como números naturales, sin considerar el valor posicional.",
+      "B": "Cree que menos cifras implica mayor valor.",
+      "D": "No reconoce que los ceros finales no cambian el valor."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa11-05",
+    "tipo": "recta",
+    "numeros": [
+      "1,2",
+      "1,25",
+      "1,18"
+    ],
+    "enunciado": "En una recta numérica, ¿cuál de estos números quedaría más a la izquierda: 1,2 ; 1,25 ; 1,18?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1,18"
+      },
+      {
+        "id": "B",
+        "texto": "1,2"
+      },
+      {
+        "id": "C",
+        "texto": "1,25"
+      },
+      {
+        "id": "D",
+        "texto": "Los tres quedan en el mismo punto, porque todos empiezan con 1"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "No compara correctamente: 1,2 = 1,20 y 1,20 > 1,18.",
+      "C": "Elige el número mayor, pero la pregunta pide el más a la izquierda (el menor).",
+      "D": "Mira solo la parte entera y concluye que los tres números son iguales."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa11-06",
+    "tipo": "menor",
+    "numeros": [
+      "5,025",
+      "5,250"
+    ],
+    "enunciado": "Dos estudiantes pesaron paquetes de harina: uno anotó 5,025 kg y el otro 5,250 kg. ¿Cuál peso es menor?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "5,025 kg"
+      },
+      {
+        "id": "B",
+        "texto": "5,250 kg"
+      },
+      {
+        "id": "C",
+        "texto": "Son iguales"
+      },
+      {
+        "id": "D",
+        "texto": "5,025 kg es mayor porque 250 > 25"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Confunde 250 con mayor que 25, sin considerar que 0 décimos < 2 décimos.",
+      "C": "Cree que son iguales aunque los dígitos difieren en los décimos.",
+      "D": "Compara las cifras finales como naturales (250 vs 25) en vez de posición por posición."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa11-07",
+    "tipo": "ordenar",
+    "numeros": [
+      "0,8",
+      "0,08",
+      "0,808",
+      "0,008"
+    ],
+    "enunciado": "Cuatro botellas contienen estos litros de agua: 0,8 ; 0,08 ; 0,808 ; 0,008. Ordena de mayor a menor cantidad de líquido.",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "0,808 > 0,8 > 0,08 > 0,008"
+      },
+      {
+        "id": "B",
+        "texto": "0,008 > 0,08 > 0,8 > 0,808"
+      },
+      {
+        "id": "C",
+        "texto": "0,8 > 0,808 > 0,08 > 0,008"
+      },
+      {
+        "id": "D",
+        "texto": "0,808 > 0,08 > 0,8 > 0,008"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Ordena de menor a mayor, pero la pregunta pide de mayor a menor.",
+      "C": "Pone 0,8 antes que 0,808, pero 0,800 < 0,808.",
+      "D": "Coloca 0,08 antes que 0,8, confundiendo el valor posicional."
+    },
+    "nivel": "reto",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa11-08",
+    "tipo": "error",
+    "numeros": [
+      "3,5",
+      "3,50",
+      "3,500"
+    ],
+    "enunciado": "Andrés dice: «3,5 es menor que 3,50, y 3,50 es menor que 3,500, porque cada número tiene más cifras». ¿Quién tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Andrés tiene razón: 3,5 < 3,50 < 3,500"
+      },
+      {
+        "id": "B",
+        "texto": "Andrés no tiene razón: 3,5 = 3,50 = 3,500"
+      },
+      {
+        "id": "C",
+        "texto": "Andrés tiene razón solo para 3,5 < 3,50"
+      },
+      {
+        "id": "D",
+        "texto": "No se pueden comparar porque tienen distinta cantidad de decimales"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Comete el error de creer que más cifras implica mayor valor.",
+      "C": "Cree que la regla de más cifras aplica solo parcialmente.",
+      "D": "No sabe que se pueden comparar decimales con distinta cantidad de cifras."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa11-09",
+    "tipo": "mayor",
+    "numeros": [
+      "12,305",
+      "12,350"
+    ],
+    "enunciado": "Dos tanques de agua contienen estos litros: el tanque A tiene 12,305 L y el tanque B tiene 12,350 L. ¿Qué tanque tiene más agua?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "El tanque A, porque 12,305 > 12,350"
+      },
+      {
+        "id": "B",
+        "texto": "El tanque B, porque 12,350 > 12,305"
+      },
+      {
+        "id": "C",
+        "texto": "Ambos tienen la misma cantidad"
+      },
+      {
+        "id": "D",
+        "texto": "El tanque A, porque 305 está más cerca de 1 000 que 350"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Confunde 305 con mayor que 350 comparando como naturales, pero en centésimos 0 < 5.",
+      "C": "Cree que son iguales aunque difieren en centésimos.",
+      "D": "Usa un criterio incorrecto (proximidad a 1 000) para comparar decimales."
+    },
+    "nivel": "reto",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+    }
+  }
+]
