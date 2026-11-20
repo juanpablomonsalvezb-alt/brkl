@@ -112,6 +112,19 @@ function falla(msg: string) {
   throw new Error(msg);
 }
 
+// Cada pregunta se apoya en un ejercicio/pasaje de los libros oficiales (se verifica si el archivo está en esta máquina).
+const BASE_LIBRO: Record<string, { archivo: string; texto: string }> = {
+  "mat5u3-oa8-01": { archivo: "MATME26E5B.md", texto: "77 Expresemos 7" },
+  "mat5u3-oa8-02": { archivo: "MATME26E5B.md", texto: "66 Expresemos 2 4" },
+  "mat5u3-oa8-03": { archivo: "MATME26E5B.md", texto: "77 Expresemos 7" },
+  "mat5u3-oa8-04": { archivo: "MATME26E5B.md", texto: "55 Expresa las fracciones impropias como" },
+  "mat5u3-oa8-05": { archivo: "MATME26E5B.md", texto: "¿Cuántos litros de agua hay en la botella de Juan?" },
+  "mat5u3-oa8-06": { archivo: "MATME26E5B.md", texto: "Como 1 L es 3" },
+  "mat5u3-oa8-07": { archivo: "MATME26E5B.md", texto: "22 Escribe las fracciones y los" },
+  "mat5u3-oa8-08": { archivo: "MATME26E5B.md", texto: "44 Expresa los números mixtos como" },
+  "mat5u3-oa8-09": { archivo: "MATME26E5B.md", texto: "55 Expresa las fracciones impropias como" },
+};
+
 // ——— Carga de datos ———
 
 const jsonPath = resolve(ROOT, "docs/vortice/piloto/contenido/oa8_preguntas.json");
@@ -219,6 +232,18 @@ caso("S5", "ninguna alternativa vacía", () => {
       if (!a.texto || a.texto.trim() === "")
         falla(`${p.id}: alternativa ${a.id} está vacía`);
     }
+  }
+});
+
+caso("LIBRO", "cada pregunta tiene su pasaje base en el texto oficial", () => {
+  const dir = resolve(process.env.HOME ?? "", "Downloads/BRKL_TEXTOS_OFICIALES");
+  const norm = (s: string) => s.replace(/\s+/g, " ").trim();
+  for (const p of preguntas) {
+    const b = BASE_LIBRO[p.id];
+    if (!b) falla(`${p.id}: sin pasaje base declarado`);
+    const ruta = resolve(dir, b.archivo);
+    if (!existsSync(ruta)) { console.warn(`AVISO ${p.id}: no está ${b.archivo}; pasaje base sin verificar`); continue; }
+    if (!norm(readFileSync(ruta, "utf-8")).includes(norm(b.texto))) falla(`${p.id}: pasaje «${b.texto}» no está en ${b.archivo}`);
   }
 });
 
