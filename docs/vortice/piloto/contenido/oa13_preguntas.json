@@ -1,0 +1,400 @@
+[
+  {
+    "id": "mat5u3-oa13-01",
+    "tipo": "fraccion_igual_denominador",
+    "numeros": {
+      "operacion": "resta",
+      "fraccion1_numerador": 4,
+      "fraccion1_denominador": 5,
+      "fraccion2_numerador": 1,
+      "fraccion2_denominador": 5,
+      "resultado_numerador": 3,
+      "resultado_denominador": 5
+    },
+    "enunciado": "Ana tenía 4/5 de litro de jugo y se tomó 1/5 de litro. ¿Cuánto jugo le queda?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "3/5 de litro"
+      },
+      {
+        "id": "B",
+        "texto": "5/5 de litro"
+      },
+      {
+        "id": "C",
+        "texto": "3/10 de litro"
+      },
+      {
+        "id": "D",
+        "texto": "4/5 de litro"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Sumó en vez de restar: 4/5 + 1/5 = 5/5.",
+      "C": "Restó los numeradores pero también sumó los denominadores: 5+5=10. El denominador no cambia.",
+      "D": "No restó; dejó la cantidad inicial."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 16 «Adición y sustracción de fracciones» (Tomo 2)"
+    }
+  },
+  {
+    "id": "mat5u3-oa13-02",
+    "tipo": "fraccion_distinto_denominador",
+    "numeros": {
+      "operacion": "suma",
+      "fraccion1_numerador": 1,
+      "fraccion1_denominador": 3,
+      "fraccion2_numerador": 1,
+      "fraccion2_denominador": 2,
+      "resultado_numerador": 5,
+      "resultado_denominador": 6
+    },
+    "enunciado": "Una botella tiene 1/3 de litro de agua y otra tiene 1/2 de litro. ¿Cuántos litros hay en total si se juntan?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "2/5 de litro"
+      },
+      {
+        "id": "B",
+        "texto": "5/6 de litro"
+      },
+      {
+        "id": "C",
+        "texto": "1/6 de litro"
+      },
+      {
+        "id": "D",
+        "texto": "2/6 de litro"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Sumó numeradores y denominadores por separado: 1+1=2 y 3+2=5, obteniendo 2/5. Error habitual: el denominador no se suma.",
+      "C": "Restó en vez de sumar, o calculó mal el denominador común.",
+      "D": "Solo sumó los numeradores (1+1=2) y usó el denominador común (6), pero el resultado correcto es 5/6."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 16 «Adición y sustracción de fracciones» (Tomo 2)"
+    }
+  },
+  {
+    "id": "mat5u3-oa13-03",
+    "tipo": "error",
+    "numeros": {
+      "operacion": "suma",
+      "fraccion1_numerador": 1,
+      "fraccion1_denominador": 3,
+      "fraccion2_numerador": 1,
+      "fraccion2_denominador": 4,
+      "resultado_erroneo_numerador": 2,
+      "resultado_erroneo_denominador": 7,
+      "resultado_correcto_numerador": 7,
+      "resultado_correcto_denominador": 12
+    },
+    "enunciado": "Pedro dice: «1/3 + 1/4 = 2/7, porque sumo los numeradores (1+1=2) y los denominadores (3+4=7)». ¿Pedro tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, 1/3 + 1/4 = 2/7"
+      },
+      {
+        "id": "B",
+        "texto": "No, 1/3 + 1/4 = 7/12, porque se usa un denominador común"
+      },
+      {
+        "id": "C",
+        "texto": "No, 1/3 + 1/4 = 1/7 porque se restan los numeradores"
+      },
+      {
+        "id": "D",
+        "texto": "No, 1/3 + 1/4 = 2/12 porque solo se suman los numeradores"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Comete el mismo error que Pedro: suma numeradores y denominadores por separado.",
+      "C": "Resta en vez de sumar y usa un denominador incorrecto.",
+      "D": "Suma solo los numeradores (correcto) pero no amplifica las fracciones al denominador común."
+    },
+    "nivel": "reto",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 16 «Adición y sustracción de fracciones» (Tomo 2)"
+    }
+  },
+  {
+    "id": "mat5u3-oa13-04",
+    "tipo": "decimal",
+    "numeros": {
+      "operacion": "suma",
+      "decimal1_milesimas": 1250,
+      "decimal2_milesimas": 875,
+      "resultado_milesimas": 2125
+    },
+    "enunciado": "Una cinta mide 1,250 m y otra mide 0,875 m. Si se unen, ¿cuánto miden en total?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "2,125 m"
+      },
+      {
+        "id": "B",
+        "texto": "1,325 m"
+      },
+      {
+        "id": "C",
+        "texto": "2,025 m"
+      },
+      {
+        "id": "D",
+        "texto": "1,925 m"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "No sumó las unidades correctamente: 1 + 0 = 1 en vez de 1 + 0 + 1 (llevado) = 2.",
+      "C": "Error en la suma de centésimas: 5 + 7 = 12, escribió 0 en vez de 2.",
+      "D": "Restó en vez de sumar."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 6 «Números decimales» (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa13-05",
+    "tipo": "decimal",
+    "numeros": {
+      "operacion": "resta",
+      "decimal1_milesimas": 5480,
+      "decimal2_milesimas": 2150,
+      "resultado_milesimas": 3330
+    },
+    "enunciado": "Un tanque tiene 5,480 litros de agua. Se usan 2,150 litros. ¿Cuántos litros quedan?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "3,330 litros"
+      },
+      {
+        "id": "B",
+        "texto": "3,370 litros"
+      },
+      {
+        "id": "C",
+        "texto": "2,330 litros"
+      },
+      {
+        "id": "D",
+        "texto": "7,630 litros"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Error en centésimas: 8 – 5 = 3, no 7.",
+      "C": "Error en unidades: 5 – 2 = 3, no 2.",
+      "D": "Sumó en vez de restar: 5,480 + 2,150 = 7,630."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 6 «Números decimales» (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa13-06",
+    "tipo": "error",
+    "numeros": {
+      "operacion": "suma",
+      "decimal1_milesimas": 500,
+      "decimal2_milesimas": 250,
+      "resultado_erroneo_milesimas": 300,
+      "resultado_correcto_milesimas": 750
+    },
+    "enunciado": "Camila dice: «0,5 + 0,25 = 0,30, porque sumo 5 + 25 = 30 y pongo la coma». ¿Camila tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, 0,5 + 0,25 = 0,30"
+      },
+      {
+        "id": "B",
+        "texto": "No, 0,5 + 0,25 = 0,750 porque se alinean las comas"
+      },
+      {
+        "id": "C",
+        "texto": "No, 0,5 + 0,25 = 0,20 porque 5 – 25 = –20"
+      },
+      {
+        "id": "D",
+        "texto": "No, 0,5 + 0,25 = 0,525 porque se juntan los números"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Comete el mismo error que Camila: no alinea la coma y opera como naturales.",
+      "C": "Resta en vez de sumar y obtiene un resultado negativo.",
+      "D": "Junta los dígitos sin operar: 0,525. No es una suma correcta."
+    },
+    "nivel": "reto",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 6 «Números decimales» (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa13-07",
+    "tipo": "fraccion_igual_denominador",
+    "numeros": {
+      "operacion": "suma",
+      "entero1": 1,
+      "fraccion1_numerador": 1,
+      "fraccion1_denominador": 4,
+      "fraccion2_numerador": 2,
+      "fraccion2_denominador": 4,
+      "resultado_entero": 1,
+      "resultado_numerador": 3,
+      "resultado_denominador": 4
+    },
+    "enunciado": "María tiene 1 1/4 de metro de cinta y compra 2/4 de metro más. ¿Cuántos metros de cinta tiene en total?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1 3/4 m"
+      },
+      {
+        "id": "B",
+        "texto": "3 3/4 m"
+      },
+      {
+        "id": "C",
+        "texto": "1 2/4 m"
+      },
+      {
+        "id": "D",
+        "texto": "2 3/8 m"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Sumó el entero 1 con los numeradores: 1 + 1 + 2 = 4, pero puso 3. Error en la parte entera.",
+      "C": "Solo sumó 1/4 + 1/4 = 2/4 en vez de 1/4 + 2/4 = 3/4.",
+      "D": "Sumó los denominadores (4 + 4 = 8) y los numeradores (1 + 2 = 3). El denominador no se suma."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8 «Fracciones» (Tomo 1) y Capítulo 16 (Tomo 2)"
+    }
+  },
+  {
+    "id": "mat5u3-oa13-08",
+    "tipo": "fraccion_distinto_denominador",
+    "numeros": {
+      "operacion": "suma",
+      "fraccion1_numerador": 1,
+      "fraccion1_denominador": 4,
+      "fraccion2_numerador": 1,
+      "fraccion2_denominador": 3,
+      "resultado_numerador": 7,
+      "resultado_denominador": 12
+    },
+    "enunciado": "Carlos caminó 1/4 de kilómetro en la mañana y 1/3 de kilómetro en la tarde. ¿Cuántos kilómetros caminó en total?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "2/7 km"
+      },
+      {
+        "id": "B",
+        "texto": "7/12 km"
+      },
+      {
+        "id": "C",
+        "texto": "1/12 km"
+      },
+      {
+        "id": "D",
+        "texto": "5/12 km"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Sumó numeradores y denominadores: 1+1=2 y 4+3=7. Error habitual.",
+      "C": "Restó en vez de sumar: 4/12 – 3/12 = 1/12.",
+      "D": "Amplificó mal: 1/4 = 3/12 (correcto) pero 1/3 = 2/12 (incorrecto, debería ser 4/12)."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 16 «Adición y sustracción de fracciones» (Tomo 2)"
+    }
+  },
+  {
+    "id": "mat5u3-oa13-09",
+    "tipo": "decimal",
+    "numeros": {
+      "operacion": "resta",
+      "decimal1_milesimas": 3400,
+      "decimal2_milesimas": 1840,
+      "resultado_milesimas": 1560
+    },
+    "enunciado": "Un río tiene 3,400 metros de largo en su tramo norte y 1,840 metros en su tramo sur. ¿Cuántos metros más tiene el tramo norte que el tramo sur?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1,560 m"
+      },
+      {
+        "id": "B",
+        "texto": "1,460 m"
+      },
+      {
+        "id": "C",
+        "texto": "2,440 m"
+      },
+      {
+        "id": "D",
+        "texto": "1,660 m"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Error en décimas: 4 – 8 requiere préstamo, 14 – 8 = 6, no 4.",
+      "C": "Sumó en vez de restar: 3,400 + 1,840 = 5,240, pero escribió 2,440.",
+      "D": "Error en el préstamo: no restó 1 de las unidades al hacer el préstamo para décimas."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 6 «Números decimales» (Tomo 1)"
+    }
+  }
+]
