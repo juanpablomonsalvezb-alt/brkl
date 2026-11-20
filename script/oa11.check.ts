@@ -48,7 +48,7 @@ function ordenarDecimales(numeros: string[]): string[] {
 
 interface PreguntaOA11 {
   id: string;
-  tipo: "mayor" | "menor" | "ordenar" | "igual" | "recta" | "error";
+  tipo: "mayor" | "menor" | "ordenar" | "igual" | "recta" | "error" | "comparar";
   numeros: string[];
   enunciado: string;
   alternativas: { id: string; texto: string }[];
@@ -62,6 +62,9 @@ interface PreguntaOA11 {
     ubicacion: string;
   };
 }
+
+// Preguntas nuevas (v2, calcadas del libro): autor claude, sin validadores hasta validación humana.
+const PENDIENTES_VALIDACION = ["mat5u3-oa11-04", "mat5u3-oa11-05", "mat5u3-oa11-08"];
 
 // ——— Estado global ———
 
@@ -175,6 +178,17 @@ function recalcularCorrecta(p: PreguntaOA11): string {
       }
       return p.respuesta_correcta;
     }
+    case "comparar": {
+      // "Compara a y b": la alternativa correcta debe empezar con "a OP b" y OP debe ser el verdadero
+      if (nums.length !== 2) falla(`Pregunta ${p.id}: comparar necesita 2 números`);
+      const c = comparaDecimales(nums[0], nums[1]);
+      const op = c > 0 ? ">" : c < 0 ? "<" : "=";
+      const altC = p.alternativas.find((a) => a.id === p.respuesta_correcta);
+      if (!altC) falla(`Pregunta ${p.id}: alternativa ${p.respuesta_correcta} no encontrada`);
+      if (!altC.texto.startsWith(`${nums[0]} ${op} ${nums[1]}`))
+        falla(`Pregunta ${p.id}: la correcta debe ser "${nums[0]} ${op} ${nums[1]}", es "${altC.texto}"`);
+      return p.respuesta_correcta;
+    }
     case "error": {
       // Para preguntas de detectar error, verificamos que la respuesta correcta
       // señale que la afirmación es incorrecta (o correcta según el caso)
@@ -273,7 +287,7 @@ caso("S7", "coma decimal (no punto) en todo texto", () => {
     // Verifica que los numeros usen coma
     for (const n of p.numeros) {
       if (n.includes(".")) falla(`${p.id}: número "${n}" usa punto en vez de coma`);
-      if (!n.includes(",")) falla(`${p.id}: número "${n}" no tiene coma decimal`);
+      if (!n.includes(",") && !/^\d+$/.test(n)) falla(`${p.id}: número "${n}" no tiene coma decimal`);
     }
     // Verifica enunciado y alternativas
     const todoTexto = p.enunciado + " " + p.alternativas.map((a) => a.texto).join(" ");
@@ -378,19 +392,24 @@ caso("CSV3", "coherencia JSON ↔ CSV para las 9 preguntas OA 11", () => {
 
     // Verifica autor_id = junie (col 12)
     const csvAutor = campos[12];
-    if (csvAutor !== "junie")
-      falla(`${p.id}: autor_id CSV es "${csvAutor}", se espera "junie"`);
+    const pendiente = PENDIENTES_VALIDACION.includes(p.id);
+    if (csvAutor !== (pendiente ? "claude" : "junie"))
+      falla(`${p.id}: autor_id CSV es "${csvAutor}", se espera "${pendiente ? "claude" : "junie"}"`);
 
     // Verifica validadores registrados tras la aprobación de la muestra por el sostenedor (col 13, 14)
     const v1 = campos[13];
     const v2 = campos[14];
-    if (v1 !== "claude" || v2 !== "verificador-oa11")
+    if (pendiente) {
+      if (v1 !== "" || v2 !== "")
+        falla(`${p.id}: pendiente de validación humana, validadores deben ir vacíos (${v1}/${v2})`);
+    } else if (v1 !== "claude" || v2 !== "verificador-oa11")
       falla(`${p.id}: validadores CSV son "${v1}" y "${v2}", se espera "claude" y "verificador-oa11"`);
 
     // Verifica estado = validada (col 15)
     const csvEstado = campos[15].trim();
-    if (csvEstado !== "validada")
-      falla(`${p.id}: estado CSV es "${csvEstado}", se espera "validada"`);
+    const estadoEsperado = pendiente ? "borrador" : "validada";
+    if (csvEstado !== estadoEsperado)
+      falla(`${p.id}: estado CSV es "${csvEstado}", se espera "${estadoEsperado}"`);
   }
 });
 

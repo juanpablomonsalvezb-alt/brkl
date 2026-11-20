@@ -34,9 +34,9 @@
     "nivel": "basico",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 6 «Números decimales», actividades de ordenar y comparar (ver OA11_preguntas_base_libro.md)"
     }
   },
   {
@@ -75,9 +75,9 @@
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 6 «Números decimales», actividades de ordenar y comparar (ver OA11_preguntas_base_libro.md)"
     }
   },
   {
@@ -115,90 +115,90 @@
     "nivel": "reto",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 6 «Números decimales», actividades de ordenar y comparar (ver OA11_preguntas_base_libro.md)"
     }
   },
   {
     "id": "mat5u3-oa11-04",
-    "tipo": "igual",
+    "tipo": "comparar",
     "numeros": [
-      "0,40",
-      "0,4"
+      "0,900",
+      "0,009"
     ],
-    "enunciado": "En el supermercado, una botella tiene 0,40 litros y otra tiene 0,4 litros. ¿Cuál botella tiene más líquido?",
+    "enunciado": "Compara 0,900 y 0,009 usando >, < o =.",
     "alternativas": [
       {
         "id": "A",
-        "texto": "La de 0,40 litros, porque 40 > 4"
+        "texto": "0,900 > 0,009"
       },
       {
         "id": "B",
-        "texto": "La de 0,4 litros, porque tiene menos cifras"
+        "texto": "0,900 < 0,009"
       },
       {
         "id": "C",
-        "texto": "Ambas tienen la misma cantidad: 0,40 = 0,4"
+        "texto": "0,900 = 0,009"
       },
       {
         "id": "D",
-        "texto": "No se puede saber sin más información"
-      }
-    ],
-    "respuesta_correcta": "C",
-    "explicacion_distractores": {
-      "A": "Compara 40 con 4 como números naturales, sin considerar el valor posicional.",
-      "B": "Cree que menos cifras implica mayor valor.",
-      "D": "No reconoce que los ceros finales no cambian el valor."
-    },
-    "nivel": "basico",
-    "fuente": {
-      "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
-    }
-  },
-  {
-    "id": "mat5u3-oa11-05",
-    "tipo": "recta",
-    "numeros": [
-      "1,2",
-      "1,25",
-      "1,18"
-    ],
-    "enunciado": "En una recta numérica, ¿cuál de estos números quedaría más a la izquierda: 1,2 ; 1,25 ; 1,18?",
-    "alternativas": [
-      {
-        "id": "A",
-        "texto": "1,18"
-      },
-      {
-        "id": "B",
-        "texto": "1,2"
-      },
-      {
-        "id": "C",
-        "texto": "1,25"
-      },
-      {
-        "id": "D",
-        "texto": "Los tres quedan en el mismo punto, porque todos empiezan con 1"
+        "texto": "No se pueden comparar porque tienen distinta cantidad de ceros"
       }
     ],
     "respuesta_correcta": "A",
     "explicacion_distractores": {
-      "B": "No compara correctamente: 1,2 = 1,20 y 1,20 > 1,18.",
-      "C": "Elige el número mayor, pero la pregunta pide el más a la izquierda (el menor).",
-      "D": "Mira solo la parte entera y concluye que los tres números son iguales."
+      "B": "Cree que 009 es mayor que 900 por mirar solo los últimos dígitos.",
+      "C": "Cree que los ceros no importan y que ambos son «nueve».",
+      "D": "Todo decimal se puede comparar mirando la posición de mayor valor: en los décimos, 9 > 0."
     },
-    "nivel": "medio",
+    "nivel": "basico",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 6, sección Practica, actividad 5c «Compara usando >, < o =»"
+    }
+  },
+  {
+    "id": "mat5u3-oa11-05",
+    "tipo": "ordenar",
+    "numeros": [
+      "1",
+      "0,1",
+      "0,011"
+    ],
+    "enunciado": "Ordena de mayor a menor los números 1 ; 0,1 ; 0,011.",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1 > 0,1 > 0,011"
+      },
+      {
+        "id": "B",
+        "texto": "0,011 > 0,1 > 1"
+      },
+      {
+        "id": "C",
+        "texto": "0,1 > 1 > 0,011"
+      },
+      {
+        "id": "D",
+        "texto": "1 > 0,011 > 0,1"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Ordena de menor a mayor en vez de mayor a menor.",
+      "C": "Cree que 0,1 es mayor que 1 por la coma.",
+      "D": "Cree que 0,011 es mayor que 0,1 porque 11 > 1."
+    },
+    "nivel": "intermedio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 6, sección Practica, actividad 6b «Ordena de mayor a menor cada grupo de números»"
     }
   },
   {
@@ -236,9 +236,9 @@
     "nivel": "basico",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 6 «Números decimales», actividades de ordenar y comparar (ver OA11_preguntas_base_libro.md)"
     }
   },
   {
@@ -278,50 +278,49 @@
     "nivel": "reto",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 6 «Números decimales», actividades de ordenar y comparar (ver OA11_preguntas_base_libro.md)"
     }
   },
   {
     "id": "mat5u3-oa11-08",
-    "tipo": "error",
+    "tipo": "comparar",
     "numeros": [
-      "3,5",
-      "3,50",
-      "3,500"
+      "9,99",
+      "9,990"
     ],
-    "enunciado": "Andrés dice: «3,5 es menor que 3,50, y 3,50 es menor que 3,500, porque cada número tiene más cifras». ¿Quién tiene razón?",
+    "enunciado": "Compara 9,99 y 9,990 usando >, < o =.",
     "alternativas": [
       {
         "id": "A",
-        "texto": "Andrés tiene razón: 3,5 < 3,50 < 3,500"
+        "texto": "9,99 = 9,990"
       },
       {
         "id": "B",
-        "texto": "Andrés no tiene razón: 3,5 = 3,50 = 3,500"
+        "texto": "9,99 < 9,990"
       },
       {
         "id": "C",
-        "texto": "Andrés tiene razón solo para 3,5 < 3,50"
+        "texto": "9,99 > 9,990"
       },
       {
         "id": "D",
-        "texto": "No se pueden comparar porque tienen distinta cantidad de decimales"
+        "texto": "No se pueden comparar porque tienen distinta cantidad de cifras"
       }
     ],
-    "respuesta_correcta": "B",
+    "respuesta_correcta": "A",
     "explicacion_distractores": {
-      "A": "Comete el error de creer que más cifras implica mayor valor.",
-      "C": "Cree que la regla de más cifras aplica solo parcialmente.",
-      "D": "No sabe que se pueden comparar decimales con distinta cantidad de cifras."
+      "B": "Cree que más cifras decimales hacen mayor el número.",
+      "C": "Cree que 99 > 990 por mirar mal las cifras.",
+      "D": "Se completa con ceros: 9,99 = 9,990."
     },
-    "nivel": "medio",
+    "nivel": "basico",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+      "referencia": "Matemática 5.º, Casa del Saber, Santillana, Tomo I",
+      "edicion": "Santillana",
+      "ubicacion": "Unidad 3, Orden y comparación de números decimales, actividad Practica 1f (9,99 y 9,990)"
     }
   },
   {
@@ -359,9 +358,9 @@
     "nivel": "reto",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 6, págs. 112–136 (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 6 «Números decimales», actividades de ordenar y comparar (ver OA11_preguntas_base_libro.md)"
     }
   }
 ]
