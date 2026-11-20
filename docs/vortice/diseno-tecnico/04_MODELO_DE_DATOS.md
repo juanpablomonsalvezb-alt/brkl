@@ -117,6 +117,7 @@ La purga legal futura (O10) chocaría con «solo inserción»: exige una vía ex
 | `evaluation_version_releases` | `evaluation_version_id` PK FK; `released_at` NN; `basis`; `declared_by`; `verification_json` | **Significa «versión expuesta»** (P19-E1, P18): alguna instancia ya es publicable. No condiciona la publicación. Una fila por versión, sin deshacer. Trigger: no asignar instancia nueva a una versión con fila. Mecanismo en [03](03_MOTOR_DE_EVIDENCIAS.md) §8.3 |
 | `evaluation_version_questions` | `evaluation_version_id`, `question_version_id` | PK compuesta; más `family_id`, `item_id`, `bank`, `position`; **CHECK `bank='evaluacion'`**; FK (qv, family, item, bank) → `question_versions` |
 | `evaluation_processes` | `id` PK; `student_id`, `evaluation_id` NN FK; `status`; `closed_at`; `close_cause` | `abierto, recuperacion_pendiente, recuperacion_abierta, aprobado, reprobado`; UNIQUE (student, evaluation) |
+| **Nota P21 v2** | | **Requisito futuro (no autorizado):** P21 v2 exige que el esquema soporte perfil de estudiante (regular/neurodivergente), intento extra con mejor porcentaje, y banco por subtema con capacidad para normal y extra sin repetir. Requiere migración aparte. Ver [P21_v2.md](../../p0e/P21_v2.md) |
 | `evaluation_instances` | `id` PK; `process_id`, `student_id`, `evaluation_version_id` NN | FK (process, student) |
 | | `phase` | `ordinaria, recuperacion` |
 | | `window_end_at`, `extension_ends_at`, `review_at`, `time_zone`, `max_attempts` | NN |

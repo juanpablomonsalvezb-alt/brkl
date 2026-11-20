@@ -149,7 +149,8 @@ flowchart TB
 | Evaluación | Regla aprobada | Conflicto | Diseño |
 |---|---|---|---|
 | E1, E3, E4 | 2 intentos, estado inmediato, pauta diferida | K11 pide feedback inmediato: C6. P16 sin aprobar | `evaluation_function` y `release_policy` como datos (nulos hasta P16) |
-| E2 | 3 intentos, recuperación con 2 | P21, C3 | Evidencia embargada |
+| E2 | ~~3 intentos, recuperación con 2~~ **SUSTITUIDO 2026-11-19 por P21 v2:** 1 normal + 1 extra (ver `docs/p0e/P21_v2.md`) | P21 v2, C3 | Evidencia embargada |
+| **Nota P21 v2** | **SUSTITUIDO (2026-11-19):** E2 tiene 1 intento normal + 1 extra (72 h, obligatorio, ≥50 % subtemas fallados). Ver [P21_v2.md](../../p0e/P21_v2.md). La fila anterior se conserva como historial. | | |
 
 **Alternativas C6 / N4:**
 
@@ -213,7 +214,9 @@ Sujeto a D1–D4 y a la condición de §8.3: porcentaje real del intento que cue
 
 Sin contenidos etiquetados (fuera del piloto), solo se muestra el nivel módulo; no se inventa detalle.
 
-### 8.6 P21 (COMUNICADO, requiere D2 y C15)
+### 8.6 P21 (APROBADA v2, 2026-11-19)
+
+> **Actualizado (2026-11-19):** P21 v2 aprobada. La mecánica anterior (3 intentos + recuperación de 2) se sustituye por 1 normal + 1 extra (72 h, obligatorio, ≥50 % subtemas fallados). Ver [P21_v2.md](../../p0e/P21_v2.md). C3/D2 resuelta; C15 dispensada.
 
 ```mermaid
 stateDiagram-v2

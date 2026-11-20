@@ -4,7 +4,7 @@
 // Ejecutar: npm run check:vortice
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { envioAceptable, extensionAgotada, finDeModulo, HoraLocalInvalida, instanteLocal, ventanaOrdinaria, ZONA_CHILE } from "../shared/ventanas";
+import { envioAceptable, extensionAgotada, finDeModulo, HoraLocalInvalida, instanteLocal, ventanaOrdinaria, ventanaExtra, estadoExtra, ZONA_CHILE, HORAS_PLAZO_EXTRA, MIN_DURACION_EVALUACION_REGULAR, MIN_DURACION_EVALUACION_NEURODIVERGENTE, UMBRAL_APROBACION_REGULAR, UMBRAL_APROBACION_NEURODIVERGENTE } from "../shared/ventanas";
 
 const iso = (t: number) => new Date(t * 1000).toISOString().replace(".000Z", "Z");
 const local = (t: number) => new Intl.DateTimeFormat("en-CA", { timeZone: ZONA_CHILE, hourCycle: "h23", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })
@@ -69,6 +69,50 @@ caso("V9", "determinismo y sin lectura del reloj del sistema", () => {
   assert.deepEqual(ventanaOrdinaria("2026-05-15"), ventanaOrdinaria("2026-05-15"));
   const codigo = fs.readFileSync("shared/ventanas.ts", "utf8").split("\n").map((l) => l.replace(/\/\/.*$/, "")).filter((l) => /Date\.now\s*\(|new Date\s*\(\s*\)/.test(l));
   assert.deepEqual(codigo, [], "ventanas.ts no debe leer el reloj del sistema");
+});
+
+// ——— P21 v2: constantes de perfil y umbrales ———
+caso("V10", "constantes P21 v2: HORAS_PLAZO_EXTRA = 72", () => {
+  assert.equal(HORAS_PLAZO_EXTRA, 72, "el plazo del extra debe ser 72 h");
+});
+caso("V11", "constantes P21 v2: umbrales y duraciones por perfil", () => {
+  assert.equal(UMBRAL_APROBACION_REGULAR, 70, "umbral regular 70 %");
+  assert.equal(UMBRAL_APROBACION_NEURODIVERGENTE, 50, "umbral neurodivergente 50 %");
+  assert.equal(MIN_DURACION_EVALUACION_REGULAR, 60, "duración regular 60 min");
+  assert.equal(MIN_DURACION_EVALUACION_NEURODIVERGENTE, 120, "duración neurodivergente 120 min");
+});
+
+// ——— P21 v2: ventanaExtra() ———
+const pubAt = Date.UTC(2026, 5, 15, 10, 0, 0) / 1000; // 2026-06-15T10:00:00Z
+caso("V12", "ventanaExtra: habilita desde publicadoAt, cierra a las 72 h", () => {
+  const ve = ventanaExtra(pubAt);
+  assert.equal(ve.habilitaDesde, pubAt, "habilita desde publicadoAt");
+  assert.equal(ve.cierraEn, pubAt + 72 * 3600, "cierra a las 72 h");
+});
+caso("V13", "ventanaExtra: rechaza publicadoAt no finito", () => {
+  assert.throws(() => ventanaExtra(NaN), RangeError, "NaN rechazado");
+  assert.throws(() => ventanaExtra(Infinity), RangeError, "Infinity rechazado");
+});
+
+// ——— P21 v2: estadoExtra() ———
+caso("V14", "estadoExtra: disponible dentro del plazo", () => {
+  assert.equal(estadoExtra(pubAt + 3600, pubAt), "disponible", "1 h después: disponible");
+  assert.equal(estadoExtra(pubAt + 71 * 3600, pubAt), "disponible", "71 h después: disponible");
+});
+caso("V15", "estadoExtra: no_rendido después de cierraEn", () => {
+  assert.equal(estadoExtra(pubAt + 72 * 3600, pubAt), "no_rendido", "72 h exactas: no_rendido");
+  assert.equal(estadoExtra(pubAt + 100 * 3600, pubAt), "no_rendido", "100 h después: no_rendido");
+});
+caso("V16", "estadoExtra: en_curso con inicioAt válido", () => {
+  assert.equal(estadoExtra(pubAt + 50 * 3600, pubAt, pubAt + 10 * 3600), "en_curso", "inicio dentro del plazo: en_curso");
+});
+caso("V17", "estadoExtra: valida inicioAt fuera de rango", () => {
+  assert.throws(() => estadoExtra(pubAt + 10 * 3600, pubAt, pubAt - 3600), RangeError, "inicio antes de publicadoAt");
+  assert.throws(() => estadoExtra(pubAt + 10 * 3600, pubAt, pubAt + 72 * 3600), RangeError, "inicio en cierraEn");
+});
+caso("V18", "estadoExtra: valida publicadoAt y ahora", () => {
+  assert.throws(() => estadoExtra(NaN, pubAt), RangeError, "ahora NaN");
+  assert.throws(() => estadoExtra(pubAt + 100, NaN), RangeError, "publicadoAt NaN");
 });
 
 console.log(salida.join("\n")); console.log(`ventanas: ok (${casos} casos)`);

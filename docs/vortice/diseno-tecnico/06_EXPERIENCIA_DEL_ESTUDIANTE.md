@@ -111,9 +111,11 @@ sequenceDiagram
   end
 ```
 
-### E2 y continuación (P21, requiere D2)
+### E2 y continuación (P21 v2, APROBADA 2026-11-19)
 
-```mermaid
+> **Actualizado (2026-11-19):** P21 v2 aprobada. El diagrama anterior (3 intentos + recuperación) se sustituye por 1 normal + 1 extra (72 h, obligatorio). Ver [P21_v2.md](../../p0e/P21_v2.md).
+
+~~```mermaid
 flowchart TD
   A[Envía intento] --> B{Resultado}
   B -->|Aprobado| C[Aprobado, módulo siguiente abierto]
@@ -126,6 +128,19 @@ flowchart TD
   H --> I[Contenidos pendientes con repaso]
   I --> J[Confirma continuar]
   J --> K[Módulo siguiente; E2 sigue Reprobado]
+```~~
+
+Diagrama vigente (P21 v2):
+
+```mermaid
+flowchart TD
+  A[Intento normal] --> B{Resultado normal}
+  B -->|Aprobado (≥70 %)| C[Aprobado, módulo siguiente abierto]
+  B -->|No aprobado| D[Extra disponible (72 h)]
+  D --> E{Intento extra}
+  E -->|Aprobado| C
+  E -->|No aprobado| F[Reprobada, avanza igual]
+  D -->|Vencen 72 h| F
 ```
 
 La pantalla de continuación dice, en este orden: resultado sin eufemismo, qué falta, enlaces de repaso, y qué significa continuar («Puedes seguir al próximo módulo. Tu resultado de esta evaluación no cambia»). Dos botones: **Repasar ahora** y **Continuar al módulo {n}**. Ninguna celebración.

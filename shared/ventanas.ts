@@ -25,6 +25,23 @@ export const HORAS_EXTENSION = 48;
 export const HORAS_REVISION_TRAS_EXTENSION = 1;
 const SEG_POR_HORA = 3600;
 
+// ——— Constantes P21 v2 enmendada (intento extra E2 y parámetros por perfil) ———
+
+/** Plazo máximo (en horas corridas) para rendir el intento extra de E2, contado desde la publicación del resultado del intento normal. El extra se puede iniciar inmediatamente después de la publicación; las 72 h son el tope final. Distinto de `HORAS_EXTENSION` (48 h), que es la extensión del intento normal. Solo aplica a E2. */
+export const HORAS_PLAZO_EXTRA = 72;
+
+/** Duración mínima de evaluación en minutos para perfil regular. */
+export const MIN_DURACION_EVALUACION_REGULAR = 60;
+
+/** Duración mínima de evaluación en minutos para perfil neurodivergente. */
+export const MIN_DURACION_EVALUACION_NEURODIVERGENTE = 120;
+
+/** Umbral de aprobación en porcentaje para perfil regular (se aprueba con este valor o más, sin redondeo hacia arriba). */
+export const UMBRAL_APROBACION_REGULAR = 70;
+
+/** Umbral de aprobación en porcentaje para perfil neurodivergente (se aprueba con este valor o más, sin redondeo hacia arriba). */
+export const UMBRAL_APROBACION_NEURODIVERGENTE = 50;
+
 export class HoraLocalInvalida extends Error {
   constructor(readonly tipo: "ambigua" | "inexistente", mensaje: string) { super(mensaje); }
 }
@@ -90,4 +107,93 @@ export function envioAceptable(v: Pick<VentanaOrdinaria, "finExtension">, ahora:
 /** ¿Venció la instancia (se alcanzó T+48 h)? Es el complemento exacto de `envioAceptable`. */
 export function extensionAgotada(v: Pick<VentanaOrdinaria, "finExtension">, ahora: number): boolean {
   return ahora >= v.finExtension;
+}
+
+// ——— Ventana del intento extra (P21 v2 enmendada, T14b) ———
+// Regla enmendada: el extra se puede rendir DESDE la publicación del resultado del intento normal.
+// Las 72 h son el PLAZO MÁXIMO (no una espera previa). No existe «ventana de 48 h» ni «espera previa».
+// Es obligatorio para avanzar. Si pasan las 72 h sin rendirlo: E2 queda reprobada y se abre el módulo siguiente.
+
+/** Resultado del cálculo del plazo del intento extra. */
+export interface VentanaExtra {
+  /** Instante UTC (seg) desde el cual se puede iniciar el intento extra: coincide con publicadoAt. */
+  habilitaDesde: number;
+  /** Instante UTC (seg) en que expira el plazo para iniciar el intento extra: publicadoAt + 72 h (exclusivo). */
+  cierraEn: number;
+}
+
+/**
+ * Calcula el plazo temporal del intento extra de E2.
+ *
+ * `publicadoAt` es el instante UTC (seg) en que se publicó el resultado del intento normal.
+ *
+ * El extra se habilita inmediatamente (habilitaDesde = publicadoAt) y el plazo máximo es de
+ * 72 h corridas (cierraEn = publicadoAt + 72 h). Son instantes absolutos en UTC: NO se usa
+ * la lógica de calendario/zona horaria que `ventanaOrdinaria` emplea para el cambio de horario.
+ * Un cambio de hora de verano (salto de reloj) no altera las 72 h, porque se suman segundos
+ * puros a un instante UTC. Esto garantiza que el estudiante tenga exactamente 72 h para rendir,
+ * sin importar si un DST cae en el intervalo.
+ */
+export function ventanaExtra(publicadoAt: number): VentanaExtra {
+  if (!Number.isFinite(publicadoAt)) {
+    throw new RangeError(`publicadoAt debe ser un número finito, recibido: ${publicadoAt}`);
+  }
+  const habilitaDesde = publicadoAt;
+  const cierraEn = publicadoAt + HORAS_PLAZO_EXTRA * SEG_POR_HORA;
+  return { habilitaDesde, cierraEn };
+}
+
+/** Estados posibles del intento extra respecto al plazo de 72 h. */
+export type EstadoExtra = "disponible" | "en_curso" | "no_rendido";
+
+/**
+ * Determina el estado actual del intento extra.
+ *
+ * - `'disponible'`: el plazo está abierto (`habilitaDesde ≤ ahora < cierraEn`) y no se ha iniciado.
+ * - `'en_curso'`: se pulsó «Inicio» dentro del plazo (`inicioAt` en [publicadoAt, cierraEn)).
+ *   Un intento iniciado antes de `cierraEn` sigue en curso aunque `cierraEn` haya pasado
+ *   (su duración de 60/120 min se gestiona por separado).
+ * - `'no_rendido'`: pasó `cierraEn` sin que se iniciara el intento.
+ *
+ * No existe el estado `'en_espera'`: el extra se habilita inmediatamente al publicar el resultado.
+ *
+ * `inicioAt` es opcional: si existe, debe ser ≥ `publicadoAt` y < `cierraEn`; de lo contrario se lanza error.
+ */
+export function estadoExtra(ahora: number, publicadoAt: number, inicioAt?: number): EstadoExtra {
+  if (!Number.isFinite(publicadoAt)) {
+    throw new RangeError(`publicadoAt debe ser un número finito, recibido: ${publicadoAt}`);
+  }
+  if (!Number.isFinite(ahora)) {
+    throw new RangeError(`ahora debe ser un número finito, recibido: ${ahora}`);
+  }
+  const { habilitaDesde, cierraEn } = ventanaExtra(publicadoAt);
+
+  // Si se proporcionó inicioAt, validar que sea finita y que esté dentro del plazo.
+  if (inicioAt !== undefined && inicioAt !== null) {
+    if (!Number.isFinite(inicioAt)) {
+      throw new RangeError(`inicioAt debe ser un número finito, recibido: ${inicioAt}`);
+    }
+    if (inicioAt < habilitaDesde) {
+      throw new RangeError(
+        `inicioAt (${new Date(inicioAt * 1000).toISOString()}) es anterior a publicadoAt (${new Date(publicadoAt * 1000).toISOString()}): no se puede iniciar antes de que se publique el resultado`
+      );
+    }
+    if (inicioAt >= cierraEn) {
+      throw new RangeError(
+        `inicioAt (${new Date(inicioAt * 1000).toISOString()}) es posterior o igual a cierraEn (${new Date(cierraEn * 1000).toISOString()}): no se puede iniciar el extra después de que expira el plazo`
+      );
+    }
+  }
+
+  // Si hay un inicioAt válido (dentro del plazo), el intento está en curso.
+  if (inicioAt !== undefined && inicioAt !== null) {
+    return "en_curso";
+  }
+
+  // Sin inicio: depende de dónde esté `ahora`.
+  if (ahora < cierraEn) {
+    return "disponible";
+  }
+  // ahora >= cierraEn y sin inicio → no rendido.
+  return "no_rendido";
 }

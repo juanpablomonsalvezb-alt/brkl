@@ -34,8 +34,10 @@ Si el sostenedor quiere empezar antes con estudiantes, M7 podría hacerse solo c
 | **M3** | Práctica y mapa en Preview | Práctica, feedback, mapa, panel | M2 | Ninguno nuevo | Motivación, claridad, móvil | CA1–CA3, CA8, CA10; accesibilidad | Tres lentes separados; dato real | O6, diseño |
 | **M4** | Retención | Agenda, comprobaciones | M3 | Ninguno nuevo | Carga | Intervalos con reloj simulado | Sin castigo por ausencia; agenda correcta | O8 |
 | **P0** | Núcleo evaluativo | Instancias, intentos, ventanas, cierres, lotes, versiones | E0 | Migración P0-E | Concurrencia, histórico | T1–T5 reales; invariantes 1–14 | Según maestra | P7, P8, P16, P17, P20-v; migración |
+| **Nota P21 v2** | | **Actualizado (2026-11-19):** P21 v2 aprobada. P0 debe implementar 1 normal + 1 extra (72 h, obligatorio). P17 sin efecto para E2. P7 decidida. P8 decidida (sin formularios). P20-v decidida (no repetir preguntas). Ver [P21_v2.md](../../p0e/P21_v2.md). Requisito futuro: migración no autorizada. |
 | **M5** | E2 aporta evidencia | Respuestas por pregunta, embargo | M3, P0 | `evaluation_attempt_answers` | **Filtración** | **No interferencia**, CA4 | Salidas iguales mientras no se cumpla la condición completa de publicación ([03](03_MOTOR_DE_EVIDENCIAS.md) §8.3): cierre de la instancia y `review_at` (P19-E1). NI1–NI6 sobre superficies reales | N2, C6, C7, N4 |
 | **M6** | Resultados y P21 | Publicación, bandas, continuación | P0, M5 | `progression_continuations` | Normativo | CA4–CA7; límites 69,9/70/79,9/80 | E2 sigue «Reprobado» | **D1–D4, C14, C15**, Q1–Q3 |
+| **Nota P21 v2** | | **Actualizado (2026-11-19):** D1–D4 decididas. C14 decidida. C15 dispensada. Q1–Q3 resueltas. P21 v2 cambia la mecánica de M6: intento extra con mejor nota. Ver [P21_v2.md](../../p0e/P21_v2.md). Requisito futuro: migración no autorizada. |
 | **M7** | Piloto real | Medición, acompañamiento | M3, M4 (M5, M6 si aplica) | Ninguno | Privacidad, equidad, muestra pequeña | Protocolo con docentes | Métricas aprobadas; informe | Datos, O10, revisión legal, autenticación real, despliegue |
 | **M8** | Ampliar, solo si se autoriza | Copiloto ([07](07_COPILOTO_IA.md) §6); modelos | M7 con evidencia | Según diseño | Promesas sin evidencia | Validación fuera de muestra | Criterios fijados | N10, K3 |
 
@@ -70,6 +72,7 @@ Plan técnico de la Etapa 1: [11](11_PLAN_E0.md).
 - Revisión de textos públicos (C12).
 - Copiloto: decisión de acceso y protocolo (C19, C22).
 - Revisión legal (O10, C15 si aplica P21).
+- **Nota (2026-11-19):** C15 dispensada por el sostenedor. P21 v2 aprobada. Revisión legal solo para O10 (datos de menores).
 - Validación con responsables institucionales.
 
 ## Ficha de definición del piloto

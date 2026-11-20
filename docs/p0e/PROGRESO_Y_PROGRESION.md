@@ -47,30 +47,33 @@ Las decisiones comunicadas chocan con reglas ya **APROBADAS** en la especificaci
 - El servidor redondea hoy el puntaje a entero (`Math.round`). **Pregunta abierta Q3:** ¿69,5 % se redondea a 70 y aprueba?
 
 **Diferencias con el sistema actual.**
-- **Umbral del código.** Hoy el umbral de aprobación es `passing_score`, que vale 60 por defecto (`shared/schema.ts`). La regla comunicada fija 70. **Pregunta abierta Q1:** ¿70 % aplica a todas las evaluaciones o solo a E2?
-- **Etiquetas de prácticas.** P16 (propuesta) muestra «Logrado / No logrado» en las prácticas E1, E3 y E4. **Pregunta abierta Q2:** ¿los umbrales y las etiquetas «Aprobada / No aprobada» aplican también a las prácticas?
+- **Umbral del código.** Hoy el umbral de aprobación es `passing_score`, que vale 60 por defecto (`shared/schema.ts`). La regla comunicada fija 70. ~~**Pregunta abierta Q1:** ¿70 % aplica a todas las evaluaciones o solo a E2?~~ → **RESUELTA (2026-11-19):** 70 % aplica a todas las evaluaciones (E1–E4). DECIDIDA por el sostenedor (C16/Q1).
+- **Etiquetas de prácticas.** P16 (propuesta) muestra «Logrado / No logrado» en las prácticas E1, E3 y E4. ~~**Pregunta abierta Q2:** ¿los umbrales y las etiquetas «Aprobada / No aprobada» aplican también a las prácticas?~~ → **RESUELTA (2026-11-19):** Prácticas E1, E3 y E4 muestran «Logrado / No logrado»; solo E2 «Aprobada / No aprobada». DECIDIDA por el sostenedor (Q2).
+- **Redondeo Q3.** ~~¿69,5 % se redondea a 70 y aprueba?~~ → **RESUELTA (2026-11-19):** Sin redondeo hacia arriba: aprueba con 70,0 % o más; 69,5 % no aprueba. Requiere cambiar el `Math.round` del servidor (cambio futuro). DECIDIDA por el sostenedor (Q3).
 
 ---
 
-## 3. P21 actualizada — Progresión tras agotar E2 (COMUNICADA, sustituye la propuesta anterior)
+## 3. P21 — Progresión tras E2 (APROBADA v2, 2026-11-19)
 
-**Cambio.** Se reemplaza la propuesta anterior de P21 («bloqueo + revisión académica + avance excepcional autorizado»), que queda **SUSTITUIDA**. El cambio afecta también la regla aprobada de la línea 61 de la especificación maestra (ver C3).
+> **SUSTITUIDO el 2026-11-19 por P21 v2 (ver [P21_v2.md](P21_v2.md)).** El texto siguiente se conserva como historial de la versión anterior (COMUNICADA, 2026-10-26).
 
-**Flujo comunicado.**
-1. El estudiante rinde E2 dentro de sus intentos ordinarios (3, P1 aprobada).
-2. Si los agota sin aprobar (menos de 70 %), pasa a la **recuperación final única** (P12 aprobada), con **2 intentos** (P17: antes propuesta, ahora comunicada).
-3. Si aprueba la recuperación: avanza al módulo siguiente con E2 «Aprobado».
-4. Si agota también la recuperación sin alcanzar 70 %:
-   - el proceso evaluativo de E2 conserva el resultado **«Reprobado»**;
-   - **se le permite continuar** al módulo siguiente;
-   - **antes de avanzar**, se le informa que no alcanzó el mínimo y en qué objetivos o contenidos;
-   - se le muestran esos contenidos pendientes, con **enlaces directos** a sus recursos de repaso;
-   - avanzar **no cambia** el resultado de E2 ni equivale a aprobarlo;
-   - se **registran** el resultado, los objetivos pendientes y la decisión de continuar (fecha y confirmación del estudiante).
+~~**Cambio.** Se reemplaza la propuesta anterior de P21 («bloqueo + revisión académica + avance excepcional autorizado»), que queda **SUSTITUIDA**. El cambio afecta también la regla aprobada de la línea 61 de la especificación maestra (ver C3).~~
 
-**Implicancias.**
+~~**Flujo comunicado.**~~
+~~1. El estudiante rinde E2 dentro de sus intentos ordinarios (3, P1 aprobada).~~
+~~2. Si los agota sin aprobar (menos de 70 %), pasa a la **recuperación final única** (P12 aprobada), con **2 intentos** (P17: antes propuesta, ahora comunicada).~~
+~~3. Si aprueba la recuperación: avanza al módulo siguiente con E2 «Aprobado».~~
+~~4. Si agota también la recuperación sin alcanzar 70 %:~~
+~~   - el proceso evaluativo de E2 conserva el resultado **«Reprobado»**;~~
+~~   - **se le permite continuar** al módulo siguiente;~~
+~~   - **antes de avanzar**, se le informa que no alcanzó el mínimo y en qué objetivos o contenidos;~~
+~~   - se le muestran esos contenidos pendientes, con **enlaces directos** a sus recursos de repaso;~~
+~~   - avanzar **no cambia** el resultado de E2 ni equivale a aprobarlo;~~
+~~   - se **registran** el resultado, los objetivos pendientes y la decisión de continuar (fecha y confirmación del estudiante).~~
 
-| Aspecto | Implicancia |
+~~**Implicancias.**~~
+
+~~| Aspecto | Implicancia |
 |---|---|
 | Regla de avance (`checkModuleAccess`, hoy «E2 aprobada») | Pasaría a «E2 aprobada **o** proceso de E2 cerrado como Reprobado con continuación registrada». |
 | Requisitos | El módulo siguiente se abre sin aprobar E2. Es lo que la dirección comunicó; debe ratificarse como reemplazo de C3. |
@@ -78,7 +81,31 @@ Las decisiones comunicadas chocan con reglas ya **APROBADAS** en la especificaci
 | Espera por lotes | La recuperación ocurre en lotes con ventana común (P6, P20). **Pregunta Q5:** ¿el estudiante espera el lote sin acceso al módulo siguiente? |
 | Seguridad de la pauta | Mostrar los objetivos no logrados al cerrar el proceso es compatible con la pauta solo si ocurre **después de la condición de publicación (`review_at` y versión cerrada)** de la recuperación (ver C4). Si debe ser inmediato, ver Q6. |
 | Nota y promoción | El «Reprobado» de E2 se mantiene como evidencia; el sistema no reprueba el módulo ni el curso. La promoción se decide fuera del sistema. |
-| Tutoría y familia | **Pregunta Q7:** ¿se avisa al tutor o al apoderado cuando el estudiante continúa con objetivos pendientes? |
+| Tutoría y familia | **Pregunta Q7:** ¿se avisa al tutor o al apoderado cuando el estudiante continúa con objetivos pendientes? |~~
+
+---
+
+**Texto vigente (P21 v2, APROBADA 2026-11-19).** Ver documento completo: [P21_v2.md](P21_v2.md). Resumen:
+
+1. E2 está segmentada por subtemas. Se aprueba con **70 %**.
+2. **1 intento normal + 1 intento extra** (reemplaza los 3 ordinarios + recuperación de 2).
+3. El intento extra se habilita **desde la publicación del resultado**, con plazo máximo de **72 horas**. Es **obligatorio para avanzar**. Al menos **50 %** de sus preguntas provienen de los subtemas fallados.
+4. Si aprueba el extra, E2 queda aprobada. En el registro **queda la mejor nota**; se conservan ambos intentos.
+5. Si no aprueba, E2 queda **reprobada** y se sugiere repasar la unidad. **El estudiante avanza igual**. No hay más intentos.
+
+**Efectos sobre decisiones anteriores:**
+- **C3/D2:** resuelta en sentido «continuar con E2 reprobada» — DECIDIDA por el sostenedor (2026-11-19).
+- **C15:** DISPENSADA por el sostenedor (Barkley se rige por normativas propias).
+- **C17:** sin efecto para E2 (la ratificación de «2 intentos de recuperación» queda sin efecto para E2).
+- **P12:** la recuperación formal de E2 se reemplaza por el intento extra.
+- **P16-2:** E2 no pone nota 1–7, solo muestra porcentaje.
+- **C16/Q1:** 70 % aplica a todas las evaluaciones (E1–E4).
+- **Q2:** Prácticas E1, E3 y E4 muestran «Logrado / No logrado»; solo E2 «Aprobada / No aprobada».
+- **Q3:** Sin redondeo hacia arriba: 70,0 % o más aprueba; 69,5 % no aprueba.
+- **P8:** Todas las evaluaciones se rinden dentro de la plataforma.
+- **P20-v:** No se repiten preguntas del intento normal en el extra.
+
+**Nota:** la revisión independiente y la autorización de migración siguen pendientes.
 
 ---
 
@@ -184,34 +211,34 @@ Moderna, motivadora y persistente dentro de la lección: se ve como una ruta en 
 
 ## 6. Coherencia verificada
 
-| Regla | ¿Coherente con P21 actualizada y el umbral de 70 %? |
+| Regla | ¿Coherente con P21 v2 y el umbral de 70 %? |
 |---|---|
-| Intentos E2: 3 ordinarios (P1, aprobada) | Sí |
-| Recuperación única (P12, aprobada) | Sí |
-| 2 intentos de recuperación (P17, ahora comunicada) | Sí; la especificación maestra la tiene como propuesta y debe actualizarse al ratificarla |
+| ~~Intentos E2: 3 ordinarios (P1, aprobada)~~ | ~~Sí~~ → **SUSTITUIDO (2026-11-19):** E2 tiene 1 intento normal + 1 extra (P21 v2) |
+| ~~Recuperación única (P12, aprobada)~~ | ~~Sí~~ → **SUSTITUIDO (2026-11-19):** el intento extra reemplaza la recuperación formal para E2 |
+| ~~2 intentos de recuperación (P17, ahora comunicada)~~ | ~~Sí~~ → **SIN EFECTO para E2 (2026-11-19):** C17 ratificó 2 intentos de recuperación, pero P21 v2 los reemplaza |
 | Revisión de la pauta en `review_at` (P4/P19, aprobadas) | Sí, solo si los objetivos no logrados se muestran después de la condición de publicación (`review_at` y versión cerrada) (C4, D1) |
 | Resultado binario (§2, aprobada) | **No**: C1 y C2 |
-| E2 bloquea el avance si no se aprueba (§4, aprobada) | **No**: C3, sustitución comunicada |
+| ~~E2 bloquea el avance si no se aprueba (§4, aprobada)~~ | ~~**No**: C3, sustitución comunicada~~ → **RESUELTA (2026-11-19):** P21 v2 permite avanzar con E2 reprobada (C3/D2 decidida) |
 | Portafolio, familia y tutor sin puntaje (§2, aprobada) | Depende de C5 |
-| `passing_score` 60 en el código | **No**: Q1 |
+| ~~`passing_score` 60 en el código~~ | ~~**No**: Q1~~ → **RESUELTA (2026-11-19):** 70 % a todas las evaluaciones; `passing_score` queda por reemplazar (cambio futuro) |
 
 ---
 
 ## 7. Decisiones y preguntas para la dirección
 
-| ID | Decisión o pregunta |
-|---|---|
-| **D1** | ¿Se reemplaza la regla «solo Aprobado/No aprobado» por «estado durante la evaluación; porcentaje, banda y contenidos no logrados al cerrar el proceso y llegar `review_at`»? (C1, C2, C4) |
-| **D2** | ¿Se ratifica que la P21 actualizada **reemplaza** la regla aprobada «agotar E2 sin aprobar no desbloquea el módulo siguiente»? (C3) |
-| **D3** | ¿Se ratifican los umbrales 70/80 y que 70 % es el mínimo de aprobación? |
-| **D4** | ¿Apoderado y tutor ven porcentajes o solo estados? (C5) |
-| Q1 | ¿El 70 % aplica a E1–E4 o solo a E2? |
-| Q2 | ¿Las prácticas (E1, E3, E4) usan «Aprobada / No aprobada» o «Logrado / No logrado»? |
-| Q3 | Redondeo: ¿69,5 % aprueba? |
-| Q4 | Mínimo de preguntas por contenido para declarar un contenido «no logrado». |
-| Q5 | ¿El estudiante puede avanzar mientras espera su lote de recuperación? |
-| Q6 | Si los contenidos no logrados deben mostrarse antes de `review_at`, ¿se acepta el riesgo de deducción de la pauta? |
-| Q7 | ¿Se avisa al tutor o al apoderado cuando el estudiante continúa con contenidos pendientes? |
-| Q8 | ¿Quién etiqueta las preguntas por contenido y en qué plazo? (requisito para la sección 4) — **respondida en parte:** K4/K5 en [`DOMINIO_POR_CONOCIMIENTO.md`](DOMINIO_POR_CONOCIMIENTO.md); falta quién y plazo (O4) |
+| ID | Decisión o pregunta | Estado (2026-11-19) |
+|---|---|---|
+| **D1** | ¿Se reemplaza la regla «solo Aprobado/No aprobado» por «estado durante la evaluación; porcentaje, banda y contenidos no logrados al cerrar el proceso y llegar `review_at`»? (C1, C2, C4) | **DECIDIDA:** Se ve el estado; el % real solo al cumplirse la condición de publicación |
+| **D2** | ¿Se ratifica que la P21 actualizada **reemplaza** la regla aprobada «agotar E2 sin aprobar no desbloquea el módulo siguiente»? (C3) | **DECIDIDA:** P21 v2 aprobada, reemplaza la regla. Ver [P21_v2.md](P21_v2.md) |
+| **D3** | ¿Se ratifican los umbrales 70/80 y que 70 % es el mínimo de aprobación? | **DECIDIDA:** Bandas 70/80 ratificadas, con Q1–Q3 resueltas |
+| **D4** | ¿Apoderado y tutor ven porcentajes o solo estados? (C5) | **DECIDIDA:** Familia y tutor ven estado y contenidos, sin % |
+| ~~Q1~~ | ~~¿El 70 % aplica a E1–E4 o solo a E2?~~ | **RESUELTA:** 70 % a todas (C16/Q1) |
+| ~~Q2~~ | ~~¿Las prácticas (E1, E3, E4) usan «Aprobada / No aprobada» o «Logrado / No logrado»?~~ | **RESUELTA:** «Logrado / No logrado» en prácticas; «Aprobada / No aprobada» solo en E2 |
+| ~~Q3~~ | ~~Redondeo: ¿69,5 % aprueba?~~ | **RESUELTA:** Sin redondeo hacia arriba; 70,0 % o más aprueba |
+| Q4 | Mínimo de preguntas por contenido para declarar un contenido «no logrado». | ABIERTA |
+| Q5 | ¿El estudiante puede avanzar mientras espera su lote de recuperación? | ABIERTA |
+| Q6 | Si los contenidos no logrados deben mostrarse antes de `review_at`, ¿se acepta el riesgo de deducción de la pauta? | ABIERTA |
+| Q7 | ¿Se avisa al tutor o al apoderado cuando el estudiante continúa con contenidos pendientes? | ABIERTA |
+| Q8 | ¿Quién etiqueta las preguntas por contenido y en qué plazo? (requisito para la sección 4) — **respondida en parte:** K4/K5 en [`DOMINIO_POR_CONOCIMIENTO.md`](DOMINIO_POR_CONOCIMIENTO.md); falta quién y plazo (O4) | ABIERTA |
 
-Nada de esta lista se implementará sin aprobación expresa, revisión de ChatGPT y una autorización aparte para la migración.
+Nada de esta lista se implementará sin aprobación expresa, revisión independiente y una autorización aparte para la migración.

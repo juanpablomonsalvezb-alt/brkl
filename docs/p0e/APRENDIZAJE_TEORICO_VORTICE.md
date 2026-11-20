@@ -24,7 +24,7 @@ La mayoría de los colegios avanza por calendario: el curso sigue aunque un estu
 
 Esta idea tiene tres consecuencias de diseño:
 
-1. **Progresión condicionada.** Cada módulo termina con una evaluación de cierre; aprobarla abre el módulo siguiente. La regla P21 comunicada permitiría continuar tras agotar todos los intentos, por lo que esta consecuencia está pendiente de ratificación (D2).
+1. **Progresión condicionada.** Cada módulo termina con una evaluación de cierre; aprobarla abre el módulo siguiente. ~~La regla P21 comunicada permitiría continuar tras agotar todos los intentos, por lo que esta consecuencia está pendiente de ratificación (D2).~~ → **RESUELTA (2026-11-19):** P21 v2 aprobada: 1 intento normal + 1 extra (72 h, obligatorio); si no aprueba, avanza igual con E2 reprobada. Ver [P21_v2.md](P21_v2.md).
 2. **Oportunidades limitadas pero reales.** Hay intentos acotados, una recuperación única y repaso dirigido, no castigo.
 3. **Evidencia por sobre tiempo.** Importa qué demostró el estudiante, no cuántas horas estuvo conectado.
 
@@ -106,7 +106,7 @@ El tratamiento del historial (P7) **no** es una regla aprobada: es una propuesta
 | 70 % a menos de 80 % | Aprobada, con refuerzo | Refuerzo sobre los contenidos más débiles |
 | 80 % a 100 % | Aprobada | Sin aviso especial |
 
-**Regla P21 (comunicada, pendiente de ratificación).** Si el estudiante agota los intentos de la evaluación de cierre y la recuperación sin alcanzar el 70 %, esa evaluación queda «Reprobada», pero el estudiante **puede continuar** al módulo siguiente. Antes se le informa qué contenidos no logró y recibe enlaces a sus recursos de repaso. Continuar no cambia el resultado, y todo queda registrado.
+**Regla P21 (APROBADA v2, 2026-11-19).** ~~Si el estudiante agota los intentos de la evaluación de cierre y la recuperación sin alcanzar el 70 %, esa evaluación queda «Reprobada», pero el estudiante **puede continuar** al módulo siguiente. Antes se le informa qué contenidos no logró y recibe enlaces a sus recursos de repaso. Continuar no cambia el resultado, y todo queda registrado.~~ → **Sustituida por P21 v2:** 1 intento normal + 1 intento extra (72 h, obligatorio, ≥50 % subtemas fallados). Si no aprueba el extra, E2 queda reprobada y el estudiante avanza igual. Ver [P21_v2.md](P21_v2.md).
 
 **Aviso importante.** Esta regla reemplaza una regla ya aprobada («agotar la evaluación sin aprobar no desbloquea el siguiente módulo»). Por eso figura como una decisión que la dirección debe ratificar expresamente (D2).
 
@@ -118,7 +118,7 @@ El tratamiento del historial (P7) **no** es una regla aprobada: es una propuesta
 |---|---|
 | El resultado binario contra el porcentaje real y la banda 70–79 | Durante el proceso solo se muestra el estado. Porcentaje, banda y contenidos no logrados aparecen al cierre, al publicarse (`review_at` y versión cerrada). |
 | Retraso de la pauta contra feedback inmediato por contenido | K11 lo plantea así, pero sigue en conflicto con la regla aprobada y depende de P16 (C6). |
-| Módulo abierto por P21 contra contenido «bloqueado» en el mapa | Sin resolver (C9, N3). |
+| Módulo abierto por P21 contra contenido «bloqueado» en el mapa | **RESUELTA (2026-11-19):** P21 v2 permite avanzar con E2 reprobada; contenidos sin base se muestran con aviso (C9 decidida). Ver [P21_v2.md](P21_v2.md) |
 
 # 7. Clasificación de las cuatro evaluaciones de cada módulo (propuesta P16)
 
@@ -186,7 +186,7 @@ Estas salvaguardas provienen del informe y de las decisiones de la dirección:
 | Currículo (OA, módulos, asignaturas) | Existe |
 | Registro de eventos y repaso espaciado básico | Existe |
 | Reglas de intentos, plazos y cierres (P0-E) | Decidido; construcción pendiente |
-| Umbrales 70/80 y regla P21 | Comunicados; ratificación pendiente |
+| Umbrales 70/80 y regla P21 | **APROBADOS (2026-11-19):** P21 v2 y bandas 70/80 ratificados |
 | Modelo de conocimiento (contenidos, prerrequisitos, estados) | Decidido; construcción pendiente |
 | Banco de preguntas por contenido, revisado | No existe |
 | Diagnóstico adaptativo y mapa del estudiante | No existe |
@@ -195,7 +195,7 @@ Estas salvaguardas provienen del informe y de las decisiones de la dirección:
 
 # 13. Pendientes que condicionan el avance
 
-**Decisiones de la dirección:** ratificar D1 a D4 (porcentaje al estudiante, reemplazo de la regla de bloqueo por P21, umbrales 70/80 y qué ven familia y tutor), y las decisiones P7, P8 y P16.
+**Decisiones de la dirección:** ~~ratificar~~ **D1 a D4 decididas (2026-11-19):** D1 (estado durante evaluación, % al publicar), D2 (P21 v2 reemplaza regla de bloqueo), D3 (bandas 70/80 ratificadas), D4 (familia y tutor ven estado sin %). P7, P8 y P16 siguen pendientes.
 
 **Preguntas abiertas del modelo de conocimiento (O1 a O10 y N1 a N10, incluida la relación entre 70 % y K6):** cuándo un contenido pasa a «no dominado», si cuenta una respuesta con ayuda, quién valida los contenidos y en qué plazo, qué unidad concreta es el piloto, cómo se muestra la incertidumbre, qué ven familia y tutor, cada cuánto se reevalúa la retención, qué adaptaciones son compatibles con la validez, y qué datos se conservan y por cuánto tiempo.
 

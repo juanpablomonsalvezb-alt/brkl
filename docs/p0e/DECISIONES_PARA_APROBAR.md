@@ -133,18 +133,22 @@ Cómo leer cada punto:
 
 ## P21 — Avance tras agotar E2 y su recuperación
 
-**Estado: COMUNICADA por la dirección (2026-10-26), pendiente de ratificación.** Sustituye la propuesta anterior de este documento: bloquear el módulo siguiente hasta una autorización extraordinaria, que queda **SUSTITUIDA**.
+> **SUSTITUIDA el 2026-11-19 por P21 v2 (APROBADA).** Ver [`P21_v2.md`](P21_v2.md). La regla v2 cambia la mecánica: 1 intento normal + 1 intento extra (72 h, obligatorio, ≥50 % subtemas fallados), en vez de 3 ordinarios + recuperación de 2. El espíritu de «continuar con E2 reprobada» se mantiene. C15 dispensada por el sostenedor. C3/D2 resuelta. La revisión independiente y la autorización de migración siguen pendientes.
 
-**Resumen de la regla comunicada.**
-1. E2 tiene 3 intentos ordinarios y luego una recuperación final única de 2 intentos.
-2. Si el estudiante no alcanza el 70 % en ninguno, E2 queda «Reprobado».
-3. Aun así **puede continuar** al módulo siguiente, después de ser informado de los contenidos que no logró y de recibir enlaces a sus recursos de repaso.
-4. Continuar no cambia el resultado de E2.
-5. Se registran el resultado, los contenidos pendientes y la decisión de continuar.
+El texto siguiente se conserva como historial de la versión anterior (COMUNICADA, 2026-10-26).
 
-**Contradicción a ratificar.** La especificación maestra tiene **aprobada** la regla «agotar E2 sin aprobar no desbloquea automáticamente el módulo siguiente». La regla comunicada la reemplaza; requiere confirmación expresa (decisión **D2**).
+~~**Estado: COMUNICADA por la dirección (2026-10-26), pendiente de ratificación.** Sustituye la propuesta anterior de este documento: bloquear el módulo siguiente hasta una autorización extraordinaria, que queda **SUSTITUIDA**.~~
 
-Detalle completo, implicancias, identificación de contenidos no logrados y preguntas abiertas: [`PROGRESO_Y_PROGRESION.md`](PROGRESO_Y_PROGRESION.md). La especificación maestra exige revisar normativa antes de decidir: C15.
+~~**Resumen de la regla comunicada.**~~
+~~1. E2 tiene 3 intentos ordinarios y luego una recuperación final única de 2 intentos.~~
+~~2. Si el estudiante no alcanza el 70 % en ninguno, E2 queda «Reprobado».~~
+~~3. Aun así **puede continuar** al módulo siguiente, después de ser informado de los contenidos que no logró y de recibir enlaces a sus recursos de repaso.~~
+~~4. Continuar no cambia el resultado de E2.~~
+~~5. Se registran el resultado, los contenidos pendientes y la decisión de continuar.~~
+
+~~**Contradicción a ratificar.** La especificación maestra tiene **aprobada** la regla «agotar E2 sin aprobar no desbloquea automáticamente el módulo siguiente». La regla comunicada la reemplaza; requiere confirmación expresa (decisión **D2**).~~
+
+~~Detalle completo, implicancias, identificación de contenidos no logrados y preguntas abiertas: [`PROGRESO_Y_PROGRESION.md`](PROGRESO_Y_PROGRESION.md). La especificación maestra exige revisar normativa antes de decidir: C15.~~
 
 ---
 
@@ -155,6 +159,6 @@ Detalle completo, implicancias, identificación de contenidos no logrados y preg
 | P7 | Historial intacto; conteo nuevo; aprobación antigua respetada | Tres respuestas sí/no |
 | P8 | Plazo + validación humana; rechazo sin gastar intento; 5 días hábiles para validar | Efecto de aprobar y rechazar; plazo de validación; fin de los formularios |
 | P16 | E2 «Evaluación de cierre»; E1, E3 y E4 «Práctica»; función como dato | Funciones, nota de E2, nombres visibles |
-| P21 | COMUNICADA: continuar tras E2 «Reprobado», informado y con repaso; ver `PROGRESO_Y_PROGRESION.md` | D2 (reemplaza regla aprobada) y preguntas Q5–Q8 |
+| P21 | **APROBADA v2 (2026-11-19):** 1 normal + 1 extra, 72 h, obligatorio, ≥50 % subtemas fallados; ver [P21_v2.md](P21_v2.md) | C3/D2 resuelta; C15 dispensada; revisión independiente y migración pendientes |
 
-P7, P8 y P16 siguen en estado **PROPUESTA**; P21 está **COMUNICADA** y pendiente de ratificación. No se implementará nada sin tu aprobación expresa de cada decisión, la revisión independiente de ChatGPT y una autorización aparte para la migración.
+P7, P8 y P16 siguen en estado **PROPUESTA**; P21 está **APROBADA v2** (2026-11-19). No se implementará nada sin aprobación expresa de cada decisión, la revisión independiente y una autorización aparte para la migración.

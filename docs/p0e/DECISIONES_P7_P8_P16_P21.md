@@ -103,35 +103,37 @@ Cada punto separa lo que **requiere aprobación académica** (A) de lo que es **
 
 ## P21 — Progresión al agotar E2 sin aprobar
 
-> **SUSTITUIDA (2026-10-26).** La dirección comunicó otra regla: continuar al módulo siguiente con E2 «Reprobado», informado de los contenidos pendientes y con repaso. Ver [`PROGRESO_Y_PROGRESION.md`](PROGRESO_Y_PROGRESION.md). El texto siguiente se conserva como historial de la propuesta anterior.
+> **SUSTITUIDA el 2026-11-19 por P21 v2 (APROBADA).** Ver [`P21_v2.md`](P21_v2.md) y [`PROGRESO_Y_PROGRESION.md`](PROGRESO_Y_PROGRESION.md) §3. La versión v2 cambia la mecánica: 1 intento normal + 1 intento extra (72 h, obligatorio, ≥50 % subtemas fallados), en vez de 3 ordinarios + recuperación de 2. El espíritu de «continuar con E2 reprobada» se mantiene. La revisión independiente y la autorización de migración siguen pendientes.
 
-**Problema.** Si un estudiante agota los intentos de E2 (y su recuperación única) sin aprobar, hoy el módulo siguiente queda bloqueado sin salida. El criterio de partida exige que esto no repruebe automáticamente el módulo y que tampoco permita saltarse requisitos.
+El texto siguiente se conserva como historial de la propuesta anterior (antes de P21 v2).
 
-**Alternativas.**
-1. Desbloqueo automático con acompañamiento (contradice «no saltarse requisitos»).
-2. Bloqueo permanente (reprobación de hecho).
-3. Bloqueo con salida por decisión humana auditada, sin efecto automático en la nota del módulo.
+~~**Problema.** Si un estudiante agota los intentos de E2 (y su recuperación única) sin aprobar, hoy el módulo siguiente queda bloqueado sin salida. El criterio de partida exige que esto no repruebe automáticamente el módulo y que tampoco permita saltarse requisitos.~~
 
-**Recomendación: alternativa 3.**
-1. Agotar E2 en la fase ordinaria abre un caso de tutoría y la recuperación única (P6, P12, aprobado).
-2. Si la recuperación se aprueba, se habilita el módulo siguiente (aprobado).
-3. Si la recuperación se agota o vence sin aprobar, el proceso de E2 queda «Reprobado» (aprobado), pero:
-   - el módulo siguiente **sigue bloqueado** (no se saltan requisitos) (A);
-   - el sistema **no** marca el módulo ni el curso como reprobados (criterio de partida) (T);
-   - se abre automáticamente una solicitud de **revisión académica** del caso (T);
-   - solo la dirección o coordinación (persona distinta de quien solicita) puede autorizar un **avance con acompañamiento**, con plan de repaso por contenidos y motivo registrado (A);
-   - la promoción del año se decide fuera del sistema, de forma deliberativa, con el registro como evidencia (A, normativa por confirmar).
+~~**Alternativas.**~~
+~~1. Desbloqueo automático con acompañamiento (contradice «no saltarse requisitos»).~~
+~~2. Bloqueo permanente (reprobación de hecho).~~
+~~3. Bloqueo con salida por decisión humana auditada, sin efecto automático en la nota del módulo.~~
 
-**Consecuencias.** Nadie queda reprobado del módulo por una regla automática, y nadie avanza sin una decisión humana registrada. Requiere capacidad de coordinación para resolver las revisiones a tiempo.
+~~**Recomendación: alternativa 3.**~~
+~~1. Agotar E2 en la fase ordinaria abre un caso de tutoría y la recuperación única (P6, P12, aprobado).~~
+~~2. Si la recuperación se aprueba, se habilita el módulo siguiente (aprobado).~~
+~~3. Si la recuperación se agota o vence sin aprobar, el proceso de E2 queda «Reprobado» (aprobado), pero:~~
+~~   - el módulo siguiente **sigue bloqueado** (no se saltan requisitos) (A);~~
+~~   - el sistema **no** marca el módulo ni el curso como reprobados (criterio de partida) (T);~~
+~~   - se abre automáticamente una solicitud de **revisión académica** del caso (T);~~
+~~   - solo la dirección o coordinación (persona distinta de quien solicita) puede autorizar un **avance con acompañamiento**, con plan de repaso por contenidos y motivo registrado (A);~~
+~~   - la promoción del año se decide fuera del sistema, de forma deliberativa, con el registro como evidencia (A, normativa por confirmar).~~
 
-**Tablas y reglas afectadas.**
-- `evaluation_recoveries`: estado final de la recuperación (T).
-- Nueva tabla `module_progression_overrides` (estudiante, módulo, autorizado por, motivo, plan de acompañamiento, fecha) (T).
-- `checkModuleAccess`: habilita el módulo N+1 si E2 está aprobada (ordinaria o recuperación) **o** existe una autorización de avance (T, sujeto a A).
-- `tutoring_cases`: caso abierto automáticamente al agotar E2 (T).
+~~**Consecuencias.** Nadie queda reprobado del módulo por una regla automática, y nadie avanza sin una decisión humana registrada. Requiere capacidad de coordinación para resolver las revisiones a tiempo.~~
 
-**Requiere aprobación académica:** si existe la vía de avance con acompañamiento; quién puede autorizarla; contenido mínimo del plan; relación con la normativa aplicable (régimen legal de Barkley por confirmar).
-**Técnico:** tabla de autorizaciones auditadas, condición adicional en `checkModuleAccess`, apertura automática del caso.
+~~**Tablas y reglas afectadas.**~~
+~~- `evaluation_recoveries`: estado final de la recuperación (T).~~
+~~- Nueva tabla `module_progression_overrides` (estudiante, módulo, autorizado por, motivo, plan de acompañamiento, fecha) (T).~~
+~~- `checkModuleAccess`: habilita el módulo N+1 si E2 está aprobada (ordinaria o recuperación) **o** existe una autorización de avance (T, sujeto a A).~~
+~~- `tutoring_cases`: caso abierto automáticamente al agotar E2 (T).~~
+
+~~**Requiere aprobación académica:** si existe la vía de avance con acompañamiento; quién puede autorizarla; contenido mínimo del plan; relación con la normativa aplicable (régimen legal de Barkley por confirmar).~~
+~~**Técnico:** tabla de autorizaciones auditadas, condición adicional en `checkModuleAccess`, apertura automática del caso.~~
 
 ---
 

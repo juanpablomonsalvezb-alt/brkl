@@ -11,7 +11,7 @@
 |---|---|---|
 | C1 | Porcentaje real frente a «solo Aprobado/No aprobado» | D1 |
 | C2 | Banda 70–79 frente al mismo principio | D1 |
-| C3 | P21 continuar frente a «agotar E2 no desbloquea» | D2 |
+| C3 | P21 continuar frente a «agotar E2 no desbloquea» | D2 | **RESUELTA (2026-11-19):** P21 v2 aprobada, reemplaza la regla. Ver [P21_v2.md](P21_v2.md) |
 | C4 | Repaso por objetivos frente a `review_at` | D1 |
 | C5 | Porcentajes frente a «familia y tutoría ven estado» | D4 |
 
@@ -27,11 +27,11 @@
 | **C11** | Maestra §7: el repaso no repite preguntas de evaluación | Código: `server/repaso.ts` usa `questions_json` (dependencia declarada como provisional) | Código vigente distinto de la regla. Ya reconocido en el archivo | Banco separado, ya propuesto | Implementación futura |
 | **C12** | K3, D2, D4 y maestra §2 | Textos publicados en producción (ver lista abajo) | Lo público promete cosas no vigentes o contrarias a lo decidido | Revisar textos con autorización aparte | Dirección |
 | **C13** | Orden de trabajo y `APRENDIZAJE` (versión anterior): el tutor IA no existe | Código: existe copiloto conversacional | **Error mío en informes anteriores:** dije que el robot era solo visual. El robot es visual, pero «Tutor virtual» enlaza a un copiloto. No se verificó en uso real | Decir «copiloto no adaptativo, sin verificar» | Dirección: confirmar nombre y uso |
-| **C14** | P21: mostrar contenidos no logrados **antes** de continuar | Maestra: revisión de la recuperación solo en su `review_at` y con versión cerrada | Entre el agotamiento y `review_at`, o se espera para continuar, o se muestran antes (Q5, Q6) | Continuar solo al cumplirse la condición de publicación de la recuperación | D1, D2 |
-| **C15** | Maestra §10: no decidir P21 sin revisar normativa y aprobación académica | P21 comunicada | Falta el material normativo (reconocimiento oficial, Decreto 67/2018, Decreto Exento 2272/2007, reglamento interno). No se verificó si aplican a Barkley | Revisar antes de ratificar D2 | Dirección y asesoría |
+| **C14** | P21: mostrar contenidos no logrados **antes** de continuar | Maestra: revisión de la recuperación solo en su `review_at` y con versión cerrada | Entre el agotamiento y `review_at`, o se espera para continuar, o se muestran antes (Q5, Q6) | Continuar solo al cumplirse la condición de publicación de la recuperación | D1, D2 | **DECIDIDA (2026-11-19):** ver P21 v2, el extra es obligatorio para avanzar; si vence el plazo, avanza igual |
+| **C15** | Maestra §10: no decidir P21 sin revisar normativa y aprobación académica | P21 comunicada | Falta el material normativo (reconocimiento oficial, Decreto 67/2018, Decreto Exento 2272/2007, reglamento interno). No se verificó si aplican a Barkley | Revisar antes de ratificar D2 | Dirección y asesoría | **DISPENSADA (2026-11-19):** el sostenedor declaró «Barkley se rige por normativas propias; hay libertad para crear el sistema». No se encarga informe legal. Riesgo anotado. |
 | **C16** | D3: 70 % | Código: `passing_score` 60 por defecto y en generador | Código vigente distinto. La nota vigente solo cambiaría al implementar | Q1 | D3 |
-| **C17** | Maestra §4: redacta 2 intentos de recuperación como regla | Maestra §9: P17 como propuesta. Orden actual: comunicada | Incoherencia interna de la maestra | Registrar ratificación en la maestra, sin editarla ahora | Dirección |
-| **C18** | Maestra §9, P7: histórico aprobado se trata como cierre por aprobación | `DECISIONES_*`: la aprobación antigua habilita la progresión; pauta solo con ventana nueva | Matiz distinto; P7 sigue pendiente | Aclarar al decidir P7 | Dirección |
+| **C17** | Maestra §4: redacta 2 intentos de recuperación como regla | Maestra §9: P17 como propuesta. Orden actual: comunicada | Incoherencia interna de la maestra | Registrar ratificación en la maestra, sin editarla ahora | Dirección | **DECIDIDA (2026-11-19):** ratificar 2 intentos de recuperación, pero **sin efecto para E2** (P21 v2 reemplaza la recuperación por el intento extra) |
+| **C18** | Maestra §9, P7: histórico aprobado se trata como cierre por aprobación | `DECISIONES_*`: la aprobación antigua habilita la progresión; pauta solo con ventana nueva | Matiz distinto; P7 sigue pendiente | Aclarar al decidir P7 | Dirección | **DECIDIDA (2026-11-19):** unificar textos de P7 |
 
 ### Textos publicados afectados por C12
 

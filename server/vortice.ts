@@ -9,6 +9,7 @@ import {
   reflectionPromptsSchema, reflectionAnswersSchema, updatePedagogicalStepSchema,
 } from "@shared/schema";
 import { buildOverview, canViewReflection, type OverviewSubjectInput, type VorticeOverview } from "@shared/vortice";
+import { moduloSiguienteAbierto, type EstadoE2 } from "@shared/progresion";
 import { isEvaluationAvailable, isModuleAvailable, type CalendarConfig } from "./calendarUtils";
 import { resolveCalendarConfig } from "./calendarConfig";
 
@@ -157,7 +158,10 @@ export async function checkModuleAccess(
           inArray(evaluationProgress.evaluationId, closing.map((c) => c.id)),
         ))
       : [];
-    previousCompleted = passed.length > 0;
+    // TODO(migración P21 v2): cuando exista persistencia de los estados de E2,
+    // mapear el estado real en vez de usar el mapeo legado (aprobada / sin_rendir).
+    const estadoE2Legado: EstadoE2 = passed.length > 0 ? 'aprobada' : 'sin_rendir';
+    previousCompleted = moduloSiguienteAbierto(estadoE2Legado);
   }
   if (!isModuleAvailable(weekNumber, now, previousCompleted, config)) {
     return { ok: false, status: 403, reason: "El módulo aún no está disponible" };

@@ -18,8 +18,8 @@ const iniciar = (i: InstanciaP0E, id: string, t = 0) => ok(iniciarIntento(i, id,
 const enviar = (i: InstanciaP0E, id: string, envio: string, aprobado: boolean, t = 0) => ok(enviarIntento(i, { intentoId: id, envioId: envio, aprobado }, t)).instancia;
 const sano = (i: InstanciaP0E) => assert.deepEqual(violaciones(i), [], JSON.stringify(i));
 
-caso("M1", "intentos ordinarios de la maestra §3: E1, E3 y E4 = 2; E2 = 3", () => {
-  assert.deepEqual({ ...INTENTOS_ORDINARIOS }, { E1: 2, E2: 3, E3: 2, E4: 2 });
+caso("M1", "intentos ordinarios de la maestra §3 (P21 v2): E1, E3 y E4 = 2; E2 = 1 (normal) + 1 extra", () => {
+  assert.deepEqual({ ...INTENTOS_ORDINARIOS }, { E1: 2, E2: 1, E3: 2, E4: 2 });
 });
 caso("M2", "aprobar cierra la instancia de inmediato y el proceso queda aprobado", () => {
   let i = iniciar(nueva(), "a1");
@@ -40,8 +40,13 @@ caso("M4", "no aprobar con intentos restantes deja la instancia disponible; agot
   assert.deepEqual([i.estado, consumidos(i), i.causaCierre], ["disponible", 1, null]); sano(i);
   const r = ok(enviarIntento(iniciar(i, "a2"), { intentoId: "a2", envioId: "e2", aprobado: false }, 20));
   assert.deepEqual([r.instancia.estado, r.instancia.causaCierre, r.efectoProceso], ["cerrada_agotada", "agotamiento", "sin_definir"]); sano(r.instancia);
-  const e2 = (() => { let x = nueva(3); for (const k of ["1", "2", "3"]) x = enviar(iniciar(x, `a${k}`), `a${k}`, `e${k}`, false); return x; })();
-  assert.deepEqual([e2.estado, consumidos(e2)], ["cerrada_agotada", 3], "E2: tres intentos");
+  // P21 v2: E2 tiene 1 intento normal (maxIntentos=1, esE2=true). Al fallar → extra_disponible.
+  const e2Normal = enviar(iniciar(nuevaInstancia({ maxIntentos: 1, finExtension: FIN, esE2: true }), "a1"), "a1", "e1", false);
+  assert.deepEqual([e2Normal.estado, consumidos(e2Normal), e2Normal.extraDisponible], ["disponible", 1, true], "E2: 1 normal fallido → extra_disponible");
+  // El extra fallido → reprobada_continua.
+  const e2ExtraStarted = ok(iniciarIntento(e2Normal, "a2", 20, "extra"));
+  const e2Extra = enviar(e2ExtraStarted.instancia, "a2", "e2", false);
+  assert.deepEqual([e2Extra.estado, consumidos(e2Extra), e2Extra.extraAgotado], ["cerrada_agotada", 2, true], "E2: extra fallido → reprobada_continua");
 });
 caso("M5", "P15: al alcanzar T+48 h la instancia vence aunque queden intentos; el activo expira sin consumir", () => {
   const i = iniciar(enviar(iniciar(nueva(3), "a1"), "a1", "e1", false), "a2");
@@ -168,6 +173,83 @@ caso("X1", "exhaustivo: todas las secuencias respetan los invariantes y los esta
   assert.deepEqual(efectosRepetidos, new Set(["aprobado", "sin_definir", null]), "X1 debe cubrir los tres resultados posibles de efectoProceso");
   assert.ok(estados > 100 && transiciones > 50_000, `cobertura: ${estados} estados, ${transiciones} transiciones`);
   salida.push(`        (${estados} estados distintos, ${transiciones} transiciones comprobadas)`);
+});
+
+// ——— Casos mínimos P21 v2: E2 con intento extra ———
+
+caso("E2-1", "E2 normal reprobado → extra_disponible", () => {
+  const i = nuevaInstancia({ maxIntentos: 1, finExtension: FIN, esE2: true });
+  const r1 = ok(iniciarIntento(i, "a1", 0));
+  const r2 = ok(enviarIntento(r1.instancia, { intentoId: "a1", envioId: "e1", aprobado: false }, 10));
+  assert.equal(r2.efectoProceso, "extra_disponible");
+  assert.equal(r2.instancia.estado, "disponible");
+  assert.equal(r2.instancia.extraDisponible, true);
+  sano(r2.instancia);
+});
+
+caso("E2-2", "E2 extra reprobado → reprobada_continua", () => {
+  let i = nuevaInstancia({ maxIntentos: 1, finExtension: FIN, esE2: true });
+  const r1 = ok(iniciarIntento(i, "a1", 0));
+  const r2 = ok(enviarIntento(r1.instancia, { intentoId: "a1", envioId: "e1", aprobado: false }, 10));
+  i = r2.instancia;
+  const r3 = ok(iniciarIntento(i, "a2", 20, "extra"));
+  const r4 = ok(enviarIntento(r3.instancia, { intentoId: "a2", envioId: "e2", aprobado: false }, 30));
+  assert.equal(r4.efectoProceso, "reprobada_continua");
+  assert.equal(r4.instancia.estado, "cerrada_agotada");
+  assert.equal(r4.instancia.extraAgotado, true);
+  sano(r4.instancia);
+});
+
+caso("E2-3", "E2 extra aprobado → aprobado", () => {
+  let i = nuevaInstancia({ maxIntentos: 1, finExtension: FIN, esE2: true });
+  const r1 = ok(iniciarIntento(i, "a1", 0));
+  const r2 = ok(enviarIntento(r1.instancia, { intentoId: "a1", envioId: "e1", aprobado: false }, 10));
+  i = r2.instancia;
+  const r3 = ok(iniciarIntento(i, "a2", 20, "extra"));
+  const r4 = ok(enviarIntento(r3.instancia, { intentoId: "a2", envioId: "e2", aprobado: true }, 30));
+  assert.equal(r4.efectoProceso, "aprobado");
+  assert.equal(r4.instancia.estado, "cerrada_aprobada");
+  sano(r4.instancia);
+});
+
+caso("E2-4", "E2 tercer intento rechazado tras agotar normal y extra", () => {
+  let i = nuevaInstancia({ maxIntentos: 1, finExtension: FIN, esE2: true });
+  const r1 = ok(iniciarIntento(i, "a1", 0));
+  const r2 = ok(enviarIntento(r1.instancia, { intentoId: "a1", envioId: "e1", aprobado: false }, 10));
+  i = r2.instancia;
+  const r3 = ok(iniciarIntento(i, "a2", 20, "extra"));
+  const r4 = ok(enviarIntento(r3.instancia, { intentoId: "a2", envioId: "e2", aprobado: false }, 30));
+  i = r4.instancia;
+  const r5 = iniciarIntento(i, "a3", 40);
+  assert.equal(r5.ok, false);
+  assert.equal((r5 as { motivo: string }).motivo, "instancia_cerrada");
+  const r6 = iniciarIntento(i, "a3", 40, "extra");
+  assert.equal(r6.ok, false);
+  assert.equal((r6 as { motivo: string }).motivo, "instancia_cerrada");
+});
+
+caso("E2-5", "E1/E3/E4 sin efecto extra (maxIntentos=2, esE2=false)", () => {
+  const i = nuevaInstancia({ maxIntentos: 2, finExtension: FIN });
+  const r1 = ok(iniciarIntento(i, "a1", 0));
+  const r2 = ok(enviarIntento(r1.instancia, { intentoId: "a1", envioId: "e1", aprobado: false }, 10));
+  assert.equal(r2.efectoProceso, null, "primer fallo E1/E3/E4 → null (no extra_disponible)");
+  assert.equal(r2.instancia.extraDisponible, false);
+  sano(r2.instancia);
+});
+
+caso("E2-6", "E2 extra rechazado si extraDisponible = false", () => {
+  const i = nuevaInstancia({ maxIntentos: 1, finExtension: FIN, esE2: true });
+  // Sin fallar el normal, extraDisponible es false → extra rechazado.
+  const r = iniciarIntento(i, "a1", 0, "extra");
+  assert.equal(r.ok, false);
+  assert.equal((r as { motivo: string }).motivo, "extra_no_disponible");
+});
+
+caso("E2-7", "extra rechazado si esE2 = false", () => {
+  const i = nuevaInstancia({ maxIntentos: 2, finExtension: FIN, esE2: false });
+  const r = iniciarIntento(i, "a1", 0, "extra");
+  assert.equal(r.ok, false);
+  assert.equal((r as { motivo: string }).motivo, "extra_no_disponible");
 });
 
 caso("B1", "lo pendiente NO está implementado: sin estados ni transiciones inventados", () => {

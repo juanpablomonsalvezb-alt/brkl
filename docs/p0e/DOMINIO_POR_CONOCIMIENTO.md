@@ -80,11 +80,13 @@ Tres categorías comunicadas: **dominado**, **por aprender** (listo: sus prerreq
 | Evaluación | Durante el proceso | Después |
 |---|---|---|
 | Prácticas (función sujeta a P16) | Feedback inmediato por contenido (K11, sujeto a C6) | Según regla de revisión |
-| E2 y recuperación | Solo estado. Sin puntaje, banda ni información que permita reconstruir la pauta. El mapa no debe delatar el resultado por contenido (C7) | Al cumplirse la condición de publicación: porcentaje real, banda y contenidos no logrados, **sujeto a D1–D4** |
+| E2 y recuperación | Solo estado. Sin puntaje, banda ni información que permita reconstruir la pauta. El mapa no debe delatar el resultado por contenido (C7) | Al cumplirse la condición de publicación: porcentaje real, banda y contenidos no logrados, **sujeto a D1–D4** (D1–D4 decididas 2026-11-19) |
 
 ### P21
 
-Abrir el módulo siguiente con E2 «Reprobado» (COMUNICADA, requiere D2) no marca contenidos como dominados y no cambia el resultado. Qué muestra el mapa para contenidos del módulo abierto con base sin dominar: C9, N3.
+~~Abrir el módulo siguiente con E2 «Reprobado» (COMUNICADA, requiere D2) no marca contenidos como dominados y no cambia el resultado. Qué muestra el mapa para contenidos del módulo abierto con base sin dominar: C9, N3.~~
+
+**Actualizado (2026-11-19):** P21 v2 aprobada. Con E2 reprobada el estudiante avanza igual; no marca contenidos como dominados y no cambia el resultado. Contenidos sin base se muestran con aviso (C9 decidida). Ver [P21_v2.md](P21_v2.md).
 
 ## 6. Piloto (K9, K10)
 
