@@ -1,0 +1,79 @@
+{
+  "titulo": "Trazabilidad del piloto: Matemática 5.º Básico, Unidad 3",
+  "piloto": "Matemática 5.º Básico, Unidad 3 del programa (fracciones, decimales, patrones/ecuaciones)",
+  "fuente_programa": "Programa de Estudio MINEDUC Matemática 5.º Básico (curriculumnacional.cl, articles-18980_programa.pdf, págs. 113–138)",
+  "texto_escolar": "Sumo Primero 5.º básico, Guía Digital del Docente 2026 (Tomo 1 = MATME26G5B.md, Tomo 2 = MATME26G5B_1.md)",
+  "temario_examenes_libres": "temario-5-basico.md (Decreto Bases Curriculares N.º 439 de 2012, versión 2026)",
+  "subtemas": [
+    {
+      "id": "mat5-u3-oa7",
+      "oa": 7,
+      "prioridad": "temario_examen_libre",
+      "origen_prioridad": "temario-5-basico.md, línea 177",
+      "texto_oa": "Demostrar que comprenden las fracciones propias: representándolas de manera concreta, pictórica y simbólica; creando grupos de fracciones equivalentes —simplificando y amplificando— de manera concreta, pictórica y simbólica, de forma manual y/o software educativo; comparando fracciones propias con igual y distinto denominador de manera concreta, pictórica y simbólica.",
+      "origen_texto_oa": "temario-5-basico.md, línea 177",
+      "ubicacion_texto_escolar": "Capítulo 8 «Fracciones» (Unidad 2 del texto), Tomo 1 (MATME26G5B.md, línea 519); planes de clases Cap. 8 (MATME26G5B.md, línea 5121)",
+      "clases_asociadas": "Clases 8–13 del plan de Unidad 2 (MATME26G5B.md, líneas 8872–8874)"
+    },
+    {
+      "id": "mat5-u3-oa8",
+      "oa": 8,
+      "prioridad": "solo_nivel",
+      "origen_prioridad": "temario-5-basico.md: OA 8 NO aparece en la lista de OA evaluados (líneas 177–180)",
+      "texto_oa": "NO_ENCONTRADO en temario-5-basico.md. Texto en UNIDAD3_FICHA.md (línea 15) y MATME26G5B.md (línea 6522).",
+      "origen_texto_oa": "MATME26G5B.md, línea 6522 (texto escolar, no temario)",
+      "ubicacion_texto_escolar": "Capítulo 8 «Fracciones» (Unidad 2 del texto), marcado como «complementario» (MATME26G5B.md, línea 519); clases 11–12 (MATME26G5B.md, líneas 8875–8876)",
+      "clases_asociadas": "Clases 11–12 del plan"
+    },
+    {
+      "id": "mat5-u3-oa10",
+      "oa": 10,
+      "prioridad": "temario_examen_libre",
+      "origen_prioridad": "temario-5-basico.md, línea 178",
+      "texto_oa": "Determinar el decimal que corresponde a fracciones con denominador 2, 4, 5 y 10.",
+      "origen_texto_oa": "temario-5-basico.md, línea 178",
+      "ubicacion_texto_escolar": "Capítulo 6 «Números decimales» (Unidad 2 del texto), Tomo 1 (MATME26G5B.md, línea 517); clases 1–4 (MATME26G5B.md, líneas 8865–8866)",
+      "clases_asociadas": "Clases 1–4 del plan de Unidad 2"
+    },
+    {
+      "id": "mat5-u3-oa11",
+      "oa": 11,
+      "prioridad": "temario_examen_libre",
+      "origen_prioridad": "temario-5-basico.md, línea 179",
+      "texto_oa": "Comparar y ordenar decimales hasta la milésima.",
+      "origen_texto_oa": "temario-5-basico.md, línea 179",
+      "ubicacion_texto_escolar": "Capítulo 6 «Números decimales» (Unidad 2 del texto), Tomo 1 (MATME26G5B.md, línea 517); clases 3–4 (MATME26G5B.md, líneas 8867–8868)",
+      "clases_asociadas": "Clases 3–4 del plan de Unidad 2"
+    },
+    {
+      "id": "mat5-u3-oa13",
+      "oa": 13,
+      "prioridad": "temario_examen_libre",
+      "origen_prioridad": "temario-5-basico.md, línea 180",
+      "texto_oa": "Resolver problemas rutinarios y no rutinarios, aplicando adiciones y sustracciones de fracciones propias o decimales hasta la milésima.",
+      "origen_texto_oa": "temario-5-basico.md, línea 180",
+      "ubicacion_texto_escolar": "Cap. 6 (MATME26G5B.md, línea 517), Cap. 8 (MATME26G5B.md, línea 519), Cap. 16 (MATME26G5B.md, línea 533)",
+      "clases_asociadas": "Clase 13 del plan (MATME26G5B.md, línea 8877)"
+    }
+  ],
+  "capitulos_excluidos": [
+    {
+      "capitulo": 7,
+      "tema": "Patrones",
+      "oa": 14,
+      "motivo": "OA 14 no es parte de la Unidad 3 del programa. Decisión del sostenedor: patrones y ecuaciones quedan fuera del piloto."
+    },
+    {
+      "capitulo": 15,
+      "tema": "Ecuaciones",
+      "oa": 15,
+      "motivo": "OA 15 no es parte de la Unidad 3 del programa. Decisión del sostenedor: patrones y ecuaciones quedan fuera del piloto."
+    }
+  ],
+  "discrepancias": [
+    "OA 13 en múltiples capítulos: el texto escolar asigna OA 13 como basal en Cap. 6, 8 y 16. El temario lo lista como un solo OA. No hay contradicción: OA 13 es transversal.",
+    "OA 9 como complementario en Cap. 16: el texto (MATME26G5B.md, línea 533) lista OA 9 como complementario y OA 13 como basal. El temario no incluye OA 9 directamente, pero lo evalúa dentro de OA 13.",
+    "OA 8 como complementario: el texto (MATME26G5B.md, línea 519) marca OA 8 como complementario. El temario no lo incluye. Coherente: contenido del nivel, no del examen.",
+    "Numeración de unidades: la «Unidad 3» del programa (OA 7–13) está repartida en Cap. 6 y 8 (Unidad 2 del texto) y Cap. 16 (Unidad 4 del texto)."
+  ]
+}
