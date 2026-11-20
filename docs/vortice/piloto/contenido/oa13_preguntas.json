@@ -39,9 +39,9 @@
     "nivel": "basico",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 16 «Adición y sustracción de fracciones» (Tomo 2)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Tomo 2, «Sustracción de fracciones»: problemas de restar fracciones"
     }
   },
   {
@@ -84,9 +84,9 @@
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 16 «Adición y sustracción de fracciones» (Tomo 2)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Tomo 2, Adición de fracciones: «Hay 1/3 L y 1/2 L de jugo en los envases. ¿Cuántos litros hay en total?»"
     }
   },
   {
@@ -131,9 +131,9 @@
     "nivel": "reto",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 16 «Adición y sustracción de fracciones» (Tomo 2)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Tomo 2, Adición de fracciones: «Pensemos cómo sumar o restar fracciones con diferentes denominadores»"
     }
   },
   {
@@ -173,9 +173,9 @@
     "nivel": "basico",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 6 «Números decimales» (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Tomo 1, Cap. 6: «Cómo sumar 2,25 + 1,344 usando la forma vertical»"
     }
   },
   {
@@ -215,9 +215,9 @@
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 6 «Números decimales» (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Tomo 1, Cap. 6: «Para restar los números decimales usando la forma vertical»"
     }
   },
   {
@@ -258,9 +258,9 @@
     "nivel": "reto",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 6 «Números decimales» (Tomo 1)"
+      "referencia": "Matemática 5.º, Casa del Saber, Santillana, Tomo I",
+      "edicion": "Santillana",
+      "ubicacion": "Santillana, Adición de números decimales: alinear según la posición de la coma"
     }
   },
   {
@@ -305,9 +305,9 @@
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 8 «Fracciones» (Tomo 1) y Capítulo 16 (Tomo 2)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Tomo 2, Adición de fracciones"
     }
   },
   {
@@ -350,9 +350,9 @@
     "nivel": "basico",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 16 «Adición y sustracción de fracciones» (Tomo 2)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Tomo 2, Adición de fracciones: «Para sumar fracciones con diferentes denominadores…»"
     }
   },
   {
@@ -392,9 +392,9 @@
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 6 «Números decimales» (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Tomo 1, Cap. 6: «Para restar los números decimales usando la forma vertical»"
     }
   }
 ]

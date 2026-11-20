@@ -151,6 +151,19 @@ function falla(msg: string) {
   throw new Error(msg);
 }
 
+// Cada pregunta se apoya en un ejercicio/pasaje de los libros oficiales (se verifica si el archivo está en esta máquina).
+const BASE_LIBRO: Record<string, { archivo: string; texto: string }> = {
+  "mat5u3-oa13-01": { archivo: "MATME26E5B_1.md", texto: "Sustracción de fracciones" },
+  "mat5u3-oa13-02": { archivo: "MATME26E5B_1.md", texto: "Hay 1 3 L y 1 2 L de jugo en los envases." },
+  "mat5u3-oa13-03": { archivo: "MATME26E5B_1.md", texto: "Pensemos cómo sumar o restar fracciones con diferentes denominadores." },
+  "mat5u3-oa13-04": { archivo: "MATME26E5B.md", texto: "Cómo sumar 2,25 + 1,344 usando la forma vertical" },
+  "mat5u3-oa13-05": { archivo: "MATME26E5B.md", texto: "Para restar los números decimales usando la forma vertical," },
+  "mat5u3-oa13-06": { archivo: "matematica5.md", texto: "alineando según la posición de la coma" },
+  "mat5u3-oa13-07": { archivo: "MATME26E5B_1.md", texto: "Adición de fracciones" },
+  "mat5u3-oa13-08": { archivo: "MATME26E5B_1.md", texto: "Para sumar fracciones con diferentes denominadores, podemos encontrar fracciones equivalentes con el mismo denominador." },
+  "mat5u3-oa13-09": { archivo: "MATME26E5B.md", texto: "Para restar los números decimales usando la forma vertical," },
+};
+
 // ——— Carga de datos ———
 
 const jsonPath = resolve(ROOT, "docs/vortice/piloto/contenido/oa13_preguntas.json");
@@ -316,6 +329,18 @@ caso("S5", "ninguna alternativa vacía", () => {
       if (!a.texto || a.texto.trim() === "")
         falla(`${p.id}: alternativa ${a.id} está vacía`);
     }
+  }
+});
+
+caso("LIBRO", "cada pregunta tiene su pasaje base en el texto oficial", () => {
+  const dir = resolve(process.env.HOME ?? "", "Downloads/BRKL_TEXTOS_OFICIALES");
+  const norm = (s: string) => s.replace(/\s+/g, " ").trim();
+  for (const p of preguntas) {
+    const b = BASE_LIBRO[p.id];
+    if (!b) falla(`${p.id}: sin pasaje base declarado`);
+    const ruta = resolve(dir, b.archivo);
+    if (!existsSync(ruta)) { console.warn(`AVISO ${p.id}: no está ${b.archivo}; pasaje base sin verificar`); continue; }
+    if (!norm(readFileSync(ruta, "utf-8")).includes(norm(b.texto))) falla(`${p.id}: pasaje «${b.texto}» no está en ${b.archivo}`);
   }
 });
 
