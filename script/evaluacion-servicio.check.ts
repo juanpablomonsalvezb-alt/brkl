@@ -102,29 +102,6 @@ const conBase = async (f: (bd: ReturnType<typeof abrir>) => Promise<void>) => { 
 // ── Casos VÁLIDOS ──────────────────────────────────────────────────────────────
 
 await caso("V1", "abrirProceso: crea proceso e instancia regular (60 min, 70 %)", async () => {
-  const bd = conBase as any;
-  const r = await abrirProceso((bd as any).c, { estudianteId: EST, evaluacionId: "me-e2", versionId: "ev-v1", perfil: "regular" });
-  assert.equal(r.perfil, "regular");
-  assert.equal(r.duracionMin, 60);
-  assert.equal(r.umbral, 70);
-});
-
-await caso("V2", "abrirProceso: perfil neurodivergente (120 min, 50 %)", async () => {
-  const bd = conBase as any;
-  const r = await abrirProceso((bd as any).c, { estudianteId: EST, evaluacionId: "me-e2", versionId: "ev-v1", perfil: "neurodivergente" });
-  assert.equal(r.perfil, "neurodivergente");
-  assert.equal(r.duracionMin, 120);
-  assert.equal(r.umbral, 50);
-});
-
-// V1 y V2 fallan porque conBase no devuelve el bd directamente. Necesito un patrón diferente.
-// Reescribo los casos para usar abrir() directamente.
-
-// Limpiar salida anterior de V1/V2 fallidos.
-salida.length = 0;
-casos = 0;
-
-await caso("V1", "abrirProceso: crea proceso e instancia regular (60 min, 70 %)", async () => {
   const bd = abrir(P);
   const r = await abrirProceso(bd.c, { estudianteId: EST, evaluacionId: "me-e2", versionId: "ev-v1", perfil: "regular" });
   assert.equal(r.perfil, "regular");
