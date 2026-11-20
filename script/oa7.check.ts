@@ -98,6 +98,21 @@ function falla(msg: string) {
   throw new Error(msg);
 }
 
+// Cada pregunta se apoya en un ejercicio/pasaje de los libros oficiales (si el archivo está en esta máquina, se verifica que exista).
+// "verificador-libro" valida las preguntas redactadas por claude (calcos).
+const CALCOS_DEL_LIBRO: Record<string, string> = { "mat5u3-oa7-09": "x" };
+const BASE_LIBRO: Record<string, { archivo: string; texto: string }> = {
+  "mat5u3-oa7-01": { archivo: "MATME26E5B.md", texto: "con denominador 8 y 12." },
+  "mat5u3-oa7-02": { archivo: "MATME26E5B.md", texto: "Encuentra la fracción irreductible." },
+  "mat5u3-oa7-03": { archivo: "MATME26E5B.md", texto: "Amplificar una fracción significa multiplicar el numerador y el denominador por un" },
+  "mat5u3-oa7-04": { archivo: "MATME26E5B.md", texto: "Comparemos 2" },
+  "mat5u3-oa7-05": { archivo: "MATME26E5B.md", texto: "Pensemos cómo comparar 2" },
+  "mat5u3-oa7-06": { archivo: "MATME26E5B.md", texto: "Simplifica hasta encontrar la" },
+  "mat5u3-oa7-07": { archivo: "MATME26E5B.md", texto: "Comparemos 2" },
+  "mat5u3-oa7-08": { archivo: "MATME26E5B.md", texto: "con denominador 12, 18 y 24." },
+  "mat5u3-oa7-09": { archivo: "MATME26E5B.md", texto: "Compara las fracciones utilizando un denominador común." },
+};
+
 // ——— Carga de datos ———
 
 const jsonPath = resolve(ROOT, "docs/vortice/piloto/contenido/oa7_preguntas.json");
@@ -222,6 +237,18 @@ for (const p of preguntas) {
     }
   });
 }
+
+caso("LIBRO", "cada pregunta tiene su pasaje base en el texto oficial", () => {
+  const dir = resolve(process.env.HOME ?? "", "Downloads/BRKL_TEXTOS_OFICIALES");
+  const norm = (s: string) => s.replace(/\s+/g, " ").trim();
+  for (const p of preguntas) {
+    const b = BASE_LIBRO[p.id];
+    if (!b) falla(`${p.id}: sin pasaje base declarado`);
+    const ruta = resolve(dir, b.archivo);
+    if (!existsSync(ruta)) { console.warn(`AVISO ${p.id}: no está ${b.archivo}; pasaje base sin verificar`); continue; }
+    if (!norm(readFileSync(ruta, "utf-8")).includes(norm(b.texto))) falla(`${p.id}: pasaje «${b.texto}» no está en ${b.archivo}`);
+  }
+});
 
 // ——— PASO 2: Estructura general ———
 
@@ -364,14 +391,16 @@ caso("CSV3", "coherencia JSON ↔ CSV para las 9 preguntas OA 7", () => {
 
     // Verifica autor_id = junie (col 12)
     const csvAutor = campos[12];
-    if (csvAutor !== "junie")
-      falla(`${p.id}: autor_id CSV es "${csvAutor}", se espera "junie"`);
+    const calco = CALCOS_DEL_LIBRO[p.id];
+    if (csvAutor !== (calco ? "claude" : "junie"))
+      falla(`${p.id}: autor_id CSV es "${csvAutor}", se espera "${calco ? "claude" : "junie"}"`);
 
     // Verifica validadores registrados tras la aprobación de la muestra por el sostenedor (col 13, 14)
     const v1 = campos[13];
     const v2 = campos[14];
-    if (v1 !== "claude" || v2 !== "verificador-oa7")
-      falla(`${p.id}: validadores CSV son "${v1}" y "${v2}", se espera "claude" y "verificador-oa7"`);
+    const vEsperados = calco ? ["verificador-libro", "verificador-oa7"] : ["claude", "verificador-oa7"];
+    if (v1 !== vEsperados[0] || v2 !== vEsperados[1])
+      falla(`${p.id}: validadores CSV son "${v1}" y "${v2}", se espera "${vEsperados[0]}" y "${vEsperados[1]}"`);
 
     // Verifica estado = validada (col 15)
     const csvEstado = campos[15].trim();

@@ -36,9 +36,9 @@
     "nivel": "basico",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 8 «Fracciones», Clase 3 (Fracciones equivalentes)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, Fracciones equivalentes: «Expresemos fracciones equivalentes a 3/4 con denominador 8 y 12»"
     }
   },
   {
@@ -78,9 +78,9 @@
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 8 «Fracciones», Clase 4 (Fracciones equivalentes)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, Simplificar: ejercicios «Encuentra la fracción irreductible» y «Simplifica hasta encontrar la fracción irreductible»"
     }
   },
   {
@@ -121,9 +121,9 @@
     "nivel": "reto",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 8 «Fracciones», Clase 3 (Fracciones equivalentes)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, Amplificar: definición «Amplificar una fracción significa multiplicar…»"
     }
   },
   {
@@ -163,9 +163,9 @@
     "nivel": "basico",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 8 «Fracciones», Clase 5 (Comparación de fracciones)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, Comparación de fracciones: apertura «Comparemos 2/4, 2/3 y 3/4»"
     }
   },
   {
@@ -208,9 +208,9 @@
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 8 «Fracciones», Clase 5 (Comparación de fracciones)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, Comparación de fracciones: «Pensemos cómo comparar 2/3 y 3/4»"
     }
   },
   {
@@ -250,9 +250,9 @@
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 8 «Fracciones», Clase 4 (Simplificar fracciones)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, Simplificar: ejercicio «Simplifica hasta encontrar la fracción irreductible»"
     }
   },
   {
@@ -292,9 +292,9 @@
     "nivel": "reto",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 8 «Fracciones», Clase 5 (Comparación de fracciones)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, Comparación de fracciones: apertura «Comparemos 2/4, 2/3 y 3/4»"
     }
   },
   {
@@ -335,67 +335,54 @@
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 8 «Fracciones», Clase 3 (Fracciones equivalentes)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, Practica 1a: «Encuentra fracciones equivalentes a 5/6 con denominador 12, 18 y 24»"
     }
   },
   {
     "id": "mat5u3-oa7-09",
-    "tipo": "ordenar_distinto_den",
+    "tipo": "comparar_distinto_den",
     "numeros": {
-      "fracciones": [
-        [
-          3,
-          4
-        ],
-        [
-          2,
-          3
-        ],
-        [
-          5,
-          8
-        ]
-      ],
+      "a_num": 7,
+      "a_den": 12,
+      "b_num": 5,
+      "b_den": 8,
       "comun_den": 24,
-      "amplificadas": [
-        18,
-        16,
-        15
-      ]
+      "a_amplificado": 14,
+      "b_amplificado": 15
     },
-    "enunciado": "Tres cintas miden 3/4 m, 2/3 m y 5/8 m. ¿Cuál opción las ordena de menor a mayor?",
+    "enunciado": "Compara las fracciones 7/12 y 5/8. ¿Cuál es mayor?",
     "alternativas": [
       {
         "id": "A",
-        "texto": "5/8, 2/3, 3/4"
+        "texto": "5/8, porque 5/8 = 15/24 y 7/12 = 14/24"
       },
       {
         "id": "B",
-        "texto": "2/3, 3/4, 5/8"
+        "texto": "7/12, porque 7 > 5"
       },
       {
         "id": "C",
-        "texto": "3/4, 2/3, 5/8"
+        "texto": "Son iguales"
       },
       {
         "id": "D",
-        "texto": "2/3, 5/8, 3/4"
+        "texto": "Ninguna se puede comparar porque tienen distinto denominador"
       }
     ],
     "respuesta_correcta": "A",
     "explicacion_distractores": {
-      "B": "Ordenó solo por los numeradores (2, 3, 5) sin llevar a denominador común.",
-      "C": "Ordenó de mayor a menor en vez de menor a mayor.",
-      "D": "No comparó con denominador común: 2/3 = 16/24 es mayor que 5/8 = 15/24."
+      "B": "Compara solo los numeradores, sin igualar denominadores.",
+      "C": "Cree que son iguales sin amplificar a un denominador común.",
+      "D": "Siempre se pueden comparar con un denominador común: 14/24 < 15/24."
     },
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulo 8 «Fracciones», Clase 5 (Comparación de fracciones)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, Ejercita 1d: «Compara las fracciones utilizando un denominador común» (7/12 y 5/8)"
     }
   }
 ]
