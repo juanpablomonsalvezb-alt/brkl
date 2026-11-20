@@ -183,21 +183,21 @@ caso("E8", "etiquetaResultado E4 no aprobado → 'No logrado'", () => {
 
 // ——— FRACCION_ENFASIS_SUBTEMAS ———
 
-caso("F1", "FRACCION_ENFASIS_SUBTEMAS = 0.5", () => {
-  assert.equal(FRACCION_ENFASIS_SUBTEMAS, 0.5);
+caso("F1", "FRACCION_ENFASIS_SUBTEMAS = 0.35 (ENMENDADO 2026-11-19, antes 0.5)", () => {
+  assert.equal(FRACCION_ENFASIS_SUBTEMAS, 0.35);
 });
 
 // ——— minimoPreguntasDeSubtemasFallados ———
 
-caso("M1", "minimoPreguntasDeSubtemasFallados(12) → 6", () => {
-  assert.equal(minimoPreguntasDeSubtemasFallados(12), 6);
+caso("M1", "minimoPreguntasDeSubtemasFallados(12) → 5 (⌈12×0.35⌉=⌈4.2⌉=5, antes 6)", () => {
+  assert.equal(minimoPreguntasDeSubtemasFallados(12), 5);
 });
 
-caso("M2", "minimoPreguntasDeSubtemasFallados(11) → 6", () => {
-  assert.equal(minimoPreguntasDeSubtemasFallados(11), 6);
+caso("M2", "minimoPreguntasDeSubtemasFallados(11) → 4 (⌈11×0.35⌉=⌈3.85⌉=4, antes 6)", () => {
+  assert.equal(minimoPreguntasDeSubtemasFallados(11), 4);
 });
 
-caso("M3", "minimoPreguntasDeSubtemasFallados(1) → 1", () => {
+caso("M3", "minimoPreguntasDeSubtemasFallados(1) → 1 (⌈1×0.35⌉=⌈0.35⌉=1, sin cambio)", () => {
   assert.equal(minimoPreguntasDeSubtemasFallados(1), 1);
 });
 

@@ -103,7 +103,7 @@ Cada punto separa lo que **requiere aprobación académica** (A) de lo que es **
 
 ## P21 — Progresión al agotar E2 sin aprobar
 
-> **SUSTITUIDA el 2026-11-19 por P21 v2 (APROBADA).** Ver [`P21_v2.md`](P21_v2.md) y [`PROGRESO_Y_PROGRESION.md`](PROGRESO_Y_PROGRESION.md) §3. La versión v2 cambia la mecánica: 1 intento normal + 1 intento extra (72 h, obligatorio, ≥50 % subtemas fallados), en vez de 3 ordinarios + recuperación de 2. El espíritu de «continuar con E2 reprobada» se mantiene. La revisión independiente y la autorización de migración siguen pendientes.
+> **SUSTITUIDA el 2026-11-19 por P21 v2 (APROBADA).** Ver [`P21_v2.md`](P21_v2.md) y [`PROGRESO_Y_PROGRESION.md`](PROGRESO_Y_PROGRESION.md) §3. La versión v2 cambia la mecánica: 1 intento normal + 1 intento extra (72 h, obligatorio, ≥35 % subtemas fallados, ENMENDADO 2026-11-19 antes 50 %), en vez de 3 ordinarios + recuperación de 2. El espíritu de «continuar con E2 reprobada» se mantiene. La revisión independiente y la autorización de migración siguen pendientes.
 
 El texto siguiente se conserva como historial de la propuesta anterior (antes de P21 v2).
 

@@ -18,7 +18,7 @@ Toda implementación, migración o despliegue requiere además autorización nue
 | Resultado binario inmediato | Maestra §2 | APROBADO; **EXISTE EN CÓDIGO** en `/submit` | Maestra | Sin puntaje en respuesta | D1, C1, C2 |
 | Familia y tutor ven estado | Maestra §2 | APROBADO | Maestra | Vistas sin puntaje | D4, C5 |
 | P17 2 intentos de recuperación | Orden de dirección; Maestra §9 | **DECIDIDA (2026-11-19):** ratificada, pero **sin efecto para E2** (P21 v2 reemplaza) | `PROGRESO` §3 | Recuperación (E1, E3, E4) | C17 |
-| P21 continuar con E2 «Reprobado» | Dirección, 2026-10-26 → **P21 v2 APROBADA 2026-11-19** | **APROBADA v2** | `P21_v2.md`; `PROGRESO` §3 | 1 normal + 1 extra (72 h, obligatorio, ≥50 % subtemas fallados); avanza con E2 reprobada | C3/D2 resuelta; C15 dispensada; revisión independiente y migración pendientes |
+| P21 continuar con E2 «Reprobado» | Dirección, 2026-10-26 → **P21 v2 APROBADA 2026-11-19** | **APROBADA v2** | `P21_v2.md`; `PROGRESO` §3 | 1 normal + 1 extra (72 h, obligatorio, ≥35 % subtemas fallados, ENMENDADO 2026-11-19 antes 50 %); avanza con E2 reprobada | C3/D2 resuelta; C15 dispensada; revisión independiente y migración pendientes |
 | Bandas 70/80 | Dirección, 2026-10-26 | **APROBADA (2026-11-19)** | `PROGRESO` §2 | Estado y aviso | **D3 decidida**, Q1–Q3 resueltas, C16 |
 | Porcentaje desde la condición de publicación | Propuesta | PROPUESTA | `PROGRESO` §1 | Publicación diferida | **D1** |
 | P7 histórico | `DECISIONES_*` | PROPUESTA | `DECISIONES_PARA_APROBAR` | Sin reescritura | Dirección; C18 |

@@ -76,18 +76,17 @@ caso("C1", "banco justo (4/subtema, N=12): suficiente=false", () => {
 
 // ——— 2. capacidadBanco: banco holgado (8 por subtema, N=12) ———
 
-caso("C2", "banco holgado (8/subtema, N=12): suficiente=true", () => {
+caso("C2", "banco holgado (8/subtema, N=12): suficiente=true (ENMENDADO 0.35)", () => {
   // Banco: 8 preguntas por subtema = 24 total
   // Normal: 4 de cada subtema = 12 preguntas
-  // Disponibles por subtema: 4 → minFallados = ceil(0.5*12) = 6
-  // 4 < 6 → insuficiente por subtema individual
-  // Pero el peor caso es un solo subtema fallado con 4 disponibles < 6
+  // Disponibles por subtema: 4 → minFallados = ceil(0.35*12) = ceil(4.2) = 5
+  // 4 < 5 → insuficiente por subtema individual
   const banco = bancoUniforme(8);
   const normal = pruebaNormalUniforme(8, 4);
   const r = capacidadBanco(banco, normal, 12);
   // Con 8 por subtema y normal usando 4, hay 4 disponibles por subtema.
-  // minFallados = ceil(0.5 * 12) = 6. 4 < 6 → insuficiente.
-  assert.equal(r.suficiente, false, "8/subtema con 4 usadas: 4 disponibles < 6 mínimo");
+  // minFallados = ceil(0.35 * 12) = 5. 4 < 5 → insuficiente.
+  assert.equal(r.suficiente, false, "8/subtema con 4 usadas: 4 disponibles < 5 mínimo");
 });
 
 // ——— 3. capacidadBanco: banco suficiente (12 por subtema, N=12) ———
@@ -95,25 +94,25 @@ caso("C2", "banco holgado (8/subtema, N=12): suficiente=true", () => {
 caso("C3", "banco suficiente (12/subtema, N=12): suficiente=true", () => {
   // Banco: 12 preguntas por subtema = 36 total
   // Normal: 4 de cada subtema = 12 preguntas
-  // Disponibles por subtema: 8 → minFallados = 6. 8 >= 6 → suficiente.
+  // Disponibles por subtema: 8 → minFallados = 5. 8 >= 5 → suficiente.
   // Total no usadas: 36 - 12 = 24 >= 12 → ok.
   const banco = bancoUniforme(12);
   const normal = pruebaNormalUniforme(12, 4);
   const r = capacidadBanco(banco, normal, 12);
-  assert.equal(r.suficiente, true, "12/subtema con 4 usadas: 8 disponibles >= 6 mínimo");
+  assert.equal(r.suficiente, true, "12/subtema con 4 usadas: 8 disponibles >= 5 mínimo");
   assert.deepEqual(r.deficits, {}, "no debe haber déficits");
 });
 
 // ——— 4. capacidadBanco: banco mínimo suficiente (10 por subtema, N=12) ———
 
-caso("C4", "banco mínimo suficiente (10/subtema, N=12): suficiente=true", () => {
-  // Banco: 10 preguntas por subtema = 30 total
+caso("C4", "banco mínimo suficiente (9/subtema, N=12): suficiente=true (ENMENDADO 0.35)", () => {
+  // Banco: 9 preguntas por subtema = 27 total
   // Normal: 4 de cada subtema = 12 preguntas
-  // Disponibles por subtema: 6 → minFallados = 6. 6 >= 6 → suficiente.
-  const banco = bancoUniforme(10);
-  const normal = pruebaNormalUniforme(10, 4);
+  // Disponibles por subtema: 5 → minFallados = 5. 5 >= 5 → suficiente.
+  const banco = bancoUniforme(9);
+  const normal = pruebaNormalUniforme(9, 4);
   const r = capacidadBanco(banco, normal, 12);
-  assert.equal(r.suficiente, true, "10/subtema con 4 usadas: 6 disponibles = 6 mínimo");
+  assert.equal(r.suficiente, true, "9/subtema con 4 usadas: 5 disponibles = 5 mínimo");
 });
 
 // ——— 5. capacidadBanco: banco insuficiente por un subtema ———
@@ -121,7 +120,7 @@ caso("C4", "banco mínimo suficiente (10/subtema, N=12): suficiente=true", () =>
 caso("C5", "banco desbalanceado: suficiente=false con déficit", () => {
   // Banco: A=10, B=10, C=4 preguntas
   // Normal: 4 de A, 4 de B, 4 de C = 12 preguntas
-  // Disponibles: A=6, B=6, C=0 → C tiene déficit de 6
+  // Disponibles: A=6, B=6, C=0 → C tiene déficit de 5 (minFallados=5)
   const banco: Pregunta[] = [];
   for (let i = 1; i <= 10; i++) banco.push({ id: `A${i}`, subtemaId: "A" });
   for (let i = 1; i <= 10; i++) banco.push({ id: `B${i}`, subtemaId: "B" });
@@ -303,13 +302,13 @@ caso("V4", "verificarExtra: detecta ids repetidos de normal", () => {
 
 // ——— 20. verificarExtra: detecta fracción de fallados insuficiente ———
 
-caso("V5", "verificarExtra: detecta fracción de fallados < 50 %", () => {
+caso("V5", "verificarExtra: detecta fracción de fallados < 35 % (ENMENDADO)", () => {
   const banco = bancoUniforme(12);
   const normal = pruebaNormalUniforme(12, 4);
-  // 5 de B (fallado) + 7 de A (no fallado) = 12, pero 5 < 6 (mínimo)
+  // 4 de B (fallado) + 8 de A (no fallado) = 12, pero 4 < 5 (mínimo con 0.35)
   const extraBajo: string[] = [];
-  for (let i = 5; i <= 9; i++) extraBajo.push(`B${i}`); // 5 de B
-  for (let i = 5; i <= 11; i++) extraBajo.push(`A${i}`); // 7 de A
+  for (let i = 5; i <= 8; i++) extraBajo.push(`B${i}`); // 4 de B
+  for (let i = 5; i <= 12; i++) extraBajo.push(`A${i}`); // 8 de A
   const v = verificarExtra({ banco, normal, fallados: ["B"], extra: extraBajo });
   const fraccion = v.find((x) => x.tipo === "fraccion_fallados");
   assert.ok(fraccion, "debe detectar fracción insuficiente");
@@ -485,8 +484,8 @@ caso("P3", "propiedad: 500 semillas distintas, determinismo consistente", () => 
 
 // ——— Casos adicionales para detectar mutaciones ———
 
-// Detecta: ceil→floor en minFallados (N=11: ceil(5.5)=6, floor(5.5)=5)
-caso("E13", "armarExtra: N=11 requiere ceil(5.5)=6 de fallados", () => {
+// Detecta: ceil→floor en minFallados (N=11: ceil(3.85)=4, floor(3.85)=3)
+caso("E13", "armarExtra: N=11 requiere ceil(3.85)=4 de fallados (ENMENDADO 0.35)", () => {
   const banco: Pregunta[] = [];
   for (let i = 1; i <= 12; i++) banco.push({ id: `A${i}`, subtemaId: "A" });
   for (let i = 1; i <= 12; i++) banco.push({ id: `B${i}`, subtemaId: "B" });
@@ -497,14 +496,14 @@ caso("E13", "armarExtra: N=11 requiere ceil(5.5)=6 de fallados", () => {
   assert.equal(extra.length, 11);
   const v = verificarExtra({ banco, normal, fallados: ["A"], extra, N: 11 });
   assert.equal(v.length, 0, `violaciones: ${v.map((x) => x.detalle).join("; ")}`);
-  // Verificar que hay al menos 6 de A (ceil(0.5*11)=6, no 5)
+  // Verificar que hay al menos 4 de A (ceil(0.35*11)=4, no 3)
   const mapaSubtema = new Map<string, string>();
   for (const p of banco) mapaSubtema.set(p.id, p.subtemaId);
   let countA = 0;
   for (const id of extra) {
     if (mapaSubtema.get(id) === "A") countA++;
   }
-  assert.ok(countA >= 6, `se requieren al menos 6 de A (ceil(5.5)), se obtuvieron ${countA}`);
+  assert.ok(countA >= 4, `se requieren al menos 4 de A (ceil(3.85)), se obtuvieron ${countA}`);
 });
 
 // Detecta: round-robin roto (con 2 subtemas fallados, cada uno con pocas preguntas)
@@ -517,7 +516,7 @@ caso("E14", "armarExtra: round-robin reparte entre 2 subtemas fallados", () => {
   for (let i = 1; i <= 4; i++) normal.push(`A${i}`);
   for (let i = 1; i <= 4; i++) normal.push(`B${i}`);
   for (let i = 1; i <= 4; i++) normal.push(`C${i}`);
-  // A y B fallados: 4 disponibles cada uno. minFallados = 6.
+  // A y B fallados: 4 disponibles cada uno. minFallados = 5 (con 0.35).
   // Round-robin debe tomar de ambos, no solo de A.
   const extra = armarExtra({ banco, normal, fallados: ["A", "B"], semilla: 42 });
   const v = verificarExtra({ banco, normal, fallados: ["A", "B"], extra });
@@ -536,35 +535,14 @@ caso("E14", "armarExtra: round-robin reparte entre 2 subtemas fallados", () => {
 });
 
 // Detecta: capacidadBanco sin verificar total no usadas
-caso("C7", "capacidadBanco: total no usadas < N → insuficiente", () => {
-  // Banco: A=6, B=6 (12 total). Normal: 4A + 4B = 8. N=10.
-  // Disponibles: A=2, B=2. Total no usadas = 4 < 10 → insuficiente.
-  // Pero por subtema individual: 2 < minFallados=5 → ya insuficiente por subtema.
-  // Necesitamos un caso donde por subtema está bien pero el total no.
-  // Banco: A=6, B=6, C=6 (18 total). Normal: 4A + 4B + 4C = 12. N=12.
-  // Disponibles: A=2, B=2, C=2. Total no usadas = 6 < 12 → insuficiente.
-  // minFallados = 6. Por subtema: 2 < 6 → insuficiente por subtema también.
-  // Caso donde por subtema está bien pero total no:
-  // Banco: A=6, B=6 (12 total). Normal: 3A + 3B = 6. N=10.
-  // Disponibles: A=3, B=3. Total no usadas = 6 < 10 → insuficiente.
-  // minFallados = 5. Por subtema: 3 < 5 → insuficiente por subtema también.
-  // Caso real: banco con muchos subtemas, cada uno con suficientes, pero total insuficiente.
-  // Banco: A=6, B=6, C=6, D=6 (24 total). Normal: 4A + 4B + 4C + 4D = 16. N=16.
-  // Disponibles: A=2, B=2, C=2, D=2. Total no usadas = 8 < 16 → insuficiente.
-  // minFallados = 8. Por subtema: 2 < 8 → insuficiente por subtema también.
-  // El caso donde por subtema individual está bien pero el total no:
-  // Necesitamos que cada subtema tenga >= minFallados disponibles pero el total < N.
-  // Esto es imposible si hay un solo subtema fallado (disponibles >= minFallados y total >= disponibles).
-  // Pero si hay múltiples subtemas, el peor caso es el individual.
-  // El check de total no usadas es un guardián adicional.
-  // Construir caso: banco con 2 subtemas, cada uno con 6 disponibles, N=13.
-  // minFallados = 7. 6 < 7 → insuficiente por subtema.
-  // Otro caso: banco con 1 subtema, 6 disponibles, N=10.
-  // minFallados = 5. 6 >= 5 → suficiente por subtema. Total no usadas = 6 < 10 → insuficiente.
+caso("C7", "capacidadBanco: total no usadas < N → insuficiente (ENMENDADO 0.35)", () => {
+  // Banco: A=8 (8 total). Normal: 2A = 2. N=10.
+  // Disponibles: 6. N=10. minFallados = ceil(0.35*10) = 4. 6 >= 4 → ok por subtema.
+  // Total no usadas = 6 < 10 → insuficiente.
   const banco: Pregunta[] = [];
   for (let i = 1; i <= 8; i++) banco.push({ id: `A${i}`, subtemaId: "A" });
   const normal: PruebaNormal = ["A1", "A2"];
-  // Disponibles: 6. N=10. minFallados = 5. 6 >= 5 → ok por subtema.
+  // Disponibles: 6. N=10. minFallados = 4. 6 >= 4 → ok por subtema.
   // Total no usadas = 6 < 10 → insuficiente.
   const r = capacidadBanco(banco, normal, 10);
   assert.equal(r.suficiente, false, "total no usadas (6) < N (10) → insuficiente");
@@ -573,7 +551,7 @@ caso("C7", "capacidadBanco: total no usadas < N → insuficiente", () => {
 // Detecta: armarExtra sin lanzar capacidad_insuficiente (o devolver extra incompleto)
 caso("E15", "armarExtra: lanza Error (no devuelve array) cuando no hay suficientes de fallados", () => {
   // Banco: A=4, B=8. Normal: 4A + 4B = 8. N=8.
-  // Si A falla: disponibles de A = 0. minFallados = 4. 0 < 4 → debe lanzar.
+  // Si A falla: disponibles de A = 0. minFallados = ceil(0.35*8) = 3. 0 < 3 → debe lanzar.
   const banco: Pregunta[] = [];
   for (let i = 1; i <= 4; i++) banco.push({ id: `A${i}`, subtemaId: "A" });
   for (let i = 1; i <= 8; i++) banco.push({ id: `B${i}`, subtemaId: "B" });

@@ -89,7 +89,7 @@ Las decisiones comunicadas chocan con reglas ya **APROBADAS** en la especificaci
 
 1. E2 está segmentada por subtemas. Se aprueba con **70 %**.
 2. **1 intento normal + 1 intento extra** (reemplaza los 3 ordinarios + recuperación de 2).
-3. El intento extra se habilita **desde la publicación del resultado**, con plazo máximo de **72 horas**. Es **obligatorio para avanzar**. Al menos **50 %** de sus preguntas provienen de los subtemas fallados.
+3. El intento extra se habilita **desde la publicación del resultado**, con plazo máximo de **72 horas**. Es **obligatorio para avanzar**. Al menos **35 %** (ENMENDADO 2026-11-19, antes 50 %) de sus preguntas provienen de los subtemas fallados.
 4. Si aprueba el extra, E2 queda aprobada. En el registro **queda la mejor nota**; se conservan ambos intentos.
 5. Si no aprueba, E2 queda **reprobada** y se sugiere repasar la unidad. **El estudiante avanza igual**. No hay más intentos.
 

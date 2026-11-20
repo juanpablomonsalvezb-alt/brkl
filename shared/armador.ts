@@ -2,14 +2,14 @@
 // Funciones puras: no leen estado externo, no guardan nada, no usan Math.random.
 //
 // Fuente de decisiones:
-//   - P21 v2 (P21_v2_APROBADA.md): intento extra con ≥ 50 % de preguntas
-//     de los subtemas fallados en el intento normal.
+//   - P21 v2 (P21_v2_APROBADA.md, enmendada 2026-11-19): intento extra con ≥ 35 % de preguntas
+//     de los subtemas fallados en el intento normal (antes 50 %).
 //   - P20-v (DECISIONES_DIRECCION.md): el extra NO repite preguntas del
 //     intento normal; el banco debe tener preguntas para las DOS pruebas
 //     con preguntas distintas; si falta capacidad, la evaluación NO se publica.
 //
 // Reutiliza FRACCION_ENFASIS_SUBTEMAS y minimoPreguntasDeSubtemasFallados
-// de shared/perfiles.ts para no duplicar el 0,5.
+// de shared/perfiles.ts para no duplicar el 0,35.
 
 import { FRACCION_ENFASIS_SUBTEMAS, minimoPreguntasDeSubtemasFallados } from "./perfiles";
 
@@ -120,7 +120,7 @@ function mezclarDeterminista<T>(array: T[], rng: () => number): T[] {
  *
  * Criterio: para cada subconjunto no vacío F de los subtemas presentes en `normal`:
  *   - `disponiblesF` = preguntas del banco de subtemas en F que NO están en `normal`
- *   - Se requiere `disponiblesF.length >= ceil(0.5 * N)` (fracción de énfasis)
+ *   - Se requiere `disponiblesF.length >= ceil(0.35 * N)` (fracción de énfasis, antes 0.5)
  *   - Además, el total de preguntas no usadas del banco debe ser >= N
  *
  * Optimización del peor caso: en lugar de enumerar 2^k subconjuntos, observamos que
@@ -221,7 +221,7 @@ export function capacidadBanco(
  * y los subtemas fallados.
  *
  * Reglas:
- *   (a) Al menos `ceil(0.5 * N)` preguntas de los subtemas fallados,
+ *   (a) Al menos `ceil(0.35 * N)` preguntas de los subtemas fallados, (antes 0.5),
  *       no usadas en `normal`, repartidas lo más parejo posible entre ellos
  *       (round-robin determinista).
  *   (b) El resto de preguntas no usadas, priorizando subtemas NO fallados
@@ -400,7 +400,7 @@ export function armarExtra(params: {
  *   - Sin duplicados.
  *   - Todos los ids pertenecen al banco.
  *   - Ningún id está repetido de `normal`.
- *   - La fracción de preguntas de subtemas fallados es ≥ 50 %.
+ *   - La fracción de preguntas de subtemas fallados es ≥ 35 % (antes 50 %).
  *
  * @param banco - Banco completo de preguntas.
  * @param normal - Prueba normal (ids).
@@ -484,7 +484,7 @@ export function verificarExtra(params: {
     });
   }
 
-  // 5. Fracción de fallados ≥ 50 %
+  // 5. Fracción de fallados ≥ 35 % (antes 50 %)
   const minFallados = minimoPreguntasDeSubtemasFallados(tamaño);
   let countFallados = 0;
   for (const id of extra) {

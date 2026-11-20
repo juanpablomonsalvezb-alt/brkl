@@ -133,7 +133,7 @@ Cómo leer cada punto:
 
 ## P21 — Avance tras agotar E2 y su recuperación
 
-> **SUSTITUIDA el 2026-11-19 por P21 v2 (APROBADA).** Ver [`P21_v2.md`](P21_v2.md). La regla v2 cambia la mecánica: 1 intento normal + 1 intento extra (72 h, obligatorio, ≥50 % subtemas fallados), en vez de 3 ordinarios + recuperación de 2. El espíritu de «continuar con E2 reprobada» se mantiene. C15 dispensada por el sostenedor. C3/D2 resuelta. La revisión independiente y la autorización de migración siguen pendientes.
+> **SUSTITUIDA el 2026-11-19 por P21 v2 (APROBADA).** Ver [`P21_v2.md`](P21_v2.md). La regla v2 cambia la mecánica: 1 intento normal + 1 intento extra (72 h, obligatorio, ≥35 % subtemas fallados, ENMENDADO 2026-11-19 antes 50 %), en vez de 3 ordinarios + recuperación de 2. El espíritu de «continuar con E2 reprobada» se mantiene. C15 dispensada por el sostenedor. C3/D2 resuelta. La revisión independiente y la autorización de migración siguen pendientes.
 
 El texto siguiente se conserva como historial de la versión anterior (COMUNICADA, 2026-10-26).
 
@@ -159,6 +159,6 @@ El texto siguiente se conserva como historial de la versión anterior (COMUNICAD
 | P7 | Historial intacto; conteo nuevo; aprobación antigua respetada | Tres respuestas sí/no |
 | P8 | Plazo + validación humana; rechazo sin gastar intento; 5 días hábiles para validar | Efecto de aprobar y rechazar; plazo de validación; fin de los formularios |
 | P16 | E2 «Evaluación de cierre»; E1, E3 y E4 «Práctica»; función como dato | Funciones, nota de E2, nombres visibles |
-| P21 | **APROBADA v2 (2026-11-19):** 1 normal + 1 extra, 72 h, obligatorio, ≥50 % subtemas fallados; ver [P21_v2.md](P21_v2.md) | C3/D2 resuelta; C15 dispensada; revisión independiente y migración pendientes |
+| P21 | **APROBADA v2 (2026-11-19):** 1 normal + 1 extra, 72 h, obligatorio, ≥35 % subtemas fallados (ENMENDADO 2026-11-19, antes 50 %); ver [P21_v2.md](P21_v2.md) | C3/D2 resuelta; C15 dispensada; revisión independiente y migración pendientes |
 
 P7, P8 y P16 siguen en estado **PROPUESTA**; P21 está **APROBADA v2** (2026-11-19). No se implementará nada sin aprobación expresa de cada decisión, la revisión independiente y una autorización aparte para la migración.

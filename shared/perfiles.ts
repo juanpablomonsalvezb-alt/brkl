@@ -120,12 +120,13 @@ export function etiquetaResultado(evaluacion: "E1" | "E2" | "E3" | "E4", aprobad
  * Fracción mínima de preguntas del intento extra que deben provenir de los
  * subtemas fallados en el intento normal.
  *
- * Valor fijo: 0.5 (≥ 50 %). NO depende del perfil.
+ * Valor fijo: 0.35 (≥ 35 %). NO depende del perfil.
+ * ENMENDADO 2026-11-19: antes era 0.5 (50 %).
  *
- * Decisión Q-D (P21 v2 CONFIRMADA): «al menos el 50 % de las preguntas
+ * Decisión Q-D (P21 v2 CONFIRMADA, enmendada): «al menos el 35 % de las preguntas
  * provienen de los subtemas fallados».
  */
-export const FRACCION_ENFASIS_SUBTEMAS = 0.5;
+export const FRACCION_ENFASIS_SUBTEMAS = 0.35;
 
 /**
  * Calcula el número mínimo de preguntas que deben provenir de los subtemas

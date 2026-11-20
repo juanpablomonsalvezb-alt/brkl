@@ -417,11 +417,11 @@ export const MUTACIONES: Record<string, Mutacion[]> = {
     { id: "p21v2: perfiles cronómetro visible invertido (regular)", archivo: "shared/perfiles.ts", de: "      cronometroVisible: true,", a: "      cronometroVisible: false,", check: "perfiles" },
     { id: "p21v2: perfiles ceil por floor en minimoPreguntas", archivo: "shared/perfiles.ts", de: "  return Math.ceil(totalPreguntas * FRACCION_ENFASIS_SUBTEMAS);", a: "  return Math.floor(totalPreguntas * FRACCION_ENFASIS_SUBTEMAS);", check: "perfiles" },
     { id: "p21v2: perfiles etiqueta E2 como Logrado/No logrado", archivo: "shared/perfiles.ts", de: "    return aprobado ? \"Aprobada\" : \"No aprobada\";", a: "    return aprobado ? \"Logrado\" : \"No logrado\";", check: "perfiles" },
-    { id: "p21v2: perfiles FRACCION_ENFASIS_SUBTEMAS 0.3 en vez de 0.5", archivo: "shared/perfiles.ts", de: "export const FRACCION_ENFASIS_SUBTEMAS = 0.5;", a: "export const FRACCION_ENFASIS_SUBTEMAS = 0.3;", check: "perfiles" },
+    { id: "p21v2: perfiles FRACCION_ENFASIS_SUBTEMAS 0.2 en vez de 0.35 (ENMENDADO)", archivo: "shared/perfiles.ts", de: "export const FRACCION_ENFASIS_SUBTEMAS = 0.35;", a: "export const FRACCION_ENFASIS_SUBTEMAS = 0.2;", check: "perfiles" },
   ],
   // T20: armador puro del intento extra y capacidad del banco.
   armador: [
-    { id: "armador: ceil→floor en minFallados", archivo: "shared/armador.ts", de: "  const minFallados = minimoPreguntasDeSubtemasFallados(tamaño);\n\n  // Verificar capacidad mínima", a: "  const minFallados = Math.floor(tamaño * 0.5);\n\n  // Verificar capacidad mínima", check: "armador" },
+    { id: "armador: ceil→floor en minFallados", archivo: "shared/armador.ts", de: "  const minFallados = minimoPreguntasDeSubtemasFallados(tamaño);\n\n  // Verificar capacidad mínima", a: "  const minFallados = Math.floor(tamaño * 0.35);\n\n  // Verificar capacidad mínima", check: "armador" },
     { id: "armador: ≥→> en capacidadBanco", archivo: "shared/armador.ts", de: "    if (count < minFallados) {", a: "    if (count <= minFallados) {", check: "armador" },
     { id: "armador: permitir repetidos de normal en extra", archivo: "shared/armador.ts", de: "    if (normalSet.has(p.id)) continue;", a: "    // if (normalSet.has(p.id)) continue;", check: "armador" },
     { id: "armador: ignorar fallados en selección", archivo: "shared/armador.ts", de: "    if (falladosSet.has(p.subtemaId)) {\n      disponiblesFallados.push(p);\n    } else {\n      disponiblesNoFallados.push(p);\n    }", a: "    disponiblesNoFallados.push(p);", check: "armador" },
