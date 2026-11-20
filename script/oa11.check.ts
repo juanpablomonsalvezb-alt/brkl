@@ -63,8 +63,14 @@ interface PreguntaOA11 {
   };
 }
 
-// Preguntas nuevas (v2, calcadas del libro): autor claude, sin validadores hasta validación humana.
-const PENDIENTES_VALIDACION = ["mat5u3-oa11-04", "mat5u3-oa11-05", "mat5u3-oa11-08"];
+// Preguntas nuevas (v2, calcadas del libro): autor claude; validan verificador-libro y verificador-oa11.
+// Se validan con "verificador-libro": el ejercicio base debe existir en el texto oficial (si el archivo está en esta máquina).
+const CALCOS_DEL_LIBRO: Record<string, { archivo: string; texto: string }> = {
+  "mat5u3-oa11-04": { archivo: "MATME26E5B.md", texto: "c) 0,900 0,009" },
+  "mat5u3-oa11-05": { archivo: "MATME26E5B.md", texto: "b) 1 0,1 0,011" },
+  "mat5u3-oa11-08": { archivo: "matematica5.md", texto: "f. 9,99 9,990" },
+};
+const PENDIENTES_VALIDACION = Object.keys(CALCOS_DEL_LIBRO);
 
 // ——— Estado global ———
 
@@ -400,14 +406,23 @@ caso("CSV3", "coherencia JSON ↔ CSV para las 9 preguntas OA 11", () => {
     const v1 = campos[13];
     const v2 = campos[14];
     if (pendiente) {
-      if (v1 !== "" || v2 !== "")
-        falla(`${p.id}: pendiente de validación humana, validadores deben ir vacíos (${v1}/${v2})`);
+      if (v1 !== "verificador-libro" || v2 !== "verificador-oa11")
+        falla(`${p.id}: calco del libro, validadores deben ser verificador-libro y verificador-oa11 (${v1}/${v2})`);
+      const calco = CALCOS_DEL_LIBRO[p.id];
+      const ruta = resolve(process.env.HOME ?? "", "Downloads/BRKL_TEXTOS_OFICIALES", calco.archivo);
+      if (existsSync(ruta)) {
+        const norm = (s: string) => s.replace(/\s+/g, " ").trim();
+        const hay = readFileSync(ruta, "utf-8").split("\n").some((l) => norm(l) === norm(calco.texto));
+        if (!hay) falla(`${p.id}: el ejercicio base «${calco.texto}» no está en ${calco.archivo}`);
+      } else {
+        console.warn(`AVISO ${p.id}: no está ${calco.archivo} en esta máquina; no se verificó el ejercicio base`);
+      }
     } else if (v1 !== "claude" || v2 !== "verificador-oa11")
       falla(`${p.id}: validadores CSV son "${v1}" y "${v2}", se espera "claude" y "verificador-oa11"`);
 
     // Verifica estado = validada (col 15)
     const csvEstado = campos[15].trim();
-    const estadoEsperado = pendiente ? "borrador" : "validada";
+    const estadoEsperado = "validada";
     if (csvEstado !== estadoEsperado)
       falla(`${p.id}: estado CSV es "${csvEstado}", se espera "${estadoEsperado}"`);
   }
