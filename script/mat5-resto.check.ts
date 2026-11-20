@@ -258,6 +258,31 @@ for (const oaDir of oas) {
   }
 }
 
+
+// ——— Banco: plantilla CSV de los 9 OA (81 preguntas) ———
+import { preguntaPublicable } from "../shared/banco";
+const csvResto = resolve(ROOT, "docs/vortice/piloto/plantilla_banco_mat5_resto.csv");
+caso("CSV-R", "plantilla_banco_mat5_resto.csv: 81 filas coherentes con los JSON y todas publicables", () => {
+  if (!existsSync(csvResto)) falla("no existe plantilla_banco_mat5_resto.csv");
+  const filas = readFileSync(csvResto, "utf-8").split("\n").filter((l) => l.trim() !== "");
+  if (filas[0].split(",").length !== 16) falla("cabecera: se esperan 16 columnas");
+  const datos = filas.slice(1);
+  if (datos.length !== 81) falla(`se esperan 81 filas, hay ${datos.length}`);
+  const oaOficiales = new Set([1, 3, 4, 6, 15, 17, 18, 19, 26]);
+  for (const d of oas) {
+    const n = Number(d.slice(2));
+    const q = JSON.parse(readFileSync(resolve(OA_RESTO_DIR, d, "preguntas.json"), "utf-8"));
+    for (const p of q) {
+      const fila = datos.find((l) => l.startsWith(p.id + ","));
+      if (!fila) falla(`${p.id}: sin fila en el CSV`);
+      if (!fila.includes(p.enunciado.replace(/"/g, '""'))) falla(`${p.id}: enunciado CSV ≠ JSON`);
+      if (!fila.endsWith(",junie,verificador-libro,verificador-mat5-resto,validada")) falla(`${p.id}: autor/validadores/estado inesperados`);
+      const r = preguntaPublicable({ id: p.id, subtemaId: `mat5-r-oa${n}`, oa: n, fuente: p.fuente, autorId: "junie", validadoPor: ["verificador-libro", "verificador-mat5-resto"] as readonly string[] }, oaOficiales);
+      if (!r.ok) falla(`${p.id}: no publicable: ${r.motivos.join("; ")}`);
+    }
+  }
+});
+
 // ——— Resumen ———
 salida.push("");
 salida.push(`Resultados: ${casos} casos, ${fallas} fallas`);
