@@ -35,9 +35,9 @@
     "nivel": "basico",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, Relación entre las fracciones y los números decimales: idea de Ema (1/2 = 5/10 = 0,5)"
     }
   },
   {
@@ -76,9 +76,9 @@
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+      "referencia": "Matemática 5.º, Casa del Saber, Santillana, Tomo I",
+      "edicion": "Santillana",
+      "ubicacion": "Santillana, Representación de fracciones como números decimales: ejemplo 3/4 = 0,75"
     }
   },
   {
@@ -117,9 +117,9 @@
     "nivel": "reto",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, Relación entre fracciones y decimales: «¿Cuál es mayor: 0,25 o 1/5?»"
     }
   },
   {
@@ -158,9 +158,9 @@
     "nivel": "basico",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+      "referencia": "Matemática 5.º, Casa del Saber, Santillana, Tomo I",
+      "edicion": "Santillana",
+      "ubicacion": "Santillana, Practica «Representar fracciones como números decimales»"
     }
   },
   {
@@ -199,9 +199,9 @@
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, «Se llaman fracciones decimales las que tienen o pueden expresarse con denominador 10, 100…»"
     }
   },
   {
@@ -240,9 +240,9 @@
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+      "referencia": "Matemática 5.º, Casa del Saber, Santillana, Tomo I",
+      "edicion": "Santillana",
+      "ubicacion": "Santillana, Practica 1 «Relaciona la fracción de la columna A con el número decimal de la columna B»"
     }
   },
   {
@@ -281,9 +281,9 @@
     "nivel": "basico",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, «Pensemos cómo expresar 1/4 como número decimal»"
     }
   },
   {
@@ -322,9 +322,9 @@
     "nivel": "reto",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 8, «Se llaman fracciones decimales las que tienen o pueden expresarse con denominador 10, 100…»"
     }
   },
   {
@@ -363,9 +363,9 @@
     "nivel": "medio",
     "fuente": {
       "tipo": "texto_escolar",
-      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
-      "edicion": "2026",
-      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+      "referencia": "Matemática 5.º, Casa del Saber, Santillana, Tomo I",
+      "edicion": "Santillana",
+      "ubicacion": "Santillana, actividad inicial: 4/5 amplificado por 2 = 8/10 = 0,8"
     }
   }
 ]

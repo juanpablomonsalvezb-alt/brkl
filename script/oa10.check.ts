@@ -104,6 +104,19 @@ function falla(msg: string) {
   throw new Error(msg);
 }
 
+// Cada pregunta se apoya en un ejercicio/pasaje de los libros oficiales (se verifica si el archivo está en esta máquina).
+const BASE_LIBRO: Record<string, { archivo: string; texto: string }> = {
+  "mat5u3-oa10-01": { archivo: "MATME26E5B.md", texto: "Idea de Ema" },
+  "mat5u3-oa10-02": { archivo: "matematica5.md", texto: "se representa como número decimal 0,75, ya que:" },
+  "mat5u3-oa10-03": { archivo: "MATME26E5B.md", texto: "22 ¿Cuál es mayor: 0,25 o 1" },
+  "mat5u3-oa10-04": { archivo: "matematica5.md", texto: "Representar fracciones como números decimales" },
+  "mat5u3-oa10-05": { archivo: "MATME26E5B.md", texto: "Se llaman fracciones decimales las que tienen o pueden expresarse con" },
+  "mat5u3-oa10-06": { archivo: "matematica5.md", texto: "Relaciona la fracción de la columna A con el número decimal de la columna B" },
+  "mat5u3-oa10-07": { archivo: "MATME26E5B.md", texto: "55 Pensemos cómo expresar 1" },
+  "mat5u3-oa10-08": { archivo: "MATME26E5B.md", texto: "Se llaman fracciones decimales las que tienen o pueden expresarse con" },
+  "mat5u3-oa10-09": { archivo: "matematica5.md", texto: "Al amplificar por el número 2 la fracción" },
+};
+
 // ——— Carga de datos ———
 
 const jsonPath = resolve(ROOT, "docs/vortice/piloto/contenido/oa10_preguntas.json");
@@ -238,6 +251,18 @@ caso("S5", "ninguna alternativa vacía", () => {
       if (!a.texto || a.texto.trim() === "")
         falla(`${p.id}: alternativa ${a.id} está vacía`);
     }
+  }
+});
+
+caso("LIBRO", "cada pregunta tiene su pasaje base en el texto oficial", () => {
+  const dir = resolve(process.env.HOME ?? "", "Downloads/BRKL_TEXTOS_OFICIALES");
+  const norm = (s: string) => s.replace(/\s+/g, " ").trim();
+  for (const p of preguntas) {
+    const b = BASE_LIBRO[p.id];
+    if (!b) falla(`${p.id}: sin pasaje base declarado`);
+    const ruta = resolve(dir, b.archivo);
+    if (!existsSync(ruta)) { console.warn(`AVISO ${p.id}: no está ${b.archivo}; pasaje base sin verificar`); continue; }
+    if (!norm(readFileSync(ruta, "utf-8")).includes(norm(b.texto))) falla(`${p.id}: pasaje «${b.texto}» no está en ${b.archivo}`);
   }
 });
 
