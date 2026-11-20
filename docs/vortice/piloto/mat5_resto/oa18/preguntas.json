@@ -1,0 +1,380 @@
+[
+  {
+    "id": "mat5r-oa18-01",
+    "tipo": "congruencia",
+    "numeros": [],
+    "enunciado": "¿Qué significa que dos figuras sean congruentes?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Que tienen el mismo perímetro"
+      },
+      {
+        "id": "B",
+        "texto": "Que al superponerlas coinciden exactamente"
+      },
+      {
+        "id": "C",
+        "texto": "Que son del mismo color"
+      },
+      {
+        "id": "D",
+        "texto": "Que tienen la misma cantidad de lados"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Figuras con mismo perímetro no necesariamente son congruentes.",
+      "D": "Figuras con misma cantidad de lados no necesariamente son congruentes.",
+      "C": "El color no tiene relación con la congruencia."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "Dos figuras son congruentes si al superponerlas coinciden."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 14, Congruencia"
+    }
+  },
+  {
+    "id": "mat5r-oa18-02",
+    "tipo": "traslacion",
+    "numeros": [],
+    "enunciado": "En una traslación, ¿qué características conservan la figura original y la trasladada?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "La misma forma y tamaño, pero orientación invertida"
+      },
+      {
+        "id": "B",
+        "texto": "Solo la misma forma"
+      },
+      {
+        "id": "C",
+        "texto": "Solo el mismo tamaño"
+      },
+      {
+        "id": "D",
+        "texto": "La misma forma, tamaño y orientación"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "A": "Eso describe una reflexión, no una traslación.",
+      "B": "Conservan forma, tamaño y orientación.",
+      "C": "Conservan forma, tamaño y orientación."
+    },
+    "nivel": "medio",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "En una traslación, la figura original y la trasladada son congruentes."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Traslación"
+    }
+  },
+  {
+    "id": "mat5r-oa18-03",
+    "tipo": "error",
+    "numeros": [],
+    "enunciado": "Matías dice: «En una reflexión, la figura reflejada tiene diferente tamaño que la original». ¿Tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "No, en una reflexión la figura reflejada tiene el mismo tamaño y forma"
+      },
+      {
+        "id": "B",
+        "texto": "Sí, la reflexión cambia el tamaño"
+      },
+      {
+        "id": "C",
+        "texto": "No, pero cambia la forma"
+      },
+      {
+        "id": "D",
+        "texto": "Sí, pero solo si el eje de simetría es diagonal"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "La reflexión conserva el tamaño y la forma.",
+      "C": "La reflexión conserva la forma.",
+      "D": "La reflexión siempre conserva tamaño y forma."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "En una reflexión, la figura original y la reflejada son congruentes."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Reflexión"
+    }
+  },
+  {
+    "id": "mat5r-oa18-04",
+    "tipo": "rotacion",
+    "numeros": [
+      "180"
+    ],
+    "enunciado": "Si se rota un triángulo 180° en torno a un vértice, ¿la figura rotada es congruente con la original?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Solo si es un triángulo equilátero"
+      },
+      {
+        "id": "B",
+        "texto": "Sí, siempre son congruentes"
+      },
+      {
+        "id": "C",
+        "texto": "No, la rotación cambia la forma"
+      },
+      {
+        "id": "D",
+        "texto": "No, la rotación cambia el tamaño"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "D": "La rotación conserva el tamaño.",
+      "A": "Todas las figuras rotadas son congruentes con la original.",
+      "C": "La rotación conserva la forma."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "En una rotación, la figura original y la rotada son congruentes."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Rotación"
+    }
+  },
+  {
+    "id": "mat5r-oa18-05",
+    "tipo": "reflexion",
+    "numeros": [],
+    "enunciado": "¿Qué transformación isométrica invierte la orientación de una figura?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "La reflexión"
+      },
+      {
+        "id": "B",
+        "texto": "La traslación"
+      },
+      {
+        "id": "C",
+        "texto": "Ninguna transformación isométrica"
+      },
+      {
+        "id": "D",
+        "texto": "La rotación de 360°"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "La traslación conserva la orientación.",
+      "D": "Una rotación de 360° devuelve la figura a su posición original.",
+      "C": "La reflexión sí invierte la orientación."
+    },
+    "nivel": "intermedio",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "En una reflexión, la figura original y la reflejada son congruentes."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Reflexión"
+    }
+  },
+  {
+    "id": "mat5r-oa18-06",
+    "tipo": "isometrica",
+    "numeros": [],
+    "enunciado": "¿Cuáles son las tres transformaciones isométricas estudiadas?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Reflexión, ampliación y rotación"
+      },
+      {
+        "id": "B",
+        "texto": "Traslación, reflexión y dilatación"
+      },
+      {
+        "id": "C",
+        "texto": "Traslación, reflexión y rotación"
+      },
+      {
+        "id": "D",
+        "texto": "Traslación, ampliación y reducción"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "D": "La ampliación y reducción no son isométricas.",
+      "A": "La ampliación no es isométrica.",
+      "B": "La dilatación no es isométrica."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "La traslación, la reflexión y la rotación son transformaciones isométricas."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, transformaciones isométricas"
+    }
+  },
+  {
+    "id": "mat5r-oa18-07",
+    "tipo": "congruencia",
+    "numeros": [
+      "3",
+      "4",
+      "5"
+    ],
+    "enunciado": "Un triángulo tiene lados de 3 cm, 4 cm y 5 cm. ¿Cuál de los siguientes triángulos es congruente?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Un triángulo con lados 3 cm, 4 cm y 5 cm"
+      },
+      {
+        "id": "B",
+        "texto": "Un triángulo con lados 3 cm, 5 cm y 5 cm"
+      },
+      {
+        "id": "C",
+        "texto": "Un triángulo con lados 6 cm, 8 cm y 10 cm"
+      },
+      {
+        "id": "D",
+        "texto": "Un triángulo con lados 3 cm, 4 cm y 6 cm"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "D": "El lado de 6 cm no coincide con el de 5 cm.",
+      "C": "Es un triángulo semejante (doble tamaño), no congruente.",
+      "B": "Los lados no coinciden con 3, 4, 5."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "En figuras congruentes, los lados"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 14, Congruencia de triángulos"
+    }
+  },
+  {
+    "id": "mat5r-oa18-08",
+    "tipo": "error",
+    "numeros": [],
+    "enunciado": "Sofía dice: «Si dos figuras tienen el mismo área, entonces son congruentes». ¿Tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "No, pero sí si son del mismo tipo de figura"
+      },
+      {
+        "id": "B",
+        "texto": "No, dos figuras pueden tener el mismo área pero diferente forma"
+      },
+      {
+        "id": "C",
+        "texto": "Sí, siempre que tengan el mismo perímetro"
+      },
+      {
+        "id": "D",
+        "texto": "Sí, mismo área implica congruencia"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "D": "Mismo área no implica misma forma ni tamaño de lados.",
+      "A": "Incluso del mismo tipo, pueden tener diferente forma (p. ej., rectángulos 2×8 y 4×4).",
+      "C": "Mismo área y perímetro tampoco garantiza congruencia."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "Dos figuras son congruentes si al superponerlas coinciden."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 14, Congruencia"
+    }
+  },
+  {
+    "id": "mat5r-oa18-09",
+    "tipo": "rotacion",
+    "numeros": [
+      "90",
+      "4"
+    ],
+    "enunciado": "Si se rota un cuadrado 90° en torno a su centro, ¿cuántas veces hay que rotarlo para volver a la posición original?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1 rotación de 90°"
+      },
+      {
+        "id": "B",
+        "texto": "4 rotaciones de 90°"
+      },
+      {
+        "id": "C",
+        "texto": "2 rotaciones de 90°"
+      },
+      {
+        "id": "D",
+        "texto": "3 rotaciones de 90°"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "C": "2 × 90° = 180°, no vuelve a la posición original.",
+      "D": "3 × 90° = 270°, no vuelve a la posición original.",
+      "A": "1 × 90° = 90°, no vuelve a la posición original."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "En una rotación, la figura original y la rotada son congruentes."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Rotación"
+    }
+  }
+]

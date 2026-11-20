@@ -1,0 +1,407 @@
+[
+  {
+    "id": "mat5r-oa15-01",
+    "tipo": "ecuacion_adicion",
+    "numeros": [
+      "35",
+      "5",
+      "40"
+    ],
+    "enunciado": "Sandra tiene x manzanas en una caja y 5 afuera. En total hay 40 manzanas. ¿Cuántas manzanas hay en la caja?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "30 manzanas"
+      },
+      {
+        "id": "B",
+        "texto": "45 manzanas"
+      },
+      {
+        "id": "C",
+        "texto": "40 manzanas"
+      },
+      {
+        "id": "D",
+        "texto": "35 manzanas"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "B": "Suma en vez de restar: 40 + 5 = 45.",
+      "A": "Resta mal: 40 − 5 = 35, no 30.",
+      "C": "Confunde el total con la cantidad en la caja."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "x + 5 = 40"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Ecuaciones de adición, ejemplo manzanas"
+    }
+  },
+  {
+    "id": "mat5r-oa15-02",
+    "tipo": "ecuacion_sustraccion",
+    "numeros": [
+      "25",
+      "4",
+      "21"
+    ],
+    "enunciado": "Se abrió una caja con cuadernos y se regalaron 4. Quedaron 21 cuadernos. ¿Cuántos había originalmente?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "17 cuadernos"
+      },
+      {
+        "id": "B",
+        "texto": "21 cuadernos"
+      },
+      {
+        "id": "C",
+        "texto": "29 cuadernos"
+      },
+      {
+        "id": "D",
+        "texto": "25 cuadernos"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "A": "Resta en vez de sumar: 21 − 4 = 17.",
+      "C": "Suma mal: 21 + 4 = 25, no 29.",
+      "B": "Confunde los que quedaron con los originales."
+    },
+    "nivel": "medio",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "x – 4 = 21"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Ecuaciones de sustracción, ejemplo cuadernos"
+    }
+  },
+  {
+    "id": "mat5r-oa15-03",
+    "tipo": "error",
+    "numeros": [
+      "35",
+      "5",
+      "40"
+    ],
+    "enunciado": "Para resolver x + 5 = 40, Diego dice: «x = 40 + 5 = 45». ¿Tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, porque se suma 5 a ambos lados"
+      },
+      {
+        "id": "B",
+        "texto": "No, porque x = 40 × 5 = 200"
+      },
+      {
+        "id": "C",
+        "texto": "No, porque en x + 5 = 40 se resta: x = 40 − 5 = 35"
+      },
+      {
+        "id": "D",
+        "texto": "Sí, porque 45 + 5 = 40"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "A": "Sumar 5 a ambos lados daría x + 10 = 45, no resuelve la ecuación.",
+      "B": "Multiplicar no es la operación inversa de sumar.",
+      "D": "45 + 5 = 50, no 40."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "En una ecuación comox + 5 = 40, puedes restar para encontrarx."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Ecuaciones de adición"
+    }
+  },
+  {
+    "id": "mat5r-oa15-04",
+    "tipo": "ecuacion_adicion",
+    "numeros": [
+      "63",
+      "37",
+      "100"
+    ],
+    "enunciado": "Un libro tiene x páginas leídas y 37 por leer. En total tiene 100 páginas. ¿Cuántas páginas se han leído?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "53 páginas"
+      },
+      {
+        "id": "B",
+        "texto": "137 páginas"
+      },
+      {
+        "id": "C",
+        "texto": "63 páginas"
+      },
+      {
+        "id": "D",
+        "texto": "73 páginas"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "B": "Suma en vez de restar: 100 + 37 = 137.",
+      "A": "Resta mal: 100 − 37 = 63, no 53.",
+      "D": "Error de 10 en la resta."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "Resolver la ecuación es encontrar un valor parax que haga la igualdad verdadera."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Ecuaciones de adición"
+    }
+  },
+  {
+    "id": "mat5r-oa15-05",
+    "tipo": "ecuacion_sustraccion",
+    "numeros": [
+      "50",
+      "15",
+      "35"
+    ],
+    "enunciado": "Tenía x stickers, regalé 15 y me quedan 35. ¿Cuántos stickers tenía al inicio?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "20 stickers"
+      },
+      {
+        "id": "B",
+        "texto": "35 stickers"
+      },
+      {
+        "id": "C",
+        "texto": "50 stickers"
+      },
+      {
+        "id": "D",
+        "texto": "55 stickers"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "A": "Resta en vez de sumar: 35 − 15 = 20.",
+      "D": "Suma mal: 35 + 15 = 50, no 55.",
+      "B": "Confunde los que quedan con los originales."
+    },
+    "nivel": "intermedio",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "En una ecuación comox – 4 = 21, puedes sumar para encontrarx."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Ecuaciones de sustracción"
+    }
+  },
+  {
+    "id": "mat5r-oa15-06",
+    "tipo": "ecuacion_adicion",
+    "numeros": [
+      "12",
+      "8",
+      "20"
+    ],
+    "enunciado": "x + 8 = 20. ¿Cuál es el valor de x?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "28"
+      },
+      {
+        "id": "B",
+        "texto": "12"
+      },
+      {
+        "id": "C",
+        "texto": "20"
+      },
+      {
+        "id": "D",
+        "texto": "8"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Suma en vez de resta: 20 + 8 = 28.",
+      "D": "Confunde el sumando con la incógnita.",
+      "C": "Confunde el resultado con la incógnita."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "x = 40 − 5"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Ecuaciones de adición"
+    }
+  },
+  {
+    "id": "mat5r-oa15-07",
+    "tipo": "ecuacion_sustraccion",
+    "numeros": [
+      "20",
+      "8",
+      "12"
+    ],
+    "enunciado": "x − 8 = 12. ¿Cuál es el valor de x?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "12"
+      },
+      {
+        "id": "B",
+        "texto": "4"
+      },
+      {
+        "id": "C",
+        "texto": "8"
+      },
+      {
+        "id": "D",
+        "texto": "20"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "B": "Resta en vez de sumar: 12 − 8 = 4.",
+      "A": "Confunde el resultado con la incógnita.",
+      "C": "Confunde el sustraendo con la incógnita."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "x = 21 + 4"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Ecuaciones de sustracción"
+    }
+  },
+  {
+    "id": "mat5r-oa15-08",
+    "tipo": "error",
+    "numeros": [
+      "25",
+      "4",
+      "21"
+    ],
+    "enunciado": "Para resolver x − 4 = 21, Ana dice: «x = 21 − 4 = 17». ¿Tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, porque se resta 4"
+      },
+      {
+        "id": "B",
+        "texto": "No, porque x = 21 × 4 = 84"
+      },
+      {
+        "id": "C",
+        "texto": "No, porque en x − 4 = 21 se suma: x = 21 + 4 = 25"
+      },
+      {
+        "id": "D",
+        "texto": "Sí, porque 17 − 4 = 21"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "A": "Restar 4 daría x = 17, pero 17 − 4 = 13, no 21.",
+      "B": "Multiplicar no es la operación inversa de restar.",
+      "D": "17 − 4 = 13, no 21."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "x = 21 + 4"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Ecuaciones de sustracción"
+    }
+  },
+  {
+    "id": "mat5r-oa15-09",
+    "tipo": "ecuacion_adicion",
+    "numeros": [
+      "30",
+      "10",
+      "40"
+    ],
+    "enunciado": "Un curso tiene x niños y se incorporan 10 más. Ahora hay 40 niños. ¿Cuántos niños había al inicio?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "40 niños"
+      },
+      {
+        "id": "B",
+        "texto": "50 niños"
+      },
+      {
+        "id": "C",
+        "texto": "30 niños"
+      },
+      {
+        "id": "D",
+        "texto": "10 niños"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "B": "Suma en vez de restar: 40 + 10 = 50.",
+      "A": "Confunde el total final con el inicial.",
+      "D": "Confunde los incorporados con los originales."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "Six representa la cantidad de manzanas en la caja, entonces la ecuación"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 15, Ecuaciones de adición"
+    }
+  }
+]

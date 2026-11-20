@@ -1,0 +1,394 @@
+[
+  {
+    "id": "mat5r-oa1-01",
+    "tipo": "descomposicion_estandar",
+    "numeros": [
+      "345976"
+    ],
+    "enunciado": "¿Cuál es la descomposición estándar del número 345 976?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "300 000 + 40 000 + 5 000 + 900 + 70 + 6"
+      },
+      {
+        "id": "B",
+        "texto": "300 000 + 4 000 + 500 + 900 + 70 + 6"
+      },
+      {
+        "id": "C",
+        "texto": "300 000 + 40 000 + 500 + 90 + 7 + 6"
+      },
+      {
+        "id": "D",
+        "texto": "30 000 + 4 000 + 500 + 90 + 7 + 6"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "C": "Confunde 5 000 con 500 y 900 con 90.",
+      "D": "Desplaza un orden de magnitud hacia la derecha.",
+      "B": "Confunde 40 000 con 4 000."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "a) 345 976"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 1, descomposición estándar actividad 2a"
+    }
+  },
+  {
+    "id": "mat5r-oa1-02",
+    "tipo": "descomposicion_expandida",
+    "numeros": [
+      "730590"
+    ],
+    "enunciado": "¿Cuál es la descomposición expandida del número 730 590?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "7 × 100 000 + 3 × 10 000 + 0 × 1 000 + 5 × 100 + 9 × 10"
+      },
+      {
+        "id": "B",
+        "texto": "7 × 100 000 + 3 × 10 000 + 5 × 100 + 9 × 10"
+      },
+      {
+        "id": "C",
+        "texto": "7 × 10 000 + 3 × 1 000 + 5 × 100 + 9 × 10"
+      },
+      {
+        "id": "D",
+        "texto": "7 × 100 000 + 3 × 10 000 + 5 × 1000 + 9 × 10"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "D": "Pone 5 × 1000 en vez de 5 × 100.",
+      "C": "Desplaza todos los valores posicionales un orden hacia la derecha.",
+      "A": "Incluye el cero explícitamente, lo cual es correcto pero no es la forma más común; la A es la respuesta esperada."
+    },
+    "nivel": "medio",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "a) 730 590"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 1, descomposición expandida actividad 3a"
+    }
+  },
+  {
+    "id": "mat5r-oa1-03",
+    "tipo": "error",
+    "numeros": [
+      "24570000"
+    ],
+    "enunciado": "Diego escribe: «24 570 000 = 2 × 1 000 000 + 4 × 100 000 + 5 × 10 000 + 7 × 1 000». ¿Es correcta su descomposición expandida?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, es correcta"
+      },
+      {
+        "id": "B",
+        "texto": "No, porque 2 × 1 000 000 = 2 000 000, pero debería ser 2 × 10 000 000 = 20 000 000"
+      },
+      {
+        "id": "C",
+        "texto": "Sí, pero debería ser descomposición estándar"
+      },
+      {
+        "id": "D",
+        "texto": "No, porque falta el dígito 7"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "La descomposición de Diego da 2 457 000, no 24 570 000.",
+      "D": "El dígito 7 sí está presente, pero con el valor posicional incorrecto.",
+      "C": "El formato es expandido, pero los valores posicionales están mal."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "24 570 000 = 2 • 10 000 000 + 4 • 1 000 000 + 5 • 100 000 + 7 • 10 000"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 1, descomposición expandida ejemplo"
+    }
+  },
+  {
+    "id": "mat5r-oa1-04",
+    "tipo": "valor_posicional",
+    "numeros": [
+      "18480000"
+    ],
+    "enunciado": "En el número 18 480 000, ¿cuántas decenas de millón tiene?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1 decena de millón"
+      },
+      {
+        "id": "B",
+        "texto": "0 decenas de millón"
+      },
+      {
+        "id": "C",
+        "texto": "18 decenas de millón"
+      },
+      {
+        "id": "D",
+        "texto": "8 decenas de millón"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "C": "Confunde el número completo con la cantidad de decenas de millón.",
+      "D": "Toma el dígito 8 (unidades de millón) en vez del dígito 1 (decenas de millón).",
+      "B": "El dígito 1 en la posición de decenas de millón indica 1 decena de millón."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "18 480 000"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 1, lectura de números grandes, censo 2024"
+    }
+  },
+  {
+    "id": "mat5r-oa1-05",
+    "tipo": "componer",
+    "numeros": [
+      "5",
+      "1000000",
+      "2",
+      "10000",
+      "9",
+      "100"
+    ],
+    "enunciado": "¿Qué número se forma con 5 grupos de 1 millón, 2 grupos de 10 mil y 9 grupos de 100?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "5 200 900"
+      },
+      {
+        "id": "B",
+        "texto": "5 209 000"
+      },
+      {
+        "id": "C",
+        "texto": "5 020 900"
+      },
+      {
+        "id": "D",
+        "texto": "5 020 090"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "A": "Pone 200 000 en vez de 20 000.",
+      "D": "Pone 90 en vez de 900.",
+      "B": "Confunde las posiciones de 20 000 y 900."
+    },
+    "nivel": "intermedio",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "b) 5 grupos de 1 millón, 2 grupos de 10 mil y 9 grupos de 100."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 1, Ejercita actividad 1b"
+    }
+  },
+  {
+    "id": "mat5r-oa1-06",
+    "tipo": "lectura",
+    "numeros": [
+      "49158634"
+    ],
+    "enunciado": "¿Cómo se lee correctamente el número 49 158 634?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Cuatro millones novecientos quince mil ochocientos sesenta y tres cuatro"
+      },
+      {
+        "id": "B",
+        "texto": "Cuarenta y nueve millones ciento cincuenta y ocho mil seiscientos treinta y cuatro"
+      },
+      {
+        "id": "C",
+        "texto": "Cuarenta y nueve millones quinientos dieciocho mil seiscientos treinta y cuatro"
+      },
+      {
+        "id": "D",
+        "texto": "Cuarenta y nueve mil ciento cincuenta y ocho mil seiscientos treinta y cuatro"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "D": "Lee «mil» en vez de «millones» en la primera parte.",
+      "A": "Lee dígito por dígito sin considerar el valor posicional.",
+      "C": "Lee 158 como 518, invirtiendo dígitos."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "Se lee: cuarenta y nueve millones ciento cincuenta y ocho mil seiscientos treinta y cuatro."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 1, lectura de números, ejemplo 49 158 634"
+    }
+  },
+  {
+    "id": "mat5r-oa1-07",
+    "tipo": "descomposicion_estandar",
+    "numeros": [
+      "12654000"
+    ],
+    "enunciado": "¿Cuál es la descomposición estándar de 12 654 000?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "12 000 000 + 65 000 + 4 000"
+      },
+      {
+        "id": "B",
+        "texto": "12 000 000 + 600 000 + 5 000 + 400"
+      },
+      {
+        "id": "C",
+        "texto": "12 000 000 + 600 000 + 50 000 + 4 000"
+      },
+      {
+        "id": "D",
+        "texto": "10 000 000 + 2 000 000 + 60 000 + 5 000 + 400"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "D": "Confunde 600 000 con 60 000 y 50 000 con 5 000.",
+      "A": "Agrupa 65 000 en vez de separar 600 000 + 50 000.",
+      "B": "Confunde 50 000 con 5 000 y 4 000 con 400."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "b) 12 654 000"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 1, descomposición estándar actividad 2b"
+    }
+  },
+  {
+    "id": "mat5r-oa1-08",
+    "tipo": "error",
+    "numeros": [
+      "100000000"
+    ],
+    "enunciado": "Catalina dice: «100 000 000 se forma con 100 grupos de 1 millón». ¿Tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "No, porque se forma con 10 grupos de 1 millón"
+      },
+      {
+        "id": "B",
+        "texto": "Sí, porque 100 × 1 000 000 = 100 000 000"
+      },
+      {
+        "id": "C",
+        "texto": "No, porque se forma con 10 grupos de 10 millones"
+      },
+      {
+        "id": "D",
+        "texto": "Sí, pero también se puede decir que son 10 grupos de 10 millones"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "B": "Aunque 100 × 1 000 000 = 100 000 000 es cierto, la D es más completa.",
+      "A": "10 × 1 000 000 = 10 000 000, no 100 000 000.",
+      "C": "10 × 10 000 000 = 100 000 000 es cierto, pero Catalina también tiene razón con 100 × 1 000 000."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "100 000 000; cien millones."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 1, 100 millones"
+    }
+  },
+  {
+    "id": "mat5r-oa1-09",
+    "tipo": "descomposicion_expandida",
+    "numeros": [
+      "65009000"
+    ],
+    "enunciado": "¿Cuál es la descomposición expandida de 65 009 000?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "6 × 10 000 000 + 5 × 100 000 + 9 × 1 000"
+      },
+      {
+        "id": "B",
+        "texto": "6 × 10 000 000 + 5 × 1 000 000 + 9 × 1 000"
+      },
+      {
+        "id": "C",
+        "texto": "65 × 1 000 000 + 9 × 1 000"
+      },
+      {
+        "id": "D",
+        "texto": "6 × 1 000 000 + 5 × 100 000 + 9 × 100"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Confunde 5 × 1 000 000 con 5 × 100 000.",
+      "C": "Agrupa 65 × 1 000 000, lo cual no es descomposición expandida estándar.",
+      "D": "Desplaza todos los valores un orden hacia la derecha."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "c) 65 009 000"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 1, descomposición expandida actividad 3c"
+    }
+  }
+]

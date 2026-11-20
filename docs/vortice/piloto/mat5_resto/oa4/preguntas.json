@@ -1,0 +1,404 @@
+[
+  {
+    "id": "mat5r-oa4-01",
+    "tipo": "dividir",
+    "numeros": [
+      "98",
+      "2"
+    ],
+    "enunciado": "Una escuela tiene 98 cuadernos que reparte equitativamente entre 2 cursos. ¿Cuántos cuadernos recibe cada curso?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "47 cuadernos"
+      },
+      {
+        "id": "B",
+        "texto": "50 cuadernos"
+      },
+      {
+        "id": "C",
+        "texto": "49 cuadernos"
+      },
+      {
+        "id": "D",
+        "texto": "48 cuadernos"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "D": "Resta 1 al cociente correcto por error de cálculo.",
+      "B": "Redondea hacia arriba en vez de dividir exactamente.",
+      "A": "Comete un error de resta en el algoritmo."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "a) 98 : 2 ="
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 5 «División», Practica actividad 1a"
+    }
+  },
+  {
+    "id": "mat5r-oa4-02",
+    "tipo": "dividir_resto",
+    "numeros": [
+      "47",
+      "3"
+    ],
+    "enunciado": "Un panadero tiene 47 panes y los distribuye en 3 bandejas iguales. ¿Cuántos panes hay en cada bandeja y cuántos sobran?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "15 panes en cada bandeja, sobran 2"
+      },
+      {
+        "id": "B",
+        "texto": "14 panes en cada bandeja, sobran 1"
+      },
+      {
+        "id": "C",
+        "texto": "16 panes en cada bandeja, sobran 1"
+      },
+      {
+        "id": "D",
+        "texto": "15 panes en cada bandeja, sobran 3"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "C": "Calcula 16 × 3 = 48, que es mayor que 47.",
+      "D": "Pone el resto igual al divisor, lo cual es imposible.",
+      "B": "Calcula 14 × 3 = 42, dejando un resto de 5, mayor que el divisor."
+    },
+    "nivel": "medio",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "b) 47 : 3 ="
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 5 «División», Practica actividad 1b"
+    }
+  },
+  {
+    "id": "mat5r-oa4-03",
+    "tipo": "error",
+    "numeros": [
+      "78",
+      "4",
+      "19",
+      "2"
+    ],
+    "enunciado": "Andrés dice que 78 : 4 = 19 con resto 3. ¿Tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, porque 78 dividido entre 4 da aproximadamente 20"
+      },
+      {
+        "id": "B",
+        "texto": "Sí, porque 19 × 4 + 3 = 78"
+      },
+      {
+        "id": "C",
+        "texto": "No, porque 19 × 4 + 3 = 79, no 78; el resto correcto es 2"
+      },
+      {
+        "id": "D",
+        "texto": "No, porque el cociente debería ser 20"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "B": "Calcula mal: 19 × 4 + 3 = 76 + 3 = 79, no 78.",
+      "D": "El cociente 20 daría 20 × 4 = 80, que es mayor que 78.",
+      "A": "Aproximar no da el resultado exacto con resto."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "78 : 4 = 19, resto 2"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 5 «División», ejemplo algoritmo 78 : 4"
+    }
+  },
+  {
+    "id": "mat5r-oa4-04",
+    "tipo": "comprobar",
+    "numeros": [
+      "84",
+      "3",
+      "2",
+      "254"
+    ],
+    "enunciado": "Para comprobar que 254 : 3 = 84 con resto 2, ¿qué expresión se debe verificar?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "84 × 2 + 3 = 254"
+      },
+      {
+        "id": "B",
+        "texto": "84 × 3 + 2 = 254"
+      },
+      {
+        "id": "C",
+        "texto": "84 + 3 + 2 = 254"
+      },
+      {
+        "id": "D",
+        "texto": "254 × 3 + 2 = 84"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Confunde divisor y resto en la fórmula de comprobación.",
+      "C": "Suma en vez de multiplicar cociente por divisor.",
+      "D": "Invierte dividendo y cociente en la fórmula."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "84 • 3 + 2 = 254"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Glosario: Comprobación del resultado de una división"
+    }
+  },
+  {
+    "id": "mat5r-oa4-05",
+    "tipo": "dividir",
+    "numeros": [
+      "160",
+      "2"
+    ],
+    "enunciado": "En una biblioteca hay 160 libros que se distribuyen en 2 estantes iguales. ¿Cuántos libros hay en cada estante?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "80 libros"
+      },
+      {
+        "id": "B",
+        "texto": "70 libros"
+      },
+      {
+        "id": "C",
+        "texto": "75 libros"
+      },
+      {
+        "id": "D",
+        "texto": "90 libros"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Resta 10 al cociente correcto.",
+      "D": "Suma 10 al cociente correcto.",
+      "C": "Confunde 160 : 2 con 150 : 2."
+    },
+    "nivel": "intermedio",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "a) 160 : 2 ="
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 5 «División», Practica actividad 11a"
+    }
+  },
+  {
+    "id": "mat5r-oa4-06",
+    "tipo": "exacta_inexacta",
+    "numeros": [
+      "20",
+      "4"
+    ],
+    "enunciado": "¿La división 20 : 4 es exacta o inexacta?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Exacta, porque el resto es 4"
+      },
+      {
+        "id": "B",
+        "texto": "Inexacta, porque 20 no es divisible por 4"
+      },
+      {
+        "id": "C",
+        "texto": "Inexacta, porque el resto es 0"
+      },
+      {
+        "id": "D",
+        "texto": "Exacta, porque el resto es 0"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "C": "Confunde: resto 0 significa exacta, no inexacta.",
+      "A": "El resto no puede ser igual al divisor.",
+      "B": "20 sí es divisible por 4: 20 = 4 × 5."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "20 : 4 = 5, tiene resto 0, es una división exacta."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Repaso: División"
+    }
+  },
+  {
+    "id": "mat5r-oa4-07",
+    "tipo": "dividir_resto",
+    "numeros": [
+      "220",
+      "3"
+    ],
+    "enunciado": "Un granjero cosechó 220 kg de trigo y los empaca en sacos de 3 kg cada uno. ¿Cuántos sacos llena y cuántos kg sobran?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "73 sacos, sobran 2 kg"
+      },
+      {
+        "id": "B",
+        "texto": "74 sacos, sobran 0 kg"
+      },
+      {
+        "id": "C",
+        "texto": "73 sacos, sobran 1 kg"
+      },
+      {
+        "id": "D",
+        "texto": "72 sacos, sobran 2 kg"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "B": "Calcula 74 × 3 = 222, que es mayor que 220.",
+      "D": "Calcula 72 × 3 = 216, dejando 4 kg de resto, mayor que el divisor.",
+      "A": "Calcula 73 × 3 = 219, el resto es 1, no 2."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "b) 220 : 3 ="
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 5 «División», Practica actividad 11b"
+    }
+  },
+  {
+    "id": "mat5r-oa4-08",
+    "tipo": "error",
+    "numeros": [
+      "23",
+      "4",
+      "5",
+      "3"
+    ],
+    "enunciado": "María dice: «En la división 23 : 4 = 5 con resto 3, el resto es mayor que el divisor, por lo tanto está bien». ¿Es correcto lo que dice María?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "No, porque la división está mal calculada"
+      },
+      {
+        "id": "B",
+        "texto": "Sí, porque el resto puede ser mayor que el divisor"
+      },
+      {
+        "id": "C",
+        "texto": "No, porque el resto (3) es menor que el divisor (4), y eso es correcto; pero su razón es falsa"
+      },
+      {
+        "id": "D",
+        "texto": "Sí, porque 5 × 4 + 3 = 23 confirma el resultado"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "B": "El resto nunca puede ser mayor o igual al divisor.",
+      "A": "La división está bien calculada: 5 × 4 + 3 = 23.",
+      "D": "Aunque 5 × 4 + 3 = 23 es cierto, la razón de María es falsa: el resto (3) es menor, no mayor, que el divisor (4)."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "23 : 4 = 5, tiene resto 3, es una división no exacta."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Repaso: División"
+    }
+  },
+  {
+    "id": "mat5r-oa4-09",
+    "tipo": "dividir",
+    "numeros": [
+      "1250",
+      "4"
+    ],
+    "enunciado": "Una fábrica produce 1.250 botellas diarias y las empaca en cajas de 4 botellas cada una. ¿Cuántas cajas llena por día?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "313 cajas"
+      },
+      {
+        "id": "B",
+        "texto": "310 cajas"
+      },
+      {
+        "id": "C",
+        "texto": "312 cajas"
+      },
+      {
+        "id": "D",
+        "texto": "312 cajas y sobran 2 botellas"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "C": "Da solo el cociente sin considerar el resto.",
+      "A": "Redondea el cociente hacia arriba.",
+      "B": "Comete un error de cálculo: 310 × 4 = 1.240, faltarían 10 botellas."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "matematica5.md",
+      "texto": "a. 1.250 : 4 ="
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Matemática 5.º, Casa del Saber, Santillana, Tomo I",
+      "edicion": "Santillana",
+      "ubicacion": "Unidad 2, Módulo 2 «División», Practica actividad 1a"
+    }
+  }
+]

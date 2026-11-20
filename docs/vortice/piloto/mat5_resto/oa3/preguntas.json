@@ -1,0 +1,400 @@
+[
+  {
+    "id": "mat5r-oa3-01",
+    "tipo": "multiplicar",
+    "numeros": [
+      "16",
+      "24"
+    ],
+    "enunciado": "Una granja tiene 16 corrales con 24 gallinas cada uno. ¿Cuántas gallinas hay en total?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "384 gallinas"
+      },
+      {
+        "id": "B",
+        "texto": "404 gallinas"
+      },
+      {
+        "id": "C",
+        "texto": "364 gallinas"
+      },
+      {
+        "id": "D",
+        "texto": "374 gallinas"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "C": "Comete un error de 20 en el cálculo del algoritmo.",
+      "B": "Suma 20 de más al producto correcto.",
+      "D": "Error de acarreo en la multiplicación."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "a) 16 • 24"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 2 «Multiplicación», Ejercita"
+    }
+  },
+  {
+    "id": "mat5r-oa3-02",
+    "tipo": "multiplicar",
+    "numeros": [
+      "38",
+      "57"
+    ],
+    "enunciado": "Una imprenta produce 38 folletos por hora durante 57 horas. ¿Cuántos folletos produce en total?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "2.066 folletos"
+      },
+      {
+        "id": "B",
+        "texto": "2.156 folletos"
+      },
+      {
+        "id": "C",
+        "texto": "2.166 folletos"
+      },
+      {
+        "id": "D",
+        "texto": "2.266 folletos"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "A": "Resta 100 al producto correcto por error de acarreo.",
+      "D": "Suma 100 de más al producto correcto.",
+      "B": "Error de 10 en el cálculo parcial."
+    },
+    "nivel": "medio",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "a) 38 • 57"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 2 «Multiplicación», Ejercita actividad 11a"
+    }
+  },
+  {
+    "id": "mat5r-oa3-03",
+    "tipo": "error",
+    "numeros": [
+      "13",
+      "21",
+      "273"
+    ],
+    "enunciado": "Pedro calcula 13 × 21 así: 13 × 20 = 260 y 13 × 1 = 13, entonces 260 + 13 = 273. ¿Su resultado es correcto?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, 273 es correcto, pero usó la descomposición de 21, no de 13"
+      },
+      {
+        "id": "B",
+        "texto": "No, porque debería haber multiplicado 10 × 21 y 3 × 21"
+      },
+      {
+        "id": "C",
+        "texto": "Sí, pero el método no es válido"
+      },
+      {
+        "id": "D",
+        "texto": "No, porque 13 × 21 = 263"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "D": "Calcula mal: 13 × 21 = 273, no 263.",
+      "B": "Ambos métodos son válidos: descomponer 21 o descomponer 13 da el mismo resultado.",
+      "C": "El método de descomposición es completamente válido (propiedad distributiva)."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "10 • 21 = 210"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 2 «Multiplicación», idea de Sofía 13 • 21"
+    }
+  },
+  {
+    "id": "mat5r-oa3-04",
+    "tipo": "propiedad",
+    "numeros": [
+      "9",
+      "4",
+      "25"
+    ],
+    "enunciado": "Para calcular 9 × 4 × 25 de forma más fácil, ¿qué propiedad de la multiplicación se puede usar?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "No se puede simplificar"
+      },
+      {
+        "id": "B",
+        "texto": "Conmutativa: 25 × 4 × 9 = 900"
+      },
+      {
+        "id": "C",
+        "texto": "Distributiva: 9 × 4 + 9 × 25 = 36 + 225 = 261"
+      },
+      {
+        "id": "D",
+        "texto": "Asociativa: 9 × (4 × 25) = 9 × 100 = 900"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "B": "La conmutativa solo cambia el orden, no agrupa para simplificar.",
+      "C": "Aplica mal la distributiva: se usa con suma, no con producto encadenado.",
+      "A": "Sí se puede simplificar usando la propiedad asociativa."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "a) 9 • 4 • 25"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 2 «Multiplicación», propiedades, Ejercita actividad a"
+    }
+  },
+  {
+    "id": "mat5r-oa3-05",
+    "tipo": "multiplicar",
+    "numeros": [
+      "29",
+      "44"
+    ],
+    "enunciado": "Un supermercado recibe 29 cajas con 44 frascos cada una. ¿Cuántos frascos recibe en total?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1.176 frascos"
+      },
+      {
+        "id": "B",
+        "texto": "1.276 frascos"
+      },
+      {
+        "id": "C",
+        "texto": "1.376 frascos"
+      },
+      {
+        "id": "D",
+        "texto": "1.266 frascos"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Resta 100 al producto correcto.",
+      "C": "Suma 100 de más al producto correcto.",
+      "D": "Error de 10 en el cálculo."
+    },
+    "nivel": "intermedio",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "b) 29 • 44"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 2 «Multiplicación», Ejercita actividad 11b"
+    }
+  },
+  {
+    "id": "mat5r-oa3-06",
+    "tipo": "multiplicar",
+    "numeros": [
+      "254",
+      "7"
+    ],
+    "enunciado": "Un avión recorre 254 km por viaje. Si hace 7 viajes, ¿cuántos km recorre en total?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1.768 km"
+      },
+      {
+        "id": "B",
+        "texto": "1.878 km"
+      },
+      {
+        "id": "C",
+        "texto": "1.678 km"
+      },
+      {
+        "id": "D",
+        "texto": "1.778 km"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "C": "Resta 100 al producto correcto.",
+      "B": "Suma 100 de más al producto correcto.",
+      "A": "Error de 10 en el cálculo."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "matematica5.md",
+      "texto": "a. 254 • 7 ="
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Matemática 5.º, Casa del Saber, Santillana, Tomo I",
+      "edicion": "Santillana",
+      "ubicacion": "Unidad 2, Módulo 1 «Multiplicación», Practica actividad 1a"
+    }
+  },
+  {
+    "id": "mat5r-oa3-07",
+    "tipo": "estimar",
+    "numeros": [
+      "33",
+      "81"
+    ],
+    "enunciado": "Estima el producto 33 × 81 redondeando cada factor a la decena más cercana.",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "30 × 80 = 2.500"
+      },
+      {
+        "id": "B",
+        "texto": "30 × 90 = 2.700"
+      },
+      {
+        "id": "C",
+        "texto": "40 × 80 = 3.200"
+      },
+      {
+        "id": "D",
+        "texto": "30 × 80 = 2.400"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "A": "Calcula mal 30 × 80: el resultado es 2.400, no 2.500.",
+      "C": "Redondea 33 a 40 en vez de a 30.",
+      "B": "Redondea 81 a 90 en vez de a 80."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "a) 33 • 81"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 2 «Multiplicación», Estimación de productos"
+    }
+  },
+  {
+    "id": "mat5r-oa3-08",
+    "tipo": "error",
+    "numeros": [
+      "36",
+      "23"
+    ],
+    "enunciado": "Ana calcula 36 × 23 y obtiene 728. ¿Es correcto su resultado?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, pero el procedimiento es incorrecto"
+      },
+      {
+        "id": "B",
+        "texto": "No, porque 36 × 23 = 738"
+      },
+      {
+        "id": "C",
+        "texto": "No, porque 36 × 23 = 828"
+      },
+      {
+        "id": "D",
+        "texto": "Sí, 36 × 23 = 728"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "D": "Calcula mal: 36 × 23 = 828, no 728.",
+      "B": "También incorrecto: 36 × 23 = 828.",
+      "A": "El resultado 728 es incorrecto sin importar el procedimiento."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "b) 36 • 23"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 2 «Multiplicación», Ejercita actividad b"
+    }
+  },
+  {
+    "id": "mat5r-oa3-09",
+    "tipo": "multiplicar",
+    "numeros": [
+      "858",
+      "14"
+    ],
+    "enunciado": "Un avión recorre 858 km en cada viaje de ida y vuelta. ¿Cuántos km recorrerá en 14 viajes?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "12.112 km"
+      },
+      {
+        "id": "B",
+        "texto": "11.012 km"
+      },
+      {
+        "id": "C",
+        "texto": "11.912 km"
+      },
+      {
+        "id": "D",
+        "texto": "12.012 km"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "B": "Resta 1.000 al producto correcto.",
+      "A": "Error de 100 en el cálculo.",
+      "C": "Error de 100 en el cálculo."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "matematica5.md",
+      "texto": "858 • 14"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Matemática 5.º, Casa del Saber, Santillana, Tomo I",
+      "edicion": "Santillana",
+      "ubicacion": "Unidad 2, Módulo 1 «Multiplicación», ejemplo avión Santiago-Concepción"
+    }
+  }
+]

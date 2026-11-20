@@ -1,0 +1,384 @@
+[
+  {
+    "id": "mat5r-oa17-01",
+    "tipo": "perpendicular",
+    "numeros": [
+      "90"
+    ],
+    "enunciado": "¿Cuántos grados forman dos rectas perpendiculares?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "180°"
+      },
+      {
+        "id": "B",
+        "texto": "90°"
+      },
+      {
+        "id": "C",
+        "texto": "360°"
+      },
+      {
+        "id": "D",
+        "texto": "45°"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "D": "45° es la mitad de un ángulo recto.",
+      "A": "180° es un ángulo llano, no recto.",
+      "C": "360° es una vuelta completa."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "M yL son perpendiculares se escribeM ⊥L."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 10, Líneas rectas perpendiculares"
+    }
+  },
+  {
+    "id": "mat5r-oa17-02",
+    "tipo": "paralelo",
+    "numeros": [],
+    "enunciado": "En un rectángulo, ¿cuántos pares de lados paralelos hay?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1 par"
+      },
+      {
+        "id": "B",
+        "texto": "2 pares"
+      },
+      {
+        "id": "C",
+        "texto": "4 pares"
+      },
+      {
+        "id": "D",
+        "texto": "0 pares"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Un rectángulo tiene dos pares de lados opuestos paralelos.",
+      "C": "Solo hay 2 pares, no 4.",
+      "D": "Un rectángulo sí tiene lados paralelos."
+    },
+    "nivel": "medio",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "Identificar lados paralelos y perpendiculares en figuras geométricas."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 10, objetivos"
+    }
+  },
+  {
+    "id": "mat5r-oa17-03",
+    "tipo": "error",
+    "numeros": [
+      "6",
+      "12"
+    ],
+    "enunciado": "Un cubo tiene 6 caras y 12 aristas. Sofía dice: «Todas las aristas de un cubo son paralelas entre sí». ¿Tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, pero solo las de la misma cara"
+      },
+      {
+        "id": "B",
+        "texto": "No, ninguna arista es paralela"
+      },
+      {
+        "id": "C",
+        "texto": "Sí, todas las aristas son paralelas"
+      },
+      {
+        "id": "D",
+        "texto": "No, solo las aristas opuestas de cada cara son paralelas; otras son perpendiculares"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "C": "Las aristas adyacentes de un cubo son perpendiculares, no paralelas.",
+      "B": "Las aristas opuestas de cada cara sí son paralelas.",
+      "A": "Las aristas paralelas pueden estar en caras diferentes."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "Identificar aristas y caras paralelas y perpendiculares en cuerpos geométricos."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 10, objetivos"
+    }
+  },
+  {
+    "id": "mat5r-oa17-04",
+    "tipo": "perpendicular",
+    "numeros": [
+      "4"
+    ],
+    "enunciado": "Un cuadrado tiene 4 ángulos. ¿Cuántos de ellos son ángulos rectos?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1 ángulo recto"
+      },
+      {
+        "id": "B",
+        "texto": "4 ángulos rectos"
+      },
+      {
+        "id": "C",
+        "texto": "2 ángulos rectos"
+      },
+      {
+        "id": "D",
+        "texto": "0 ángulos rectos"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "C": "Un cuadrado tiene 4 ángulos rectos, no 2.",
+      "A": "Un cuadrado tiene 4 ángulos rectos, no 1.",
+      "D": "Todos los ángulos de un cuadrado son rectos."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "M yL son perpendiculares se escribeM ⊥L."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 10, ángulo recto"
+    }
+  },
+  {
+    "id": "mat5r-oa17-05",
+    "tipo": "paralelo",
+    "numeros": [
+      "6"
+    ],
+    "enunciado": "Un cubo tiene 6 caras. ¿Cuántas caras paralelas tiene en total (contando pares)?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "6 pares de caras paralelas"
+      },
+      {
+        "id": "B",
+        "texto": "2 pares de caras paralelas"
+      },
+      {
+        "id": "C",
+        "texto": "0 pares de caras paralelas"
+      },
+      {
+        "id": "D",
+        "texto": "3 pares de caras paralelas"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "A": "Un cubo tiene 3 pares de caras opuestas paralelas, no 6.",
+      "B": "Un cubo tiene 3 pares, no 2.",
+      "C": "Un cubo sí tiene caras paralelas."
+    },
+    "nivel": "intermedio",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "Identificar aristas y caras paralelas y perpendiculares en cuerpos geométricos."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 10, cuerpos geométricos"
+    }
+  },
+  {
+    "id": "mat5r-oa17-06",
+    "tipo": "perpendicular",
+    "numeros": [
+      "12"
+    ],
+    "enunciado": "Un cubo tiene 12 aristas. ¿Cuántas aristas perpendiculares se encuentran en cada vértice?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1 arista perpendicular"
+      },
+      {
+        "id": "B",
+        "texto": "4 aristas perpendiculares"
+      },
+      {
+        "id": "C",
+        "texto": "2 aristas perpendiculares"
+      },
+      {
+        "id": "D",
+        "texto": "3 aristas perpendiculares"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "C": "En cada vértice de un cubo se encuentran 3 aristas mutuamente perpendiculares.",
+      "B": "Solo 3 aristas se encuentran en cada vértice.",
+      "A": "3 aristas se encuentran en cada vértice."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "Caras y aristas paralelas y perpendiculares"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 10, índice"
+    }
+  },
+  {
+    "id": "mat5r-oa17-07",
+    "tipo": "paralelo",
+    "numeros": [],
+    "enunciado": "En un triángulo equilátero, ¿hay lados paralelos?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, 2 pares de lados paralelos"
+      },
+      {
+        "id": "B",
+        "texto": "Sí, 3 pares de lados paralelos"
+      },
+      {
+        "id": "C",
+        "texto": "No, ningún par de lados es paralelo"
+      },
+      {
+        "id": "D",
+        "texto": "Sí, 1 par de lados paralelos"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "D": "Un triángulo no tiene lados paralelos; sus lados siempre se intersectan.",
+      "A": "Un triángulo no tiene lados paralelos.",
+      "B": "Un triángulo no tiene lados paralelos."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "Identificar lados paralelos y perpendiculares en figuras geométricas."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 10, paralelismo"
+    }
+  },
+  {
+    "id": "mat5r-oa17-08",
+    "tipo": "error",
+    "numeros": [],
+    "enunciado": "Diego dice: «En un rectángulo, los lados adyacentes son paralelos». ¿Tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "No, los lados adyacentes son perpendiculares; los opuestos son paralelos"
+      },
+      {
+        "id": "B",
+        "texto": "No, ningún lado es paralelo en un rectángulo"
+      },
+      {
+        "id": "C",
+        "texto": "Sí, los lados adyacentes son paralelos"
+      },
+      {
+        "id": "D",
+        "texto": "Sí, pero solo en un cuadrado"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "C": "Los lados adyacentes forman ángulos rectos, son perpendiculares.",
+      "B": "Un rectángulo sí tiene lados paralelos (los opuestos).",
+      "D": "En todo rectángulo los lados opuestos son paralelos."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "Identifica los cuadriláteros de la página 11 que tengan pares de lados perpendiculares."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 10, actividad 4"
+    }
+  },
+  {
+    "id": "mat5r-oa17-09",
+    "tipo": "perpendicular",
+    "numeros": [
+      "360"
+    ],
+    "enunciado": "La suma de los ángulos internos de un cuadrilátero es 360°. Si es un rectángulo, ¿cuánto mide cada ángulo?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "120°"
+      },
+      {
+        "id": "B",
+        "texto": "90°"
+      },
+      {
+        "id": "C",
+        "texto": "60°"
+      },
+      {
+        "id": "D",
+        "texto": "45°"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "C": "60° × 4 = 240°, no 360°.",
+      "A": "120° × 4 = 480°, no 360°.",
+      "D": "45° × 4 = 180°, no 360°."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B_1.md",
+      "texto": "M yL son perpendiculares se escribeM ⊥L."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 10, ángulo recto"
+    }
+  }
+]

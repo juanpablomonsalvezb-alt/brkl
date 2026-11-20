@@ -1,0 +1,408 @@
+[
+  {
+    "id": "mat5r-oa26-01",
+    "tipo": "tabla",
+    "numeros": [
+      "6",
+      "3",
+      "5",
+      "7",
+      "1"
+    ],
+    "enunciado": "En una tabla de lesiones se registran: Patio 6, Pasillo 3, Sala de clases 5, Gimnasio 7, Escaleras 1. ¿Cuál es el total de lesiones?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "20"
+      },
+      {
+        "id": "B",
+        "texto": "24"
+      },
+      {
+        "id": "C",
+        "texto": "22"
+      },
+      {
+        "id": "D",
+        "texto": "18"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "A": "Resta 2 en vez de sumar correctamente.",
+      "B": "Suma mal: 6+3+5+7+1 = 22, no 24.",
+      "D": "Olvida sumar el valor del Gimnasio."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "Total 22"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 9, Gráficos de barras actividad 1"
+    }
+  },
+  {
+    "id": "mat5r-oa26-02",
+    "tipo": "grafico_barras",
+    "numeros": [
+      "7"
+    ],
+    "enunciado": "En un gráfico de barras sobre lesiones, el Gimnasio tiene 7, el Patio 6, la Sala de clases 5, el Pasillo 3 y las Escaleras 1. ¿Dónde hubo más lesiones?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Pasillo"
+      },
+      {
+        "id": "B",
+        "texto": "Sala de clases"
+      },
+      {
+        "id": "C",
+        "texto": "Patio"
+      },
+      {
+        "id": "D",
+        "texto": "Gimnasio"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "C": "El Patio tiene 6, menos que el Gimnasio con 7.",
+      "B": "La Sala de clases tiene 5, menos que el Gimnasio.",
+      "A": "El Pasillo tiene 3, el valor más bajo."
+    },
+    "nivel": "medio",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "Gimnasio 7"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 9, Gráficos de barras"
+    }
+  },
+  {
+    "id": "mat5r-oa26-03",
+    "tipo": "grafico_lineas",
+    "numeros": [
+      "24"
+    ],
+    "enunciado": "Un gráfico de líneas muestra temperaturas mensuales. Si en marzo la temperatura es 24 °C y en abril es 20 °C, ¿cuánto bajó la temperatura?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "2 °C"
+      },
+      {
+        "id": "B",
+        "texto": "6 °C"
+      },
+      {
+        "id": "C",
+        "texto": "4 °C"
+      },
+      {
+        "id": "D",
+        "texto": "8 °C"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "B": "Calcula 24 - 20 = 4, no 6.",
+      "A": "Calcula 24 - 20 = 4, no 2.",
+      "D": "Calcula 24 - 20 = 4, no 8."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "cantidades que varían en el tiempo se llama gráfico de líneas."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 9, Gráficos de líneas"
+    }
+  },
+  {
+    "id": "mat5r-oa26-04",
+    "tipo": "tabla",
+    "numeros": [
+      "120",
+      "135",
+      "110"
+    ],
+    "enunciado": "Una biblioteca registró libros prestados: abril 120, mayo 135, junio 110. ¿En qué mes se prestaron más libros?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Abril"
+      },
+      {
+        "id": "B",
+        "texto": "Abril y Junio son iguales"
+      },
+      {
+        "id": "C",
+        "texto": "Mayo"
+      },
+      {
+        "id": "D",
+        "texto": "Junio"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "A": "Abril tiene 120, menos que mayo con 135.",
+      "D": "Junio tiene 110, el valor más bajo.",
+      "B": "Abril (120) y Junio (110) no son iguales."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "Juntando tablas"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 9, Juntando tablas"
+    }
+  },
+  {
+    "id": "mat5r-oa26-05",
+    "tipo": "grafico_lineas",
+    "numeros": [
+      "18",
+      "20",
+      "24"
+    ],
+    "enunciado": "Un gráfico de líneas muestra temperaturas: 6h = 18°C, 12h = 24°C, 18h = 20°C. ¿En qué hora fue la temperatura más alta?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "6h y 18h son iguales"
+      },
+      {
+        "id": "B",
+        "texto": "18h"
+      },
+      {
+        "id": "C",
+        "texto": "6h"
+      },
+      {
+        "id": "D",
+        "texto": "12h"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "C": "6h tiene 18°C, la más baja.",
+      "B": "18h tiene 20°C, menos que 12h con 24°C.",
+      "A": "6h (18°C) y 18h (20°C) no son iguales."
+    },
+    "nivel": "medio",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "Dibuja un gráfico de líneas a partir de la tabla."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 9, Cómo dibujar un gráfico de líneas"
+    }
+  },
+  {
+    "id": "mat5r-oa26-06",
+    "tipo": "tabla",
+    "numeros": [
+      "120",
+      "135",
+      "110"
+    ],
+    "enunciado": "Libros prestados: abril 120, mayo 135, junio 110. ¿Cuántos libros se prestaron en total en los tres meses?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "365"
+      },
+      {
+        "id": "B",
+        "texto": "345"
+      },
+      {
+        "id": "C",
+        "texto": "375"
+      },
+      {
+        "id": "D",
+        "texto": "355"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "D": "120+135+110 = 365, no 355.",
+      "C": "120+135+110 = 365, no 375.",
+      "B": "120+135+110 = 365, no 345."
+    },
+    "nivel": "medio",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "Organización de datos en tablas"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 9, Organización de datos en tablas"
+    }
+  },
+  {
+    "id": "mat5r-oa26-07",
+    "tipo": "grafico_barras",
+    "numeros": [
+      "6",
+      "3",
+      "5",
+      "7",
+      "1"
+    ],
+    "enunciado": "En un gráfico de barras de lesiones: Patio 6, Pasillo 3, Sala 5, Gimnasio 7, Escaleras 1. ¿Cuántas lesiones más hubo en el Gimnasio que en las Escaleras?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "7 más"
+      },
+      {
+        "id": "B",
+        "texto": "5 más"
+      },
+      {
+        "id": "C",
+        "texto": "4 más"
+      },
+      {
+        "id": "D",
+        "texto": "6 más"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "B": "7 - 1 = 6, no 5.",
+      "C": "7 - 1 = 6, no 4.",
+      "A": "7 - 1 = 6, no 7."
+    },
+    "nivel": "medio",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "Hizo un gráfico de barras para mostrarles a sus compañeros."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 9, Gráficos de barras"
+    }
+  },
+  {
+    "id": "mat5r-oa26-08",
+    "tipo": "grafico_lineas",
+    "numeros": [
+      "18",
+      "24"
+    ],
+    "enunciado": "Un gráfico de líneas muestra la temperatura a las 6h (18°C) y a las 12h (24°C). ¿Cuántos grados subió la temperatura entre las 6h y las 12h?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "6 °C"
+      },
+      {
+        "id": "B",
+        "texto": "4 °C"
+      },
+      {
+        "id": "C",
+        "texto": "10 °C"
+      },
+      {
+        "id": "D",
+        "texto": "8 °C"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "24 - 18 = 6, no 4.",
+      "D": "24 - 18 = 6, no 8.",
+      "C": "24 - 18 = 6, no 10."
+    },
+    "nivel": "medio",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "Cómo dibujar un gráfico de líneas"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 9, Cómo dibujar un gráfico de líneas"
+    }
+  },
+  {
+    "id": "mat5r-oa26-09",
+    "tipo": "completa_grafico",
+    "numeros": [
+      "6",
+      "3",
+      "5",
+      "7",
+      "1"
+    ],
+    "enunciado": "Sergio registró lesiones: Patio 6, Pasillo 3, Sala 5, Gimnasio 7, Escaleras 1. Si completa el gráfico de barras, ¿cuál debe ser la altura de la barra del Pasillo?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "7"
+      },
+      {
+        "id": "B",
+        "texto": "6"
+      },
+      {
+        "id": "C",
+        "texto": "3"
+      },
+      {
+        "id": "D",
+        "texto": "5"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "D": "5 corresponde a la Sala de clases, no al Pasillo.",
+      "B": "6 corresponde al Patio, no al Pasillo.",
+      "A": "7 corresponde al Gimnasio, no al Pasillo."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "Completa el gráfico."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 2",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 9, Gráficos de barras actividad 1a"
+    }
+  }
+]

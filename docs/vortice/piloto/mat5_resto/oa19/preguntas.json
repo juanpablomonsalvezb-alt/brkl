@@ -1,0 +1,399 @@
+[
+  {
+    "id": "mat5r-oa19-01",
+    "tipo": "convertir",
+    "numeros": [
+      "2",
+      "100"
+    ],
+    "enunciado": "Un cordel mide 2 metros. ¿Cuántos centímetros mide?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "2 000 cm"
+      },
+      {
+        "id": "B",
+        "texto": "2000 mm"
+      },
+      {
+        "id": "C",
+        "texto": "200 cm"
+      },
+      {
+        "id": "D",
+        "texto": "20 cm"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "D": "Multiplica por 10 en vez de 100.",
+      "A": "Multiplica por 1000 en vez de 100.",
+      "B": "Da el resultado en mm, no en cm."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "1 m = 100 cm"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Capítulo 3, Longitud, equivalencias"
+    }
+  },
+  {
+    "id": "mat5r-oa19-02",
+    "tipo": "convertir",
+    "numeros": [
+      "5",
+      "10"
+    ],
+    "enunciado": "Un lápiz mide 5 centímetros. ¿Cuántos milímetros mide?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "0,5 mm"
+      },
+      {
+        "id": "B",
+        "texto": "5 mm"
+      },
+      {
+        "id": "C",
+        "texto": "500 mm"
+      },
+      {
+        "id": "D",
+        "texto": "50 mm"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "B": "No convierte, deja el número igual.",
+      "C": "Multiplica por 100 en vez de 10.",
+      "A": "Divide en vez de multiplicar."
+    },
+    "nivel": "medio",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "El milímetro se obtiene dividiendo 1 cm en 10 partes iguales"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Glosario: unidades de medida de longitud"
+    }
+  },
+  {
+    "id": "mat5r-oa19-03",
+    "tipo": "error",
+    "numeros": [
+      "3",
+      "1000"
+    ],
+    "enunciado": "Camila dice: «3 kilómetros son 300 metros». ¿Tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "No, porque 3 km = 30 m"
+      },
+      {
+        "id": "B",
+        "texto": "Sí, porque 3 km = 300 m"
+      },
+      {
+        "id": "C",
+        "texto": "No, porque 3 km = 3 000 m"
+      },
+      {
+        "id": "D",
+        "texto": "Sí, porque 1 km = 100 m"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "B": "Calcula mal: 3 × 1000 = 3000, no 300.",
+      "A": "También incorrecto: 3 km = 3000 m.",
+      "D": "1 km = 1000 m, no 100 m."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "1 000 metros es un kilómetro"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Repaso: Longitud"
+    }
+  },
+  {
+    "id": "mat5r-oa19-04",
+    "tipo": "convertir",
+    "numeros": [
+      "250",
+      "10"
+    ],
+    "enunciado": "Una regla mide 250 milímetros. ¿Cuántos centímetros mide?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "25 cm"
+      },
+      {
+        "id": "B",
+        "texto": "250 cm"
+      },
+      {
+        "id": "C",
+        "texto": "2 500 cm"
+      },
+      {
+        "id": "D",
+        "texto": "2,5 cm"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "No convierte, deja el número igual.",
+      "D": "Divide por 100 en vez de 10.",
+      "C": "Multiplica por 10 en vez de dividir."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "El milímetro se obtiene dividiendo 1 cm en 10 partes iguales"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Glosario: unidades de medida"
+    }
+  },
+  {
+    "id": "mat5r-oa19-05",
+    "tipo": "convertir",
+    "numeros": [
+      "500",
+      "100"
+    ],
+    "enunciado": "Una mesa mide 500 centímetros. ¿Cuántos metros mide?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "0,5 m"
+      },
+      {
+        "id": "B",
+        "texto": "500 m"
+      },
+      {
+        "id": "C",
+        "texto": "5 m"
+      },
+      {
+        "id": "D",
+        "texto": "50 m"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "D": "Multiplica por 10 en vez de dividir por 100.",
+      "A": "Divide por 1000 en vez de 100.",
+      "B": "No convierte."
+    },
+    "nivel": "intermedio",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "100 centímetros es 1 metro"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Repaso: Longitud"
+    }
+  },
+  {
+    "id": "mat5r-oa19-06",
+    "tipo": "convertir",
+    "numeros": [
+      "3",
+      "1000"
+    ],
+    "enunciado": "Un camino rural mide 3 kilómetros. ¿Cuántos metros mide?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "300 m"
+      },
+      {
+        "id": "B",
+        "texto": "30 m"
+      },
+      {
+        "id": "C",
+        "texto": "30 000 m"
+      },
+      {
+        "id": "D",
+        "texto": "3 000 m"
+      }
+    ],
+    "respuesta_correcta": "D",
+    "explicacion_distractores": {
+      "A": "Multiplica por 100 en vez de 1000.",
+      "C": "Multiplica por 10000 en vez de 1000.",
+      "B": "Multiplica por 10 en vez de 1000."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "El kilómetro es una unidad de longitud."
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Glosario: unidades de medida"
+    }
+  },
+  {
+    "id": "mat5r-oa19-07",
+    "tipo": "convertir",
+    "numeros": [
+      "2000",
+      "1000"
+    ],
+    "enunciado": "Una pista de atletismo mide 2 000 metros. ¿Cuántos kilómetros mide?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "200 km"
+      },
+      {
+        "id": "B",
+        "texto": "20 km"
+      },
+      {
+        "id": "C",
+        "texto": "2 km"
+      },
+      {
+        "id": "D",
+        "texto": "0,2 km"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "B": "Multiplica por 10 en vez de dividir por 1000.",
+      "D": "Divide por 10000 en vez de 1000.",
+      "A": "Multiplica por 10 en vez de dividir."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "1 000 metros es un kilómetro"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Repaso: Longitud"
+    }
+  },
+  {
+    "id": "mat5r-oa19-08",
+    "tipo": "error",
+    "numeros": [
+      "15",
+      "10"
+    ],
+    "enunciado": "Andrés dice: «15 cm son 150 mm». ¿Tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "No, porque 15 cm = 1,5 mm"
+      },
+      {
+        "id": "B",
+        "texto": "Sí, porque 15 × 10 = 150 mm"
+      },
+      {
+        "id": "C",
+        "texto": "No, porque 1 cm = 100 mm"
+      },
+      {
+        "id": "D",
+        "texto": "No, porque 15 cm = 1500 mm"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Divide en vez de multiplicar.",
+      "D": "Multiplica por 100 en vez de 10.",
+      "C": "1 cm = 10 mm, no 100 mm."
+    },
+    "nivel": "basico",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "El milímetro se obtiene dividiendo 1 cm en 10 partes iguales"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Glosario: unidades de medida"
+    }
+  },
+  {
+    "id": "mat5r-oa19-09",
+    "tipo": "convertir",
+    "numeros": [
+      "1",
+      "100",
+      "10"
+    ],
+    "enunciado": "¿Cuántos milímetros hay en 1 metro?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1 000 mm"
+      },
+      {
+        "id": "B",
+        "texto": "100 mm"
+      },
+      {
+        "id": "C",
+        "texto": "10 mm"
+      },
+      {
+        "id": "D",
+        "texto": "10 000 mm"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Solo convierte a cm: 1 m = 100 cm, pero pregunta mm.",
+      "C": "Confunde cm con mm.",
+      "D": "Multiplica por 10000 en vez de 1000."
+    },
+    "nivel": "reto",
+    "base_libro": {
+      "archivo": "MATME26E5B.md",
+      "texto": "1 m = 100 cm"
+    },
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Texto del Estudiante Tomo 1",
+      "edicion": "Sexta Edición, 2025",
+      "ubicacion": "Repaso: Longitud"
+    }
+  }
+]
