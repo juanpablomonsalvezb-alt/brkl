@@ -1,0 +1,399 @@
+<meta charset="utf-8">
+<title>Piloto del estudiante Barkley</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+/* Plan de diseño. Dirección: cuaderno de campo bajo un cielo de estrellas. Papel frío para leer y practicar, cielo marino solo para el mapa.
+   Layout: pestañas arriba; a la izquierda la pantalla del estudiante dentro de un marco; a la derecha, qué decisión de Barkley muestra. */
+:root{
+  --ink:#0B2545; --navy:#003366; --sky:#001d3d; --gold:#FFC548; --gold-ink:#6b4a00;
+  --paper:#F6F8FB; --card:#FFFFFF; --rule:#D3DBE8; --muted:#5B6E86; --text:#33465E;
+  --ok:#0B8F63; --ok-soft:#DDF3EA; --risk:#B4421C; --risk-soft:#FBE6DD; --focus:#2F3FBF; --focus-soft:#E6E9FB;
+  --display:'Newsreader',Georgia,serif; --body:'Instrument Sans',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --ink:#EAF1FB; --navy:#9CC3F5; --sky:#001a38; --gold:#FFC548; --gold-ink:#FFD98A;
+  --paper:#0E1A2B; --card:#142238; --rule:#2A3C57; --muted:#9FB2CC; --text:#C6D3E6;
+  --ok:#4FD1A1; --ok-soft:#123A2E; --risk:#FF9A73; --risk-soft:#3B2118; --focus:#9AA7FF; --focus-soft:#1E2550; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --ink:#EAF1FB; --navy:#9CC3F5; --sky:#001a38; --gold:#FFC548; --gold-ink:#FFD98A;
+  --paper:#0E1A2B; --card:#142238; --rule:#2A3C57; --muted:#9FB2CC; --text:#C6D3E6;
+  --ok:#4FD1A1; --ok-soft:#123A2E; --risk:#FF9A73; --risk-soft:#3B2118; --focus:#9AA7FF; --focus-soft:#1E2550; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.6;margin:0;
+  padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.wrap{max-width:1120px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);color:var(--ink);font-weight:500;line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,4.6vw,46px);letter-spacing:-.015em}
+h2{font-size:clamp(24px,3vw,32px);margin-bottom:8px}
+h3{font-size:21px}
+p{margin:0}
+.lead{font-size:18px;max-width:720px;margin-top:12px}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.tabs{display:flex;gap:8px;margin:26px 0 30px;flex-wrap:wrap}
+.tab{border:1px solid var(--rule);background:var(--card);color:var(--ink);padding:11px 18px;border-radius:10px;font-weight:600;min-height:46px}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:4px 11px;border-radius:999px;border:1px solid var(--rule);background:var(--card);color:var(--text)}
+.pill.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.pill.mid{background:var(--focus-soft);color:var(--focus);border-color:transparent}
+.pill.low{background:var(--risk-soft);color:var(--risk);border-color:transparent}
+/* Investigación */
+.principios{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));margin-top:22px}
+.principio{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.principio .en-barkley{margin-top:auto;border-top:1px solid var(--rule);padding-top:12px;color:var(--ink)}
+.principio .en-barkley b{display:block;font-size:13px;color:var(--gold-ink);margin-bottom:2px}
+.contraste{margin-top:34px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:620px;background:var(--card);border:1px solid var(--rule)}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--display);font-weight:500;color:var(--ink);font-size:17px;background:var(--focus-soft)}
+.fuentes{margin-top:30px;font-size:14px}.fuentes a{color:var(--focus)}
+.fuentes li{margin:4px 0}
+/* Piloto */
+.escenario{display:grid;gap:26px;grid-template-columns:minmax(0,420px) minmax(0,1fr);align-items:start}
+@media (max-width:860px){.escenario{grid-template-columns:minmax(0,1fr)}}
+.pantallas{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.pantallas button{border:1px solid var(--rule);background:var(--card);color:var(--ink);padding:9px 14px;border-radius:999px;font-weight:600;min-height:44px}
+.pantallas button[aria-selected="true"]{background:var(--gold);color:#1b1400;border-color:var(--gold)}
+.marco{border:1px solid var(--rule);border-radius:22px;overflow:hidden;background:var(--card);box-shadow:0 18px 50px rgba(0,29,61,.18)}
+.barra{background:var(--sky);color:#EAF1FB;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.barra .mod{font-family:var(--display);font-size:19px}
+.barra small{color:#a9c2e6}
+.cuerpo{padding:20px 18px 24px;min-height:520px}
+.nota-ej{font-size:12.5px;color:var(--muted);margin-top:10px}
+.lado{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:22px;min-width:0}
+.lado ul{padding-left:18px;margin:10px 0}.lado li{margin:6px 0}
+/* Mi camino */
+.sendero{position:relative;margin:6px 0 0 12px;padding-left:34px}
+.sendero:before{content:"";position:absolute;left:11px;top:8px;bottom:8px;border-left:3px dotted var(--rule)}
+.est{position:relative;padding:10px 0 18px}
+.est .nodo{position:absolute;left:-34px;top:12px;width:26px;height:26px;border-radius:50%;border:3px solid var(--rule);background:var(--card);display:grid;place-items:center;font-size:13px;font-weight:700}
+.est.hecha .nodo{background:var(--ok);border-color:var(--ok);color:#fff}
+.est.ahora .nodo{background:var(--gold);border-color:var(--gold);color:#1b1400;box-shadow:0 0 0 6px color-mix(in srgb,var(--gold) 30%,transparent)}
+.est .t{font-weight:600;color:var(--ink)}.est .s{font-size:14px;color:var(--muted)}
+.est .go{margin-top:8px;border:0;background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:9px;font-weight:600;min-height:42px}
+/* Lección */
+.pasos{display:flex;gap:6px;margin-bottom:14px}
+.pasos button{flex:1;border:1px solid var(--rule);background:var(--card);color:var(--text);padding:8px 6px;border-radius:8px;font-size:13px;font-weight:600;min-height:44px}
+.pasos button[aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.cuadriculas{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.cuad{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;aspect-ratio:1;max-width:100%}
+.cuad i{background:var(--rule);border-radius:2px}.cuad i.a{background:var(--gold)}.cuad i.b{background:var(--navy)}
+.etq{font-family:var(--display);font-size:26px;color:var(--ink);text-align:center}
+.simbolo{font-family:var(--display);font-size:42px;text-align:center;color:var(--ink);margin:4px 0}
+input[type=range]{width:100%;accent-color:var(--gold);min-height:34px}
+.caja{background:var(--focus-soft);border-radius:12px;padding:14px 16px;color:var(--ink)}
+.ej li{margin:10px 0;list-style:none;padding-left:0}
+.ej{padding:0}
+.paso-ej{opacity:.25;transition:opacity .3s}.paso-ej.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.paso-ej{transition:none}}
+.opc{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.opc button{border:2px solid var(--rule);background:var(--card);color:var(--ink);padding:10px 16px;border-radius:10px;font-weight:600;min-height:46px}
+.opc button.bien{border-color:var(--ok);background:var(--ok-soft)}
+.opc button.mal{border-color:var(--risk);background:var(--risk-soft)}
+.sokra{display:flex;gap:10px;background:var(--card);border:1px solid var(--gold);border-radius:12px;padding:12px 14px;margin-top:10px}
+.sokra .av{width:34px;height:34px;border-radius:50%;background:var(--gold);color:#1b1400;display:grid;place-items:center;font-weight:700;flex:none}
+.sig{margin-top:14px;border:0;background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:9px;font-weight:600;min-height:44px}
+/* Constelación */
+.cielo{background:var(--sky);border-radius:14px;padding:6px}
+.cielo svg{width:100%;height:auto;display:block}
+.lista-est{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.lista-est button{width:100%;text-align:left;border:1px solid var(--rule);background:var(--card);border-radius:10px;padding:10px 12px;color:var(--ink);min-height:48px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.lista-est button[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 35%,transparent)}
+
+/* Dashboard a pantalla completa */
+body.full{padding-inline:0;padding-block-start:12px}
+body.full .wrap{max-width:none}
+body.full #cab{display:none}
+body.full .tabs{margin:0 0 0;padding-inline:max(16px,env(safe-area-inset-left,0px))}
+.dash{display:grid;grid-template-columns:230px minmax(0,1fr) 300px;min-height:calc(100vh - 80px);background:var(--paper);border-top:1px solid var(--rule)}
+@media (max-width:1100px){.dash{grid-template-columns:200px minmax(0,1fr)}.dash .der{grid-column:1/-1}}
+@media (max-width:760px){.dash{grid-template-columns:minmax(0,1fr)}}
+.izq{background:var(--sky);color:#dce8f8;padding:20px 14px;display:flex;flex-direction:column;gap:6px}
+.izq .logo{font-family:var(--display);font-size:22px;color:#fff;padding:2px 10px 14px}
+.izq button{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;color:#cfe0f5;min-height:44px;box-sizing:border-box}
+.izq button[aria-current="page"]{background:#0e3a6d;color:#fff}
+.izq button:focus-visible{outline:3px solid var(--gold)}
+.izq .yo{margin-top:auto;padding:12px;border-top:1px solid #1d3f6b;font-size:14px;color:#a9c2e6}
+.cen{padding:26px clamp(16px,3vw,40px) 40px;min-width:0}
+.der{padding:26px 22px 40px;border-left:1px solid var(--rule);min-width:0;background:var(--card)}
+.hola{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:end;margin-bottom:6px}
+.hola h2{margin:0}
+.migas{font-size:14px;color:var(--muted);margin-bottom:18px}
+.ruta{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 22px;padding:0;list-style:none}
+.ruta li{padding:8px 14px;border-radius:999px;border:1px solid var(--rule);background:var(--card);font-weight:600;font-size:14px;color:var(--muted)}
+.ruta li.ahora{background:var(--gold);color:#1b1400;border-color:var(--gold)}
+.grupo{margin:0 0 20px}
+.grupo h3{font-size:18px;margin-bottom:10px}
+.fichas{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.ficha{all:unset;cursor:pointer;box-sizing:border-box;background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px;min-height:150px;position:relative}
+.ficha:hover{border-color:var(--gold)}.ficha:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.ficha .ico{width:44px;height:44px;border-radius:12px;background:var(--focus-soft);color:var(--focus);display:grid;place-items:center}
+.ficha .ti{font-family:var(--display);font-size:20px;color:var(--ink)}
+.ficha .de{font-size:14px;color:var(--muted)}
+.ficha .ch{margin-top:auto;display:flex;gap:6px;flex-wrap:wrap}
+.ficha.reserva:after{content:"";position:absolute;inset:0;border-radius:14px;border:1.5px dashed var(--rule);pointer-events:none}
+.visor{background:var(--card);border:1px solid var(--rule);border-radius:16px;padding:20px}
+.volver{all:unset;cursor:pointer;color:var(--focus);font-weight:600;padding:8px 0;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center}
+.marco-ej{background:repeating-linear-gradient(135deg,var(--focus-soft) 0 12px,transparent 12px 24px);border:1.5px dashed var(--focus);border-radius:12px;display:grid;place-items:center;text-align:center;padding:20px;color:var(--ink);min-height:260px}
+.reproductor{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+.reproductor .play{width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;border:0}
+.barra-r{flex:1;min-width:120px;height:8px;border-radius:99px;background:var(--rule);position:relative}.barra-r:after{content:"";position:absolute;left:0;top:0;bottom:0;width:30%;background:var(--gold);border-radius:99px}
+.onda{display:flex;align-items:center;gap:3px;height:70px;justify-content:center}.onda i{width:5px;border-radius:3px;background:var(--navy);display:block}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0}
+.chip{border:1px solid var(--rule);background:var(--card);color:var(--ink);padding:8px 12px;border-radius:999px;font-size:14px;font-weight:600;min-height:40px}
+.mini h3{font-size:18px;margin:0 0 8px}.mini{margin-bottom:22px}
+.mini ol{margin:0;padding-left:20px}.mini li{margin:6px 0}
+.notas{background:var(--focus-soft);border-radius:14px;padding:18px 20px;margin:0 0 22px;color:var(--ink)}
+.notas h3{font-size:19px;margin-bottom:8px}.notas ul{margin:6px 0 0;padding-left:20px}.notas li{margin:5px 0}
+.conm{display:flex;gap:8px;align-items:center;margin:0 0 14px;font-weight:600;color:var(--ink)}
+.conm input{width:20px;height:20px;accent-color:var(--gold)}
+</style>
+
+<div class="wrap">
+  <header id="cab"><h1>Piloto del estudiante Barkley</h1>
+  <p class="lead">Un bosquejo de cómo un estudiante estudia en la plataforma: no como quien abre un archivo, sino como quien avanza por un camino. Primero lo que hacen los mejores programas del mundo, después una versión pequeña que puedes tocar.</p></header>
+  <div class="tabs" role="tablist" aria-label="Secciones">
+    <button class="tab" role="tab" id="t-inv" aria-selected="true" aria-controls="v-inv">Qué hacen los mejores</button>
+    <button class="tab" role="tab" id="t-pil" aria-selected="false" aria-controls="v-pil">Lo que ve el estudiante</button>
+    <button class="tab" role="tab" id="t-dash" aria-selected="false" aria-controls="v-dash">Dashboard a pantalla completa</button>
+  </div>
+
+  <section id="v-inv" role="tabpanel" aria-labelledby="t-inv">
+    <h2>Seis ideas que funcionan, y qué tomamos de cada una</h2>
+    <p>Cada idea trae su nivel de evidencia, porque no todas valen lo mismo. Donde solo hay reseñas o estudios de la propia empresa, se dice.</p>
+    <div class="principios" id="principios"></div>
+
+    <div class="contraste">
+      <h2 style="margin-top:34px">Un repositorio no enseña</h2>
+      <p style="margin-bottom:14px">Lo que describes de Canvas y Moodle es un depósito: el profesor sube cosas y el estudiante las descarga. Barkley parte desde otro lugar.</p>
+      <table>
+        <thead><tr><th></th><th>Repositorio (Canvas, Moodle como se usa hoy)</th><th>Barkley</th></tr></thead>
+        <tbody>
+          <tr><td><b>Unidad básica</b></td><td>Archivo: PDF, presentación, video</td><td>Mini-lección con ejemplo resuelto y práctica</td></tr>
+          <tr><td><b>Quién guía</b></td><td>Nadie; el estudiante organiza todo</td><td>El camino y el tutor Sókra, que pregunta en vez de dar la respuesta</td></tr>
+          <tr><td><b>Avance</b></td><td>Por fecha o por «lo abrí»</td><td>Por dominio demostrado</td></tr>
+          <tr><td><b>Qué se mide</b></td><td>Entradas, clics, tiempo conectado</td><td>Qué sabe hacer; sin contar minutos conectados</td></tr>
+          <tr><td><b>Error</b></td><td>Una nota</td><td>Una pista y otra oportunidad con énfasis en lo que falló</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="fuentes">
+      <h3 style="font-size:19px">Dónde leer más</h3>
+      <ul>
+        <li><a href="https://beginnersinai.org/mastery-learning-explained/" target="_blank" rel="noopener">Aprendizaje por dominio y el problema de las dos sigmas de Bloom</a></li>
+        <li><a href="https://deepaksood619.github.io/education/competitors/aleks-analysis" target="_blank" rel="noopener">Análisis de ALEKS y la teoría de espacios de conocimiento</a></li>
+        <li><a href="https://www.mheducation.com.sg/g3-12/aleks" target="_blank" rel="noopener">ALEKS (descripción del proveedor)</a></li>
+        <li><a href="https://skillscouter.com/brilliant-review-math-science-coding/" target="_blank" rel="noopener">Reseña de Brilliant y su enfoque de problema primero</a></li>
+        <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12561277" target="_blank" rel="noopener">Estudio de actividad en Canvas y rendimiento</a></li>
+        <li><a href="https://math.nie.edu.sg/ame/matheduc/tme/tmeV16_1/TME16_1.pdf" target="_blank" rel="noopener">Concreto, dibujo y símbolo en la matemática de Singapur (Leong, Ho y Cheng)</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="v-pil" role="tabpanel" aria-labelledby="t-pil" hidden>
+    <h2>Un módulo del piloto, visto por el estudiante</h2>
+    <p style="margin-bottom:18px">Matemática de 5.º Básico, comparar decimales. Cambia de pantalla y toca todo: es un ejemplo para decidir la estructura, no contenido validado ni datos de ningún estudiante.</p>
+    <div class="escenario">
+      <div>
+        <div class="pantallas" role="tablist" aria-label="Pantallas del estudiante">
+          <button role="tab" id="p-camino" aria-selected="true">Mi camino</button>
+          <button role="tab" id="p-leccion" aria-selected="false">Lección</button>
+          <button role="tab" id="p-conoc" aria-selected="false">Mis conocimientos</button>
+        </div>
+        <div class="marco">
+          <div class="barra"><div><div class="mod">Fracciones y decimales</div><small>5.º Básico · Matemática</small></div><span class="pill" style="background:#0b2d57;color:#FFC548;border-color:#1c4a85">Ejemplo</span></div>
+          <div class="cuerpo" id="pantalla" aria-live="polite"></div>
+        </div>
+        <p class="nota-ej">Los números de la lección son un ejemplo de redacción; las preguntas reales saldrán del banco validado.</p>
+      </div>
+      <aside class="lado" id="lado" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section id="v-dash" role="tabpanel" aria-labelledby="t-dash" hidden>
+    <div class="dash" id="dash"></div>
+  </section>
+</div>
+
+<script>
+const PRINCIPIOS=[
+ {t:'Avanzar solo cuando se domina',q:'Aprendizaje por dominio (Bloom); Khan Academy; ALEKS',e:['mid','Evidencia mixta'],d:'Cada contenido se confirma antes de abrir lo que depende de él. ALEKS lo organiza como un mapa de prerrequisitos. Sus propios estudios dicen que un umbral alto retiene más al principio y que la diferencia se reduce con las semanas.',b:'Umbral 70 % para pasar de contenido, mapa de conocimientos y E2 como cierre del módulo.'},
+ {t:'El problema primero, con ayuda gradual',q:'Brilliant',e:['low','Solo reseñas'],d:'Se descubre el patrón antes de recibir la regla y la ayuda aparece en pasos, con respuesta inmediata. A quien quiere una explicación larga antes de intentar, le puede incomodar.',b:'La lección abre con algo que se mueve y se explora. Sókra da pistas en forma de pregunta.'},
+ {t:'Ver un ejemplo resuelto antes de practicar',q:'Efecto del ejemplo resuelto (Sweller)',e:['ok','Investigación sólida'],d:'Para quien aprende algo nuevo, estudiar un ejemplo resuelto carga menos la memoria de trabajo que resolver desde cero. El efecto es mayor en principiantes que en expertos.',b:'Cada mini-lección trae un ejemplo con cada paso a la vista, y después práctica propia.'},
+ {t:'De lo concreto al dibujo y al símbolo',q:'Matemática de Singapur; Bruner',e:['ok','Enfoque oficial en Singapur'],d:'Se parte de material que se puede manipular, se pasa al dibujo y recién al número. Lo promueve el Ministerio de Educación de Singapur desde los años ochenta.',b:'Las lecciones de fracciones y decimales parten con cuadrículas que se mueven, siguen con la recta numérica y terminan con los números.'},
+ {t:'Recordar a propósito y espaciar',q:'ALEKS; práctica de recuperación',e:['mid','Dato del proveedor'],d:'ALEKS insiste en evaluar cada cierto tiempo lo ya aprendido. Los resultados que cita son de la propia empresa.',b:'Comprobaciones breves después de aprender y retención con intervalos, sin castigo por ausencia.'},
+ {t:'No medir el tiempo conectado',q:'Estudio sobre Canvas',e:['ok','Un estudio'],d:'En un estudio de posgrado, quienes más entraban y hacían clic no eran los que mejor rendían. Los registros de uso no reflejan bien lo aprendido.',b:'El panel muestra qué sabe hacer el estudiante, no cuántos minutos estuvo conectado.'}
+];
+const cont=document.getElementById('principios');
+PRINCIPIOS.forEach(p=>{const d=document.createElement('article');d.className='principio';
+ d.innerHTML=`<h3>${p.t}</h3><div><span class="pill ${p.e[0]}">${p.e[1]}</span></div><p style="font-size:14px;color:var(--muted)">${p.q}</p><p>${p.d}</p><div class="en-barkley"><b>En Barkley</b>${p.b}</div>`;cont.appendChild(d)});
+
+/* Pestañas generales */
+const vInv=document.getElementById('v-inv'),vPil=document.getElementById('v-pil'),tInv=document.getElementById('t-inv'),tPil=document.getElementById('t-pil');
+const vDash=document.getElementById('v-dash'),tDash=document.getElementById('t-dash');
+function vista(v){const inv=v==='inv',pil=v==='piloto',da=v==='dash';vInv.hidden=!inv;vPil.hidden=!pil;vDash.hidden=!da;
+ tInv.setAttribute('aria-selected',inv);tPil.setAttribute('aria-selected',pil);tDash.setAttribute('aria-selected',da);document.body.classList.toggle('full',da);
+ if(da)dashboard();try{history.replaceState(null,'',inv?'#investigacion':pil?'#piloto':'#dashboard')}catch(e){}}
+tInv.onclick=()=>vista('inv');tPil.onclick=()=>vista('piloto');tDash.onclick=()=>vista('dash');
+
+
+/* Piloto */
+const pant=document.getElementById('pantalla'),lado=document.getElementById('lado');
+const bot={camino:document.getElementById('p-camino'),leccion:document.getElementById('p-leccion'),conoc:document.getElementById('p-conoc')};
+Object.keys(bot).forEach(k=>bot[k].onclick=()=>mostrar(k));
+function mostrar(k){Object.keys(bot).forEach(x=>bot[x].setAttribute('aria-selected',x===k));({camino,leccion,conoc})[k]()}
+
+function camino(){
+ const E=[['hecha','✓','Práctica 1','Diagnóstico: veamos qué ya sabes. Lo hiciste hace 3 días.'],
+  ['hecha','✓','Fracciones propias','Lección y comprobación listas.'],
+  ['ahora','3','Comparar decimales','Estás aquí. Lección de 15 minutos.'],
+  ['','4','Práctica 2','Se abre al terminar la lección.'],
+  ['','5','Problemas con decimales y fracciones','Lección y comprobación.'],
+  ['','6','Evaluación de cierre','Cierra el módulo. 15 preguntas.']];
+ pant.innerHTML='<h3 style="margin-bottom:4px">Mi camino</h3><p style="font-size:14px;color:var(--muted)">Siempre estás dentro de un camino, no en una lista de archivos.</p><div class="sendero">'+
+  E.map(e=>`<div class="est ${e[0]}"><span class="nodo" aria-hidden="true">${e[1]}</span><div class="t">${e[2]}</div><div class="s">${e[3]}</div>${e[0]==='ahora'?'<button class="go" id="irLec">Seguir con la lección</button>':''}</div>`).join('')+'</div>';
+ const g=document.getElementById('irLec');if(g)g.onclick=()=>mostrar('leccion');
+ lado.innerHTML=`<h3>Qué muestra esta pantalla</h3><ul><li><b>Un sendero, no una carpeta.</b> Cada estación es una acción: aprender, practicar o comprobar.</li><li><b>Una sola cosa destacada.</b> El estudiante sabe qué hacer ahora.</li><li><b>La Evaluación de cierre es una estación más</b>, no un muro: llega después de aprender y practicar.</li><li><b>Estado con icono y texto</b>, nunca solo color.</li></ul><p class="nota-ej">Decisiones relacionadas: Práctica 1 a 3 y Evaluación de cierre (P16); avance por dominio.</p>`;
+}
+
+function leccion(){
+ let paso=0,A=45,resp={},ejv=0;
+ const B=50,fmt=n=>{const s=(n/100).toFixed(2).replace('.',',');return s};
+ const Q=[
+  {p:'¿Cuál es mayor: 0,7 o 0,69?',o:['0,7','0,69'],c:0,pista:'Escribe los dos con tres cifras decimales. ¿Qué número te queda en cada uno?',ok:'0,7 es 0,700 y 0,69 es 0,690. Si piensas en milésimas, 700 es más que 690.'},
+  {p:'Ordena de menor a mayor: 0,305 · 0,35 · 0,3',o:['0,3 · 0,305 · 0,35','0,305 · 0,3 · 0,35','0,35 · 0,305 · 0,3'],c:0,pista:'¿Cuántas milésimas son 0,3, 0,305 y 0,35? Escríbelos con tres cifras.',ok:'0,300 < 0,305 < 0,350.'},
+  {p:'0,40 y 0,4, ¿cómo son entre sí?',o:['0,40 es mayor','Son iguales','0,4 es mayor'],c:1,pista:'Un cero al final de un decimal, ¿cambia cuánto vale?',ok:'Son iguales: 0,40 y 0,4 son cuatro décimas.'}];
+ const pasos=['Explora','Un ejemplo','Inténtalo','Comprueba'];
+ function dibuja(){
+  let h=`<div class="pasos" role="tablist">${pasos.map((n,i)=>`<button role="tab" aria-selected="${i===paso}" data-p="${i}">${n}</button>`).join('')}</div><div id="paso"></div>`;
+  pant.innerHTML=h;pant.querySelectorAll('.pasos button').forEach(b=>b.onclick=()=>{paso=+b.dataset.p;dibuja()});
+  const c=document.getElementById('paso');
+  if(paso===0){
+   const cel=(n,cl)=>Array.from({length:100},(_,i)=>`<i class="${i<n?cl:''}"></i>`).join('');
+   const sim=A>B?'>':A<B?'<':'=';
+   c.innerHTML=`<h3>Mueve A y compara con B</h3><p style="font-size:14px;color:var(--muted);margin:4px 0 6px">Cada cuadrícula es un entero partido en 100 cuadritos.</p>
+    <div class="cuadriculas"><div><div class="cuad" aria-hidden="true">${cel(A,'a')}</div><div class="etq">A = ${fmt(A)}</div></div><div><div class="cuad" aria-hidden="true">${cel(B,'b')}</div><div class="etq">B = ${fmt(B)}</div></div></div>
+    <div class="simbolo" aria-live="polite">${fmt(A)} ${sim} ${fmt(B)}</div>
+    <label for="slA" style="font-weight:600;color:var(--ink)">Valor de A</label><input id="slA" type="range" min="0" max="100" value="${A}">
+    <p class="caja" style="margin-top:12px">Prueba con A = 0,45. ¿Por qué 0,45 es menor que 0,5 aunque 45 sea más que 5?</p><button class="sig" id="sg">Ver un ejemplo</button>`;
+   document.getElementById('slA').oninput=e=>{A=+e.target.value;const cu=c.querySelectorAll('.cuad')[0],et=c.querySelectorAll('.etq')[0],sm=c.querySelector('.simbolo');cu.innerHTML=cel(A,'a');et.textContent='A = '+fmt(A);const s=A>B?'>':A<B?'<':'=';sm.textContent=fmt(A)+' '+s+' '+fmt(B)};
+   document.getElementById('sg').onclick=()=>{paso=1;dibuja()};
+  }
+  if(paso===1){
+   const P=['Escribe los dos con las mismas cifras decimales: 0,45 → 0,450 y 0,5 → 0,500.','Compáralos como si fueran números enteros: 450 y 500.','450 es menor que 500, entonces 0,45 < 0,5.'];
+   c.innerHTML=`<h3>Ejemplo resuelto: 0,45 y 0,5</h3><ol class="ej">${P.map((t,i)=>`<li class="paso-ej ${i<=ejv?'on':''}"><span class="pill" style="margin-right:6px">${i+1}</span>${t}</li>`).join('')}</ol>
+    <div class="caja">Error frecuente: creer que un decimal con más cifras es más grande. Mira otra vez la cuadrícula del paso anterior.</div>
+    <button class="sig" id="sg">${ejv<2?'Mostrar el siguiente paso':'Ahora tú'}</button>`;
+   document.getElementById('sg').onclick=()=>{if(ejv<2){ejv++;dibuja()}else{paso=2;dibuja()}};
+  }
+  if(paso===2){
+   c.innerHTML=`<h3>Inténtalo tú</h3>`+Q.map((q,i)=>{const r=resp[i];return `<div style="margin:14px 0"><p><b>${q.p}</b></p><div class="opc">${q.o.map((o,j)=>`<button data-q="${i}" data-o="${j}" class="${r!==undefined&&r.j===j?(j===q.c?'bien':'mal'):''}">${o}</button>`).join('')}</div>`+
+    (r!==undefined?(r.j===q.c?`<p class="pill ok">Bien · ${q.ok}</p>`:`<div class="sokra"><div class="av" aria-hidden="true">S</div><div><b style="color:var(--ink)">Sókra</b><br>${q.pista}</div></div>`):'')+`</div>`}).join('')+`<button class="sig" id="sg">Terminar</button>`;
+   c.querySelectorAll('.opc button').forEach(b=>b.onclick=()=>{resp[+b.dataset.q]={j:+b.dataset.o};dibuja()});
+   document.getElementById('sg').onclick=()=>{paso=3;dibuja()};
+  }
+  if(paso===3){
+   const bien=Object.keys(resp).filter(i=>resp[i].j===Q[i].c).length;
+   c.innerHTML=`<h3>Lección terminada</h3><p style="margin:8px 0">Respondiste bien ${bien} de ${Q.length} en la primera mirada. Eso es práctica, no una nota.</p>
+    <div class="caja"><b>Comprueba si ya lo dominas.</b><br>Terminar una lección no enciende ninguna estrella. Una comprobación corta sí puede hacerlo.</div>
+    <button class="sig" id="sg">Hacer la comprobación</button><button class="sig" id="sv" style="margin-left:8px;background:var(--card);color:var(--ink);border:1px solid var(--rule)">Volver al camino</button>`;
+   document.getElementById('sg').onclick=()=>mostrar('conoc');document.getElementById('sv').onclick=()=>mostrar('camino');
+  }
+  lado.innerHTML=[`<h3>Explora antes de leer</h3><ul><li>Lo concreto va primero: cuadrículas que se mueven.</li><li>El estudiante descubre que «más cifras» no es «más grande».</li><li>Así empiezan los programas que parten desde el problema.</li></ul>`,
+   `<h3>Un ejemplo con todos los pasos</h3><ul><li>Cada paso se muestra de a uno.</li><li>El error frecuente se nombra, no se esconde.</li><li>El ejemplo resuelto prepara la práctica.</li></ul>`,
+   `<h3>Práctica con pistas, no respuestas</h3><ul><li>Si se equivoca, Sókra pregunta en vez de corregir.</li><li>Cuando acierta, explica por qué.</li><li>No hay nota ni castigo en la práctica.</li></ul>`,
+   `<h3>Cerrar sin declarar victoria</h3><ul><li>Terminar la lección no enciende estrellas.</li><li>Se invita a comprobar lo aprendido.</li><li>El dominio se confirma aparte, con el umbral de 70 %.</li></ul>`][paso];
+ }
+ dibuja();
+}
+
+function conoc(){
+ const S=[{id:'oa7',n:'Fracciones propias',x:60,y:70,e:'ok',t:'Lo dominas',a:'Ver'},{id:'oa8',n:'Fracciones impropias',x:150,y:150,e:'ref',t:'Lo reforzamos',a:'Repasar'},{id:'oa10',n:'De fracción a decimal',x:260,y:80,e:'lis',t:'Listo para aprender',a:'Empezar'},{id:'oa11',n:'Comparar decimales',x:330,y:170,e:'pra',t:'Sigue practicando',a:'Practicar'},{id:'oa13',n:'Problemas con fracciones y decimales',x:410,y:90,e:'blo',t:'Primero: comparar decimales',a:'Ir a la base'}];
+ const L=[['oa7','oa8'],['oa7','oa10'],['oa10','oa11'],['oa11','oa13'],['oa10','oa13']];
+ const col={ok:'#FFC548',ref:'#FF9A73',lis:'#9CC3F5',pra:'#FFE08A',blo:'#4A6285'};
+ let sel='oa11';
+ const g=id=>S.find(s=>s.id===id);
+ function dibuja(){
+  const sv=`<svg viewBox="0 0 470 220" role="img" aria-label="Constelación de cinco contenidos conectados">${L.map(([a,b])=>`<line x1="${g(a).x}" y1="${g(a).y}" x2="${g(b).x}" y2="${g(b).y}" stroke="#2c4a78" stroke-width="2" ${g(b).e==='blo'||g(a).e==='blo'?'stroke-dasharray="4 5"':''}/>`).join('')}
+   ${S.map(s=>`<g tabindex="0" role="button" aria-label="${s.n}: ${s.t}" data-id="${s.id}" style="cursor:pointer"><circle cx="${s.x}" cy="${s.y}" r="${s.id===sel?20:15}" fill="${s.e==='blo'?'transparent':col[s.e]}" ${s.e==='blo'?'stroke="#4A6285" stroke-width="3" stroke-dasharray="3 3"':s.e==='ref'?'stroke="#fff" stroke-width="3"':''} opacity="${s.e==='pra'?.75:1}"/>${s.e==='ok'?`<text x="${s.x}" y="${s.y+5}" text-anchor="middle" font-size="15" fill="#1b1400">★</text>`:''}<text x="${s.x}" y="${s.y+(s.id==='oa8'||s.id==='oa11'?38:-26)}" text-anchor="middle" font-size="11.5" fill="#c7d9f3" font-family="Instrument Sans,sans-serif">${s.n.length>22?s.n.slice(0,21)+'…':s.n}</text></g>`).join('')}</svg>`;
+  const s=g(sel);
+  pant.innerHTML=`<h3 style="margin-bottom:4px">Mis conocimientos</h3><p style="font-size:14px;color:var(--muted);margin-bottom:10px">Cada punto es algo que sabes hacer. Las líneas muestran qué depende de qué.</p><div class="cielo">${sv}</div>
+   <div class="caja" style="margin-top:12px"><b>${s.n}</b><br>${s.t}. <button class="sig" style="margin:6px 0 0;min-height:38px;padding:7px 14px">${s.a}</button></div>
+   <ul class="lista-est">${S.map(x=>`<li><button data-id="${x.id}" aria-pressed="${x.id===sel}"><span>${x.n}</span><span class="pill ${x.e==='ok'?'ok':x.e==='ref'?'low':'mid'}">${x.t}</span></button></li>`).join('')}</ul>`;
+  pant.querySelectorAll('[data-id]').forEach(e=>{e.onclick=()=>{sel=e.dataset.id;dibuja()};e.onkeydown=ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();sel=e.dataset.id;dibuja()}}});
+ }
+ dibuja();
+ lado.innerHTML=`<h3>Qué muestra esta pantalla</h3><ul><li><b>Qué sé hacer</b>, separado de «dónde voy» y de «cómo me fue».</li><li><b>Cada estado tiene forma y texto</b>: estrella llena, estrella con halo, punto punteado.</li><li><b>Un contenido bloqueado dice por qué</b> y lleva a su base, en vez de esconderse.</li><li><b>«Sigue practicando»</b> en lugar de un número que asusta.</li><li>La lista de abajo es la <b>alternativa accesible</b> al dibujo.</li></ul><p class="nota-ej">Estados y textos tomados del diseño de Vórtice (documento 06).</p>`;
+}
+mostrar('camino');
+
+/* Dashboard a pantalla completa: espacios reservados para el material multimedia */
+const IC={
+ video:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>',
+ podcast:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14v-2a8 8 0 0116 0v2"/><rect x="3" y="14" width="5" height="7" rx="2"/><rect x="16" y="14" width="5" height="7" rx="2"/></svg>',
+ slides:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 21h8M12 16v5"/></svg>',
+ mapa:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4.5" cy="5" r="2"/><circle cx="19.5" cy="5" r="2"/><circle cx="4.5" cy="19" r="2"/><circle cx="19.5" cy="19" r="2"/><path d="M10 10L6 6.5M14 10l4-3.5M10 14l-4 3.5M14 14l4 3.5"/></svg>',
+ info:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9h8M8 13h5M8 17h3"/></svg>',
+ cards:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="14" height="12" rx="2"/><path d="M7 4h12a2 2 0 012 2v9"/></svg>',
+ explorar:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="12" r="2" fill="currentColor"/><circle cx="7" cy="17" r="2" fill="currentColor"/></svg>',
+ practicar:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20l4-1 11-11-3-3L5 16z"/></svg>',
+ sokra:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H9l-5 4z"/></svg>'};
+const FICHAS=[
+ {g:'Aprende',id:'video',ti:'Video',min:'6 min',de:'Una explicación con ejemplos, paso a paso.',aux:'Subtítulos y transcripción',sug:true},
+ {g:'Aprende',id:'podcast',ti:'Podcast',min:'8 min',de:'Dos voces conversan el tema. Ideal para escuchar en el bus.',aux:'Transcripción'},
+ {g:'Aprende',id:'slides',ti:'Presentación',min:'12 láminas',de:'Las ideas clave, una por lámina.',aux:'Descargable'},
+ {g:'Aprende',id:'explorar',ti:'Explorar',min:'5 min',de:'Mueve, compara y descubre antes de leer la regla.',aux:'Interactivo'},
+ {g:'Apoyos',id:'mapa',ti:'Mapa mental',min:'1 página',de:'Cómo se conectan las ideas del tema.',aux:'Zoom'},
+ {g:'Apoyos',id:'info',ti:'Infografía',min:'1 página',de:'El tema resumido en un solo vistazo.',aux:'Descargable'},
+ {g:'Apoyos',id:'cards',ti:'Tarjetas de repaso',min:'12 tarjetas',de:'Una pregunta por tarjeta para recordar sin mirar.',aux:'Por intervalos'},
+ {g:'Apoyos',id:'sokra',ti:'Preguntar a Sókra',min:'cuando quieras',de:'Tu tutor responde con preguntas, a toda hora.',aux:'Siempre disponible'},
+ {g:'Inténtalo',id:'practicar',ti:'Practicar con pistas',min:'10 min',de:'Ejercicios donde Sókra pregunta en vez de dar la respuesta.',aux:'Sin nota'}];
+function dashboard(){
+ const D=document.getElementById('dash');let notas=true,sel=null,paso=0,vistos={};
+ const PASOS=['Aprende','Inténtalo tú','Comprueba'];
+ function nav(act){return `<nav class="izq" aria-label="Navegación"><div class="logo">Barkley</div>`+['Inicio','Mi camino','Mis conocimientos','Mis resultados'].map(n=>`<button ${n===act?'aria-current="page"':''}>${n}</button>`).join('')+`<div class="yo">Sofía · 5.º Básico<br>Ejemplo ilustrativo</div></nav>`}
+ function ficha(f){return `<button class="ficha reserva" data-id="${f.id}" aria-label="${f.ti}, ${f.min}. Abrir"><span class="ico" aria-hidden="true">${IC[f.id]}</span><span class="ti">${f.ti}</span><span class="de">${f.de}</span><span class="ch">${f.sug?'<span class="pill mid">Te sugerimos empezar aquí</span>':''}<span class="pill">${f.min}</span><span class="pill">${f.aux}</span>${vistos[f.id]?'<span class="pill ok">Ya lo viste</span>':''}</span></button>`}
+function visor(f){
+  let cuerpo='';
+  if(f.id==='video')cuerpo=`<div class="marco-ej" role="img" aria-label="Espacio reservado para el video"><div><div style="font-family:var(--display);font-size:24px">Aquí va el video</div><p>Maqueta: el video se crea aparte y se coloca en este espacio.</p></div></div><div class="reproductor"><button class="play" aria-label="Reproducir">▶</button><div class="barra-r"></div><span class="pill">1:50 / 6:00</span></div><div class="chips"><button class="chip">Subtítulos</button><button class="chip">Velocidad 1×</button><button class="chip">Leer la transcripción</button></div>`;
+  if(f.id==='podcast')cuerpo=`<div class="marco-ej" style="min-height:180px"><div><div class="onda" aria-hidden="true">${Array.from({length:44},(_,i)=>`<i style="height:${14+Math.abs(Math.sin(i*.7))*52|0}px"></i>`).join('')}</div><p>Aquí va el podcast (maqueta). Dos voces conversan sobre comparar decimales.</p></div></div><div class="reproductor"><button class="play" aria-label="Reproducir">▶</button><div class="barra-r"></div><span class="pill">2:20 / 8:00</span></div><div class="chips"><button class="chip">Velocidad 1×</button><button class="chip">Leer la transcripción</button><button class="chip">Seguir escuchando con la pantalla apagada</button></div>`;
+  if(f.id==='slides')cuerpo=`<div class="marco-ej" style="aspect-ratio:16/9;min-height:0"><div><div style="font-family:var(--display);font-size:24px">Lámina 3 de 12</div><p>Aquí va la presentación (maqueta). Una idea clave por lámina.</p></div></div><div class="chips"><button class="chip">Anterior</button><button class="chip">Siguiente</button><button class="chip">Pantalla completa</button><button class="chip">Descargar</button></div>`;
+  if(f.id==='mapa')cuerpo=`<div class="marco-ej" style="min-height:300px"><svg viewBox="0 0 480 260" width="100%" role="img" aria-label="Maqueta de mapa mental"><g stroke="var(--focus)" stroke-width="2" fill="none"><path d="M240 130L100 50M240 130L380 50M240 130L100 210M240 130L380 210"/></g><g font-family="Instrument Sans,sans-serif" font-size="14" text-anchor="middle" fill="var(--ink)"><rect x="170" y="108" width="140" height="44" rx="22" fill="var(--gold)"/><text x="240" y="135">Comparar decimales</text><rect x="30" y="30" width="140" height="40" rx="20" fill="var(--card)" stroke="var(--focus)"/><text x="100" y="55">Mismas cifras</text><rect x="310" y="30" width="140" height="40" rx="20" fill="var(--card)" stroke="var(--focus)"/><text x="380" y="55">Como enteros</text><rect x="30" y="190" width="140" height="40" rx="20" fill="var(--card)" stroke="var(--focus)"/><text x="100" y="215">Error frecuente</text><rect x="310" y="190" width="140" height="40" rx="20" fill="var(--card)" stroke="var(--focus)"/><text x="380" y="215">Ejemplos</text></g></svg></div><div class="chips"><button class="chip">Acercar</button><button class="chip">Pantalla completa</button><button class="chip">Descargar</button></div>`;
+  if(f.id==='info')cuerpo=`<div class="marco-ej" style="min-height:320px"><div><div style="font-family:var(--display);font-size:24px">Aquí va la infografía</div><p>Maqueta: una sola página vertical con el tema resumido, que se puede ampliar y descargar.</p></div></div><div class="chips"><button class="chip">Ampliar</button><button class="chip">Descargar</button></div>`;
+  if(f.id==='cards')cuerpo=`<div class="marco-ej" style="min-height:200px"><div><div style="font-family:var(--display);font-size:24px">Tarjeta 1 de 12</div><p style="font-size:20px;color:var(--ink)">¿Cuál es mayor, 0,7 o 0,69?</p><p>Piensa tu respuesta y da vuelta la tarjeta.</p></div></div><div class="chips"><button class="chip">Dar vuelta</button><button class="chip">La sabía</button><button class="chip">Lo repaso</button></div>`;
+  if(f.id==='explorar')cuerpo=`<div class="marco-ej" style="min-height:220px"><div><div style="font-family:var(--display);font-size:24px">Laboratorio interactivo</div><p>Es la actividad del deslizador y las cuadrículas, que ya tienes en la pestaña «Lo que ve el estudiante».</p></div></div>`;
+  if(f.id==='practicar')cuerpo=`<div class="marco-ej" style="min-height:220px"><div><div style="font-family:var(--display);font-size:24px">Práctica con pistas</div><p>Tres ejercicios con feedback. Si te equivocas, Sókra pregunta. Aquí no hay nota.</p></div></div>`;
+  if(f.id==='sokra')cuerpo=`<div style="display:grid;gap:10px"><div class="sokra" style="margin:0"><div class="av">S</div><div><b style="color:var(--ink)">Sókra</b><br>¿Con qué parte te trabaste? Cuéntame qué hiciste primero.</div></div><div class="chip" style="border-radius:12px">Escribe tu duda…</div></div>`;
+  return `<div class="visor"><button class="volver" id="vuelve">← Volver</button><h3 style="margin:4px 0 12px">${f.ti} · ${f.min}</h3>${cuerpo}<div class="caja" style="margin-top:16px">Ver o escuchar no cuenta como dominar el tema. <b>Siguiente:</b> Inténtalo tú.</div></div>`}
+ 
+ function notasHtml(){return notas?`<div class="notas"><h3>Qué ve el estudiante y cómo lo ve</h3><ul><li><b>Un camino con tres pasos a la vista:</b> Aprende, Inténtalo tú y Comprueba. Sabe dónde está y qué viene.</li><li><b>En «Aprende» elige UNA puerta</b> (video, podcast, presentación o explorar). Con una basta; la plataforma le sugiere una, pero las otras siguen ahí.</li><li><b>No hay candados dentro de la lección.</b> Ver el video completo no es requisito: lo que confirma que aprendió es la práctica y la comprobación.</li><li><b>«Ya lo sé»</b> lo lleva directo a la comprobación. Si la aprueba, avanza sin repetir.</li><li><b>Los apoyos (derecha)</b> están siempre: mapa mental, infografía, tarjetas y Sókra.</li><li><b>Las fichas punteadas son espacios reservados</b> para lo que se produzca con NotebookLM a partir del libreto.</li></ul></div>`:''}
+ function cuerpoPaso(){
+  if(paso===0){const g=FICHAS.filter(f=>f.g==='Aprende');return `<h3 style="margin-bottom:6px">Elige una forma de aprender esto</h3><p style="margin-bottom:12px;color:var(--muted)">Con una basta. Todas llevan al mismo contenido.</p><div class="fichas">${g.map(ficha).join('')}</div>
+   <div class="caja" style="margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between"><span><b>¿Ya lo sabes?</b> Salta a la comprobación. Si la apruebas, avanzas sin repetir.</span><button class="chip" id="yaSe">Ya lo sé, ir a la comprobación</button></div>
+   <div style="margin-top:14px"><button class="sig" id="sigP" style="margin:0">Seguir con Inténtalo tú</button></div>`}
+  if(paso===1){const f=FICHAS.find(x=>x.id==='practicar');return `<h3 style="margin-bottom:6px">Inténtalo tú</h3><p style="margin-bottom:12px;color:var(--muted)">Practica con pistas. Aquí no hay nota.</p><div class="fichas">${ficha(f)}</div><div class="caja" style="margin-top:14px">Si te trabas, Sókra te hace una pregunta para que lo veas tú. Cuando te sientas listo, pasa a la comprobación.</div><div style="margin-top:14px"><button class="sig" id="sigP" style="margin:0">Seguir con la comprobación</button></div>`}
+  return `<h3 style="margin-bottom:6px">Comprueba</h3><p style="margin-bottom:12px;color:var(--muted)">Una comprobación corta confirma si ya lo dominas.</p><div class="marco-ej" style="min-height:200px"><div><div style="font-family:var(--display);font-size:24px">Comprobación de 5 preguntas</div><p>Maqueta: las preguntas salen del banco validado.</p></div></div><div class="caja" style="margin-top:14px">Terminar esta estación no enciende ninguna estrella. Si la apruebas con 70 % o más, tu conocimiento queda confirmado.</div>`}
+ function dibuja(){
+  const f=FICHAS.find(x=>x.id===sel);
+  const apo=FICHAS.filter(x=>x.g==='Apoyos');
+  D.innerHTML=nav('Mi camino')+`<main class="cen"><div class="hola"><h2>Comparar decimales</h2><span class="pill mid">Módulo: Fracciones y decimales</span></div><div class="migas">5.º Básico · Matemática · Estación 3 de 6</div>
+   <label class="conm"><input type="checkbox" id="cn" ${notas?'checked':''}> Ver notas del diseño</label>${notasHtml()}
+   <ol class="ruta" aria-label="Pasos de la estación">${PASOS.map((n,i)=>`<li class="${i===paso?'ahora':''}"><button style="all:unset;cursor:pointer" data-paso="${i}" ${i===paso?'aria-current="step"':''}>${n}</button></li>`).join('')}</ol>
+   ${f?visor(f):cuerpoPaso()}</main>
+   <aside class="der" aria-label="Lo que sigue"><div class="mini"><h3>Apoyos para cuando los necesites</h3><div style="display:grid;gap:10px">${apo.map(a=>`<button class="ficha reserva" data-id="${a.id}" style="min-height:0;padding:12px;flex-direction:row;align-items:center;gap:12px"><span class="ico" aria-hidden="true" style="flex:none">${IC[a.id]}</span><span><span class="ti" style="font-size:17px;display:block">${a.ti}</span><span class="de" style="font-size:13px">${a.min}</span></span></button>`).join('')}</div></div>
+   <div class="mini"><h3>Mi camino</h3><ol><li>Práctica 1 <span class="pill ok">Hecha</span></li><li>Fracciones propias <span class="pill ok">Hecha</span></li><li><b>Comparar decimales</b> <span class="pill mid">Ahora</span></li><li>Práctica 2</li><li>Problemas con decimales y fracciones</li><li>Evaluación de cierre</li></ol></div>
+   <div class="mini"><h3>Mis conocimientos</h3><p style="font-size:14px">Fracciones propias: <b>lo dominas</b><br>Comparar decimales: <b>sigue practicando</b></p></div></aside>`;
+  D.querySelectorAll('.ficha').forEach(b=>b.onclick=()=>{sel=b.dataset.id;vistos[sel]=true;dibuja();window.scrollTo(0,0)});
+  D.querySelectorAll('[data-paso]').forEach(b=>b.onclick=()=>{paso=+b.dataset.paso;sel=null;dibuja()});
+  const v=document.getElementById('vuelve');if(v)v.onclick=()=>{sel=null;dibuja()};
+  const sp=document.getElementById('sigP');if(sp)sp.onclick=()=>{paso=Math.min(2,paso+1);dibuja()};
+  const ys=document.getElementById('yaSe');if(ys)ys.onclick=()=>{paso=2;dibuja()};
+  document.getElementById('cn').onchange=e=>{notas=e.target.checked;dibuja()};
+ }
+ dibuja();
+}
+if(location.hash==='#piloto')vista('piloto');else if(location.hash==='#dashboard')vista('dash');
+</script>
