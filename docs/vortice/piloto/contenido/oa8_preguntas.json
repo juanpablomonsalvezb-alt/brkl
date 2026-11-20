@@ -1,0 +1,380 @@
+[
+  {
+    "id": "mat5u3-oa8-01",
+    "tipo": "impropia_a_mixto",
+    "numeros": {
+      "numerador": 7,
+      "denominador": 4,
+      "entero": 1,
+      "resto": 3
+    },
+    "enunciado": "Una barra se divide en 4 partes iguales y se toman 7 partes. ¿Qué número mixto representa 7/4?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1 3/4"
+      },
+      {
+        "id": "B",
+        "texto": "1 4/7"
+      },
+      {
+        "id": "C",
+        "texto": "2 1/4"
+      },
+      {
+        "id": "D",
+        "texto": "1 7/4"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Pone el resto (3) sobre el numerador original (7) en vez de sobre el denominador (4). 7/4 = 1 3/4.",
+      "C": "Calcula mal la división: 7 ÷ 4 = 1 con resto 3, no 2 con resto 1. 7/4 = 1 3/4.",
+      "D": "Escribe 1 7/4 como si el numerador no cambiara. Pero 7/4 = 1 entero + 3/4 = 1 3/4."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8, Fracciones mayores que 1 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa8-02",
+    "tipo": "mixto_a_impropia",
+    "numeros": {
+      "entero": 2,
+      "numerador": 3,
+      "denominador": 5,
+      "impropia_numerador": 13
+    },
+    "enunciado": "Ana tiene 2 tortas completas y 3/5 de otra torta. ¿Cuántos quintos de torta tiene en total?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "11/5"
+      },
+      {
+        "id": "B",
+        "texto": "13/5"
+      },
+      {
+        "id": "C",
+        "texto": "10/5"
+      },
+      {
+        "id": "D",
+        "texto": "8/5"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Multiplica entero × numerador en vez de entero × denominador: 2 × 3 + 5 = 11. La regla es 2 × 5 + 3 = 13.",
+      "C": "Solo multiplica entero × denominador sin sumar el numerador: 2 × 5 = 10. Falta sumar los 3 quintos: 10 + 3 = 13.",
+      "D": "Suma entero + numerador y pone sobre denominador: 2 + 3 = 5, pero eso no es correcto. 2 × 5 + 3 = 13."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8, Fracciones mayores que 1 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa8-03",
+    "tipo": "error",
+    "numeros": {
+      "numerador": 7,
+      "denominador": 4,
+      "entero": 1,
+      "resto": 3
+    },
+    "enunciado": "Pedro dice: «7/4 es igual a 1 3/7 porque el resto es 3 y el numerador era 7». ¿Pedro tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, 7/4 = 1 3/7"
+      },
+      {
+        "id": "B",
+        "texto": "No, 7/4 = 1 3/4 porque el denominador no cambia"
+      },
+      {
+        "id": "C",
+        "texto": "No, 7/4 = 2 1/4 porque 7 menos 4 es 3"
+      },
+      {
+        "id": "D",
+        "texto": "No, 7/4 = 1 4/7 porque se invierte la fracción"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Comete el mismo error que Pedro: pone el resto sobre el numerador original. El denominador se mantiene: 7/4 = 1 3/4.",
+      "C": "Resta en vez de dividir: 7 - 4 = 3, pero eso no da el número mixto. 7 ÷ 4 = 1 con resto 3, entonces 7/4 = 1 3/4.",
+      "D": "Invierte numerador y denominador en la parte fraccionaria. 7/4 = 1 3/4, no 1 4/7."
+    },
+    "nivel": "reto",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8, Fracciones mayores que 1 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa8-04",
+    "tipo": "impropia_a_mixto",
+    "numeros": {
+      "numerador": 11,
+      "denominador": 4,
+      "entero": 2,
+      "resto": 3
+    },
+    "enunciado": "Una cinta mide 11/4 de metro. ¿Cuántos metros y cuartos de metro mide la cinta?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "2 3/4 m"
+      },
+      {
+        "id": "B",
+        "texto": "2 4/11 m"
+      },
+      {
+        "id": "C",
+        "texto": "3 1/4 m"
+      },
+      {
+        "id": "D",
+        "texto": "1 7/4 m"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Pone el denominador sobre el numerador original: 2 4/11. Pero 11 ÷ 4 = 2 con resto 3, entonces 11/4 = 2 3/4.",
+      "C": "Calcula mal la división: 11 ÷ 4 = 2 con resto 3, no 3 con resto 1. 11/4 = 2 3/4.",
+      "D": "Solo resta 4 del numerador: 11 - 4 = 7, pero eso no es la conversión correcta. 11/4 = 2 3/4."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8, Fracciones mayores que 1 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa8-05",
+    "tipo": "pictorica",
+    "numeros": {
+      "numerador": 12,
+      "denominador": 5,
+      "entero": 2,
+      "resto": 2
+    },
+    "enunciado": "Se tienen 12/5 de litro de jugo. Si cada jarra completa tiene 1 litro (5/5), ¿cuántas jarras completas y cuántos quintos sobran?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "2 jarras completas y 2/5 de litro"
+      },
+      {
+        "id": "B",
+        "texto": "2 jarras completas y 5/12 de litro"
+      },
+      {
+        "id": "C",
+        "texto": "3 jarras completas y 2/5 de litro"
+      },
+      {
+        "id": "D",
+        "texto": "1 jarra completa y 7/5 de litro"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Invierte numerador y denominador en la parte fraccionaria: 5/12. Pero 12 ÷ 5 = 2 con resto 2, entonces 12/5 = 2 2/5.",
+      "C": "Redondea hacia arriba: 12/5 no llega a 3 enteros. 12 ÷ 5 = 2 con resto 2, entonces 12/5 = 2 2/5.",
+      "D": "Solo resta 5 del numerador: 12 - 5 = 7, pero 7/5 sigue siendo impropia. 12/5 = 2 2/5."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8, Fracciones mayores que 1 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa8-06",
+    "tipo": "mixto_a_impropia",
+    "numeros": {
+      "entero": 1,
+      "numerador": 1,
+      "denominador": 3,
+      "impropia_numerador": 4
+    },
+    "enunciado": "María caminó 1 1/3 de kilómetro. ¿Qué fracción impropia representa la distancia que caminó?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "2/3"
+      },
+      {
+        "id": "B",
+        "texto": "3/3"
+      },
+      {
+        "id": "C",
+        "texto": "4/3"
+      },
+      {
+        "id": "D",
+        "texto": "5/3"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "A": "Suma entero + numerador sin multiplicar: 1 + 1 = 2. Pero la regla es 1 × 3 + 1 = 4, entonces 1 1/3 = 4/3.",
+      "B": "Solo considera el entero como fracción: 1 = 3/3, pero olvida sumar 1/3. 1 1/3 = 4/3.",
+      "D": "Suma entero + numerador + denominador: 1 + 1 + 3 = 5. La regla es 1 × 3 + 1 = 4, entonces 1 1/3 = 4/3."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8, Fracciones mayores que 1 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa8-07",
+    "tipo": "recta",
+    "numeros": {
+      "numerador": 5,
+      "denominador": 2,
+      "entero": 2,
+      "resto": 1
+    },
+    "enunciado": "En una recta numérica graduada en medios, ¿entre qué números enteros se ubica 5/2?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Entre 1 y 2"
+      },
+      {
+        "id": "B",
+        "texto": "Entre 2 y 3"
+      },
+      {
+        "id": "C",
+        "texto": "Entre 3 y 4"
+      },
+      {
+        "id": "D",
+        "texto": "Justo en el 2"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Piensa que 5/2 está entre 1 y 2. Pero 5/2 = 2 1/2, que está entre 2 y 3.",
+      "C": "Piensa que 5/2 está entre 3 y 4. Pero 5/2 = 2 1/2, que está entre 2 y 3.",
+      "D": "Piensa que 5/2 = 2. Pero 5/2 = 2 1/2, que está justo en el medio entre 2 y 3."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8, Fracciones mayores que 1 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa8-08",
+    "tipo": "error",
+    "numeros": {
+      "entero": 2,
+      "numerador": 3,
+      "denominador": 5,
+      "impropia_numerador": 13
+    },
+    "enunciado": "Camila dice: «2 3/5 es igual a 11/5 porque 2 × 3 + 5 = 11». ¿Camila tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, 2 3/5 = 11/5"
+      },
+      {
+        "id": "B",
+        "texto": "No, 2 3/5 = 13/5 porque se multiplica entero × denominador + numerador"
+      },
+      {
+        "id": "C",
+        "texto": "No, 2 3/5 = 10/5 porque 2 × 5 = 10"
+      },
+      {
+        "id": "D",
+        "texto": "No, 2 3/5 = 8/5 porque 2 + 3 + 5 = 10"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Comete el mismo error que Camila: multiplica entero × numerador en vez de entero × denominador. 2 × 5 + 3 = 13.",
+      "C": "Multiplica entero × denominador pero olvida sumar el numerador: 2 × 5 = 10. Falta +3: 10 + 3 = 13.",
+      "D": "Suma todo junto: 2 + 3 + 5 = 10, pero eso no es la regla. 2 × 5 + 3 = 13, entonces 2 3/5 = 13/5."
+    },
+    "nivel": "reto",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8, Fracciones mayores que 1 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa8-09",
+    "tipo": "impropia_a_mixto",
+    "numeros": {
+      "numerador": 14,
+      "denominador": 5,
+      "entero": 2,
+      "resto": 4
+    },
+    "enunciado": "Un envase contiene 14/5 de litro de agua. ¿Cuántos litros completos y cuántos quintos de litro hay?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "2 litros y 4/5 de litro"
+      },
+      {
+        "id": "B",
+        "texto": "2 litros y 5/14 de litro"
+      },
+      {
+        "id": "C",
+        "texto": "3 litros y 4/5 de litro"
+      },
+      {
+        "id": "D",
+        "texto": "1 litro y 9/5 de litro"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Invierte numerador y denominador en la parte fraccionaria: 5/14. Pero 14 ÷ 5 = 2 con resto 4, entonces 14/5 = 2 4/5.",
+      "C": "Redondea hacia arriba: 14/5 no llega a 3 enteros. 14 ÷ 5 = 2 con resto 4, entonces 14/5 = 2 4/5.",
+      "D": "Solo resta 5 del numerador: 14 - 5 = 9, pero 9/5 sigue siendo impropia. 14/5 = 2 4/5."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulo 8, Fracciones mayores que 1 (Tomo 1)"
+    }
+  }
+]
