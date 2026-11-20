@@ -26,7 +26,10 @@ export function registerFaqRoutes(app: Express) {
       );
     } catch (error: any) {
       console.error("Error fetching FAQs:", error);
-      return res.status(500).json({ error: "Error al obtener FAQs" });
+      // Público: si la base no responde se devuelve lista vacía (la página simplemente
+      // no muestra preguntas) en vez de un 500 que rompe la sección.
+      res.setHeader("X-Degradado", "faqs-sin-base");
+      return res.json([]);
     }
   });
 

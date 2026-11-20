@@ -211,20 +211,37 @@ export async function registerRoutes(
       if (!parsed.success) {
         return res.status(400).json({ message: "Datos inválidos", errors: parsed.error.flatten() });
       }
-      const existing = await db
-        .select({ id: waitlistSignups.id })
-        .from(waitlistSignups)
-        .where(eq(waitlistSignups.email, parsed.data.email))
-        .limit(1);
+      // Si la base de datos no responde (cuota excedida, caída, etc.) la inscripción
+      // NO se pierde: se avisa por correo igual, con el asunto marcado para que el
+      // equipo la anote a mano, y la familia ve la pantalla de éxito. Antes esto
+      // devolvía 500 y el formulario de inscripción dejaba de funcionar por completo.
+      let bdDisponible = true;
+      let existing: { id: string | number }[] = [];
+      try {
+        existing = await db
+          .select({ id: waitlistSignups.id })
+          .from(waitlistSignups)
+          .where(eq(waitlistSignups.email, parsed.data.email))
+          .limit(1);
+      } catch (e: any) {
+        bdDisponible = false;
+        console.error("waitlist: base no disponible al consultar; se continúa solo con correo:", e?.message || e);
+      }
       // Reinscripción con el mismo correo: no se duplica la fila, pero sí se
       // avisa igual. Antes esta rama cortaba antes de los envíos, así que quien
       // volvía a postular (o probaba el formulario) no recibía nada y el equipo
       // tampoco se enteraba — con la pantalla de éxito igual mostrándose.
       const yaInscrito = existing.length > 0;
-      if (!yaInscrito) {
-        await db.insert(waitlistSignups).values(parsed.data);
+      if (!yaInscrito && bdDisponible) {
+        try {
+          await db.insert(waitlistSignups).values(parsed.data);
+        } catch (e: any) {
+          if (String(e?.message || "").includes("UNIQUE")) throw e;
+          bdDisponible = false;
+          console.error("waitlist: base no disponible al guardar; se continúa solo con correo:", e?.message || e);
+        }
       }
-      notifyByEmail(yaInscrito ? "Reinscripción en Barkley (correo ya registrado)" : "Nueva inscripción en Barkley", {
+      notifyByEmail(!bdDisponible ? "Nueva inscripción en Barkley (SIN GUARDAR EN LA BASE: anotar a mano)" : yaInscrito ? "Reinscripción en Barkley (correo ya registrado)" : "Nueva inscripción en Barkley", {
         Nombre: parsed.data.name,
         Correo: parsed.data.email,
         Nivel: parsed.data.levelInterest,
