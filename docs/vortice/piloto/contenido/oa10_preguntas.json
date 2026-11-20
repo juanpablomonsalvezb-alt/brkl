@@ -1,0 +1,371 @@
+[
+  {
+    "id": "mat5u3-oa10-01",
+    "tipo": "fraccion_a_decimal",
+    "numeros": {
+      "numerador": 1,
+      "denominador": 2,
+      "decimal": "0,5"
+    },
+    "enunciado": "Ana tiene medio litro de jugo. ¿Cómo se escribe 1/2 como número decimal?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "0,5"
+      },
+      {
+        "id": "B",
+        "texto": "0,2"
+      },
+      {
+        "id": "C",
+        "texto": "1,2"
+      },
+      {
+        "id": "D",
+        "texto": "0,12"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Confunde 1/2 con 1/5. 1/5 = 0,2, pero 1/2 = 0,5.",
+      "C": "Escribe el numerador antes de la coma y el denominador después: 1,2. Esto no es una conversión correcta.",
+      "D": "Une los dígitos 1 y 2 sin hacer la conversión: 0,12. 1/2 = 5/10 = 0,5."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa10-02",
+    "tipo": "fraccion_a_decimal",
+    "numeros": {
+      "numerador": 3,
+      "denominador": 4,
+      "decimal": "0,75"
+    },
+    "enunciado": "Una barra se divide en 4 partes iguales y se pintan 3. ¿Qué decimal representa 3/4?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "0,34"
+      },
+      {
+        "id": "B",
+        "texto": "0,75"
+      },
+      {
+        "id": "C",
+        "texto": "0,3"
+      },
+      {
+        "id": "D",
+        "texto": "0,43"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Une los dígitos 3 y 4: 0,34. Pero 3/4 = 75/100 = 0,75.",
+      "C": "Solo toma el numerador como décimo: 0,3. 3/4 = 0,75.",
+      "D": "Invierte la operación: 4 ÷ 3 ≈ 1,33 y luego escribe 0,43. 3/4 = 0,75."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa10-03",
+    "tipo": "error",
+    "numeros": {
+      "numerador": 1,
+      "denominador": 5,
+      "decimal": "0,2"
+    },
+    "enunciado": "Matías dice: «1/5 es igual a 0,5 porque 1 entre 5 da medio». ¿Matías tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, 1/5 = 0,5"
+      },
+      {
+        "id": "B",
+        "texto": "No, 1/5 = 0,2 porque 1/5 = 2/10"
+      },
+      {
+        "id": "C",
+        "texto": "No, 1/5 = 0,1 porque el numerador es 1"
+      },
+      {
+        "id": "D",
+        "texto": "No, 1/5 = 0,15 porque se juntan el 1 y el 5 después de la coma"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Comete el mismo error que Matías: confunde 1/5 con 1/2. 1/2 = 0,5, pero 1/5 = 0,2.",
+      "C": "Pone el numerador como décimo: 0,1. Pero 1/5 = 2/10 = 0,2.",
+      "D": "Junta el numerador y el denominador como si fueran las cifras del decimal."
+    },
+    "nivel": "reto",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa10-04",
+    "tipo": "fraccion_a_decimal",
+    "numeros": {
+      "numerador": 2,
+      "denominador": 5,
+      "decimal": "0,4"
+    },
+    "enunciado": "En una carrera, Carolina recorrió 2/5 de la distancia total. ¿Qué decimal representa 2/5?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "0,25"
+      },
+      {
+        "id": "B",
+        "texto": "0,5"
+      },
+      {
+        "id": "C",
+        "texto": "0,4"
+      },
+      {
+        "id": "D",
+        "texto": "0,2"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "A": "Confunde 2/5 con 1/4. 1/4 = 0,25, pero 2/5 = 4/10 = 0,4.",
+      "B": "Confunde 2/5 con 1/2. 1/2 = 0,5, pero 2/5 = 0,4.",
+      "D": "Confunde 2/5 con 1/5. 1/5 = 0,2, pero 2/5 = 0,4."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa10-05",
+    "tipo": "pictorica",
+    "numeros": {
+      "numerador": 7,
+      "denominador": 10,
+      "decimal": "0,7"
+    },
+    "enunciado": "Una cuadrícula de 10 columnas tiene 7 columnas pintadas de azul. ¿Qué decimal representa la parte pintada?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "0,7"
+      },
+      {
+        "id": "B",
+        "texto": "0,07"
+      },
+      {
+        "id": "C",
+        "texto": "7,0"
+      },
+      {
+        "id": "D",
+        "texto": "0,17"
+      }
+    ],
+    "respuesta_correcta": "A",
+    "explicacion_distractores": {
+      "B": "Pone 7 en los centésimos en vez de los décimos: 0,07. 7/10 = 0,7.",
+      "C": "Escribe 7 entero en vez de 7 décimos: 7,0. 7/10 = 0,7.",
+      "D": "Une los dígitos 1 y 7: 0,17. 7/10 = 0,7."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa10-06",
+    "tipo": "decimal_a_fraccion",
+    "numeros": {
+      "numerador": 3,
+      "denominador": 5,
+      "decimal": "0,6"
+    },
+    "enunciado": "Un envase contiene 0,6 litros de agua. ¿Qué fracción con denominador 5 representa 0,6?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "1/5 (que es 0,2)"
+      },
+      {
+        "id": "B",
+        "texto": "2/5 (que es 0,4)"
+      },
+      {
+        "id": "C",
+        "texto": "3/5 (que es 0,6)"
+      },
+      {
+        "id": "D",
+        "texto": "6/5 (que es 1,2)"
+      }
+    ],
+    "respuesta_correcta": "C",
+    "explicacion_distractores": {
+      "A": "Confunde 0,6 con 0,2. 1/5 = 0,2, no 0,6.",
+      "B": "Confunde 0,6 con 0,4. 2/5 = 0,4, no 0,6.",
+      "D": "Pone el 6 como numerador sin simplificar: 6/5. Pero 0,6 = 6/10 = 3/5."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa10-07",
+    "tipo": "recta",
+    "numeros": {
+      "numerador": 1,
+      "denominador": 4,
+      "decimal": "0,25"
+    },
+    "enunciado": "En una recta numérica entre 0 y 1, ¿en qué punto se ubica 1/4?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "En 0,14"
+      },
+      {
+        "id": "B",
+        "texto": "En 0,25"
+      },
+      {
+        "id": "C",
+        "texto": "En 0,4"
+      },
+      {
+        "id": "D",
+        "texto": "En 0,41"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Une los dígitos 1 y 4: 0,14. 1/4 = 25/100 = 0,25.",
+      "C": "Pone el denominador como décimo: 0,4. 1/4 = 0,25.",
+      "D": "Invierte numerador y denominador como dígitos: 0,41. 1/4 = 0,25."
+    },
+    "nivel": "basico",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa10-08",
+    "tipo": "error",
+    "numeros": {
+      "numerador": 3,
+      "denominador": 10,
+      "decimal": "0,3"
+    },
+    "enunciado": "Felipe dice: «3/10 se escribe como 0,30 y eso es diferente de 0,3 porque 30 es mayor que 3». ¿Felipe tiene razón?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "Sí, 0,30 es mayor que 0,3"
+      },
+      {
+        "id": "B",
+        "texto": "No, son iguales: los ceros al final no cambian el valor"
+      },
+      {
+        "id": "C",
+        "texto": "No, 3/10 = 0,03"
+      },
+      {
+        "id": "D",
+        "texto": "No, 3/10 = 3,10 porque el 3 y el 10 se escriben a los lados de la coma"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Compara 30 con 3 como números naturales. Pero 0,30 = 0,3: son el mismo valor.",
+      "C": "Pone 3 en los centésimos en vez de los décimos: 0,03. 3/10 = 0,3.",
+      "D": "Pone el numerador y el denominador a los lados de la coma."
+    },
+    "nivel": "reto",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+    }
+  },
+  {
+    "id": "mat5u3-oa10-09",
+    "tipo": "fraccion_a_decimal",
+    "numeros": {
+      "numerador": 4,
+      "denominador": 5,
+      "decimal": "0,8"
+    },
+    "enunciado": "Una receta necesita 4/5 de kilogramo de harina. ¿Cuántos kilogramos son 4/5 en forma decimal?",
+    "alternativas": [
+      {
+        "id": "A",
+        "texto": "0,45"
+      },
+      {
+        "id": "B",
+        "texto": "0,8"
+      },
+      {
+        "id": "C",
+        "texto": "0,4"
+      },
+      {
+        "id": "D",
+        "texto": "0,54"
+      }
+    ],
+    "respuesta_correcta": "B",
+    "explicacion_distractores": {
+      "A": "Une los dígitos 4 y 5: 0,45. 4/5 = 8/10 = 0,8.",
+      "C": "Confunde 4/5 con 2/5. 2/5 = 0,4, pero 4/5 = 0,8.",
+      "D": "Invierte los dígitos: 0,54. 4/5 = 8/10 = 0,8."
+    },
+    "nivel": "medio",
+    "fuente": {
+      "tipo": "texto_escolar",
+      "referencia": "Sumo Primero 5.º básico, Guía Digital del Docente 2026",
+      "edicion": "2026",
+      "ubicacion": "Capítulos 6 y 8 (Tomo 1)"
+    }
+  }
+]
