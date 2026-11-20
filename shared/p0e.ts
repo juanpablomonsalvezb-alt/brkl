@@ -88,9 +88,14 @@ export function enviarIntento(i: InstanciaP0E, e: { intentoId: string; envioId: 
   const t = i.intentos.find((x) => x.id === e.intentoId);
   if (!t) return { ok: false, motivo: "intento_inexistente" };
   if (t.estado === "enviado") {
-    return t.envioId === e.envioId
-      ? { ok: true, instancia: i, efectoProceso: i.causaCierre === "aprobacion" ? "aprobado" : i.causaCierre === "agotamiento" ? "sin_definir" : null, repetido: true, intento: t }
-      : { ok: false, motivo: "conflicto_idempotencia" };
+    if (t.envioId !== e.envioId) return { ok: false, motivo: "conflicto_idempotencia" };
+    const enviados = i.intentos.filter((x) => x.estado === "enviado");
+    const efectoProceso: EfectoProceso = t.aprobado
+      ? "aprobado"
+      : i.causaCierre === "agotamiento" && enviados[enviados.length - 1]?.id === t.id
+        ? "sin_definir"
+        : null;
+    return { ok: true, instancia: i, efectoProceso, repetido: true, intento: t };
   }
   if (t.estado === "expirado") return { ok: false, motivo: "intento_expirado" };
   if (esFinal(i.estado)) return { ok: false, motivo: "instancia_cerrada" };

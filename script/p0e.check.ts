@@ -63,11 +63,34 @@ caso("M6", "fuera de la extensión no se aceptan envíos ni inicios (409): el in
   assert.deepEqual(enviarIntento(v, { intentoId: "a1", envioId: "e1", aprobado: true }, FIN), { ok: false, motivo: "intento_expirado" });
 });
 caso("M7", "envío repetido: mismo resultado, un solo consumo; otro envío sobre el mismo intento es conflicto", () => {
+  // 1. Reenvío inmediato de un intento fallido.
   const a = ok(enviarIntento(iniciar(nueva(), "a1"), { intentoId: "a1", envioId: "e1", aprobado: false }, 3));
+  assert.equal(a.efectoProceso, null);
   const b = ok(enviarIntento(a.instancia, { intentoId: "a1", envioId: "e1", aprobado: false }, 4));
-  assert.deepEqual([b.repetido, b.instancia, consumidos(b.instancia)], [true, a.instancia, 1]);
+  assert.deepEqual([b.repetido, b.efectoProceso, b.instancia, consumidos(b.instancia)], [true, null, a.instancia, 1]);
+
+  // 2. Conflicto cuando se reutiliza el mismo intento con otro envioId; intento inexistente.
   assert.deepEqual(enviarIntento(a.instancia, { intentoId: "a1", envioId: "e2", aprobado: true }, 4), { ok: false, motivo: "conflicto_idempotencia" });
   assert.deepEqual(enviarIntento(a.instancia, { intentoId: "no", envioId: "e1", aprobado: true }, 4), { ok: false, motivo: "intento_inexistente" });
+
+  // 3. Reenvío de un intento fallido después de la aprobación de otro (FABLE-009 escenario 1: A1 falla → A2 aprueba).
+  const trasA2Aprueba = ok(enviarIntento(iniciar(a.instancia, "a2", 5), { intentoId: "a2", envioId: "e2", aprobado: true }, 6));
+  assert.deepEqual([trasA2Aprueba.instancia.estado, trasA2Aprueba.efectoProceso], ["cerrada_aprobada", "aprobado"]);
+  const reenvioA1TrasAprobar = ok(enviarIntento(trasA2Aprueba.instancia, { intentoId: "a1", envioId: "e1", aprobado: false }, 7));
+  assert.deepEqual([reenvioA1TrasAprobar.repetido, reenvioA1TrasAprobar.efectoProceso, reenvioA1TrasAprobar.intento.aprobado], [true, null, false]);
+  // El reenvío conserva su efecto original independientemente del flag `aprobado` del payload repetido.
+  const reenvioA1PayloadDistinto = ok(enviarIntento(trasA2Aprueba.instancia, { intentoId: "a1", envioId: "e1", aprobado: true }, 8));
+  assert.deepEqual([reenvioA1PayloadDistinto.repetido, reenvioA1PayloadDistinto.efectoProceso, reenvioA1PayloadDistinto.intento.aprobado], [true, null, false]);
+
+  // 4. Reenvío de un intento fallido anterior después del agotamiento y reenvío del intento que produjo el agotamiento (FABLE-009 escenario 2).
+  const trasA2Agota = ok(enviarIntento(iniciar(a.instancia, "a2", 5), { intentoId: "a2", envioId: "e2", aprobado: false }, 6));
+  assert.deepEqual([trasA2Agota.instancia.estado, trasA2Agota.efectoProceso], ["cerrada_agotada", "sin_definir"]);
+  const reenvioA1TrasAgotar = ok(enviarIntento(trasA2Agota.instancia, { intentoId: "a1", envioId: "e1", aprobado: false }, 7));
+  assert.deepEqual([reenvioA1TrasAgotar.repetido, reenvioA1TrasAgotar.efectoProceso, reenvioA1TrasAgotar.intento.id], [true, null, "a1"]);
+  const reenvioA2QueAgoto = ok(enviarIntento(trasA2Agota.instancia, { intentoId: "a2", envioId: "e2", aprobado: false }, 8));
+  assert.deepEqual([reenvioA2QueAgoto.repetido, reenvioA2QueAgoto.efectoProceso, reenvioA2QueAgoto.intento.id], [true, "sin_definir", "a2"]);
+
+  // 5. Reenvío de un intento aprobado (incluso fuera de ventana).
   const cierre = ok(enviarIntento(iniciar(nueva(), "a1"), { intentoId: "a1", envioId: "e1", aprobado: true }, 3));
   const rep = ok(enviarIntento(cierre.instancia, { intentoId: "a1", envioId: "e1", aprobado: true }, 99));
   assert.deepEqual([rep.repetido, rep.efectoProceso, rep.instancia.estado], [true, "aprobado", "cerrada_aprobada"], "el reenvío del envío que cerró sigue idempotente aun fuera de ventana");
@@ -93,6 +116,7 @@ caso("M9", "un solo intento activo; no se excede el máximo", () => {
 // tiempos antes, en y después de T+48 h, hasta profundidad 7, para 1, 2 y 3 intentos.
 caso("X1", "exhaustivo: todas las secuencias respetan los invariantes y los estados finales son absorbentes", () => {
   let estados = 0, transiciones = 0;
+  const efectosRepetidos = new Set<string | null>();
   for (const max of [1, 2, 3]) {
     const vistos = new Set<string>(); let frontera: InstanciaP0E[] = [nuevaInstancia({ maxIntentos: max, finExtension: FIN })];
     for (let prof = 0; prof < 7; prof++) {
@@ -119,6 +143,21 @@ caso("X1", "exhaustivo: todas las secuencias respetan los invariantes y los esta
             // consumir solo al enviar con éxito; nunca fuera de ventana
             if (consumidos(nuevaI) > consumidos(i)) assert.ok(t < FIN, "no se consume fuera de la extensión");
             if (esFinal(i.estado) && "instancia" in r && !(r as { repetido?: boolean }).repetido && "ok" in r) assert.equal(consumidos(nuevaI), consumidos(i));
+            // Consistencia histórica de efectoProceso en cada intento enviado (idempotencia por intento).
+            const enviados = nuevaI.intentos.filter((x) => x.estado === "enviado");
+            for (let idx = 0; idx < enviados.length; idx++) {
+              const int = enviados[idx];
+              const esperado = int.aprobado
+                ? "aprobado"
+                : nuevaI.causaCierre === "agotamiento" && idx === enviados.length - 1
+                  ? "sin_definir"
+                  : null;
+              const rep = enviarIntento(nuevaI, { intentoId: int.id, envioId: int.envioId!, aprobado: false }, t);
+              assert.ok(rep.ok && rep.repetido, `reenvío idempotente debe ser ok/repetido en ${k}`);
+              assert.equal(rep.efectoProceso, esperado, `efectoProceso histórico inconsistente para ${int.id} en ${k}`);
+              assert.equal(rep.instancia, nuevaI, "el reenvío no muta la instancia");
+              efectosRepetidos.add(rep.efectoProceso);
+            }
             sig.push(nuevaI);
           }
         }
@@ -126,6 +165,7 @@ caso("X1", "exhaustivo: todas las secuencias respetan los invariantes y los esta
       frontera = sig;
     }
   }
+  assert.deepEqual(efectosRepetidos, new Set(["aprobado", "sin_definir", null]), "X1 debe cubrir los tres resultados posibles de efectoProceso");
   assert.ok(estados > 100 && transiciones > 50_000, `cobertura: ${estados} estados, ${transiciones} transiciones`);
   salida.push(`        (${estados} estados distintos, ${transiciones} transiciones comprobadas)`);
 });

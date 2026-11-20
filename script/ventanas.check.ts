@@ -13,7 +13,8 @@ let casos = 0; const salida: string[] = [];
 const caso = (id: string, nombre: string, f: () => void) => { f(); casos++; salida.push(`  ✓ ${id.padEnd(5)} ${nombre}`); };
 
 caso("V1", "verano (UTC−3): T, T+48 h y review_at", () => {
-  const v = ventanaOrdinaria("2026-03-13"); // viernes
+  let v!: ReturnType<typeof ventanaOrdinaria>;
+  assert.doesNotThrow(() => { v = ventanaOrdinaria("2026-03-13"); }, "V1: un día normal de verano no debe lanzar excepción (HoraLocalInvalida u otra)"); // viernes
   assert.deepEqual([iso(v.finModulo), iso(v.finExtension), iso(v.revisionDesde)], ["2026-03-14T02:59:00Z", "2026-03-16T02:59:00Z", "2026-03-16T03:59:00Z"]);
   assert.equal(v.zonaHoraria, "America/Santiago"); assert.equal(v.diaFin, "2026-03-13");
   assert.equal(local(v.finModulo), "2026-03-13 23:59");

@@ -366,7 +366,7 @@ export const MUTACIONES: Record<string, Mutacion[]> = {
     { id: "p0e: enviar fuera de ventana", archivo: "shared/p0e.ts", de: "if (ahora >= i.finExtension) return { ok: false, motivo: \"ventana_cerrada\" };\n  const enviado", a: "const enviado", check: "p0e" },
     { id: "p0e: recargar crea otro intento", archivo: "shared/p0e.ts", de: "if (a) return { ok: true, instancia: i,", a: "if (false) return { ok: true, instancia: i,", check: "p0e" },
     { id: "p0e: se reutiliza el id de intento", archivo: "shared/p0e.ts", de: "if (i.intentos.some((x) => x.id === intentoId)) return", a: "if (false) return", check: "p0e" },
-    { id: "p0e: un envío repetido distinto no es conflicto", archivo: "shared/p0e.ts", de: "return t.envioId === e.envioId\n", a: "return true\n", check: "p0e" },
+    { id: "p0e: un envío repetido distinto no es conflicto", archivo: "shared/p0e.ts", de: "if (t.envioId !== e.envioId) return { ok: false, motivo: \"conflicto_idempotencia\" };", a: "if (false) return { ok: false, motivo: \"conflicto_idempotencia\" };", check: "p0e" },
     { id: "p0e: un intento expirado se envía", archivo: "shared/p0e.ts", de: "if (t.estado === \"expirado\") return { ok: false, motivo: \"intento_expirado\" };", a: "", check: "p0e" },
     { id: "p0e: aprobar no cierra", archivo: "shared/p0e.ts", de: "if (e.aprobado) return { ok: true, instancia: { ...i, estado: \"cerrada_aprobada\"", a: "if (false) return { ok: true, instancia: { ...i, estado: \"cerrada_aprobada\"", check: "p0e" },
     { id: "p0e: agotar un intento más tarde", archivo: "shared/p0e.ts", de: "if (usados >= i.maxIntentos) return { ok: true,", a: "if (usados > i.maxIntentos) return { ok: true,", check: "p0e" },
