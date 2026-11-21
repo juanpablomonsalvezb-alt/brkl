@@ -56,13 +56,13 @@ const courseOptions = [
 // Planes disponibles según el grupo (precio incluye IVA 19% y Mentor GRATIS)
 const plansByGroup: Record<string, Array<{ value: string; label: string; price: string }>> = {
   basica: [
-    { value: "basica_plan", label: "Plan Completo (Plataforma + IA + Mentor): $240.000", price: "$240.000" },
+    { value: "basica_plan", label: "Plan Completo (Plataforma + IA + Mentor), pago único del año: $416.500 (lista $490.000, ahorras $73.500)", price: "$416.500" },
   ],
   media1: [
-    { value: "media1_plan", label: "Plan Completo (Plataforma + IA + Mentor): $280.000", price: "$280.000" },
+    { value: "media1_plan", label: "Plan Completo (Plataforma + IA + Mentor), pago único del año: $416.500 (lista $490.000, ahorras $73.500)", price: "$416.500" },
   ],
   media2: [
-    { value: "media2_plan", label: "Plan Completo (Plataforma + IA + Mentor): $320.000", price: "$320.000" },
+    { value: "media2_plan", label: "Plan Completo (Plataforma + IA + Mentor), pago único del año: $416.500 (lista $490.000, ahorras $73.500)", price: "$416.500" },
   ],
   adultos_basica: [
     { value: "adultos_basica", label: "Plan Básica (1° a 8° Básico) - $360.000", price: "$360.000" },

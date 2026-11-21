@@ -42,14 +42,17 @@ const PREMIUM_FEATURES = [
   }
 ];
 
+// Plan escolar (Básica, Media I y Media II), decisión del sostenedor 2026-11-21: lista anual tachada, pago único con 15 % de descuento.
+const PRECIO_ESCOLAR = { listaAnual: 490_000, pagoUnico: 416_500, ahorro: 73_500, descuentoPct: 15 } as const;
+
 // Planes con diseño premium
 const PREMIUM_PLANS = [
   {
     id: "basica",
     level: "Básica",
     grades: "7º y 8º Básico",
-    period: "Mar — Oct 2026",
-    price: "240.000",
+    period: "Mar — Oct 2027",
+    price: "416.500",
     currency: "CLP",
     description: "Fundamentos sólidos para la educación media",
     highlight: false,
@@ -60,8 +63,8 @@ const PREMIUM_PLANS = [
     id: "media1",
     level: "Media I",
     grades: "1º y 2º Medio",
-    period: "Mar — Oct 2026",
-    price: "280.000",
+    period: "Mar — Oct 2027",
+    price: "416.500",
     currency: "CLP",
     description: "Consolidación de competencias clave",
     highlight: true,
@@ -72,8 +75,8 @@ const PREMIUM_PLANS = [
     id: "media2",
     level: "Media II",
     grades: "3º y 4º Medio",
-    period: "Mar — Oct 2026",
-    price: "320.000",
+    period: "Mar — Oct 2027",
+    price: "416.500",
     currency: "CLP",
     description: "Preparación integral para la educación superior",
     highlight: false,
@@ -187,13 +190,18 @@ export function PlanConfiguratorYouthPremium() {
 
                   {/* Pricing Section */}
                   <div className="text-center mb-5 py-4 bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-100">
+                    <p className="text-sm text-gray-400 line-through" aria-label={`Precio de lista anual $${PRECIO_ESCOLAR.listaAnual.toLocaleString("es-CL")}`}>
+                      ${PRECIO_ESCOLAR.listaAnual.toLocaleString("es-CL")}
+                    </p>
                     <div className="flex items-center justify-center gap-1">
                       <span className="text-2xl font-bold text-gray-500">$</span>
                       <span className="text-5xl font-black text-[#002147]" style={{ fontFamily: 'Georgia, serif' }}>
-                        {plan.price.split('.')[0]}
+                        {PRECIO_ESCOLAR.pagoUnico.toLocaleString("es-CL")}
                       </span>
-                      <span className="text-2xl font-bold text-gray-500">.000</span>
                     </div>
+                    <p className="text-xs font-semibold text-[#A51C30] mt-1">
+                      Pago único del año · {PRECIO_ESCOLAR.descuentoPct}% de descuento · ahorras ${PRECIO_ESCOLAR.ahorro.toLocaleString("es-CL")}
+                    </p>
                   </div>
 
                   {/* Academic Features */}
@@ -204,7 +212,7 @@ export function PlanConfiguratorYouthPremium() {
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <div className="w-1.5 h-1.5 rounded-full bg-[#A51C30]" />
-                      <span>Pago único Marzo - Octubre 2026</span>
+                      <span>Pago único Marzo - Octubre 2027</span>
                     </div>
                   </div>
 
