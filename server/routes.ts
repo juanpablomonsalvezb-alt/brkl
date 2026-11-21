@@ -43,7 +43,8 @@ import {
 import { listLinkedStudents, loadFamiliaResumen, guardianLinkInput, upsertGuardianLink } from "./familia";
 import { recordEvent, recordResourceOpened, loadAnaliticaResumen } from "./analitica";
 import { enrollStudentInLevel, listEnrollments, findUserIdByEmail, MatriculaError } from "./matricula";
-import { db } from "./db";
+import { db, client as dbClient } from "./db";
+import { registrarRutasEvaluacion, rutasEvaluacionHabilitadas } from "./evaluacionRoutes";
 import { seedBase, BASE_LEVELS, BASE_SUBJECTS } from "./seedBase";
 import { purgarPresenciaVieja } from "./retencion";
 import {
@@ -510,6 +511,16 @@ export async function registerRoutes(
       res.status(500).json({ message: "Failed to fetch progress" });
     }
   });
+
+  // Vórtice: evaluación de cierre E2 (P21 v2). Apagada salvo VORTICE_EVALUACION_RUTAS=1: depende de la
+  // migración 0005, que aún no se aplica a una base real.
+  if (rutasEvaluacionHabilitadas()) {
+    registrarRutasEvaluacion(app, {
+      client: dbClient,
+      userId: currentUserId,
+      esAdmin: async (userId) => (await storage.getUserProfile(userId))?.role === "admin",
+    });
+  }
 
   // Vórtice: resumen del estudiante (tramo de dashboard, avance por asignatura, siguiente paso).
   app.get("/api/vortice/overview", async (req: any, res) => {
