@@ -2,6 +2,7 @@
 // en la respuesta de POST /api/evaluations/:id/submit, nunca antes.
 
 import { htmlToQuestions, type ConvertedQuestion } from "./evaluationHtml";
+import type { EvaluationFunction } from "./clasificacionEvaluacion";
 
 // Restos de marcas de corrección que no deben llegar al estudiante en el texto de una pregunta.
 const KEY_MARKER = /✓|✔|☑|✅|\(\s*correct[ao]?\s*\)|\bcorrect[ao]s?\b|respuesta\s+correcta|\bclave\b/i;
@@ -53,6 +54,7 @@ export function toStudentQuestions(questionsJson: string): StudentQuestion[] {
 /** Fila de module_evaluations sin questionsJson ni htmlContent (lista blanca de campos). */
 export function toPublicEvaluation<T extends {
   id: string; learningObjectiveId: string; evaluationNumber: number; title: string;
+  evaluationFunction?: EvaluationFunction | null;
   description: string | null; releaseDay: number; releaseWeek: number; formUrl: string | null;
   questionsJson: string | null; totalQuestions: number | null; passingScore: number | null; isRequired: boolean | null;
   htmlContent?: string | null;
@@ -62,6 +64,7 @@ export function toPublicEvaluation<T extends {
     id: e.id,
     learningObjectiveId: e.learningObjectiveId,
     evaluationNumber: e.evaluationNumber,
+    evaluationFunction: (e.evaluationFunction ?? null) as EvaluationFunction | null,
     title: e.title,
     description: e.description,
     releaseDay: e.releaseDay,

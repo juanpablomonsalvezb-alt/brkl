@@ -81,6 +81,15 @@ export function registrarRutasEvaluacion(app: Express, deps: DepsRutasEvaluacion
     if (!a.ok) throw new ErrorHttp(a.status === 404 ? 404 : 403, a.reason);
   };
 
+  // Perfil guardado por administración en user_profiles; si no existe, regular por defecto.
+  const leerPerfilGuardado = async (studentId: string): Promise<"regular" | "neurodivergente"> => {
+    const r = await c.execute({
+      sql: "SELECT evaluation_profile FROM user_profiles WHERE user_id = ? LIMIT 1",
+      args: [studentId],
+    });
+    return (r.rows[0] as any)?.evaluation_profile === "neurodivergente" ? "neurodivergente" : "regular";
+  };
+
   // Estado para la pantalla: reloj del servidor, perfil, intentos y si el extra está disponible.
   app.get("/api/vortice/evaluaciones/:evaluacionId/estado", ruta(async (uid, req) => {
     const evaluacionId = String(req.params.evaluacionId);
@@ -131,7 +140,8 @@ export function registrarRutasEvaluacion(app: Express, deps: DepsRutasEvaluacion
       args: [evaluacionId],
     });
     if (!v.rows.length) throw new ErrorEvaluacion("version_no_encontrada", "no hay versión publicada de esta evaluación");
-    return abrirProceso(c, { estudianteId: uid, evaluacionId, versionId: String((v.rows[0] as any).id), perfil: "regular" });
+    const perfil = await leerPerfilGuardado(uid);
+    return abrirProceso(c, { estudianteId: uid, evaluacionId, versionId: String((v.rows[0] as any).id), perfil });
   }));
 
   // Inicia un intento. El extra arma sus preguntas con el banco de la base (ver cargarBancoExtra).
@@ -173,10 +183,11 @@ export function registrarRutasEvaluacion(app: Express, deps: DepsRutasEvaluacion
   app.post("/api/vortice/evaluaciones/procesos/:procesoId/cerrar", ruta(async (uid, req) =>
     cerrarProceso(c, { procesoId: String(req.params.procesoId), estudianteId: uid })));
 
-  // Administración: declarar perfil al abrir el proceso y reabrir una sola vez con motivo.
+  // Administración: declarar perfil al abrir el proceso (si se omite, toma el guardado en user_profiles) y reabrir una sola vez con motivo.
   app.post("/api/admin/vortice/evaluaciones/:evaluacionId/proceso", ruta(async (uid, req) => {
     if (!(await deps.esAdmin(uid))) throw new ErrorHttp(403, "Forbidden: Admin access required");
-    const estudianteId = texto(req.body?.estudianteId), perfil = req.body?.perfil;
+    const estudianteId = texto(req.body?.estudianteId);
+    const perfil = req.body?.perfil === undefined ? await leerPerfilGuardado(estudianteId ?? "") : req.body.perfil;
     const evaluacionId = String(req.params.evaluacionId);
     if (!estudianteId) throw new ErrorEvaluacion("proceso_no_encontrado", "estudianteId requerido");
     const v = await c.execute({ sql: "SELECT id FROM evaluation_versions WHERE evaluation_id = ? AND status IN ('validada','asignada') ORDER BY version DESC LIMIT 1", args: [evaluacionId] });

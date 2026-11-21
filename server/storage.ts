@@ -17,6 +17,11 @@ type ModuleEvaluation, type InsertModuleEvaluation,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, inArray, desc, getTableColumns, sql } from "drizzle-orm";
+import {
+  etiquetaEvaluacion,
+  funcionPorNumero,
+  obtenerEvaluacionesDeCierre,
+} from "@shared/clasificacionEvaluacion";
 
 // R1: `reflexion` si el cambio de tipo desde o hacia `reflexion` toparía con preguntas o respuestas de reflexión.
 export type ResultadoActualizarRecurso =
@@ -375,15 +380,18 @@ export class DatabaseStorage implements IStorage {
         .returning();
       return updated;
     } else {
-      const releaseDay = evaluationNumber % 2 === 1 ? 3 : 5;
+      const fn = funcionPorNumero(evaluationNumber);
+      const releaseDay = evaluationNumber === 0 ? 1 : (evaluationNumber % 2 === 1 ? 3 : 5);
       const releaseWeek = evaluationNumber <= 2 ? 1 : 2;
       
       const [created] = await db.insert(moduleEvaluations).values({
         learningObjectiveId: objectiveId,
         evaluationNumber,
-        title: `Evaluación Formativa ${evaluationNumber}`,
+        evaluationFunction: fn,
+        title: etiquetaEvaluacion(fn, evaluationNumber),
         releaseDay,
         releaseWeek,
+        isRequired: evaluationNumber !== 0,
         htmlContent,
       }).returning();
       return created;
@@ -432,18 +440,21 @@ export class DatabaseStorage implements IStorage {
         .returning();
       return updated;
     } else {
-      const releaseDay = evaluationNumber % 2 === 1 ? 3 : 5;
+      const fn = funcionPorNumero(evaluationNumber);
+      const releaseDay = evaluationNumber === 0 ? 1 : (evaluationNumber % 2 === 1 ? 3 : 5);
       const releaseWeek = evaluationNumber <= 2 ? 1 : 2;
       
       const [created] = await db.insert(moduleEvaluations).values({
         learningObjectiveId: objectiveId,
         evaluationNumber,
-        title: `Evaluación Formativa ${evaluationNumber}`,
+        evaluationFunction: fn,
+        title: etiquetaEvaluacion(fn, evaluationNumber),
         releaseDay,
         releaseWeek,
         questionsJson,
         totalQuestions,
         passingScore: 60,
+        isRequired: evaluationNumber !== 0,
         generatedAt: new Date(),
       }).returning();
       return created;
@@ -472,12 +483,16 @@ export class DatabaseStorage implements IStorage {
     
     const objectiveIds = objectivesForSubject.map(o => o.id);
     
-    const eval2s = await db.select()
+    const allEvals = await db.select()
       .from(moduleEvaluations)
-      .where(and(
-        inArray(moduleEvaluations.learningObjectiveId, objectiveIds),
-        eq(moduleEvaluations.evaluationNumber, 2)
-      ));
+      .where(inArray(moduleEvaluations.learningObjectiveId, objectiveIds));
+    const porOa = new Map<string, typeof allEvals>();
+    for (const e of allEvals) {
+      const lista = porOa.get(e.learningObjectiveId) ?? [];
+      lista.push(e);
+      porOa.set(e.learningObjectiveId, lista);
+    }
+    const eval2s = [...porOa.values()].flatMap((lista) => obtenerEvaluacionesDeCierre(lista));
     
     if (eval2s.length === 0) return [];
     

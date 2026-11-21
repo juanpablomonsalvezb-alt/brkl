@@ -85,7 +85,7 @@ export default function VorticeEvaluacion() {
       <header className="ve-top">
         <Link href="/vortice" className="ve-inicio"><Home size={17} aria-hidden /> Inicio</Link>
         <div className="ve-titulo">
-          <span className="ve-kicker">Evaluación de cierre</span>
+          <span className="ve-kicker">Evaluación del módulo</span>
           <h1>{estado?.titulo ?? "Evaluación"}</h1>
         </div>
         {activo && <span className="ve-chip">{activo.tipo === "extra" ? "Intento extra" : "Intento normal"}</span>}

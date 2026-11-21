@@ -36,6 +36,7 @@ import { useToast } from "@/hooks/use-toast";
 import { TextbookViewer } from "@/components/TextbookViewer";
 import { EvaluationQuiz } from "@/components/EvaluationQuiz";
 import { GeminiCopilotButton } from "@/components/GeminiCopilotButton";
+import { etiquetaEvaluacion, type EvaluationFunction } from "@shared/clasificacionEvaluacion";
 import {
   AreaChart, Area,
   PieChart, Pie, Cell,
@@ -166,6 +167,7 @@ export default function CoursePlayer() {
   const { data: moduleEvaluations } = useQuery<Array<{
     id: string;
     evaluationNumber: number;
+    evaluationFunction?: EvaluationFunction | null;
     title: string;
     hasQuestions: boolean;
     totalQuestions: number | null;
@@ -212,7 +214,15 @@ export default function CoursePlayer() {
 
   const getEvaluationDates = (moduleStartDate: string) => {
     const start = new Date(moduleStartDate);
-    const evaluations = [];
+    const evaluations = [
+      {
+        number: 0,
+        title: "Evaluación de diagnóstico",
+        date: new Date(start),
+        dayName: "Inicio del módulo",
+        htmlContent: "",
+      },
+    ];
 
     for (let week = 0; week < 2; week++) {
       const wednesday = new Date(start);
@@ -222,19 +232,21 @@ export default function CoursePlayer() {
       const friday = new Date(wednesday);
       friday.setDate(wednesday.getDate() + 2);
 
+      const n1 = week * 2 + 1;
+      const n2 = week * 2 + 2;
       evaluations.push({
-        number: week * 2 + 1,
-        title: `Evaluación Formativa ${week * 2 + 1}`,
+        number: n1,
+        title: n1 <= 3 ? `Evaluación de proceso ${n1}` : "Evaluación del módulo",
         date: wednesday,
         dayName: "Miércoles",
-        htmlContent: ""
+        htmlContent: "",
       });
       evaluations.push({
-        number: week * 2 + 2,
-        title: `Evaluación Formativa ${week * 2 + 2}`,
+        number: n2,
+        title: n2 <= 3 ? `Evaluación de proceso ${n2}` : "Evaluación del módulo",
         date: friday,
         dayName: "Viernes",
-        htmlContent: ""
+        htmlContent: "",
       });
     }
 
@@ -972,7 +984,7 @@ export default function CoursePlayer() {
                     <ul className="space-y-2" data-testid="evaluation-status-list">
                       {[...moduleEvaluations].sort((a, b) => a.evaluationNumber - b.evaluationNumber).map((e) => (
                         <li key={e.id} className="flex items-center justify-between text-sm">
-                          <span className="text-slate-700">E{e.evaluationNumber}</span>
+                          <span className="text-slate-700">{etiquetaEvaluacion(e.evaluationFunction, e.evaluationNumber)}</span>
                           {e.aprobada ? (
                             <span className="flex items-center gap-1 font-medium text-emerald-700">
                               <Check className="w-4 h-4" aria-hidden="true" /> Aprobado

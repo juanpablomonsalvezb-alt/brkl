@@ -1,5 +1,6 @@
--- Vórtice: migración consolidada de todas las ramas vortice/* (incluye T37 Flow recurrente y T38 Brújula parte 2).
--- Generada a partir de drizzle-kit/api + adición idempotente/SQLite de flow_subscriptions, brujula_preferences y brujula_study_blocks.
+-- Vórtice: migración consolidada de todas las ramas vortice/* (incluye T37 Flow recurrente, T38 Brújula parte 2 y T39 perfil/evaluaciones).
+-- Generada a partir de drizzle-kit/api + adición SQLite de flow_subscriptions, brujula_preferences, brujula_study_blocks,
+-- perfil de evaluación en user_profiles y función de evaluación en module_evaluations.
 -- NO APLICADA EN NINGUNA BASE. Aplicar en producción requiere autorización explícita y respaldo previo.
 -- Supone que producción coincide con shared/schema.ts de main (creada con db:push); verificarlo antes.
 -- program_calendar: el INSERT fue corregido a mano (el generado leía columnas que la tabla antigua no tiene).
@@ -279,3 +280,12 @@ CREATE TABLE `brujula_study_blocks` (
 );;
 
 CREATE UNIQUE INDEX `brujula_blocks_user_week` ON `brujula_study_blocks` (`user_id`,`week_start`);;
+
+-- T39: perfil de evaluación en ficha del estudiante (regular / neurodivergente) y clasificación de evaluaciones.
+ALTER TABLE `user_profiles` ADD `evaluation_profile` text DEFAULT 'regular' NOT NULL CHECK(`evaluation_profile` IN ('regular', 'neurodivergente'));;
+
+ALTER TABLE `user_profiles` ADD `evaluation_profile_set_by` text;;
+
+ALTER TABLE `user_profiles` ADD `evaluation_profile_set_at` integer;;
+
+ALTER TABLE `module_evaluations` ADD `evaluation_function` text CHECK(`evaluation_function` IS NULL OR `evaluation_function` IN ('diagnostico', 'proceso', 'modulo'));;

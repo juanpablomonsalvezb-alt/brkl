@@ -1,6 +1,7 @@
-// Verifica en bases SQLite locales desechables las migraciones SQL preparadas para T37 y T38
-// (docs/vortice-migracion.sql y docs/vortice-migracion-incremental-flow-brujula2.sql), su paridad con
-// shared/schema.ts, sus constraints e idempotencia, y su convivencia con migrations/vortice/0001..0005.
+// Verifica en bases SQLite locales desechables las migraciones SQL preparadas para T37, T38 y T39
+// (docs/vortice-migracion.sql, docs/vortice-migracion-incremental-flow-brujula2.sql y
+// docs/vortice-migracion-incremental-perfil-y-evaluaciones.sql), su paridad con shared/schema.ts,
+// sus constraints e idempotencia, y su convivencia con migrations/vortice/0001..0005.
 // Nunca toca Turso ni producción.
 // Ejecutar: npm run check:vortice
 import assert from "node:assert/strict";
@@ -68,6 +69,7 @@ async function describirTabla(c: Client, tabla: string): Promise<{ cols: ColInfo
 
 const bMain = baseArchivo();
 const bInc = baseArchivo();
+const bIncPerfil = baseArchivo();
 const bSchema = baseArchivo();
 
 try {
@@ -76,6 +78,9 @@ try {
   await verificarClavesForaneas(cMain);
   await esquemaMinimoMain(cMain);
   await cMain.execute("INSERT INTO levels (id, name, program_type) VALUES ('5b', '5° Básico', 'menores')");
+  await cMain.execute("INSERT INTO subjects (id, name, slug) VALUES ('mat', 'Matemática', 'matematica')");
+  await cMain.execute("INSERT INTO level_subjects (id, level_id, subject_id) VALUES ('ls-5b', '5b', 'mat')");
+  await cMain.execute("INSERT INTO learning_objectives (id, level_subject_id, code, title, week_number) VALUES ('oa-1', 'ls-5b', 'OA 1', 'Números', 1)");
   // 2027-03-08 00:00:00 UTC = 1804464000 s
   await cMain.execute(
     "INSERT INTO program_calendar (id, level_id, start_date, module_duration_weeks, created_at) VALUES ('cal-seed', '5b', 1804464000, 2, 1700000000000)",
@@ -97,6 +102,16 @@ try {
   const tpCols = await cMain.execute("PRAGMA table_info(together_presence)");
   assert.ok(!tpCols.rows.some((r: any) => String(r.name) === "email"), "together_presence.email debe quedar eliminada");
 
+  // Columnas T39 y sus CHECK en la consolidada.
+  await assert.rejects(
+    cMain.execute("INSERT INTO user_profiles (id, user_id, evaluation_profile) VALUES ('up-bad', 'u-bad', 'otro')"),
+    /CHECK/,
+  );
+  await assert.rejects(
+    cMain.execute("INSERT INTO module_evaluations (id, learning_objective_id, evaluation_number, title, release_week, evaluation_function) VALUES ('me-bad', 'oa-1', 1, 'X', 1, 'invalida')"),
+    /CHECK/,
+  );
+
   const resMigr = await migrar(cMain, "migrations/vortice");
   assert.deepEqual(resMigr.aplicadas, [
     "0001_catalogo.sql",
@@ -108,7 +123,7 @@ try {
   assert.equal((await verificarDeriva(cMain)).ok, true);
   assert.deepEqual((await migrar(cMain, "migrations/vortice")).aplicadas, []);
 
-  // ── Suite B: Camino incremental (idempotencia + constraints reales en SQLite) ──
+  // ── Suite B: Camino incremental Flow + Brújula 2 ──
   const cInc = bInc.client;
   await verificarClavesForaneas(cInc);
   await cInc.execute("CREATE TABLE users (id TEXT PRIMARY KEY NOT NULL, email TEXT)");
@@ -119,7 +134,6 @@ try {
   await ejecutarArchivoSql(cInc, "docs/vortice-migracion-incremental-flow-brujula2.sql");
   await ejecutarArchivoSql(cInc, "docs/vortice-migracion-incremental-flow-brujula2.sql");
 
-  // flow_subscriptions: valid + FK + UNIQUE + nullable UNIQUE + CHECK
   await cInc.execute(
     "INSERT INTO flow_subscriptions (id, reservation_id, flow_plan_id, flow_customer_id, register_token, flow_subscription_id, amount, periods_total) VALUES ('fs-1', 'res-1', 'plan-1', 'cust-1', 'tok-1', 'sub-1', 70000, 7)",
   );
@@ -166,7 +180,6 @@ try {
     /CHECK/,
   );
 
-  // brujula_preferences: defaults + FK + CHECK
   await cInc.execute("INSERT INTO brujula_preferences (user_id) VALUES ('u-1')");
   const pref = await cInc.execute("SELECT intensidad, dias_preferidos_json, franja FROM brujula_preferences WHERE user_id = 'u-1'");
   assert.equal(String((pref.rows[0] as any).intensidad), "normal");
@@ -186,7 +199,6 @@ try {
     /CHECK/,
   );
 
-  // brujula_study_blocks: valid + UNIQUE(user_id, week_start) + FK
   await cInc.execute(
     "INSERT INTO brujula_study_blocks (id, user_id, week_start, blocks_json) VALUES ('bsb-1', 'u-1', '2027-03-08', '[]')",
   );
@@ -202,6 +214,43 @@ try {
     ),
     /FOREIGN KEY/,
   );
+
+  // ── Suite B2: Camino incremental T39 (perfil de evaluación y función de evaluación) ──
+  const cIncP = bIncPerfil.client;
+  await verificarClavesForaneas(cIncP);
+  await cIncP.execute("CREATE TABLE learning_objectives (id TEXT PRIMARY KEY NOT NULL)");
+  await cIncP.execute("CREATE TABLE user_profiles (id TEXT PRIMARY KEY NOT NULL, user_id TEXT NOT NULL, role TEXT DEFAULT 'student' NOT NULL, level_id TEXT, tutor_user_id TEXT, created_at INTEGER)");
+  await cIncP.execute("CREATE TABLE module_evaluations (id TEXT PRIMARY KEY NOT NULL, learning_objective_id TEXT NOT NULL REFERENCES learning_objectives(id), evaluation_number INTEGER NOT NULL, title TEXT NOT NULL, release_week INTEGER NOT NULL)");
+  await cIncP.execute("INSERT INTO learning_objectives (id) VALUES ('oa-1')");
+  await cIncP.execute("INSERT INTO user_profiles (id, user_id, role) VALUES ('up-prev', 'u-1', 'student')");
+  await cIncP.execute("INSERT INTO module_evaluations (id, learning_objective_id, evaluation_number, title, release_week) VALUES ('me-prev', 'oa-1', 2, 'Evaluación Formativa 2', 1)");
+
+  await ejecutarArchivoSql(cIncP, "docs/vortice-migracion-incremental-perfil-y-evaluaciones.sql");
+
+  const upPrev = await cIncP.execute("SELECT evaluation_profile, evaluation_profile_set_by, evaluation_profile_set_at FROM user_profiles WHERE id = 'up-prev'");
+  assert.equal(String((upPrev.rows[0] as any).evaluation_profile), "regular");
+  assert.equal((upPrev.rows[0] as any).evaluation_profile_set_by, null);
+  assert.equal((upPrev.rows[0] as any).evaluation_profile_set_at, null);
+
+  const mePrev = await cIncP.execute("SELECT evaluation_function FROM module_evaluations WHERE id = 'me-prev'");
+  assert.equal((mePrev.rows[0] as any).evaluation_function, null, "no autoclasifica historial previo");
+
+  await assert.rejects(
+    cIncP.execute("UPDATE user_profiles SET evaluation_profile = 'otro' WHERE id = 'up-prev'"),
+    /CHECK/,
+  );
+  await cIncP.execute("UPDATE user_profiles SET evaluation_profile = 'neurodivergente', evaluation_profile_set_by = 'adm-1', evaluation_profile_set_at = 1700000000 WHERE id = 'up-prev'");
+
+  await assert.rejects(
+    cIncP.execute("UPDATE module_evaluations SET evaluation_function = 'sumativa' WHERE id = 'me-prev'"),
+    /CHECK/,
+  );
+  for (const [idx, fn] of [[0, "diagnostico"], [1, "proceso"], [4, "modulo"]] as const) {
+    await cIncP.execute({
+      sql: "INSERT INTO module_evaluations (id, learning_objective_id, evaluation_number, title, release_week, evaluation_function) VALUES (?, 'oa-1', ?, 'T', 1, ?)",
+      args: [`me-fn-${idx}`, idx, fn],
+    });
+  }
 
   // ── Suite C: Paridad exacta con shared/schema.ts generado por drizzle-kit ──
   const cSchema = bSchema.client;
@@ -222,9 +271,31 @@ try {
       `${tabla} en docs/vortice-migracion-incremental-flow-brujula2.sql difiere de shared/schema.ts`,
     );
   }
+
+  // Paridad de columnas nuevas T39 entre shared/schema.ts, consolidada e incremental.
+  const extraerCols = (cols: ColInfo[], nombres: string[]) =>
+    nombres.map((n) => cols.find((c) => c.name === n));
+  const upSchema = extraerCols((await describirTabla(cSchema, "user_profiles")).cols, [
+    "evaluation_profile", "evaluation_profile_set_by", "evaluation_profile_set_at",
+  ]);
+  const upCons = extraerCols((await describirTabla(cMain, "user_profiles")).cols, [
+    "evaluation_profile", "evaluation_profile_set_by", "evaluation_profile_set_at",
+  ]);
+  const upInc = extraerCols((await describirTabla(cIncP, "user_profiles")).cols, [
+    "evaluation_profile", "evaluation_profile_set_by", "evaluation_profile_set_at",
+  ]);
+  assert.deepEqual(upCons, upSchema, "user_profiles en consolidada difiere de shared/schema.ts");
+  assert.deepEqual(upInc, upSchema, "user_profiles en incremental T39 difiere de shared/schema.ts");
+
+  const meSchema = extraerCols((await describirTabla(cSchema, "module_evaluations")).cols, ["evaluation_function"]);
+  const meCons = extraerCols((await describirTabla(cMain, "module_evaluations")).cols, ["evaluation_function"]);
+  const meInc = extraerCols((await describirTabla(cIncP, "module_evaluations")).cols, ["evaluation_function"]);
+  assert.deepEqual(meCons, meSchema, "module_evaluations en consolidada difiere de shared/schema.ts");
+  assert.deepEqual(meInc, meSchema, "module_evaluations en incremental T39 difiere de shared/schema.ts");
 } finally {
   await bMain.cerrar();
   await bInc.cerrar();
+  await bIncPerfil.cerrar();
   await bSchema.cerrar();
 }
 

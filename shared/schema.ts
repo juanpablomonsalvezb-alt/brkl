@@ -76,6 +76,10 @@ export const userProfiles = sqliteTable("user_profiles", {
   levelId: text("level_id"),
   // Tutor asignado al estudiante (puede ver sus reflexiones). Opcional.
   tutorUserId: text("tutor_user_id"),
+  // Perfil de evaluación declarado por administración (sin guardar diagnóstico médico).
+  evaluationProfile: text("evaluation_profile", { enum: ["regular", "neurodivergente"] }).default("regular").notNull(),
+  evaluationProfileSetBy: text("evaluation_profile_set_by"),
+  evaluationProfileSetAt: integer("evaluation_profile_set_at", { mode: "timestamp" }),
   createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
 });
 
@@ -180,11 +184,12 @@ export const calendarConfigInputSchema = z.object({
   });
 export type CalendarConfigInput = z.infer<typeof calendarConfigInputSchema>;
 
-// Module Evaluations (4 per module - Wed/Fri for 2 weeks)
+// Module Evaluations (0 = diagnóstico, 1-3 = proceso, 4 = evaluación del módulo)
 export const moduleEvaluations = sqliteTable("module_evaluations", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),
   learningObjectiveId: text("learning_objective_id").notNull().references(() => learningObjectives.id),
-  evaluationNumber: integer("evaluation_number").notNull(), // 1, 2, 3, or 4
+  evaluationNumber: integer("evaluation_number").notNull(), // 0 = diagnóstico, 1-3 = proceso, 4 = evaluación del módulo
+  evaluationFunction: text("evaluation_function", { enum: ["diagnostico", "proceso", "modulo"] }),
   title: text("title").notNull(),
   description: text("description"),
   releaseDay: integer("release_day").default(5).notNull(), // Day of week (3 = Wed, 5 = Fri)

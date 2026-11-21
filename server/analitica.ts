@@ -8,6 +8,7 @@ import {
   learningEvents, enrollments, learningObjectives, weeklyResources, moduleEvaluations,
   type LearningEventType,
 } from "@shared/schema";
+import { obtenerEvaluacionesDeCierre } from "@shared/clasificacionEvaluacion";
 
 type Db = LibSQLDatabase<typeof schema>;
 
@@ -115,10 +116,22 @@ export async function loadAnaliticaResumen(db: Db, levelSubjectId: string): Prom
     ? await db.select({ id: weeklyResources.id, oa: weeklyResources.learningObjectiveId }).from(weeklyResources)
         .where(and(inArray(weeklyResources.learningObjectiveId, oaIds), eq(weeklyResources.isActive, true)))
     : [];
-  const cierres = oaIds.length
-    ? await db.select({ id: moduleEvaluations.id, oa: moduleEvaluations.learningObjectiveId }).from(moduleEvaluations)
-        .where(and(inArray(moduleEvaluations.learningObjectiveId, oaIds), eq(moduleEvaluations.evaluationNumber, 2)))
+  const todasEvals = oaIds.length
+    ? await db.select({
+        id: moduleEvaluations.id,
+        oa: moduleEvaluations.learningObjectiveId,
+        evaluationNumber: moduleEvaluations.evaluationNumber,
+        evaluationFunction: moduleEvaluations.evaluationFunction,
+      }).from(moduleEvaluations)
+        .where(inArray(moduleEvaluations.learningObjectiveId, oaIds))
     : [];
+  const evalsPorOa = new Map<string, typeof todasEvals>();
+  for (const e of todasEvals) {
+    const lista = evalsPorOa.get(e.oa) ?? [];
+    lista.push(e);
+    evalsPorOa.set(e.oa, lista);
+  }
+  const cierres = [...evalsPorOa.values()].flatMap((lista) => obtenerEvaluacionesDeCierre(lista));
 
   // Pares únicos (estudiante, referencia): se usan para contar y se descartan, no se devuelven.
   const pares = await db.selectDistinct({ userId: learningEvents.userId, tipo: learningEvents.tipo, referencia: learningEvents.referencia })

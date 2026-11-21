@@ -68,7 +68,7 @@ import { HORARIO, actualizarPreferenciasSchema } from "@shared/notificaciones";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
 import {
   getAllModulesSchedule, getModuleSchedule, getCalendarSummary,
-  isEvaluationAvailable, formatModuleDates
+  isEvaluationAvailable, isModuleAvailable, formatModuleDates
 } from "./calendarUtils";
 import {
   resolveCalendarConfig, resolveCalendarConfigForLevelSubject, rowToCalendarInput, calendarInputToRow,
@@ -85,6 +85,8 @@ import { registerSalesChatRoutes } from "./salesChatRoutes";
 import { registerFlowRoutes } from "./flowRoutes";
 import { planCopilotTurn, evaluationQuestionTexts, takeRateToken } from "@shared/iaPolicy";
 import { trackForLevel } from "@shared/vortice";
+import { getPerfilEvaluacion, setPerfilEvaluacion, setFuncionEvaluacion } from "./perfilEvaluacion";
+import { etiquetaEvaluacion, obtenerEvaluacionesDeCierre } from "@shared/clasificacionEvaluacion";
 
 // Helper to ensure string params (not arrays)
 function getStringParam(param: string | string[]): string {
@@ -916,6 +918,55 @@ export async function registerRoutes(
 
   // === ADMIN ROUTES (require admin role) ===
 
+  // Perfil de evaluación del estudiante (regular / neurodivergente) y clasificación funcional por evaluación (T39).
+  app.get("/api/admin/students/:userId/evaluation-profile", isAdmin, async (req: any, res) => {
+    try {
+      const adminId = currentUserId(req);
+      if (!adminId) return res.status(401).json({ message: "Unauthorized" });
+      const perfilAdmin = await storage.getUserProfile(adminId);
+      if (perfilAdmin?.role !== "admin") return res.status(403).json({ message: "Forbidden: Admin access required" });
+      res.json(await getPerfilEvaluacion(db, getStringParam(req.params.userId)));
+    } catch (error) {
+      console.error("Error loading evaluation profile:", error);
+      res.status(500).json({ message: "Failed to load evaluation profile" });
+    }
+  });
+
+  app.put("/api/admin/students/:userId/evaluation-profile", isAdmin, async (req: any, res) => {
+    try {
+      const adminId = currentUserId(req);
+      if (!adminId) return res.status(401).json({ message: "Unauthorized" });
+      const r = await setPerfilEvaluacion(db, {
+        adminUserId: adminId,
+        studentUserId: getStringParam(req.params.userId),
+        body: req.body,
+        now: new Date(),
+      });
+      if (!r.ok) return res.status(r.status).json({ message: r.reason });
+      res.json(r.value);
+    } catch (error) {
+      console.error("Error updating evaluation profile:", error);
+      res.status(500).json({ message: "Failed to update evaluation profile" });
+    }
+  });
+
+  app.patch("/api/admin/evaluations/:id/function", isAdmin, async (req: any, res) => {
+    try {
+      const adminId = currentUserId(req);
+      if (!adminId) return res.status(401).json({ message: "Unauthorized" });
+      const r = await setFuncionEvaluacion(db, {
+        adminUserId: adminId,
+        evaluationId: getStringParam(req.params.id),
+        body: req.body,
+      });
+      if (!r.ok) return res.status(r.status).json({ message: r.reason });
+      res.json(r.value);
+    } catch (error) {
+      console.error("Error updating evaluation function:", error);
+      res.status(500).json({ message: "Failed to update evaluation function" });
+    }
+  });
+
   // Umbral™: POST crea una versión nueva de la rúbrica; PUT edita la última si sigue en borrador.
   for (const [method, write] of [["post", createRubricVersion], ["put", updateDraftRubric]] as const) {
     app[method]("/api/admin/objectives/:id/rubrica", isAdmin, async (req: any, res) => {
@@ -1437,26 +1488,67 @@ export async function registerRoutes(
       const config = await resolveCalendarConfigForLevelSubject(db, levelSubjectId, currentDate);
       const schedule = getModuleSchedule(moduleNumber, currentDate, true, false, config);
 
-      const evaluationsWithStatus = [
+      const formatted = formatModuleDates(schedule);
+      const cierreIds = new Set(obtenerEvaluacionesDeCierre(evaluations).map((c) => c.id));
+      const tramos: Array<{
+        number: 0 | 1 | 2 | 3 | 4;
+        funcion: "diagnostico" | "proceso" | "modulo";
+        releaseDate: Date;
+        releaseDateFormatted: string;
+        isAvailable: boolean;
+      }> = [
+        {
+          number: 0,
+          funcion: "diagnostico",
+          releaseDate: schedule.startDate,
+          releaseDateFormatted: formatted.startFormatted,
+          isAvailable: isModuleAvailable(moduleNumber, currentDate, true, config),
+        },
         {
           number: 1,
-          title: "Evaluación Formativa 1",
+          funcion: "proceso",
           releaseDate: schedule.evaluation1ReleaseDate,
-          releaseDateFormatted: formatModuleDates(schedule).eval1Formatted,
+          releaseDateFormatted: formatted.eval1Formatted,
           isAvailable: isEvaluationAvailable(moduleNumber, 1, currentDate, config),
-          evaluation: evaluations.find(e => e.evaluationNumber === 1),
-          completed: userProgress.some(p => evaluations.find(e => e.evaluationNumber === 1 && e.id === p.evaluationId)),
         },
         {
           number: 2,
-          title: "Evaluación Formativa 2",
+          funcion: "proceso",
           releaseDate: schedule.evaluation2ReleaseDate,
-          releaseDateFormatted: formatModuleDates(schedule).eval2Formatted,
+          releaseDateFormatted: formatted.eval2Formatted,
           isAvailable: isEvaluationAvailable(moduleNumber, 2, currentDate, config),
-          evaluation: evaluations.find(e => e.evaluationNumber === 2),
-          completed: userProgress.some(p => evaluations.find(e => e.evaluationNumber === 2 && e.id === p.evaluationId) && p.passed),
+        },
+        {
+          number: 3,
+          funcion: "proceso",
+          releaseDate: schedule.evaluation3ReleaseDate,
+          releaseDateFormatted: formatted.eval3Formatted,
+          isAvailable: isEvaluationAvailable(moduleNumber, 3, currentDate, config),
+        },
+        {
+          number: 4,
+          funcion: "modulo",
+          releaseDate: schedule.evaluation4ReleaseDate,
+          releaseDateFormatted: formatted.eval4Formatted,
+          isAvailable: isEvaluationAvailable(moduleNumber, 4, currentDate, config),
         },
       ];
+
+      const evaluationsWithStatus = tramos.map((t) => {
+        const ev = evaluations.find((e) => e.evaluationNumber === t.number);
+        const fn = (ev?.evaluationFunction ?? t.funcion) as "diagnostico" | "proceso" | "modulo";
+        const esCierre = ev ? cierreIds.has(ev.id) : fn === "modulo";
+        return {
+          number: t.number,
+          evaluationFunction: ev?.evaluationFunction ?? null,
+          title: ev?.title ?? etiquetaEvaluacion(fn, t.number),
+          releaseDate: t.releaseDate,
+          releaseDateFormatted: t.releaseDateFormatted,
+          isAvailable: t.isAvailable,
+          evaluation: ev,
+          completed: userProgress.some((p) => ev && ev.id === p.evaluationId && (!esCierre || p.passed)),
+        };
+      });
 
       res.json({
         moduleNumber,
@@ -1560,8 +1652,8 @@ export async function registerRoutes(
       }
 
       const evalNum = parseInt(evaluationNumber);
-      if (isNaN(evalNum) || evalNum < 1 || evalNum > 4) {
-        return res.status(400).json({ message: "evaluationNumber must be 1, 2, 3, or 4" });
+      if (isNaN(evalNum) || evalNum < 0 || evalNum > 4) {
+        return res.status(400).json({ message: "evaluationNumber must be 0, 1, 2, 3, or 4" });
       }
 
       const evaluation = await storage.upsertEvaluationHtml(objectiveId, evalNum, htmlContent);
@@ -2210,6 +2302,7 @@ export async function registerRoutes(
       const evaluationsWithStatus = evaluations.map(e => { const g = gradableQuestions(e); return {
         id: e.id,
         evaluationNumber: e.evaluationNumber,
+        evaluationFunction: e.evaluationFunction ?? null,
         title: e.title,
         releaseDay: e.releaseDay,
         releaseWeek: e.releaseWeek,

@@ -9,6 +9,7 @@ import {
   reflectionPromptsSchema, reflectionAnswersSchema, updatePedagogicalStepSchema,
 } from "@shared/schema";
 import { buildOverview, canViewReflection, type OverviewSubjectInput, type VorticeOverview } from "@shared/vortice";
+import { obtenerEvaluacionesDeCierre } from "@shared/clasificacionEvaluacion";
 import { moduloSiguienteAbierto, type EstadoE2 } from "@shared/progresion";
 import { isEvaluationAvailable, isModuleAvailable, type CalendarConfig } from "./calendarUtils";
 import { resolveCalendarConfig } from "./calendarConfig";
@@ -64,18 +65,28 @@ export async function loadVorticeInput(
   const allEvaluations = oaIds.length
     ? await db.select().from(moduleEvaluations).where(inArray(moduleEvaluations.learningObjectiveId, oaIds))
     : [];
-  // La evaluación 2 cierra el módulo, así que siempre es un paso aunque no esté marcada obligatoria.
-  const evaluations = allEvaluations.filter((e) => e.isRequired || e.evaluationNumber === 2);
+  const evalsPorOa = new Map<string, typeof allEvaluations>();
+  for (const e of allEvaluations) {
+    const lista = evalsPorOa.get(e.learningObjectiveId) ?? [];
+    lista.push(e);
+    evalsPorOa.set(e.learningObjectiveId, lista);
+  }
+  const closingIds = new Set<string>();
+  for (const lista of evalsPorOa.values()) {
+    for (const cierre of obtenerEvaluacionesDeCierre(lista)) closingIds.add(cierre.id);
+  }
+  // La evaluación del módulo (o la 2 en módulos heredados sin clasificar) siempre cuenta aunque no esté marcada obligatoria.
+  const evaluations = allEvaluations.filter((e) => e.isRequired || closingIds.has(e.id));
   const passed = await db.select({ evaluationId: evaluationProgress.evaluationId }).from(evaluationProgress)
     .where(and(eq(evaluationProgress.userId, userId), eq(evaluationProgress.passed, true)));
 
   const passedIds = new Set(passed.map((p) => p.evaluationId));
-  // Módulo completado = evaluación 2 aprobada (misma regla que storage.getUserCompletedModules).
+  // Módulo completado = evaluación del módulo aprobada (o evaluación 2 en módulos heredados sin clasificar).
   const objectiveById = new Map(objectives.map((o) => [o.id, o]));
   const moduleKey = (levelSubjectId: string, weekNumber: number) => `${levelSubjectId}:${weekNumber}`;
   const completedModules = new Set(
     allEvaluations
-      .filter((e) => e.evaluationNumber === 2 && passedIds.has(e.id))
+      .filter((e) => closingIds.has(e.id) && passedIds.has(e.id))
       .map((e) => objectiveById.get(e.learningObjectiveId)!)
       .map((o) => moduleKey(o.levelSubjectId, o.weekNumber)),
   );
@@ -90,24 +101,34 @@ export async function loadVorticeInput(
     subjectSlug: r.subjectSlug,
     objectives: objectives
       .filter((o) => o.levelSubjectId === r.levelSubjectId)
-      .map((o) => ({
-        id: o.id, code: o.code, title: o.title, weekNumber: o.weekNumber, sortOrder: o.sortOrder,
-        available: isModuleAvailable(o.weekNumber, now, completedModules.has(moduleKey(r.levelSubjectId, o.weekNumber - 1)), configs.get(r.levelId)),
-        resources: resources
-          .filter((x) => x.learningObjectiveId === o.id)
-          .map((x) => ({
-            id: x.id, title: x.title, resourceType: x.resourceType, sortOrder: x.sortOrder, pedagogicalStep: x.pedagogicalStep,
-          })),
-        evaluations: evaluations
-          .filter((e) => e.learningObjectiveId === o.id)
-          .map((e) => ({
-            id: e.id, title: e.title, evaluationNumber: e.evaluationNumber,
-            // Fuera de 1-4 no hay fecha de liberación definida: se considera disponible.
-            available: e.evaluationNumber >= 1 && e.evaluationNumber <= 4
-              ? isEvaluationAvailable(o.weekNumber, e.evaluationNumber as 1 | 2 | 3 | 4, now, configs.get(r.levelId))
-              : true,
-          })),
-      })),
+      .map((o) => {
+        const moduleOpen = isModuleAvailable(
+          o.weekNumber,
+          now,
+          completedModules.has(moduleKey(r.levelSubjectId, o.weekNumber - 1)),
+          configs.get(r.levelId),
+        );
+        return {
+          id: o.id, code: o.code, title: o.title, weekNumber: o.weekNumber, sortOrder: o.sortOrder,
+          available: moduleOpen,
+          resources: resources
+            .filter((x) => x.learningObjectiveId === o.id)
+            .map((x) => ({
+              id: x.id, title: x.title, resourceType: x.resourceType, sortOrder: x.sortOrder, pedagogicalStep: x.pedagogicalStep,
+            })),
+          evaluations: evaluations
+            .filter((e) => e.learningObjectiveId === o.id)
+            .map((e) => ({
+              id: e.id, title: e.title, evaluationNumber: e.evaluationNumber,
+              // 0 = diagnóstico: disponible al abrir el módulo; 1-4 por calendario; otro: disponible.
+              available: e.evaluationNumber === 0
+                ? moduleOpen
+                : e.evaluationNumber >= 1 && e.evaluationNumber <= 4
+                  ? isEvaluationAvailable(o.weekNumber, e.evaluationNumber as 1 | 2 | 3 | 4, now, configs.get(r.levelId))
+                  : true,
+            })),
+        };
+      }),
   }));
 
   return { level, input, completed: new Set(done.map((d) => d.resourceId)), passed: passedIds };
@@ -140,17 +161,27 @@ export async function checkModuleAccess(
     return { ok: false, status: 403, reason: "No tienes matrícula activa en esta asignatura" };
   }
 
-  if (!(await hasActiveEnrollment(db, userId, levelSubjectId))) return { ok: false, status: 403, reason: "No tienes matrícula activa en esta asignatura" };
-
   let previousCompleted = true;
   if (weekNumber > 1) {
-    const closing = await db.select({ id: moduleEvaluations.id }).from(moduleEvaluations)
+    const prevEvals = await db.select({
+      id: moduleEvaluations.id,
+      learningObjectiveId: moduleEvaluations.learningObjectiveId,
+      evaluationNumber: moduleEvaluations.evaluationNumber,
+      evaluationFunction: moduleEvaluations.evaluationFunction,
+    }).from(moduleEvaluations)
       .innerJoin(learningObjectives, eq(moduleEvaluations.learningObjectiveId, learningObjectives.id))
       .where(and(
         eq(learningObjectives.levelSubjectId, levelSubjectId),
         eq(learningObjectives.weekNumber, weekNumber - 1),
-        eq(moduleEvaluations.evaluationNumber, 2),
       ));
+    const porOa = new Map<string, typeof prevEvals>();
+    for (const e of prevEvals) {
+      const lista = porOa.get(e.learningObjectiveId) ?? [];
+      lista.push(e);
+      porOa.set(e.learningObjectiveId, lista);
+    }
+    const closing: typeof prevEvals = [];
+    for (const lista of porOa.values()) closing.push(...obtenerEvaluacionesDeCierre(lista));
     const passed = closing.length
       ? await db.select({ id: evaluationProgress.id }).from(evaluationProgress).where(and(
           eq(evaluationProgress.userId, userId),
@@ -158,9 +189,9 @@ export async function checkModuleAccess(
           inArray(evaluationProgress.evaluationId, closing.map((c) => c.id)),
         ))
       : [];
-    // TODO(migración P21 v2): cuando exista persistencia de los estados de E2,
+    // TODO(migración P21 v2): cuando exista persistencia de los estados de evaluación del módulo,
     // mapear el estado real en vez de usar el mapeo legado (aprobada / sin_rendir).
-    const estadoE2Legado: EstadoE2 = passed.length > 0 ? 'aprobada' : 'sin_rendir';
+    const estadoE2Legado: EstadoE2 = passed.length > 0 ? "aprobada" : "sin_rendir";
     previousCompleted = moduloSiguienteAbierto(estadoE2Legado);
   }
   if (!isModuleAvailable(weekNumber, now, previousCompleted, config)) {
