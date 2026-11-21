@@ -21,6 +21,7 @@ Verificación general al cierre: `npx tsc --noEmit` limpio y `npm run check:vort
 | **Migraciones SQL listas (T37 + T38 + T39)** (`flow_subscriptions`, `brujula_preferences`, `brujula_study_blocks`, `user_profiles.evaluation_profile*`, `module_evaluations.evaluation_function`) | Listas en local (sin aplicar a Turso) | `docs/vortice-migracion.sql`, `docs/vortice-migracion-incremental-flow-brujula2.sql`, `docs/vortice-migracion-incremental-perfil-y-evaluaciones.sql` | `migraciones-nuevas.check.ts` (paridad exacta con `shared/schema.ts`, constraints, idempotencia, convivencia con `0001..0005`) |
 | **Perfil único neurodivergente y clasificación de evaluaciones (0 diagnóstico, 1..3 proceso, 4 módulo)** | Terminado en local | `shared/clasificacionEvaluacion.ts`, `shared/schema.ts`, `server/perfilEvaluacion.ts`, `server/evaluacionRoutes.ts`, `server/vortice.ts`, `server/storage.ts`, `server/analitica.ts`, `server/routes.ts`, `CoursePlayer.tsx`, `VorticeEvaluacion.tsx` | `perfil-y-clasificacion.check.ts` y 3/3 mutaciones |
 | **Fechas de cobro unificadas (enero de 2027)** | Terminado en local | `Home.tsx`, `Legal.tsx`, `prerendered/reembolso.html`, `scripts/generate-landings.mjs`, 12 landings `examenes-libres-*`, `guia-examenes-libres`, `server/notify.ts` | `fechas-cobro.check.ts` y mutación de cordura (sin tocar Verano Barkley ni regenerar a ciegas) |
+| **Monitor de uso en Turso (50 % / 80 %)** (`turso plan show`, solo lectura) | Terminado | `shared/tursoUso.ts`, `scripts/turso-uso-alerta.ts` | `turso-uso.check.ts`, 2/2 mutaciones y lectura real de cuota Turso |
 | **Calendario 2027 por nivel** (cuántos módulos caben antes del cierre, tabla de opciones y carga idempotente `program_calendar` por nivel) | Terminado | `shared/calendario2027.ts`, `server/calendario2027Db.ts`, `scripts/aplicar-calendario-2027.ts`, `scripts/calendario2027-opciones.ts` | 16 casos puros (`calendario2027.check.ts`) y 12 casos DB en memoria (`calendario2027-db.check.ts`); 3/3 mutaciones |
 | **Piloto y banco**: Matemática 5.º, Unidad 3 (OA 7, 8, 10, 11, 13) con 45 preguntas, más 81 de los OA 1, 3, 4, 6, 15, 17, 18, 19, 26 | Terminado a nivel de script | `docs/vortice/piloto/` | Cada pregunta con pasaje del libro verificado por script. Banco de 126 preguntas «validadas» por validadores de script, **sin revisión humana** |
 | **Libros** (109 textos del estudiante en Markdown) | Terminado | `~/Downloads/brkl-libros/libros_md/` (índice `INDICE_UNICO.md`) | MINEDUC 2026 de 1.º básico a 4.º medio (69) y Casa del Saber de 1.º a 6.º básico (40); sin vacíos ni imágenes incrustadas |
@@ -86,8 +87,8 @@ Detalle de la evaluación E2:
 6. ~~Brújula parte 2~~ (**hecho en local**, pendiente migración/Turso).
 7. **Ver en pantalla** la tarjeta de precios, el panel de Brújula (parte 1 y 2) y `/familia`; ajustar si no gustan.
 8. ~~Corregir la inconsistencia de fechas de cobro (landings: «pagas recién en febrero de 2027»; home: «Arancel desde enero 2027»).~~ (**unificadas a «enero de 2027» en rama local**, pendiente publicación tras autorización).
-9. Cifras de la landing con datos reales (91,2 / 92,1 / 93,4 %, 70 %, estadísticas nacionales de «Por qué Barkley»).
-10. Alertas de uso en Turso (50 % y 80 %). Interfaz restante, M2 a M8 y piloto con estudiantes: etapas futuras, cada una con autorización.
+9. Cifras de la landing con datos reales (auditado: `91,2 / 92,1 / 93,4 %` ya no figuran en `Home.tsx`, solo el 70 % de regla de dominio).
+10. ~~Alertas de uso en Turso (50 % y 80 %)~~ (**hecho** con `scripts/turso-uso-alerta.ts`). Interfaz restante, M2 a M8 y piloto con estudiantes: etapas futuras, cada una con autorización.
 
 ---
 

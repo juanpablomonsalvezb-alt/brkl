@@ -7,6 +7,7 @@
  *       tsx scripts/preparar-preview.ts                    (migra 0001-0005 y siembra la evaluación)
  * Opcional: EVALUACION_ID (por omisión ficticio-e2, de la siembra ficticia existente).
  */
+import fs from "node:fs";
 import { crearClienteDb, verificarClavesForaneas } from "../server/cliente";
 import { PREVIEW_HOST_PATTERN } from "../server/dbGuard";
 import { migrar, verificarDeriva } from "../server/migrar";
@@ -33,6 +34,35 @@ if (soloVerificar) { console.log("Solo verificación: sin cambios."); process.ex
 
 const r = await migrar(c);
 console.log("Migraciones aplicadas ahora:", r.aplicadas.join(", ") || "ninguna (ya estaban)");
+
+// Migraciones incrementales T37/T38 (IF NOT EXISTS) y T39 (columnas idempotentes en user_profiles/module_evaluations).
+const sqlIncFlowBrujula = fs
+  .readFileSync("docs/vortice-migracion-incremental-flow-brujula2.sql", "utf8")
+  .split("\n")
+  .filter((l) => !l.trimStart().startsWith("--"))
+  .join("\n")
+  .replaceAll("--> statement-breakpoint", ";")
+  .split(";")
+  .map((s) => s.trim())
+  .filter(Boolean);
+for (const s of sqlIncFlowBrujula) await x(s);
+
+const colsTabla = async (tabla: string) =>
+  new Set((await x(`PRAGMA table_info(${tabla})`)).rows.map((row: any) => String(row.name)));
+const upCols = await colsTabla("user_profiles");
+const colsUpAgregar: Array<[string, string]> = [
+  ["evaluation_profile", "ALTER TABLE `user_profiles` ADD `evaluation_profile` text DEFAULT 'regular' NOT NULL CHECK(`evaluation_profile` IN ('regular', 'neurodivergente'))"],
+  ["evaluation_profile_set_by", "ALTER TABLE `user_profiles` ADD `evaluation_profile_set_by` text"],
+  ["evaluation_profile_set_at", "ALTER TABLE `user_profiles` ADD `evaluation_profile_set_at` integer"],
+];
+for (const [col, ddl] of colsUpAgregar) {
+  if (!upCols.has(col)) await x(ddl);
+}
+const meCols = await colsTabla("module_evaluations");
+if (!meCols.has("evaluation_function")) {
+  await x("ALTER TABLE `module_evaluations` ADD `evaluation_function` text CHECK(`evaluation_function` IS NULL OR `evaluation_function` IN ('diagnostico', 'proceso', 'modulo'))");
+}
+
 const d = await verificarDeriva(c);
 console.log("Deriva:", JSON.stringify({ ok: d.ok, faltantes: d.faltantes, alterados: d.alterados }));
 if (!d.ok) fallar("la base no coincide con las migraciones");
