@@ -61,7 +61,7 @@
   tutor asignado, asesor, Portal Familia y preparación para Exámenes Libres MINEDUC.
   Sin costos ocultos.
 - **Calendario**: durante 2026 se reserva cupo sin pago. El año de preparación va
-  de marzo al 31 de octubre de 2027, cuando se rinden los Exámenes Libres.
+  de marzo a octubre de 2027, cuando se rinden los Exámenes Libres.
 - **Diagnóstico inicial**: al matricularse, cada estudiante rinde un diagnóstico
   por asignatura que detecta vacíos de años anteriores.
 

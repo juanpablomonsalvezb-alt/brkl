@@ -1317,7 +1317,7 @@ export default function Home() {
               { fecha: "Enero 2027", titulo: "Primer pago", texto: "Confirmas tu plan (mensual o anual con 15% dcto) y activas la cuenta. El arancel se paga a partir de enero 2027." },
               { fecha: "Marzo 2027", titulo: "Inicio del año de preparación", texto: "Acceso completo a la plataforma: video, pódcast, tutor y asesor." },
               { fecha: "Marzo – octubre", texto: "8 meses de avance a tu ritmo con Aprendizaje por Dominio, acompañado por tu tutor y monitoreado por tu asesor.", titulo: "Año lectivo" },
-              { fecha: "31 de octubre 2027", titulo: "Exámenes libres MINEDUC", texto: <>Rindes tus exámenes libres ante el Ministerio de Educación de Chile. <a href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11" target="_blank" rel="noopener noreferrer" style={{ color: NAVY, fontWeight: 700 }}>Ver cómo inscribirte en Ayuda Mineduc</a>.</> },
+              { fecha: "Octubre 2027", titulo: "Exámenes libres MINEDUC", texto: <>Rindes tus exámenes libres ante el Ministerio de Educación de Chile. <a href="https://www.ayudamineduc.cl/ficha/examenes-libres-menores-de-18-anos-11" target="_blank" rel="noopener noreferrer" style={{ color: NAVY, fontWeight: 700 }}>Ver cómo inscribirte en Ayuda Mineduc</a>.</> },
             ].map((h, i) => (
               <Reveal key={h.titulo} delay={i * 0.06}>
                 <div style={{ display: "flex", gap: 24, marginBottom: 36, position: "relative" }}>
@@ -1407,7 +1407,7 @@ export default function Home() {
             <p style={{ fontSize: 13, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 8px" }}>Precio transparente</p>
             <h2 style={{ fontSize: "clamp(30px,4.6vw,48px)", fontWeight: 700, lineHeight: 1.15, color: NAVY, margin: "0 0 12px" }}>Un solo valor, sin letra chica</h2>
             <p style={{ fontSize: 16, color: TEXT, margin: "0 auto 20px", maxWidth: 640 }}>
-              Sin costos ocultos. El año de preparación va de <strong style={{ color: NAVY }}>marzo al 31 de octubre</strong>, cuando rindes tus exámenes libres. Todo incluido — 2 a 3 videos y pódcasts por lección, un tutor asignado a tu hijo (no un pool genérico de soporte) que te acompaña en todo, no solo lo académico, asesor que sigue tu progreso y portal para tu familia.
+              Sin costos ocultos. El año de preparación va de <strong style={{ color: NAVY }}>marzo a octubre</strong>, cuando rindes tus exámenes libres. Todo incluido — 2 a 3 videos y pódcasts por lección, un tutor asignado a tu hijo (no un pool genérico de soporte) que te acompaña en todo, no solo lo académico, asesor que sigue tu progreso y portal para tu familia.
             </p>
             <p style={{ display: "inline-block", background: "#fff8ea", border: `1px solid ${GOLD}`, borderRadius: 999, padding: "8px 20px", fontSize: 14.5, fontWeight: 700, color: NAVY, margin: "0 0 40px" }}>
               🎁 Matrícula {PRECIOS.matricula} — gratis para quienes se inscriban antes del 30 de noviembre

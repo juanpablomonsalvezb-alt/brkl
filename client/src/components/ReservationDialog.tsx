@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { PRECIOS } from "@shared/precios";
 import { Loader2, CheckCircle2, Check } from "lucide-react";
 
 const reservationSchema = z.object({
@@ -56,13 +57,13 @@ const courseOptions = [
 // Planes disponibles según el grupo (precio incluye IVA 19% y Mentor GRATIS)
 const plansByGroup: Record<string, Array<{ value: string; label: string; price: string }>> = {
   basica: [
-    { value: "basica_plan", label: "Plan Completo (Plataforma + IA + Mentor), pago único del año: $416.500 (lista $490.000, ahorras $73.500)", price: "$416.500" },
+    { value: "basica_plan", label: `Plan Completo (Plataforma + IA + Mentor), pago único del año: ${PRECIOS.escolarAnual} (lista ${PRECIOS.escolarAnualLista}, ahorras ${PRECIOS.escolarAhorroAnual})`, price: PRECIOS.escolarAnual },
   ],
   media1: [
-    { value: "media1_plan", label: "Plan Completo (Plataforma + IA + Mentor), pago único del año: $416.500 (lista $490.000, ahorras $73.500)", price: "$416.500" },
+    { value: "media1_plan", label: `Plan Completo (Plataforma + IA + Mentor), pago único del año: ${PRECIOS.escolarAnual} (lista ${PRECIOS.escolarAnualLista}, ahorras ${PRECIOS.escolarAhorroAnual})`, price: PRECIOS.escolarAnual },
   ],
   media2: [
-    { value: "media2_plan", label: "Plan Completo (Plataforma + IA + Mentor), pago único del año: $416.500 (lista $490.000, ahorras $73.500)", price: "$416.500" },
+    { value: "media2_plan", label: `Plan Completo (Plataforma + IA + Mentor), pago único del año: ${PRECIOS.escolarAnual} (lista ${PRECIOS.escolarAnualLista}, ahorras ${PRECIOS.escolarAhorroAnual})`, price: PRECIOS.escolarAnual },
   ],
   adultos_basica: [
     { value: "adultos_basica", label: "Plan Básica (1° a 8° Básico) - $360.000", price: "$360.000" },

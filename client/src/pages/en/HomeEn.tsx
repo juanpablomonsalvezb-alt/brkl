@@ -191,7 +191,7 @@ export default function HomeEn() {
             <H2 color="#fff">Affordable by design</H2>
             <p style={{ fontSize: 16, lineHeight: 1.7, opacity: 0.9, margin: 0 }}>
               Primary (grades 1–8) and secondary (grades 9–12) follow Chile's official curriculum. Adults aged 18+ can finish school through their own
-              programme. The school year runs {MONTOS.meses} months, from March to October, when students sit their official exams.
+              programme. The school year runs from March to October, when students sit their official exams.
             </p>
           </Reveal>
           <Reveal delay={0.1} style={{ flex: "1 1 360px" }}>

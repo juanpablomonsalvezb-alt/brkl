@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Check, Sparkles, BookOpen, TrendingUp, Clock, Headphones, FileText, Award, Users, BarChart, ChevronRight, Shield, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ReservationDialog } from "./ReservationDialog";
+import { PRECIOS } from "@shared/precios";
 
 // Características premium con categorización
 const PREMIUM_FEATURES = [
@@ -42,8 +43,7 @@ const PREMIUM_FEATURES = [
   }
 ];
 
-// Plan escolar (Básica, Media I y Media II), decisión del sostenedor 2026-11-21: lista anual tachada, pago único con 15 % de descuento.
-const PRECIO_ESCOLAR = { listaAnual: 490_000, pagoUnico: 416_500, ahorro: 73_500, descuentoPct: 15 } as const;
+// Precios del plan escolar: salen de shared/precios.ts (fuente única).
 
 // Planes con diseño premium
 const PREMIUM_PLANS = [
@@ -52,7 +52,7 @@ const PREMIUM_PLANS = [
     level: "Básica",
     grades: "7º y 8º Básico",
     period: "Mar — Oct 2027",
-    price: "416.500",
+    price: PRECIOS.escolarAnual.replace("$", ""),
     currency: "CLP",
     description: "Fundamentos sólidos para la educación media",
     highlight: false,
@@ -64,7 +64,7 @@ const PREMIUM_PLANS = [
     level: "Media I",
     grades: "1º y 2º Medio",
     period: "Mar — Oct 2027",
-    price: "416.500",
+    price: PRECIOS.escolarAnual.replace("$", ""),
     currency: "CLP",
     description: "Consolidación de competencias clave",
     highlight: true,
@@ -76,7 +76,7 @@ const PREMIUM_PLANS = [
     level: "Media II",
     grades: "3º y 4º Medio",
     period: "Mar — Oct 2027",
-    price: "416.500",
+    price: PRECIOS.escolarAnual.replace("$", ""),
     currency: "CLP",
     description: "Preparación integral para la educación superior",
     highlight: false,
@@ -190,17 +190,16 @@ export function PlanConfiguratorYouthPremium() {
 
                   {/* Pricing Section */}
                   <div className="text-center mb-5 py-4 bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-100">
-                    <p className="text-sm text-gray-400 line-through" aria-label={`Precio de lista anual $${PRECIO_ESCOLAR.listaAnual.toLocaleString("es-CL")}`}>
-                      ${PRECIO_ESCOLAR.listaAnual.toLocaleString("es-CL")}
+                    <p className="text-sm text-gray-400 line-through" aria-label={`Precio de lista anual ${PRECIOS.escolarAnualLista}`}>
+                      {PRECIOS.escolarAnualLista}
                     </p>
                     <div className="flex items-center justify-center gap-1">
-                      <span className="text-2xl font-bold text-gray-500">$</span>
                       <span className="text-5xl font-black text-[#002147]" style={{ fontFamily: 'Georgia, serif' }}>
-                        {PRECIO_ESCOLAR.pagoUnico.toLocaleString("es-CL")}
+                        {PRECIOS.escolarAnual}
                       </span>
                     </div>
                     <p className="text-xs font-semibold text-[#A51C30] mt-1">
-                      Pago único del año · {PRECIO_ESCOLAR.descuentoPct}% de descuento · ahorras ${PRECIO_ESCOLAR.ahorro.toLocaleString("es-CL")}
+                      Pago único del año · {PRECIOS.descuentoAnual} de descuento · ahorras {PRECIOS.escolarAhorroAnual}
                     </p>
                   </div>
 
