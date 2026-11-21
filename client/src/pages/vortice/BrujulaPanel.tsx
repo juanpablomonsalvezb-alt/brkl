@@ -1,6 +1,7 @@
 // Brújula™ en el inicio del estudiante: dónde está, cuánto le falta, intensidad y bloques semanales.
 // Solo lectura de /api/vortice/brujula/panel más preferencias y bloques. Tono de orientación, sin puntajes ni castigos.
-import { Check, Compass } from "lucide-react";
+import { useState } from "react";
+import { Check, Compass, SlidersHorizontal } from "lucide-react";
 import {
   CONFIG_INTENSIDAD,
   FRANJAS_BRUJULA,
@@ -41,6 +42,8 @@ export function BrujulaPanel({
   guardandoPreferencias?: boolean;
   guardandoBloqueId?: string | null;
 }) {
+  const [editarRitmo, setEditarRitmo] = useState(false);
+
   const toggleDia = (dia: number) => {
     if (!preferencias || !onSavePreferencias) return;
     const existe = preferencias.diasPreferidos.includes(dia);
@@ -55,7 +58,21 @@ export function BrujulaPanel({
     <section className="vx-card vb" id="brujula" aria-labelledby="vb-titulo">
       <header>
         <h2 id="vb-titulo"><Compass aria-hidden="true" />Brújula</h2>
-        {panel?.avanceTotal != null && <small>Faltan {panel.faltanTotal} actividades</small>}
+        <div className="vb-head-right">
+          {panel?.avanceTotal != null && <small>Faltan {panel.faltanTotal} actividades</small>}
+          {preferencias && onSavePreferencias && (
+            <button
+              type="button"
+              className="vb-prefs-toggle"
+              aria-expanded={editarRitmo}
+              onClick={() => setEditarRitmo((v) => !v)}
+            >
+              <SlidersHorizontal aria-hidden="true" />
+              <span>{CONFIG_INTENSIDAD[preferencias.intensidad].label} · {FRANJA_LABEL[preferencias.franja]}</span>
+              <b>Ajustar ritmo</b>
+            </button>
+          )}
+        </div>
       </header>
 
       {cargando ? <div className="vx-skeleton" /> : error ? (
@@ -64,6 +81,14 @@ export function BrujulaPanel({
         <p className="vx-empty">Cuando tengas asignaturas matriculadas, aquí verás cómo vas y qué sigue.</p>
       ) : (
         <>
+          {panel.proximaEvaluacion && (
+            <p className="vb-proxima">
+              <span>Próxima evaluación</span>
+              <b>{panel.proximaEvaluacion.dias === 0 ? "Hoy" : `En ${panel.proximaEvaluacion.dias} ${panel.proximaEvaluacion.dias === 1 ? "día" : "días"}`}</b>
+              <em>«{panel.proximaEvaluacion.titulo}» · {panel.proximaEvaluacion.subjectName}</em>
+            </p>
+          )}
+
           <ul className="vb-notas" aria-label="Mensajes de tu Brújula">
             {panel.mensajes.map((m) => (
               <li key={m.id} data-tono={m.tono}>
@@ -73,15 +98,7 @@ export function BrujulaPanel({
             ))}
           </ul>
 
-          {panel.proximaEvaluacion && (
-            <p className="vb-proxima">
-              <span>Próxima evaluación</span>
-              <b>{panel.proximaEvaluacion.dias === 0 ? "Hoy" : `En ${panel.proximaEvaluacion.dias} ${panel.proximaEvaluacion.dias === 1 ? "día" : "días"}`}</b>
-              <em>«{panel.proximaEvaluacion.titulo}» · {panel.proximaEvaluacion.subjectName}</em>
-            </p>
-          )}
-
-          {preferencias && onSavePreferencias && (
+          {editarRitmo && preferencias && onSavePreferencias && (
             <div className="vb-prefs" aria-label="Ritmo y preferencias de estudio">
               <div className="vb-prefs-row">
                 <span className="vb-prefs-lbl">Intensidad</span>
