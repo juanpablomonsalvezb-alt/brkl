@@ -1422,6 +1422,7 @@ export default function Home() {
                   <span style={{ fontSize: 48, fontWeight: 700, color: NAVY }}>{PRECIOS.escolar}</span>
                   <span style={{ fontSize: 16, color: TEXT }}>/ mes</span>
                 </div>
+                <p style={{ fontSize: 14, fontWeight: 600, color: NAVY, margin: "0 0 8px" }}>{PRECIOS.escolarPagos}</p>
                 <p style={{ fontSize: 14, color: TEXT, margin: "0 0 22px" }}>Matrícula {PRECIOS.matricula} (gratis si te inscribes antes del 30 de noviembre). Arancel desde enero 2027, cancela cuando quieras.</p>
                 {["Todas las asignaturas de tu nivel", "2 a 3 videos y pódcasts en cada lección", "Un tutor general que te acompaña integralmente", "Asesor que sigue tu progreso", "Portal Familia con avance en tiempo real", "Preparación para exámenes libres MINEDUC"].map((f) => (
                   <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>

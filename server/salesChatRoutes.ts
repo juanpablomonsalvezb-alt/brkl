@@ -85,7 +85,7 @@ Matrícula: ${PRECIOS.matricula}. Al preguntar por la matrícula, SIEMPRE mencio
 de gratuidad juntos — nunca digas solo "es gratis" sin decir cuánto cuesta normalmente. Es gratis
 únicamente para quienes se inscriban antes del 30 de noviembre; fuera de ese plazo se cobra el
 ${PRECIOS.matricula} completo.
-Plan mensual: ${PRECIOS.escolar}/mes. Pago único anual: ${PRECIOS.escolarAnual} (${PRECIOS.descuentoAnual} de descuento, ahorra ${PRECIOS.escolarAhorroAnual} vs pagar mes a mes).
+Plan mensual: ${PRECIOS.escolar}/mes (${PRECIOS.escolarPagos}). Pago único anual: ${PRECIOS.escolarAnual} (${PRECIOS.descuentoAnual} de descuento, ahorra ${PRECIOS.escolarAhorroAnual} vs pagar mes a mes).
 El arancel (mensualidad o pago anual) se empieza a pagar a partir de enero de 2027 — hoy solo se reserva
 el cupo, sin costo.
 El año de preparación va de marzo a octubre, cuando se rinden los Exámenes Libres.
