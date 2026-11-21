@@ -1,77 +1,116 @@
 # HANDOFF: Barkley / Vórtice, estado al 2026-11-21
 
-**Para qué sirve:** retomar el trabajo en una conversación nueva sin perder nada. Consolida el traspaso del 20 de noviembre (`~/Downloads/BRKL_TRASPASO_2026-11-20.md`), el tablero `.junie/ESTADO.md`, las decisiones de dirección (`.junie/DECISIONES_DIRECCION.md`) y todo lo hecho el 21 de noviembre.
-**Primer mensaje sugerido en la sesión nueva:** «Lee `HANDOFF.md` en la raíz de `~/Downloads/brkl-motor` y `.junie/ESTADO.md` y continúa desde ahí.»
+Consolida el traspaso del 20 de noviembre (`~/Downloads/BRKL_TRASPASO_2026-11-20.md`), el tablero `.junie/ESTADO.md`, las decisiones de dirección (`.junie/DECISIONES_DIRECCION.md`), las reglas globales de `~/.claude/CLAUDE.md` y todo lo hecho el 21 de noviembre. No existe un `CLAUDE.md` dentro del proyecto; `ARQUITECTURA_ESTANDAR.md` describe la plataforma antigua (carpeta de Drive con detección por nombre de archivo) y no rige Vórtice.
 
-## 1. Dónde está todo (carpeta raíz)
-- **Carpeta raíz de Vórtice:** `/Users/juanpablomonsalvez/Downloads/brkl-motor`, rama `vortice/h1b1-p0e-puro`. Es un *worktree* del repositorio real `~/Downloads/Moodle-Theme-Creator` (ahí vive el `.git` y los `node_modules`). Remoto: `github.com/juanpablomonsalvezb-alt/brkl`.
-- Diseño y decisiones: `docs/vortice/`. Piloto: `docs/vortice/piloto/`. Motor: `server/` y `shared/`. Migraciones: `migrations/vortice/`. Pruebas: `script/*.check.ts`. Pantallas: `client/src/pages/vortice/`. Instrucciones y decisiones para Junie: `.junie/`.
-- Copias y carpetas auxiliares (no son la raíz): `brkl-motor-brujula` y `brkl-motor-cal` (copias aisladas de Junie, ya fusionadas), `brkl-prod-precios` (rama limpia desde `main` usada para publicar precios), `~/Downloads/brkl-libros` (libros convertidos a Markdown), `~/Downloads/BRKL_TEXTOS_OFICIALES` (textos y temario del piloto).
+**Para retomar en una sesión nueva**, el primer mensaje: «Lee `HANDOFF.md` en la raíz de `~/Downloads/brkl-motor` y `.junie/ESTADO.md` y continúa desde ahí.»
 
-## 2. Reglas de trabajo vigentes
-- **Junie programa, Claude es arquitecto.** Todo código nuevo lo hace Junie (CLI) en copia aislada; Claude escribe el brief, verifica por su cuenta (código de salida real, mutaciones, diff) y puede corregir lo que Junie ya hizo. Junie ha dejado errores reales que su informe no vio: en T34 el conteo de días daba 400 al cruzar el cambio de horario de septiembre de 2027; en T35 el fin con menos módulos, el conteo de semanas (31 en vez de 32) y el viernes de evaluación. **Verificar siempre.**
-- **Producción solo con la orden explícita «PRODUCCION».** Se trabaja en rama, se prueba y se publica solo con esa orden. Vórtice: nada de push a `main`, migraciones reales ni Turso real sin autorización por etapa.
-- **Archivos protegidos (no modificar):** `shared/p0e.ts`, `script/p0e.check.ts`, `script/mutar.ts`, `script/ventanas.check.ts`, `server/calendarUtils.ts`. Verificar sus hashes al iniciar y al cerrar.
-- **Turso:** no usar la cuenta real para pruebas de carga (el 2026-11-20 lecturas masivas bloquearon la cuenta). E0 remoto cancelado.
-- **Estilo:** responder en español, breve. Sin guiones largos en textos entregados. Decisiones del sostenedor con fecha en `.junie/DECISIONES_DIRECCION.md`.
-- Prueba completa: `npm run check:vortice` (debe salir con código 0; comprobarlo con `echo $?`) y `npx tsc --noEmit`.
+**Carpeta raíz:** `/Users/juanpablomonsalvez/Downloads/brkl-motor`, rama `vortice/h1b1-p0e-puro`. Es un *worktree* del repositorio real `~/Downloads/Moodle-Theme-Creator` (ahí vive el `.git` y los `node_modules`). Remoto: `github.com/juanpablomonsalvezb-alt/brkl`.
 
-## 3. Estado de Vórtice (rama local y remota `vortice/h1b1-p0e-puro`)
-Último commit: `5660554`. Rama empujada a GitHub el 2026-11-21 (CI en verde la primera vez; los commits posteriores a `4f9ee9f` están solo locales).
+---
 
-### 3.1 Evaluación de cierre E2 (P21 v2): hecha de punta a punta
-- **Regla:** 1 intento normal + 1 extra (plazo 72 h, obligatorio para avanzar); aprobación 70 % (50 % neurodivergentes, sin redondeo); 15 preguntas; 60 min (120 sin cronómetro para neurodivergentes); sin nota 1 a 7; ≥ 35 % del extra de los subtemas fallados, sin repetir preguntas del normal; mejor porcentaje.
-- **Migración 0005** (`migrations/vortice/0005_evaluacion.sql`): 8 tablas, con un trigger que acepta respuestas del normal o del extra (la FK original no dejaba guardar las del extra).
-- **Servicio** `server/evaluacion.ts`: abrir proceso, iniciar intento, responder, enviar, cerrar, reabrir por administrador, cargador del banco (`cargarBancoExtra`), subtema = `item_id`.
-- **Rutas** `server/evaluacionRoutes.ts` (apagadas salvo `VORTICE_EVALUACION_RUTAS=1`): proceso, estado, intentos, preguntas sin clave, responder (409 si ya hay respuesta), enviar, verificar tiempo, cerrar, y rutas de administrador (declarar perfil, reabrir).
-- **Seguridad (revisión del 21-nov, 3 hallazgos corregidos con pruebas):** el tiempo lo aplica el servidor (`responder` rechaza vencido el plazo y `enviarIntento` no cuenta respuestas tardías); `cerrarProceso` exige aprobar, extra enviado o plazo vencido; `estado` y `proceso` exigen `checkEvaluationAccess` (matrícula y liberación).
-- **Pantalla** `client/src/pages/vortice/VorticeEvaluacion.tsx` + `evaluacion.css`: estilo «cuaderno de examen»; modo calmo para neurodivergentes; las respuestas se guardan y no se cambian (la base es solo inserción). Enlazada desde el inicio de Vórtice (botón «Rendir mi evaluación») solo si las rutas están encendidas.
-- **Probado en Vercel Preview** (`brkl-preview`, cuentas ficticias): recorrido completo 23 de 23 pasos (abrir, responder, reprobar, extra, aprobar, 401, 403, 404, admin). Las claves foráneas están activas en Turso remoto.
-- **Demo local:** `npx tsx script/evaluacion-demo.ts` (puerto 3002; `/demo/entrar?u=est-reg` o `est-neuro`), datos ficticios y las 45 preguntas del piloto.
+## 1. Estado actual (terminado y verificado)
 
-### 3.2 Brújula (panel del estudiante): hecha, fusionada (`9939051`)
-Métricas por asignatura, ritmo frente al calendario (al día, atrasado, adelantado), próxima evaluación, mensajes de orientación sin culpa, panel en el inicio y botón «Brújula» en el menú. Ruta `GET /api/vortice/brujula/panel` (solo lectura). Código en `shared/brujulaPanel.ts`, `server/brujula.ts`, `client/src/pages/vortice/BrujulaPanel.tsx`. Pruebas: `script/brujula-panel.check.ts` (18 casos) y `script/brujula-mutacion.ts` (herramienta manual de mutación, no corre en la suite).
-**Falta de Brújula (decidido, sin construir):** intensidad (suave, normal, intensivo), calendarización de bloques de estudio y vista del apoderado con correo semanal. Brújula nace de una apoderada que no sabía cómo le iba a su hijo.
+Verificación general al cierre: `npx tsc --noEmit` limpio y `npm run check:vortice` con código de salida 0. Último commit: `66529b0`.
 
-### 3.3 Calendario 2027 por nivel: hecho, fusionado (`5660554`)
-`shared/calendario2027.ts`, `script/calendario2027.check.ts` (13 casos) y `scripts/calendario2027-opciones.ts` (imprime la tabla de opciones). Recesos y feriados 2027 son **supuestos marcados** (invierno 5 al 16 de julio, Fiestas Patrias 13 al 17 de septiembre); la resolución del Mineduc no está publicada.
+| Módulo | Estado | Dónde | Cómo se verificó |
+|---|---|---|---|
+| **Evaluación de cierre E2 (P21 v2)**: reglas, migración 0005, servicio, rutas, pantalla | Terminado | `server/evaluacion.ts`, `server/evaluacionRoutes.ts`, `migrations/vortice/0005_evaluacion.sql`, `client/src/pages/vortice/VorticeEvaluacion.tsx` | Checks locales (servicio 22 casos, extra 11, rutas 17, base 25) y recorrido completo **23 de 23 pasos** en Vercel Preview con cuentas ficticias |
+| **Seguridad de la evaluación** (3 hallazgos corregidos) | Terminado | mismos archivos | Cada corrección probada quitándola y viendo fallar su caso (mutación) |
+| **Brújula, parte 1** (panel del estudiante: métricas, ritmo frente al calendario, mensajes sin culpa) | Terminado, fusionado | `shared/brujulaPanel.ts`, `server/brujula.ts`, `BrujulaPanel.tsx`, `brujula.css` | 18 casos puros y casos de servidor; conteo de días en calendario de Chile corregido tras verificar el trabajo de Junie. **No se vio en pantalla con datos reales** |
+| **Calendario 2027 por nivel** (cuántos módulos caben antes del cierre, tabla de opciones) | Terminado, fusionado | `shared/calendario2027.ts`, `scripts/calendario2027-opciones.ts` | 13 casos; corregidos 3 errores de Junie |
+| **Piloto y banco**: Matemática 5.º, Unidad 3 (OA 7, 8, 10, 11, 13) con 45 preguntas, más 81 de los OA 1, 3, 4, 6, 15, 17, 18, 19, 26 | Terminado a nivel de script | `docs/vortice/piloto/` | Cada pregunta con pasaje del libro verificado por script. Banco de 126 preguntas «validadas» por validadores de script, **sin revisión humana** |
+| **Libros** (109 textos del estudiante en Markdown) | Terminado | `~/Downloads/brkl-libros/libros_md/` (índice `INDICE_UNICO.md`) | MINEDUC 2026 de 1.º básico a 4.º medio (69) y Casa del Saber de 1.º a 6.º básico (40); sin vacíos ni imágenes incrustadas |
+| **Precios del plan escolar 2027 en producción** | Publicado | `shared/precios.ts` (fuente única) | HTML publicado verificado: 0 apariciones de \$65.000, «7 pagos, de marzo a septiembre» presente |
+| **P0, P21 v2, armador del extra, énfasis 35 %, regla de publicable** | Terminado | `shared/*.ts` | Checks y mutaciones del 20 de noviembre |
 
-### 3.4 Piloto y banco
-Matemática 5.º Básico, Unidad 3 (OA 7, 8, 10, 11, 13): 45 preguntas validadas con libretos de citas literales de los dos libros oficiales (Sumo Primero y Casa del Saber). Además 81 preguntas de los OA 1, 3, 4, 6, 15, 17, 18, 19 y 26 (`docs/vortice/piloto/mat5_resto/`), banco total de 126 preguntas con estado «validada» por script. **Sin revisión humana** de las 81 del resto ni de las preguntas escritas por Claude; las fracciones en los libros salen partidas por la conversión (solo se cita prosa).
-Libros: 109 textos del estudiante en Markdown (`~/Downloads/brkl-libros/libros_md/`, índice en `INDICE_UNICO.md`): MINEDUC 2026 de 1.º básico a 4.º medio (69) y Casa del Saber de 1.º a 6.º básico (40). Las guías docentes no se convirtieron.
+Detalle de la evaluación E2:
+- **Regla:** 1 intento normal más 1 extra (plazo 72 h, obligatorio para avanzar), aprobación 70 % (50 % para neurodivergentes, sin redondeo), 15 preguntas, 60 min con reloj (120 min sin cronómetro y con avisos suaves para neurodivergentes), sin nota 1 a 7, el extra toma al menos 35 % de los subtemas fallados y nunca repite preguntas del normal, vale el mejor porcentaje.
+- **Rutas apagadas por defecto:** solo se registran con `VORTICE_EVALUACION_RUTAS=1`. Se enlazan desde el inicio de Vórtice solo si están encendidas.
+- **Demo local:** `npx tsx script/evaluacion-demo.ts` (puerto 3002; entrar por `/demo/entrar?u=est-reg` o `?u=est-neuro`), con las 45 preguntas del piloto.
 
-## 4. Decisiones de dirección del 2026-11-21
-- **Cierre del año 2027:** viernes **15 de octubre** (resto de cursos) y miércoles **15 de septiembre** (4.º medio). Razón: los exámenes libres de menores 2026 fueron 8 al 19 de junio (1.er período, opcional), 21 de septiembre al 2 de octubre (solo 4.º medio y NEE) y 19 al 30 de octubre (resto de cursos). 4.º medio no puede rendir en la ventana de octubre y su certificado llega a inicios de noviembre, antes de la PAES regular (~30 de noviembre). El calendario oficial 2027 sale por resolución exenta entre febrero y abril: confirmarlo. Con inicio el 8 de marzo hay 32 semanas hasta el 15 de octubre, justo las del plan actual (15 módulos × 2 semanas + 2 de evaluación), sin descontar recesos; con recesos faltan unas 3 semanas y 4.º medio tiene ~27 semanas. **Pendiente: decidir cómo acortar el ciclo.**
-- **Precios del plan escolar 2027** (Básica, Media I y Media II, mismo precio): lista anual \$490.000 tachada, pago único \$416.500 (15 % dto., ahorro \$73.500) y plan mensual \$70.000 × 7 pagos de marzo a septiembre. Octubre sin cobro mensual es intencional. Adultos y PAES sin cambio.
+---
 
-## 5. Producción (barkleyinstituto.cl), publicado el 2026-11-21 con la orden «PRODUCCION»
-- PR 4, 5 y 6 fusionados a `main` desde ramas limpias (`precios-2027`, `precios-fuente-unica`, `precios-siete-pagos`). Solo cambios de precios y textos; **nada de Vórtice fue a producción.**
-- La fuente única de precios es `shared/precios.ts` (marcadores `{{precio_escolar}}` etc.). Quedó: \$70.000, «7 pagos, de marzo a septiembre», \$490.000 / \$416.500 / \$73.500, «de marzo a octubre» (sin «31»). Verificado en el HTML publicado: 0 apariciones de \$65.000.
-- En `main` no existe el catálogo de cobro por servidor ni Flow para el plan escolar; en producción los precios son lo que se muestra y reserva. El cobro mensual recurrente no está implementado en ninguna parte.
-- Para revertir: un commit de reversa de cada PR.
+## 2. Decisiones de arquitectura y reglas (NO cambiar sin decisión del sostenedor)
 
-## 6. Entornos y credenciales
-- **Vercel:** proyecto `brkl`, rama de producción `main`; los Preview están protegidos (SSO). Vínculo local de Vercel en `/tmp/ctx/vl` (se pierde al reiniciar; recrear con `vercel link --yes --project brkl`).
-- **Turso:** bases `brkl-db` (producción, no tocar), `brkl-preview` (pruebas, con las migraciones 0001 a 0005 y la evaluación sembrada sobre `ficticio-e2`), `brkl-staging` (sin uso). El Preview solo acepta hosts `brkl-preview-*` (guarda en `server/dbGuard.ts`). Variable `VORTICE_EVALUACION_RUTAS=1` activa solo en el Preview de la rama de Vórtice.
-- Script `scripts/preparar-preview.ts` (migra y siembra la base de pruebas; rechaza cualquier otro host). Se creó un token de Turso de 1 día para `brkl-preview` (no se imprimió).
-- Cuentas de prueba ficticias: `ficticio-estudiante`, `ficticio-ajeno`, `ficticio-admin`, etc. (acceso por cabeceras en el Preview).
+**Roles y método**
+- **Junie programa; Claude es el arquitecto.** Todo código nuevo lo hace Junie (CLI) en una copia aislada; Claude escribe el brief, verifica por su cuenta (código de salida real, mutaciones, diff) y corrige lo que Junie ya hizo. No escribir features nuevas desde cero (decisión del sostenedor, 2026-11-21, para cuidar sus tokens).
+- Cada decisión de dirección se registra con fecha en `.junie/DECISIONES_DIRECCION.md`.
 
-## 7. Pendientes
-| Pendiente | De quién |
-|---|---|
-| **Cómo acortar el ciclo 2027** (menos módulos, inicio en febrero u otra opción) y recesos oficiales | Tú |
-| Confirmar el calendario oficial de exámenes libres 2027 (feb a abr) | Tú |
-| **O4:** nombres de los 2 validadores del banco (sin ellos ninguna pregunta cumple «dos validadores») | Tú |
-| P16 y P7 (columnas de la migración), dónde se declara el perfil neurodivergente en la base | Tú |
-| Revisión humana de las 81 preguntas del resto y de las escritas por Claude | Tu equipo |
-| Cobro mensual recurrente (Flow) para ofrecer los \$70.000 × 7: tarea para Junie | Junie |
-| Brújula parte 2: intensidad, calendarización y vista del apoderado | Junie, con tu visto bueno |
-| Aplicar la migración 0005 y las rutas a producción (etapa aparte, con tu orden) | Tú |
-| Cifras de la landing (91,2 / 92,1 / 93,4 %, 70 %, estadísticas nacionales) con datos reales | Tú |
-| Inconsistencia: landings dicen «pagas recién en febrero de 2027», la home «enero 2027» | Tú |
-| Página antigua `PlanSelector2026` dice «8 cuotas de marzo a octubre» (no se tocó, no se sabe si está en uso) | Revisar |
-| Alertas de uso en Turso (50 % y 80 %) | Tú |
-| Ver en pantalla la tarjeta de precios y el panel de Brújula (solo se verificó el código publicado) | Tú |
+**Producción y seguridad operativa**
+- **Producción solo con la orden explícita «PRODUCCION».** Se trabaja en rama, se prueba y se publica con esa orden. Se publica desde una rama limpia a partir de `main` con solo lo pedido (así se hizo con los precios); **nada de Vórtice ha ido a producción**.
+- Vórtice: ningún push a `main`, migración real ni Turso real sin autorización por etapa. La migración 0005 y las rutas de evaluación no se han aplicado a producción.
+- **Turso:** no usar la cuenta real para pruebas de carga (el 2026-11-20 lecturas masivas bloquearon toda la cuenta). E0 remoto cancelado. El Preview solo acepta bases `brkl-preview-*` (`server/dbGuard.ts`).
 
-## 8. Cómo lanzar a Junie (para Claude)
-`cd <copia aislada> && junie -p . --max-steps=150 "Lee .junie/INSTRUCCIONES_ACTUALES.md y .junie/REGLAS_FIJAS.md y ejecuta la tarea Txx"`. En este Mac no existen `timeout` ni `gtimeout`: limitar con `perl -e 'alarm shift; exec @ARGV' 3300 <comando>`. Las copias se hacen con `rsync --exclude .git --exclude node_modules` (o `git archive HEAD`) + `git init` propio y `ln -s` a los `node_modules` del repositorio real. Nunca copiar el `.git` del worktree. Informes en `.junie/informes/` (T0 a T35).
+**Reglas de las reglas globales (`~/.claude/CLAUDE.md`)**
+- Responder siempre en español, breve. Sin guiones largos en textos entregados. Español neutro (tú, no voseo).
+- Código nuevo: implementar, revisar el diff (`/code-review`), revisar seguridad (`/security-review`), corregir y recién entonces commit. En Vórtice, commit solo local hasta que el sostenedor ordene el push.
+
+**Reglas del dominio**
+- **Prioridad curricular:** manda el temario de Exámenes Libres 2026 (MINEDUC); lo que no está en él igual se estudia con menor énfasis. Toda pregunta debe citar fuente oficial (OA, texto escolar o programa). Contenido y preguntas salen de los libros oficiales (meta ~90 %) y **se consultan siempre ambas fuentes** (Sumo Primero y Casa del Saber). Prohibido usar Khan Academy o Coursera como referente.
+- **Archivos protegidos (no modificar, verificar sus hashes al iniciar y al cerrar):** `shared/p0e.ts`, `script/p0e.check.ts`, `script/mutar.ts`, `script/ventanas.check.ts`, `server/calendarUtils.ts`. No tocar la especificación maestra ni el commit E0 (`2edf702`).
+- **Respuestas de la evaluación: solo inserción.** Una respuesta guardada no se cambia; la pantalla lo avisa y se guarda al confirmar.
+- **Porcentajes sin redondeo:** se muestran truncados (69,99 nunca se ve como 70).
+- Brújula: orienta y propone, **sin castigos, rachas ni puntajes ni culpa**. Los mensajes son por reglas, sin IA.
+- ORBBI no debe llevar IA en el producto sin instrucción explícita; Barkley no nombra al fundador ni a su colegio anterior en el sitio.
+
+**Fechas y precios decididos (2026-11-21)**
+- **Cierre del año 2027:** viernes **15 de octubre** para 1.º básico a 3.º medio y miércoles **15 de septiembre** para 4.º medio (4.º medio no puede rendir en la ventana de octubre).
+- **Precios del plan escolar** (Básica, Media I y Media II, mismo precio): lista anual \$490.000 tachada, pago único \$416.500 (15 % de descuento, ahorro \$73.500) y mensual \$70.000 × 7 pagos de marzo a septiembre. Octubre sin cobro mensual es intencional. Adultos y PAES sin cambio. Fuente única: `shared/precios.ts`.
+- El año de preparación se escribe «de marzo a octubre» (sin «31»).
+
+---
+
+## 3. Punto exacto donde quedamos
+
+1. **Calendario 2027:** la tabla de opciones está lista, pero **falta que el sostenedor decida cómo acortar el ciclo.** Con inicio el 8 de marzo hay 32 semanas hasta el 15 de octubre, justo el plan actual (15 módulos × 2 semanas + 2 de evaluación), pero **no cabe con receso de invierno y Fiestas Patrias** (faltan unas 3 semanas); 4.º medio tiene ~27 semanas.
+2. **Brújula parte 2** (intensidad suave, normal e intensivo; calendarización de bloques de estudio; vista del apoderado con correo semanal): decidida, **sin construir**.
+3. **Plan mensual de \$70.000:** hoy solo se *muestra*; el servidor cobra un solo monto. El cobro mensual recurrente no está implementado en ninguna parte.
+4. **Evaluación E2:** lista y probada en Preview. Falta aplicar la migración 0005 y las rutas a producción (etapa aparte, con orden explícita), cargar las 45 preguntas con validación humana y definir dónde se declara el perfil neurodivergente en la base.
+5. **Rama de Vórtice:** empujada a GitHub hasta `4f9ee9f`; los commits siguientes (corrección de 409, Brújula, calendario, precios locales, este archivo) están solo locales.
+
+---
+
+## 4. Próximas tareas en orden de prioridad
+
+1. **Decidir cómo acortar el ciclo 2027** (menos módulos, inicio en febrero u otra opción) y definir los recesos reales; luego pedirle a Junie que lo aplique como `program_calendar` por nivel (con 4.º medio propio).
+2. **Confirmar el calendario oficial de exámenes libres 2027** (resolución exenta del Mineduc, suele salir entre febrero y abril) y revisar las dos fechas de cierre.
+3. **Nombrar a los 2 validadores del banco (O4)** y organizar la revisión humana de las 81 preguntas del resto y de las escritas por Claude. Sin esto ninguna pregunta cumple «dos validadores».
+4. **Decidir P16 y P7** (columnas de la migración) y dónde se declara el perfil neurodivergente; luego autorizar la migración 0005 en producción.
+5. **Tarea para Junie: cobro mensual recurrente (Flow)** para poder ofrecer \$70.000 × 7.
+6. **Tarea para Junie: Brújula parte 2** (con tu visto bueno por parte).
+7. **Ver en pantalla** la tarjeta de precios y el panel de Brújula; ajustar si no gustan.
+8. Corregir la inconsistencia de fechas de cobro (landings: «pagas recién en febrero de 2027»; home: «Arancel desde enero 2027»).
+9. Cifras de la landing con datos reales (91,2 / 92,1 / 93,4 %, 70 %, estadísticas nacionales de «Por qué Barkley»).
+10. Alertas de uso en Turso (50 % y 80 %). Interfaz restante, M2 a M8 y piloto con estudiantes: etapas futuras, cada una con autorización.
+
+---
+
+## 5. Advertencias y deuda técnica
+
+**Lecciones sobre el trabajo de Junie (verificar SIEMPRE por tu cuenta):** su informe dijo «OK» con errores reales:
+- T30: inventó 50 citas y dijo que el texto «no era exacto».
+- T33: un check imprimía «ok» pero salía con código 1 (casos V1 y V2 duplicados con la salida borrada).
+- T34: el conteo de días daba **400 al cruzar el 5 de septiembre de 2027** (cambio de horario, la medianoche no existe); su prueba de horario de verano solo cubría abril.
+- T35: con menos módulos la opción de ajuste ignoraba los últimos módulos (decía «cabe» con fin en junio), el conteo de semanas daba 31 en vez de 32 y el viernes de evaluación salía jueves cerca del cambio de horario. Arreglado por el arquitecto.
+- Además cambió una vez el ejecutor de mutaciones sin permiso (rechazado y restaurado). Verificar el ejecutor y los grupos antiguos.
+- Recalcular a mano las respuestas correctas del banco; revisar alternativas con la misma afirmación; no usar dinero con decimales; sin páginas en el cuerpo de los libretos; «según el libro» solo si se verifica.
+
+**Deuda técnica y errores conocidos**
+- La migración 0005 se editó en su sitio (trigger `eaa_pregunta_del_intento`) porque nunca se aplicó a una base real; en `brkl-preview` ya está aplicada con esa versión.
+- `server/evaluacion.ts` tiene un nombre `ErrorEvaluacion` mapeado a HTTP en `evaluacionRoutes.ts`; el código `proceso_no_encontrado` también se usa como respuesta de «ya existe» en `abrirProceso` (la ruta lo evita comprobando antes).
+- El extra no excluye variantes de la misma familia de una pregunta del normal (solo garantiza ids distintos) ni filtra el banco por evaluación, solo por los subtemas de la versión.
+- En `main` (producción) **no existe** el catálogo de cobro por servidor ni Flow para el plan escolar: los precios son lo que se muestra y reserva. Los snapshots prerenderizados para buscadores (`client/public/prerendered/*.html`) se parchearon a mano con los precios nuevos: **regenerarlos con `npm run prerender` falló** (timeout esperando el servidor) y `npm run seo:build` mete cambios ajenos a precios (títulos y fuentes). No regenerar a ciegas.
+- `api/handler.js` es un artefacto versionado que `npm run build` regenera; revertirlo (`git checkout -- api/handler.js`) tras compilar localmente.
+- Errores de tipos antiguos ya existentes en `main` (`GeminiCopilotButton.tsx`, `PlanConfiguratorAdultsNew.tsx`); no son de Vórtice.
+- Página antigua `PlanSelector2026` dice «8 cuotas de marzo a octubre»: no se tocó, no se sabe si está en uso.
+- Los recesos 2027 (`SUPUESTOS_2027`) son supuestos marcados; la lista de feriados está vacía a propósito hasta que haya resolución oficial.
+- Las fracciones en los libros convertidos salen partidas; solo se cita prosa. Los libros de Casa del Saber son de 2013 y los de MINEDUC de 2026: riesgo de desfase de edición al citar.
+
+**Archivos y datos delicados**
+- No tocar: los 5 archivos protegidos, la especificación maestra, el commit `2edf702`, ni `brkl-db` (producción).
+- El token de Turso de 1 día para `brkl-preview` y el secreto del acceso de prueba de Vercel están en el entorno local (`/tmp/ctx/vl/.env.preview`); no commitear ni pegar en ningún lado. El vínculo local de Vercel (`/tmp/ctx/vl`) se pierde al reiniciar: recrear con `vercel link --yes --project brkl`.
+- `script/evaluacion-demo.ts` entrega la clave de respuestas por `/demo/clave`: es solo para desarrollo local, nunca montar esa ruta en un servidor real.
+
+**Cómo lanzar a Junie:** `cd <copia aislada> && junie -p . --max-steps=150 "Lee .junie/INSTRUCCIONES_ACTUALES.md y .junie/REGLAS_FIJAS.md y ejecuta la tarea Txx"`. En este Mac no existen `timeout` ni `gtimeout`: limitar con `perl -e 'alarm shift; exec @ARGV' 3300 <comando>`. Copias con `rsync --exclude .git --exclude node_modules` (o `git archive HEAD`) más `git init` propio y `ln -s` a los `node_modules` del repositorio real; nunca copiar el `.git` del worktree. Informes en `.junie/informes/` (T0 a T35).
+
+**Otras carpetas (no son la raíz):** `brkl-motor-brujula` y `brkl-motor-cal` (copias aisladas de Junie ya fusionadas, se pueden borrar), `brkl-prod-precios` (rama limpia desde `main` para publicar precios), `~/Downloads/BRKL_TEXTOS_OFICIALES` (textos y temario del piloto).
