@@ -182,7 +182,7 @@ const JORNADA = [
 const NO_CAMBIA = [
   ["Mismo temario oficial", "Currículo MINEDUC completo. Sin recortes ni versión simplificada."],
   ["Misma validación", "Exámenes Libres ante el Ministerio, igual que cualquier estudiante."],
-  ["Mismo valor", `${PRECIOS.escolar} al mes. Los apoyos no tienen costo adicional.`],
+  ["Mismo valor", `${PRECIOS.escolar} al mes (${PRECIOS.escolarPagos}). Los apoyos no tienen costo adicional.`],
 ];
 
 const FAQS = [

@@ -29,6 +29,7 @@ export const PRECIOS = {
   escolarAnual: clp(escolar.conDescuento),
   escolarAnualLista: clp(escolar.lista),
   escolarAhorroAnual: clp(escolar.ahorro),
+  escolarPagos: `${BASE.mesesEscolar} pagos, de marzo a septiembre`,
   adultos: clp(BASE.adultosMensual),
   adultosAnual: clp(adultos.conDescuento),
   adultosAhorroAnual: clp(adultos.ahorro),
@@ -39,6 +40,7 @@ export const PRECIOS = {
 export const MARCADORES: Record<string, string> = {
   precio_escolar: PRECIOS.escolar,
   precio_escolar_numero: String(BASE.escolarMensual),
+  detalle_pagos_escolar: PRECIOS.escolarPagos,
   meses_escolar: String(BASE.mesesEscolar),
   meses_adultos: String(BASE.mesesAdultos),
   precio_escolar_anual: PRECIOS.escolarAnual,
