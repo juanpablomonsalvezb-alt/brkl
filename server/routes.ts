@@ -519,6 +519,7 @@ export async function registerRoutes(
       client: dbClient,
       userId: currentUserId,
       esAdmin: async (userId) => (await storage.getUserProfile(userId))?.role === "admin",
+      acceso: (userId, evaluacionId) => checkEvaluationAccess(db, userId, evaluacionId, new Date()),
     });
   }
 

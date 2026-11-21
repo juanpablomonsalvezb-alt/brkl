@@ -51,7 +51,7 @@ const RAIZ = fs.mkdtempSync(path.join(os.tmpdir(), "t35-"));
 
 // Plantilla: misma estructura que evaluacion-db.check.ts pero con 9 preguntas (3 subtemas).
 
-import { abrirProceso, iniciarIntento, responder, enviarIntento, cargarBancoExtra, preguntasDelIntento, ErrorEvaluacion } from "../server/evaluacion";
+import { abrirProceso, iniciarIntento, responder, enviarIntento, cargarBancoExtra, preguntasDelIntento, cerrarProceso, ErrorEvaluacion } from "../server/evaluacion";
 import { armarExtra } from "../shared/armador";
 
 // Plantilla: 3 subtemas (i1..i3), prueba normal de 9 (3 por subtema), banco extra de 15 (5 por subtema).
@@ -158,6 +158,42 @@ await caso("X7", "banco: preguntas no aprobadas no entran", async () => {
   const bd = abrir(P); try {
     await bd.x("UPDATE question_versions SET status = 'retirada', retired_kind = 'otro', retired_reason = 'x', retired_by = ?, retired_at = 2 WHERE id = 'qx1'", [VA]);
     assert.ok(!(await cargarBancoExtra(bd.c, "ev-v1")).some((q) => q.id === "qx1"));
+  } finally { bd.cerrar(); }
+});
+
+await caso("X8", "responder vencido el tiempo: se rechaza y el intento se entrega con lo respondido a tiempo", async () => {
+  const bd = abrir(P); try {
+    const proc = await abrirProceso(bd.c, { estudianteId: EST, evaluacionId: "me-e2", versionId: "ev-v1", perfil: "regular" });
+    const n = await iniciarIntento(bd.c, { instanciaId: proc.instanciaId, estudianteId: EST, tipo: "normal" });
+    await responder(bd.c, { intentoId: n.intentoId, estudianteId: EST, preguntaVersionId: "qe1", opcionId: "o2" });
+    await bd.x("UPDATE evaluation_attempts SET expires_at = unixepoch('subsec') - 1 WHERE id = ?", [n.intentoId]);
+    await assert.rejects(responder(bd.c, { intentoId: n.intentoId, estudianteId: EST, preguntaVersionId: "qe2", opcionId: "o2" }), (er: any) => er instanceof ErrorEvaluacion && er.codigo === "intento_no_activo");
+    const a = await bd.x("SELECT status, total_correct, total_questions FROM evaluation_attempts WHERE id = ?", [n.intentoId]);
+    assert.equal((a.rows[0] as any).status, "enviado"); assert.equal(Number((a.rows[0] as any).total_questions), 9);
+    assert.equal(Number((await bd.x("SELECT COUNT(*) AS n FROM evaluation_attempt_answers WHERE attempt_id = ?", [n.intentoId])).rows[0].n), 1);
+  } finally { bd.cerrar(); }
+});
+await caso("X9", "enviar: las respuestas posteriores al vencimiento no cuentan", async () => {
+  const bd = abrir(P); try {
+    const proc = await abrirProceso(bd.c, { estudianteId: EST, evaluacionId: "me-e2", versionId: "ev-v1", perfil: "regular" });
+    const n = await iniciarIntento(bd.c, { instanciaId: proc.instanciaId, estudianteId: EST, tipo: "normal" });
+    await responder(bd.c, { intentoId: n.intentoId, estudianteId: EST, preguntaVersionId: "qe1", opcionId: "o2" });
+    await new Promise((r) => setTimeout(r, 30));
+    await responder(bd.c, { intentoId: n.intentoId, estudianteId: EST, preguntaVersionId: "qe2", opcionId: "o2" });
+    const t = Number((await bd.x("SELECT answered_at FROM evaluation_attempt_answers WHERE question_version_id = 'qe1' AND attempt_id = ?", [n.intentoId])).rows[0].answered_at);
+    await bd.x("UPDATE evaluation_attempts SET expires_at = ? WHERE id = ?", [t + 0.001, n.intentoId]); // entre qe1 y qe2
+    const env = await enviarIntento(bd.c, { intentoId: n.intentoId, estudianteId: EST });
+    assert.equal(env.totalCorrect, 1);
+  } finally { bd.cerrar(); }
+});
+await caso("X10", "cerrarProceso: no sin intentos ni con el normal reprobado y el extra pendiente", async () => {
+  const bd = abrir(P); try {
+    const proc = await abrirProceso(bd.c, { estudianteId: EST, evaluacionId: "me-e2", versionId: "ev-v1", perfil: "regular" });
+    const E = (er: any) => er instanceof ErrorEvaluacion && er.codigo === "cierre_no_permitido";
+    await assert.rejects(cerrarProceso(bd.c, { procesoId: proc.procesoId, estudianteId: EST }), E);
+    const n = await iniciarIntento(bd.c, { instanciaId: proc.instanciaId, estudianteId: EST, tipo: "normal" });
+    await enviarIntento(bd.c, { intentoId: n.intentoId, estudianteId: EST });
+    await assert.rejects(cerrarProceso(bd.c, { procesoId: proc.procesoId, estudianteId: EST }), E);
   } finally { bd.cerrar(); }
 });
 

@@ -65,7 +65,8 @@ export type CodigoEvaluacion =
   | "proceso_cerrado"
   | "version_no_encontrada"
   | "capacidad_insuficiente"
-  | "entrega_automatica";
+  | "entrega_automatica"
+  | "cierre_no_permitido";
 
 export class ErrorEvaluacion extends Error {
   constructor(readonly codigo: CodigoEvaluacion, mensaje: string) {
@@ -640,15 +641,20 @@ export async function responder(
   // Verificar intento activo.
   const intento = row<{
     id: string; instance_id: string; status: string; student_id: string;
-    evaluation_version_id: string; evidence_source_type: string; review_at: number | null;
+    evaluation_version_id: string; evidence_source_type: string; review_at: number | null; expires_at: number | null;
   }>(await x(
-    "SELECT id, instance_id, status, student_id, evaluation_version_id, evidence_source_type, review_at FROM evaluation_attempts WHERE id = ?",
+    "SELECT id, instance_id, status, student_id, evaluation_version_id, evidence_source_type, review_at, expires_at FROM evaluation_attempts WHERE id = ?",
     [params.intentoId],
   ));
   if (!intento) throw new ErrorEvaluacion("intento_no_encontrado", `intento ${params.intentoId} no existe`);
-  if (intento.status !== "activo") throw new ErrorEvaluacion("intento_no_activo", `intento ${params.intentoId} no está activo (status: ${intento.status})`);
   if (String(intento.student_id) !== params.estudianteId) {
     throw new ErrorEvaluacion("intento_no_encontrado", `intento no pertenece al estudiante ${params.estudianteId}`);
+  }
+  if (intento.status !== "activo") throw new ErrorEvaluacion("intento_no_activo", `intento ${params.intentoId} no está activo (status: ${intento.status})`);
+  // El tiempo lo controla el servidor: vencido el plazo no se acepta nada más y el intento se entrega con lo respondido a tiempo.
+  if (intento.expires_at != null && ahora >= Number(intento.expires_at)) {
+    await verificarEntregaAutomatica(c, { intentoId: params.intentoId, estudianteId: params.estudianteId });
+    throw new ErrorEvaluacion("intento_no_activo", "el tiempo terminó: el intento se entregó con lo respondido a tiempo");
   }
 
   // Validar que la pregunta pertenece a la versión de evaluación.
@@ -763,9 +769,12 @@ export async function enviarIntento(
   const umbral = Number(inst.passing_score) ?? parametrosPerfil(perfil).umbralAprobacion;
 
   // Calcular correctas y total.
+  // Solo cuentan las respuestas dadas antes del vencimiento (las posteriores se tratan como sin responder).
+  const limite = intento.expires_at != null ? Number(intento.expires_at) : null;
+  const aTiempo = "AND (? IS NULL OR answered_at <= ?)";
   const respuestas = rows<{ is_correct: number }>(await x(
-    "SELECT is_correct FROM evaluation_attempt_answers WHERE attempt_id = ?",
-    [params.intentoId],
+    `SELECT is_correct FROM evaluation_attempt_answers WHERE attempt_id = ? ${aTiempo}`,
+    [params.intentoId, limite, limite],
   ));
   const totalCorrect = respuestas.filter((r) => Number(r.is_correct) === 1).length;
 
@@ -783,16 +792,16 @@ export async function enviarIntento(
   const subtemasFallados: string[] = [];
   if (params.intentoId && !aprobado) {
     const falladas = rows<{ item_id: string }>(await x(
-      "SELECT item_id FROM evaluation_attempt_answers WHERE attempt_id = ? AND is_correct = 0",
-      [params.intentoId],
+      `SELECT item_id FROM evaluation_attempt_answers WHERE attempt_id = ? AND is_correct = 0 ${aTiempo}`,
+      [params.intentoId, limite, limite],
     ));
     // item_id es el subtema.
     const falladosSet = new Set(falladas.map((r) => String(r.item_id)));
     // También los subtemas sin responder cuentan como fallados.
     const respondidas = new Set(
       rows<{ question_version_id: string }>(await x(
-        "SELECT question_version_id FROM evaluation_attempt_answers WHERE attempt_id = ?",
-        [params.intentoId],
+        `SELECT question_version_id FROM evaluation_attempt_answers WHERE attempt_id = ? ${aTiempo}`,
+        [params.intentoId, limite, limite],
       )).map((r) => String(r.question_version_id)),
     );
     for (const p of preguntasIntento) {
@@ -964,6 +973,15 @@ export async function cerrarProceso(
     }
   }
 
+  // El estudiante no puede cerrar a su antojo: solo con un intento aprobado, el extra ya enviado
+  // o el plazo del extra vencido. Así el extra obligatorio no se salta.
+  const hayExtraEnviado = rows<{ n: number }>(await x(
+    "SELECT COUNT(*) AS n FROM evaluation_attempts a JOIN evaluation_instances i ON i.id = a.instance_id WHERE i.process_id = ? AND a.attempt_kind = 'extra' AND a.status = 'enviado'",
+    [params.procesoId],
+  ))[0]?.n;
+  if (!hayAprobado && !Number(hayExtraEnviado ?? 0) && !hayExtraNoRendido) {
+    throw new ErrorEvaluacion("cierre_no_permitido", "el proceso no se puede cerrar todavía: falta el intento extra o que venza su plazo");
+  }
   const estado: "aprobado" | "reprobado" = hayAprobado ? "aprobado" : "reprobado";
   if (hayAprobado) closeCause = "aprobacion";
   if (hayExtraNoRendido && !hayAprobado) closeCause = "reprobada_continua";

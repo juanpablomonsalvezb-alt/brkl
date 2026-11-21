@@ -15,6 +15,8 @@ export interface DepsRutasEvaluacion {
   client: Client;
   userId: (req: Request) => string | undefined;
   esAdmin: (userId: string) => Promise<boolean>;
+  /** Matrícula activa, módulo abierto y evaluación liberada (checkEvaluationAccess). */
+  acceso: (userId: string, evaluacionId: string) => Promise<{ ok: true } | { ok: false; status: number; reason: string }>;
 }
 
 const ESTADO: Record<CodigoEvaluacion, number> = {
@@ -32,6 +34,7 @@ const ESTADO: Record<CodigoEvaluacion, number> = {
   normal_no_enviado: 409,
   capacidad_insuficiente: 409,
   entrega_automatica: 409,
+  cierre_no_permitido: 409,
   extra_plazo_vencido: 410,
 };
 
@@ -71,9 +74,16 @@ export function registrarRutasEvaluacion(app: Express, deps: DepsRutasEvaluacion
     return r.rows.length > 0;
   };
 
+  // Sin matrícula, módulo cerrado o evaluación sin liberar: no se ve ni se abre nada.
+  const exigirAcceso = async (uid: string, evaluacionId: string) => {
+    const a = await deps.acceso(uid, evaluacionId);
+    if (!a.ok) throw new ErrorHttp(a.status === 404 ? 404 : 403, a.reason);
+  };
+
   // Estado para la pantalla: reloj del servidor, perfil, intentos y si el extra está disponible.
   app.get("/api/vortice/evaluaciones/:evaluacionId/estado", ruta(async (uid, req) => {
     const evaluacionId = String(req.params.evaluacionId);
+    await exigirAcceso(uid, evaluacionId);
     const ahora = await relojMotor(c).ahora();
     const ev = await c.execute({ sql: "SELECT title FROM module_evaluations WHERE id = ?", args: [evaluacionId] });
     if (!ev.rows.length) throw new ErrorEvaluacion("proceso_no_encontrado", "evaluación no encontrada");
@@ -106,6 +116,7 @@ export function registrarRutasEvaluacion(app: Express, deps: DepsRutasEvaluacion
   app.post("/api/vortice/evaluaciones/:evaluacionId/proceso", ruta(async (uid, req) => {
     const evaluacionId = texto(req.params.evaluacionId);
     if (!evaluacionId) throw new ErrorEvaluacion("proceso_no_encontrado", "evaluación requerida");
+    await exigirAcceso(uid, evaluacionId);
     const existente = await c.execute({
       sql: "SELECT p.id AS proceso_id, i.id AS instancia_id, i.student_profile AS perfil, i.duration_minutes AS duracion, i.passing_score AS umbral, p.status AS estado FROM evaluation_processes p JOIN evaluation_instances i ON i.process_id = p.id WHERE p.student_id = ? AND p.evaluation_id = ? ORDER BY i.id DESC LIMIT 1",
       args: [uid, evaluacionId],

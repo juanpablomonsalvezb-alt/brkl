@@ -55,7 +55,7 @@ await abrirProceso(c, { estudianteId: "est-neuro", evaluacionId: "me-e2", versio
 
 const app = express(); app.use(express.json());
 const cookie = (r: express.Request) => /(?:^|; )demo=([\w-]+)/.exec(r.headers.cookie ?? "")?.[1];
-registrarRutasEvaluacion(app, { client: c, userId: cookie, esAdmin: async () => false });
+registrarRutasEvaluacion(app, { client: c, userId: cookie, esAdmin: async () => false, acceso: async () => ({ ok: true as const }) });
 app.get("/demo/entrar", (req, res) => { const u = req.query.u === "est-neuro" ? "est-neuro" : "est-reg"; res.cookie("demo", u, { path: "/" }); res.redirect("/vortice/evaluacion/me-e2"); });
 // Solo demo: acorta el tiempo del intento activo y entrega la clave, para ver el vencimiento y el extra.
 app.get("/demo/vencer", async (req, res) => { await x("UPDATE evaluation_attempts SET expires_at = unixepoch('subsec') + ? WHERE status = 'activo' AND student_id = ?", [Number(req.query.seg ?? 5), cookie(req) ?? ""]); res.json({ ok: true }); });

@@ -101,7 +101,7 @@ const bd = abrir(P);
 await bd.c.execute("INSERT INTO users (id, email) VALUES ('est-b', 'b@ficticio.test')");
 await bd.c.execute("INSERT INTO users (id, email) VALUES ('adm-1', 'adm@ficticio.test')");
 const app = express(); app.use(express.json());
-registrarRutasEvaluacion(app, { client: bd.c, userId: (r) => (r.headers["x-test-user"] as string) || undefined, esAdmin: async (u) => u === "adm-1" });
+registrarRutasEvaluacion(app, { client: bd.c, userId: (r) => (r.headers["x-test-user"] as string) || undefined, esAdmin: async (u) => u === "adm-1", acceso: async (u) => (u === "ajeno" ? { ok: false as const, status: 403, reason: "Sin acceso a esta evaluación" } : { ok: true as const }) });
 const srv = app.listen(0); const port = (srv.address() as any).port;
 const http = async (m: string, u: string, who?: string, body?: unknown) => {
   const r = await fetch(`http://127.0.0.1:${port}${u}`, { method: m, headers: { "content-type": "application/json", ...(who ? { "x-test-user": who } : {}) }, body: body === undefined ? undefined : JSON.stringify(body) });
@@ -190,6 +190,21 @@ await caso("R15", "preguntas devuelve la selección propia sin revelar la clave;
   assert.equal(ps2[0].seleccion, "o1"); assert.equal(ps2[1].seleccion, null);
   assert.ok(!/correct/i.test(JSON.stringify(ps2)));
   assert.equal((await http("GET", `${E}/intentos/${i.intentoId}/preguntas`, EST)).s, 404);
+});
+
+await caso("R16", "sin matrícula/liberación: estado y apertura dan 403 y no crean nada", async () => {
+  await bd.c.execute("INSERT INTO users (id, email) VALUES ('ajeno', 'ajeno@ficticio.test')");
+  assert.equal((await http("GET", `${E}/me-e2/estado`, "ajeno")).s, 403);
+  assert.equal((await http("POST", `${E}/me-e2/proceso`, "ajeno")).s, 403);
+  const n = await bd.c.execute("SELECT COUNT(*) AS n FROM evaluation_processes WHERE student_id = 'ajeno'");
+  assert.equal(Number((n.rows[0] as any).n), 0);
+});
+await caso("R17", "cerrar con el normal reprobado y el extra pendiente: 409 cierre_no_permitido", async () => {
+  const st = (await http("GET", `${E}/me-e2/estado`, "est-b")).j.proceso;
+  const act = st.intentos.find((i: any) => i.estado === "activo");
+  await http("POST", `${E}/intentos/${act.id}/enviar`, "est-b", {}); // sin responder: 0 %, reprueba
+  const r = await http("POST", `${E}/procesos/${st.procesoId}/cerrar`, "est-b");
+  assert.equal(r.s, 409); assert.equal(r.j.codigo, "cierre_no_permitido");
 });
 
 srv.close(); bd.cerrar();
