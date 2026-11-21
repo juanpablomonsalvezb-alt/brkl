@@ -3,7 +3,7 @@
 // Nunca mezcla lentes: completar un video/lectura no enciende una estrella; solo practicar y comprobar sin pistas.
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   ArrowRight,
@@ -26,6 +26,19 @@ import type {
   RecomendacionMapa,
   ResumenMapaConocimiento,
 } from "@shared/mapaConocimiento";
+import type { ResumenEvaluacionMapa } from "@shared/cruceEvaluacionMapa";
+import type { ItemRetencionProgramado } from "@shared/retencionMapa";
+
+interface PreguntaRetencionItem {
+  preguntaVersionId: string;
+  preguntaId: string;
+  enunciado: string;
+  opciones: Array<{ id: string; texto: string }>;
+}
+
+interface ItemRetencionConPregunta extends ItemRetencionProgramado {
+  pregunta: PreguntaRetencionItem | null;
+}
 
 interface MapaConocimientoResponse {
   disponible: boolean;
@@ -37,7 +50,17 @@ interface MapaConocimientoResponse {
   aristas: AristaMapa[];
   recomendacion: RecomendacionMapa | null;
   resumen: ResumenMapaConocimiento;
+  retencion: {
+    hoy: string;
+    pendientesCount: number;
+    pendientes: ItemRetencionConPregunta[];
+    proximas: ItemRetencionProgramado[];
+  };
+  evaluacion: ResumenEvaluacionMapa | null;
 }
+
+const truncPct = (n: number) =>
+  (Math.floor(n * 100) / 100).toLocaleString("es-CL", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 
 const POSICION_NODO: Record<string, { x: number; y: number }> = {
   oa7: { x: 80, y: 120 },
@@ -98,6 +121,7 @@ function IconoEstado({ estadoVisual }: { estadoVisual: EstadoVisualMapa }) {
 }
 
 export default function VorticeMapa() {
+  const queryClient = useQueryClient();
   const mapaQuery = useQuery<MapaConocimientoResponse>({
     queryKey: ["/api/vortice/conocimiento/mapa"],
     queryFn: async () => {
@@ -112,6 +136,54 @@ export default function VorticeMapa() {
   const data = mapaQuery.data;
   const nodos = data?.nodos ?? [];
   const [seleccionadoId, setSeleccionadoId] = useState<string | null>(null);
+  const [retencionIdx, setRetencionIdx] = useState(0);
+  const [retencionOpcion, setRetencionOpcion] = useState<string | null>(null);
+  const [retencionFeedback, setRetencionFeedback] = useState<{
+    correcta: boolean;
+    explicacion: string | null;
+    nombre: string;
+  } | null>(null);
+  const [retencionError, setRetencionError] = useState<string | null>(null);
+
+  const retencionMutation = useMutation({
+    mutationFn: async (vars: {
+      dominioId: string;
+      oaId: string;
+      preguntaId: string;
+      opcionId: string;
+      nombre: string;
+    }) => {
+      const res = await fetch("/api/vortice/conocimiento/retencion", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dominioId: vars.dominioId,
+          oaId: vars.oaId,
+          preguntaId: vars.preguntaId,
+          opcionId: vars.opcionId,
+          clientSubmissionId: crypto.randomUUID(),
+        }),
+      });
+      const json = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(json?.message ?? "No pudimos registrar tu repaso");
+      return {
+        correcta: Boolean(json?.correcta),
+        explicacion: typeof json?.explicacion === "string" ? json.explicacion : null,
+        nombre: vars.nombre,
+      };
+    },
+    onSuccess: async (res) => {
+      setRetencionError(null);
+      setRetencionFeedback(res);
+      setRetencionOpcion(null);
+      setRetencionIdx(0);
+      await queryClient.invalidateQueries({ queryKey: ["/api/vortice/conocimiento/mapa"] });
+    },
+    onError: (err) => {
+      setRetencionError((err as Error).message);
+    },
+  });
 
   useEffect(() => {
     if (!nodos.length) return;
@@ -261,6 +333,247 @@ export default function VorticeMapa() {
                 <div className="text-2xl font-bold text-slate-600">{data.resumen.bloqueados}</div>
               </div>
             </div>
+
+            {/* Comprobaciones de retención espaciada (M4, sin reloj ni castigo por ausencia) */}
+            {(data.retencion?.pendientes?.length > 0 || data.retencion?.proximas?.length > 0 || retencionFeedback) && (
+              <Card className="border-[#d6cfc2] bg-white">
+                <CardHeader className="pb-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <CardTitle className="text-base">Repaso breve para mantener tus estrellas</CardTitle>
+                    <Badge variant="outline" className="bg-[#f7f4ee] text-[#1f4a3d] border-[#d6cfc2]">
+                      Sin cronómetro · sin castigo por días sin entrar
+                    </Badge>
+                  </div>
+                  <CardDescription>
+                    Una pregunta del banco de práctica para confirmar que lo aprendido sigue firme.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {retencionFeedback && (
+                    <Alert
+                      className={
+                        retencionFeedback.correcta
+                          ? "border-[#1f4a3d] bg-[#e5ece4]/70 text-[#1c2a3a]"
+                          : "border-[#d97706] bg-amber-50 text-[#1c2a3a]"
+                      }
+                    >
+                      <AlertDescription className="text-sm space-y-1">
+                        <div className="font-semibold">
+                          {retencionFeedback.correcta
+                            ? `Confirmado: ${retencionFeedback.nombre} sigue firme en tu mapa.`
+                            : `Guardado en ${retencionFeedback.nombre}: lo dejaremos por comprobar para repasarlo pronto.`}
+                        </div>
+                        {retencionFeedback.explicacion && <p>{retencionFeedback.explicacion}</p>}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  {data.retencion.pendientes.length > 0 ? (() => {
+                    const pendientes = data.retencion.pendientes;
+                    const activoRet = pendientes[retencionIdx] ?? pendientes[0];
+                    const preg = activoRet?.pregunta;
+                    return (
+                      <div className="space-y-3">
+                        {pendientes.length > 1 && (
+                          <div className="flex flex-wrap gap-2">
+                            {pendientes.map((item, idx) => (
+                              <Button
+                                key={item.itemId}
+                                type="button"
+                                size="sm"
+                                variant={idx === (retencionIdx < pendientes.length ? retencionIdx : 0) ? "default" : "outline"}
+                                className={
+                                  idx === (retencionIdx < pendientes.length ? retencionIdx : 0)
+                                    ? "bg-[#1f4a3d] hover:bg-[#173a30]"
+                                    : ""
+                                }
+                                onClick={() => {
+                                  setRetencionIdx(idx);
+                                  setRetencionOpcion(null);
+                                  setRetencionError(null);
+                                }}
+                              >
+                                {item.oaId.toUpperCase()} · {item.nombre}
+                              </Button>
+                            ))}
+                          </div>
+                        )}
+
+                        {activoRet && preg ? (
+                          <div className="p-4 rounded-xl bg-[#faf8f3] border border-[#e8e2d6] space-y-3">
+                            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#5b6670]">
+                              <span className="font-semibold text-[#1f4a3d]">
+                                {activoRet.oaId.toUpperCase()} · {activoRet.nombre}
+                              </span>
+                              <span>Intervalo actual: cada {activoRet.intervaloDias} días</span>
+                            </div>
+                            <p className="font-medium text-sm text-[#1c2a3a]">{preg.enunciado}</p>
+                            <div role="radiogroup" aria-label={`Pregunta de repaso ${activoRet.oaId}`} className="grid gap-2">
+                              {preg.opciones.map((opt) => {
+                                const elegida = retencionOpcion === opt.id;
+                                return (
+                                  <button
+                                    key={opt.id}
+                                    type="button"
+                                    role="radio"
+                                    aria-checked={elegida}
+                                    onClick={() => setRetencionOpcion(opt.id)}
+                                    className={`w-full text-left px-3 py-2.5 rounded-lg border text-sm transition flex items-center gap-2.5 ${
+                                      elegida
+                                        ? "border-[#1f4a3d] bg-[#e5ece4] font-medium"
+                                        : "border-[#d6cfc2] bg-white hover:border-[#1f4a3d]"
+                                    }`}
+                                  >
+                                    <span className="font-mono text-xs font-bold text-[#1f4a3d]">{opt.id}</span>
+                                    <span>{opt.texto}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            {retencionError && (
+                              <p role="alert" className="text-xs text-[#9a3412] font-medium">
+                                {retencionError}
+                              </p>
+                            )}
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <span className="text-xs text-[#5b6670]">
+                                {data.retencion.pendientesCount > pendientes.length
+                                  ? `Mostrando ${pendientes.length} de ${data.retencion.pendientesCount} comprobaciones para no recargarte.`
+                                  : "Responde sin prisa cuando te sientas listo."}
+                              </span>
+                              <Button
+                                type="button"
+                                className="bg-[#1f4a3d] hover:bg-[#173a30]"
+                                disabled={!retencionOpcion || retencionMutation.isPending}
+                                onClick={() => {
+                                  if (!retencionOpcion) return;
+                                  retencionMutation.mutate({
+                                    dominioId: data.dominioId,
+                                    oaId: activoRet.oaId,
+                                    preguntaId: preg.preguntaId,
+                                    opcionId: retencionOpcion,
+                                    nombre: activoRet.nombre,
+                                  });
+                                }}
+                              >
+                                {retencionMutation.isPending ? "Comprobando…" : "Comprobar"}
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-[#5b6670]">
+                            No encontramos otra pregunta disponible en este momento para este repaso.
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })() : (
+                    data.retencion.proximas.length > 0 && (
+                      <p className="text-sm text-[#5b6670]">
+                        Tus estrellas están al día. Próxima comprobación sugerida el{" "}
+                        <strong className="text-[#1c2a3a]">{data.retencion.proximas[0].proximoDia}</strong> (sin castigo si
+                        entras otro día).
+                      </p>
+                    )
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Cruce evaluación del módulo (M5 / M6) respetando embargo P19-E1 y P21 v2 */}
+            {data.evaluacion && data.evaluacion.estadoProceso !== "sin_iniciar" && (
+              <Card className="border-[#d6cfc2] bg-white">
+                <CardHeader className="pb-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <CardTitle className="text-base">Evaluación del módulo</CardTitle>
+                    <Badge
+                      variant="outline"
+                      className={
+                        data.evaluacion.estadoProceso === "aprobado"
+                          ? "bg-[#e5ece4] text-[#1f4a3d] border-[#1f4a3d]"
+                          : data.evaluacion.estadoProceso === "reprobado"
+                            ? "bg-[#fff7ed] text-[#9a3412] border-[#fdba74]"
+                            : "bg-[#eff6ff] text-[#1e40af] border-[#93c5fd]"
+                      }
+                    >
+                      {data.evaluacion.estadoProceso === "aprobado"
+                        ? "Aprobado"
+                        : data.evaluacion.estadoProceso === "reprobado"
+                          ? "Reprobado"
+                          : "En curso"}
+                    </Badge>
+                  </div>
+                  <CardDescription>
+                    El puntaje de la evaluación es un canal independiente y nunca enciende estrellas por sí solo.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {data.evaluacion.publicada ? (
+                    <>
+                      <div className="flex flex-wrap items-center gap-4 text-sm">
+                        {data.evaluacion.mejorScorePct != null && (
+                          <span>
+                            Mejor porcentaje: <strong className="text-[#1c2a3a]">{truncPct(data.evaluacion.mejorScorePct)} %</strong>
+                            {data.evaluacion.umbral != null ? ` (umbral ${data.evaluacion.umbral} %)` : ""}
+                          </span>
+                        )}
+                        <span className="text-[#5b6670]">
+                          {data.evaluacion.moduloSiguienteAbierto
+                            ? "Módulo siguiente abierto."
+                            : "Módulo siguiente pendiente de cierre."}
+                        </span>
+                      </div>
+
+                      {data.evaluacion.contenidosAReforzar.length > 0 ? (
+                        <div className="space-y-2 pt-1">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-[#9a3412]">
+                            Temas sugeridos para reforzar desde esta evaluación
+                          </p>
+                          <ul className="space-y-2">
+                            {data.evaluacion.contenidosAReforzar.map((ref) => (
+                              <li
+                                key={ref.itemId}
+                                className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-lg bg-[#fff7ed]/60 border border-[#fed7aa]"
+                              >
+                                <div className="text-sm">
+                                  <span className="font-semibold text-[#1c2a3a]">
+                                    {ref.oaId.toUpperCase()} · {ref.nombre}
+                                  </span>
+                                  <p className="text-xs text-[#5b6670]">{ref.motivo}</p>
+                                </div>
+                                <Link href={`/vortice/aula/${encodeURIComponent(ref.oaId)}`}>
+                                  <Button type="button" size="sm" variant="outline">
+                                    Reforzar en el Aula
+                                    <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                                  </Button>
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-[#1f4a3d]">
+                          No quedaron temas pendientes por reforzar en la revisión de esta evaluación.
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <p className="text-sm text-[#5b6670]">
+                      Tu proceso está en estado{" "}
+                      <strong className="text-[#1c2a3a]">
+                        {data.evaluacion.estadoProceso === "aprobado"
+                          ? "Aprobado"
+                          : data.evaluacion.estadoProceso === "reprobado"
+                            ? "Reprobado"
+                            : "En curso"}
+                      </strong>
+                      . {data.evaluacion.moduloSiguienteAbierto ? "El módulo siguiente ya está abierto. " : ""}
+                      El detalle por tema se mostrará cuando concluya tu evaluación y se cumpla la ventana de revisión.
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            )}
 
             <div className="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start">
               {/* Constelación SVG de prerrequisitos */}

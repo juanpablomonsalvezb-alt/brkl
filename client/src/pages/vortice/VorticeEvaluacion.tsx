@@ -338,12 +338,16 @@ function Resultado({ estado, ocupado, onIniciarNormal, onIniciarExtra, onCerrar 
   }
   if (!mejor) return <p className="ve-cargando">Cargando tu resultado…</p>;
 
+  const procesoTerminadoReprobado = !aprobado && (Boolean(extra) || pr.extraEstado === "no_rendido");
+
   return (
     <section className="ve-hoja ve-resultado">
       <p className="ve-kicker">{extra ? "Resultado final" : "Resultado de tu intento"}</p>
       <div className="ve-score">
         <span className="ve-grande">{pct(mejor.scorePct!)}<small>%</small></span>
-        <span className={`ve-sello ${aprobado ? "ok" : "no"}`}>{aprobado ? "Aprobado" : "Todavía no"}</span>
+        <span className={`ve-sello ${aprobado ? "ok" : "no"}`}>
+          {aprobado ? "Aprobado" : procesoTerminadoReprobado ? "Reprobado" : "Todavía no"}
+        </span>
       </div>
       <div className="ve-escala" role="img" aria-label={`Tu porcentaje: ${pct(mejor.scorePct!)} %. Se aprueba con ${pr.umbral} %.`}>
         <i className="ve-relleno" style={{ width: `${Math.min(100, mejor.scorePct!)}%` }} />
@@ -353,8 +357,10 @@ function Resultado({ estado, ocupado, onIniciarNormal, onIniciarExtra, onCerrar 
 
       {aprobado ? (
         <p className="ve-mensaje">Lo lograste. {extra && !normal?.aprobado ? "Tu intento extra mejoró el resultado." : "Ya puedes seguir con el módulo siguiente."}</p>
-      ) : extra || pr.extraEstado === "no_rendido" ? (
-        <p className="ve-mensaje">{pr.extraEstado === "no_rendido" ? "El plazo del intento extra terminó." : "Este fue tu mejor resultado."} Igual avanzas al módulo siguiente.</p>
+      ) : procesoTerminadoReprobado ? (
+        <p className="ve-mensaje">
+          {pr.extraEstado === "no_rendido" ? "El plazo del intento extra terminó." : "Este fue tu mejor resultado."} Tu resultado final queda como Reprobado, pero igual avanzas al módulo siguiente. Cuando se libere la revisión podrás repasar tus temas pendientes en «Mis conocimientos».
+        </p>
       ) : (
         <div className="ve-extra">
           <h3><RotateCcw size={18} aria-hidden /> Tienes un intento extra</h3>
@@ -364,7 +370,10 @@ function Resultado({ estado, ocupado, onIniciarNormal, onIniciarExtra, onCerrar 
           </button>
         </div>
       )}
-      <Link href="/vortice" className="ve-btn ve-volver"><Home size={17} aria-hidden /> Volver al inicio</Link>
+      <div className="ve-acciones">
+        <Link href="/vortice/conocimientos" className="ve-btn ve-volver">Ver mi mapa de conocimientos</Link>
+        <Link href="/vortice" className="ve-btn ve-volver"><Home size={17} aria-hidden /> Volver al inicio</Link>
+      </div>
     </section>
   );
 }

@@ -5,7 +5,12 @@ import { randomUUID } from "node:crypto";
 import type { Client } from "@libsql/client";
 import { obtenerLeccionPorOa } from "../shared/aulaUniversal";
 import {
+  calcularRefuerzoDesdeEvaluacionPublicada,
+  type ResumenEvaluacionMapa,
+} from "../shared/cruceEvaluacionMapa";
+import {
   calcularFronteras,
+  oaIdDesdeCodigo,
   recomendarSiguienteContenido,
   type AristaMapa,
   type NodoEntradaMapa,
@@ -13,13 +18,23 @@ import {
   type RecomendacionMapa,
   type ResumenMapaConocimiento,
 } from "../shared/mapaConocimiento";
+import type { ItemRetencionProgramado } from "../shared/retencionMapa";
 import { grafoDeVersion, versionPublicada } from "./catalogo";
 import { leerEstado } from "./conocimiento";
+import { cargarResumenEvaluacionParaMapa } from "./cruceEvaluacionMapa";
 import { iniciarSesion, PracticaError, registrarRespuesta } from "./practica";
 import { relojMotor } from "./reloj";
+import { cargarAgendaRetencion, type ItemRetencionConPregunta } from "./retencionMapa";
 import { DOMINIO_PILOTO_PRACTICA_ID } from "./sembrarPilotoPractica";
 
 export { DOMINIO_PILOTO_PRACTICA_ID };
+
+export interface RetencionMapaDTO {
+  hoy: string;
+  pendientesCount: number;
+  pendientes: ItemRetencionConPregunta[];
+  proximas: ItemRetencionProgramado[];
+}
 
 export interface MapaConocimientoDTO {
   disponible: boolean;
@@ -31,6 +46,8 @@ export interface MapaConocimientoDTO {
   aristas: AristaMapa[];
   recomendacion: RecomendacionMapa | null;
   resumen: ResumenMapaConocimiento;
+  retencion: RetencionMapaDTO;
+  evaluacion: ResumenEvaluacionMapa | null;
 }
 
 export interface RegistrarPracticaMotorResultado {
@@ -39,11 +56,6 @@ export interface RegistrarPracticaMotorResultado {
   correcta?: boolean;
   duplicada?: boolean;
   estado?: { estado: string; marca: "por_comprobar" | null; motivo: string | null } | null;
-}
-
-function oaIdDesdeCodigo(code: string): string {
-  const m = /OA0?(\d+)$/i.exec(code.trim());
-  return m ? `oa${Number(m[1])}` : code.trim().toLowerCase();
 }
 
 function mapaVacio(dominioId: string, dominioNombre: string | null = null): MapaConocimientoDTO {
@@ -57,12 +69,14 @@ function mapaVacio(dominioId: string, dominioNombre: string | null = null): Mapa
     aristas: [],
     recomendacion: null,
     resumen: { dominados: 0, porComprobar: 0, enPractica: 0, porReforzar: 0, listos: 0, bloqueados: 0, total: 0 },
+    retencion: { hoy: "", pendientesCount: 0, pendientes: [], proximas: [] },
+    evaluacion: null,
   };
 }
 
 export async function cargarMapaConocimiento(
   c: Client,
-  params: { estudianteId: string; dominioId?: string; ahora?: number },
+  params: { estudianteId: string; dominioId?: string; ahora?: number; evaluacionId?: string },
 ): Promise<MapaConocimientoDTO> {
   const dominioId = params.dominioId?.trim() || DOMINIO_PILOTO_PRACTICA_ID;
   const pub = await versionPublicada(c, dominioId);
@@ -87,7 +101,7 @@ export async function cargarMapaConocimiento(
   const proyeccion = await leerEstado(c, params.estudianteId, ahora);
   const filaPorItem = new Map(proyeccion.filas.map((f) => [f.itemId, f]));
 
-  const nodosEntrada: NodoEntradaMapa[] = itemsRes.rows.map((r) => {
+  const nodosBase: NodoEntradaMapa[] = itemsRes.rows.map((r) => {
     const itemId = String(r.item_id);
     const code = String(r.code);
     const fila = filaPorItem.get(itemId);
@@ -103,7 +117,32 @@ export async function cargarMapaConocimiento(
     };
   });
 
-  const grafo = await grafoDeVersion(c, pub.id);
+  const [grafo, agendaRetencion, evalCruce] = await Promise.all([
+    grafoDeVersion(c, pub.id),
+    cargarAgendaRetencion(c, { estudianteId: params.estudianteId, dominioId, ahora }),
+    cargarResumenEvaluacionParaMapa(c, {
+      estudianteId: params.estudianteId,
+      ahora,
+      evaluacionId: params.evaluacionId,
+    }),
+  ]);
+
+  const cruceEval = calcularRefuerzoDesdeEvaluacionPublicada({
+    nodos: nodosBase,
+    resultadosPublicadosPorOa: evalCruce.resultadosPublicadosPorOa,
+  });
+
+  const vencidosSet = new Set(agendaRetencion.vencidosIds);
+  const dominadosEvalComprobar = new Set(cruceEval.dominadosPorComprobarOaIds);
+  const nodosEntrada: NodoEntradaMapa[] = nodosBase.map((n) => ({
+    ...n,
+    marca:
+      n.estado === "dominado" &&
+      (n.marca === "por_comprobar" || vencidosSet.has(n.itemId) || dominadosEvalComprobar.has(n.oaId))
+        ? "por_comprobar"
+        : n.marca,
+  }));
+
   const aristas: AristaMapa[] = grafo.aristas.map((a) => ({
     itemId: a.itemId,
     prerequisiteItemId: a.prerequisiteItemId,
@@ -111,11 +150,17 @@ export async function cargarMapaConocimiento(
   }));
 
   const fronteras = calcularFronteras(nodosEntrada, aristas);
-  const recomendacion = recomendarSiguienteContenido(fronteras);
+  const recomendacion = recomendarSiguienteContenido(fronteras, {
+    refuerzoEvaluacionOaIds: cruceEval.refuerzos.map((r) => r.oaId),
+  });
   const itemIdsDelDominio = new Set(nodosEntrada.map((n) => n.itemId));
   const tieneEvidencia = proyeccion.filas.some(
     (f) => itemIdsDelDominio.has(f.itemId) && f.lastEvidenceAt != null,
   );
+
+  const evaluacion: ResumenEvaluacionMapa = evalCruce.resumen.publicada
+    ? { ...evalCruce.resumen, contenidosAReforzar: cruceEval.refuerzos }
+    : { ...evalCruce.resumen, contenidosAReforzar: [] };
 
   return {
     disponible: true,
@@ -127,6 +172,13 @@ export async function cargarMapaConocimiento(
     aristas: fronteras.aristas,
     recomendacion,
     resumen: fronteras.resumen,
+    retencion: {
+      hoy: agendaRetencion.hoy,
+      pendientesCount: agendaRetencion.pendientesCount,
+      pendientes: agendaRetencion.pendientes,
+      proximas: agendaRetencion.proximas,
+    },
+    evaluacion,
   };
 }
 

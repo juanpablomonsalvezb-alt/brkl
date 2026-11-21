@@ -111,8 +111,10 @@ import {
   registrarComprobacionEnMotorSombra,
   registrarPracticaEnMotor,
 } from "./mapaConocimiento";
+import { cargarAgendaRetencion, registrarComprobacionRetencion } from "./retencionMapa";
 import { PracticaError } from "./practica";
 import { registrarPracticaInputSchema } from "@shared/mapaConocimiento";
+import { registrarRetencionInputSchema } from "@shared/retencionMapa";
 
 // Helper to ensure string params (not arrays)
 function getStringParam(param: string | string[]): string {
@@ -1028,8 +1030,9 @@ export async function registerRoutes(
     }
   });
 
-  // Motor en sombra M2 + Mapa «Mis conocimientos» M3 (nunca altera checkModuleAccess ni checkEvaluationAccess).
+  // Motor en sombra M2 + Mapa «Mis conocimientos» M3 + Retención M4 + Cruce M5 (nunca altera checkModuleAccess ni checkEvaluationAccess).
   app.get("/api/vortice/conocimiento/mapa", async (req: any, res) => {
+    res.set("Cache-Control", "no-store");
     const dominioId = typeof req.query.dominio === "string" && req.query.dominio.trim()
       ? req.query.dominio.trim()
       : DOMINIO_PILOTO_PRACTICA_ID;
@@ -1050,10 +1053,61 @@ export async function registerRoutes(
           aristas: [],
           recomendacion: null,
           resumen: { dominados: 0, porComprobar: 0, enPractica: 0, porReforzar: 0, listos: 0, bloqueados: 0, total: 0 },
+          retencion: { hoy: "", pendientesCount: 0, pendientes: [], proximas: [] },
+          evaluacion: null,
         });
       }
       console.error("Error loading knowledge map:", error);
       res.status(500).json({ message: "Failed to load knowledge map" });
+    }
+  });
+
+  app.get("/api/vortice/conocimiento/retencion", async (req: any, res) => {
+    res.set("Cache-Control", "no-store");
+    const dominioId = typeof req.query.dominio === "string" && req.query.dominio.trim()
+      ? req.query.dominio.trim()
+      : DOMINIO_PILOTO_PRACTICA_ID;
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      res.json(await cargarAgendaRetencion(dbClient, { estudianteId: userId, dominioId }));
+    } catch (error) {
+      const msg = (error as Error)?.message ?? "";
+      if (/no such table/i.test(msg)) {
+        return res.json({
+          disponible: false,
+          dominioId,
+          hoy: "",
+          pendientesCount: 0,
+          pendientes: [],
+          proximas: [],
+          vencidosIds: [],
+        });
+      }
+      console.error("Error loading retention agenda:", error);
+      res.status(500).json({ message: "Failed to load retention agenda" });
+    }
+  });
+
+  app.post("/api/vortice/conocimiento/retencion", async (req: any, res) => {
+    res.set("Cache-Control", "no-store");
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const parsed = registrarRetencionInputSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Comprobación de retención inválida" });
+      res.json(await registrarComprobacionRetencion(dbClient, { estudianteId: userId, ...parsed.data }));
+    } catch (error) {
+      if (error instanceof PracticaError) {
+        const status = error.codigo === "conflicto_idempotencia" ? 409 : 400;
+        return res.status(status).json({ message: error.message });
+      }
+      const msg = (error as Error)?.message ?? "";
+      if (/no such table/i.test(msg)) {
+        return res.json({ registrado: false, motivo: "motor_no_migrado" });
+      }
+      console.error("Error recording retention check:", error);
+      res.status(500).json({ message: "Failed to record retention check" });
     }
   });
 

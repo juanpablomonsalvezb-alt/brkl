@@ -53,6 +53,12 @@ export const registrarPracticaInputSchema = z.object({
 
 export type RegistrarPracticaInput = z.infer<typeof registrarPracticaInputSchema>;
 
+/** Normaliza códigos como `MAT5U3-OA07` o `COD-d-piloto-oa7` al identificador de OA (`oa7`). */
+export function oaIdDesdeCodigo(code: string): string {
+  const m = /OA0?(\d+)$/i.exec(code.trim());
+  return m ? `oa${Number(m[1])}` : code.trim().toLowerCase();
+}
+
 export type EstadoVisualMapa =
   | "dominado"
   | "por_comprobar"
@@ -270,12 +276,16 @@ export function calcularFronteras(
 
 /**
  * Recomendación determinista (05 §4, reglas sin IA):
- * 1. Contenidos dominados con marca `por_comprobar` en la frontera interna.
- * 2. Contenidos `no_dominado` o `incierto` con bases disponibles.
- * 3. Frontera externa `listo` en orden topológico (desempate por código ascendente).
- * 4. Resto no dominado por código ascendente.
+ * 1. Contenidos dominados con marca `por_comprobar` en la frontera interna (incluye retención vencida).
+ * 2. Contenidos disponibles a reforzar según evaluación del módulo ya publicada (`refuerzoEvaluacionOaIds`).
+ * 3. Contenidos `no_dominado` o `incierto` con bases disponibles.
+ * 4. Frontera externa `listo` en orden topológico (desempate por código ascendente).
+ * 5. Resto no dominado por código ascendente.
  */
-export function recomendarSiguienteContenido(mapa: MapaFronterasResultado): RecomendacionMapa | null {
+export function recomendarSiguienteContenido(
+  mapa: MapaFronterasResultado,
+  opts?: { refuerzoEvaluacionOaIds?: readonly string[] },
+): RecomendacionMapa | null {
   const porId = new Map(mapa.nodos.map((n) => [n.itemId, n]));
   const internaSet = new Set(mapa.fronteraInterna);
 
@@ -291,6 +301,23 @@ export function recomendarSiguienteContenido(mapa: MapaFronterasResultado): Reco
       tipo: "comprobar",
       motivo: `Te sugerimos comprobar ${porComprobarInterno.nombre} para reafirmar lo que ya sabes.`,
     };
+  }
+
+  if (opts?.refuerzoEvaluacionOaIds?.length) {
+    const refuerzoSet = new Set(opts.refuerzoEvaluacionOaIds);
+    const refuerzoEval = mapa.nodos
+      .filter((n) => n.disponible && n.estado !== "dominado" && refuerzoSet.has(n.oaId))
+      .sort(porCodigoAsc)[0];
+    if (refuerzoEval) {
+      return {
+        itemId: refuerzoEval.itemId,
+        code: refuerzoEval.code,
+        oaId: refuerzoEval.oaId,
+        nombre: refuerzoEval.nombre,
+        tipo: "reforzar",
+        motivo: `Te sugerimos reforzar ${refuerzoEval.nombre} según el detalle publicado de tu evaluación del módulo.`,
+      };
+    }
   }
 
   const enProgresoDisponible = mapa.nodos.find(

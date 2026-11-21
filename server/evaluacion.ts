@@ -43,6 +43,7 @@ import {
 } from "../shared/ventanas";
 import { armarExtra, type Pregunta, type Banco } from "../shared/armador";
 import { moduloSiguienteAbierto, type EstadoE2 } from "../shared/progresion";
+import { esVersionEvaluacionExpuesta } from "./cruceEvaluacionMapa";
 import { relojMotor } from "./reloj";
 
 const SEG_POR_HORA = 3600;
@@ -276,6 +277,7 @@ export async function abrirProceso(
     versionId: string; // evaluation_versions.id
     perfil: PerfilEstudiante;
     evaluacionTipo?: Evaluacion;
+    reviewAt?: number | null;
   },
 ): Promise<ProcesoCreado> {
   const x: X = (s, a = []) => c.execute({ sql: s, args: a as InValue[] });
@@ -290,7 +292,7 @@ export async function abrirProceso(
   const evalTipo: Evaluacion = params.evaluacionTipo ?? "E2";
   const maxIntentos = INTENTOS_ORDINARIOS[evalTipo];
 
-  // Verificar que la versión existe y está validada.
+  // Verificar que la versión existe y está validada, y que no esté ya expuesta (P18).
   const version = row<{ status: string }>(await x(
     "SELECT status FROM evaluation_versions WHERE id = ?",
     [params.versionId],
@@ -298,6 +300,9 @@ export async function abrirProceso(
   if (!version) throw new ErrorEvaluacion("version_no_encontrada", `versión ${params.versionId} no existe`);
   if (version.status !== "validada" && version.status !== "asignada") {
     throw new ErrorEvaluacion("version_no_encontrada", `versión ${params.versionId} no está validada (status: ${version.status})`);
+  }
+  if (await esVersionEvaluacionExpuesta(c, params.versionId, ahora)) {
+    throw new ErrorEvaluacion("version_no_encontrada", `versión ${params.versionId} ya fue expuesta`);
   }
 
   // Verificar que no existe proceso para este estudiante y evaluación.
@@ -321,13 +326,14 @@ export async function abrirProceso(
       args: [procesoId, params.estudianteId, params.evaluacionId],
     },
     {
-      sql: "INSERT INTO evaluation_instances (id, process_id, student_id, evaluation_version_id, phase, window_end_at, max_attempts, status, student_profile, duration_minutes, passing_score, extra_deadline_at) VALUES (?, ?, ?, ?, 'ordinaria', ?, ?, 'disponible', ?, ?, ?, ?)",
+      sql: "INSERT INTO evaluation_instances (id, process_id, student_id, evaluation_version_id, phase, window_end_at, review_at, max_attempts, status, student_profile, duration_minutes, passing_score, extra_deadline_at) VALUES (?, ?, ?, ?, 'ordinaria', ?, ?, ?, 'disponible', ?, ?, ?, ?)",
       args: [
         instanciaId,
         procesoId,
         params.estudianteId,
         params.versionId,
         ahora + HORAS_PLAZO_EXTRA * SEG_POR_HORA * 2, // window_end_at lejano (se puede ajustar)
+        params.reviewAt ?? null,
         maxIntentos,
         params.perfil,
         perfilParams.duracionMin,
@@ -815,15 +821,9 @@ export async function enviarIntento(
     subtemasFallados.push(...falladosSet);
   }
 
-  // Actualizar intento.
   const envioId = params.envioId ?? randomUUID();
 
-  await x(
-    "UPDATE evaluation_attempts SET status = 'enviado', submitted_at = ?, submission_id = ?, score_pct = ?, total_correct = ?, total_questions = ?, passed = ? WHERE id = ?",
-    [ahora, envioId, scorePct, totalCorrect, totalQuestions, aprobado ? 1 : 0, params.intentoId],
-  );
-
-  // Actualizar P0E.
+  // Calcular la transición P0E con el intento aún activo antes de marcarlo como enviado.
   const p0e = await cargarInstanciaP0E(x, intento.instance_id);
   const resultadoP0E = enviarIntentoP0E(
     p0e,
@@ -833,6 +833,11 @@ export async function enviarIntento(
   if (!resultadoP0E.ok) {
     throw new ErrorEvaluacion("intento_enviado", `P0E rechaza: ${resultadoP0E.motivo}`);
   }
+
+  await x(
+    "UPDATE evaluation_attempts SET status = 'enviado', submitted_at = ?, submission_id = ?, score_pct = ?, total_correct = ?, total_questions = ?, passed = ? WHERE id = ?",
+    [ahora, envioId, scorePct, totalCorrect, totalQuestions, aprobado ? 1 : 0, params.intentoId],
+  );
   await guardarInstanciaP0E(x, intento.instance_id, resultadoP0E.instancia);
 
   // Si es intento normal y no aprueba, actualizar extra_deadline_at con el plazo real (72 h desde ahora).
@@ -997,14 +1002,39 @@ export async function cerrarProceso(
     [estado, ahora, closeCause, params.procesoId],
   );
 
-  // Si reprobada y extra no rendido, crear progression_continuations.
-  const moduloSiguiente = false;
-  if (estado === "reprobado" && hayExtraNoRendido) {
-    const pcId = randomUUID();
-    await x(
-      "INSERT INTO progression_continuations (id, student_id, process_id, from_module_id) VALUES (?, ?, ?, NULL)",
-      [pcId, params.estudianteId, params.procesoId],
-    );
+  // Si reprobada (agotamiento o extra no rendido en 72 h), registrar progression_continuations con pendientes reales.
+  if (estado === "reprobado") {
+    const yaCont = row<{ id: string }>(await x(
+      "SELECT id FROM progression_continuations WHERE process_id = ? LIMIT 1",
+      [params.procesoId],
+    ));
+    if (!yaCont) {
+      const modRow = row<{ learning_objective_id: string | null }>(await x(
+        `SELECT me.learning_objective_id
+         FROM evaluation_processes p
+         LEFT JOIN module_evaluations me ON me.id = p.evaluation_id
+         WHERE p.id = ? LIMIT 1`,
+        [params.procesoId],
+      ));
+      const instIds = instancias.map((i) => i.id);
+      const pendingSet = new Set<string>();
+      if (instIds.length > 0) {
+        const ph = instIds.map(() => "?").join(",");
+        const falladosRes = rows<{ item_id: string }>(await x(
+          `SELECT DISTINCT ans.item_id
+           FROM evaluation_attempt_answers ans
+           JOIN evaluation_attempts att ON att.id = ans.attempt_id
+           WHERE att.instance_id IN (${ph}) AND att.status = 'enviado' AND ans.is_correct = 0`,
+          instIds,
+        ));
+        for (const r of falladosRes) pendingSet.add(String(r.item_id));
+      }
+      const pcId = randomUUID();
+      await x(
+        "INSERT INTO progression_continuations (id, student_id, process_id, from_module_id, pending_items_json) VALUES (?, ?, ?, ?, ?)",
+        [pcId, params.estudianteId, params.procesoId, modRow?.learning_objective_id ?? null, JSON.stringify([...pendingSet].sort())],
+      );
+    }
   }
 
   // Determinar si el módulo siguiente debe abrirse.

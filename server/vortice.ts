@@ -1,6 +1,6 @@
 // Vórtice: carga desde la base de datos los datos del resumen del estudiante.
 // Recibe la conexión como parámetro para poder probarse contra una base en memoria.
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import * as schema from "@shared/schema";
 import {
@@ -10,9 +10,41 @@ import {
 } from "@shared/schema";
 import { buildOverview, canViewReflection, type OverviewSubjectInput, type VorticeOverview } from "@shared/vortice";
 import { obtenerEvaluacionesDeCierre } from "@shared/clasificacionEvaluacion";
+import { mapearProcesoAEstadoE2 } from "@shared/cruceEvaluacionMapa";
 import { moduloSiguienteAbierto, type EstadoE2 } from "@shared/progresion";
 import { isEvaluationAvailable, isModuleAvailable, type CalendarConfig } from "./calendarUtils";
 import { resolveCalendarConfig } from "./calendarConfig";
+
+async function procesosCierreEnP0E(
+  db: LibSQLDatabase<typeof schema>,
+  userId: string,
+  evalIds: readonly string[],
+): Promise<{ abrenSiguiente: Set<string>; aprobadas: Set<string> }> {
+  const abrenSiguiente = new Set<string>();
+  const aprobadas = new Set<string>();
+  if (evalIds.length === 0) return { abrenSiguiente, aprobadas };
+  try {
+    const lista = sql.join(evalIds.map((id) => sql`${id}`), sql`, `);
+    const procesos = await db.all<{ evaluation_id: string; status: string; close_cause: string | null }>(
+      sql`SELECT evaluation_id, status, close_cause
+          FROM evaluation_processes
+          WHERE student_id = ${userId} AND evaluation_id IN (${lista})`,
+    );
+    for (const p of procesos) {
+      const evId = String(p.evaluation_id);
+      const status = String(p.status);
+      const estadoE2 = mapearProcesoAEstadoE2({
+        status,
+        closeCause: p.close_cause == null ? null : String(p.close_cause),
+      });
+      if (moduloSiguienteAbierto(estadoE2)) abrenSiguiente.add(evId);
+      if (status === "aprobado") aprobadas.add(evId);
+    }
+  } catch (error) {
+    if (!/no such table/i.test((error as Error)?.message ?? "")) throw error;
+  }
+  return { abrenSiguiente, aprobadas };
+}
 
 export async function loadVorticeOverview(
   db: LibSQLDatabase<typeof schema>,
@@ -80,13 +112,18 @@ export async function loadVorticeInput(
   const passed = await db.select({ evaluationId: evaluationProgress.evaluationId }).from(evaluationProgress)
     .where(and(eq(evaluationProgress.userId, userId), eq(evaluationProgress.passed, true)));
 
-  const passedIds = new Set(passed.map((p) => p.evaluationId));
-  // Módulo completado = evaluación del módulo aprobada (o evaluación 2 en módulos heredados sin clasificar).
+  const { abrenSiguiente: cerradasP0E, aprobadas: aprobadasP0E } = await procesosCierreEnP0E(
+    db,
+    userId,
+    [...closingIds],
+  );
+  const passedIds = new Set([...passed.map((p) => p.evaluationId), ...aprobadasP0E]);
+  // Módulo completado = evaluación del módulo aprobada o proceso E2 concluido (P21 v2).
   const objectiveById = new Map(objectives.map((o) => [o.id, o]));
   const moduleKey = (levelSubjectId: string, weekNumber: number) => `${levelSubjectId}:${weekNumber}`;
   const completedModules = new Set(
     allEvaluations
-      .filter((e) => closingIds.has(e.id) && passedIds.has(e.id))
+      .filter((e) => closingIds.has(e.id) && (passedIds.has(e.id) || cerradasP0E.has(e.id)))
       .map((e) => objectiveById.get(e.learningObjectiveId)!)
       .map((o) => moduleKey(o.levelSubjectId, o.weekNumber)),
   );
@@ -182,17 +219,20 @@ export async function checkModuleAccess(
     }
     const closing: typeof prevEvals = [];
     for (const lista of porOa.values()) closing.push(...obtenerEvaluacionesDeCierre(lista));
-    const passed = closing.length
-      ? await db.select({ id: evaluationProgress.id }).from(evaluationProgress).where(and(
-          eq(evaluationProgress.userId, userId),
-          eq(evaluationProgress.passed, true),
-          inArray(evaluationProgress.evaluationId, closing.map((c) => c.id)),
-        ))
-      : [];
-    // TODO(migración P21 v2): cuando exista persistencia de los estados de evaluación del módulo,
-    // mapear el estado real en vez de usar el mapeo legado (aprobada / sin_rendir).
-    const estadoE2Legado: EstadoE2 = passed.length > 0 ? "aprobada" : "sin_rendir";
-    previousCompleted = moduloSiguienteAbierto(estadoE2Legado);
+    const closingPrevIds = closing.map((c) => c.id);
+    const [passed, procesosPrev] = closingPrevIds.length
+      ? await Promise.all([
+          db.select({ id: evaluationProgress.id }).from(evaluationProgress).where(and(
+            eq(evaluationProgress.userId, userId),
+            eq(evaluationProgress.passed, true),
+            inArray(evaluationProgress.evaluationId, closingPrevIds),
+          )),
+          procesosCierreEnP0E(db, userId, closingPrevIds),
+        ])
+      : [[], { abrenSiguiente: new Set<string>(), aprobadas: new Set<string>() }];
+    const estadoE2: EstadoE2 =
+      passed.length > 0 || procesosPrev.abrenSiguiente.size > 0 ? "aprobada" : "sin_rendir";
+    previousCompleted = moduloSiguienteAbierto(estadoE2);
   }
   if (!isModuleAvailable(weekNumber, now, previousCompleted, config)) {
     return { ok: false, status: 403, reason: "El módulo aún no está disponible" };

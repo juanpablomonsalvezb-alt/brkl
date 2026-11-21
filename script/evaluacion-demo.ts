@@ -33,9 +33,12 @@ import {
   registrarComprobacionEnMotorSombra,
   registrarPracticaEnMotor,
 } from "../server/mapaConocimiento";
+import { cargarAgendaRetencion, registrarComprobacionRetencion } from "../server/retencionMapa";
 import { PracticaError } from "../server/practica";
+import { relojMotor } from "../server/reloj";
 import { sembrarPilotoPractica } from "../server/sembrarPilotoPractica";
 import { registrarPracticaInputSchema } from "../shared/mapaConocimiento";
+import { registrarRetencionInputSchema } from "../shared/retencionMapa";
 import { migrar } from "../server/migrar";
 import { baseArchivo } from "./lib/basePrueba";
 import { aplicarEsquemaHeredado, sembrarFicticios } from "./lib/esquemaHeredado";
@@ -57,18 +60,50 @@ import { calcularPanel, resumenBrujulaParaApoderado } from "../shared/brujulaPan
 if (process.env.NODE_ENV === "production") throw new Error("la demo no corre en producción");
 
 const b = baseArchivo(); const c = b.client; const demoDb = drizzle(c, { schema });
+let demoRelojOffsetSeg = 0;
+const cDemo: typeof c = new Proxy(c, {
+  get(target, prop) {
+    if (prop === "execute") {
+      return async (...args: Parameters<typeof target.execute>) => {
+        const res = await target.execute(...args);
+        const sqlTxt = typeof args[0] === "string" ? args[0] : (args[0] as any)?.sql;
+        if (
+          typeof sqlTxt === "string" &&
+          /SELECT\s+unixepoch\s*\(\s*'subsec'\s*\)/i.test(sqlTxt) &&
+          demoRelojOffsetSeg !== 0 &&
+          res.rows?.[0]
+        ) {
+          const valor = Number(res.rows[0][0]) + demoRelojOffsetSeg;
+          const fila = Object.assign([valor], { "unixepoch('subsec')": valor });
+          return { ...res, rows: [fila] };
+        }
+        return res;
+      };
+    }
+    const v = Reflect.get(target, prop, target);
+    return typeof v === "function" ? v.bind(target) : v;
+  },
+});
+
 const x = (s: string, a: InArgs = []) => c.execute({ sql: s, args: a });
 await aplicarEsquemaHeredado(c); await sembrarFicticios(c); await migrar(c, "migrations/vortice");
 await x("INSERT INTO users (id, email, name) VALUES ('est-reg', 'est-reg@ficticio.test', 'Ana (Regular)'), ('est-neuro', 'est-neuro@ficticio.test', 'Mateo (Neurodivergente)'), ('admin-demo', 'admin@ficticio.test', 'Coordinación Demo')");
 await x("INSERT INTO user_profiles (id, user_id, role, level_id, evaluation_profile) VALUES ('up-adm', 'admin-demo', 'admin', NULL, 'regular'), ('up-reg', 'est-reg', 'student', '5b', 'regular'), ('up-neuro', 'est-neuro', 'student', '5b', 'neurodivergente')");
 await x("INSERT INTO module_evaluations (id, learning_objective_id, evaluation_number, evaluation_function, title, release_day, release_week, passing_score) VALUES ('me-diag', 'lo-mat', 0, 'diagnostico', 'Diagnóstico inicial · Fracciones y decimales', 1, 1, 70), ('me-p1', 'lo-mat', 1, 'proceso', 'Proceso 1 · Fracciones propias', 3, 1, 70), ('me-e2', 'lo-mat', 4, 'modulo', 'Fracciones y decimales · Matemática 5.º', 5, 2, 70), ('me-leg', 'lo-len', 2, NULL, 'Evaluación heredada P7 · Lectura', 5, 1, 60)");
 const clave = await sembrarEvaluacionPiloto(x, { levelSubjectId: "ls-mat-5b", evaluacionId: "me-e2", versionId: "ev-demo", oaCurricularId: "oa1" });
-await sembrarPilotoPractica(c, { levelSubjectId: "ls-mat-5b" });
-await abrirProceso(c, { estudianteId: "est-neuro", evaluacionId: "me-e2", versionId: "ev-demo", perfil: "neurodivergente" });
+await sembrarPilotoPractica(cDemo, { levelSubjectId: "ls-mat-5b" });
+const ahoraDemoInicial = await relojMotor(cDemo).ahora();
+await abrirProceso(cDemo, {
+  estudianteId: "est-neuro",
+  evaluacionId: "me-e2",
+  versionId: "ev-demo",
+  perfil: "neurodivergente",
+  reviewAt: ahoraDemoInicial + 49 * 3600,
+});
 
 const app = express(); app.use(express.json());
 const cookie = (r: express.Request) => /(?:^|; )demo=([\w-]+)/.exec(r.headers.cookie ?? "")?.[1];
-registrarRutasEvaluacion(app, { client: c, userId: cookie, esAdmin: async () => false, acceso: async () => ({ ok: true as const }) });
+registrarRutasEvaluacion(app, { client: cDemo, userId: cookie, esAdmin: async () => false, acceso: async () => ({ ok: true as const }) });
 
 // Aula Universal UDL (Bloque A) usando el estudiante activo en cookie (por defecto est-reg).
 const demoStudentId = (r: express.Request) => cookie(r) ?? "est-reg";
@@ -105,7 +140,7 @@ app.post("/api/vortice/aula/lecciones/:oaId/comprobar", async (req, res) => {
     now: new Date(),
   });
   if (!r.ok) return res.status(r.status).json({ message: r.reason });
-  await registrarComprobacionEnMotorSombra(c, {
+  await registrarComprobacionEnMotorSombra(cDemo, {
     estudianteId: userId,
     oaId: String(req.params.oaId),
     respuestas: req.body?.respuestas ?? {},
@@ -113,18 +148,19 @@ app.post("/api/vortice/aula/lecciones/:oaId/comprobar", async (req, res) => {
   res.json(r.value);
 });
 
-// Motor en sombra M2 + Mapa «Mis conocimientos» M3.
+// Motor en sombra M2 + Mapa «Mis conocimientos» M3 + Retención M4 + Cruce M5.
 app.get("/api/vortice/conocimiento/mapa", async (req, res) => {
+  res.set("Cache-Control", "no-store");
   const dominio = typeof req.query.dominio === "string" && req.query.dominio.trim()
     ? req.query.dominio.trim()
     : DOMINIO_PILOTO_PRACTICA_ID;
-  res.json(await cargarMapaConocimiento(c, { estudianteId: demoStudentId(req), dominioId: dominio }));
+  res.json(await cargarMapaConocimiento(cDemo, { estudianteId: demoStudentId(req), dominioId: dominio }));
 });
 app.post("/api/vortice/conocimiento/practica", async (req, res) => {
   const parsed = registrarPracticaInputSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ message: "Práctica inválida" });
   try {
-    res.json(await registrarPracticaEnMotor(c, { estudianteId: demoStudentId(req), ...parsed.data }));
+    res.json(await registrarPracticaEnMotor(cDemo, { estudianteId: demoStudentId(req), ...parsed.data }));
   } catch (e) {
     if (e instanceof PracticaError) {
       const status = e.codigo === "conflicto_idempotencia" ? 409 : 400;
@@ -132,6 +168,38 @@ app.post("/api/vortice/conocimiento/practica", async (req, res) => {
     }
     throw e;
   }
+});
+app.get("/api/vortice/conocimiento/retencion", async (req, res) => {
+  res.set("Cache-Control", "no-store");
+  const dominio = typeof req.query.dominio === "string" && req.query.dominio.trim()
+    ? req.query.dominio.trim()
+    : DOMINIO_PILOTO_PRACTICA_ID;
+  res.json(await cargarAgendaRetencion(cDemo, { estudianteId: demoStudentId(req), dominioId: dominio }));
+});
+app.post("/api/vortice/conocimiento/retencion", async (req, res) => {
+  res.set("Cache-Control", "no-store");
+  const parsed = registrarRetencionInputSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ message: "Comprobación de retención inválida" });
+  try {
+    res.json(await registrarComprobacionRetencion(cDemo, { estudianteId: demoStudentId(req), ...parsed.data }));
+  } catch (e) {
+    if (e instanceof PracticaError) {
+      const status = e.codigo === "conflicto_idempotencia" ? 409 : 400;
+      return res.status(status).json({ message: e.message });
+    }
+    throw e;
+  }
+});
+app.get("/demo/avanzar-reloj", async (req, res) => {
+  if (req.query.reset === "1") {
+    demoRelojOffsetSeg = 0;
+  } else {
+    const dias = Number(req.query.dias ?? 0);
+    const horas = Number(req.query.horas ?? 0);
+    if (Number.isFinite(dias)) demoRelojOffsetSeg += Math.trunc(dias) * 86400;
+    if (Number.isFinite(horas)) demoRelojOffsetSeg += Math.trunc(horas) * 3600;
+  }
+  res.json({ ok: true, offsetSeg: demoRelojOffsetSeg, ahora: await relojMotor(cDemo).ahora() });
 });
 
 // Panel Admin T39 (Bloque B) en demo local con cuenta admin-demo ficticia.
