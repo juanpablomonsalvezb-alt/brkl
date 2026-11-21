@@ -1,14 +1,17 @@
 // Administración del perfil de evaluación del estudiante (regular / neurodivergente)
 // y clasificación funcional de evaluaciones por módulo (diagnostico / proceso / modulo).
 // Nunca guarda diagnósticos ni documentos clínicos sensibles (O10).
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import * as schema from "@shared/schema";
-import { moduleEvaluations, userProfiles } from "@shared/schema";
+import { learningObjectives, levels, levelSubjects, moduleEvaluations, subjects, userProfiles } from "@shared/schema";
 import { users } from "@shared/models/auth";
 import {
+  etiquetaEvaluacion,
+  funcionEfectivaEvaluacion,
   setEvaluationFunctionSchema,
   setEvaluationProfileSchema,
+  type EvaluationFunction,
   type EvaluationProfile,
 } from "@shared/clasificacionEvaluacion";
 
@@ -17,6 +20,29 @@ export interface PerfilEvaluacionDTO {
   perfil: EvaluationProfile;
   setBy: string | null;
   setAt: Date | null;
+}
+
+export interface PerfilEstudianteListadoDTO extends PerfilEvaluacionDTO {
+  email: string | null;
+  name: string | null;
+  role: string;
+  levelId: string | null;
+}
+
+export interface ClasificacionEvaluacionDTO {
+  id: string;
+  learningObjectiveId: string;
+  objectiveCode: string;
+  objectiveTitle: string;
+  moduleNumber: number;
+  subjectName: string | null;
+  levelName: string | null;
+  evaluationNumber: number;
+  title: string;
+  evaluationFunction: EvaluationFunction | null;
+  effectiveFunction: EvaluationFunction | null;
+  heredadoP7: boolean;
+  etiqueta: string;
 }
 
 type Res<T> = { ok: true; value: T } | { ok: false; status: 400 | 403 | 404; reason: string };
@@ -111,4 +137,110 @@ export async function setFuncionEvaluacion(
     .where(eq(moduleEvaluations.id, params.evaluationId))
     .returning();
   return { ok: true, value: updated };
+}
+
+export async function listarPerfilesEvaluacion(
+  db: LibSQLDatabase<typeof schema>,
+  adminUserId: string,
+): Promise<Res<PerfilEstudianteListadoDTO[]>> {
+  if (!(await esAdmin(db, adminUserId))) {
+    return { ok: false, status: 403, reason: "Solo un administrador puede consultar perfiles de evaluación" };
+  }
+  const rows = await db
+    .select({
+      userId: users.id,
+      email: users.email,
+      name: users.name,
+      firstName: users.firstName,
+      lastName: users.lastName,
+      role: userProfiles.role,
+      levelId: userProfiles.levelId,
+      evaluationProfile: userProfiles.evaluationProfile,
+      setBy: userProfiles.evaluationProfileSetBy,
+      setAt: userProfiles.evaluationProfileSetAt,
+    })
+    .from(users)
+    .leftJoin(userProfiles, eq(users.id, userProfiles.userId))
+    .orderBy(asc(users.email));
+
+  // Solo devuelve campos no clínicos (O10): identificador, rol, curso, perfil y auditoría.
+  return {
+    ok: true,
+    value: rows.map((r) => {
+      const nombreDerivado =
+        r.name?.trim() || [r.firstName, r.lastName].filter(Boolean).join(" ").trim() || null;
+      return {
+        userId: r.userId,
+        email: r.email ?? null,
+        name: nombreDerivado,
+        role: r.role ?? "student",
+        levelId: r.levelId ?? null,
+        perfil: r.evaluationProfile === "neurodivergente" ? "neurodivergente" : "regular",
+        setBy: r.setBy ?? null,
+        setAt: r.setAt ?? null,
+      };
+    }),
+  };
+}
+
+export async function listarClasificacionEvaluaciones(
+  db: LibSQLDatabase<typeof schema>,
+  adminUserId: string,
+): Promise<Res<ClasificacionEvaluacionDTO[]>> {
+  if (!(await esAdmin(db, adminUserId))) {
+    return { ok: false, status: 403, reason: "Solo un administrador puede consultar la clasificación de evaluaciones" };
+  }
+  const rows = await db
+    .select({
+      id: moduleEvaluations.id,
+      learningObjectiveId: moduleEvaluations.learningObjectiveId,
+      objectiveCode: learningObjectives.code,
+      objectiveTitle: learningObjectives.title,
+      moduleNumber: learningObjectives.weekNumber,
+      subjectName: subjects.name,
+      levelName: levels.name,
+      evaluationNumber: moduleEvaluations.evaluationNumber,
+      title: moduleEvaluations.title,
+      evaluationFunction: moduleEvaluations.evaluationFunction,
+    })
+    .from(moduleEvaluations)
+    .innerJoin(learningObjectives, eq(moduleEvaluations.learningObjectiveId, learningObjectives.id))
+    .leftJoin(levelSubjects, eq(learningObjectives.levelSubjectId, levelSubjects.id))
+    .leftJoin(subjects, eq(levelSubjects.subjectId, subjects.id))
+    .leftJoin(levels, eq(levelSubjects.levelId, levels.id))
+    .orderBy(
+      asc(learningObjectives.weekNumber),
+      asc(learningObjectives.code),
+      asc(moduleEvaluations.evaluationNumber),
+    );
+
+  const porObjetivo = new Map<string, typeof rows>();
+  for (const r of rows) {
+    const arr = porObjetivo.get(r.learningObjectiveId) ?? [];
+    arr.push(r);
+    porObjetivo.set(r.learningObjectiveId, arr);
+  }
+
+  return {
+    ok: true,
+    value: rows.map((r) => {
+      const grupo = porObjetivo.get(r.learningObjectiveId) ?? [r];
+      const { effectiveFunction, heredadoP7 } = funcionEfectivaEvaluacion(grupo, r);
+      return {
+        id: r.id,
+        learningObjectiveId: r.learningObjectiveId,
+        objectiveCode: r.objectiveCode,
+        objectiveTitle: r.objectiveTitle,
+        moduleNumber: r.moduleNumber,
+        subjectName: r.subjectName ?? null,
+        levelName: r.levelName ?? null,
+        evaluationNumber: r.evaluationNumber,
+        title: r.title,
+        evaluationFunction: r.evaluationFunction ?? null,
+        effectiveFunction,
+        heredadoP7,
+        etiqueta: etiquetaEvaluacion(effectiveFunction, r.evaluationNumber),
+      };
+    }),
+  };
 }

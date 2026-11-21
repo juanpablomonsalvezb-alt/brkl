@@ -1168,3 +1168,19 @@ export const notificationLog = sqliteTable("notification_log", {
   periodKey: text("period_key").notNull(), // "2026-10-15" (diaria) o "2026-W42" (semanal)
   sentAt: integer("sent_at", { mode: "timestamp" }).notNull(),
 }, (t) => [primaryKey({ columns: [t.userId, t.type, t.periodKey] })]);
+
+// Progreso guardado por tramo en el Aula Universal (pausar y retomar real).
+export const lessonStudyProgress = sqliteTable("lesson_study_progress", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  oaId: text("oa_id").notNull(),
+  pasoActual: text("paso_actual", { enum: ["me_ubico", "aprende", "intentalo", "comprueba"] }).default("me_ubico").notNull(),
+  tramoActual: integer("tramo_actual").default(0).notNull(),
+  puertaPreferida: text("puerta_preferida", { enum: ["video", "podcast", "presentacion", "explorar"] }).default("video").notNull(),
+  pasoEjemploVisto: integer("paso_ejemplo_visto").default(0).notNull(),
+  completadaPorYaLoSe: integer("completada_por_ya_lo_se", { mode: "boolean" }).default(false).notNull(),
+  practicaLograda: integer("practica_lograda", { mode: "boolean" }).default(false).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow().notNull(),
+}, (t) => [uniqueIndex("lesson_study_progress_user_oa_uidx").on(t.userId, t.oaId)]);
+
+export type LessonStudyProgressRow = typeof lessonStudyProgress.$inferSelect;

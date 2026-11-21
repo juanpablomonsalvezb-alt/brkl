@@ -85,8 +85,26 @@ import { registerSalesChatRoutes } from "./salesChatRoutes";
 import { registerFlowRoutes } from "./flowRoutes";
 import { planCopilotTurn, evaluationQuestionTexts, takeRateToken } from "@shared/iaPolicy";
 import { trackForLevel } from "@shared/vortice";
-import { getPerfilEvaluacion, setPerfilEvaluacion, setFuncionEvaluacion } from "./perfilEvaluacion";
+import {
+  getPerfilEvaluacion,
+  listarClasificacionEvaluaciones,
+  listarPerfilesEvaluacion,
+  setFuncionEvaluacion,
+  setPerfilEvaluacion,
+} from "./perfilEvaluacion";
 import { etiquetaEvaluacion, obtenerEvaluacionesDeCierre } from "@shared/clasificacionEvaluacion";
+import {
+  getProgresoLeccion,
+  getProgresoLecciones,
+  registrarComprobacionProceso,
+  saveProgresoLeccion,
+} from "./aulaUniversal";
+import {
+  diagnosticoRespuestasSchema,
+  evaluarDiagnosticoCero,
+  obtenerLeccionPorOa,
+  obtenerLeccionesPiloto,
+} from "@shared/aulaUniversal";
 
 // Helper to ensure string params (not arrays)
 function getStringParam(param: string | string[]): string {
@@ -916,7 +934,111 @@ export async function registerRoutes(
     }
   });
 
+  // Aula Universal UDL del piloto (Bloque A): 5 OA de Matemática 5.º U3 con guardado real por tramo.
+  app.get("/api/vortice/aula/piloto", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const progreso = await getProgresoLecciones(db, userId);
+      res.json({ lecciones: obtenerLeccionesPiloto(), progreso });
+    } catch (error) {
+      console.error("Error loading Aula Universal pilot:", error);
+      res.status(500).json({ message: "Failed to load Aula Universal pilot" });
+    }
+  });
+
+  app.get("/api/vortice/aula/lecciones/:oaId", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const oaId = getStringParam(req.params.oaId);
+      const leccion = obtenerLeccionPorOa(oaId);
+      if (!leccion) return res.status(404).json({ message: "Lección no encontrada" });
+      const progreso = await getProgresoLeccion(db, userId, oaId);
+      res.json({ leccion, progreso });
+    } catch (error) {
+      console.error("Error loading Aula Universal lesson:", error);
+      res.status(500).json({ message: "Failed to load lesson" });
+    }
+  });
+
+  app.put("/api/vortice/aula/lecciones/:oaId/progreso", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const r = await saveProgresoLeccion(db, {
+        userId,
+        oaId: getStringParam(req.params.oaId),
+        body: req.body,
+        now: new Date(),
+      });
+      if (!r.ok) return res.status(r.status).json({ message: r.reason });
+      res.json(r.value);
+    } catch (error) {
+      console.error("Error saving Aula Universal progress:", error);
+      res.status(500).json({ message: "Failed to save lesson progress" });
+    }
+  });
+
+  app.post("/api/vortice/aula/diagnostico", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const parsed = diagnosticoRespuestasSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Respuestas de diagnóstico inválidas" });
+      res.json(evaluarDiagnosticoCero(parsed.data.respuestas));
+    } catch (error) {
+      console.error("Error evaluating Aula Universal diagnostic:", error);
+      res.status(500).json({ message: "Failed to evaluate diagnostic" });
+    }
+  });
+
+  app.post("/api/vortice/aula/lecciones/:oaId/comprobar", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const r = await registrarComprobacionProceso(db, {
+        userId,
+        oaId: getStringParam(req.params.oaId),
+        body: req.body,
+        now: new Date(),
+      });
+      if (!r.ok) return res.status(r.status).json({ message: r.reason });
+      res.json(r.value);
+    } catch (error) {
+      console.error("Error checking Aula Universal comprehension:", error);
+      res.status(500).json({ message: "Failed to check comprehension" });
+    }
+  });
+
   // === ADMIN ROUTES (require admin role) ===
+
+  // Listados e interfaz de perfil de evaluación del estudiante (regular / neurodivergente) y clasificación 0..4 (T39 / Bloque B).
+  app.get("/api/admin/evaluation-profiles", isAdmin, async (req: any, res) => {
+    try {
+      const adminId = currentUserId(req);
+      if (!adminId) return res.status(401).json({ message: "Unauthorized" });
+      const r = await listarPerfilesEvaluacion(db, adminId);
+      if (!r.ok) return res.status(r.status).json({ message: r.reason });
+      res.json(r.value);
+    } catch (error) {
+      console.error("Error listing evaluation profiles:", error);
+      res.status(500).json({ message: "Failed to list evaluation profiles" });
+    }
+  });
+
+  app.get("/api/admin/evaluations/classification", isAdmin, async (req: any, res) => {
+    try {
+      const adminId = currentUserId(req);
+      if (!adminId) return res.status(401).json({ message: "Unauthorized" });
+      const r = await listarClasificacionEvaluaciones(db, adminId);
+      if (!r.ok) return res.status(r.status).json({ message: r.reason });
+      res.json(r.value);
+    } catch (error) {
+      console.error("Error listing evaluation classifications:", error);
+      res.status(500).json({ message: "Failed to list evaluation classifications" });
+    }
+  });
 
   // Perfil de evaluación del estudiante (regular / neurodivergente) y clasificación funcional por evaluación (T39).
   app.get("/api/admin/students/:userId/evaluation-profile", isAdmin, async (req: any, res) => {

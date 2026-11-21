@@ -164,6 +164,7 @@ export default function VorticeInicio() {
         <a className="vx-brand" href="/vortice">BARKLEY<span>INSTITUTO</span></a>
         <nav className="vx-nav" aria-label="Secciones">
           <Link href="/vortice" aria-current="page"><Home />Inicio</Link>
+          <Link href="/vortice/aula"><BookOpen />Aula del piloto</Link>
           <a href="#semana" onClick={() => setMenu(false)}><CalendarDays />Planificador</a>
           <a href="#brujula" onClick={() => setMenu(false)}><Compass />Brújula</a>
           <a href="#asignaturas" onClick={() => setMenu(false)}><BookOpen />Asignaturas</a>
@@ -201,6 +202,14 @@ export default function VorticeInicio() {
               <Link className="vx-cta" href={linkSiguiente}>
                 {aEvaluacion ? "Rendir mi evaluación" : siguiente ? "Continuar mi plan de hoy" : "Ver mis asignaturas"} <ArrowRight aria-hidden="true" />
               </Link>
+              <div style={{ marginTop: 10 }}>
+                <Link
+                  href="/vortice/aula"
+                  style={{ color: "#1f4a3d", fontWeight: 600, fontSize: 14, textDecoration: "underline" }}
+                >
+                  Ir al aula universal del piloto (5 OA)
+                </Link>
+              </div>
             </div>
             <div className="vx-focus" id="semana">
               <h2><Target aria-hidden="true" />Enfoque de la semana</h2>

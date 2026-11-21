@@ -121,15 +121,22 @@ export interface FlowInvoiceResponse {
   paidDate?: string;
 }
 
-class FlowService {
+export interface FlowServiceConfig {
+  apiKey?: string;
+  secretKey?: string;
+  apiUrl?: string;
+}
+
+export class FlowService {
   private apiKey: string;
   private secretKey: string;
   private apiUrl: string;
 
-  constructor() {
-    this.apiKey = process.env.FLOW_API_KEY || '';
-    this.secretKey = process.env.FLOW_SECRET_KEY || '';
-    this.apiUrl = process.env.FLOW_API_URL || 'https://sandbox.flow.cl/api';
+  constructor(config?: FlowServiceConfig) {
+    this.apiKey = config?.apiKey ?? process.env.FLOW_API_KEY ?? '';
+    this.secretKey = config?.secretKey ?? process.env.FLOW_SECRET_KEY ?? '';
+    const rawUrl = config?.apiUrl ?? process.env.FLOW_API_URL ?? 'https://sandbox.flow.cl/api';
+    this.apiUrl = rawUrl.replace(/\/+$/, '');
 
     if (!this.apiKey || !this.secretKey) {
       console.warn('⚠️  Flow.cl credentials not configured. Payment processing will not work.');
@@ -340,6 +347,10 @@ class FlowService {
     if (a.length !== b.length) return false;
     return crypto.timingSafeEqual(a, b);
   }
+}
+
+export function createFlowService(config?: FlowServiceConfig): FlowService {
+  return new FlowService(config);
 }
 
 export const flowService = new FlowService();

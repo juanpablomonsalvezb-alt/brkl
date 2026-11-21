@@ -35,17 +35,26 @@ if (soloVerificar) { console.log("Solo verificación: sin cambios."); process.ex
 const r = await migrar(c);
 console.log("Migraciones aplicadas ahora:", r.aplicadas.join(", ") || "ninguna (ya estaban)");
 
-// Migraciones incrementales T37/T38 (IF NOT EXISTS) y T39 (columnas idempotentes en user_profiles/module_evaluations).
-const sqlIncFlowBrujula = fs
-  .readFileSync("docs/vortice-migracion-incremental-flow-brujula2.sql", "utf8")
-  .split("\n")
-  .filter((l) => !l.trimStart().startsWith("--"))
-  .join("\n")
-  .replaceAll("--> statement-breakpoint", ";")
-  .split(";")
-  .map((s) => s.trim())
-  .filter(Boolean);
-for (const s of sqlIncFlowBrujula) await x(s);
+// Migraciones incrementales T37/T38 (IF NOT EXISTS), Aula Universal UDL y T39 (columnas idempotentes en user_profiles/module_evaluations).
+const ejecutarSqlArchivo = async (ruta: string) => {
+  const sentencias = fs
+    .readFileSync(ruta, "utf8")
+    .split("\n")
+    .filter((l) => !l.trimStart().startsWith("--"))
+    .join("\n")
+    .replaceAll("--> statement-breakpoint", ";")
+    .split(";")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  for (const s of sentencias) await x(s);
+};
+
+for (const rutaInc of [
+  "docs/vortice-migracion-incremental-flow-brujula2.sql",
+  "docs/vortice-migracion-incremental-aula-universal.sql",
+]) {
+  await ejecutarSqlArchivo(rutaInc);
+}
 
 const colsTabla = async (tabla: string) =>
   new Set((await x(`PRAGMA table_info(${tabla})`)).rows.map((row: any) => String(row.name)));

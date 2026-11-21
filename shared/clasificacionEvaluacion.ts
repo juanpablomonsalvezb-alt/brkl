@@ -71,3 +71,30 @@ export function esEvaluacionDeCierreEnModulo<
 >(evalsDelObjetivo: readonly T[], evaluacion: Pick<T, "id">): boolean {
   return obtenerEvaluacionesDeCierre(evalsDelObjetivo).some((e) => e.id === evaluacion.id);
 }
+
+/**
+ * Calcula la función efectiva de una evaluación dentro de su objetivo y señala si
+ * opera bajo compatibilidad histórica P7 (`heredadoP7 = true`, cuando todas las
+ * evaluaciones del objetivo tienen `evaluationFunction === null`).
+ */
+export function funcionEfectivaEvaluacion<
+  T extends { id: string; evaluationNumber: number; evaluationFunction?: EvaluationFunction | null },
+>(
+  evalsDelObjetivo: readonly T[],
+  evaluacion: T,
+): { effectiveFunction: EvaluationFunction | null; heredadoP7: boolean } {
+  if (evaluacion.evaluationFunction != null) {
+    return { effectiveFunction: evaluacion.evaluationFunction, heredadoP7: false };
+  }
+  const hayClasificadas = evalsDelObjetivo.some((e) => e.evaluationFunction != null);
+  if (hayClasificadas) {
+    return { effectiveFunction: null, heredadoP7: false };
+  }
+  if (evaluacion.evaluationNumber === 2) {
+    return { effectiveFunction: "modulo", heredadoP7: true };
+  }
+  if (evaluacion.evaluationNumber === 0) {
+    return { effectiveFunction: "diagnostico", heredadoP7: true };
+  }
+  return { effectiveFunction: "proceso", heredadoP7: true };
+}

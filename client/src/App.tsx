@@ -60,6 +60,7 @@ export function preloadRoute(pathname: string): Promise<void> {
 const NotFound = lazy(() => import("@/pages/not-found"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const VorticeInicio = lazy(() => import("@/pages/vortice/VorticeInicio"));
+const VorticeAula = lazy(() => import("@/pages/vortice/VorticeAula"));
 const VorticeEvaluacion = lazy(() => import("@/pages/vortice/VorticeEvaluacion"));
 const FamiliaVista = lazy(() => import("@/pages/vortice/FamiliaVista"));
 const CoursePlayer = lazy(() => import("@/pages/CoursePlayer"));
@@ -69,6 +70,7 @@ const Reservations = lazy(() => import("@/pages/Reservations"));
 const PlanSettings = lazy(() => import("@/pages/PlanSettings"));
 const LevelPlanSettings = lazy(() => import("@/pages/LevelPlanSettings"));
 const BarkleyAdmin = lazy(() => import("@/pages/BarkleyAdmin"));
+const EvaluacionesPerfilAdmin = lazy(() => import("@/pages/EvaluacionesPerfilAdmin"));
 const EvaluationLinksAdmin = lazy(() => import("@/pages/EvaluationLinksAdmin"));
 const GeminiCopilotsAdmin = lazy(() => import("@/pages/GeminiCopilotsAdmin"));
 const FaqAdmin = lazy(() => import("@/pages/FaqAdmin"));
@@ -124,6 +126,8 @@ function Router() {
       <Route path="/electivos" component={Electivos} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/vortice" component={VorticeInicio} />
+      <Route path="/vortice/aula" component={VorticeAula} />
+      <Route path="/vortice/aula/:oaId" component={VorticeAula} />
       <Route path="/vortice/evaluacion/:evaluacionId" component={VorticeEvaluacion} />
       <Route path="/familia" component={FamiliaVista} />
       <Route path="/course/:id" component={CoursePlayer} />
@@ -134,6 +138,7 @@ function Router() {
       <Route path="/level-plan-settings" component={LevelPlanSettings} />
       <Route path="/planes-2026" component={PlanSelector2026} />
       <Route path="/barkley-admin" component={BarkleyAdmin} />
+      <Route path="/admin/evaluaciones-perfil" component={EvaluacionesPerfilAdmin} />
       <Route path="/evaluation-links-admin" component={EvaluationLinksAdmin} />
       <Route path="/gemini-copilots-admin" component={GeminiCopilotsAdmin} />
       <Route path="/faq-admin" component={FaqAdmin} />

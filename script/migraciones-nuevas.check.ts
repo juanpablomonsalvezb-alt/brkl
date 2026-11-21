@@ -70,6 +70,7 @@ async function describirTabla(c: Client, tabla: string): Promise<{ cols: ColInfo
 const bMain = baseArchivo();
 const bInc = baseArchivo();
 const bIncPerfil = baseArchivo();
+const bIncAula = baseArchivo();
 const bSchema = baseArchivo();
 
 try {
@@ -252,6 +253,34 @@ try {
     });
   }
 
+  // ── Suite B3: Camino incremental Aula Universal UDL (lesson_study_progress) ──
+  const cIncA = bIncAula.client;
+  await verificarClavesForaneas(cIncA);
+  await cIncA.execute("CREATE TABLE users (id TEXT PRIMARY KEY NOT NULL, email TEXT)");
+  await cIncA.execute("INSERT INTO users (id, email) VALUES ('u-aula', 'aula@prueba.test')");
+  await ejecutarArchivoSql(cIncA, "docs/vortice-migracion-incremental-aula-universal.sql");
+  await ejecutarArchivoSql(cIncA, "docs/vortice-migracion-incremental-aula-universal.sql");
+
+  await cIncA.execute(
+    "INSERT INTO lesson_study_progress (id, user_id, oa_id, paso_actual, tramo_actual, puerta_preferida, paso_ejemplo_visto) VALUES ('lsp-1', 'u-aula', 'oa11', 'aprende', 1, 'explorar', 2)",
+  );
+  await assert.rejects(
+    cIncA.execute("INSERT INTO lesson_study_progress (id, user_id, oa_id) VALUES ('lsp-dup', 'u-aula', 'oa11')"),
+    /UNIQUE/,
+  );
+  await assert.rejects(
+    cIncA.execute("INSERT INTO lesson_study_progress (id, user_id, oa_id) VALUES ('lsp-fk', 'u-inexistente', 'oa7')"),
+    /FOREIGN KEY/,
+  );
+  await assert.rejects(
+    cIncA.execute("UPDATE lesson_study_progress SET paso_actual = 'inventado' WHERE id = 'lsp-1'"),
+    /CHECK/,
+  );
+  await assert.rejects(
+    cIncA.execute("UPDATE lesson_study_progress SET puerta_preferida = 'otra' WHERE id = 'lsp-1'"),
+    /CHECK/,
+  );
+
   // ── Suite C: Paridad exacta con shared/schema.ts generado por drizzle-kit ──
   const cSchema = bSchema.client;
   const ddlSchema = await generateSQLiteMigration(
@@ -271,6 +300,12 @@ try {
       `${tabla} en docs/vortice-migracion-incremental-flow-brujula2.sql difiere de shared/schema.ts`,
     );
   }
+
+  const lspEsperado = await describirTabla(cSchema, "lesson_study_progress");
+  const lspConsolidada = await describirTabla(cMain, "lesson_study_progress");
+  const lspIncremental = await describirTabla(cIncA, "lesson_study_progress");
+  assert.deepEqual(lspConsolidada, lspEsperado, "lesson_study_progress en consolidada difiere de shared/schema.ts");
+  assert.deepEqual(lspIncremental, lspEsperado, "lesson_study_progress en incremental aula difiere de shared/schema.ts");
 
   // Paridad de columnas nuevas T39 entre shared/schema.ts, consolidada e incremental.
   const extraerCols = (cols: ColInfo[], nombres: string[]) =>
@@ -296,6 +331,7 @@ try {
   await bMain.cerrar();
   await bInc.cerrar();
   await bIncPerfil.cerrar();
+  await bIncAula.cerrar();
   await bSchema.cerrar();
 }
 

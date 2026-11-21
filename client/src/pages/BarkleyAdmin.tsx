@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -311,7 +312,13 @@ export default function BarkleyAdmin() {
               Gestión completa de la oferta comercial para Landing Page
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
+            <Link href="/admin/evaluaciones-perfil">
+              <Button variant="outline" className="border-[#002147] text-[#002147]">
+                <Users className="w-4 h-4 mr-2" />
+                Perfiles y Evaluaciones 0..4
+              </Button>
+            </Link>
             {(youthPlans.length === 0 || adultCycles.length === 0) && (
               <Button
                 onClick={() => initializeAllMutation.mutate()}
