@@ -35,6 +35,7 @@ const ESTADO: Record<CodigoEvaluacion, number> = {
   capacidad_insuficiente: 409,
   entrega_automatica: 409,
   cierre_no_permitido: 409,
+  respuesta_existente: 409,
   extra_plazo_vencido: 410,
 };
 

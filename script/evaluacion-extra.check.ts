@@ -196,6 +196,14 @@ await caso("X10", "cerrarProceso: no sin intentos ni con el normal reprobado y e
     await assert.rejects(cerrarProceso(bd.c, { procesoId: proc.procesoId, estudianteId: EST }), E);
   } finally { bd.cerrar(); }
 });
+await caso("X11", "responder dos veces la misma pregunta: 409 respuesta_existente, sin error de base", async () => {
+  const bd = abrir(P); try {
+    const proc = await abrirProceso(bd.c, { estudianteId: EST, evaluacionId: "me-e2", versionId: "ev-v1", perfil: "regular" });
+    const n = await iniciarIntento(bd.c, { instanciaId: proc.instanciaId, estudianteId: EST, tipo: "normal" });
+    await responder(bd.c, { intentoId: n.intentoId, estudianteId: EST, preguntaVersionId: "qe1", opcionId: "o1" });
+    await assert.rejects(responder(bd.c, { intentoId: n.intentoId, estudianteId: EST, preguntaVersionId: "qe1", opcionId: "o2" }), (er: any) => er instanceof ErrorEvaluacion && er.codigo === "respuesta_existente");
+  } finally { bd.cerrar(); }
+});
 
 fs.rmSync(RAIZ, { recursive: true, force: true });
 console.log(salida.join("\n"));

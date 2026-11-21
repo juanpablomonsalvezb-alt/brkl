@@ -66,7 +66,8 @@ export type CodigoEvaluacion =
   | "version_no_encontrada"
   | "capacidad_insuficiente"
   | "entrega_automatica"
-  | "cierre_no_permitido";
+  | "cierre_no_permitido"
+  | "respuesta_existente";
 
 export class ErrorEvaluacion extends Error {
   constructor(readonly codigo: CodigoEvaluacion, mensaje: string) {
@@ -663,6 +664,10 @@ export async function responder(
   if (!preguntaEnVersion) {
     throw new ErrorEvaluacion("pregunta_no_pertenece_version", `pregunta ${params.preguntaVersionId} no pertenece a la versión ${intento.evaluation_version_id}`);
   }
+
+  // Solo inserción: una respuesta guardada no se cambia (409 claro en vez de un error de la base).
+  const yaRespondida = await x("SELECT 1 FROM evaluation_attempt_answers WHERE attempt_id = ? AND question_version_id = ?", [params.intentoId, params.preguntaVersionId]);
+  if (yaRespondida.rows.length) throw new ErrorEvaluacion("respuesta_existente", "esa pregunta ya tiene una respuesta guardada");
 
   // Obtener la respuesta correcta de la pregunta.
   const pregunta = row<{ correct_option_id: string }>(await x(
