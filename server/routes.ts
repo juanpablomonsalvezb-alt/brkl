@@ -2894,7 +2894,7 @@ export async function registerRoutes(
   registerSalesChatRoutes(app);
 
   // Register Flow.cl payment routes
-  registerFlowRoutes(app);
+  registerFlowRoutes(app, { isAdmin });
 
   return httpServer;
 }

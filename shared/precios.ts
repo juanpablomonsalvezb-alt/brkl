@@ -5,29 +5,31 @@
 // marcadores como {{precio_escolar}}; se reemplazan en el build (dist/public)
 // y al servir /api/faqs. Un marcador desconocido hace fallar el build.
 const BASE = {
-  escolarMensual: 65000,
+  escolarMensual: 70000, // decisión 2026-11-21: plan mensual escolar de 7 meses (marzo a septiembre)
   adultosMensual: 55000,
   matricula: 30000,
-  mesesDelAnio: 8, // marzo a octubre
+  mesesEscolar: 7, // marzo a septiembre (el año cierra el 15-oct, pero octubre no se cobra: intencional)
+  mesesAdultos: 8, // marzo a octubre
   descuentoAnual: 0.15,
 };
 
 const clp = (n: number) => "$" + n.toLocaleString("es-CL").replace(/,/g, ".");
 
-function anual(mensual: number) {
-  const lista = mensual * BASE.mesesDelAnio;
+function anual(mensual: number, meses: number) {
+  const lista = mensual * meses;
   const conDescuento = Math.round(lista * (1 - BASE.descuentoAnual));
   return { lista, conDescuento, ahorro: lista - conDescuento };
 }
 
-const escolar = anual(BASE.escolarMensual);
-const adultos = anual(BASE.adultosMensual);
+const escolar = anual(BASE.escolarMensual, BASE.mesesEscolar);
+const adultos = anual(BASE.adultosMensual, BASE.mesesAdultos);
 
 export const PRECIOS = {
   escolar: clp(BASE.escolarMensual),
   escolarAnual: clp(escolar.conDescuento),
   escolarAnualLista: clp(escolar.lista),
   escolarAhorroAnual: clp(escolar.ahorro),
+  escolarPagos: `${BASE.mesesEscolar} pagos, de marzo a septiembre`,
   adultos: clp(BASE.adultosMensual),
   adultosAnual: clp(adultos.conDescuento),
   adultosAhorroAnual: clp(adultos.ahorro),
@@ -38,6 +40,9 @@ export const PRECIOS = {
 export const MARCADORES: Record<string, string> = {
   precio_escolar: PRECIOS.escolar,
   precio_escolar_numero: String(BASE.escolarMensual),
+  detalle_pagos_escolar: PRECIOS.escolarPagos,
+  meses_escolar: String(BASE.mesesEscolar),
+  meses_adultos: String(BASE.mesesAdultos),
   precio_escolar_anual: PRECIOS.escolarAnual,
   precio_escolar_anual_lista: PRECIOS.escolarAnualLista,
   ahorro_escolar_anual: PRECIOS.escolarAhorroAnual,

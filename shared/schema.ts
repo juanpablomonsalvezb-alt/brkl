@@ -686,6 +686,32 @@ export const insertReservationSchema = z.object({
 export type Reservation = typeof reservations.$inferSelect;
 export type InsertReservation = z.infer<typeof insertReservationSchema>;
 
+// Suscripciones recurrentes Flow.cl (ej. plan escolar mensual $70.000 x 7 pagos marzo-septiembre)
+export const flowSubscriptions = sqliteTable("flow_subscriptions", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  reservationId: text("reservation_id").notNull().references(() => reservations.id),
+  flowPlanId: text("flow_plan_id").notNull(),
+  flowCustomerId: text("flow_customer_id").notNull(),
+  registerToken: text("register_token"),
+  flowSubscriptionId: text("flow_subscription_id"),
+  amount: integer("amount").notNull(),
+  periodsTotal: integer("periods_total").notNull(),
+  periodsPaid: integer("periods_paid").default(0).notNull(),
+  status: text("status", {
+    enum: ["pending_card", "card_registered", "active", "past_due", "completed", "cancelled", "failed"],
+  }).default("pending_card").notNull(),
+  lastInvoiceId: text("last_invoice_id"),
+  lastPaidAt: text("last_paid_at"),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
+}, (t) => [
+  uniqueIndex("flow_subscriptions_reservation_uq").on(t.reservationId),
+  uniqueIndex("flow_subscriptions_register_token_uq").on(t.registerToken),
+  uniqueIndex("flow_subscriptions_flow_sub_uq").on(t.flowSubscriptionId),
+]);
+
+export type FlowSubscription = typeof flowSubscriptions.$inferSelect;
+
 // Barkley Institute Plans Configuration - OLD (mantener por compatibilidad)
 export const planConfigurations = sqliteTable("plan_configurations", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),

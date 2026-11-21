@@ -1,4 +1,4 @@
-import { plansByGroup } from "@shared/planPrices";
+import { detalleCobroPlan, plansByGroup } from "@shared/planPrices";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -234,13 +234,36 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
     },
   });
 
+  const esPlanMensual = detalleCobroPlan(form.watch("selectedPlan"))?.modalidad === "mensual";
+
   const paymentMutation = useMutation({
     mutationFn: async () => {
       if (!reservationId) throw new Error("No reservation ID");
-      
+
       const formData = form.getValues();
+      const mensual = detalleCobroPlan(formData.selectedPlan)?.modalidad === "mensual";
+      if (mensual) {
+        const response = await fetch("/api/flow/create-subscription", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            reservationId,
+            payerEmail: formData.guardianEmail || formData.studentEmail,
+            payerName: formData.guardianFullName || formData.studentFullName,
+          }),
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || "Error al iniciar la suscripción");
+        }
+
+        return response.json();
+      }
+
       const selectedPlanData = availablePlans.find(p => p.value === formData.selectedPlan);
-      
+
       const response = await fetch("/api/flow/create-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -261,8 +284,8 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
       return response.json();
     },
     onSuccess: (data) => {
-      // Redirigir a Flow.cl para completar el pago
-      window.location.href = data.paymentUrl;
+      // Redirigir a Flow.cl para completar el pago o el registro de tarjeta
+      window.location.href = data.registerUrl || data.paymentUrl;
     },
     onError: (error: Error) => {
       toast({
@@ -304,7 +327,9 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
             {showPaymentOption ? (
               <>
                 <p className="text-[#002147]/70 text-center mb-6">
-                  Tu inscripción ha sido registrada. Ahora puedes proceder con el pago a través de Flow.cl
+                  {esPlanMensual
+                    ? "Tu inscripción ha sido registrada. Ahora puedes suscribir tu tarjeta en Flow.cl para los 7 pagos mensuales de $70.000."
+                    : "Tu inscripción ha sido registrada. Ahora puedes proceder con el pago a través de Flow.cl"}
                 </p>
                 
                 <div className="flex gap-3">
@@ -330,6 +355,8 @@ export function ReservationDialog({ open, onOpenChange }: ReservationDialogProps
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Procesando...
                       </>
+                    ) : esPlanMensual ? (
+                      "Suscribir plan mensual en Flow ($70.000 × 7)"
                     ) : (
                       "Pagar Ahora con Flow"
                     )}

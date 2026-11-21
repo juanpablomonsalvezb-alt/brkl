@@ -1,15 +1,32 @@
-import type { Express } from "express";
+import type { Express, RequestHandler } from "express";
 import { flowService } from "./flowService";
 import { db } from "./db";
 import { reservations } from "../shared/schema";
 import { eq } from "drizzle-orm";
 import { isValidEmail, getEmailErrorMessage } from "../shared/emailValidation";
 import { enrollFromPaidReservation } from "./matricula";
-import { montoDelPlan } from "../shared/planPrices";
+import { detalleCobroPlan, montoDelPlan } from "../shared/planPrices";
+import {
+  cancelarSuscripcionAdmin,
+  completarRegistroTarjeta,
+  FlowSubscriptionError,
+  iniciarSuscripcionMensual,
+  procesarWebhookSuscripcion,
+} from "./flowSubscriptions";
 
-export function registerFlowRoutes(app: Express) {
+export interface FlowRoutesOptions {
+  isAdmin?: RequestHandler;
+}
+
+const denyWithoutAdminMiddleware: RequestHandler = (_req, res) => {
+  res.status(401).json({ message: "Unauthorized" });
+};
+
+export function registerFlowRoutes(app: Express, options: FlowRoutesOptions = {}) {
+  const requireAdmin = options.isAdmin ?? denyWithoutAdminMiddleware;
+
   /**
-   * Crea un pago en Flow.cl para una reserva
+   * Crea un pago único en Flow.cl para una reserva
    */
   app.post("/api/flow/create-payment", async (req, res) => {
     try {
@@ -17,19 +34,17 @@ export function registerFlowRoutes(app: Express) {
       const { reservationId, studentEmail, studentName } = req.body;
 
       if (!reservationId || !studentEmail || !studentName) {
-        return res.status(400).json({ 
-          message: "Faltan datos requeridos: reservationId, studentEmail, studentName" 
+        return res.status(400).json({
+          message: "Faltan datos requeridos: reservationId, studentEmail, studentName",
         });
       }
 
-      // Validar que el email sea de un dominio válido
       if (!isValidEmail(studentEmail)) {
         return res.status(400).json({
-          message: getEmailErrorMessage(studentEmail)
+          message: getEmailErrorMessage(studentEmail),
         });
       }
 
-      // Obtener la reserva de la base de datos
       const [reservation] = await db
         .select()
         .from(reservations)
@@ -39,50 +54,46 @@ export function registerFlowRoutes(app: Express) {
         return res.status(404).json({ message: "Reserva no encontrada" });
       }
 
+      const detalle = detalleCobroPlan(reservation.selectedPlan);
+      if (!detalle) {
+        return res.status(400).json({ message: "El plan de la reserva no es válido" });
+      }
+      if (detalle.modalidad === "mensual") {
+        return res.status(400).json({ message: "Este plan requiere suscripción mensual recurrente" });
+      }
+
       // IDEMPOTENCIA: Verificar si ya existe un pago en proceso o completado
       if (reservation.flowOrder && reservation.flowToken) {
-        // Si el pago ya está completado, no crear uno nuevo
         if (reservation.paymentStatus === "completed") {
           return res.status(400).json({
-            message: "Esta reserva ya tiene un pago completado"
+            message: "Esta reserva ya tiene un pago completado",
           });
         }
 
-        // Si hay un pago pendiente, devolver el existente
         if (reservation.paymentStatus === "pending") {
-          const existingPaymentUrl = `https://sandbox.flow.cl/app/web/pay.php?token=${reservation.flowToken}`;
+          const existingPaymentUrl = `${flowService.getWebBaseUrl()}/app/web/pay.php?token=${reservation.flowToken}`;
           return res.json({
             success: true,
             paymentUrl: existingPaymentUrl,
             flowOrder: parseInt(reservation.flowOrder),
             token: reservation.flowToken,
-            message: "Ya existe un pago en proceso para esta reserva"
+            message: "Ya existe un pago en proceso para esta reserva",
           });
         }
       }
 
-      // Monto autoritativo del servidor, según el catálogo (shared/planPrices.ts).
-      const amount = montoDelPlan(reservation.selectedPlan);
-      if (!amount) {
-        return res.status(400).json({ message: "El plan de la reserva no es válido" });
-      }
-
-      // Crear orden de comercio única (máximo 45 caracteres)
-      // Usar solo los primeros 8 caracteres del ID + timestamp corto
+      const amount = detalle.monto;
       const shortId = reservationId.substring(0, 8);
-      const timestamp = Date.now().toString().slice(-8); // Últimos 8 dígitos
-      const commerceOrder = `UCE-${shortId}-${timestamp}`; // Formato: UCE-12345678-12345678 (25 chars)
+      const timestamp = Date.now().toString().slice(-8);
+      const commerceOrder = `UCE-${shortId}-${timestamp}`;
 
-      // URLs de confirmación y retorno
-      const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
+      const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get("host")}`;
       const urlConfirmation = `${baseUrl}/api/flow/confirm`;
-      // Flow reemplaza {{token}} con el token real del pago
       const urlReturn = `${baseUrl}/payment-result?token={{token}}`;
 
-      // Crear pago en Flow con datos opcionales
       const paymentData = await flowService.createPayment({
         commerceOrder,
-        subject: `Inscripción UCE - ${reservation.selectedPlan || 'Plan'}`,
+        subject: `Inscripción UCE - ${reservation.selectedPlan || "Plan"}`,
         currency: "CLP",
         amount,
         email: studentEmail,
@@ -91,19 +102,18 @@ export function registerFlowRoutes(app: Express) {
         optional: {
           reservationId,
           studentName,
-          plan: reservation.selectedPlan || 'N/A',
-          course: reservation.courseOfInterest || 'N/A',
+          plan: reservation.selectedPlan || "N/A",
+          course: reservation.courseOfInterest || "N/A",
         },
       });
 
-      // Actualizar la reserva con los datos del pago
       await db
         .update(reservations)
         .set({
           paymentStatus: "pending",
           flowOrder: paymentData.flowOrder.toString(),
           flowToken: paymentData.token,
-          paymentAmount: amount, // Guardar el monto del pago
+          paymentAmount: amount,
         })
         .where(eq(reservations.id, reservationId));
 
@@ -115,15 +125,101 @@ export function registerFlowRoutes(app: Express) {
       });
     } catch (error: any) {
       console.error("Error creating Flow payment:", error);
-      res.status(500).json({ 
-        message: error.message || "Error al crear el pago" 
+      res.status(500).json({
+        message: error.message || "Error al crear el pago",
       });
     }
   });
 
   /**
-   * Confirmación de pago desde Flow (webhook)
-   * IMPORTANTE: Este endpoint es llamado por Flow.cl para confirmar pagos
+   * Inicia suscripción mensual recurrente en Flow (7 pagos de $70.000, marzo a septiembre)
+   */
+  app.post("/api/flow/create-subscription", async (req, res) => {
+    try {
+      const { reservationId, payerEmail, payerName, studentEmail, studentName } = req.body ?? {};
+      const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get("host")}`;
+      const result = await iniciarSuscripcionMensual(db, flowService, {
+        reservationId: String(reservationId ?? ""),
+        payerEmail: String(payerEmail || studentEmail || ""),
+        payerName: String(payerName || studentName || ""),
+        baseUrl,
+      });
+      res.json({ success: true, ...result });
+    } catch (error: any) {
+      if (error instanceof FlowSubscriptionError) {
+        return res.status(error.status).json({ message: error.message });
+      }
+      console.error("Error creating Flow subscription:", error);
+      res.status(500).json({ message: error.message || "Error al iniciar la suscripción" });
+    }
+  });
+
+  /**
+   * Retorno de Flow tras inscribir tarjeta del cliente (redirige al frontend)
+   */
+  app.post("/api/flow/card-return", async (req, res) => {
+    const token = String(req.body?.token ?? req.query?.token ?? "");
+    if (!token) {
+      return res.redirect("/payment-result?mode=subscription");
+    }
+    try {
+      await completarRegistroTarjeta(db, flowService, token);
+    } catch (error) {
+      console.error("Error in Flow card return:", error);
+    }
+    return res.redirect(`/payment-result?mode=subscription&token=${encodeURIComponent(token)}`);
+  });
+
+  /**
+   * Consulta segura del estado de registro de tarjeta / activación de suscripción mensual
+   */
+  app.get("/api/flow/subscription-register-status/:token", async (req, res) => {
+    try {
+      const result = await completarRegistroTarjeta(db, flowService, String(req.params.token ?? ""));
+      res.json({ success: true, ...result });
+    } catch (error: any) {
+      if (error instanceof FlowSubscriptionError) {
+        return res.status(error.status).json({ message: error.message });
+      }
+      console.error("Error getting subscription register status:", error);
+      res.status(500).json({ message: error.message || "Error al verificar la suscripción" });
+    }
+  });
+
+  /**
+   * Webhook de cobros periódicos y cambios de estado de suscripción en Flow
+   */
+  app.post("/api/flow/subscription-webhook", async (req, res) => {
+    try {
+      const result = await procesarWebhookSuscripcion(db, flowService, req.body);
+      res.status(200).json(result);
+    } catch (error: any) {
+      if (error instanceof FlowSubscriptionError) {
+        return res.status(error.status).send(error.message);
+      }
+      console.error("Error confirming Flow subscription webhook:", error);
+      res.status(500).send("Error al procesar webhook de suscripción");
+    }
+  });
+
+  /**
+   * Cancelación administrativa de una suscripción mensual en Flow
+   */
+  app.post("/api/admin/flow/subscriptions/:id/cancel", requireAdmin, async (req, res) => {
+    try {
+      const updated = await cancelarSuscripcionAdmin(db, flowService, String(req.params.id ?? ""));
+      res.json({ success: true, subscription: updated });
+    } catch (error: any) {
+      if (error instanceof FlowSubscriptionError) {
+        return res.status(error.status).json({ message: error.message });
+      }
+      console.error("Error cancelling Flow subscription:", error);
+      res.status(500).json({ message: error.message || "Error al cancelar la suscripción" });
+    }
+  });
+
+  /**
+   * Confirmación de pago desde Flow (webhook pago único)
    */
   app.post("/api/flow/confirm", async (req, res) => {
     try {
@@ -134,29 +230,25 @@ export function registerFlowRoutes(app: Express) {
         return res.status(400).send("Token no proporcionado");
       }
 
-      // SEGURIDAD: Validar firma del webhook
       if (!s) {
         console.error("Webhook error: Firma no proporcionada");
         return res.status(401).send("Firma no proporcionada");
       }
 
-      // Validar que la firma sea correcta
       const paramsToValidate = { token };
       const isValidSignature = flowService.validateSignature(paramsToValidate, s);
-      
+
       if (!isValidSignature) {
         console.error("Webhook error: Firma inválida - posible ataque");
         return res.status(401).send("Firma inválida");
       }
 
-      // Obtener el estado del pago desde Flow
       const paymentStatus = await flowService.getPaymentStatus(token);
 
-      if (process.env.NODE_ENV !== 'production') {
+      if (process.env.NODE_ENV !== "production") {
         console.log("Flow payment confirmation:", paymentStatus);
       }
 
-      // Buscar la reserva por flowOrder
       const [reservation] = await db
         .select()
         .from(reservations)
@@ -167,7 +259,6 @@ export function registerFlowRoutes(app: Express) {
         return res.status(404).send("Reserva no encontrada");
       }
 
-      // Actualizar el estado de la reserva según el estado del pago
       let newStatus: "pending" | "confirmed" | "cancelled" = "pending";
       let paymentStatusText: "pending" | "completed" | "failed" | "cancelled" = "pending";
 
@@ -180,15 +271,12 @@ export function registerFlowRoutes(app: Express) {
         newStatus = "pending";
         paymentStatusText = "failed";
       } else if (paymentStatus.status === 2) {
-        // Pago exitoso
         newStatus = "confirmed";
         paymentStatusText = "completed";
       } else if (paymentStatus.status === 3) {
-        // Pago rechazado
         newStatus = "pending";
         paymentStatusText = "failed";
       } else if (paymentStatus.status === 4) {
-        // Pago anulado
         newStatus = "cancelled";
         paymentStatusText = "cancelled";
       }
@@ -202,8 +290,6 @@ export function registerFlowRoutes(app: Express) {
         })
         .where(eq(reservations.id, reservation.id));
 
-      // Matrícula automática si la reserva trae curso de Vórtice y el estudiante ya tiene cuenta.
-      // Nunca hace fallar la confirmación del pago: si no se puede, queda para el admin.
       if (paymentStatusText === "completed") {
         try {
           const auto = await enrollFromPaidReservation(db, reservation.id);
@@ -221,7 +307,7 @@ export function registerFlowRoutes(app: Express) {
   });
 
   /**
-   * Obtener el estado de un pago
+   * Obtener el estado de un pago único
    */
   app.get("/api/flow/payment-status/:token", async (req, res) => {
     try {
@@ -233,7 +319,6 @@ export function registerFlowRoutes(app: Express) {
 
       const paymentStatus = await flowService.getPaymentStatus(token);
 
-      // Buscar la reserva asociada
       const [reservation] = await db
         .select()
         .from(reservations)
@@ -246,8 +331,8 @@ export function registerFlowRoutes(app: Express) {
       });
     } catch (error: any) {
       console.error("Error getting Flow payment status:", error);
-      res.status(500).json({ 
-        message: error.message || "Error al obtener el estado del pago" 
+      res.status(500).json({
+        message: error.message || "Error al obtener el estado del pago",
       });
     }
   });

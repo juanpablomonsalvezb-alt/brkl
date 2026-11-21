@@ -9,9 +9,11 @@ export default function PaymentResult() {
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState("");
   const [retryCount, setRetryCount] = useState(0);
-  
+
   const token = searchParams.get("token");
-  
+  const mode = searchParams.get("mode");
+  const esSuscripcion = mode === "subscription";
+
   // Debug solo en desarrollo
   if (process.env.NODE_ENV !== 'production') {
     console.log('Payment Result - Token:', token ? 'Present' : 'Missing');
@@ -20,7 +22,7 @@ export default function PaymentResult() {
   useEffect(() => {
     if (!token) {
       setStatus("error");
-      setMessage("Token de pago no encontrado");
+      setMessage(esSuscripcion ? "Token de registro de tarjeta no encontrado" : "Token de pago no encontrado");
       return;
     }
 
@@ -30,6 +32,30 @@ export default function PaymentResult() {
 
     const checkPaymentStatus = async () => {
       try {
+        if (esSuscripcion) {
+          const res = await fetch(`/api/flow/subscription-register-status/${encodeURIComponent(token)}`);
+          const data = await res.json();
+          if (res.ok && data.success) {
+            if (data.status === "active" || data.status === "completed") {
+              setStatus("success");
+              setMessage("Tu suscripción mensual en Flow quedó activa (7 pagos de $70.000, de marzo a septiembre).");
+              clearInterval(pollInterval);
+            } else if (data.status === "failed" || data.status === "cancelled") {
+              setStatus("error");
+              setMessage("No se completó el registro de tu tarjeta en Flow.");
+              clearInterval(pollInterval);
+            } else {
+              setMessage("Verificando el registro de tu tarjeta...");
+              setRetryCount(prev => prev + 1);
+            }
+          } else {
+            setStatus("error");
+            setMessage(data.message || "No se pudo verificar la suscripción.");
+            clearInterval(pollInterval);
+          }
+          return;
+        }
+
         const res = await fetch(`/api/flow/payment-status/${token}`);
         const data = await res.json();
 
@@ -80,7 +106,7 @@ export default function PaymentResult() {
     return () => {
       if (pollInterval) clearInterval(pollInterval);
     };
-  }, [token, retryCount]);
+  }, [token, retryCount, esSuscripcion]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#002147] via-[#003366] to-[#A51C30] flex items-center justify-center p-4">
@@ -102,10 +128,12 @@ export default function PaymentResult() {
             <>
               <CheckCircle2 className="w-16 h-16 text-green-600 mb-4" />
               <h1 className="text-2xl font-bold text-[#002147] mb-2">
-                ¡Pago Exitoso!
+                {esSuscripcion ? "¡Suscripción Activa!" : "¡Pago Exitoso!"}
               </h1>
               <p className="text-[#002147]/70 mb-6">
-                Tu inscripción ha sido confirmada. Recibirás un correo electrónico con los detalles de tu matrícula.
+                {esSuscripcion
+                  ? message
+                  : "Tu inscripción ha sido confirmada. Recibirás un correo electrónico con los detalles de tu matrícula."}
               </p>
               <Link to="/">
                 <Button className="bg-[#A51C30] hover:bg-[#8B1725] text-white">
