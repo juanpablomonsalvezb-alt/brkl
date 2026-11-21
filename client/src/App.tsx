@@ -67,6 +67,7 @@ const NotFound = lazy(() => import("@/pages/not-found"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const VorticeInicio = lazy(() => import("@/pages/vortice/VorticeInicio"));
 const VorticeAula = lazy(() => import("@/pages/vortice/VorticeAula"));
+const VorticeMapa = lazy(() => import("@/pages/vortice/VorticeMapa"));
 const VorticeEvaluacion = lazy(() => import("@/pages/vortice/VorticeEvaluacion"));
 const FamiliaVista = lazy(() => import("@/pages/vortice/FamiliaVista"));
 const CoursePlayer = lazy(() => import("@/pages/CoursePlayer"));
@@ -134,6 +135,7 @@ function Router() {
       <Route path="/vortice" component={VorticeInicio} />
       <Route path="/vortice/aula" component={VorticeAula} />
       <Route path="/vortice/aula/:oaId" component={VorticeAula} />
+      <Route path="/vortice/conocimientos" component={VorticeMapa} />
       <Route path="/vortice/evaluacion/:evaluacionId" component={VorticeEvaluacion} />
       <Route path="/familia" component={FamiliaVista} />
       <Route path="/course/:id" component={CoursePlayer} />

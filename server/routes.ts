@@ -105,6 +105,14 @@ import {
   obtenerLeccionPorOa,
   obtenerLeccionesPiloto,
 } from "@shared/aulaUniversal";
+import {
+  cargarMapaConocimiento,
+  DOMINIO_PILOTO_PRACTICA_ID,
+  registrarComprobacionEnMotorSombra,
+  registrarPracticaEnMotor,
+} from "./mapaConocimiento";
+import { PracticaError } from "./practica";
+import { registrarPracticaInputSchema } from "@shared/mapaConocimiento";
 
 // Helper to ensure string params (not arrays)
 function getStringParam(param: string | string[]): string {
@@ -1000,17 +1008,77 @@ export async function registerRoutes(
     try {
       const userId = currentUserId(req);
       if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const oaId = getStringParam(req.params.oaId);
       const r = await registrarComprobacionProceso(db, {
         userId,
-        oaId: getStringParam(req.params.oaId),
+        oaId,
         body: req.body,
         now: new Date(),
       });
       if (!r.ok) return res.status(r.status).json({ message: r.reason });
+      await registrarComprobacionEnMotorSombra(dbClient, {
+        estudianteId: userId,
+        oaId,
+        respuestas: req.body?.respuestas ?? {},
+      });
       res.json(r.value);
     } catch (error) {
       console.error("Error checking Aula Universal comprehension:", error);
       res.status(500).json({ message: "Failed to check comprehension" });
+    }
+  });
+
+  // Motor en sombra M2 + Mapa «Mis conocimientos» M3 (nunca altera checkModuleAccess ni checkEvaluationAccess).
+  app.get("/api/vortice/conocimiento/mapa", async (req: any, res) => {
+    const dominioId = typeof req.query.dominio === "string" && req.query.dominio.trim()
+      ? req.query.dominio.trim()
+      : DOMINIO_PILOTO_PRACTICA_ID;
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      res.json(await cargarMapaConocimiento(dbClient, { estudianteId: userId, dominioId }));
+    } catch (error) {
+      const msg = (error as Error)?.message ?? "";
+      if (/no such table/i.test(msg)) {
+        return res.json({
+          disponible: false,
+          dominioId,
+          dominioNombre: null,
+          politicaActiva: false,
+          tieneEvidencia: false,
+          nodos: [],
+          aristas: [],
+          recomendacion: null,
+          resumen: { dominados: 0, porComprobar: 0, enPractica: 0, porReforzar: 0, listos: 0, bloqueados: 0, total: 0 },
+        });
+      }
+      console.error("Error loading knowledge map:", error);
+      res.status(500).json({ message: "Failed to load knowledge map" });
+    }
+  });
+
+  app.post("/api/vortice/conocimiento/practica", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const parsed = registrarPracticaInputSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Práctica inválida" });
+      const result = await registrarPracticaEnMotor(dbClient, {
+        estudianteId: userId,
+        ...parsed.data,
+      });
+      res.json(result);
+    } catch (error) {
+      if (error instanceof PracticaError) {
+        const status = error.codigo === "conflicto_idempotencia" ? 409 : 400;
+        return res.status(status).json({ message: error.message });
+      }
+      const msg = (error as Error)?.message ?? "";
+      if (/no such table/i.test(msg)) {
+        return res.json({ registrado: false, motivo: "motor_no_migrado" });
+      }
+      console.error("Error recording practice in knowledge engine:", error);
+      res.status(500).json({ message: "Failed to record practice" });
     }
   });
 

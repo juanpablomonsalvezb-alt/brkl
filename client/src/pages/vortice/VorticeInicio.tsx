@@ -165,6 +165,7 @@ export default function VorticeInicio() {
         <nav className="vx-nav" aria-label="Secciones">
           <Link href="/vortice" aria-current="page"><Home />Inicio</Link>
           <Link href="/vortice/aula"><BookOpen />Aula del piloto</Link>
+          <Link href="/vortice/conocimientos"><Target />Mis conocimientos</Link>
           <a href="#semana" onClick={() => setMenu(false)}><CalendarDays />Planificador</a>
           <a href="#brujula" onClick={() => setMenu(false)}><Compass />Brújula</a>
           <a href="#asignaturas" onClick={() => setMenu(false)}><BookOpen />Asignaturas</a>

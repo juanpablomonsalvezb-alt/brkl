@@ -300,6 +300,29 @@ export default function VorticeAula() {
           prev ? { ...prev, progreso: { ...prev.progreso, [data.progreso!.oaId]: data.progreso! } } : prev,
         );
       }
+      queryClient.invalidateQueries({ queryKey: ["/api/vortice/conocimiento/mapa"] });
+    },
+  });
+
+  const registrarPracticaMutation = useMutation({
+    mutationFn: async (payload: {
+      oaId: string;
+      preguntaId: string;
+      opcionId: string;
+      usoPista: boolean;
+      clientSubmissionId: string;
+    }) => {
+      const res = await fetch("/api/vortice/conocimiento/practica", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) return null;
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/vortice/conocimiento/mapa"] });
     },
   });
 
@@ -363,14 +386,21 @@ export default function VorticeAula() {
             </div>
           </div>
 
-          <Button
-            type="button"
-            variant={abiertoDiagnostico ? "secondary" : "outline"}
-            onClick={() => setAbiertoDiagnostico((v) => !v)}
-          >
-            <Compass className="w-4 h-4 mr-2" />
-            Diagnóstico inicial (0)
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/vortice/conocimientos">
+              <Button type="button" variant="outline">
+                Mis conocimientos
+              </Button>
+            </Link>
+            <Button
+              type="button"
+              variant={abiertoDiagnostico ? "secondary" : "outline"}
+              onClick={() => setAbiertoDiagnostico((v) => !v)}
+            >
+              <Compass className="w-4 h-4 mr-2" />
+              Diagnóstico inicial (0)
+            </Button>
+          </div>
         </div>
 
         {/* Selector de los 5 OA del piloto */}
@@ -912,9 +942,20 @@ export default function VorticeAula() {
                       <button
                         key={alt.id}
                         type="button"
-                        onClick={() =>
-                          setRespPractica((prev) => ({ ...prev, [ejercicioActual.id]: alt.id }))
-                        }
+                        onClick={() => {
+                          setRespPractica((prev) => ({ ...prev, [ejercicioActual.id]: alt.id }));
+                          const submissionId =
+                            typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+                              ? crypto.randomUUID()
+                              : `prac-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+                          registrarPracticaMutation.mutate({
+                            oaId: leccion.oaId,
+                            preguntaId: ejercicioActual.id,
+                            opcionId: alt.id,
+                            usoPista: nivelPistaActual > 0,
+                            clientSubmissionId: submissionId,
+                          });
+                        }}
                         className={`min-h-[44px] px-4 py-2.5 rounded-lg border text-left transition ${
                           seleccionada
                             ? esCorrecta

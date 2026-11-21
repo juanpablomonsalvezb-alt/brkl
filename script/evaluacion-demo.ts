@@ -27,6 +27,15 @@ import {
   setFuncionEvaluacion,
   setPerfilEvaluacion,
 } from "../server/perfilEvaluacion";
+import {
+  cargarMapaConocimiento,
+  DOMINIO_PILOTO_PRACTICA_ID,
+  registrarComprobacionEnMotorSombra,
+  registrarPracticaEnMotor,
+} from "../server/mapaConocimiento";
+import { PracticaError } from "../server/practica";
+import { sembrarPilotoPractica } from "../server/sembrarPilotoPractica";
+import { registrarPracticaInputSchema } from "../shared/mapaConocimiento";
 import { migrar } from "../server/migrar";
 import { baseArchivo } from "./lib/basePrueba";
 import { aplicarEsquemaHeredado, sembrarFicticios } from "./lib/esquemaHeredado";
@@ -54,6 +63,7 @@ await x("INSERT INTO users (id, email, name) VALUES ('est-reg', 'est-reg@fictici
 await x("INSERT INTO user_profiles (id, user_id, role, level_id, evaluation_profile) VALUES ('up-adm', 'admin-demo', 'admin', NULL, 'regular'), ('up-reg', 'est-reg', 'student', '5b', 'regular'), ('up-neuro', 'est-neuro', 'student', '5b', 'neurodivergente')");
 await x("INSERT INTO module_evaluations (id, learning_objective_id, evaluation_number, evaluation_function, title, release_day, release_week, passing_score) VALUES ('me-diag', 'lo-mat', 0, 'diagnostico', 'Diagnóstico inicial · Fracciones y decimales', 1, 1, 70), ('me-p1', 'lo-mat', 1, 'proceso', 'Proceso 1 · Fracciones propias', 3, 1, 70), ('me-e2', 'lo-mat', 4, 'modulo', 'Fracciones y decimales · Matemática 5.º', 5, 2, 70), ('me-leg', 'lo-len', 2, NULL, 'Evaluación heredada P7 · Lectura', 5, 1, 60)");
 const clave = await sembrarEvaluacionPiloto(x, { levelSubjectId: "ls-mat-5b", evaluacionId: "me-e2", versionId: "ev-demo", oaCurricularId: "oa1" });
+await sembrarPilotoPractica(c, { levelSubjectId: "ls-mat-5b" });
 await abrirProceso(c, { estudianteId: "est-neuro", evaluacionId: "me-e2", versionId: "ev-demo", perfil: "neurodivergente" });
 
 const app = express(); app.use(express.json());
@@ -87,14 +97,41 @@ app.post("/api/vortice/aula/diagnostico", (req, res) => {
   res.json(evaluarDiagnosticoCero(parsed.data.respuestas));
 });
 app.post("/api/vortice/aula/lecciones/:oaId/comprobar", async (req, res) => {
+  const userId = demoStudentId(req);
   const r = await registrarComprobacionProceso(demoDb, {
-    userId: demoStudentId(req),
+    userId,
     oaId: String(req.params.oaId),
     body: req.body,
     now: new Date(),
   });
   if (!r.ok) return res.status(r.status).json({ message: r.reason });
+  await registrarComprobacionEnMotorSombra(c, {
+    estudianteId: userId,
+    oaId: String(req.params.oaId),
+    respuestas: req.body?.respuestas ?? {},
+  });
   res.json(r.value);
+});
+
+// Motor en sombra M2 + Mapa «Mis conocimientos» M3.
+app.get("/api/vortice/conocimiento/mapa", async (req, res) => {
+  const dominio = typeof req.query.dominio === "string" && req.query.dominio.trim()
+    ? req.query.dominio.trim()
+    : DOMINIO_PILOTO_PRACTICA_ID;
+  res.json(await cargarMapaConocimiento(c, { estudianteId: demoStudentId(req), dominioId: dominio }));
+});
+app.post("/api/vortice/conocimiento/practica", async (req, res) => {
+  const parsed = registrarPracticaInputSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ message: "Práctica inválida" });
+  try {
+    res.json(await registrarPracticaEnMotor(c, { estudianteId: demoStudentId(req), ...parsed.data }));
+  } catch (e) {
+    if (e instanceof PracticaError) {
+      const status = e.codigo === "conflicto_idempotencia" ? 409 : 400;
+      return res.status(status).json({ message: e.message });
+    }
+    throw e;
+  }
 });
 
 // Panel Admin T39 (Bloque B) en demo local con cuenta admin-demo ficticia.
@@ -241,6 +278,7 @@ app.listen(PUERTO, () => {
   console.log(`  - Precios:      http://localhost:${PUERTO}/#precio`);
   console.log(`  - Brújula 1+2:  http://localhost:${PUERTO}/vortice`);
   console.log(`  - Aula UDL:     http://localhost:${PUERTO}/vortice/aula`);
+  console.log(`  - Mapa M3:      http://localhost:${PUERTO}/vortice/conocimientos`);
   console.log(`  - Familia:      http://localhost:${PUERTO}/familia`);
   console.log(`  - Admin T39:    http://localhost:${PUERTO}/admin/evaluaciones-perfil`);
   console.log(`  - Evaluación:   http://localhost:${PUERTO}/demo/entrar?u=est-reg  |  ?u=est-neuro`);
