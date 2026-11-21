@@ -20,6 +20,7 @@ import {
   type CalendarConfig,
   type CalendarBreak,
 } from "../server/calendarUtils";
+import type { CalendarConfigInput } from "./schema";
 
 // ---------------------------------------------------------------------------
 // Tipos
@@ -351,4 +352,54 @@ export function imprimirTablaOpciones(perfil: Perfil2027, conRecesos: boolean): 
   }
 
   return salida;
+}
+
+// ---------------------------------------------------------------------------
+// Niveles escolares 2027 y plan por nivel (T36)
+// ---------------------------------------------------------------------------
+
+export const NIVELES_GENERAL_2027 = ["1b", "2b", "3b", "4b", "5b", "6b", "7b", "8b", "1m", "2m", "3m"] as const;
+
+export const NIVEL_CUARTO_MEDIO_2027 = "4m" as const;
+
+export const NIVELES_ESCOLARES_2027 = [...NIVELES_GENERAL_2027, NIVEL_CUARTO_MEDIO_2027] as const;
+
+/** Retorna los 12 perfiles CalendarConfigInput para cargar en program_calendar (año 2027).
+ *  11 niveles generales (1b-3m): 15 módulos, evaluaciones tras 7 y 15.
+ *  4m: 12 módulos, evaluaciones tras 7 y 12.
+ *  Sin recesos, sin filas NULL ni niveles de adultos. */
+export function planCalendario2027PorNivel(): CalendarConfigInput[] {
+  const resultado: CalendarConfigInput[] = [];
+
+  for (const nivel of NIVELES_GENERAL_2027) {
+    resultado.push({
+      academicYear: 2027,
+      levelId: nivel,
+      startDate: "2027-03-08",
+      moduleDurationWeeks: 2,
+      totalModules: 15,
+      generalEvaluationWeeks: [
+        { afterModule: 7, name: "Semana de Evaluaciones Generales (Primer Semestre)" },
+        { afterModule: 15, name: "Semana de Evaluaciones Finales" },
+      ],
+      breaks: [],
+      holidays: [],
+    });
+  }
+
+  resultado.push({
+    academicYear: 2027,
+    levelId: NIVEL_CUARTO_MEDIO_2027,
+    startDate: "2027-03-08",
+    moduleDurationWeeks: 2,
+    totalModules: 12,
+    generalEvaluationWeeks: [
+      { afterModule: 7, name: "Semana de Evaluaciones Generales (Primer Semestre)" },
+      { afterModule: 12, name: "Semana de Evaluaciones Finales" },
+    ],
+    breaks: [],
+    holidays: [],
+  });
+
+  return resultado;
 }

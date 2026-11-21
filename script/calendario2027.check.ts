@@ -10,6 +10,10 @@ import {
   SUPUESTOS_2027,
   formatearFecha,
   imprimirTablaOpciones,
+  planCalendario2027PorNivel,
+  NIVELES_GENERAL_2027,
+  NIVEL_CUARTO_MEDIO_2027,
+  NIVELES_ESCOLARES_2027,
 } from "../shared/calendario2027";
 import {
   CHILE_TZ,
@@ -257,4 +261,103 @@ console.log("✓ Caso 10: resultados deterministas, no dependen de la fecha de h
   assert.equal(new Date(red.fechaFin + "T12:00:00Z").getUTCDay(), 5, "debe ser viernes");
   console.log("✓ Caso 13: el viernes de evaluación no se corre por el cambio de horario");
 }
+
+// ============================================================================
+// Caso 14: planCalendario2027PorNivel devuelve exactamente 12 entradas
+// ============================================================================
+{
+  const plan = planCalendario2027PorNivel();
+  assert.equal(plan.length, 12, "deben ser 12 niveles escolares");
+
+  for (const nivel of NIVELES_GENERAL_2027) {
+    const cfg = plan.find((c) => c.levelId === nivel);
+    assert.ok(cfg, `falta nivel ${nivel}`);
+    assert.equal(cfg.academicYear, 2027);
+    assert.equal(cfg.startDate, "2027-03-08");
+    assert.equal(cfg.moduleDurationWeeks, 2);
+    assert.deepEqual(cfg.breaks, []);
+    assert.deepEqual(cfg.holidays, []);
+    assert.equal(cfg.totalModules, 15, `${nivel} debe tener 15 módulos`);
+    assert.equal(cfg.generalEvaluationWeeks.length, 2);
+    assert.equal(cfg.generalEvaluationWeeks[0].afterModule, 7);
+    assert.equal(cfg.generalEvaluationWeeks[1].afterModule, 15);
+  }
+
+  const cfg4m = plan.find((c) => c.levelId === NIVEL_CUARTO_MEDIO_2027);
+  assert.ok(cfg4m, "falta nivel 4m");
+  assert.equal(cfg4m.academicYear, 2027);
+  assert.equal(cfg4m.startDate, "2027-03-08");
+  assert.equal(cfg4m.moduleDurationWeeks, 2);
+  assert.deepEqual(cfg4m.breaks, []);
+  assert.deepEqual(cfg4m.holidays, []);
+  assert.equal(cfg4m.totalModules, 12, "4m debe tener 12 módulos");
+  assert.equal(cfg4m.generalEvaluationWeeks.length, 2);
+  assert.equal(cfg4m.generalEvaluationWeeks[0].afterModule, 7);
+  assert.equal(cfg4m.generalEvaluationWeeks[1].afterModule, 12);
+
+  // Arreglos breaks/holidays independientes entre entradas (no comparten referencia)
+  assert.notStrictEqual(plan[0].breaks, plan[1].breaks);
+  assert.notStrictEqual(plan[0].holidays, plan[1].holidays);
+
+  const levelIds = plan.map((c) => c.levelId);
+  assert.ok(!levelIds.includes(null as any), "no debe haber levelId null");
+  for (const adulto of ["nb1", "nb2", "nb3", "nm1", "nm2"]) {
+    assert.ok(!levelIds.includes(adulto), `no debe incluir adulto ${adulto}`);
+  }
+
+  assert.deepEqual(
+    [...NIVELES_ESCOLARES_2027].sort(),
+    [...levelIds].sort(),
+    "NIVELES_ESCOLARES_2027 debe coincidir con los levelId del plan",
+  );
+
+  console.log("✓ Caso 14: planCalendario2027PorNivel devuelve 12 entradas correctas");
+}
+
+// ============================================================================
+// Caso 15: calcularCalendario con plan de niveles generales termina 2027-10-15
+// ============================================================================
+{
+  const plan = planCalendario2027PorNivel();
+  for (const nivel of NIVELES_GENERAL_2027) {
+    const cfg = plan.find((c) => c.levelId === nivel)!;
+    const config = buildConfig2027(
+      PERFILES_2027.find((p) => p.id === "general")!,
+      {
+        totalModules: cfg.totalModules,
+        generalEvaluationWeeks: cfg.generalEvaluationWeeks,
+        breaks: cfg.breaks,
+        holidays: cfg.holidays,
+      },
+    );
+    const calc = calcularCalendario(config, "2027-10-15");
+    assert.equal(calc.fechaFinEvaluaciones, "2027-10-15", `${nivel}: fin debe ser 2027-10-15`);
+    assert.equal(calc.cabe, true, `${nivel}: debe caber`);
+  }
+
+  console.log("✓ Caso 15: niveles generales terminan el 2027-10-15 con cabe=true");
+}
+
+// ============================================================================
+// Caso 16: 4m con plan propio termina 2027-09-03
+// ============================================================================
+{
+  const plan = planCalendario2027PorNivel();
+  const cfg4m = plan.find((c) => c.levelId === "4m")!;
+  const config = buildConfig2027(
+    PERFILES_2027.find((p) => p.id === "cuarto_medio")!,
+    {
+      totalModules: cfg4m.totalModules,
+      generalEvaluationWeeks: cfg4m.generalEvaluationWeeks,
+      breaks: cfg4m.breaks,
+      holidays: cfg4m.holidays,
+    },
+  );
+  const calc = calcularCalendario(config, "2027-09-15");
+  assert.equal(calc.fechaFinEvaluaciones, "2027-09-03", "4m: fin debe ser 2027-09-03");
+  assert.equal(calc.cabe, true, "4m: debe caber dentro del tope 2027-09-15");
+
+  console.log("✓ Caso 16: 4m termina el 2027-09-03 con cabe=true");
+}
+
 console.log("\n✅ calendario2027.check.ts: todas las pruebas pasaron");
