@@ -1092,6 +1092,27 @@ export const brujulaWeeks = sqliteTable("brujula_weeks", {
 
 export type BrujulaWeek = typeof brujulaWeeks.$inferSelect;
 
+// Brújula™ parte 2: preferencias de intensidad/días/franja y bloques semanales de estudio.
+export const brujulaPreferences = sqliteTable("brujula_preferences", {
+  userId: text("user_id").primaryKey().references(() => users.id),
+  intensidad: text("intensidad", { enum: ["suave", "normal", "intensivo"] }).default("normal").notNull(),
+  diasPreferidosJson: text("dias_preferidos_json").default("[1,2,3,4,5]").notNull(),
+  franja: text("franja", { enum: ["manana", "tarde", "noche"] }).default("tarde").notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
+});
+
+export const brujulaStudyBlocks = sqliteTable("brujula_study_blocks", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  userId: text("user_id").notNull().references(() => users.id),
+  weekStart: text("week_start").notNull(),
+  blocksJson: text("blocks_json").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
+}, (t) => [uniqueIndex("brujula_blocks_user_week").on(t.userId, t.weekStart)]);
+
+export type BrujulaPreferenceRow = typeof brujulaPreferences.$inferSelect;
+export type BrujulaStudyBlockRow = typeof brujulaStudyBlocks.$inferSelect;
+
 // ============================================
 // Tutoría humana como caso (Atlas #006): el estudiante pide ayuda asincrónica
 // sobre un OA (y opcionalmente un recurso de ese OA), un admin asigna un tutor,

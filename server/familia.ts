@@ -10,7 +10,9 @@ import {
   moduleEvaluations, learningObjectives, levelSubjects, subjects,
 } from "@shared/schema";
 import type { VorticeOverview } from "@shared/vortice";
+import { resumenBrujulaParaApoderado, type ResumenBrujulaApoderado } from "@shared/brujulaPanel";
 import { loadVorticeOverview } from "./vortice";
+import { getBrujulaBlocks, getBrujulaPanel } from "./brujula";
 
 type Db = LibSQLDatabase<typeof schema>;
 
@@ -31,6 +33,8 @@ export interface FamiliaResumen {
   studyDays: number;
   // Evaluaciones rendidas y aún no aprobadas. Sin puntajes ni respuestas.
   evaluationsInReview: { title: string; subjectName: string; completedAt: Date | null }[];
+  // Brújula parte 2: orientación cualitativa y bloques semanales, sin notas ni porcentajes.
+  brujula: ResumenBrujulaApoderado;
 }
 
 const displayName = (u: { name: string | null; firstName: string | null; lastName: string | null }) =>
@@ -69,6 +73,18 @@ async function studyDaysInMonth(db: Db, studentUserId: string, now: Date) {
   return { month, studyDays: days.size };
 }
 
+async function buildBrujulaResumen(db: Db, studentUserId: string, now: Date): Promise<ResumenBrujulaApoderado> {
+  const [panel, blocksView] = await Promise.all([
+    getBrujulaPanel(db, studentUserId, now),
+    getBrujulaBlocks(db, studentUserId, now),
+  ]);
+  return resumenBrujulaParaApoderado(panel, {
+    intensidad: blocksView.preferencias.intensidad,
+    bloquesPlanificados: blocksView.bloques.length,
+    bloquesCompletados: blocksView.bloques.filter((b) => b.completado).length,
+  });
+}
+
 // null = sin vínculo activo (la ruta responde 404 sin distinguir si el estudiante existe).
 export async function loadFamiliaResumen(
   db: Db, guardianUserId: string, studentUserId: string, now: Date,
@@ -76,7 +92,7 @@ export async function loadFamiliaResumen(
   const student = await linkedStudent(db, guardianUserId, studentUserId);
   if (!student) return null;
 
-  const [overview, days, attempts] = await Promise.all([
+  const [overview, days, attempts, brujula] = await Promise.all([
     loadVorticeOverview(db, studentUserId, now),
     studyDaysInMonth(db, studentUserId, now),
     // Solo columnas no sensibles: nunca answersJson, score ni totalCorrect.
@@ -90,6 +106,7 @@ export async function loadFamiliaResumen(
       .innerJoin(levelSubjects, eq(learningObjectives.levelSubjectId, levelSubjects.id))
       .innerJoin(subjects, eq(levelSubjects.subjectId, subjects.id))
       .where(eq(evaluationProgress.userId, studentUserId)),
+    buildBrujulaResumen(db, studentUserId, now),
   ]);
   // Hay un registro por intento: "en revisión" = rendida al menos una vez y ningún intento aprobado.
   const byEval = new Map<string, FamiliaResumen["evaluationsInReview"][number] & { passed: boolean }>();
@@ -99,7 +116,15 @@ export async function loadFamiliaResumen(
     byEval.set(a.evaluationId, { title: a.title, subjectName: a.subjectName, completedAt: latest, passed: !!prev?.passed || !!a.passed });
   }
   const inReview = [...byEval.values()].filter((e) => !e.passed).map(({ passed: _p, ...e }) => e);
-  return { student, overview, ...days, evaluationsInReview: inReview };
+  return { student, overview, ...days, evaluationsInReview: inReview, brujula };
+}
+
+export async function getFamiliaBrujula(
+  db: Db, guardianUserId: string, studentUserId: string, now: Date,
+): Promise<ResumenBrujulaApoderado | null> {
+  const student = await linkedStudent(db, guardianUserId, studentUserId);
+  if (!student) return null;
+  return buildBrujulaResumen(db, studentUserId, now);
 }
 
 export const guardianLinkInput = z.object({

@@ -28,8 +28,13 @@ import {
 } from "./vortice";
 import { loadDueReview, answerReviewItem } from "./repaso";
 import { getStudentRubric, createRubricVersion, updateDraftRubric, rubricInputSchema } from "./rubricas";
-import { getBrujulaWeek, getBrujulaPanel, saveBrujulaWeek, closeBrujulaWeek } from "./brujula";
-import { saveWeekSchema, closeWeekSchema } from "@shared/brujula";
+import {
+  getBrujulaWeek, getBrujulaPanel, saveBrujulaWeek, closeBrujulaWeek,
+  getBrujulaPreferences, saveBrujulaPreferences, getBrujulaBlocks, saveBrujulaBlocks, toggleBrujulaBlock,
+} from "./brujula";
+import {
+  saveWeekSchema, closeWeekSchema, preferenciasBrujulaSchema, guardarBloquesSchema, toggleBloqueSchema,
+} from "@shared/brujula";
 import {
   crearCaso,
   casosDelEstudiante,
@@ -40,7 +45,9 @@ import {
   cerrarCaso,
   type TutoriaResult,
 } from "./tutoria";
-import { listLinkedStudents, loadFamiliaResumen, guardianLinkInput, upsertGuardianLink } from "./familia";
+import {
+  listLinkedStudents, loadFamiliaResumen, getFamiliaBrujula, guardianLinkInput, upsertGuardianLink,
+} from "./familia";
 import { recordEvent, recordResourceOpened, loadAnaliticaResumen } from "./analitica";
 import { enrollStudentInLevel, listEnrollments, findUserIdByEmail, MatriculaError } from "./matricula";
 import { db, client as dbClient } from "./db";
@@ -623,6 +630,73 @@ export async function registerRoutes(
     }
   });
 
+  // Brújula™ parte 2: preferencias de intensidad, días preferidos y franja horaria.
+  app.get("/api/vortice/brujula/preferencias", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      res.json(await getBrujulaPreferences(db, userId));
+    } catch (error) {
+      console.error("Error loading Brújula preferences:", error);
+      res.status(500).json({ message: "Failed to load preferences" });
+    }
+  });
+
+  app.put("/api/vortice/brujula/preferencias", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const parsed = preferenciasBrujulaSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Invalid data", errors: parsed.error.errors });
+      res.json(await saveBrujulaPreferences(db, userId, parsed.data));
+    } catch (error) {
+      console.error("Error saving Brújula preferences:", error);
+      res.status(500).json({ message: "Failed to save preferences" });
+    }
+  });
+
+  // Brújula™ parte 2: bloques semanales de estudio (propuestos o guardados).
+  app.get("/api/vortice/brujula/bloques", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      res.json(await getBrujulaBlocks(db, userId, new Date()));
+    } catch (error) {
+      console.error("Error loading Brújula blocks:", error);
+      res.status(500).json({ message: "Failed to load study blocks" });
+    }
+  });
+
+  app.post("/api/vortice/brujula/bloques", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const parsed = guardarBloquesSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Invalid data", errors: parsed.error.errors });
+      const result = await saveBrujulaBlocks(db, userId, new Date(), parsed.data.bloques);
+      if (!result.ok) return res.status(result.status).json({ message: result.reason });
+      res.json(result.data);
+    } catch (error) {
+      console.error("Error saving Brújula blocks:", error);
+      res.status(500).json({ message: "Failed to save study blocks" });
+    }
+  });
+
+  app.patch("/api/vortice/brujula/bloques/:blockId", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const parsed = toggleBloqueSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Invalid data", errors: parsed.error.errors });
+      const result = await toggleBrujulaBlock(db, userId, new Date(), getStringParam(req.params.blockId), parsed.data.completado);
+      if (!result.ok) return res.status(result.status).json({ message: result.reason });
+      res.json(result.data);
+    } catch (error) {
+      console.error("Error updating Brújula block:", error);
+      res.status(500).json({ message: "Failed to update study block" });
+    }
+  });
+
   // Vórtice familia (solo lectura): estudiantes con vínculo activo al apoderado en sesión.
   app.get("/api/familia/estudiantes", async (req: any, res) => {
     try {
@@ -646,6 +720,19 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error building familia resumen:", error);
       res.status(500).json({ message: "Failed to build resumen" });
+    }
+  });
+
+  app.get("/api/familia/estudiantes/:studentId/brujula", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const brujula = await getFamiliaBrujula(db, userId, String(req.params.studentId), new Date());
+      if (!brujula) return res.status(404).json({ message: "Estudiante no encontrado" });
+      res.json(brujula);
+    } catch (error) {
+      console.error("Error building familia brujula:", error);
+      res.status(500).json({ message: "Failed to build brujula" });
     }
   });
 

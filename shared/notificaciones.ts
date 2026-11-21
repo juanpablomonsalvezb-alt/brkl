@@ -101,6 +101,13 @@ export interface EntradaNotificaciones {
   resumen: VorticeOverview;
   // Recursos vistos + evaluaciones aprobadas en los últimos 7 días.
   avancesSemana: number;
+  // Resumen cualitativo de Brújula parte 2 para el correo del apoderado (sin notas ni porcentajes de E2).
+  brujulaApoderado?: {
+    estadoGeneral: "al_dia" | "por_recuperar" | "adelantado" | "sin_datos";
+    bloquesPlanificados: number;
+    bloquesCompletados: number;
+    orientacion?: string;
+  };
 }
 
 export interface Notificacion {
@@ -135,6 +142,14 @@ function lineasResumen(e: EntradaNotificaciones, sujeto: "tu" | "su"): string[] 
       : `Su siguiente paso es «${sig.itemTitle}» en ${sig.subjectName}.`);
   } else if (e.resumen.subjects.some((s) => s.waitingForRelease)) {
     lineas.push("Por ahora no hay nada pendiente: lo siguiente se abrirá según el calendario.");
+  }
+  if (sujeto === "su" && e.brujulaApoderado) {
+    if (e.brujulaApoderado.bloquesPlanificados > 0) {
+      lineas.push(`Plan semanal de estudio: ${e.brujulaApoderado.bloquesCompletados} de ${e.brujulaApoderado.bloquesPlanificados} bloques completados.`);
+    }
+    if (e.brujulaApoderado.orientacion) {
+      lineas.push(e.brujulaApoderado.orientacion);
+    }
   }
   return lineas;
 }

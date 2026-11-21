@@ -2,6 +2,7 @@
 // Lógica pura: recibe el resumen del estudiante y las fechas del calendario ya resueltas, y devuelve el panel.
 // Tono: orienta y propone, sin castigos, rachas ni puntajes (misma regla que shared/brujula.ts).
 import type { OverviewSubjectInput } from "./vortice";
+import type { IntensidadBrujula } from "./brujula";
 
 export interface FechasModulo {
   inicio: Date;
@@ -163,5 +164,96 @@ export function calcularPanel(p: {
     metricas,
     proximaEvaluacion: proxima,
     mensajes: mensajes.slice(0, MAX_MENSAJES),
+  };
+}
+
+export type EstadoRitmoApoderado = "al_dia" | "por_recuperar" | "adelantado" | "sin_datos";
+
+export interface ResumenBrujulaApoderado {
+  estadoGeneral: EstadoRitmoApoderado;
+  etiquetaEstado: string;
+  intensidad: IntensidadBrujula;
+  bloquesPlanificados: number;
+  bloquesCompletados: number;
+  proximaEvaluacion: { titulo: string; subjectName: string; dias: number } | null;
+  orientacion: string[];
+  asignaturas: { subjectName: string; estado: EstadoRitmoApoderado; etiquetaEstado: string }[];
+}
+
+const ETIQUETA_ESTADO_APODERADO: Record<EstadoRitmoApoderado, string> = {
+  al_dia: "Al día",
+  por_recuperar: "Por retomar a su ritmo",
+  adelantado: "Adelantado",
+  sin_datos: "Sin contenido aún",
+};
+
+const aEstadoApoderado = (r: Ritmo): EstadoRitmoApoderado =>
+  r === "atrasado" ? "por_recuperar" : r;
+
+/**
+ * Vista de Brújula para el apoderado (C5/D4): ritmo cualitativo, bloques semanales
+ * y orientación constructiva, sin porcentajes ni puntajes de evaluación.
+ */
+export function resumenBrujulaParaApoderado(
+  panel: PanelBrujula,
+  agenda: { intensidad: IntensidadBrujula; bloquesPlanificados: number; bloquesCompletados: number },
+): ResumenBrujulaApoderado {
+  const asignaturas = panel.metricas.map((m) => {
+    const estado = aEstadoApoderado(m.ritmo);
+    return {
+      subjectName: m.subjectName,
+      estado,
+      etiquetaEstado: ETIQUETA_ESTADO_APODERADO[estado],
+    };
+  });
+
+  let estadoGeneral: EstadoRitmoApoderado = "sin_datos";
+  if (asignaturas.some((a) => a.estado === "por_recuperar")) {
+    estadoGeneral = "por_recuperar";
+  } else if (asignaturas.some((a) => a.estado === "adelantado")) {
+    estadoGeneral = "adelantado";
+  } else if (asignaturas.some((a) => a.estado === "al_dia")) {
+    estadoGeneral = "al_dia";
+  }
+
+  const orientacion: string[] = [];
+  if (estadoGeneral === "por_recuperar") {
+    orientacion.push("Tiene módulos pendientes por retomar; acompañarlo con bloques cortos esta semana ayuda a ponerse al día a su ritmo.");
+  } else if (estadoGeneral === "al_dia" || estadoGeneral === "adelantado") {
+    orientacion.push("Va al día con su calendario semanal.");
+  } else {
+    orientacion.push("Aún no hay contenido liberado para observar el ritmo esta semana.");
+  }
+
+  if (agenda.bloquesPlanificados > 0) {
+    if (agenda.bloquesCompletados >= agenda.bloquesPlanificados) {
+      orientacion.push(`Completó los ${agenda.bloquesPlanificados} bloques de estudio planificados esta semana.`);
+    } else {
+      orientacion.push(`Lleva ${agenda.bloquesCompletados} de ${agenda.bloquesPlanificados} bloques de estudio planificados esta semana.`);
+    }
+  }
+
+  if (panel.proximaEvaluacion) {
+    const cuando = panel.proximaEvaluacion.dias === 0
+      ? "disponible hoy"
+      : `en ${plural(panel.proximaEvaluacion.dias, "día", "días")}`;
+    orientacion.push(`Próxima evaluación: «${panel.proximaEvaluacion.titulo}» de ${panel.proximaEvaluacion.subjectName} (${cuando}).`);
+  }
+
+  return {
+    estadoGeneral,
+    etiquetaEstado: ETIQUETA_ESTADO_APODERADO[estadoGeneral],
+    intensidad: agenda.intensidad,
+    bloquesPlanificados: agenda.bloquesPlanificados,
+    bloquesCompletados: agenda.bloquesCompletados,
+    proximaEvaluacion: panel.proximaEvaluacion
+      ? {
+          titulo: panel.proximaEvaluacion.titulo,
+          subjectName: panel.proximaEvaluacion.subjectName,
+          dias: panel.proximaEvaluacion.dias,
+        }
+      : null,
+    orientacion: orientacion.slice(0, 3),
+    asignaturas,
   };
 }

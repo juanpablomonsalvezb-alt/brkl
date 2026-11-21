@@ -4,13 +4,13 @@
 // plataforma (ruta PAES, proyectos, recursos, orientación, evaluaciones con fecha) no se muestran.
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowRight, BarChart3, BookOpen, Compass, BriefcaseBusiness, CalendarDays, ChevronRight, FileText, Home,
   Link2, Menu, MessageCircle, ClipboardCheck, RotateCcw, Target, Users, X,
 } from "lucide-react";
 import type { VorticeOverview, VorticeTrack } from "@shared/vortice";
-import type { BrujulaGoal } from "@shared/brujula";
+import type { BloqueEstudio, BrujulaGoal, PreferenciasBrujula } from "@shared/brujula";
 import type { PanelBrujula } from "@shared/brujulaPanel";
 import { RobotTutor } from "./RobotTutor";
 import { BrujulaPanel } from "./BrujulaPanel";
@@ -18,6 +18,7 @@ import "./vortice.css";
 
 interface Usuario { firstName: string | null; name: string | null }
 interface Semana { saved: boolean; goals: BrujulaGoal[] }
+interface BloquesRes { weekStart: string; preferencias: PreferenciasBrujula; saved: boolean; bloques: BloqueEstudio[] }
 interface Repaso { domains: { due: number }[] }
 interface Evidencia {
   id: string; kind: "texto" | "enlace" | "evaluacion"; title: string;
@@ -70,13 +71,54 @@ export default function VorticeInicio() {
     }));
   }, []);
 
+  const queryClient = useQueryClient();
   const usuario = useQuery({ queryKey: ["/api/auth/user"], queryFn: () => getJson<Usuario>("/api/auth/user"), retry: false });
   const sesion = !!usuario.data;
   const overview = useQuery({ queryKey: ["/api/vortice/overview"], queryFn: () => getJson<VorticeOverview & { evaluacionE2?: boolean }>("/api/vortice/overview"), enabled: sesion });
   const semana = useQuery({ queryKey: ["/api/vortice/brujula/semana"], queryFn: () => getJson<Semana>("/api/vortice/brujula/semana"), enabled: sesion });
   const panel = useQuery({ queryKey: ["/api/vortice/brujula/panel"], queryFn: () => getJson<PanelBrujula>("/api/vortice/brujula/panel"), enabled: sesion });
+  const preferencias = useQuery({ queryKey: ["/api/vortice/brujula/preferencias"], queryFn: () => getJson<PreferenciasBrujula>("/api/vortice/brujula/preferencias"), enabled: sesion });
+  const bloques = useQuery({ queryKey: ["/api/vortice/brujula/bloques"], queryFn: () => getJson<BloquesRes>("/api/vortice/brujula/bloques"), enabled: sesion });
   const repaso = useQuery({ queryKey: ["/api/vortice/repaso"], queryFn: () => getJson<Repaso>("/api/vortice/repaso"), enabled: sesion });
   const portafolio = useQuery({ queryKey: ["/api/vortice/portafolio"], queryFn: () => getJson<Evidencia[]>("/api/vortice/portafolio"), enabled: sesion });
+
+  const savePrefsMutation = useMutation({
+    mutationFn: async (next: PreferenciasBrujula) => {
+      const res = await fetch("/api/vortice/brujula/preferencias", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(next),
+      });
+      if (!res.ok) throw new Error("Error guardando preferencias");
+      return res.json() as Promise<PreferenciasBrujula>;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/vortice/brujula/preferencias"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/vortice/brujula/bloques"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/vortice/brujula/semana"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/vortice/brujula/panel"] });
+    },
+  });
+
+  const [togglingId, setTogglingId] = useState<string | null>(null);
+  const toggleBloqueMutation = useMutation({
+    mutationFn: async ({ blockId, completado }: { blockId: string; completado: boolean }) => {
+      setTogglingId(blockId);
+      const res = await fetch(`/api/vortice/brujula/bloques/${encodeURIComponent(blockId)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ completado }),
+      });
+      if (!res.ok) throw new Error("Error actualizando bloque");
+      return res.json() as Promise<BloquesRes>;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(["/api/vortice/brujula/bloques"], data);
+    },
+    onSettled: () => setTogglingId(null),
+  });
 
   const enPreview = typeof window !== "undefined" && window.location.hostname.endsWith(".vercel.app");
   const salir = enPreview ? "/api/preview/salir" : "/api/logout";
@@ -198,7 +240,17 @@ export default function VorticeInicio() {
             )}
           </section>
 
-          <BrujulaPanel panel={panel.data ?? undefined} cargando={panel.isLoading} error={panel.isError} />
+          <BrujulaPanel
+            panel={panel.data ?? undefined}
+            cargando={panel.isLoading}
+            error={panel.isError}
+            preferencias={preferencias.data ?? undefined}
+            bloques={bloques.data?.bloques}
+            onSavePreferencias={(p) => savePrefsMutation.mutate(p)}
+            onToggleBloque={(blockId, completado) => toggleBloqueMutation.mutate({ blockId, completado })}
+            guardandoPreferencias={savePrefsMutation.isPending}
+            guardandoBloqueId={togglingId}
+          />
 
           <section className="vx-card" id="asignaturas" aria-labelledby="vx-asig">
             <header><h2 id="vx-asig"><ClipboardCheck aria-hidden="true" />Mis asignaturas</h2>{nivel && <small>{nivel.name}</small>}</header>

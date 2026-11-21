@@ -1,17 +1,22 @@
 // Vórtice: despacho de notificaciones de aprendizaje.
 // Base de datos y transporte se inyectan para probarlo con SQLite en memoria y un transporte simulado.
 import { createHash, timingSafeEqual } from "node:crypto";
-import { and, count, eq, gte, inArray, isNotNull } from "drizzle-orm";
+import { and, asc, count, eq, gte, inArray, isNotNull } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import * as schema from "@shared/schema";
-import { enrollments, evaluationProgress, notificationLog, notificationPreferences, studentProgress } from "@shared/schema";
+import {
+  enrollments, evaluationProgress, guardianLinks, notificationLog,
+  notificationPreferences, studentProgress,
+} from "@shared/schema";
 import { users } from "@shared/models/auth";
 import { buildOverview } from "@shared/vortice";
+import { resumenBrujulaParaApoderado } from "@shared/brujulaPanel";
 import {
   PREFERENCIAS_POR_DEFECTO, TIPOS, claveEnvio, dentroDeHorario, momentoChile, planificarNotificaciones, semanaIso,
-  type ModuloNotif, type Notificacion, type Preferencias,
+  type EntradaNotificaciones, type ModuloNotif, type Notificacion, type Preferencias,
 } from "@shared/notificaciones";
 import { loadVorticeInput } from "./vortice";
+import { getBrujulaBlocks, getBrujulaPanel } from "./brujula";
 import {
   getModuleStartDate, getEvaluation1ReleaseDate, getEvaluation2ReleaseDate, getEvaluation3ReleaseDate, getEvaluation4ReleaseDate,
 } from "./calendarUtils";
@@ -106,23 +111,56 @@ export async function despacharNotificaciones(db: Db, transporte: Transporte, ah
           })),
       })));
 
-      const [[vistos], [aprobadas]] = await Promise.all([
+      const [[vistos], [aprobadas], [vinculoApoderado]] = await Promise.all([
         db.select({ n: count() }).from(studentProgress)
           .where(and(eq(studentProgress.userId, u.id), gte(studentProgress.completedAt, hace7Dias))),
         db.select({ n: count() }).from(evaluationProgress)
           .where(and(eq(evaluationProgress.userId, u.id), eq(evaluationProgress.passed, true), gte(evaluationProgress.completedAt, hace7Dias))),
+        db.select({ nombre: users.firstName, fullName: users.name, email: users.email })
+          .from(guardianLinks)
+          .innerJoin(users, eq(guardianLinks.guardianUserId, users.id))
+          .where(and(
+            eq(guardianLinks.studentUserId, u.id),
+            eq(guardianLinks.status, "activo"),
+            isNotNull(users.email),
+          ))
+          .orderBy(asc(guardianLinks.createdAt))
+          .limit(1),
       ]);
+
+      const apoderado = vinculoApoderado?.email
+        ? { nombre: vinculoApoderado.nombre || vinculoApoderado.fullName || null, email: vinculoApoderado.email }
+        : null;
+
+      let brujulaApoderado: EntradaNotificaciones["brujulaApoderado"];
+      if (apoderado && preferencias.resumenSemanalApoderado) {
+        const [panel, bloquesView] = await Promise.all([
+          getBrujulaPanel(db, u.id, ahora),
+          getBrujulaBlocks(db, u.id, ahora),
+        ]);
+        const resApoderado = resumenBrujulaParaApoderado(panel, {
+          intensidad: bloquesView.preferencias.intensidad,
+          bloquesPlanificados: bloquesView.bloques.length,
+          bloquesCompletados: bloquesView.bloques.filter((b) => b.completado).length,
+        });
+        brujulaApoderado = {
+          estadoGeneral: resApoderado.estadoGeneral,
+          bloquesPlanificados: resApoderado.bloquesPlanificados,
+          bloquesCompletados: resApoderado.bloquesCompletados,
+          orientacion: resApoderado.orientacion[0],
+        };
+      }
 
       const plan = planificarNotificaciones({
         ahora,
         estudiante: { nombre: u.firstName || u.name || null, email: u.email },
-        // ponytail: sin modelo de vínculo estudiante→apoderado en esta rama; el resumen al apoderado queda definido pero no se envía.
-        apoderado: null,
+        apoderado,
         preferencias,
         enviadas: new Set(registradas.map((r) => claveEnvio(r.type as Notificacion["tipo"], r.periodKey))),
         modulos,
         resumen: buildOverview(level, input, completed, passed),
         avancesSemana: (vistos?.n ?? 0) + (aprobadas?.n ?? 0),
+        brujulaApoderado,
       });
 
       for (const n of plan) {
