@@ -528,7 +528,8 @@ export async function registerRoutes(
       const userId = currentUserId(req);
       if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
-      res.json(await loadVorticeOverview(db, userId, new Date()));
+      // evaluacionE2: la pantalla de evaluación solo se enlaza si sus rutas están encendidas.
+      res.json({ ...(await loadVorticeOverview(db, userId, new Date())), evaluacionE2: rutasEvaluacionHabilitadas() });
     } catch (error) {
       console.error("Error building Vórtice overview:", error);
       res.status(500).json({ message: "Failed to build overview" });

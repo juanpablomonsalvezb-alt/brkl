@@ -70,7 +70,7 @@ export default function VorticeInicio() {
 
   const usuario = useQuery({ queryKey: ["/api/auth/user"], queryFn: () => getJson<Usuario>("/api/auth/user"), retry: false });
   const sesion = !!usuario.data;
-  const overview = useQuery({ queryKey: ["/api/vortice/overview"], queryFn: () => getJson<VorticeOverview>("/api/vortice/overview"), enabled: sesion });
+  const overview = useQuery({ queryKey: ["/api/vortice/overview"], queryFn: () => getJson<VorticeOverview & { evaluacionE2?: boolean }>("/api/vortice/overview"), enabled: sesion });
   const semana = useQuery({ queryKey: ["/api/vortice/brujula/semana"], queryFn: () => getJson<Semana>("/api/vortice/brujula/semana"), enabled: sesion });
   const repaso = useQuery({ queryKey: ["/api/vortice/repaso"], queryFn: () => getJson<Repaso>("/api/vortice/repaso"), enabled: sesion });
   const portafolio = useQuery({ queryKey: ["/api/vortice/portafolio"], queryFn: () => getJson<Evidencia[]>("/api/vortice/portafolio"), enabled: sesion });
@@ -96,7 +96,10 @@ export default function VorticeInicio() {
   const nivel = ov?.level;
   const linkAsignatura = (slug: string) => (nivel ? `/course/${nivel.id}-${slug}` : "#");
   const siguiente = ov?.nextStep;
-  const linkSiguiente = siguiente ? linkAsignatura(ov!.subjects.find((s) => s.levelSubjectId === siguiente.levelSubjectId)?.subjectSlug ?? "") : "#asignaturas";
+  const aEvaluacion = siguiente?.kind === "evaluation" && ov?.evaluacionE2 === true;
+  const linkSiguiente = aEvaluacion
+    ? `/vortice/evaluacion/${encodeURIComponent(siguiente!.itemId)}`
+    : siguiente ? linkAsignatura(ov!.subjects.find((s) => s.levelSubjectId === siguiente.levelSubjectId)?.subjectSlug ?? "") : "#asignaturas";
   const metas = semana.data?.goals ?? [];
   // Meta cumplida: el objetivo ya no es el objetivo abierto actual de su asignatura.
   const cumplida = (g: BrujulaGoal) => {
@@ -150,7 +153,7 @@ export default function VorticeInicio() {
               <p className="vx-sub">{ov?.track ? SUBTITULO[ov.track] : "Este es tu espacio de aprendizaje."}</p>
               <p className="vx-lema">“Pequeños avances, grandes resultados.”</p>
               <Link className="vx-cta" href={linkSiguiente}>
-                {siguiente ? "Continuar mi plan de hoy" : "Ver mis asignaturas"} <ArrowRight aria-hidden="true" />
+                {aEvaluacion ? "Rendir mi evaluación" : siguiente ? "Continuar mi plan de hoy" : "Ver mis asignaturas"} <ArrowRight aria-hidden="true" />
               </Link>
             </div>
             <div className="vx-focus" id="semana">
