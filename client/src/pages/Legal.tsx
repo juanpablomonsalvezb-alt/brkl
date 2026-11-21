@@ -80,7 +80,7 @@ export function TermsOfUse() {
       <P>
         Barkley entrega contenido asincrónico (video, pódcast, lecturas y evaluaciones) organizado por Aprendizaje
         por Dominio, acompañamiento de un tutor general y un asesor académico, y acceso al Portal Familia. El año de
-        preparación corre de marzo al 31 de octubre.
+        preparación corre de marzo a octubre.
       </P>
       <H2>Responsabilidades del estudiante y la familia</H2>
       <Ul>

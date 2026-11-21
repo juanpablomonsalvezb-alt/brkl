@@ -22,7 +22,7 @@ export const CONTACTO = "admisiones@barkleyinstituto.cl";
 const clp = (n: number) => `CLP ${n.toLocaleString("en-US")}`;
 const escolar = Number(MARCADORES.precio_escolar_numero);
 const adultos = Number(MARCADORES.precio_adultos_numero);
-const MESES = 8; // marzo a octubre
+const MESES = Number(MARCADORES.meses_escolar); // cuotas del plan escolar (marzo a septiembre)
 export const MONTOS = {
   escolarMes: clp(escolar),
   adultosMes: clp(adultos),
