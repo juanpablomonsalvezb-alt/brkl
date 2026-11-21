@@ -1,0 +1,203 @@
+/* Sistema visual editorial compartido de Vórtice (estética editorial calma + tipografía estilo Anthropic).
+   Aislado bajo .vx-editorial, .vx y .ve para no alterar la landing pública ni Home.tsx. */
+
+.vx-editorial,
+.vx,
+.ve {
+  --vx-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --vx-sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --vx-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --vx-bg: #FAF9F5;
+  --vx-cream: #FAF9F5;
+  --vx-surface: #F3F1EA;
+  --vx-side: #F3F1EA;
+  --vx-card: #FFFFFF;
+  --vx-line: #E6E2D8;
+  --vx-line-strong: #D5CFC2;
+
+  --vx-ink: #141413;
+  --vx-ink-soft: #5E5D59;
+  --vx-muted: #87867F;
+
+  --vx-green: #1F4A3D;
+  --vx-green-2: #2D6654;
+  --vx-green-soft: #EDF3F0;
+  --vx-clay: #C96442;
+  --vx-clay-hover: #B45435;
+  --vx-clay-soft: #FBF0EB;
+  --vx-amber: #D4942A;
+  --vx-amber-soft: #FEF6EA;
+  --vx-blue: #2F5EA8;
+  --vx-blue-soft: #EEF4FC;
+  --vx-orange: #D97736;
+  --vx-red: #C84B3B;
+  --vx-purple: #6D58B8;
+
+  --vx-shadow-sm: 0 1px 2px rgba(20, 20, 19, 0.04);
+  --vx-shadow-card: 0 1px 2px rgba(20, 20, 19, 0.04), 0 10px 28px -16px rgba(20, 20, 19, 0.08);
+  --vx-shadow: var(--vx-shadow-card);
+}
+
+.vx-editorial {
+  font-family: var(--vx-sans);
+  color: var(--vx-ink);
+  background: var(--vx-bg);
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.vx-editorial :focus-visible {
+  outline: 2px solid var(--vx-green-2);
+  outline-offset: 2px;
+}
+
+/* Anula la regla global Poppins de index.css dentro de todas las superficies editoriales de Vórtice. */
+.vx-editorial h1,
+.vx-editorial h2,
+.vx-editorial h3,
+.vx-editorial h4,
+.vx-editorial .vx-serif {
+  font-family: var(--vx-serif);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  letter-spacing: -0.022em;
+  color: var(--vx-ink);
+}
+
+.vx-editorial h1 {
+  letter-spacing: -0.028em;
+  line-height: 1.12;
+}
+
+:is(.vx-editorial, .vx) .vx-kicker {
+  font-family: var(--vx-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--vx-clay);
+}
+
+:is(.vx-editorial, .vx) .vx-mono {
+  font-family: var(--vx-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.vx-editorial .vx-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(250, 249, 245, 0.86);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--vx-line);
+}
+
+.vx-editorial .vx-paper {
+  background: var(--vx-card);
+  border: 1px solid var(--vx-line);
+  border-radius: 18px;
+  box-shadow: var(--vx-shadow-card);
+}
+
+.vx-editorial .vx-pill-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--vx-line);
+  background: var(--vx-card);
+  color: var(--vx-ink);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+.vx-editorial .vx-pill-nav:hover {
+  border-color: var(--vx-green);
+  color: var(--vx-green);
+  background: var(--vx-green-soft);
+}
+
+:is(.vx-editorial, .vx) .vx-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--vx-green);
+  background: var(--vx-green);
+  color: #FFFFFF;
+  font-weight: 500;
+  font-size: 14.5px;
+  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+:is(.vx-editorial, .vx) .vx-btn-primary:hover:not(:disabled) {
+  background: #16382E;
+  border-color: #16382E;
+}
+
+:is(.vx-editorial, .vx) .vx-btn-primary:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+:is(.vx-editorial, .vx) .vx-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--vx-line-strong);
+  background: var(--vx-card);
+  color: var(--vx-ink);
+  font-weight: 500;
+  font-size: 14.5px;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+:is(.vx-editorial, .vx) .vx-btn-ghost:hover:not(:disabled) {
+  border-color: var(--vx-ink);
+  background: var(--vx-surface);
+}
+
+.vx-editorial .vx-option-card {
+  width: 100%;
+  min-height: 52px;
+  text-align: left;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--vx-line);
+  background: var(--vx-card);
+  color: var(--vx-ink);
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.vx-editorial .vx-option-card:hover:not(:disabled) {
+  border-color: var(--vx-green-2);
+  background: #FCFCF9;
+}
+
+.vx-editorial .vx-option-card[data-selected="true"],
+.vx-editorial .vx-option-card[aria-checked="true"] {
+  border-color: var(--vx-green);
+  background: var(--vx-green-soft);
+  box-shadow: inset 0 0 0 1px var(--vx-green);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vx-editorial *,
+  .vx-editorial *::before,
+  .vx-editorial *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

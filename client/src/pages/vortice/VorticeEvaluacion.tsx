@@ -50,14 +50,7 @@ export default function VorticeEvaluacion() {
   const [ocupado, setOcupado] = useState(false);
   const offset = useRef(0); // segundos: reloj del servidor menos reloj local
 
-  useEffect(() => {
-    const id = "ve-fuentes";
-    if (document.getElementById(id)) return;
-    document.head.appendChild(Object.assign(document.createElement("link"), {
-      id, rel: "stylesheet",
-      href: "https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&display=swap",
-    }));
-  }, []);
+
 
   const cargar = useCallback(async () => {
     try {

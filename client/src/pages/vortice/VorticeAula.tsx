@@ -36,6 +36,7 @@ import {
   type PasoLeccion,
   type PuertaAprendizaje,
 } from "@shared/aulaUniversal";
+import "./vortice-editorial.css";
 
 interface ProgresoLeccionDTO extends GuardarProgresoLeccionInput {
   oaId: string;
@@ -120,7 +121,14 @@ function BotonVoz({
   const leyendo = voz.activoId === id;
   if (!voz.soporta) {
     return (
-      <Button type="button" variant="outline" size="sm" disabled title="Tu navegador no incluye síntesis de voz">
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        className="rounded-full border-[#D5CFC2] text-[#87867F]"
+        disabled
+        title="Tu navegador no incluye síntesis de voz"
+      >
         <VolumeX className="w-4 h-4 mr-1.5" />
         Voz no disponible
       </Button>
@@ -131,6 +139,11 @@ function BotonVoz({
       type="button"
       variant={leyendo ? "secondary" : "outline"}
       size="sm"
+      className={
+        leyendo
+          ? "rounded-full bg-[#EDF3F0] text-[#1F4A3D] border border-[#1F4A3D]/40 hover:bg-[#E2EDE8]"
+          : "rounded-full border-[#D5CFC2] bg-white text-[#141413] hover:border-[#1F4A3D] hover:bg-[#FAF9F5]"
+      }
       onClick={() => voz.alternar(id, texto)}
     >
       {leyendo ? <VolumeX className="w-4 h-4 mr-1.5" /> : <Volume2 className="w-4 h-4 mr-1.5" />}
@@ -342,15 +355,18 @@ export default function VorticeAula() {
 
   if (pilotoQuery.isError && (pilotoQuery.error as Error).message === "UNAUTHORIZED") {
     return (
-      <div className="min-h-screen bg-[#f7f4ee] flex items-center justify-center p-6">
-        <Card className="max-w-md w-full">
+      <div className="vx-editorial min-h-screen flex items-center justify-center p-6">
+        <Card className="vx-paper max-w-md w-full border-[#E6E2D8] shadow-none">
           <CardHeader>
-            <CardTitle>Inicia sesión para entrar al Aula</CardTitle>
-            <CardDescription>Necesitas tu cuenta activa para guardar exactamente en qué tramo vas.</CardDescription>
+            <span className="vx-kicker">Sesión requerida</span>
+            <CardTitle className="vx-serif font-medium text-2xl mt-1">Inicia sesión para entrar al Aula</CardTitle>
+            <CardDescription className="text-[#5E5D59]">
+              Necesitas tu cuenta activa para guardar exactamente en qué tramo vas.
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <Link href="/vortice">
-              <Button>Ir a Vórtice</Button>
+            <Link href="/vortice" className="vx-btn-primary">
+              Ir a Vórtice
             </Link>
           </CardContent>
         </Card>
@@ -368,39 +384,36 @@ export default function VorticeAula() {
   const diagLeccion = lecciones[idxDiag] ?? lecciones[0];
 
   return (
-    <div className="min-h-screen bg-[#f7f4ee] text-[#1c2a3a] py-6 px-4">
-      <div className="max-w-4xl mx-auto space-y-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <Link href="/vortice">
-              <Button type="button" variant="outline" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-1.5" />
-                Volver a Vórtice
-              </Button>
-            </Link>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-[#2f6b55]">
-                5.º Básico · Matemática · {leccion.modulo}
-              </p>
-              <h1 className="text-2xl font-serif font-bold text-[#1c2a3a]">Aula Universal del Piloto</h1>
-            </div>
-          </div>
+    <div className="vx-editorial min-h-screen">
+      <header className="vx-topbar">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+          <Link href="/vortice" className="vx-pill-nav">
+            <ArrowLeft className="w-4 h-4" />
+            Volver a Vórtice
+          </Link>
 
-          <div className="flex flex-wrap gap-2">
-            <Link href="/vortice/conocimientos">
-              <Button type="button" variant="outline">
-                Mis conocimientos
-              </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link href="/vortice/conocimientos" className="vx-pill-nav">
+              Mis conocimientos
             </Link>
-            <Button
+            <button
               type="button"
-              variant={abiertoDiagnostico ? "secondary" : "outline"}
               onClick={() => setAbiertoDiagnostico((v) => !v)}
+              className={`vx-pill-nav ${
+                abiertoDiagnostico ? "!border-[#1F4A3D] !bg-[#EDF3F0] !text-[#1F4A3D]" : ""
+              }`}
             >
-              <Compass className="w-4 h-4 mr-2" />
+              <Compass className="w-4 h-4" />
               Diagnóstico inicial (0)
-            </Button>
+            </button>
           </div>
+        </div>
+      </header>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+        <div className="space-y-1.5">
+          <span className="vx-kicker">5.º Básico · Matemática · {leccion.modulo}</span>
+          <h1 className="text-3xl sm:text-[2.35rem] leading-[1.12] text-[#141413]">Aula Universal del Piloto</h1>
         </div>
 
         {/* Selector de los 5 OA del piloto */}
@@ -415,13 +428,13 @@ export default function VorticeAula() {
                 role="tab"
                 aria-selected={activo}
                 onClick={() => setOaSeleccionado(item.oaId)}
-                className={`min-h-[44px] px-3.5 py-2 rounded-xl border text-left transition flex items-center gap-2 ${
+                className={`min-h-[42px] px-4 py-2 rounded-full border text-left transition flex items-center gap-2 ${
                   activo
-                    ? "bg-[#1f4a3d] text-white border-[#1f4a3d]"
-                    : "bg-white text-[#1c2a3a] border-[#e8e2d6] hover:border-[#1f4a3d]"
+                    ? "bg-[#1F4A3D] text-white border-[#1F4A3D] shadow-sm"
+                    : "bg-white text-[#141413] border-[#E6E2D8] hover:border-[#1F4A3D] hover:bg-[#FAF9F5]"
                 }`}
               >
-                <span className="font-semibold text-sm">{item.codigo}</span>
+                <span className="vx-mono font-medium text-sm">{item.codigo}</span>
                 {p?.practicaLograda && <CheckCircle2 className="w-4 h-4 shrink-0" />}
               </button>
             );
@@ -430,10 +443,10 @@ export default function VorticeAula() {
 
         {/* Panel de Diagnóstico 0 orientador (una pregunta a la vez, sin nota ni reloj) */}
         {abiertoDiagnostico && (
-          <Card className="border-[#2f6b55] bg-white">
-            <CardHeader>
-              <CardTitle className="text-lg">Evaluación de diagnóstico (0) · Orientación sin nota</CardTitle>
-              <CardDescription>
+          <Card className="vx-paper border-[#1F4A3D]/35 shadow-none">
+            <CardHeader className="pb-3">
+              <CardTitle className="vx-serif font-medium text-xl">Evaluación de diagnóstico (0) · Orientación sin nota</CardTitle>
+              <CardDescription className="text-[#5E5D59]">
                 Responde una pregunta breve por tema para sugerir qué te conviene repasar y dónde puedes ir directo a comprobar.
               </CardDescription>
             </CardHeader>
@@ -441,7 +454,7 @@ export default function VorticeAula() {
               {!resDiag ? (
                 <div className="space-y-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <Badge variant="outline">
+                    <Badge variant="outline" className="vx-mono rounded-full border-[#D5CFC2] text-[#5E5D59] font-normal">
                       Pregunta {idxDiag + 1} de {lecciones.length} · {diagLeccion.codigo}
                     </Badge>
                     <BotonVoz
@@ -450,7 +463,9 @@ export default function VorticeAula() {
                       voz={voz}
                     />
                   </div>
-                  <p className="font-medium text-base">{diagLeccion.preguntaDiagnostico.enunciado}</p>
+                  <p className="font-medium text-base text-[#141413] leading-relaxed">
+                    {diagLeccion.preguntaDiagnostico.enunciado}
+                  </p>
                   <div className="grid gap-2">
                     {diagLeccion.preguntaDiagnostico.alternativas.map((alt) => {
                       const marcada = respDiag[diagLeccion.preguntaDiagnostico.id] === alt.id;
@@ -461,11 +476,11 @@ export default function VorticeAula() {
                           onClick={() =>
                             setRespDiag((prev) => ({ ...prev, [diagLeccion.preguntaDiagnostico.id]: alt.id }))
                           }
-                          className={`min-h-[44px] px-4 py-2.5 rounded-lg border text-left transition ${
-                            marcada ? "bg-[#e5ece4] border-[#1f4a3d] font-semibold" : "bg-white border-[#e8e2d6]"
+                          className={`vx-option-card ${
+                            marcada ? "!bg-[#EDF3F0] !border-[#1F4A3D] font-medium" : ""
                           }`}
                         >
-                          <span className="font-bold mr-2">{alt.id}.</span>
+                          <span className="vx-mono text-xs font-medium text-[#1F4A3D] mr-2.5">{alt.id}.</span>
                           {alt.texto}
                         </button>
                       );
@@ -475,18 +490,24 @@ export default function VorticeAula() {
                     <Button
                       type="button"
                       variant="outline"
+                      className="rounded-full border-[#D5CFC2]"
                       disabled={idxDiag === 0}
                       onClick={() => setIdxDiag((i) => Math.max(0, i - 1))}
                     >
                       Anterior
                     </Button>
                     {idxDiag + 1 < lecciones.length ? (
-                      <Button type="button" onClick={() => setIdxDiag((i) => i + 1)}>
+                      <Button
+                        type="button"
+                        className="rounded-full bg-[#1F4A3D] hover:bg-[#16382E] text-white"
+                        onClick={() => setIdxDiag((i) => i + 1)}
+                      >
                         Siguiente tema
                       </Button>
                     ) : (
                       <Button
                         type="button"
+                        className="rounded-full bg-[#1F4A3D] hover:bg-[#16382E] text-white"
                         onClick={() => diagMutation.mutate(respDiag)}
                         disabled={diagMutation.isPending}
                       >
@@ -497,22 +518,27 @@ export default function VorticeAula() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <p className="text-sm text-[#5b6670]">
+                  <p className="text-sm text-[#5E5D59]">
                     Diagnóstico completado (solo orientador; puedes recorrer igual todos los módulos):
                   </p>
                   <div className="grid gap-2">
                     {resDiag.porOa.map((item) => (
                       <div
                         key={item.oaId}
-                        className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-lg border border-[#e8e2d6] bg-[#faf8f3]"
+                        className="flex flex-wrap items-center justify-between gap-2 p-3.5 rounded-xl border border-[#E6E2D8] bg-[#FAF9F5]"
                       >
                         <div>
-                          <span className="font-semibold mr-2">{item.codigo}</span>
-                          <span className="text-sm">{item.titulo}</span>
+                          <span className="vx-mono font-medium text-sm text-[#1F4A3D] mr-2">{item.codigo}</span>
+                          <span className="text-sm text-[#141413]">{item.titulo}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <Badge
-                            variant={item.recomendacion === "ya_lo_se_sugerido" ? "secondary" : "outline"}
+                            variant="outline"
+                            className={`rounded-full font-normal ${
+                              item.recomendacion === "ya_lo_se_sugerido"
+                                ? "bg-[#EDF3F0] text-[#1F4A3D] border-[#1F4A3D]/30"
+                                : "bg-[#FBF0EB] text-[#9A4225] border-[#C96442]/30"
+                            }`}
                           >
                             {item.recomendacion === "ya_lo_se_sugerido" ? "Sugerido: Ya lo sé" : "Conviene estudiar"}
                           </Badge>
@@ -520,6 +546,7 @@ export default function VorticeAula() {
                             type="button"
                             size="sm"
                             variant="outline"
+                            className="rounded-full border-[#D5CFC2] bg-white"
                             onClick={() => {
                               const yaLoSe = item.recomendacion === "ya_lo_se_sugerido";
                               if (item.oaId === leccion.oaId) {
@@ -538,7 +565,13 @@ export default function VorticeAula() {
                       </div>
                     ))}
                   </div>
-                  <Button type="button" variant="outline" size="sm" onClick={() => setResDiag(null)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full border-[#D5CFC2]"
+                    onClick={() => setResDiag(null)}
+                  >
                     Responder de nuevo
                   </Button>
                 </div>
@@ -548,37 +581,43 @@ export default function VorticeAula() {
         )}
 
         {retomadoBanner && (
-          <Alert className="border-[#2f6b55] bg-[#e5ece4] text-[#1f4a3d]">
-            <AlertDescription className="flex flex-wrap items-center justify-between gap-2">
+          <Alert className="rounded-2xl border-[#1F4A3D]/30 bg-[#EDF3F0] text-[#1F4A3D]">
+            <AlertDescription className="flex flex-wrap items-center justify-between gap-2 text-[14.5px]">
               <span>{retomadoBanner}</span>
               {progresoActual?.practicaLograda && (
-                <Badge className="bg-[#1f4a3d] text-white">Comprobación lograda</Badge>
+                <Badge className="rounded-full bg-[#1F4A3D] text-white font-normal">Comprobación lograda</Badge>
               )}
             </AlertDescription>
           </Alert>
         )}
 
         {/* Cabecera de la lección actual */}
-        <Card className="border-[#e8e2d6] bg-white">
-          <CardHeader className="pb-3">
+        <Card className="vx-paper border-[#E6E2D8] shadow-none">
+          <CardHeader className="pb-4 space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <Badge className="bg-[#1f4a3d] text-white">{leccion.codigo}</Badge>
-                <Badge variant="outline">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge className="vx-mono rounded-full bg-[#1F4A3D] text-white font-normal">{leccion.codigo}</Badge>
+                <Badge variant="outline" className="rounded-full border-[#D5CFC2] text-[#5E5D59] font-normal">
                   {leccion.prioridad === "nucleo_examen" ? "Prioridad de examen" : "Del nivel"}
                 </Badge>
-                <span className="text-xs text-[#5b6670]">{leccion.tiempoEstimadoMin} min aprox.</span>
+                <span className="vx-mono text-xs text-[#87867F]">{leccion.tiempoEstimadoMin} min aprox.</span>
               </div>
               {guardarProgresoMutation.isPending && (
-                <span className="text-xs text-[#5b6670]">Guardando tramo…</span>
+                <span className="text-xs text-[#5E5D59]">Guardando tramo…</span>
               )}
             </div>
-            <CardTitle className="text-xl font-serif pt-1">{leccion.titulo}</CardTitle>
+            <CardTitle className="vx-serif font-medium text-2xl sm:text-[1.65rem] leading-snug pt-1 text-[#141413]">
+              {leccion.titulo}
+            </CardTitle>
           </CardHeader>
 
           {/* Barra fija de los 4 bloques */}
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" role="tablist" aria-label="Pasos de la lección">
+            <div
+              className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1.5 rounded-2xl bg-[#F3F1EA] border border-[#E6E2D8]"
+              role="tablist"
+              aria-label="Pasos de la lección"
+            >
               {PASOS_LECCION.map((paso) => {
                 const activo = pasoActual === paso;
                 return (
@@ -591,10 +630,10 @@ export default function VorticeAula() {
                       setOrigenYaLoSe(false);
                       actualizarYGuardar({ pasoActual: paso });
                     }}
-                    className={`min-h-[44px] px-3 py-2 rounded-lg border text-sm font-semibold transition ${
+                    className={`min-h-[42px] px-3 py-2 rounded-xl border text-sm transition ${
                       activo
-                        ? "bg-[#1f4a3d] text-white border-[#1f4a3d]"
-                        : "bg-[#faf8f3] text-[#1c2a3a] border-[#e8e2d6] hover:border-[#1f4a3d]"
+                        ? "bg-white text-[#141413] border-[#D5CFC2] font-medium shadow-sm"
+                        : "bg-transparent text-[#5E5D59] border-transparent hover:text-[#141413] hover:bg-white/60"
                     }`}
                   >
                     {ETIQUETA_PASO[paso]}
@@ -605,31 +644,31 @@ export default function VorticeAula() {
 
             {/* BLOQUE 1: ME UBICO (Anticipador + Vocabulario clave previo) */}
             {pasoActual === "me_ubico" && (
-              <div className="space-y-5">
-                <div className="p-4 rounded-xl bg-[#faf8f3] border border-[#e8e2d6] space-y-2">
+              <div className="space-y-6">
+                <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#E6E2D8] border-l-2 border-l-[#C96442] space-y-2.5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h2 className="font-semibold text-base flex items-center gap-2">
-                      <BookOpen className="w-4 h-4 text-[#1f4a3d]" />
+                    <h2 className="vx-serif font-medium text-lg flex items-center gap-2 text-[#141413]">
+                      <BookOpen className="w-4 h-4 text-[#1F4A3D]" />
                       ¿Qué vas a lograr aquí?
                     </h2>
                     <BotonVoz id={`obj-${leccion.oaId}`} texto={leccion.objetivo} voz={voz} />
                   </div>
-                  <p className="text-base">{leccion.objetivo}</p>
-                  <p className="text-xs text-[#5b6670]">
+                  <p className="text-[16px] leading-[1.65] text-[#141413] max-w-[66ch]">{leccion.objetivo}</p>
+                  <p className="text-xs text-[#5E5D59]">
                     Esta lección tiene {leccion.microTramos.length} tramos breves, 1 ejemplo paso a paso y 3 comprobaciones sin cronómetro.
                   </p>
                 </div>
 
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-sm uppercase tracking-wide text-[#5b6670]">
+                <div className="space-y-3">
+                  <h3 className="vx-kicker !text-[#5E5D59]">
                     Vocabulario clave antes de partir
                   </h3>
-                  <div className="grid gap-2.5 sm:grid-cols-2">
+                  <div className="grid gap-3 sm:grid-cols-2">
                     {leccion.vocabulario.map((item) => (
-                      <div key={item.termino} className="p-3 rounded-lg border border-[#e8e2d6] bg-white space-y-1">
-                        <div className="font-semibold text-[#1f4a3d]">{item.termino}</div>
-                        <p className="text-sm text-[#1c2a3a]">{item.definicion}</p>
-                        <p className="text-xs text-[#5b6670]">Ejemplo: {item.ejemplo}</p>
+                      <div key={item.termino} className="p-4 rounded-xl border border-[#E6E2D8] bg-white space-y-1.5">
+                        <div className="vx-serif font-medium text-[17px] text-[#1F4A3D]">{item.termino}</div>
+                        <p className="text-sm leading-relaxed text-[#141413]">{item.definicion}</p>
+                        <p className="text-xs text-[#5E5D59]">Ejemplo: {item.ejemplo}</p>
                       </div>
                     ))}
                   </div>
@@ -639,6 +678,7 @@ export default function VorticeAula() {
                   <Button
                     type="button"
                     variant="outline"
+                    className="rounded-full border-[#D5CFC2]"
                     onClick={() => {
                       setOrigenYaLoSe(true);
                       actualizarYGuardar({ pasoActual: "comprueba" });
@@ -648,7 +688,7 @@ export default function VorticeAula() {
                   </Button>
                   <Button
                     type="button"
-                    className="bg-[#1f4a3d] hover:bg-[#173a30]"
+                    className="rounded-full px-5 bg-[#1F4A3D] hover:bg-[#16382E] text-white"
                     onClick={() => actualizarYGuardar({ pasoActual: "aprende", tramoActual: 0 })}
                   >
                     Empezar en Aprende
@@ -662,11 +702,13 @@ export default function VorticeAula() {
             {pasoActual === "aprende" && (
               <div className="space-y-5">
                 {/* Única puerta principal visible por defecto */}
-                <div className="p-4 rounded-xl border-2 border-[#1f4a3d] bg-[#faf8f3] space-y-3">
+                <div className="p-5 rounded-2xl border border-[#1F4A3D]/35 bg-[#FAF9F5] space-y-3.5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div>
-                      <Badge className="bg-[#1f4a3d] text-white mb-1">Puerta principal · {principal.duracion}</Badge>
-                      <h2 className="text-lg font-semibold">{principal.etiqueta}</h2>
+                    <div className="space-y-1">
+                      <Badge className="rounded-full bg-[#1F4A3D] text-white font-normal">
+                        Puerta principal · {principal.duracion}
+                      </Badge>
+                      <h2 className="vx-serif font-medium text-xl text-[#141413]">{principal.etiqueta}</h2>
                     </div>
                     <BotonVoz
                       id={`puerta-${leccion.oaId}-${principal.tipo}`}
@@ -674,24 +716,24 @@ export default function VorticeAula() {
                       voz={voz}
                     />
                   </div>
-                  <p className="text-sm text-[#5b6670]">{principal.descripcion}</p>
+                  <p className="text-[14.5px] leading-relaxed text-[#5E5D59]">{principal.descripcion}</p>
 
                   {principal.tipo === "explorar" && principal.explorarConfig && (
-                    <div className="p-3 rounded-lg bg-white border border-[#e8e2d6] space-y-2">
-                      <p className="font-semibold text-sm">{principal.explorarConfig.titulo}</p>
-                      <p className="text-xs text-[#5b6670]">{principal.explorarConfig.descripcion}</p>
-                      <div className="space-y-1.5">
-                        <div className="text-xs font-medium">{principal.explorarConfig.izqEtiqueta}</div>
-                        <div className="h-3 rounded-full bg-[#e8e2d6] overflow-hidden">
+                    <div className="p-4 rounded-xl bg-white border border-[#E6E2D8] space-y-2.5">
+                      <p className="font-medium text-sm text-[#141413]">{principal.explorarConfig.titulo}</p>
+                      <p className="text-xs text-[#5E5D59]">{principal.explorarConfig.descripcion}</p>
+                      <div className="space-y-2">
+                        <div className="text-xs font-medium text-[#141413]">{principal.explorarConfig.izqEtiqueta}</div>
+                        <div className="h-3 rounded-full bg-[#F3F1EA] overflow-hidden">
                           <div
-                            className="h-full bg-[#e8893a]"
+                            className="h-full bg-[#C96442] rounded-full"
                             style={{ width: `${principal.explorarConfig.izqValor}%` }}
                           />
                         </div>
-                        <div className="text-xs font-medium">{principal.explorarConfig.derEtiqueta}</div>
-                        <div className="h-3 rounded-full bg-[#e8e2d6] overflow-hidden">
+                        <div className="text-xs font-medium text-[#141413]">{principal.explorarConfig.derEtiqueta}</div>
+                        <div className="h-3 rounded-full bg-[#F3F1EA] overflow-hidden">
                           <div
-                            className="h-full bg-[#1f4a3d]"
+                            className="h-full bg-[#1F4A3D] rounded-full"
                             style={{ width: `${principal.explorarConfig.derValor}%` }}
                           />
                         </div>
@@ -699,11 +741,11 @@ export default function VorticeAula() {
                     </div>
                   )}
 
-                  <div className="p-3 rounded-lg bg-white border border-[#e8e2d6] text-sm">
-                    <span className="font-semibold block text-xs uppercase text-[#5b6670] mb-1">
+                  <div className="p-4 rounded-xl bg-white border border-[#E6E2D8] text-[15px] leading-[1.65] text-[#141413]">
+                    <span className="vx-kicker !text-[#5E5D59] block mb-1.5">
                       Transcripción / guion breve
                     </span>
-                    {principal.transcripcion}
+                    <div className="max-w-[66ch]">{principal.transcripcion}</div>
                   </div>
 
                   {/* Controles desplegables para no saturar */}
@@ -712,6 +754,7 @@ export default function VorticeAula() {
                       type="button"
                       variant="outline"
                       size="sm"
+                      className="rounded-full border-[#D5CFC2] bg-white"
                       aria-expanded={verOtrasPuertas}
                       onClick={() => setVerOtrasPuertas((v) => !v)}
                     >
@@ -722,6 +765,7 @@ export default function VorticeAula() {
                       type="button"
                       variant="outline"
                       size="sm"
+                      className="rounded-full border-[#D5CFC2] bg-white"
                       aria-expanded={verApoyos}
                       onClick={() => setVerApoyos((v) => !v)}
                     >
@@ -731,7 +775,7 @@ export default function VorticeAula() {
                   </div>
 
                   {verOtrasPuertas && (
-                    <div className="grid gap-2 sm:grid-cols-3 pt-2">
+                    <div className="grid gap-2.5 sm:grid-cols-3 pt-2">
                       {secundarias.map((sec) => (
                         <button
                           key={sec.tipo}
@@ -740,17 +784,17 @@ export default function VorticeAula() {
                             setVerOtrasPuertas(false);
                             actualizarYGuardar({ puertaPreferida: sec.tipo });
                           }}
-                          className="min-h-[44px] p-3 rounded-lg border border-[#e8e2d6] bg-white text-left hover:border-[#1f4a3d]"
+                          className="vx-option-card !min-h-[44px] !p-3"
                         >
-                          <div className="font-semibold text-sm">{sec.etiqueta}</div>
-                          <div className="text-xs text-[#5b6670]">{sec.duracion}</div>
+                          <div className="font-medium text-sm text-[#141413]">{sec.etiqueta}</div>
+                          <div className="text-xs text-[#5E5D59] mt-0.5">{sec.duracion}</div>
                         </button>
                       ))}
                     </div>
                   )}
 
                   {verApoyos && (
-                    <div className="p-3 rounded-lg border border-[#e8e2d6] bg-white space-y-3">
+                    <div className="p-4 rounded-xl border border-[#E6E2D8] bg-white space-y-3">
                       <div className="flex flex-wrap gap-2">
                         {(["mapa", "infografia", "tarjetas"] as const).map((tab) => (
                           <Button
@@ -758,6 +802,11 @@ export default function VorticeAula() {
                             type="button"
                             size="sm"
                             variant={apoyoActivo === tab ? "default" : "outline"}
+                            className={
+                              apoyoActivo === tab
+                                ? "rounded-full bg-[#1F4A3D] hover:bg-[#16382E] text-white"
+                                : "rounded-full border-[#D5CFC2]"
+                            }
                             onClick={() => setApoyoActivo(tab)}
                           >
                             {tab === "mapa" ? "Mapa mental" : tab === "infografia" ? "Infografía" : "Tarjetas"}
@@ -765,41 +814,48 @@ export default function VorticeAula() {
                         ))}
                       </div>
                       {apoyoActivo === "mapa" && (
-                        <ul className="space-y-1.5 text-sm">
+                        <ul className="space-y-1.5 text-sm leading-relaxed text-[#141413]">
                           {leccion.apoyos.mapaMental.map((n) => (
                             <li key={n.nodo}>
-                              <span className="font-semibold text-[#1f4a3d]">{n.nodo}:</span> {n.detalle}
+                              <span className="font-semibold text-[#1F4A3D]">{n.nodo}:</span> {n.detalle}
                             </li>
                           ))}
                         </ul>
                       )}
                       {apoyoActivo === "infografia" && (
-                        <ul className="list-disc pl-5 space-y-1 text-sm">
+                        <ul className="list-disc pl-5 space-y-1.5 text-sm leading-relaxed text-[#141413]">
                           {leccion.apoyos.infografiaResumen.map((linea, idx) => (
                             <li key={idx}>{linea}</li>
                           ))}
                         </ul>
                       )}
                       {apoyoActivo === "tarjetas" && (
-                        <div className="space-y-2">
-                          <div className="p-3 rounded-lg bg-[#faf8f3] border border-[#e8e2d6] text-sm">
-                            <span className="text-xs uppercase text-[#5b6670] block mb-1">
+                        <div className="space-y-2.5">
+                          <div className="p-4 rounded-xl bg-[#FAF9F5] border border-[#E6E2D8] text-sm">
+                            <span className="vx-kicker !text-[#5E5D59] block mb-1.5">
                               Tarjeta {tarjetaIdx + 1} de {leccion.apoyos.tarjetas.length}
                             </span>
-                            <p className="font-medium">
+                            <p className="font-medium text-[15px] text-[#141413]">
                               {tarjetaVolteada
                                 ? leccion.apoyos.tarjetas[tarjetaIdx].reverso
                                 : leccion.apoyos.tarjetas[tarjetaIdx].frente}
                             </p>
                           </div>
                           <div className="flex gap-2">
-                            <Button type="button" size="sm" variant="outline" onClick={() => setTarjetaVolteada((v) => !v)}>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="outline"
+                              className="rounded-full border-[#D5CFC2]"
+                              onClick={() => setTarjetaVolteada((v) => !v)}
+                            >
                               {tarjetaVolteada ? "Ver pregunta" : "Dar vuelta"}
                             </Button>
                             <Button
                               type="button"
                               size="sm"
                               variant="outline"
+                              className="rounded-full border-[#D5CFC2]"
                               onClick={() => {
                                 setTarjetaVolteada(false);
                                 setTarjetaIdx((i) => (i + 1) % leccion.apoyos.tarjetas.length);
@@ -815,9 +871,9 @@ export default function VorticeAula() {
                 </div>
 
                 {/* Micro-tramo actual (de a uno para menos carga cognitiva) */}
-                <div className="p-4 rounded-xl border border-[#e8e2d6] bg-white space-y-3">
+                <div className="p-5 rounded-2xl border border-[#E6E2D8] bg-white space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <Badge variant="outline">
+                    <Badge variant="outline" className="vx-mono rounded-full border-[#D5CFC2] text-[#5E5D59] font-normal">
                       Tramo {tramoActual + 1} de {leccion.microTramos.length}
                     </Badge>
                     <BotonVoz
@@ -826,13 +882,14 @@ export default function VorticeAula() {
                       voz={voz}
                     />
                   </div>
-                  <h3 className="font-semibold text-base">{tramo.titulo}</h3>
-                  <p className="text-sm font-medium text-[#2f6b55]">{tramo.consigna}</p>
-                  <p className="text-sm leading-relaxed">{tramo.contenido}</p>
+                  <h3 className="vx-serif font-medium text-xl text-[#141413]">{tramo.titulo}</h3>
+                  <p className="text-sm font-medium text-[#1F4A3D]">{tramo.consigna}</p>
+                  <p className="text-[15.5px] leading-[1.68] text-[#141413] max-w-[66ch]">{tramo.contenido}</p>
                   <div className="flex justify-between pt-2">
                     <Button
                       type="button"
                       variant="outline"
+                      className="rounded-full border-[#D5CFC2]"
                       disabled={tramoActual === 0}
                       onClick={() => actualizarYGuardar({ tramoActual: Math.max(0, tramoActual - 1) })}
                     >
@@ -841,6 +898,7 @@ export default function VorticeAula() {
                     <Button
                       type="button"
                       variant="outline"
+                      className="rounded-full border-[#D5CFC2]"
                       disabled={tramoActual + 1 >= leccion.microTramos.length}
                       onClick={() =>
                         actualizarYGuardar({
@@ -854,9 +912,9 @@ export default function VorticeAula() {
                 </div>
 
                 {/* Ejemplo resuelto paso a paso (revelar de a uno) */}
-                <div className="p-4 rounded-xl border border-[#e8e2d6] bg-[#faf8f3] space-y-3">
+                <div className="p-5 rounded-2xl border border-[#E6E2D8] bg-[#FAF9F5] space-y-3.5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="font-semibold text-base">{leccion.ejemploResuelto.titulo}</h3>
+                    <h3 className="vx-serif font-medium text-lg text-[#141413]">{leccion.ejemploResuelto.titulo}</h3>
                     <BotonVoz
                       id={`ej-${leccion.oaId}-${pasoEjemploVisto}`}
                       texto={leccion.ejemploResuelto.pasos.slice(0, pasoEjemploVisto + 1).join(". ")}
@@ -867,36 +925,39 @@ export default function VorticeAula() {
                     {leccion.ejemploResuelto.pasos.map((pasoTxt, i) => (
                       <li
                         key={i}
-                        className={`p-2.5 rounded-lg border text-sm ${
+                        className={`p-3 rounded-xl border text-[14.5px] leading-relaxed ${
                           i <= pasoEjemploVisto
-                            ? "bg-white border-[#2f6b55] text-[#1c2a3a]"
-                            : "bg-[#f4efe6] border-dashed border-[#d6cfc2] text-[#7b858c]"
+                            ? "bg-white border-[#1F4A3D]/35 text-[#141413]"
+                            : "bg-[#F3F1EA] border-dashed border-[#D5CFC2] text-[#87867F]"
                         }`}
                       >
-                        <span className="font-semibold mr-2">Paso {i + 1}:</span>
+                        <span className="vx-mono text-xs font-medium text-[#1F4A3D] mr-2.5">Paso {i + 1}</span>
                         {i <= pasoEjemploVisto ? pasoTxt : "Paso oculto (pulsa mostrar siguiente paso)"}
                       </li>
                     ))}
                   </ol>
-                  <div className="p-3 rounded-lg bg-[#fff7ed] border border-[#fed7aa] text-sm">
-                    <span className="font-semibold">Error frecuente:</span> {leccion.ejemploResuelto.errorFrecuente}
+                  <div className="p-3.5 rounded-xl bg-[#FBF0EB] border border-[#C96442]/30 text-sm text-[#141413]">
+                    <span className="font-semibold text-[#9A4225]">Error frecuente:</span>{" "}
+                    {leccion.ejemploResuelto.errorFrecuente}
                   </div>
                   <div className="flex flex-wrap justify-between gap-2 pt-1">
                     {pasoEjemploVisto + 1 < leccion.ejemploResuelto.pasos.length ? (
                       <Button
                         type="button"
                         variant="outline"
+                        className="rounded-full border-[#D5CFC2] bg-white"
                         onClick={() => actualizarYGuardar({ pasoEjemploVisto: pasoEjemploVisto + 1 })}
                       >
                         Mostrar paso {pasoEjemploVisto + 2}
                       </Button>
                     ) : (
-                      <span className="text-xs font-medium text-[#2f6b55] self-center">Ejemplo completo revisado</span>
+                      <span className="text-xs font-medium text-[#1F4A3D] self-center">Ejemplo completo revisado</span>
                     )}
                     <div className="flex flex-wrap gap-2">
                       <Button
                         type="button"
                         variant="outline"
+                        className="rounded-full border-[#D5CFC2] bg-white"
                         onClick={() => {
                           setOrigenYaLoSe(true);
                           actualizarYGuardar({ pasoActual: "comprueba" });
@@ -906,7 +967,7 @@ export default function VorticeAula() {
                       </Button>
                       <Button
                         type="button"
-                        className="bg-[#1f4a3d] hover:bg-[#173a30]"
+                        className="rounded-full px-5 bg-[#1F4A3D] hover:bg-[#16382E] text-white"
                         onClick={() => actualizarYGuardar({ pasoActual: "intentalo" })}
                       >
                         Seguir con Inténtalo tú
@@ -922,7 +983,7 @@ export default function VorticeAula() {
             {pasoActual === "intentalo" && (
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <Badge variant="outline">
+                  <Badge variant="outline" className="vx-mono rounded-full border-[#D5CFC2] text-[#5E5D59] font-normal">
                     Práctica {idxPractica + 1} de {leccion.ejerciciosPractica.length} · Sin nota ni cronómetro
                   </Badge>
                   <BotonVoz
@@ -932,7 +993,9 @@ export default function VorticeAula() {
                   />
                 </div>
 
-                <p className="text-base font-medium">{ejercicioActual.enunciado}</p>
+                <p className="text-[16.5px] font-medium leading-relaxed text-[#141413] max-w-[66ch]">
+                  {ejercicioActual.enunciado}
+                </p>
 
                 <div className="grid gap-2">
                   {ejercicioActual.alternativas.map((alt) => {
@@ -956,15 +1019,15 @@ export default function VorticeAula() {
                             clientSubmissionId: submissionId,
                           });
                         }}
-                        className={`min-h-[44px] px-4 py-2.5 rounded-lg border text-left transition ${
+                        className={`vx-option-card ${
                           seleccionada
                             ? esCorrecta
-                              ? "bg-[#e5ece4] border-[#1f4a3d] font-semibold"
-                              : "bg-[#fef2f2] border-[#d65a4a]"
-                            : "bg-white border-[#e8e2d6]"
+                              ? "!bg-[#EDF3F0] !border-[#1F4A3D] font-medium"
+                              : "!bg-[#FBF0EB] !border-[#C84B3B]/60"
+                            : ""
                         }`}
                       >
-                        <span className="font-bold mr-2">{alt.id}.</span>
+                        <span className="vx-mono text-xs font-medium text-[#1F4A3D] mr-2.5">{alt.id}.</span>
                         {alt.texto}
                       </button>
                     );
@@ -973,15 +1036,15 @@ export default function VorticeAula() {
 
                 {respActual && (
                   <div
-                    className={`p-3 rounded-lg border text-sm ${
+                    className={`p-3.5 rounded-xl border text-sm ${
                       respActual === ejercicioActual.respuestaCorrecta
-                        ? "bg-[#e5ece4] border-[#1f4a3d]"
-                        : "bg-[#faf8f3] border-[#e8e2d6]"
+                        ? "bg-[#EDF3F0] border-[#1F4A3D]/35 text-[#141413]"
+                        : "bg-[#FAF9F5] border-[#E6E2D8] text-[#141413]"
                     }`}
                   >
                     {respActual === ejercicioActual.respuestaCorrecta ? (
                       <>
-                        <span className="font-semibold">Bien:</span> {ejercicioActual.explicacionCorrecta}
+                        <span className="font-semibold text-[#1F4A3D]">Bien:</span> {ejercicioActual.explicacionCorrecta}
                       </>
                     ) : (
                       <span>Aún no coincide. Usa una pista abajo y vuelve a elegir con calma.</span>
@@ -990,10 +1053,10 @@ export default function VorticeAula() {
                 )}
 
                 {/* Pistas escalonadas en 3 niveles (deterministas, sin IA) */}
-                <div className="p-4 rounded-xl bg-[#faf8f3] border border-[#e8e2d6] space-y-3">
+                <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#E6E2D8] space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-sm font-semibold flex items-center gap-1.5">
-                      <Lightbulb className="w-4 h-4 text-[#e8893a]" />
+                    <span className="text-sm font-medium text-[#141413] flex items-center gap-1.5">
+                      <Lightbulb className="w-4 h-4 text-[#C96442]" />
                       Pistas paso a paso (sin nota)
                     </span>
                     <div className="flex flex-wrap gap-2">
@@ -1003,6 +1066,11 @@ export default function VorticeAula() {
                           type="button"
                           size="sm"
                           variant={nivelPistaActual >= n ? "secondary" : "outline"}
+                          className={
+                            nivelPistaActual >= n
+                              ? "rounded-full bg-[#FBF0EB] text-[#9A4225] border border-[#C96442]/35"
+                              : "rounded-full border-[#D5CFC2] bg-white"
+                          }
                           onClick={() =>
                             setNivelPistaPorEj((prev) => ({ ...prev, [ejercicioActual.id]: n }))
                           }
@@ -1014,12 +1082,12 @@ export default function VorticeAula() {
                     </div>
                   </div>
                   {nivelPistaActual > 0 ? (
-                    <div className="space-y-1.5 text-sm">
+                    <div className="space-y-2 text-sm">
                       {([1, 2, 3] as const)
                         .filter((n) => n <= nivelPistaActual)
                         .map((n) => (
-                          <p key={n} className="p-2 rounded bg-white border border-[#e8e2d6]">
-                            <span className="font-semibold">
+                          <p key={n} className="p-3 rounded-xl bg-white border border-[#E6E2D8] leading-relaxed">
+                            <span className="font-medium text-[#1F4A3D]">
                               Nivel {n} ({n === 1 ? "dónde mirar" : n === 2 ? "primer paso" : "ejemplo similar"}):{" "}
                             </span>
                             {pistaPorNivel(ejercicioActual, n)}
@@ -1027,7 +1095,7 @@ export default function VorticeAula() {
                         ))}
                     </div>
                   ) : (
-                    <p className="text-xs text-[#5b6670]">
+                    <p className="text-xs text-[#5E5D59]">
                       Si te trabas, pide Pista 1 (dónde mirar), Pista 2 (primer paso) o Pista 3 (ejemplo similar).
                     </p>
                   )}
@@ -1037,6 +1105,7 @@ export default function VorticeAula() {
                   <Button
                     type="button"
                     variant="outline"
+                    className="rounded-full border-[#D5CFC2]"
                     disabled={idxPractica === 0}
                     onClick={() => setIdxPractica((i) => Math.max(0, i - 1))}
                   >
@@ -1044,13 +1113,18 @@ export default function VorticeAula() {
                   </Button>
                   <div className="flex gap-2">
                     {idxPractica + 1 < leccion.ejerciciosPractica.length ? (
-                      <Button type="button" variant="outline" onClick={() => setIdxPractica((i) => i + 1)}>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="rounded-full border-[#D5CFC2]"
+                        onClick={() => setIdxPractica((i) => i + 1)}
+                      >
                         Siguiente ejercicio
                       </Button>
                     ) : null}
                     <Button
                       type="button"
-                      className="bg-[#1f4a3d] hover:bg-[#173a30]"
+                      className="rounded-full px-5 bg-[#1F4A3D] hover:bg-[#16382E] text-white"
                       onClick={() => {
                         setOrigenYaLoSe(false);
                         actualizarYGuardar({ pasoActual: "comprueba" });
@@ -1066,14 +1140,14 @@ export default function VorticeAula() {
 
             {/* BLOQUE 4: COMPRUEBA (proceso sin cronómetro ni porcentaje visible; solo Logrado / Sigue practicando) */}
             {pasoActual === "comprueba" && (
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
-                    <h2 className="font-semibold text-base flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-[#1f4a3d]" />
+                    <h2 className="vx-serif font-medium text-xl flex items-center gap-2 text-[#141413]">
+                      <Sparkles className="w-4 h-4 text-[#1F4A3D]" />
                       Comprueba lo aprendido (sin reloj ni nota)
                     </h2>
-                    <p className="text-xs text-[#5b6670]">
+                    <p className="text-xs text-[#5E5D59] mt-0.5">
                       {origenYaLoSe
                         ? "Entraste directo con «Ya lo sé»: si logras las 3 respuestas, avanzas sin repetir."
                         : "Responde estas 3 preguntas para confirmar tu dominio en este tema."}
@@ -1083,16 +1157,18 @@ export default function VorticeAula() {
 
                 <div className="space-y-4">
                   {leccion.ejerciciosComprobacion.map((ej, idx) => (
-                    <div key={ej.id} className="p-4 rounded-xl border border-[#e8e2d6] bg-[#faf8f3] space-y-2.5">
+                    <div key={ej.id} className="p-5 rounded-2xl border border-[#E6E2D8] bg-[#FAF9F5] space-y-3">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <Badge variant="outline">Comprobación {idx + 1} de 3</Badge>
+                        <Badge variant="outline" className="vx-mono rounded-full border-[#D5CFC2] text-[#5E5D59] font-normal">
+                          Comprobación {idx + 1} de 3
+                        </Badge>
                         <BotonVoz
                           id={`comp-${ej.id}`}
                           texto={`${ej.enunciado}. ${ej.alternativas.map((a) => `${a.id}: ${a.texto}`).join(". ")}`}
                           voz={voz}
                         />
                       </div>
-                      <p className="font-medium text-sm sm:text-base">{ej.enunciado}</p>
+                      <p className="font-medium text-[15.5px] leading-relaxed text-[#141413]">{ej.enunciado}</p>
                       <div className="grid gap-2">
                         {ej.alternativas.map((alt) => {
                           const marcada = respComprueba[ej.id] === alt.id;
@@ -1101,18 +1177,18 @@ export default function VorticeAula() {
                               key={alt.id}
                               type="button"
                               onClick={() => setRespComprueba((prev) => ({ ...prev, [ej.id]: alt.id }))}
-                              className={`min-h-[44px] px-3.5 py-2 rounded-lg border text-left text-sm transition ${
-                                marcada ? "bg-[#e5ece4] border-[#1f4a3d] font-semibold" : "bg-white border-[#e8e2d6]"
+                              className={`vx-option-card text-sm ${
+                                marcada ? "!bg-[#EDF3F0] !border-[#1F4A3D] font-medium" : ""
                               }`}
                             >
-                              <span className="font-bold mr-2">{alt.id}.</span>
+                              <span className="vx-mono text-xs font-medium text-[#1F4A3D] mr-2.5">{alt.id}.</span>
                               {alt.texto}
                             </button>
                           );
                         })}
                       </div>
                       {resComprueba && (
-                        <p className="text-xs font-medium text-[#1c2a3a]">
+                        <p className="text-xs font-medium text-[#141413]">
                           {resComprueba.detalle[ej.id]
                             ? `Correcto: ${ej.explicacionCorrecta}`
                             : "Revisa este ejercicio antes de volver a comprobar."}
@@ -1126,11 +1202,11 @@ export default function VorticeAula() {
                   <Alert
                     className={
                       resComprueba.estado === "logrado"
-                        ? "border-[#1f4a3d] bg-[#e5ece4] text-[#1f4a3d]"
-                        : "border-[#e8893a] bg-[#fff7ed] text-[#1c2a3a]"
+                        ? "rounded-2xl border-[#1F4A3D]/35 bg-[#EDF3F0] text-[#1F4A3D]"
+                        : "rounded-2xl border-[#C96442]/35 bg-[#FBF0EB] text-[#141413]"
                     }
                   >
-                    <AlertDescription className="font-semibold">
+                    <AlertDescription className="font-medium">
                       {resComprueba.estado === "logrado"
                         ? "Logrado: dominas este tema y tu avance quedó guardado."
                         : "Sigue practicando: revisa las preguntas pendientes o vuelve al paso Aprende."}
@@ -1142,6 +1218,7 @@ export default function VorticeAula() {
                   <Button
                     type="button"
                     variant="outline"
+                    className="rounded-full border-[#D5CFC2]"
                     onClick={() => actualizarYGuardar({ pasoActual: "aprende" })}
                   >
                     Volver a Aprende
@@ -1149,7 +1226,7 @@ export default function VorticeAula() {
                   <div className="flex flex-wrap gap-2">
                     <Button
                       type="button"
-                      className="bg-[#1f4a3d] hover:bg-[#173a30]"
+                      className="rounded-full px-5 bg-[#1F4A3D] hover:bg-[#16382E] text-white"
                       disabled={comprobarMutation.isPending}
                       onClick={() =>
                         comprobarMutation.mutate({
@@ -1161,14 +1238,17 @@ export default function VorticeAula() {
                       Verificar respuestas
                     </Button>
                     {siguienteOa ? (
-                      <Button type="button" variant="outline" onClick={() => setOaSeleccionado(siguienteOa.oaId)}>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="rounded-full border-[#D5CFC2]"
+                        onClick={() => setOaSeleccionado(siguienteOa.oaId)}
+                      >
                         Ir al siguiente tema ({siguienteOa.codigo})
                       </Button>
                     ) : (
-                      <Link href="/vortice/evaluacion/me-e2">
-                        <Button type="button" variant="outline">
-                          Ir a Evaluación del módulo (4)
-                        </Button>
+                      <Link href="/vortice/evaluacion/me-e2" className="vx-btn-ghost">
+                        Ir a Evaluación del módulo (4)
                       </Link>
                     )}
                   </div>

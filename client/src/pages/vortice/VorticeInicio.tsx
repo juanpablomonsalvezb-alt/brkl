@@ -2,7 +2,7 @@
 // Solo datos reales: /api/auth/user, /api/vortice/overview, /api/vortice/brujula/semana,
 // /api/vortice/repaso y /api/vortice/portafolio. Las secciones del diseño sin datos en la
 // plataforma (ruta PAES, proyectos, recursos, orientación, evaluaciones con fecha) no se muestran.
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "wouter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -63,13 +63,6 @@ const mismoDia = (a: Date, b: Date) => a.toDateString() === b.toDateString();
 export default function VorticeInicio() {
   const [menu, setMenu] = useState(false);
   const [pestana, setPestana] = useState<"producciones" | "evaluaciones">("producciones");
-  useEffect(() => {
-    const id = "vx-inter";
-    if (document.getElementById(id)) return;
-    document.head.appendChild(Object.assign(document.createElement("link"), {
-      id, rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
-    }));
-  }, []);
 
   const queryClient = useQueryClient();
   const usuario = useQuery({ queryKey: ["/api/auth/user"], queryFn: () => getJson<Usuario>("/api/auth/user"), retry: false });
@@ -200,14 +193,11 @@ export default function VorticeInicio() {
               <h1 id="vx-saludo">{nombre ? `Hola, ${nombre}` : "Hola"}</h1>
               <p className="vx-sub">{ov?.track ? SUBTITULO[ov.track] : "Este es tu espacio de aprendizaje."}</p>
               <p className="vx-lema">“Pequeños avances, grandes resultados.”</p>
-              <Link className="vx-cta" href={linkSiguiente}>
-                {aEvaluacion ? "Rendir mi evaluación" : siguiente ? "Continuar mi plan de hoy" : "Ver mis asignaturas"} <ArrowRight aria-hidden="true" />
-              </Link>
-              <div style={{ marginTop: 10 }}>
-                <Link
-                  href="/vortice/aula"
-                  style={{ color: "#1f4a3d", fontWeight: 600, fontSize: 14, textDecoration: "underline" }}
-                >
+              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10 }}>
+                <Link className="vx-cta" href={linkSiguiente}>
+                  {aEvaluacion ? "Rendir mi evaluación" : siguiente ? "Continuar mi plan de hoy" : "Ver mis asignaturas"} <ArrowRight aria-hidden="true" />
+                </Link>
+                <Link className="vx-btn-ghost" href="/vortice/aula">
                   Ir al aula universal del piloto (5 OA)
                 </Link>
               </div>

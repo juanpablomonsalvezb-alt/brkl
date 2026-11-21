@@ -93,15 +93,27 @@ export default function FamiliaVista() {
       </aside>
 
       <main className="vx-main" style={{ paddingTop: 18 }}>
-        <section className="vx-card" id="resumen" style={{ marginBottom: 14 }}>
+        <section className="vx-card" id="resumen" style={{ marginBottom: 16 }}>
           <header>
-            <h2><Compass aria-hidden="true" />Acompañamiento semanal</h2>
+            <div>
+              <span className="vx-kicker" style={{ display: "block", marginBottom: 4 }}>
+                Portal familia · solo lectura
+              </span>
+              <h2><Compass aria-hidden="true" />Acompañamiento semanal</h2>
+            </div>
             {lista.length > 1 && (
               <select
                 aria-label="Seleccionar estudiante"
                 value={selectedId}
                 onChange={(e) => setSelectedId(e.target.value)}
-                style={{ padding: "6px 10px", borderRadius: 8, border: "1px solid var(--vx-line)" }}
+                style={{
+                  padding: "7px 12px",
+                  borderRadius: 999,
+                  border: "1px solid var(--vx-line-strong)",
+                  background: "var(--vx-card)",
+                  fontFamily: "var(--vx-sans)",
+                  fontSize: 13.5,
+                }}
               >
                 {lista.map((est) => (
                   <option key={est.studentUserId} value={est.studentUserId}>
@@ -122,10 +134,12 @@ export default function FamiliaVista() {
             <p className="vx-empty">No pudimos cargar el resumen de tu estudiante. Intenta recargar la página.</p>
           ) : (
             <>
-              <div className="vb-fila" style={{ marginBottom: 12 }}>
+              <div className="vb-fila" style={{ marginBottom: 14, alignItems: "flex-end" }}>
                 <div>
-                  <strong style={{ fontSize: 17 }}>{data.student.name ?? "Estudiante"}</strong>
-                  <div style={{ color: "var(--vx-ink-soft)", fontSize: 13 }}>
+                  <h3 style={{ fontSize: 25, lineHeight: 1.15, marginBottom: 4 }}>
+                    {data.student.name ?? "Estudiante"}
+                  </h3>
+                  <div style={{ color: "var(--vx-ink-soft)", fontSize: 13.5 }}>
                     {data.overview.level?.name ?? "Curso escolar"} · {data.studyDays} {data.studyDays === 1 ? "día" : "días"} de estudio en {data.month}
                   </div>
                 </div>
