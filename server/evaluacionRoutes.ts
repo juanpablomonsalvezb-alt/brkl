@@ -6,7 +6,7 @@ import type { Express, Request, Response } from "express";
 import type { Client } from "@libsql/client";
 import {
   abrirProceso, iniciarIntento, responder, enviarIntento, cerrarProceso,
-  reabrirPorAdministrador, verificarEntregaAutomatica, ErrorEvaluacion, type CodigoEvaluacion,
+  reabrirPorAdministrador, verificarEntregaAutomatica, preguntasDelIntento, ErrorEvaluacion, type CodigoEvaluacion,
 } from "./evaluacion";
 
 export interface DepsRutasEvaluacion {
@@ -90,12 +90,10 @@ export function registrarRutasEvaluacion(app: Express, deps: DepsRutasEvaluacion
     return abrirProceso(c, { estudianteId: uid, evaluacionId, versionId: String((v.rows[0] as any).id), perfil: "regular" });
   }));
 
-  // Inicia un intento. El extra necesita el armador con banco; se habilita cuando exista el
-  // cargador del banco (pendiente), así que hoy responde 501 en vez de crear un intento vacío.
+  // Inicia un intento. El extra arma sus preguntas con el banco de la base (ver cargarBancoExtra).
   app.post("/api/vortice/evaluaciones/instancias/:instanciaId/intentos", ruta(async (uid, req) => {
     const tipo = req.body?.tipo;
     if (tipo !== "normal" && tipo !== "extra") throw new ErrorHttp(400, "tipo debe ser normal o extra");
-    if (tipo === "extra") throw new ErrorHttp(501, "el intento extra aún no está habilitado: falta el cargador del banco");
     return iniciarIntento(c, { instanciaId: String(req.params.instanciaId), estudianteId: uid, tipo });
   }));
 
@@ -103,11 +101,11 @@ export function registrarRutasEvaluacion(app: Express, deps: DepsRutasEvaluacion
   app.get("/api/vortice/evaluaciones/intentos/:intentoId/preguntas", ruta(async (uid, req) => {
     const id = String(req.params.intentoId);
     if (!(await esDelEstudiante("evaluation_attempts", id, uid))) throw new ErrorEvaluacion("intento_no_encontrado", "intento no encontrado");
-    const r = await c.execute({
-      sql: "SELECT q.id AS pregunta_id, q.stem AS enunciado, q.options_json AS opciones, vq.position AS posicion FROM evaluation_attempts a JOIN evaluation_version_questions vq ON vq.evaluation_version_id = a.evaluation_version_id JOIN question_versions q ON q.id = vq.question_version_id WHERE a.id = ? ORDER BY vq.position",
-      args: [id],
-    });
-    return r.rows.map((x: any) => ({ preguntaVersionId: x.pregunta_id, enunciado: x.enunciado, posicion: x.posicion, opciones: JSON.parse(String(x.opciones)) }));
+    const ids = await preguntasDelIntento(c, id);
+    if (!ids.length) return [];
+    const r = await c.execute({ sql: `SELECT id, stem, options_json FROM question_versions WHERE id IN (${ids.map(() => "?").join(",")})`, args: ids.map((q) => q.id) });
+    const por = new Map((r.rows as any[]).map((x) => [String(x.id), x]));
+    return ids.map((q, i) => ({ preguntaVersionId: q.id, enunciado: por.get(q.id)?.stem, posicion: i, opciones: JSON.parse(String(por.get(q.id)?.options_json ?? "[]")) }));
   }));
 
   app.post("/api/vortice/evaluaciones/intentos/:intentoId/responder", ruta(async (uid, req) => {

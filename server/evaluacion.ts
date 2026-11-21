@@ -137,6 +137,42 @@ function rows<T extends Record<string, unknown>>(r: { rows: unknown[] }): T[] {
   return r.rows as T[];
 }
 
+/** Banco para armar el extra: preguntas aprobadas del banco de evaluación cuyos subtemas (item_id) están en la versión. */
+export async function cargarBancoExtra(c: Client, versionId: string): Promise<Banco> {
+  const x: X = (q, a = []) => c.execute({ sql: q, args: a as InValue[] });
+  return cargarBancoExtraX(x, versionId);
+}
+async function cargarBancoExtraX(x: X, versionId: string): Promise<Banco> {
+  const r = rows<{ id: string; item_id: string }>(await x(
+    "SELECT id, item_id FROM question_versions WHERE bank = 'evaluacion' AND status = 'aprobada' AND item_id IN (SELECT item_id FROM evaluation_version_questions WHERE evaluation_version_id = ?) ORDER BY id",
+    [versionId],
+  ));
+  return r.map((q) => ({ id: String(q.id), subtemaId: String(q.item_id) }));
+}
+
+export interface PreguntaDelIntento { id: string; familyId: string; itemId: string }
+/** Preguntas de un intento: las de la versión (normal) o las armadas para el extra (permutation_json). */
+export async function preguntasDelIntento(c: Client, intentoId: string): Promise<PreguntaDelIntento[]> {
+  return preguntasDelIntentoX((q, a = []) => c.execute({ sql: q, args: a as InValue[] }), intentoId);
+}
+async function preguntasDelIntentoX(x: X, intentoId: string): Promise<PreguntaDelIntento[]> {
+  const a = row<{ attempt_kind: string; evaluation_version_id: string; permutation_json: string | null }>(await x(
+    "SELECT attempt_kind, evaluation_version_id, permutation_json FROM evaluation_attempts WHERE id = ?", [intentoId]));
+  if (!a) return [];
+  if (a.attempt_kind === "extra") {
+    const ids: string[] = a.permutation_json ? (JSON.parse(String(a.permutation_json)).preguntas ?? []) : [];
+    if (!ids.length) return [];
+    const r = rows<{ id: string; family_id: string; item_id: string }>(await x(
+      `SELECT id, family_id, item_id FROM question_versions WHERE id IN (${ids.map(() => "?").join(",")})`, ids));
+    const por = new Map(r.map((q) => [String(q.id), q]));
+    return ids.flatMap((id) => { const q = por.get(id); return q ? [{ id, familyId: String(q.family_id), itemId: String(q.item_id) }] : []; });
+  }
+  const r = rows<{ question_version_id: string; family_id: string; item_id: string }>(await x(
+    "SELECT question_version_id, family_id, item_id FROM evaluation_version_questions WHERE evaluation_version_id = ? ORDER BY position",
+    [a.evaluation_version_id]));
+  return r.map((q) => ({ id: String(q.question_version_id), familyId: String(q.family_id), itemId: String(q.item_id) }));
+}
+
 // Carga el estado P0E de una instancia desde la base.
 async function cargarInstanciaP0E(x: X, instanciaId: string): Promise<InstanciaP0E> {
   const inst = row<{
@@ -432,8 +468,9 @@ export async function iniciarIntento(
       throw new ErrorEvaluacion("extra_plazo_vencido", "el plazo de 72 h para el intento extra ha vencido");
     }
 
-    // Si se proporciona banco, armar las preguntas del extra.
-    if (params.banco) {
+    // Armar las preguntas del extra con el banco dado o el cargado desde la base.
+    {
+      const banco = params.banco ?? await cargarBancoExtraX(x, inst.evaluation_version_id);
       // Obtener preguntas del normal.
       const normalIntentoId = p0e.intentos.find((i) => i.fase === "normal" && i.estado === "enviado")?.id;
       if (!normalIntentoId) {
@@ -444,7 +481,9 @@ export async function iniciarIntento(
         "SELECT question_version_id FROM evaluation_attempt_answers WHERE attempt_id = ?",
         [normalIntentoId],
       ));
-      const normalIds = normalPreguntas.map((r) => String(r.question_version_id));
+      // El normal son todas las preguntas de la versión (también las no respondidas) más lo respondido.
+      const delNormal = await preguntasDelIntentoX(x, normalIntentoId);
+      const normalIds = [...new Set([...delNormal.map((q) => q.id), ...normalPreguntas.map((r) => String(r.question_version_id))])];
 
       // Obtener subtemas fallados del normal.
       const respuestas = rows<{
@@ -457,8 +496,9 @@ export async function iniciarIntento(
       ));
 
       // Los subtemas fallados se derivan de las preguntas incorrectas.
-      // Usamos family_id como subtemaId (en el banco, family_id = subtema).
-      const subtemasFallados = [...new Set(respuestas.map((r) => String(r.family_id)))];
+      // Subtema = item_id; incluye los subtemas con preguntas sin responder.
+      const respondidas = new Set(normalPreguntas.map((r) => String(r.question_version_id)));
+      const subtemasFallados = [...new Set([...respuestas.map((r) => String(r.item_id)), ...delNormal.filter((q) => !respondidas.has(q.id)).map((q) => q.itemId)])];
 
       if (subtemasFallados.length === 0) {
         // Si no hay subtemas fallados (aprobó el normal), no debería llegar aquí,
@@ -469,13 +509,13 @@ export async function iniciarIntento(
       // Armar el extra con shared/armador.ts.
       const semilla = params.semilla ?? `${params.instanciaId}-extra-${ahora}`;
       const N = normalIds.length;
-      const extraPreguntas = armarExtra({
-        banco: params.banco,
-        normal: normalIds as readonly string[],
-        fallados: subtemasFallados,
-        N,
-        semilla,
-      });
+      let extraPreguntas: readonly string[];
+      try {
+        extraPreguntas = armarExtra({ banco, normal: normalIds as readonly string[], fallados: subtemasFallados, N, semilla });
+      } catch (e) {
+        if ((e as { code?: string }).code === "capacidad_insuficiente") throw new ErrorEvaluacion("capacidad_insuficiente", (e as Error).message);
+        throw e;
+      }
 
       // Guardar las preguntas del extra en el intento (permutation_json).
       // Primero crear el intento.
@@ -612,10 +652,8 @@ export async function responder(
   }
 
   // Validar que la pregunta pertenece a la versión de evaluación.
-  const preguntaEnVersion = row<{ question_version_id: string; family_id: string; item_id: string; bank: string }>(await x(
-    "SELECT question_version_id, family_id, item_id, bank FROM evaluation_version_questions WHERE evaluation_version_id = ? AND question_version_id = ?",
-    [intento.evaluation_version_id, params.preguntaVersionId],
-  ));
+  const delIntento = (await preguntasDelIntentoX(x, params.intentoId)).find((q) => q.id === params.preguntaVersionId);
+  const preguntaEnVersion = delIntento && { family_id: delIntento.familyId, item_id: delIntento.itemId, bank: "evaluacion" };
   if (!preguntaEnVersion) {
     throw new ErrorEvaluacion("pregunta_no_pertenece_version", `pregunta ${params.preguntaVersionId} no pertenece a la versión ${intento.evaluation_version_id}`);
   }
@@ -732,11 +770,8 @@ export async function enviarIntento(
   const totalCorrect = respuestas.filter((r) => Number(r.is_correct) === 1).length;
 
   // Total preguntas de la versión.
-  const totalRow = await x(
-    "SELECT COUNT(*) AS total FROM evaluation_version_questions WHERE evaluation_version_id = ?",
-    [intento.evaluation_version_id],
-  );
-  const totalQuestions = Number(row<{ total: number }>(totalRow)?.total ?? 0);
+  const preguntasIntento = await preguntasDelIntentoX(x, params.intentoId);
+  const totalQuestions = preguntasIntento.length;
 
   // Porcentaje sin redondeo.
   const scorePct = totalQuestions > 0 ? (totalCorrect / totalQuestions) * 100 : 0;
@@ -747,12 +782,12 @@ export async function enviarIntento(
   // Subtemas fallados (para el extra).
   const subtemasFallados: string[] = [];
   if (params.intentoId && !aprobado) {
-    const falladas = rows<{ family_id: string }>(await x(
-      "SELECT family_id FROM evaluation_attempt_answers WHERE attempt_id = ? AND is_correct = 0",
+    const falladas = rows<{ item_id: string }>(await x(
+      "SELECT item_id FROM evaluation_attempt_answers WHERE attempt_id = ? AND is_correct = 0",
       [params.intentoId],
     ));
-    // family_id mapea al subtema.
-    const falladosSet = new Set(falladas.map((r) => String(r.family_id)));
+    // item_id es el subtema.
+    const falladosSet = new Set(falladas.map((r) => String(r.item_id)));
     // También los subtemas sin responder cuentan como fallados.
     const respondidas = new Set(
       rows<{ question_version_id: string }>(await x(
@@ -760,14 +795,8 @@ export async function enviarIntento(
         [params.intentoId],
       )).map((r) => String(r.question_version_id)),
     );
-    const todasPreguntas = rows<{ question_version_id: string; family_id: string }>(await x(
-      "SELECT question_version_id, family_id FROM evaluation_version_questions WHERE evaluation_version_id = ?",
-      [intento.evaluation_version_id],
-    ));
-    for (const p of todasPreguntas) {
-      if (!respondidas.has(String(p.question_version_id))) {
-        falladosSet.add(String(p.family_id));
-      }
+    for (const p of preguntasIntento) {
+      if (!respondidas.has(p.id)) falladosSet.add(p.itemId);
     }
     subtemasFallados.push(...falladosSet);
   }

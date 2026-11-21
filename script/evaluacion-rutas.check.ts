@@ -127,10 +127,10 @@ await caso("R3", "abrir proceso: versión del servidor, perfil regular; repetir 
 await caso("R4", "evaluación sin versión publicada: 404", async () => {
   assert.equal((await http("POST", `${E}/no-existe/proceso`, EST)).s, 404);
 });
-await caso("R5", "intento normal; tipo inválido 400; extra 501", async () => {
+await caso("R5", "intento normal; tipo inválido 400; extra sin normal enviado 409", async () => {
   const r = await http("POST", `${E}/instancias/${proc.instanciaId}/intentos`, EST, { tipo: "normal" }); assert.equal(r.s, 200); int = r.j;
   assert.equal((await http("POST", `${E}/instancias/${proc.instanciaId}/intentos`, EST, { tipo: "otro" })).s, 400);
-  assert.equal((await http("POST", `${E}/instancias/${proc.instanciaId}/intentos`, EST, { tipo: "extra" })).s, 501);
+  assert.equal((await http("POST", `${E}/instancias/${proc.instanciaId}/intentos`, EST, { tipo: "extra" })).s, 409);
 });
 await caso("R6", "preguntas sin clave ni explicación", async () => {
   const r = await http("GET", `${E}/intentos/${int.intentoId}/preguntas`, EST); assert.equal(r.s, 200);

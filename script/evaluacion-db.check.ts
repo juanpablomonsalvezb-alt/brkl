@@ -206,7 +206,7 @@ await caso("I7", "respuesta con pregunta ajena a la versión de evaluación", ()
   await bd.x(`INSERT INTO question_versions (id, family_id, item_id, bank, version, status, stem, options_json, correct_option_id, origin, authored_by) VALUES ('qe3', 'ef3', 'i1', 'evaluacion', 1, 'borrador', 'E', ?, 'o2', 'humano', ?)`, [OPC, AU]);
   await bd.x("UPDATE question_versions SET status = 'en_revision' WHERE id = 'qe3'");
   await bd.x("UPDATE question_versions SET status = 'aprobada', reviewed_by = ?, reviewed_at = 1 WHERE id = 'qe3'", [VA]);
-  await rechaza(bd, "INSERT INTO evaluation_attempt_answers (id, attempt_id, student_id, evaluation_version_id, evidence_source_type, review_at, question_version_id, family_id, item_id, bank, selected_option_id, is_correct, answered_at, sequence_no, study_day) VALUES ('eaa1', 'ea1', 'est-a', 'ev-v1', 'evaluacion_cierre', 100, 'qe3', 'ef3', 'i1', 'evaluacion', 'o2', 1, 201, 1, '2027-03-01')", [], /FOREIGN KEY/, "pregunta no en versión");
+  await rechaza(bd, "INSERT INTO evaluation_attempt_answers (id, attempt_id, student_id, evaluation_version_id, evidence_source_type, review_at, question_version_id, family_id, item_id, bank, selected_option_id, is_correct, answered_at, sequence_no, study_day) VALUES ('eaa1', 'ea1', 'est-a', 'ev-v1', 'evaluacion_cierre', 100, 'qe3', 'ef3', 'i1', 'evaluacion', 'o2', 1, 201, 1, '2027-03-01')", [], /no pertenece al intento/, "pregunta no en versión");
 }));
 
 await caso("I8", "proceso: transición invierta (aprobado → abierto)", () => conBase(async (bd) => {

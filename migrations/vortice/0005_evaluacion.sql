@@ -314,9 +314,8 @@ CREATE TABLE evaluation_attempt_answers (
   study_day TEXT NOT NULL CHECK (study_day GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   -- FK a intento (PK). Las copias atan la evidencia.
   FOREIGN KEY (attempt_id) REFERENCES evaluation_attempts(id) ON DELETE RESTRICT,
-  -- La pregunta debe integrar la versión de evaluación.
-  FOREIGN KEY (evaluation_version_id, question_version_id)
-    REFERENCES evaluation_version_questions (evaluation_version_id, question_version_id) ON DELETE RESTRICT,
+  -- La pregunta debe integrar la versión (intento normal) o las armadas para el extra: lo exige el
+  -- trigger eaa_pregunta_del_intento, porque las del extra no están en evaluation_version_questions.
   -- La pregunta debe existir en el banco.
   FOREIGN KEY (question_version_id, family_id, item_id, bank)
     REFERENCES question_versions (id, family_id, item_id, bank) ON DELETE RESTRICT,
@@ -325,6 +324,14 @@ CREATE TABLE evaluation_attempt_answers (
 );
 --> statement-breakpoint
 CREATE INDEX eaa_item ON evaluation_attempt_answers (student_id, item_id, sequence_no);
+--> statement-breakpoint
+CREATE TRIGGER eaa_pregunta_del_intento BEFORE INSERT ON evaluation_attempt_answers
+WHEN NOT EXISTS (SELECT 1 FROM evaluation_version_questions v
+                 WHERE v.evaluation_version_id = NEW.evaluation_version_id AND v.question_version_id = NEW.question_version_id
+                   AND EXISTS (SELECT 1 FROM evaluation_attempts a WHERE a.id = NEW.attempt_id AND a.attempt_kind = 'normal'))
+ AND NOT EXISTS (SELECT 1 FROM evaluation_attempts a, json_each(a.permutation_json, '$.preguntas') j
+                 WHERE a.id = NEW.attempt_id AND a.attempt_kind = 'extra' AND j.value = NEW.question_version_id)
+BEGIN SELECT RAISE(ABORT, 'evaluation_attempt_answers: la pregunta no pertenece al intento'); END;
 --> statement-breakpoint
 CREATE TRIGGER eaa_no_update BEFORE UPDATE ON evaluation_attempt_answers
 BEGIN SELECT RAISE(ABORT, 'evaluation_attempt_answers es solo inserción'); END;
