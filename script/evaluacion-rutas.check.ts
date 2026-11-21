@@ -171,6 +171,27 @@ await caso("R13", "error interno no filtra detalles", async () => {
   const r = await http("GET", `${E}/intentos/%00/preguntas`, EST); assert.ok(r.s === 404 || r.s === 500); assert.ok(!JSON.stringify(r.j).includes("SELECT"));
 });
 
+await caso("R14", "estado: reloj del servidor, perfil, intentos y resultado; 401 sin sesión; 404 si no existe", async () => {
+  assert.equal((await http("GET", `${E}/me-e2/estado`)).s, 401);
+  assert.equal((await http("GET", `${E}/no-existe/estado`, EST)).s, 404);
+  const e = await http("GET", `${E}/me-e2/estado`, EST); assert.equal(e.s, 200);
+  assert.ok(typeof e.j.ahora === "number" && e.j.titulo);
+  assert.equal(e.j.proceso.perfil, "regular"); assert.equal(e.j.proceso.intentos.length, 1);
+  assert.equal(e.j.proceso.intentos[0].estado, "enviado"); assert.equal(e.j.proceso.intentos[0].total, 9);
+  const b = await http("GET", `${E}/me-e2/estado`, "est-b");
+  assert.equal(b.j.proceso.perfil, "neurodivergente"); assert.equal(b.j.proceso.duracionMin, 120); assert.deepEqual(b.j.proceso.intentos, []);
+});
+await caso("R15", "preguntas devuelve la selección propia sin revelar la clave; otro estudiante no la ve", async () => {
+  const i = (await http("POST", `${E}/instancias/${(await http("GET", `${E}/me-e2/estado`, "est-b")).j.proceso.instanciaId}/intentos`, "est-b", { tipo: "normal" })).j;
+  const ps = (await http("GET", `${E}/intentos/${i.intentoId}/preguntas`, "est-b")).j;
+  assert.ok(ps.every((q: any) => q.seleccion === null));
+  await http("POST", `${E}/intentos/${i.intentoId}/responder`, "est-b", { preguntaVersionId: ps[0].preguntaVersionId, opcionId: "o1" });
+  const ps2 = (await http("GET", `${E}/intentos/${i.intentoId}/preguntas`, "est-b")).j;
+  assert.equal(ps2[0].seleccion, "o1"); assert.equal(ps2[1].seleccion, null);
+  assert.ok(!/correct/i.test(JSON.stringify(ps2)));
+  assert.equal((await http("GET", `${E}/intentos/${i.intentoId}/preguntas`, EST)).s, 404);
+});
+
 srv.close(); bd.cerrar();
 fs.rmSync(RAIZ, { recursive: true, force: true });
 console.log(salida.join("\n"));

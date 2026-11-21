@@ -60,6 +60,7 @@ export function preloadRoute(pathname: string): Promise<void> {
 const NotFound = lazy(() => import("@/pages/not-found"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const VorticeInicio = lazy(() => import("@/pages/vortice/VorticeInicio"));
+const VorticeEvaluacion = lazy(() => import("@/pages/vortice/VorticeEvaluacion"));
 const CoursePlayer = lazy(() => import("@/pages/CoursePlayer"));
 const DriveSync = lazy(() => import("@/pages/DriveSync"));
 const TextbookConfig = lazy(() => import("@/pages/TextbookConfig"));
@@ -122,6 +123,7 @@ function Router() {
       <Route path="/electivos" component={Electivos} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/vortice" component={VorticeInicio} />
+      <Route path="/vortice/evaluacion/:evaluacionId" component={VorticeEvaluacion} />
       <Route path="/course/:id" component={CoursePlayer} />
       <Route path="/drive-sync" component={DriveSync} />
       <Route path="/textbook-config" component={TextbookConfig} />

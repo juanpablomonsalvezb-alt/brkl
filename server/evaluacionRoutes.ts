@@ -4,6 +4,8 @@
 // migración 0005, que aún no se aplica a una base real.
 import type { Express, Request, Response } from "express";
 import type { Client } from "@libsql/client";
+import { relojMotor } from "./reloj";
+import { estadoExtra, ventanaExtra } from "../shared/ventanas";
 import {
   abrirProceso, iniciarIntento, responder, enviarIntento, cerrarProceso,
   reabrirPorAdministrador, verificarEntregaAutomatica, preguntasDelIntento, ErrorEvaluacion, type CodigoEvaluacion,
@@ -69,6 +71,36 @@ export function registrarRutasEvaluacion(app: Express, deps: DepsRutasEvaluacion
     return r.rows.length > 0;
   };
 
+  // Estado para la pantalla: reloj del servidor, perfil, intentos y si el extra está disponible.
+  app.get("/api/vortice/evaluaciones/:evaluacionId/estado", ruta(async (uid, req) => {
+    const evaluacionId = String(req.params.evaluacionId);
+    const ahora = await relojMotor(c).ahora();
+    const ev = await c.execute({ sql: "SELECT title FROM module_evaluations WHERE id = ?", args: [evaluacionId] });
+    if (!ev.rows.length) throw new ErrorEvaluacion("proceso_no_encontrado", "evaluación no encontrada");
+    const titulo = String((ev.rows[0] as any).title);
+    const pr = await c.execute({
+      sql: "SELECT p.id AS proceso_id, p.status AS estado, i.id AS instancia_id, i.student_profile AS perfil, i.duration_minutes AS duracion, i.passing_score AS umbral FROM evaluation_processes p JOIN evaluation_instances i ON i.process_id = p.id WHERE p.student_id = ? AND p.evaluation_id = ? ORDER BY i.id DESC LIMIT 1",
+      args: [uid, evaluacionId],
+    });
+    if (!pr.rows.length) return { ahora, titulo, proceso: null };
+    const r = pr.rows[0] as any;
+    const at = await c.execute({
+      sql: "SELECT id, attempt_kind, status, expires_at, submitted_at, score_pct, total_correct, total_questions, passed FROM evaluation_attempts WHERE instance_id = ? AND student_id = ? ORDER BY attempt_number",
+      args: [r.instancia_id, uid],
+    });
+    const intentos = (at.rows as any[]).map((a) => ({
+      id: a.id, tipo: a.attempt_kind, estado: a.status, expiraAt: a.expires_at, enviadoAt: a.submitted_at,
+      scorePct: a.score_pct, correctas: a.total_correct, total: a.total_questions, aprobado: a.passed === null ? null : a.passed === 1,
+    }));
+    const normal = intentos.find((i) => i.tipo === "normal"), extra = intentos.find((i) => i.tipo === "extra");
+    let extraEstado: string | null = null, extraCierraAt: number | null = null;
+    if (normal?.estado === "enviado" && normal.aprobado === false) {
+      extraEstado = extra ? "iniciado" : estadoExtra(ahora, Number(normal.enviadoAt));
+      extraCierraAt = ventanaExtra(Number(normal.enviadoAt)).cierraEn;
+    }
+    return { ahora, titulo, proceso: { procesoId: r.proceso_id, instanciaId: r.instancia_id, estado: r.estado, perfil: r.perfil, duracionMin: r.duracion, umbral: r.umbral, intentos, extraEstado, extraCierraAt } };
+  }));
+
   // Abre (o devuelve) el proceso del estudiante. El perfil lo declara el administrador; sin
   // declaración, regular. La versión sale del servidor: la última validada o asignada.
   app.post("/api/vortice/evaluaciones/:evaluacionId/proceso", ruta(async (uid, req) => {
@@ -105,7 +137,9 @@ export function registrarRutasEvaluacion(app: Express, deps: DepsRutasEvaluacion
     if (!ids.length) return [];
     const r = await c.execute({ sql: `SELECT id, stem, options_json FROM question_versions WHERE id IN (${ids.map(() => "?").join(",")})`, args: ids.map((q) => q.id) });
     const por = new Map((r.rows as any[]).map((x) => [String(x.id), x]));
-    return ids.map((q, i) => ({ preguntaVersionId: q.id, enunciado: por.get(q.id)?.stem, posicion: i, opciones: JSON.parse(String(por.get(q.id)?.options_json ?? "[]")) }));
+    const sel = await c.execute({ sql: "SELECT question_version_id, selected_option_id FROM evaluation_attempt_answers WHERE attempt_id = ?", args: [id] });
+    const elegida = new Map((sel.rows as any[]).map((x) => [String(x.question_version_id), String(x.selected_option_id)]));
+    return ids.map((q, i) => ({ preguntaVersionId: q.id, enunciado: por.get(q.id)?.stem, posicion: i, opciones: JSON.parse(String(por.get(q.id)?.options_json ?? "[]")), seleccion: elegida.get(q.id) ?? null }));
   }));
 
   app.post("/api/vortice/evaluaciones/intentos/:intentoId/responder", ruta(async (uid, req) => {
