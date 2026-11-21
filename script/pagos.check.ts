@@ -20,7 +20,14 @@ const { flowService } = await import("../server/flowService");
 const { registerRoutes } = await import("../server/routes");
 
 // Catálogo
-assert.equal(montoDelPlan("media1_plan"), 280000);
+assert.equal(montoDelPlan("media1_plan"), 416500);
+assert.equal(montoDelPlan("basica_plan"), 416500, "Básica, Media I y Media II tienen el mismo precio");
+assert.equal(montoDelPlan("media2_plan"), 416500);
+// Plan escolar: la cuenta cuadra exactamente (7 × 70.000 = 490.000; 15 % de dto. = 73.500).
+const { PLAN_ESCOLAR: PE } = await import("../shared/planPrices");
+assert.equal(PE.mensual * PE.mesesMensual, PE.listaAnual);
+assert.equal(PE.listaAnual * PE.descuentoPct / 100, PE.ahorro);
+assert.equal(PE.listaAnual - PE.ahorro, PE.pagoUnico);
 assert.equal(montoDelPlan("paes_lenguaje, paes_ciencias"), 360000, "PAES suma asignaturas");
 assert.equal(montoDelPlan("plan_inventado"), null);
 assert.equal(montoDelPlan("paes_lenguaje, inventado"), null, "un plan inválido invalida todo");
@@ -66,8 +73,8 @@ assert.notEqual(creada.status, "confirmed");
 await nueva("res-1", "media1_plan");
 const pago = await post("/api/flow/create-payment", { reservationId: "res-1", planPrice: "$1", studentEmail: "estudiante@gmail.com", studentName: "Ficticio" });
 assert.equal(pago.status, 200, JSON.stringify(pago.json));
-assert.equal(pedidos.at(-1)!.amount, 280000, "monto del catálogo, no $1");
-assert.equal((await fila("res-1")).paymentAmount, 280000);
+assert.equal(pedidos.at(-1)!.amount, 416500, "monto del catálogo, no $1");
+assert.equal((await fila("res-1")).paymentAmount, 416500);
 await nueva("res-2", "plan_inventado");
 assert.equal((await post("/api/flow/create-payment", { reservationId: "res-2", studentEmail: "estudiante@gmail.com", studentName: "F" })).status, 400, "plan inválido");
 
@@ -78,7 +85,7 @@ assert.equal((await post("/api/flow/confirm", { token: "t", s: "firma" })).statu
 assert.deepEqual([(await fila("res-1")).paymentStatus, (await fila("res-1")).status], ["failed", "pending"], "monto incorrecto no confirma");
 // Monto correcto → confirma.
 await db.update(S.reservations).set({ paymentStatus: "pending" }).where(eq(S.reservations.id, "res-1"));
-estadoFlow = { flowOrder: Number(orden), status: 2, amount: 280000 };
+estadoFlow = { flowOrder: Number(orden), status: 2, amount: 416500 };
 await post("/api/flow/confirm", { token: "t", s: "firma" });
 assert.deepEqual([(await fila("res-1")).paymentStatus, (await fila("res-1")).status], ["completed", "confirmed"]);
 

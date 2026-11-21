@@ -1,14 +1,29 @@
 // Catálogo de planes y precios (CLP, IVA incluido). Única fuente para el formulario de reserva
 // y para el servidor, que calcula el monto del pago desde aquí y nunca desde el cliente.
+// Plan escolar (Básica, Media I y Media II): decisión del sostenedor 2026-11-21. Un mismo precio para los tres.
+// Lista anual tachada $490.000; pago único del año con 15 % de descuento; o plan mensual de 7 meses (marzo a septiembre).
+// Hoy el servidor cobra solo el pago único. El cobro mensual recurrente no está implementado: no se ofrece en el formulario.
+export const PLAN_ESCOLAR = {
+  mensual: 70_000,
+  mesesMensual: 7,
+  listaAnual: 490_000,
+  descuentoPct: 15,
+  pagoUnico: 416_500,
+  ahorro: 73_500,
+} as const;
+
+const clp = (n: number) => "$" + n.toLocaleString("es-CL");
+const ETIQUETA_ESCOLAR = `Plan Completo (Plataforma + IA + Mentor), pago único del año: ${clp(PLAN_ESCOLAR.pagoUnico)} (lista ${clp(PLAN_ESCOLAR.listaAnual)}, ahorras ${clp(PLAN_ESCOLAR.ahorro)})`;
+
 export const plansByGroup: Record<string, Array<{ value: string; label: string; price: string }>> = {
   basica: [
-    { value: "basica_plan", label: "Plan Completo (Plataforma + IA + Mentor): $240.000", price: "$240.000" },
+    { value: "basica_plan", label: ETIQUETA_ESCOLAR, price: clp(PLAN_ESCOLAR.pagoUnico) },
   ],
   media1: [
-    { value: "media1_plan", label: "Plan Completo (Plataforma + IA + Mentor): $280.000", price: "$280.000" },
+    { value: "media1_plan", label: ETIQUETA_ESCOLAR, price: clp(PLAN_ESCOLAR.pagoUnico) },
   ],
   media2: [
-    { value: "media2_plan", label: "Plan Completo (Plataforma + IA + Mentor): $320.000", price: "$320.000" },
+    { value: "media2_plan", label: ETIQUETA_ESCOLAR, price: clp(PLAN_ESCOLAR.pagoUnico) },
   ],
   adultos_basica: [
     { value: "adultos_basica", label: "Plan Básica (1° a 8° Básico) - $360.000", price: "$360.000" },
