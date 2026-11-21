@@ -28,7 +28,7 @@ import {
 } from "./vortice";
 import { loadDueReview, answerReviewItem } from "./repaso";
 import { getStudentRubric, createRubricVersion, updateDraftRubric, rubricInputSchema } from "./rubricas";
-import { getBrujulaWeek, saveBrujulaWeek, closeBrujulaWeek } from "./brujula";
+import { getBrujulaWeek, getBrujulaPanel, saveBrujulaWeek, closeBrujulaWeek } from "./brujula";
 import { saveWeekSchema, closeWeekSchema } from "@shared/brujula";
 import {
   crearCaso,
@@ -564,6 +564,18 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error answering Vórtice review item:", error);
       res.status(500).json({ message: "Failed to answer review item" });
+    }
+  });
+
+  // Brújula™: panel de métricas y mensajes de orientación (solo lectura).
+  app.get("/api/vortice/brujula/panel", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      res.json(await getBrujulaPanel(db, userId, new Date()));
+    } catch (error) {
+      console.error("Error building Brújula panel:", error);
+      res.status(500).json({ message: "Failed to load panel" });
     }
   });
 

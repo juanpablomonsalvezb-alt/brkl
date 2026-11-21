@@ -6,12 +6,14 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import {
-  ArrowRight, BarChart3, BookOpen, BriefcaseBusiness, CalendarDays, ChevronRight, FileText, Home,
+  ArrowRight, BarChart3, BookOpen, Compass, BriefcaseBusiness, CalendarDays, ChevronRight, FileText, Home,
   Link2, Menu, MessageCircle, ClipboardCheck, RotateCcw, Target, Users, X,
 } from "lucide-react";
 import type { VorticeOverview, VorticeTrack } from "@shared/vortice";
 import type { BrujulaGoal } from "@shared/brujula";
+import type { PanelBrujula } from "@shared/brujulaPanel";
 import { RobotTutor } from "./RobotTutor";
+import { BrujulaPanel } from "./BrujulaPanel";
 import "./vortice.css";
 
 interface Usuario { firstName: string | null; name: string | null }
@@ -72,6 +74,7 @@ export default function VorticeInicio() {
   const sesion = !!usuario.data;
   const overview = useQuery({ queryKey: ["/api/vortice/overview"], queryFn: () => getJson<VorticeOverview & { evaluacionE2?: boolean }>("/api/vortice/overview"), enabled: sesion });
   const semana = useQuery({ queryKey: ["/api/vortice/brujula/semana"], queryFn: () => getJson<Semana>("/api/vortice/brujula/semana"), enabled: sesion });
+  const panel = useQuery({ queryKey: ["/api/vortice/brujula/panel"], queryFn: () => getJson<PanelBrujula>("/api/vortice/brujula/panel"), enabled: sesion });
   const repaso = useQuery({ queryKey: ["/api/vortice/repaso"], queryFn: () => getJson<Repaso>("/api/vortice/repaso"), enabled: sesion });
   const portafolio = useQuery({ queryKey: ["/api/vortice/portafolio"], queryFn: () => getJson<Evidencia[]>("/api/vortice/portafolio"), enabled: sesion });
 
@@ -120,6 +123,7 @@ export default function VorticeInicio() {
         <nav className="vx-nav" aria-label="Secciones">
           <Link href="/vortice" aria-current="page"><Home />Inicio</Link>
           <a href="#semana" onClick={() => setMenu(false)}><CalendarDays />Planificador</a>
+          <a href="#brujula" onClick={() => setMenu(false)}><Compass />Brújula</a>
           <a href="#asignaturas" onClick={() => setMenu(false)}><BookOpen />Asignaturas</a>
           <a href="#portafolio" onClick={() => setMenu(false)}><BriefcaseBusiness />Portafolio</a>
           <Link href="/academic-copilot"><MessageCircle />Tutor virtual</Link>
@@ -193,6 +197,8 @@ export default function VorticeInicio() {
               </div>
             )}
           </section>
+
+          <BrujulaPanel panel={panel.data ?? undefined} cargando={panel.isLoading} error={panel.isError} />
 
           <section className="vx-card" id="asignaturas" aria-labelledby="vx-asig">
             <header><h2 id="vx-asig"><ClipboardCheck aria-hidden="true" />Mis asignaturas</h2>{nivel && <small>{nivel.name}</small>}</header>

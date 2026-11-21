@@ -1,0 +1,32 @@
+/* Brújula™: panel del inicio. Usa los tokens .vx de vortice.css; el detalle propio es la «aguja»
+   de cada mensaje, que cambia de color y de ángulo según la urgencia. */
+.vb header small { color: var(--vx-muted); font-size: 12px; }
+.vb-notas { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 10px; }
+.vb-notas li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; padding: 11px 13px; border-radius: 12px; background: var(--vx-cream); border: 1px solid var(--vx-line); animation: vb-entra .4s cubic-bezier(.2,.7,.2,1) both; }
+.vb-notas li:nth-child(2) { animation-delay: 60ms; } .vb-notas li:nth-child(3) { animation-delay: 120ms; } .vb-notas li:nth-child(n+4) { animation-delay: 180ms; }
+.vb-notas small { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--vx-muted); }
+.vb-notas p { margin: 2px 0 0; font-size: 13.5px; line-height: 1.45; color: var(--vx-ink); }
+.vb-aguja { width: 18px; height: 18px; margin-top: 2px; border-radius: 50%; border: 2px solid currentColor; position: relative; color: var(--vx-green-2); }
+.vb-aguja::after { content: ""; position: absolute; left: 50%; top: 2px; width: 2px; height: 7px; margin-left: -1px; background: currentColor; transform-origin: 50% 7px; border-radius: 2px; transform: rotate(35deg); }
+.vb-notas li[data-tono="alerta"] { border-color: #e6b3aa; background: #fbefec; } .vb-notas li[data-tono="alerta"] .vb-aguja { color: var(--vx-red); } .vb-notas li[data-tono="alerta"] .vb-aguja::after { transform: rotate(160deg); }
+.vb-notas li[data-tono="aviso"] { border-color: #efd2ae; background: #fcf4e9; } .vb-notas li[data-tono="aviso"] .vb-aguja { color: var(--vx-orange); } .vb-notas li[data-tono="aviso"] .vb-aguja::after { transform: rotate(95deg); }
+.vb-notas li[data-tono="info"] .vb-aguja { color: var(--vx-blue); } .vb-notas li[data-tono="info"] .vb-aguja::after { transform: rotate(60deg); }
+.vb-notas li[data-tono="ok"] { background: var(--vx-green-soft); border-color: #cddbcc; }
+
+.vb-proxima { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; margin: 0 0 14px; padding: 10px 13px; border-radius: 12px; background: var(--vx-green); color: #fff; }
+.vb-proxima span { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
+.vb-proxima b { font: 700 20px var(--vx-serif); } .vb-proxima em { font-style: normal; font-size: 12.5px; opacity: .92; }
+
+.vb-ritmo { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.vb-fila { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.vb-fila b { font-size: 13.5px; }
+.vb-chip { padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; background: #eef0ee; color: var(--vx-ink-soft); }
+.vb-chip[data-ritmo="ok"] { background: var(--vx-green-soft); color: var(--vx-green); }
+.vb-chip[data-ritmo="atraso"] { background: #fcefdc; color: #9a5a17; }
+.vb-barra { height: 7px; margin: 6px 0 4px; border-radius: 6px; background: var(--vx-line); overflow: hidden; }
+.vb-barra i { display: block; height: 100%; border-radius: 6px; background: var(--vx-green-2); animation: vb-crece .8s cubic-bezier(.2,.7,.2,1) both; transform-origin: left; }
+.vb-barra i[data-ritmo="atraso"] { background: var(--vx-orange); } .vb-barra i[data-ritmo="nada"] { background: var(--vx-muted); }
+.vb-ritmo small { color: var(--vx-ink-soft); font-size: 12px; }
+@keyframes vb-entra { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes vb-crece { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .vb *, .vb-notas li { animation: none !important; } }

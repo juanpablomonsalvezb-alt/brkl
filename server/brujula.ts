@@ -9,8 +9,14 @@ import {
   type BrujulaGoal, type BrujulaDifficulty,
 } from "@shared/brujula";
 import type { VorticeTrack } from "@shared/vortice";
-import { loadVorticeOverview, checkModuleAccess } from "./vortice";
-import { resolveCalendarConfigForLevelSubject } from "./calendarConfig";
+import { calcularPanel, type PanelBrujula } from "@shared/brujulaPanel";
+import { loadVorticeOverview, loadVorticeInput, checkModuleAccess } from "./vortice";
+import { resolveCalendarConfig, resolveCalendarConfigForLevelSubject } from "./calendarConfig";
+import {
+  getModuleStartDate, getModuleEndDate, getEvaluation1ReleaseDate, getEvaluation2ReleaseDate,
+  getEvaluation3ReleaseDate, getEvaluation4ReleaseDate,
+  CHILE_TZ, ymdIn, midnightIn,
+} from "./calendarUtils";
 
 type Db = LibSQLDatabase<typeof schema>;
 type Result<T> = { ok: true; data: T } | { ok: false; status: 400 | 403 | 404 | 409; reason: string };
@@ -112,4 +118,19 @@ export async function closeBrujulaWeek(
     .set({ difficulty: input.difficulty, note, closedAt: now, updatedAt: now })
     .where(eq(brujulaWeeks.id, row.id));
   return { ok: true, data: { weekStart, difficulty: input.difficulty, note, closedAt: now } };
+}
+
+// Panel del estudiante: métricas, ritmo frente al calendario y mensajes de orientación. Solo lee.
+export async function getBrujulaPanel(db: Db, userId: string, now: Date): Promise<PanelBrujula> {
+  const { level, input, completed, passed } = await loadVorticeInput(db, userId, now);
+  const cfg = await resolveCalendarConfig(db, level?.id, now);
+  return calcularPanel({
+    subjects: input, completed, passed, now,
+    fechas: (_levelSubjectId, m) => ({
+      inicio: getModuleStartDate(m, cfg), fin: getModuleEndDate(m, cfg),
+      evaluaciones: { 1: getEvaluation1ReleaseDate(m, cfg), 2: getEvaluation2ReleaseDate(m, cfg), 3: getEvaluation3ReleaseDate(m, cfg), 4: getEvaluation4ReleaseDate(m, cfg) },
+    }),
+    ymdIn: (d) => ymdIn(CHILE_TZ, d),
+    midnightIn: (ymd) => midnightIn(CHILE_TZ, ymd),
+  });
 }

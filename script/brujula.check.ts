@@ -8,7 +8,7 @@ import * as schema from "../shared/schema";
 import { users } from "../shared/models/auth";
 import { buildOverview, type OverviewSubjectInput } from "../shared/vortice";
 import { proposeWeeklyPlan, weekStartOf, previousWeekStart, saveWeekSchema, closeWeekSchema } from "../shared/brujula";
-import { getBrujulaWeek, saveBrujulaWeek, closeBrujulaWeek } from "../server/brujula";
+import { getBrujulaWeek, getBrujulaPanel, saveBrujulaWeek, closeBrujulaWeek } from "../server/brujula";
 
 // --- Semana: lunes local.
 assert.equal(weekStartOf(new Date(2026, 5, 3)), "2026-06-01"); // miércoles
@@ -118,5 +118,16 @@ assert.ok((await closeBrujulaWeek(db, "u1", lunes, { difficulty: "entender", not
 assert.equal((await closeBrujulaWeek(db, "u1", lunes, { difficulty: "nada", weekStart: "2026-05-25" }) as any).status, 400);
 // Semana nueva: vuelve a proponer, sin arrastre ni castigo.
 assert.equal((await getBrujulaWeek(db, "u1", lunes)).saved, false);
+
+// Panel: solo lee, forma estable, y sin matrícula no muestra asignaturas.
+const antesFilas = (await db.select().from(schema.brujulaWeeks)).length;
+const panelU1 = await getBrujulaPanel(db, "u1", now);
+assert.equal(panelU1.metricas.length, 3); // Mat, Len, Cie
+assert.ok(panelU1.metricas.every((m) => ["al_dia", "atrasado", "adelantado", "sin_datos"].includes(m.ritmo)));
+assert.ok(Array.isArray(panelU1.mensajes) && panelU1.mensajes.length <= 5);
+assert.equal(typeof panelU1.faltanTotal, "number");
+const panelU2 = await getBrujulaPanel(db, "u2", now);
+assert.deepEqual([panelU2.metricas.length, panelU2.avanceTotal, panelU2.mensajes.length], [0, null, 0]);
+assert.equal((await db.select().from(schema.brujulaWeeks)).length, antesFilas); // GET no escribe
 
 console.log("brujula: ok");
