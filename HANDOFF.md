@@ -114,7 +114,7 @@ Detalle de la evaluación E2:
 - En `main` (producción) **no existe** el catálogo de cobro por servidor ni Flow para el plan escolar: los precios son lo que se muestra y reserva. Los snapshots prerenderizados para buscadores (`client/public/prerendered/*.html`) se parchearon a mano con los precios nuevos: **regenerarlos con `npm run prerender` falló** (timeout esperando el servidor) y `npm run seo:build` mete cambios ajenos a precios (títulos y fuentes). No regenerar a ciegas.
 - `api/handler.js` es un artefacto versionado que `npm run build` regenera; revertirlo (`git checkout -- api/handler.js`) tras compilar localmente.
 - Errores de tipos antiguos ya existentes en `main` (`GeminiCopilotButton.tsx`, `PlanConfiguratorAdultsNew.tsx`); no son de Vórtice.
-- Página antigua `PlanSelector2026` dice «8 cuotas de marzo a octubre»: no se tocó, no se sabe si está en uso.
+- Página antigua `PlanSelector2026` retirada: `/planes-2026` y `AsiTrabajamos.tsx` ya redirigen a `/#precio`.
 - Los recesos 2027 (`SUPUESTOS_2027`) son supuestos marcados; la lista de feriados está vacía a propósito hasta que haya resolución oficial.
 - Las fracciones en los libros convertidos salen partidas; solo se cita prosa. Los libros de Casa del Saber son de 2013 y los de MINEDUC de 2026: riesgo de desfase de edición al citar.
 

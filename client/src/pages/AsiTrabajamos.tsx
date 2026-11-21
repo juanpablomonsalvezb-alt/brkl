@@ -188,7 +188,7 @@ export default function AsiTrabajamos() {
             Un mismo objetivo: que tu hijo aprenda, avance y desarrolle todo su potencial.
           </h2>
           <a
-            href="/planes-2026"
+            href="/#precio"
             style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 32, background: RED, color: "#fff", fontWeight: 700, padding: "16px 32px", borderRadius: 999, textDecoration: "none" }}
           >
             Conocer los planes <ArrowUpRight size={18} />

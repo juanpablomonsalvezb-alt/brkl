@@ -26,8 +26,14 @@ const Electivos = lazyRoute(() => import("@/pages/Electivos"));
 const PlataformaNivel = lazyRoute(() => import("@/pages/PlataformaNivel"));
 const HomeEn = lazyRoute(() => import("@/pages/en/HomeEn"));
 const SupportEn = lazyRoute(() => import("@/pages/en/SupportEn"));
-const PlanSelector2026 = lazyRoute(() => import("@/pages/PlanSelector2026"));
 const PrivacyPolicy = lazyRoute(() => import("@/pages/Legal").then((m) => ({ default: m.PrivacyPolicy })));
+
+function RedirectPlanes2026() {
+  useEffect(() => {
+    window.location.replace("/#precio");
+  }, []);
+  return null;
+}
 const TermsOfUse = lazyRoute(() => import("@/pages/Legal").then((m) => ({ default: m.TermsOfUse })));
 const RefundPolicy = lazyRoute(() => import("@/pages/Legal").then((m) => ({ default: m.RefundPolicy })));
 
@@ -136,7 +142,7 @@ function Router() {
       <Route path="/reservations" component={Reservations} />
       <Route path="/plan-settings" component={PlanSettings} />
       <Route path="/level-plan-settings" component={LevelPlanSettings} />
-      <Route path="/planes-2026" component={PlanSelector2026} />
+      <Route path="/planes-2026" component={RedirectPlanes2026} />
       <Route path="/barkley-admin" component={BarkleyAdmin} />
       <Route path="/admin/evaluaciones-perfil" component={EvaluacionesPerfilAdmin} />
       <Route path="/evaluation-links-admin" component={EvaluationLinksAdmin} />

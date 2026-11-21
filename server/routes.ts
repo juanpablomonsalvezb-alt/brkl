@@ -278,6 +278,9 @@ export async function registerRoutes(
     currentUserId(req) ? next() : void res.status(401).json({ message: "Unauthorized" });
 
 
+  // Redirección permanente desde la ruta obsoleta 2026 a las tarjetas de precios 2027.
+  app.get("/planes-2026", (_req, res) => res.redirect(301, "/#precio"));
+
   // Health check endpoint for keep-alive service
   app.get("/api/health", (req, res) => {
     res.json({ 
