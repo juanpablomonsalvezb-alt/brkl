@@ -101,7 +101,7 @@ export function RefundPolicy() {
   return (
     <LegalPage title="Política de reembolso y cancelación" description="Condiciones de reserva de cupo, cancelación y reembolso en Barkley Online." updated="julio 2026">
       <P>
-        Barkley no cobra matrícula. Puedes reservar tu cupo ahora sin pagar hasta febrero de 2027, antes del inicio
+        Barkley no cobra matrícula. Puedes reservar tu cupo ahora sin pagar hasta enero de 2027, antes del inicio
         del año de preparación en marzo.
       </P>
       <H2>Cancelación antes de marzo</H2>

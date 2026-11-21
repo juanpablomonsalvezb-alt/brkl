@@ -10,7 +10,7 @@ Consolida el traspaso del 20 de noviembre (`~/Downloads/BRKL_TRASPASO_2026-11-20
 
 ## 1. Estado actual (terminado y verificado)
 
-Verificación general al cierre: `npx tsc --noEmit` limpio y `npm run check:vortice` con código de salida 0. Último commit: `66529b0`.
+Verificación general al cierre: `npx tsc --noEmit` limpio y `npm run check:vortice` con código de salida 0 en rama local `vortice/h1b1-p0e-puro` (sin push ni escritura en Turso/producción).
 
 | Módulo | Estado | Dónde | Cómo se verificó |
 |---|---|---|---|
@@ -18,6 +18,8 @@ Verificación general al cierre: `npx tsc --noEmit` limpio y `npm run check:vort
 | **Seguridad de la evaluación** (3 hallazgos corregidos) | Terminado | mismos archivos | Cada corrección probada quitándola y viendo fallar su caso (mutación) |
 | **Brújula, parte 1 y 2** (panel del estudiante, intensidad suave/normal/intensivo, bloques semanales, vista `/familia` del apoderado y correo semanal) | Terminado en local | `shared/brujula.ts`, `shared/brujulaPanel.ts`, `server/brujula.ts`, `server/familia.ts`, `server/notificaciones.ts`, `BrujulaPanel.tsx`, `FamiliaVista.tsx` | 18 casos panel, `brujula.check.ts`, `brujula-parte2.check.ts`, `familia-db.check.ts`, `notificaciones.check.ts` y 3/3 mutaciones |
 | **Cobro mensual recurrente (Flow)** (\$70.000 × 7 pagos marzo a septiembre) + sync `shared/precios.ts` | Terminado en local | `shared/planPrices.ts`, `shared/precios.ts`, `server/flowService.ts`, `server/flowSubscriptions.ts`, `server/flowRoutes.ts`, `ReservationDialog.tsx`, `PaymentResult.tsx` | `pagos.check.ts`, `flow-suscripciones.check.ts` y 3/3 mutaciones (Flow simulado sin red) |
+| **Migraciones SQL listas (T37 + T38)** (`flow_subscriptions`, `brujula_preferences`, `brujula_study_blocks`) | Listas en local (sin aplicar a Turso) | `docs/vortice-migracion.sql`, `docs/vortice-migracion-incremental-flow-brujula2.sql` | `migraciones-nuevas.check.ts` (paridad exacta con `shared/schema.ts`, constraints, idempotencia, convivencia con `0001..0005`) y 2/2 mutaciones |
+| **Fechas de cobro unificadas (enero de 2027)** | Terminado en local | `Home.tsx`, `Legal.tsx`, `prerendered/reembolso.html`, `scripts/generate-landings.mjs`, 12 landings `examenes-libres-*`, `guia-examenes-libres`, `server/notify.ts` | `fechas-cobro.check.ts` y mutación de cordura (sin tocar Verano Barkley ni regenerar a ciegas) |
 | **Calendario 2027 por nivel** (cuántos módulos caben antes del cierre, tabla de opciones y carga idempotente `program_calendar` por nivel) | Terminado | `shared/calendario2027.ts`, `server/calendario2027Db.ts`, `scripts/aplicar-calendario-2027.ts`, `scripts/calendario2027-opciones.ts` | 16 casos puros (`calendario2027.check.ts`) y 12 casos DB en memoria (`calendario2027-db.check.ts`); 3/3 mutaciones |
 | **Piloto y banco**: Matemática 5.º, Unidad 3 (OA 7, 8, 10, 11, 13) con 45 preguntas, más 81 de los OA 1, 3, 4, 6, 15, 17, 18, 19, 26 | Terminado a nivel de script | `docs/vortice/piloto/` | Cada pregunta con pasaje del libro verificado por script. Banco de 126 preguntas «validadas» por validadores de script, **sin revisión humana** |
 | **Libros** (109 textos del estudiante en Markdown) | Terminado | `~/Downloads/brkl-libros/libros_md/` (índice `INDICE_UNICO.md`) | MINEDUC 2026 de 1.º básico a 4.º medio (69) y Casa del Saber de 1.º a 6.º básico (40); sin vacíos ni imágenes incrustadas |
@@ -65,10 +67,11 @@ Detalle de la evaluación E2:
 ## 3. Punto exacto donde quedamos
 
 1. **Calendario 2027:** definición cerrada (sin recesos; 1b–3m 15 módulos; 4m 12 módulos; adultos fuera) y cargador idempotente `applyCalendario2027` + script local `scripts/aplicar-calendario-2027.ts` listos en rama local (T36). Falta resolución exenta Mineduc 2027 para cargar feriados y autorización aparte para aplicar a Turso/producción.
-2. **Brújula parte 1 y 2** (panel del estudiante, intensidad, bloques semanales, vista `/familia` y correo semanal al apoderado): construidas en rama local (tablas `brujula_preferences` y `brujula_study_blocks` pendientes de migración/push a Turso con autorización).
-3. **Plan mensual de \$70.000 × 7 (Flow recurrente):** flujo de suscripción implementado y probado en rama local con Flow simulado (tabla `flow_subscriptions` pendiente de migración/push a Turso y prueba en sandbox/credenciales reales).
+2. **Brújula parte 1 y 2** (panel del estudiante, intensidad, bloques semanales, vista `/familia` y correo semanal al apoderado): construidas en rama local y con SQL listo/verificado en local (`docs/vortice-migracion.sql` + `docs/vortice-migracion-incremental-flow-brujula2.sql`); pendiente autorización para aplicar a Turso/producción.
+3. **Plan mensual de \$70.000 × 7 (Flow recurrente):** flujo de suscripción implementado y probado en rama local con Flow simulado y SQL listo/verificado en local; pendiente autorización para aplicar migración a Turso/producción y prueba en sandbox/credenciales reales.
 4. **Evaluación E2:** lista y probada en Preview. Falta aplicar la migración 0005 y las rutas a producción (etapa aparte, con orden explícita), cargar las 45 preguntas con validación humana y definir dónde se declara el perfil neurodivergente en la base.
-5. **Rama de Vórtice:** empujada a GitHub hasta `4f9ee9f`; los commits siguientes (corrección de 409, Brújula, calendario, precios locales, este archivo) están solo locales.
+5. **Fechas de cobro:** unificadas en rama local a **enero de 2027** (pendiente push/publicación con orden explícita).
+6. **Rama de Vórtice:** empujada a GitHub hasta `4f9ee9f`; los commits siguientes (corrección de 409, Brújula, calendario, precios locales, Flow recurrente, unificación de fechas y migraciones SQL locales) están solo locales.
 
 ---
 
@@ -81,7 +84,7 @@ Detalle de la evaluación E2:
 5. ~~Cobro mensual recurrente (Flow)~~ (**hecho en local**, pendiente migración/Turso y prueba con credenciales reales).
 6. ~~Brújula parte 2~~ (**hecho en local**, pendiente migración/Turso).
 7. **Ver en pantalla** la tarjeta de precios, el panel de Brújula (parte 1 y 2) y `/familia`; ajustar si no gustan.
-8. Corregir la inconsistencia de fechas de cobro (landings: «pagas recién en febrero de 2027»; home: «Arancel desde enero 2027»).
+8. ~~Corregir la inconsistencia de fechas de cobro (landings: «pagas recién en febrero de 2027»; home: «Arancel desde enero 2027»).~~ (**unificadas a «enero de 2027» en rama local**, pendiente publicación tras autorización).
 9. Cifras de la landing con datos reales (91,2 / 92,1 / 93,4 %, 70 %, estadísticas nacionales de «Por qué Barkley»).
 10. Alertas de uso en Turso (50 % y 80 %). Interfaz restante, M2 a M8 y piloto con estudiantes: etapas futuras, cada una con autorización.
 

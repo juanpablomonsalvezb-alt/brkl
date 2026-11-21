@@ -1292,7 +1292,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === URGENCIA — cupos limitados + primer pago en febrero 2027 === */}
+      {/* === URGENCIA — cupos limitados + primer pago en enero 2027 === */}
       <section style={{ background: NAVY, padding: "40px 24px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: -40, left: -40, opacity: 0.3 }}><ShapeFlower color="#ffffff14" size={160} /></div>
         <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: 24, textAlign: "center" }}>
