@@ -7,7 +7,7 @@ Sirve para no releer lo que no cambió: `git diff --stat <commit> -- <rutas del 
 | evaluacion | `server/evaluacion*.ts`, `VorticeEvaluacion.tsx`, `migrations/vortice/0005*` | `ac51d91` | `923826e` (seguridad) y `a292d75`; cambios posteriores de Antigravity sin verificar |
 | brujula | `shared/brujula*.ts`, `server/brujula.ts`, `BrujulaPanel.tsx` | `20136ee` | parte 1: `9939051`; parte 2 sin verificar |
 | calendario | `shared/calendario2027.ts`, `server/calendario2027Db.ts` | `aac8752` | `5660554` (T35); carga a BD sin verificar |
-| flow | `server/flow*.ts`, `shared/flowSandbox.ts` | T40 fusionada (ver commit siguiente a este) | F1 a F7 verificadas 2026-11-22; corregido 1 error del informe de Junie (script de test) |
+| flow | `server/flow*.ts`, `shared/flowSandbox.ts` | `ae7cf3a` | F1 a F7 verificadas 2026-11-22; corregido 1 error del informe de Junie (script de test) |
 | precios | `shared/precios.ts`, `shared/planPrices.ts` | `3580a91` | publicado en producción (PR 4, 5 y 6) |
 | aula-mapa | `shared/{aulaUniversal,mapaConocimiento,retencionMapa,cruceEvaluacionMapa}.ts` | `4f16b84` | sin verificar a fondo |
 | banco | `docs/vortice/piloto/` | `ad8c264` | `ad8c264` |
