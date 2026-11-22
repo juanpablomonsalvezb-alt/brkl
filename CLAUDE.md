@@ -4,7 +4,7 @@ Carpeta raíz: `~/Downloads/brkl-motor`, rama `vortice/h1b1-p0e-puro` (worktree 
 
 ## Roles
 - **Claude = arquitecto.** Diseña, escribe el brief, verifica por su cuenta y puede corregir lo que Junie ya hizo. **No escribe features nuevas desde cero.**
-- **Junie = programador (CLI).** Trabaja en copia aislada: `junie -p . --max-steps=150 "Lee .junie/INSTRUCCIONES_ACTUALES.md y .junie/REGLAS_FIJAS.md y ejecuta la tarea Txx"`. Sin `timeout` en este Mac: usar `perl -e 'alarm shift; exec @ARGV' 3300 <cmd>`. Copias con `git archive HEAD` o `rsync --exclude .git --exclude node_modules`, más `git init` propio y `ln -s` a los `node_modules` reales. Nunca copiar el `.git` del worktree.
+- **Junie = programador (CLI).** Trabaja en copia aislada: `junie -p . --max-steps=150 "Lee .junie/INSTRUCCIONES_ACTUALES.md y .junie/REGLAS_FIJAS.md y ejecuta la tarea Txx"`. Sin `timeout` en este Mac: usar `perl -e 'alarm shift; exec @ARGV' 3300 <cmd>`. Copias con `git archive HEAD` **más `cp -r .junie`** (en el repo público solo están 3 archivos de `.junie/`) o `rsync --exclude .git --exclude node_modules`, más `git init` propio y `ln -s` a los `node_modules` reales. Nunca copiar el `.git` del worktree.
 - **Junie se equivoca sin verlo** (T30, T33, T34, T35): verificar siempre código de salida real, mutaciones y diff antes de fusionar.
 
 ## Reglas inamovibles
@@ -35,6 +35,6 @@ Carpeta raíz: `~/Downloads/brkl-motor`, rama `vortice/h1b1-p0e-puro` (worktree 
 - Estado vivo: `docs/vortice/MEMORIA.md`. Cambios y último commit revisado por área: `docs/vortice/CAMBIOS.md`.
 - Áreas: `docs/vortice/areas/{evaluacion,brujula,calendario,flow,precios,aula-mapa,banco}.md`.
 - Decisiones: índice `docs/vortice/DECISIONES_INDICE.md` (el detalle completo está en `.junie/DECISIONES_DIRECCION.md`, no cargarlo entero).
-- Brief a Junie: plantilla `.junie/PLANTILLA_TAREA.md`. Reglas fijas de Junie: `.junie/REGLAS_FIJAS.md`.
+- Brief a Junie: plantilla `.junie/PLANTILLA_TAREA.md`. Reglas fijas de Junie: `.junie/REGLAS_FIJAS.md`. `.junie/` va en dos repos (el principal es público): ver `docs/vortice/JUNIE_PRIVADO.md`.
 - Medición de consumo: `docs/vortice/MEDICION.md`.
 - Histórico (no cargar por defecto): `HANDOFF.md`, `.junie/ESTADO.md`, `~/Downloads/BRKL_TRASPASO_2026-11-20.md`.

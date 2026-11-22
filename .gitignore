@@ -24,3 +24,10 @@ video/intro/out/
 video/trailer/out/
 video/javiera/out/
 __pycache__/
+
+# .junie/: en este repositorio PÚBLICO solo se versionan las reglas y plantillas permanentes.
+# Decisiones, informes y estado viven en el repositorio PRIVADO (ver docs/vortice/JUNIE_PRIVADO.md).
+/.junie/*
+!/.junie/REGLAS_FIJAS.md
+!/.junie/PLANTILLA_INFORME.md
+!/.junie/PLANTILLA_TAREA.md

@@ -9,6 +9,9 @@
 - Flow mensual construido pero **inseguro para habilitar** (auditoría 2026-11-22): ver `areas/flow.md`.
 - Migraciones SQL nuevas (`docs/vortice-migracion*.sql`) **no aplicadas** a ninguna base. Solo `0001` a `0005` están aplicadas en `brkl-preview`.
 
+## Versionado de `.junie/` (2026-11-22)
+Repo público: solo reglas y plantillas. Repo privado local `~/Downloads/brkl-junie-privado.git` (commit `6cfc402`, 27 archivos, sin remoto): ver `JUNIE_PRIVADO.md`. **No empujar los 8 commits locales al repo público antes de cerrar T40:** `areas/flow.md` describe debilidades de Flow sin corregir.
+
 ## En curso
 - **T40** (Junie, copia `~/Downloads/brkl-motor-flow`): endurecer Flow F1 a F7. Pendiente verificarla por mi cuenta antes de fusionar.
 
