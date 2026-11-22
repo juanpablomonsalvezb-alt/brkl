@@ -1,3 +1,5 @@
+> **DOCUMENTO HISTÓRICO (desde 2026-11-22).** No es la fuente del estado actual. Usar `docs/vortice/MEMORIA.md` (estado vivo) y `docs/vortice/CAMBIOS.md`. Se conserva como registro.
+
 # HANDOFF: Barkley / Vórtice, estado al 2026-11-21
 
 Consolida el traspaso del 20 de noviembre (`~/Downloads/BRKL_TRASPASO_2026-11-20.md`), el tablero `.junie/ESTADO.md`, las decisiones de dirección (`.junie/DECISIONES_DIRECCION.md`), las reglas globales de `~/.claude/CLAUDE.md` y todo lo hecho el 21 de noviembre. No existe un `CLAUDE.md` dentro del proyecto; `ARQUITECTURA_ESTANDAR.md` describe la plataforma antigua (carpeta de Drive con detección por nombre de archivo) y no rige Vórtice.

@@ -22,3 +22,7 @@ Tokens (entrada, caché, salida); llamadas por herramienta; archivos explorados 
 | Fecha | Sesión | Tarea | Tokens caché | Llamadas | Notas |
 |---|---|---|---|---|---|
 | 2026-11-22 | `4aa4e204` | línea base | 271 M | 682 | sesión larga, contexto medio ~397 mil |
+| 2026-11-22 | `4aa4e204` | verificación de la optimización (misma sesión, sin sesión nueva) | 290 M | 704 | contexto medio 412 mil; últimas 22 respuestas ~870 mil por llamada (contexto casi lleno). Sin efecto medible: las instrucciones se cargan al iniciar sesión |
+
+## Pendiente de comparar
+Abrir una sesión nueva en `~/Downloads/brkl-motor`, trabajar una tarea de nivel 2 y registrar aquí tokens de caché, llamadas y contexto medio con `scripts/medir-sesion.py <archivo>` para comparar contra la línea base.
