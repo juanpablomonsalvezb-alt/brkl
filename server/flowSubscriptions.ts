@@ -1,9 +1,9 @@
 // Suscripciones mensuales recurrentes en Flow.cl (ej. plan escolar $70.000 x 7 pagos).
 // Recibe la conexión Drizzle y la pasarela Flow inyectadas para probarse sin red contra SQLite en memoria.
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import * as schema from "@shared/schema";
-import { flowSubscriptions, reservations, type FlowSubscription } from "@shared/schema";
+import { flowSubscriptions, flowSubscriptionInvoices, reservations, type FlowSubscription } from "@shared/schema";
 import { detalleCobroPlan } from "@shared/planPrices";
 import { isValidEmail, getEmailErrorMessage } from "@shared/emailValidation";
 import { enrollFromPaidReservation } from "./matricula";
@@ -21,6 +21,11 @@ import type {
 } from "./flowService";
 
 type Db = LibSQLDatabase<typeof schema>;
+
+// ─── F4: Lock en memoria para evitar concurrencia en completarRegistroTarjeta ──
+// Mapa token → promesa en curso.  Si dos llamadas llegan con el mismo token,
+// la segunda espera a que la primera termine y reutiliza el resultado.
+const registroLocks = new Map<string, Promise<any>>();
 
 export interface FlowSubscriptionsGateway {
   getWebBaseUrl(): string;
@@ -102,10 +107,21 @@ export async function iniciarSuscripcionMensual(
     }
   }
 
-  // Asegurar que el plan mensual exista en Flow antes de inscribir la tarjeta.
+  // F6: Asegurar que el plan mensual exista en Flow antes de inscribir la tarjeta.
+  // Distinguir «el plan no existe» de otros errores; ante error de red o credenciales
+  // NO se crea el plan.
   try {
     await flow.getPlan(detalle.flowPlanId);
-  } catch {
+  } catch (planErr: any) {
+    const msg = (planErr.message ?? "").toLowerCase();
+    const planNotFound =
+      msg.includes("no existe") ||
+      msg.includes("not found") ||
+      planErr.status === 404;
+    if (!planNotFound) {
+      // Error de red, credenciales, timeout → no crear plan, propagar
+      throw new Error(`No se puede verificar el plan en Flow: ${planErr.message}`);
+    }
     await flow.createPlan({
       planId: detalle.flowPlanId,
       name: "Barkley Plan Escolar Mensual 2027 (7 pagos)",
@@ -183,6 +199,15 @@ export interface CompletarRegistroResult {
   alreadyActive: boolean;
 }
 
+/**
+ * F3 + F4: completarRegistroTarjeta — registra la tarjeta y crea la suscripción en Flow,
+ * pero NO marca paymentStatus=completed ni cambia la reserva a confirmed ni llama
+ * enrollFromPaidReservation.  Eso ocurre en procesarWebhookSuscripcion al llegar la
+ * primera factura pagada.
+ *
+ * F4: transición atómica pending_card → card_registered con UPDATE WHERE status='pending_card'
+ * y verificación de filas afectadas para evitar duplicados por concurrencia.
+ */
 export async function completarRegistroTarjeta(
   db: Db,
   flow: FlowSubscriptionsGateway,
@@ -192,10 +217,18 @@ export async function completarRegistroTarjeta(
     throw new FlowSubscriptionError(400, "Token no proporcionado");
   }
 
-  const [sub] = await db
-    .select()
-    .from(flowSubscriptions)
-    .where(eq(flowSubscriptions.registerToken, token));
+  // F4: lock por token — si ya hay una promesa en curso con este token, esperar
+  const existingPromise = registroLocks.get(token);
+  if (existingPromise) {
+    const result = await existingPromise;
+    return result;
+  }
+
+  const promise = (async (): Promise<CompletarRegistroResult> => {
+    const [sub] = await db
+      .select()
+      .from(flowSubscriptions)
+      .where(eq(flowSubscriptions.registerToken, token));
 
   if (!sub) {
     throw new FlowSubscriptionError(404, "Registro de tarjeta no encontrado");
@@ -235,6 +268,55 @@ export async function completarRegistroTarjeta(
     };
   }
 
+  // F4: transición atómica — solo una llamada concurrente avanza.
+  // Paso 1: intentar mover pending_card → card_registered (solo uno lo logra)
+  await db
+    .update(flowSubscriptions)
+    .set({ status: "card_registered", updatedAt: now })
+    .where(and(eq(flowSubscriptions.id, sub.id), eq(flowSubscriptions.status, "pending_card")));
+
+  // Paso 2: leer de nuevo — si el estado no es card_registered, otra llamada ya lo procesó
+  const [subAfter] = await db
+    .select()
+    .from(flowSubscriptions)
+    .where(eq(flowSubscriptions.id, sub.id));
+
+  if (subAfter.status !== "card_registered") {
+    // Otra llamada concurrente ya procesó esto
+    return {
+      status: subAfter.status as FlowSubscription["status"],
+      flowSubscriptionId: subAfter.flowSubscriptionId,
+      amount: subAfter.amount,
+      periodsTotal: subAfter.periodsTotal,
+      periodsPaid: subAfter.periodsPaid,
+      reservationId: subAfter.reservationId,
+      alreadyActive: true,
+    };
+  }
+
+  // Paso 3: ahora card_registered → active (solo el ganador avanza)
+  const [subBeforeCreate] = await db
+    .select()
+    .from(flowSubscriptions)
+    .where(and(eq(flowSubscriptions.id, sub.id), eq(flowSubscriptions.status, "card_registered")));
+
+  if (!subBeforeCreate) {
+    // Edge case: otra llamada ya pasó de card_registered a active
+    const [subFinal] = await db
+      .select()
+      .from(flowSubscriptions)
+      .where(eq(flowSubscriptions.id, sub.id));
+    return {
+      status: subFinal.status as FlowSubscription["status"],
+      flowSubscriptionId: subFinal.flowSubscriptionId,
+      amount: subFinal.amount,
+      periodsTotal: subFinal.periodsTotal,
+      periodsPaid: subFinal.periodsPaid,
+      reservationId: subFinal.reservationId,
+      alreadyActive: true,
+    };
+  }
+
   const [reservation] = await db.select().from(reservations).where(eq(reservations.id, sub.reservationId));
   if (!reservation) {
     throw new FlowSubscriptionError(404, "Reserva no encontrada");
@@ -256,27 +338,12 @@ export async function completarRegistroTarjeta(
     .set({
       flowSubscriptionId: flowSub.subscriptionId,
       status: "active",
-      updatedAt: now,
+      updatedAt: new Date(),
     })
     .where(eq(flowSubscriptions.id, sub.id));
 
-  await db
-    .update(reservations)
-    .set({
-      status: reservation.status === "enrolled" ? "enrolled" : "confirmed",
-      paymentStatus: "completed",
-      paymentAmount: sub.amount,
-      flowOrder: flowSub.subscriptionId,
-      updatedAt: now,
-    })
-    .where(eq(reservations.id, reservation.id));
-
-  try {
-    const auto = await enrollFromPaidReservation(db, reservation.id);
-    if (!auto.ok) console.warn(`Matrícula automática pendiente (reserva ${reservation.id}): ${auto.reason}`);
-  } catch (error) {
-    console.error(`Error en matrícula automática (reserva ${reservation.id}):`, error);
-  }
+  // F3: NO marcamos paymentStatus=completed ni confirmamos la reserva ni matriculamos.
+  // Eso se hace en procesarWebhookSuscripcion al llegar la primera factura pagada.
 
   return {
     status: "active",
@@ -286,6 +353,49 @@ export async function completarRegistroTarjeta(
     periodsPaid: sub.periodsPaid,
     reservationId: sub.reservationId,
     alreadyActive: false,
+  };
+  })();
+
+  // Registrar la promesa en el lock; limpiar cuando termine
+  registroLocks.set(token, promise);
+  try {
+    const result = await promise;
+    return result;
+  } finally {
+    registroLocks.delete(token);
+  }
+}
+
+/**
+ * F7: obtenerEstadoRegistroTarjeta — versión de solo lectura para
+ * subscription-register-status.  Consulta el estado local sin crear nada en Flow.
+ */
+export async function obtenerEstadoRegistroTarjeta(
+  db: Db,
+  _flow: FlowSubscriptionsGateway,
+  token: string,
+): Promise<CompletarRegistroResult> {
+  if (!token) {
+    throw new FlowSubscriptionError(400, "Token no proporcionado");
+  }
+
+  const [sub] = await db
+    .select()
+    .from(flowSubscriptions)
+    .where(eq(flowSubscriptions.registerToken, token));
+
+  if (!sub) {
+    throw new FlowSubscriptionError(404, "Registro de tarjeta no encontrado");
+  }
+
+  return {
+    status: sub.status,
+    flowSubscriptionId: sub.flowSubscriptionId,
+    amount: sub.amount,
+    periodsTotal: sub.periodsTotal,
+    periodsPaid: sub.periodsPaid,
+    reservationId: sub.reservationId,
+    alreadyActive: sub.status === "active" || sub.status === "completed",
   };
 }
 
@@ -297,6 +407,13 @@ export interface WebhookSuscripcionResult {
   amountMismatch?: boolean;
 }
 
+/**
+ * F3: procesarWebhookSuscripcion — aquí es donde se paga y matricula al confirmarse
+ * la primera factura (status === 1 y monto correcto).
+ * F5: deduplicación por tabla flow_subscription_invoices (no por lastInvoiceId).
+ * Una factura pendiente (status === 0) NO cambia el estado a past_due.
+ * Solo una fallida/anulada (status === 2) lo hace.
+ */
 export async function procesarWebhookSuscripcion(
   db: Db,
   flow: FlowSubscriptionsGateway,
@@ -334,7 +451,13 @@ export async function procesarWebhookSuscripcion(
       throw new FlowSubscriptionError(404, "Suscripción no encontrada");
     }
 
-    if (sub.lastInvoiceId === String(invoice.id)) {
+    // F5: deduplicación por tabla flow_subscription_invoices
+    const [existingInvoice] = await db
+      .select()
+      .from(flowSubscriptionInvoices)
+      .where(eq(flowSubscriptionInvoices.invoiceId, String(invoice.id)));
+
+    if (existingInvoice) {
       return {
         ok: true,
         deduplicated: true,
@@ -343,6 +466,46 @@ export async function procesarWebhookSuscripcion(
       };
     }
 
+    // F5: registrar la factura como procesada (idempotente por unique invoice_id)
+    try {
+      await db.insert(flowSubscriptionInvoices).values({
+        invoiceId: String(invoice.id),
+        subscriptionId: String(invoice.subscriptionId),
+        processedAt: now,
+      });
+    } catch {
+      // UNIQUE constraint violation → ya estaba procesada
+      return {
+        ok: true,
+        deduplicated: true,
+        status: sub.status,
+        periodsPaid: sub.periodsPaid,
+      };
+    }
+
+    // F5: factura pendiente (status === 0) NO cambia el estado
+    if (invoice.status === 0) {
+      return {
+        ok: true,
+        status: sub.status,
+        periodsPaid: sub.periodsPaid,
+      };
+    }
+
+    // Factura fallida/anulada (status === 2) → past_due
+    if (invoice.status === 2) {
+      await db
+        .update(flowSubscriptions)
+        .set({ status: "past_due", updatedAt: now })
+        .where(eq(flowSubscriptions.id, sub.id));
+      return {
+        ok: true,
+        status: "past_due",
+        periodsPaid: sub.periodsPaid,
+      };
+    }
+
+    // Factura pagada (status === 1)
     if (invoice.status === 1 && Number(invoice.amount) !== sub.amount) {
       console.error(`Flow suscripción: monto distinto del esperado (${invoice.amount} vs ${sub.amount}) en ${sub.id}`);
       await db
@@ -373,6 +536,7 @@ export async function procesarWebhookSuscripcion(
         })
         .where(eq(flowSubscriptions.id, sub.id));
 
+      // F3: pagar y matricular al confirmarse la primera factura
       const [reservation] = await db.select().from(reservations).where(eq(reservations.id, sub.reservationId));
       if (reservation) {
         await db
@@ -381,9 +545,20 @@ export async function procesarWebhookSuscripcion(
             status: reservation.status === "enrolled" ? "enrolled" : "confirmed",
             paymentStatus: "completed",
             paymentDate: paidAt,
+            paymentAmount: sub.amount,
             updatedAt: now,
           })
           .where(eq(reservations.id, reservation.id));
+
+        // Matricular solo en la primera factura pagada
+        if (sub.periodsPaid === 0) {
+          try {
+            const auto = await enrollFromPaidReservation(db, reservation.id);
+            if (!auto.ok) console.warn(`Matrícula automática pendiente (reserva ${reservation.id}): ${auto.reason}`);
+          } catch (error) {
+            console.error(`Error en matrícula automática (reserva ${reservation.id}):`, error);
+          }
+        }
       }
 
       return {
@@ -394,14 +569,9 @@ export async function procesarWebhookSuscripcion(
       };
     }
 
-    await db
-      .update(flowSubscriptions)
-      .set({ status: "past_due", updatedAt: now })
-      .where(eq(flowSubscriptions.id, sub.id));
-
     return {
       ok: true,
-      status: "past_due",
+      status: sub.status,
       periodsPaid: sub.periodsPaid,
     };
   }

@@ -717,6 +717,16 @@ export const flowSubscriptions = sqliteTable("flow_subscriptions", {
 
 export type FlowSubscription = typeof flowSubscriptions.$inferSelect;
 
+// ─── F5: Tabla de facturas procesadas (deduplicación por tabla, no por lastInvoiceId) ──
+export const flowSubscriptionInvoices = sqliteTable("flow_subscription_invoices", {
+  id: text("id").primaryKey().$defaultFn(() => randomUUID()),
+  invoiceId: text("invoice_id").notNull().unique(),
+  subscriptionId: text("subscription_id").notNull(),
+  processedAt: integer("processed_at", { mode: "timestamp" }).defaultNow().notNull(),
+});
+
+export type FlowSubscriptionInvoice = typeof flowSubscriptionInvoices.$inferSelect;
+
 // Barkley Institute Plans Configuration - OLD (mantener por compatibilidad)
 export const planConfigurations = sqliteTable("plan_configurations", {
   id: text("id").primaryKey().$defaultFn(() => randomUUID()),

@@ -1,4 +1,5 @@
 // Guardia de seguridad para pruebas con Flow.cl: impide apuntar a producción (www.flow.cl).
+// F1: Factoría crearPasarelaSuscripciones con modo explícito (sandbox por omisión).
 
 export const FLOW_SANDBOX_API_URL = "https://sandbox.flow.cl/api";
 
@@ -38,4 +39,67 @@ export function assertFlowSandboxUrl(url: string, options: AssertFlowSandboxOpti
   }
 
   return FLOW_SANDBOX_API_URL;
+}
+
+// ─── F1: Pasarela de suscripciones con modo explícito ─────────────────────────
+
+/** Modo de operación de las suscripciones: sandbox (seguro) o produccion (requiere triple confirmación). */
+export type FlowSuscripcionesModo = "sandbox" | "produccion";
+
+/**
+ * Factoría que devuelve un objeto FlowService configurado exclusivamente para las rutas de
+ * suscripción mensual.  Lee `FLOW_SUSCRIPCIONES_MODO` del entorno (sandbox por omisión).
+ *
+ * - `sandbox`: la URL debe pasar `assertFlowSandboxUrl` (solo https://sandbox.flow.cl/api).
+ * - `produccion`: exige NODE_ENV=production, VERCEL_ENV=production y
+ *   FLOW_SUSCRIPCIONES_CONFIRMO_PRODUCCION=si; si falta cualquiera, lanza error.
+ *
+ * El singleton `flowService` (pago único) NO se ve afectado.
+ */
+export function crearPasarelaSuscripciones(env?: NodeJS.ProcessEnv) {
+  const e = env ?? process.env;
+  const modo: FlowSuscripcionesModo = (e.FLOW_SUSCRIPCIONES_MODO as FlowSuscripcionesModo) ?? "sandbox";
+
+  if (modo === "sandbox") {
+    const url = assertFlowSandboxUrl(e.FLOW_API_URL ?? "");
+    return {
+      modo,
+      apiUrl: url,
+      apiKey: e.FLOW_API_KEY ?? "",
+      secretKey: e.FLOW_SECRET_KEY ?? "",
+    };
+  }
+
+  /* modo === "produccion" */
+  if (e.NODE_ENV !== "production") {
+    throw new Error(
+      "FLOW_SUSCRIPCIONES_MODO=produccion requiere NODE_ENV=production",
+    );
+  }
+  if (e.VERCEL_ENV !== "production") {
+    throw new Error(
+      "FLOW_SUSCRIPCIONES_MODO=produccion requiere VERCEL_ENV=production",
+    );
+  }
+  if (e.FLOW_SUSCRIPCIONES_CONFIRMO_PRODUCCION !== "si") {
+    throw new Error(
+      "FLOW_SUSCRIPCIONES_MODO=produccion requiere FLOW_SUSCRIPCIONES_CONFIRMO_PRODUCCION=si",
+    );
+  }
+
+  const rawUrl = (e.FLOW_API_URL ?? "").trim().replace(/\/+$/, "");
+  return {
+    modo,
+    apiUrl: rawUrl,
+    apiKey: e.FLOW_API_KEY ?? "",
+    secretKey: e.FLOW_SECRET_KEY ?? "",
+  };
+}
+
+/** Resultado de `crearPasarelaSuscripciones`. */
+export interface PasarelaSuscripcionesConfig {
+  modo: FlowSuscripcionesModo;
+  apiUrl: string;
+  apiKey: string;
+  secretKey: string;
 }

@@ -353,5 +353,17 @@ export function createFlowService(config?: FlowServiceConfig): FlowService {
   return new FlowService(config);
 }
 
+/**
+ * Crea un FlowService a partir de la configuración de la factoría de suscripciones (F1).
+ * Las rutas de suscripción deben usar esta función en lugar del singleton flowService.
+ */
+export function crearFlowServiceDesdePasarela(pasarela: { apiUrl: string; apiKey: string; secretKey: string }): FlowService {
+  return new FlowService({
+    apiKey: pasarela.apiKey,
+    secretKey: pasarela.secretKey,
+    apiUrl: pasarela.apiUrl,
+  });
+}
+
 export const flowService = new FlowService();
 export type { FlowPaymentParams, FlowPaymentResponse, FlowPaymentStatus };

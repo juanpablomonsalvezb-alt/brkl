@@ -341,3 +341,35 @@ if (esEjecucionDirecta) {
     await ejecutarSandboxReal();
   }
 }
+
+// ─── F8 (solo documentación, no ejecutar) ──────────────────────────────────────
+//
+// PENDIENTE: verificar en el sandbox real el formato exacto del callback de
+// suscripción mensual.  ¿Flow envía `invoiceId` y firma `s`, o solo un `token`?
+//
+// Pasos para verificar (requiere credenciales sandbox válidas):
+//
+//   1. Definir variables de entorno:
+//        export FLOW_API_KEY="<sandbox-api-key>"
+//        export FLOW_SECRET_KEY="<sandbox-secret-key>"
+//        export FLOW_API_URL="https://sandbox.flow.cl/api"
+//        export BASE_URL="https://tu-app.vercel.app"   (o el URL real)
+//
+//   2. Ejecutar sin --simulado:
+//        npx tsx scripts/probar-flow-sandbox.ts
+//
+//   3. Abrir la URL de inscripción de tarjeta que imprime el script y completar
+//      el registro con una tarjeta de prueba del sandbox.
+//
+//   4. Observar los logs del servidor cuando Flow llama a:
+//        - /api/flow/card-return          (¿POST? ¿qué campos en el body?)
+//        - /api/flow/subscription-webhook (¿invoiceId + s? ¿solo token?)
+//
+//   5. Si Flow envía campos distintos a los esperados (invoiceId + s con HMAC),
+//      actualizar `procesarWebhookSuscripcion` y `completarRegistroTarjeta`
+//      para manejar el formato real.
+//
+//   6. Documentar el formato confirmado en .junie/informes/T40.md.
+//
+// Sin credenciales sandbox no se puede ejecutar; se deja como pendiente del
+// sostenedor.

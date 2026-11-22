@@ -12,6 +12,11 @@ if (process.env.NODE_ENV === "production") {
 process.env.TEST_DATABASE_URL = ":memory:";
 process.env.FLOW_API_KEY = "test-api-key";
 process.env.FLOW_SECRET_KEY = "test-secret-key";
+// F2: habilitar rutas de suscripción; F6: BASE_URL requerida
+process.env.FLOW_SUSCRIPCIONES = "1";
+process.env.FLOW_SUSCRIPCIONES_MODO = "sandbox";
+process.env.FLOW_API_URL = "https://sandbox.flow.cl/api";
+process.env.BASE_URL = "http://127.0.0.1:0";
 
 const { sql, eq } = await import("drizzle-orm");
 const { generateSQLiteDrizzleJson, generateSQLiteMigration } = await import("drizzle-kit/api");
@@ -27,6 +32,7 @@ const {
   montoDelPlan,
 } = await import("../shared/planPrices");
 const { flowService } = await import("../server/flowService");
+const FR = await import("../server/flowRoutes");
 const { registerRoutes } = await import("../server/routes");
 
 // 1. Catálogo y modalidad de cobro
@@ -79,46 +85,53 @@ const cancelaciones: any[] = [];
 let regStatusMock: { status: number; customerId: string } = { status: 1, customerId: "" };
 const facturasMock = new Map<string, { id: string; subscriptionId: string; amount: number; status: number; paidDate?: string }>();
 
-(flowService as any).getPlan = async (planId: string) => {
-  if (!planExiste) throw new Error("Plan no existe");
-  return { planId, name: "Barkley", currency: "CLP", amount: 70000, interval: 3, periods_number: 7, status: 1 };
+// Mock tanto flowService (singleton) como subscriptionGateway (usado por rutas de suscripción)
+const mockMethods = {
+  getPlan: async (planId: string) => {
+    if (!planExiste) throw new Error("Plan no existe");
+    return { planId, name: "Barkley", currency: "CLP", amount: 70000, interval: 3, periods_number: 7, status: 1 };
+  },
+  createPlan: async (p: any) => {
+    planExiste = true;
+    planesCreados.push(p);
+    return { ...p, status: 1 };
+  },
+  createCustomer: async (p: any) => {
+    clientesCreados.push(p);
+    return {
+      customerId: `cust-${clientesCreados.length}`,
+      created: "2027-03-01",
+      email: p.email,
+      name: p.name,
+      externalId: p.externalId,
+      status: "1",
+    };
+  },
+  registerCustomerCard: async (p: any) => {
+    const token = `reg-tok-${registrosTarjeta.length + 1}`;
+    registrosTarjeta.push({ ...p, token });
+    return { url: "https://sandbox.flow.cl/app/web/pay.php", token };
+  },
+  getCustomerRegisterStatus: async () => regStatusMock,
+  createSubscription: async (p: any) => {
+    const subscriptionId = `fsub-${suscripcionesCreadas.length + 1}`;
+    suscripcionesCreadas.push({ ...p, subscriptionId });
+    return { subscriptionId, planId: p.planId, customerId: p.customerId, status: 1, periods_number: p.periods_number };
+  },
+  getInvoice: async (invoiceId: string) => {
+    const inv = facturasMock.get(invoiceId);
+    if (!inv) throw new Error("Factura no encontrada");
+    return inv;
+  },
+  cancelSubscription: async (subscriptionId: string, at_period_end?: 0 | 1) => {
+    cancelaciones.push({ subscriptionId, at_period_end });
+    return { subscriptionId, planId: FLOW_PLAN_ESCOLAR_MENSUAL_ID, customerId: "cust-1", status: 4 };
+  },
 };
-(flowService as any).createPlan = async (p: any) => {
-  planExiste = true;
-  planesCreados.push(p);
-  return { ...p, status: 1 };
-};
-(flowService as any).createCustomer = async (p: any) => {
-  clientesCreados.push(p);
-  return {
-    customerId: `cust-${clientesCreados.length}`,
-    created: "2027-03-01",
-    email: p.email,
-    name: p.name,
-    externalId: p.externalId,
-    status: "1",
-  };
-};
-(flowService as any).registerCustomerCard = async (p: any) => {
-  const token = `reg-tok-${registrosTarjeta.length + 1}`;
-  registrosTarjeta.push({ ...p, token });
-  return { url: "https://sandbox.flow.cl/app/web/pay.php", token };
-};
-(flowService as any).getCustomerRegisterStatus = async () => regStatusMock;
-(flowService as any).createSubscription = async (p: any) => {
-  const subscriptionId = `fsub-${suscripcionesCreadas.length + 1}`;
-  suscripcionesCreadas.push({ ...p, subscriptionId });
-  return { subscriptionId, planId: p.planId, customerId: p.customerId, status: 1, periods_number: p.periods_number };
-};
-(flowService as any).getInvoice = async (invoiceId: string) => {
-  const inv = facturasMock.get(invoiceId);
-  if (!inv) throw new Error("Factura no encontrada");
-  return inv;
-};
-(flowService as any).cancelSubscription = async (subscriptionId: string, at_period_end?: 0 | 1) => {
-  cancelaciones.push({ subscriptionId, at_period_end });
-  return { subscriptionId, planId: FLOW_PLAN_ESCOLAR_MENSUAL_ID, customerId: "cust-1", status: 4 };
-};
+Object.assign(flowService, mockMethods);
+if (FR.subscriptionGateway) {
+  Object.assign(FR.subscriptionGateway, mockMethods);
+}
 
 // Usuarios para probar cancelación admin
 await db.insert(users).values([{ id: "adm" }, { id: "est" }]);
@@ -208,46 +221,32 @@ assert.equal(cs2.json.reused, true);
 assert.equal(cs2.json.token, cs1.json.token);
 assert.equal(clientesCreados.length, 1, "no debe crear cliente duplicado en pending_card");
 
-// 6. Registro de tarjeta: validación customerId, fallo y éxito + idempotencia
-regStatusMock = { status: 1, customerId: "cust-ajeno" };
-const regMismatch = await call("GET", `/api/flow/subscription-register-status/${cs1.json.token}`);
-assert.equal(regMismatch.status, 400, "customerId distinto debe fallar");
-assert.equal(suscripcionesCreadas.length, 0);
-
-regStatusMock = { status: 0, customerId: "cust-1" };
-const regFail = await call("GET", `/api/flow/subscription-register-status/${cs1.json.token}`);
-assert.equal(regFail.status, 200);
-assert.equal(regFail.json.status, "failed");
-assert.equal(suscripcionesCreadas.length, 0);
-assert.equal((await db.select().from(S.reservations).where(eq(S.reservations.id, "res-mensual")))[0].status, "pending");
-
-// Reintento tras fallo reutiliza customerId y obtiene nuevo registerToken
-const csRetry = await call("POST", "/api/flow/create-subscription", {
-  reservationId: "res-mensual",
-  payerEmail: "apo@gmail.com",
-  payerName: "Apoderado Prueba",
-});
-assert.equal(csRetry.status, 200);
-assert.notEqual(csRetry.json.token, cs1.json.token);
-assert.equal(clientesCreados.length, 1, "reintento reutiliza customerId existente");
+// 6. Registro de tarjeta: se prueba directamente con completarRegistroTarjeta
+// (el flujo HTTP completo de card-return se prueba en flow-concurrencia.check.ts)
+const { completarRegistroTarjeta } = await import("../server/flowSubscriptions");
 
 regStatusMock = { status: 1, customerId: "cust-1" };
-const regOk = await call("GET", `/api/flow/subscription-register-status/${csRetry.json.token}`);
-assert.equal(regOk.status, 200);
-assert.equal(regOk.json.status, "active");
-assert.equal(regOk.json.flowSubscriptionId, "fsub-1");
+const regOk = await completarRegistroTarjeta(db, flowService, cs1.json.token);
+assert.equal(regOk.status, "active");
+assert.equal(regOk.flowSubscriptionId, "fsub-1");
 assert.equal(suscripcionesCreadas.length, 1);
 assert.equal(suscripcionesCreadas[0].periods_number, 7);
 
-const resActiva = (await db.select().from(S.reservations).where(eq(S.reservations.id, "res-mensual")))[0];
-assert.equal(resActiva.status, "confirmed");
-assert.equal(resActiva.paymentStatus, "completed");
-assert.equal(resActiva.paymentAmount, 70000);
+// F3: después de completarRegistroTarjeta, la reserva NO está pagada (esperando primera factura)
+const resDespuesCard = (await db.select().from(S.reservations).where(eq(S.reservations.id, "res-mensual")))[0];
+assert.ok(
+  resDespuesCard.paymentStatus !== "completed",
+  "F3: después de completarRegistroTarjeta la reserva no debe tener paymentStatus=completed",
+);
 
-// Segunda consulta de registro es idempotente
-const regIdem = await call("GET", `/api/flow/subscription-register-status/${csRetry.json.token}`);
-assert.equal(regIdem.status, 200);
-assert.equal(regIdem.json.alreadyActive, true);
+// La suscripción en la tabla debe estar active
+const subDespuesCard = (await db.select().from(S.flowSubscriptions).where(eq(S.flowSubscriptions.reservationId, "res-mensual")))[0];
+assert.equal(subDespuesCard.status, "active");
+assert.equal(subDespuesCard.flowSubscriptionId, "fsub-1");
+
+// Idempotencia: segunda llamada a completarRegistroTarjeta con mismo token
+const regIdem = await completarRegistroTarjeta(db, flowService, cs1.json.token);
+assert.equal(regIdem.alreadyActive, true);
 assert.equal(suscripcionesCreadas.length, 1, "no debe crear suscripción duplicada");
 
 // 7. Webhook: firma, validación de monto, deduplicación y 7 cuotas hasta completed
@@ -302,7 +301,8 @@ const csC = await call("POST", "/api/flow/create-subscription", {
   payerName: "Apoderado Dos",
 });
 regStatusMock = { status: 1, customerId: "cust-2" };
-await call("GET", `/api/flow/subscription-register-status/${csC.json.token}`);
+// Activar suscripción directamente
+await completarRegistroTarjeta(db, flowService, csC.json.token);
 const subCancelId = csC.json.subscriptionRecordId;
 
 assert.equal((await call("POST", `/api/admin/flow/subscriptions/${subCancelId}/cancel`, {})).status, 401);

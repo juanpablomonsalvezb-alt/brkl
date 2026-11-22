@@ -1,5 +1,5 @@
 import type { Express, RequestHandler } from "express";
-import { flowService } from "./flowService";
+import { flowService, crearFlowServiceDesdePasarela } from "./flowService";
 import { db } from "./db";
 import { reservations } from "../shared/schema";
 import { eq } from "drizzle-orm";
@@ -11,8 +11,10 @@ import {
   completarRegistroTarjeta,
   FlowSubscriptionError,
   iniciarSuscripcionMensual,
+  obtenerEstadoRegistroTarjeta,
   procesarWebhookSuscripcion,
 } from "./flowSubscriptions";
+import { crearPasarelaSuscripciones } from "../shared/flowSandbox";
 
 export interface FlowRoutesOptions {
   isAdmin?: RequestHandler;
@@ -21,6 +23,47 @@ export interface FlowRoutesOptions {
 const denyWithoutAdminMiddleware: RequestHandler = (_req, res) => {
   res.status(401).json({ message: "Unauthorized" });
 };
+
+// ─── F7: Límite de frecuencia (contador en memoria acotado) ────────────────────
+// Sin dependencias nuevas.  Se limpia cada 60 s para evitar fugas.
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+
+function limpiarRateLimit() {
+  const now = Date.now();
+  for (const [key, val] of rateLimitMap.entries()) {
+    if (now > val.resetAt) rateLimitMap.delete(key);
+  }
+}
+setInterval(limpiarRateLimit, 60_000).unref?.();
+
+const RATE_LIMIT_MAX = 30;       // peticiones por ventana
+const RATE_LIMIT_WINDOW = 60_000; // 60 s
+
+/**
+ * Verifica el límite de frecuencia para una clave (IP o token).
+ * Devuelve true si se permite, false si se debe rechazar (429).
+ */
+function verificarRateLimit(clave: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(clave);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(clave, { count: 1, resetAt: now + RATE_LIMIT_WINDOW });
+    return true;
+  }
+  entry.count++;
+  if (entry.count > RATE_LIMIT_MAX) return false;
+  return true;
+}
+
+// ─── F2: Bandera de apagado ───────────────────────────────────────────────────
+const suscripcionesHabilitadas = process.env.FLOW_SUSCRIPCIONES === "1";
+
+// ─── F1: Pasarela desde factoría (solo si están habilitadas) ──────────────────
+export let subscriptionGateway: ReturnType<typeof crearFlowServiceDesdePasarela> | null = null;
+if (suscripcionesHabilitadas) {
+  const pasarela = crearPasarelaSuscripciones();
+  subscriptionGateway = crearFlowServiceDesdePasarela(pasarela);
+}
 
 export function registerFlowRoutes(app: Express, options: FlowRoutesOptions = {}) {
   const requireAdmin = options.isAdmin ?? denyWithoutAdminMiddleware;
@@ -131,92 +174,124 @@ export function registerFlowRoutes(app: Express, options: FlowRoutesOptions = {}
     }
   });
 
-  /**
-   * Inicia suscripción mensual recurrente en Flow (7 pagos de $70.000, marzo a septiembre)
-   */
-  app.post("/api/flow/create-subscription", async (req, res) => {
-    try {
-      const { reservationId, payerEmail, payerName, studentEmail, studentName } = req.body ?? {};
-      const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get("host")}`;
-      const result = await iniciarSuscripcionMensual(db, flowService, {
-        reservationId: String(reservationId ?? ""),
-        payerEmail: String(payerEmail || studentEmail || ""),
-        payerName: String(payerName || studentName || ""),
-        baseUrl,
-      });
-      res.json({ success: true, ...result });
-    } catch (error: any) {
-      if (error instanceof FlowSubscriptionError) {
-        return res.status(error.status).json({ message: error.message });
-      }
-      console.error("Error creating Flow subscription:", error);
-      res.status(500).json({ message: error.message || "Error al iniciar la suscripción" });
-    }
-  });
+  // ─── Rutas de suscripción mensual (F2: solo si FLOW_SUSCRIPCIONES=1) ───
 
-  /**
-   * Retorno de Flow tras inscribir tarjeta del cliente (redirige al frontend)
-   */
-  app.post("/api/flow/card-return", async (req, res) => {
-    const token = String(req.body?.token ?? req.query?.token ?? "");
-    if (!token) {
-      return res.redirect("/payment-result?mode=subscription");
-    }
-    try {
-      await completarRegistroTarjeta(db, flowService, token);
-    } catch (error) {
-      console.error("Error in Flow card return:", error);
-    }
-    return res.redirect(`/payment-result?mode=subscription&token=${encodeURIComponent(token)}`);
-  });
+  if (suscripcionesHabilitadas && subscriptionGateway) {
+    const subFlow = subscriptionGateway;
 
-  /**
-   * Consulta segura del estado de registro de tarjeta / activación de suscripción mensual
-   */
-  app.get("/api/flow/subscription-register-status/:token", async (req, res) => {
-    try {
-      const result = await completarRegistroTarjeta(db, flowService, String(req.params.token ?? ""));
-      res.json({ success: true, ...result });
-    } catch (error: any) {
-      if (error instanceof FlowSubscriptionError) {
-        return res.status(error.status).json({ message: error.message });
+    /**
+     * Inicia suscripción mensual recurrente en Flow (7 pagos de $70.000, marzo a septiembre)
+     * F6: sin respaldo al encabezado Host; F7: rate limit por IP
+     */
+    app.post("/api/flow/create-subscription", async (req, res) => {
+      // F7: rate limit por IP
+      const ip = (req.headers["x-forwarded-for"] as string) ?? req.ip ?? "unknown";
+      if (!verificarRateLimit(`sub-ip:${ip}`)) {
+        return res.status(429).json({ message: "Demasiadas solicitudes. Intente más tarde." });
       }
-      console.error("Error getting subscription register status:", error);
-      res.status(500).json({ message: error.message || "Error al verificar la suscripción" });
-    }
-  });
+      try {
+        const { reservationId, payerEmail, payerName, studentEmail, studentName } = req.body ?? {};
+        // F6: sin fallback a Host
+        const baseUrl = process.env.BASE_URL;
+        if (!baseUrl) {
+          return res.status(500).json({ message: "Servicio no configurado" });
+        }
+        const result = await iniciarSuscripcionMensual(db, subFlow, {
+          reservationId: String(reservationId ?? ""),
+          payerEmail: String(payerEmail || studentEmail || ""),
+          payerName: String(payerName || studentName || ""),
+          baseUrl,
+        });
+        res.json({ success: true, ...result });
+      } catch (error: any) {
+        if (error instanceof FlowSubscriptionError) {
+          return res.status(error.status).json({ message: error.message });
+        }
+        console.error("Error creating Flow subscription:", error);
+        res.status(500).json({ message: error.message || "Error al iniciar la suscripción" });
+      }
+    });
 
-  /**
-   * Webhook de cobros periódicos y cambios de estado de suscripción en Flow
-   */
-  app.post("/api/flow/subscription-webhook", async (req, res) => {
-    try {
-      const result = await procesarWebhookSuscripcion(db, flowService, req.body);
-      res.status(200).json(result);
-    } catch (error: any) {
-      if (error instanceof FlowSubscriptionError) {
-        return res.status(error.status).send(error.message);
+    /**
+     * Retorno de Flow tras inscribir tarjeta del cliente (redirige al frontend)
+     * F7: solo POST (Flow lo llama por POST); rate limit por token
+     */
+    app.post("/api/flow/card-return", async (req, res) => {
+      const token = String(req.body?.token ?? req.query?.token ?? "");
+      if (!token) {
+        return res.redirect("/payment-result?mode=subscription");
       }
-      console.error("Error confirming Flow subscription webhook:", error);
-      res.status(500).send("Error al procesar webhook de suscripción");
-    }
-  });
+      // F7: rate limit por token
+      if (!verificarRateLimit(`sub-token:${token}`)) {
+        return res.status(429).json({ message: "Demasiadas solicitudes. Intente más tarde." });
+      }
+      try {
+        await completarRegistroTarjeta(db, subFlow, token);
+      } catch (error) {
+        console.error("Error in Flow card return:", error);
+      }
+      return res.redirect(`/payment-result?mode=subscription&token=${encodeURIComponent(token)}`);
+    });
 
-  /**
-   * Cancelación administrativa de una suscripción mensual en Flow
-   */
-  app.post("/api/admin/flow/subscriptions/:id/cancel", requireAdmin, async (req, res) => {
-    try {
-      const updated = await cancelarSuscripcionAdmin(db, flowService, String(req.params.id ?? ""));
-      res.json({ success: true, subscription: updated });
-    } catch (error: any) {
-      if (error instanceof FlowSubscriptionError) {
-        return res.status(error.status).json({ message: error.message });
+    /**
+     * Consulta segura del estado de registro de tarjeta / activación de suscripción mensual
+     * F7: solo lectura (no crea nada en Flow); rate limit por token
+     */
+    app.get("/api/flow/subscription-register-status/:token", async (req, res) => {
+      const token = String(req.params.token ?? "");
+      // F7: rate limit por token
+      if (!verificarRateLimit(`sub-token:${token}`)) {
+        return res.status(429).json({ message: "Demasiadas solicitudes. Intente más tarde." });
       }
-      console.error("Error cancelling Flow subscription:", error);
-      res.status(500).json({ message: error.message || "Error al cancelar la suscripción" });
-    }
-  });
+      try {
+        const result = await obtenerEstadoRegistroTarjeta(db, subFlow, token);
+        res.json({ success: true, ...result });
+      } catch (error: any) {
+        if (error instanceof FlowSubscriptionError) {
+          return res.status(error.status).json({ message: error.message });
+        }
+        console.error("Error getting subscription register status:", error);
+        res.status(500).json({ message: error.message || "Error al verificar la suscripción" });
+      }
+    });
+
+    /**
+     * Webhook de cobros periódicos y cambios de estado de suscripción en Flow
+     * F7: rate limit por IP
+     */
+    app.post("/api/flow/subscription-webhook", async (req, res) => {
+      const ip = (req.headers["x-forwarded-for"] as string) ?? req.ip ?? "unknown";
+      if (!verificarRateLimit(`sub-ip:${ip}`)) {
+        return res.status(429).json({ message: "Demasiadas solicitudes. Intente más tarde." });
+      }
+      try {
+        const result = await procesarWebhookSuscripcion(db, subFlow, req.body);
+        res.status(200).json(result);
+      } catch (error: any) {
+        if (error instanceof FlowSubscriptionError) {
+          return res.status(error.status).send(error.message);
+        }
+        console.error("Error confirming Flow subscription webhook:", error);
+        res.status(500).send("Error al procesar webhook de suscripción");
+      }
+    });
+
+    /**
+     * Cancelación administrativa de una suscripción mensual en Flow
+     */
+    app.post("/api/admin/flow/subscriptions/:id/cancel", requireAdmin, async (req, res) => {
+      try {
+        const updated = await cancelarSuscripcionAdmin(db, subFlow, String(req.params.id ?? ""));
+        res.json({ success: true, subscription: updated });
+      } catch (error: any) {
+        if (error instanceof FlowSubscriptionError) {
+          return res.status(error.status).json({ message: error.message });
+        }
+        console.error("Error cancelling Flow subscription:", error);
+        res.status(500).json({ message: error.message || "Error al cancelar la suscripción" });
+      }
+    });
+  }
 
   /**
    * Confirmación de pago desde Flow (webhook pago único)
