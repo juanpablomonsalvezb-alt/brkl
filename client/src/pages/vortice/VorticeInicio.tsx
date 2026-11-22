@@ -9,6 +9,13 @@ import {
   ArrowRight, BarChart3, BookOpen, Compass, BriefcaseBusiness, CalendarDays, ChevronRight, FileText, Home,
   Link2, Menu, MessageCircle, ClipboardCheck, Target, Users, X,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from "@/components/ui/item";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { VorticeOverview, VorticeTrack } from "@shared/vortice";
 import type { BloqueEstudio, BrujulaGoal, PreferenciasBrujula } from "@shared/brujula";
 import type { PanelBrujula } from "@shared/brujulaPanel";
@@ -57,7 +64,7 @@ const MINIATURA: Record<string, string> = {
 };
 const VISIBILIDAD = { privada: ["Privada", "#F3F1EA", "#5E5D59"], tutor: ["Tutor", "#EEF4FC", "#2F5EA8"], familia: ["Familia", "#EDF3F0", "#1F4A3D"] } as const;
 
-const colorAvance = (p: number) => (p >= 70 ? "#2D6654" : p >= 55 ? "#C96442" : "#C84B3B");
+const claseAvance = (p: number) => (p >= 70 ? "[&>div]:bg-[#2D6654]" : p >= 55 ? "[&>div]:bg-[#C96442]" : "[&>div]:bg-[#C84B3B]");
 
 function semanaActual(hoy: Date) {
   const lunes = new Date(hoy);
@@ -260,10 +267,24 @@ export default function VorticeInicio() {
 
               <section className="vx-card" id="asignaturas" aria-labelledby="vx-asig">
                 <header><h2 id="vx-asig"><ClipboardCheck aria-hidden="true" />Mis asignaturas</h2>{nivel && <small>{nivel.name}</small>}</header>
-                {overview.isLoading ? <div className="vx-skeleton" /> : overview.isError ? (
+                {overview.isLoading ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {[0, 1, 2].map((i) => (
+                      <Skeleton key={i} className="h-28 w-full rounded-xl bg-[#EFECE3]" />
+                    ))}
+                  </div>
+                ) : overview.isError ? (
                   <p className="vx-empty">No pudimos cargar tus asignaturas. Recarga la página para intentarlo de nuevo.</p>
                 ) : !ov?.subjects.length ? (
-                  <p className="vx-empty">Aún no tienes asignaturas matriculadas.</p>
+                  <Empty className="border border-dashed border-[#D5CFC2] bg-[#FAF9F5]/80 py-6 px-4 md:py-7">
+                    <EmptyHeader>
+                      <EmptyMedia variant="icon">
+                        <ClipboardCheck className="text-[#1F4A3D]" />
+                      </EmptyMedia>
+                      <EmptyTitle className="text-base">Sin asignaturas matriculadas</EmptyTitle>
+                      <EmptyDescription>Tus cursos aparecerán aquí apenas queden asignados a tu nivel.</EmptyDescription>
+                    </EmptyHeader>
+                  </Empty>
                 ) : (
                   <div className="vx-subjects">
                     {ov.subjects.map((s) => {
@@ -273,8 +294,13 @@ export default function VorticeInicio() {
                           <div className="vx-thumb" style={{ backgroundImage: `url(/images/vortice/${img}.jpg)` }} />
                           <b title={s.subjectName}>{s.subjectName}</b>
                           {s.percent === null ? <small className="vx-empty">Sin contenido aún</small> : (
-                            <div className="vx-meter" role="progressbar" aria-valuenow={s.percent} aria-valuemin={0} aria-valuemax={100} aria-label={`Avance en ${s.subjectName}`}>
-                              <span><i style={{ width: `${s.percent}%`, background: colorAvance(s.percent) }} /></span>{s.percent}%
+                            <div className="vx-meter">
+                              <Progress
+                                value={s.percent}
+                                aria-label={`Avance en ${s.subjectName}`}
+                                className={`h-1.5 flex-1 bg-[#ECE8DE] ${claseAvance(s.percent)}`}
+                              />
+                              {s.percent}%
                             </div>
                           )}
                         </Link>
@@ -286,27 +312,91 @@ export default function VorticeInicio() {
 
               <section className="vx-card" id="portafolio" aria-labelledby="vx-port">
                 <header><h2 id="vx-port"><FileText aria-hidden="true" />Mi portafolio</h2></header>
-                <div className="vx-tabs" role="tablist" aria-label="Tipo de evidencia">
-                  <button role="tab" aria-selected={pestana === "producciones"} onClick={() => setPestana("producciones")}>Producciones</button>
-                  <button role="tab" aria-selected={pestana === "evaluaciones"} onClick={() => setPestana("evaluaciones")}>Evaluaciones</button>
-                </div>
-                {portafolio.isLoading ? <div className="vx-skeleton" /> : evidencias.length === 0 ? (
-                  <p className="vx-empty">{pestana === "producciones" ? "Aún no hay producciones en tu portafolio." : "Aún no hay evaluaciones en tu portafolio."}</p>
-                ) : (
-                  <ul className="vx-list">
-                    {evidencias.slice(0, 5).map((e) => {
-                      const [txt, bg, fg] = VISIBILIDAD[e.visibility];
-                      const Icon = e.kind === "enlace" ? Link2 : e.kind === "evaluacion" ? ClipboardCheck : FileText;
-                      return (
-                        <li key={e.id}>
-                          <div className="vx-doc" style={{ background: e.kind === "enlace" ? "#FBF0EB" : "#EEF4FC", color: e.kind === "enlace" ? "#C96442" : "#2F5EA8" }}><Icon aria-hidden="true" /></div>
-                          <div><b>{e.title}</b><small>{e.evaluationTitle ?? (e.kind === "enlace" ? "Enlace" : "Texto")} · {new Date(e.createdAt).toLocaleDateString("es-CL", { day: "numeric", month: "short", year: "numeric" })}</small></div>
-                          <span className="vx-chip" style={{ background: bg, color: fg }} title="Quién puede verla">{txt}</span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                )}
+                <Tabs value={pestana} onValueChange={(v) => setPestana(v as "producciones" | "evaluaciones")}>
+                  <TabsList className="grid h-auto w-full grid-cols-2 rounded-xl bg-[#F3F1EA] border border-[#E6E2D8] p-1">
+                    <TabsTrigger
+                      value="producciones"
+                      className="rounded-lg py-1.5 text-sm text-[#5E5D59] data-[state=active]:bg-white data-[state=active]:text-[#141413] data-[state=active]:shadow-sm"
+                    >
+                      Producciones
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="evaluaciones"
+                      className="rounded-lg py-1.5 text-sm text-[#5E5D59] data-[state=active]:bg-white data-[state=active]:text-[#141413] data-[state=active]:shadow-sm"
+                    >
+                      Evaluaciones
+                    </TabsTrigger>
+                  </TabsList>
+                  {(["producciones", "evaluaciones"] as const).map((tab) => (
+                    <TabsContent key={tab} value={tab} className="mt-3">
+                      {portafolio.isLoading ? (
+                        <div className="space-y-2">
+                          <Skeleton className="h-14 w-full rounded-xl bg-[#EFECE3]" />
+                          <Skeleton className="h-14 w-full rounded-xl bg-[#EFECE3]" />
+                        </div>
+                      ) : evidencias.length === 0 ? (
+                        <Empty className="border border-dashed border-[#D5CFC2] bg-[#FAF9F5]/80 py-6 px-4 md:py-7">
+                          <EmptyHeader>
+                            <EmptyMedia variant="icon">
+                              <FileText className="text-[#1F4A3D]" />
+                            </EmptyMedia>
+                            <EmptyTitle className="text-base">
+                              {tab === "producciones" ? "Sin producciones todavía" : "Sin evaluaciones registradas"}
+                            </EmptyTitle>
+                            <EmptyDescription>
+                              {tab === "producciones"
+                                ? "Aún no hay producciones en tu portafolio."
+                                : "Aún no hay evaluaciones en tu portafolio."}
+                            </EmptyDescription>
+                          </EmptyHeader>
+                        </Empty>
+                      ) : (
+                        <ItemGroup className="gap-2">
+                          {evidencias.slice(0, 5).map((e) => {
+                            const [txt, bg, fg] = VISIBILIDAD[e.visibility];
+                            const Icon = e.kind === "enlace" ? Link2 : e.kind === "evaluacion" ? ClipboardCheck : FileText;
+                            return (
+                              <Item
+                                key={e.id}
+                                variant="outline"
+                                size="sm"
+                                className="rounded-xl border-[#E6E2D8] bg-[#FAF9F5]/60 px-3.5 py-2.5"
+                              >
+                                <ItemMedia
+                                  variant="icon"
+                                  className="rounded-lg border-transparent"
+                                  style={{
+                                    background: e.kind === "enlace" ? "#FBF0EB" : "#EEF4FC",
+                                    color: e.kind === "enlace" ? "#C96442" : "#2F5EA8",
+                                  }}
+                                >
+                                  <Icon aria-hidden="true" />
+                                </ItemMedia>
+                                <ItemContent>
+                                  <ItemTitle className="text-[#141413]">{e.title}</ItemTitle>
+                                  <ItemDescription className="text-xs text-[#87867F]">
+                                    {e.evaluationTitle ?? (e.kind === "enlace" ? "Enlace" : "Texto")} ·{" "}
+                                    {new Date(e.createdAt).toLocaleDateString("es-CL", { day: "numeric", month: "short", year: "numeric" })}
+                                  </ItemDescription>
+                                </ItemContent>
+                                <ItemActions>
+                                  <Badge
+                                    variant="outline"
+                                    className="rounded-full border-transparent font-medium"
+                                    style={{ background: bg, color: fg }}
+                                    title="Quién puede verla"
+                                  >
+                                    {txt}
+                                  </Badge>
+                                </ItemActions>
+                              </Item>
+                            );
+                          })}
+                        </ItemGroup>
+                      )}
+                    </TabsContent>
+                  ))}
+                </Tabs>
               </section>
             </div>
 
@@ -320,7 +410,12 @@ export default function VorticeInicio() {
                     </div>
                   ))}
                 </div>
-                {semana.isLoading ? <div className="vx-skeleton" style={{ minHeight: 72 }} /> : metas.length ? (
+                {semana.isLoading ? (
+                  <div className="space-y-2">
+                    <Skeleton className="h-9 w-full rounded-lg bg-[#EFECE3]" />
+                    <Skeleton className="h-9 w-full rounded-lg bg-[#EFECE3]" />
+                  </div>
+                ) : metas.length ? (
                   <ul className="vx-agenda">
                     {metas.map((g) => (
                       <li key={g.objectiveId}>
@@ -355,7 +450,7 @@ export default function VorticeInicio() {
                         )}
                       </div>
                     ) : repaso.isLoading ? (
-                      <div className="vx-skeleton" style={{ minHeight: 44 }} />
+                      <Skeleton className="h-11 w-full rounded-lg bg-[#EFECE3]" />
                     ) : (
                       <div className="vx-pulse-map">
                         <p>
@@ -372,7 +467,9 @@ export default function VorticeInicio() {
 
                   <div className="vx-pulse-ch">
                     <span className="vx-kicker">Actividades del curso</span>
-                    {overview.isLoading ? <div className="vx-skeleton" /> : ov?.totals.percent == null ? (
+                    {overview.isLoading ? (
+                      <Skeleton className="h-24 w-full rounded-lg bg-[#EFECE3]" />
+                    ) : ov?.totals.percent == null ? (
                       <p className="vx-empty">Todavía no hay contenido cargado para medir tu avance.</p>
                     ) : (
                       <>
@@ -381,10 +478,13 @@ export default function VorticeInicio() {
                             <strong>{ov.totals.percent}%</strong>
                             <small>Avance en actividades</small>
                           </div>
-                          <div className="vx-bar-track" role="img" aria-label={`${ov.totals.percent}% de avance en actividades`}>
-                            <i style={{ width: `${ov.totals.percent}%` }} />
-                          </div>
+                          <Progress
+                            value={ov.totals.percent}
+                            aria-label={`${ov.totals.percent}% de avance en actividades`}
+                            className="h-2 bg-[#ECE8DE] [&>div]:bg-[#1F4A3D]"
+                          />
                         </div>
+                        <Separator className="my-1 bg-[#E6E2D8]" />
                         <ul className="vx-stats">
                           <li><i style={{ background: "#2D6654" }} />Actividades completadas <b>{ov.totals.completedItems} / {ov.totals.totalItems}</b></li>
                           <li><i style={{ background: "#1F4A3D" }} />Asignaturas con avance <b>{ov.subjects.filter((s) => (s.percent ?? 0) > 0).length} / {ov.subjects.length}</b></li>

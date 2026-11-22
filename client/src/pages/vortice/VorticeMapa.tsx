@@ -19,6 +19,11 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from "@/components/ui/item";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import type {
   AristaMapa,
   EstadoVisualMapa,
@@ -254,11 +259,24 @@ export default function VorticeMapa() {
         </div>
 
         {mapaQuery.isLoading ? (
-          <Card className="vx-paper border-[#E6E2D8] shadow-none">
-            <CardContent className="py-12 text-center text-sm text-[#5E5D59]">
-              Cargando mapa de conocimientos…
-            </CardContent>
-          </Card>
+          <div className="space-y-5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+              {[0, 1, 2, 3].map((i) => (
+                <Card key={i} className="vx-paper border-[#E6E2D8] shadow-none">
+                  <CardContent className="p-4 sm:p-5 space-y-2">
+                    <Skeleton className="h-3.5 w-24 bg-[#EFECE3]" />
+                    <Skeleton className="h-8 w-12 bg-[#EFECE3]" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <Card className="vx-paper border-[#E6E2D8] shadow-none">
+              <CardContent className="py-8 space-y-3">
+                <Skeleton className="h-5 w-60 bg-[#EFECE3]" />
+                <Skeleton className="h-56 w-full rounded-2xl bg-[#EFECE3]" />
+              </CardContent>
+            </Card>
+          </div>
         ) : mapaQuery.isError ? (
           <Card className="vx-paper border-[#C84B3B]/40 shadow-none">
             <CardContent className="py-8 flex flex-wrap items-center justify-between gap-4">
@@ -271,11 +289,26 @@ export default function VorticeMapa() {
           </Card>
         ) : !data?.disponible || nodos.length === 0 ? (
           <Card className="vx-paper border-[#E6E2D8] shadow-none">
-            <CardContent className="py-8 space-y-4">
-              <p className="font-medium text-[#141413]">Este curso todavía no tiene un mapa publicado en el piloto.</p>
-              <Link href="/vortice/aula" className="vx-btn-ghost">
-                Ir a estudiar en el Aula
-              </Link>
+            <CardContent className="py-4">
+              <Empty className="border border-dashed border-[#D5CFC2] bg-[#FAF9F5]/80 py-8 px-4">
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <Compass className="text-[#1F4A3D]" />
+                  </EmptyMedia>
+                  <EmptyTitle className="vx-serif font-medium text-xl text-[#141413]">
+                    Mapa aún no disponible
+                  </EmptyTitle>
+                  <EmptyDescription>
+                    Este curso todavía no tiene un mapa publicado en el piloto.
+                  </EmptyDescription>
+                </EmptyHeader>
+                <EmptyContent>
+                  <Link href="/vortice/aula" className="vx-btn-primary">
+                    Ir a estudiar en el Aula
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </EmptyContent>
+              </Empty>
             </CardContent>
           </Card>
         ) : (
@@ -312,30 +345,43 @@ export default function VorticeMapa() {
 
             {/* Resumen de estados sin porcentajes ni notas */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-              <div className="vx-paper p-4 sm:p-5">
-                <div className="text-xs font-medium text-[#5E5D59]">Lo dominas</div>
-                <div className="vx-serif text-[2rem] leading-none font-medium text-[#1F4A3D] mt-2">
-                  {data.resumen.dominados}
-                </div>
-              </div>
-              <div className="vx-paper p-4 sm:p-5">
-                <div className="text-xs font-medium text-[#5E5D59]">En práctica / refuerzo</div>
-                <div className="vx-serif text-[2rem] leading-none font-medium text-[#141413] mt-2">
-                  {data.resumen.enPractica + data.resumen.porReforzar + data.resumen.porComprobar}
-                </div>
-              </div>
-              <div className="vx-paper p-4 sm:p-5">
-                <div className="text-xs font-medium text-[#5E5D59]">Listos para aprender</div>
-                <div className="vx-serif text-[2rem] leading-none font-medium text-[#2F5EA8] mt-2">
-                  {data.resumen.listos}
-                </div>
-              </div>
-              <div className="vx-paper p-4 sm:p-5">
-                <div className="text-xs font-medium text-[#5E5D59]">Esperando su base</div>
-                <div className="vx-serif text-[2rem] leading-none font-medium text-[#87867F] mt-2">
-                  {data.resumen.bloqueados}
-                </div>
-              </div>
+              <Card className="vx-paper border-[#E6E2D8] shadow-none">
+                <CardContent className="p-4 sm:p-5">
+                  <div className="text-xs font-medium text-[#5E5D59]">Lo dominas</div>
+                  <div className="vx-serif text-[2rem] leading-none font-medium text-[#1F4A3D] mt-2">
+                    {data.resumen.dominados}
+                  </div>
+                  <Progress
+                    value={nodos.length ? (data.resumen.dominados / nodos.length) * 100 : 0}
+                    aria-label="Progreso visual de contenidos dominados"
+                    className="mt-3 h-1.5 bg-[#ECE8DE] [&>div]:bg-[#1F4A3D]"
+                  />
+                </CardContent>
+              </Card>
+              <Card className="vx-paper border-[#E6E2D8] shadow-none">
+                <CardContent className="p-4 sm:p-5">
+                  <div className="text-xs font-medium text-[#5E5D59]">En práctica / refuerzo</div>
+                  <div className="vx-serif text-[2rem] leading-none font-medium text-[#141413] mt-2">
+                    {data.resumen.enPractica + data.resumen.porReforzar + data.resumen.porComprobar}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="vx-paper border-[#E6E2D8] shadow-none">
+                <CardContent className="p-4 sm:p-5">
+                  <div className="text-xs font-medium text-[#5E5D59]">Listos para aprender</div>
+                  <div className="vx-serif text-[2rem] leading-none font-medium text-[#2F5EA8] mt-2">
+                    {data.resumen.listos}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="vx-paper border-[#E6E2D8] shadow-none">
+                <CardContent className="p-4 sm:p-5">
+                  <div className="text-xs font-medium text-[#5E5D59]">Esperando su base</div>
+                  <div className="vx-serif text-[2rem] leading-none font-medium text-[#87867F] mt-2">
+                    {data.resumen.bloqueados}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Comprobaciones de retención espaciada (M4, sin reloj ni castigo por ausencia) */}
@@ -533,27 +579,32 @@ export default function VorticeMapa() {
                           <p className="vx-kicker !text-[#9A4225]">
                             Temas sugeridos para reforzar desde esta evaluación
                           </p>
-                          <ul className="space-y-2">
+                          <ItemGroup className="gap-2">
                             {data.evaluacion.contenidosAReforzar.map((ref) => (
-                              <li
+                              <Item
                                 key={ref.itemId}
-                                className="flex flex-wrap items-center justify-between gap-2 p-3.5 rounded-xl bg-[#FBF0EB]/70 border border-[#C96442]/30"
+                                variant="outline"
+                                size="sm"
+                                className="rounded-xl bg-[#FBF0EB]/70 border-[#C96442]/30"
                               >
-                                <div className="text-sm">
-                                  <span className="font-medium text-[#141413]">
-                                    {ref.oaId.toUpperCase()} · {ref.nombre}
-                                  </span>
-                                  <p className="text-xs text-[#5E5D59] mt-0.5">{ref.motivo}</p>
-                                </div>
-                                <Link href={`/vortice/aula/${encodeURIComponent(ref.oaId)}`}>
-                                  <Button type="button" size="sm" variant="outline" className="rounded-full border-[#D5CFC2] bg-white">
-                                    Reforzar en el Aula
-                                    <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                                  </Button>
-                                </Link>
-                              </li>
+                                <ItemContent>
+                                  <ItemTitle className="text-[#141413]">
+                                    <span className="vx-mono text-xs text-[#9A4225]">{ref.oaId.toUpperCase()}</span>
+                                    <span>{ref.nombre}</span>
+                                  </ItemTitle>
+                                  <ItemDescription className="text-xs text-[#5E5D59]">{ref.motivo}</ItemDescription>
+                                </ItemContent>
+                                <ItemActions>
+                                  <Link href={`/vortice/aula/${encodeURIComponent(ref.oaId)}`}>
+                                    <Button type="button" size="sm" variant="outline" className="rounded-full border-[#D5CFC2] bg-white">
+                                      Reforzar en el Aula
+                                      <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                                    </Button>
+                                  </Link>
+                                </ItemActions>
+                              </Item>
                             ))}
-                          </ul>
+                          </ItemGroup>
                         </div>
                       ) : (
                         <p className="text-sm text-[#1F4A3D]">
@@ -748,6 +799,7 @@ export default function VorticeMapa() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                    <Separator className="bg-[#E6E2D8]" />
                     {seleccionado.inconsistencia && (
                       <Alert className="rounded-xl border-[#D4942A]/45 bg-[#FEF6EA] text-[#141413]">
                         <AlertDescription className="text-xs">
@@ -806,36 +858,49 @@ export default function VorticeMapa() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2" aria-label="Lista de contenidos por estado">
+                <ItemGroup className="gap-2" aria-label="Lista de contenidos por estado">
                   {nodos.map((n) => {
                     const activo = seleccionado?.itemId === n.itemId;
                     return (
-                      <li key={n.itemId}>
+                      <Item
+                        key={n.itemId}
+                        variant="outline"
+                        size="sm"
+                        asChild
+                        className={`rounded-xl transition ${
+                          activo
+                            ? "border-[#1F4A3D] bg-[#EDF3F0]/60 shadow-[inset_0_0_0_1px_#1F4A3D]"
+                            : "border-[#E6E2D8] bg-white hover:border-[#2D6654] hover:bg-[#FAF9F5]/60"
+                        }`}
+                      >
                         <button
                           type="button"
                           aria-pressed={activo}
                           onClick={() => setSeleccionadoId(n.itemId)}
-                          className={`vx-option-card flex flex-wrap items-center justify-between gap-2 ${
-                            activo
-                              ? "!border-[#1F4A3D] !bg-[#EDF3F0]/60"
-                              : ""
-                          }`}
+                          className="w-full text-left"
                         >
-                          <span className="flex items-center gap-2.5">
+                          <ItemMedia variant="icon" className="rounded-lg border-[#E6E2D8] bg-[#FAF9F5]">
                             <IconoEstado estadoVisual={n.estadoVisual} />
-                            <span className="font-medium text-sm text-[#141413]">
-                              <span className="vx-mono text-xs text-[#5E5D59] mr-1.5">{n.oaId.toUpperCase()}</span>
-                              {n.nombre}
-                            </span>
-                          </span>
-                          <Badge variant="outline" className={`rounded-full font-normal ${ESTILO_ESTADO[n.estadoVisual].badgeClass}`}>
-                            {n.etiqueta}
-                          </Badge>
+                          </ItemMedia>
+                          <ItemContent>
+                            <ItemTitle className="text-[#141413]">
+                              <span className="vx-mono text-xs text-[#5E5D59]">{n.oaId.toUpperCase()}</span>
+                              <span>{n.nombre}</span>
+                            </ItemTitle>
+                            <ItemDescription className="text-xs text-[#5E5D59] line-clamp-1">
+                              {n.definicion}
+                            </ItemDescription>
+                          </ItemContent>
+                          <ItemActions>
+                            <Badge variant="outline" className={`rounded-full font-normal ${ESTILO_ESTADO[n.estadoVisual].badgeClass}`}>
+                              {n.etiqueta}
+                            </Badge>
+                          </ItemActions>
                         </button>
-                      </li>
+                      </Item>
                     );
                   })}
-                </ul>
+                </ItemGroup>
               </CardContent>
             </Card>
           </>

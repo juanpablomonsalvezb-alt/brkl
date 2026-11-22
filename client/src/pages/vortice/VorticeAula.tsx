@@ -26,6 +26,11 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Item, ItemActions, ItemContent, ItemGroup, ItemTitle } from "@/components/ui/item";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   obtenerLeccionesPiloto,
   PASOS_LECCION,
@@ -521,17 +526,21 @@ export default function VorticeAula() {
                   <p className="text-sm text-[#5E5D59]">
                     Diagnóstico completado (solo orientador; puedes recorrer igual todos los módulos):
                   </p>
-                  <div className="grid gap-2">
+                  <ItemGroup className="gap-2">
                     {resDiag.porOa.map((item) => (
-                      <div
+                      <Item
                         key={item.oaId}
-                        className="flex flex-wrap items-center justify-between gap-2 p-3.5 rounded-xl border border-[#E6E2D8] bg-[#FAF9F5]"
+                        variant="outline"
+                        size="sm"
+                        className="rounded-xl border-[#E6E2D8] bg-[#FAF9F5]"
                       >
-                        <div>
-                          <span className="vx-mono font-medium text-sm text-[#1F4A3D] mr-2">{item.codigo}</span>
-                          <span className="text-sm text-[#141413]">{item.titulo}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
+                        <ItemContent>
+                          <ItemTitle className="text-[#141413]">
+                            <span className="vx-mono text-sm text-[#1F4A3D]">{item.codigo}</span>
+                            <span className="font-normal">{item.titulo}</span>
+                          </ItemTitle>
+                        </ItemContent>
+                        <ItemActions>
                           <Badge
                             variant="outline"
                             className={`rounded-full font-normal ${
@@ -561,10 +570,10 @@ export default function VorticeAula() {
                           >
                             Abrir
                           </Button>
-                        </div>
-                      </div>
+                        </ItemActions>
+                      </Item>
                     ))}
-                  </div>
+                  </ItemGroup>
                   <Button
                     type="button"
                     variant="outline"
@@ -609,42 +618,48 @@ export default function VorticeAula() {
             <CardTitle className="vx-serif font-medium text-2xl sm:text-[1.65rem] leading-snug pt-1 text-[#141413]">
               {leccion.titulo}
             </CardTitle>
+            <div className="space-y-1.5 pt-2">
+              <div className="flex items-center justify-between text-xs text-[#5E5D59]">
+                <span className="vx-mono">
+                  Paso {PASOS_LECCION.indexOf(pasoActual) + 1} de {PASOS_LECCION.length}
+                </span>
+                <span>{ETIQUETA_PASO[pasoActual]}</span>
+              </div>
+              <Progress
+                value={((PASOS_LECCION.indexOf(pasoActual) + 1) / PASOS_LECCION.length) * 100}
+                aria-label={`Paso ${PASOS_LECCION.indexOf(pasoActual) + 1} de ${PASOS_LECCION.length}`}
+                className="h-1.5 bg-[#ECE8DE] [&>div]:bg-[#1F4A3D]"
+              />
+            </div>
           </CardHeader>
 
           {/* Barra fija de los 4 bloques */}
-          <CardContent className="space-y-6">
-            <div
-              className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1.5 rounded-2xl bg-[#F3F1EA] border border-[#E6E2D8]"
-              role="tablist"
-              aria-label="Pasos de la lección"
+          <CardContent>
+            <Tabs
+              value={pasoActual}
+              onValueChange={(v) => {
+                setOrigenYaLoSe(false);
+                actualizarYGuardar({ pasoActual: v as PasoLeccion });
+              }}
+              className="space-y-6"
             >
-              {PASOS_LECCION.map((paso) => {
-                const activo = pasoActual === paso;
-                return (
-                  <button
+              <TabsList
+                className="grid h-auto w-full grid-cols-2 sm:grid-cols-4 gap-1.5 rounded-2xl bg-[#F3F1EA] border border-[#E6E2D8] p-1.5"
+                aria-label="Pasos de la lección"
+              >
+                {PASOS_LECCION.map((paso) => (
+                  <TabsTrigger
                     key={paso}
-                    type="button"
-                    role="tab"
-                    aria-selected={activo}
-                    onClick={() => {
-                      setOrigenYaLoSe(false);
-                      actualizarYGuardar({ pasoActual: paso });
-                    }}
-                    className={`min-h-[42px] px-3 py-2 rounded-xl border text-sm transition ${
-                      activo
-                        ? "bg-white text-[#141413] border-[#D5CFC2] font-medium shadow-sm"
-                        : "bg-transparent text-[#5E5D59] border-transparent hover:text-[#141413] hover:bg-white/60"
-                    }`}
+                    value={paso}
+                    className="min-h-[42px] rounded-xl border border-transparent px-3 py-2 text-sm text-[#5E5D59] hover:text-[#141413] hover:bg-white/60 data-[state=active]:bg-white data-[state=active]:text-[#141413] data-[state=active]:border-[#D5CFC2] data-[state=active]:shadow-sm"
                   >
                     {ETIQUETA_PASO[paso]}
-                  </button>
-                );
-              })}
-            </div>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
 
-            {/* BLOQUE 1: ME UBICO (Anticipador + Vocabulario clave previo) */}
-            {pasoActual === "me_ubico" && (
-              <div className="space-y-6">
+              {/* BLOQUE 1: ME UBICO (Anticipador + Vocabulario clave previo) */}
+              <TabsContent value="me_ubico" className="mt-0 space-y-6">
                 <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#E6E2D8] border-l-2 border-l-[#C96442] space-y-2.5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <h2 className="vx-serif font-medium text-lg flex items-center gap-2 text-[#141413]">
@@ -674,7 +689,9 @@ export default function VorticeAula() {
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                <Separator className="bg-[#E6E2D8]" />
+
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <Button
                     type="button"
                     variant="outline"
@@ -695,12 +712,10 @@ export default function VorticeAula() {
                     <ArrowRight className="w-4 h-4 ml-1.5" />
                   </Button>
                 </div>
-              </div>
-            )}
+              </TabsContent>
 
-            {/* BLOQUE 2: APRENDE (1 puerta principal + desplegables + micro-tramo + ejemplo paso a paso) */}
-            {pasoActual === "aprende" && (
-              <div className="space-y-5">
+              {/* BLOQUE 2: APRENDE (1 puerta principal + desplegables + micro-tramo + ejemplo paso a paso) */}
+              <TabsContent value="aprende" className="mt-0 space-y-5">
                 {/* Única puerta principal visible por defecto */}
                 <div className="p-5 rounded-2xl border border-[#1F4A3D]/35 bg-[#FAF9F5] space-y-3.5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
@@ -749,125 +764,127 @@ export default function VorticeAula() {
                   </div>
 
                   {/* Controles desplegables para no saturar */}
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="rounded-full border-[#D5CFC2] bg-white"
-                      aria-expanded={verOtrasPuertas}
-                      onClick={() => setVerOtrasPuertas((v) => !v)}
-                    >
-                      Ver otras formas de aprender ({secundarias.length})
-                      {verOtrasPuertas ? <ChevronUp className="w-4 h-4 ml-1.5" /> : <ChevronDown className="w-4 h-4 ml-1.5" />}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="rounded-full border-[#D5CFC2] bg-white"
-                      aria-expanded={verApoyos}
-                      onClick={() => setVerApoyos((v) => !v)}
-                    >
-                      Apoyos (mapa, infografía, tarjetas)
-                      {verApoyos ? <ChevronUp className="w-4 h-4 ml-1.5" /> : <ChevronDown className="w-4 h-4 ml-1.5" />}
-                    </Button>
-                  </div>
-
-                  {verOtrasPuertas && (
-                    <div className="grid gap-2.5 sm:grid-cols-3 pt-2">
-                      {secundarias.map((sec) => (
-                        <button
-                          key={sec.tipo}
+                  <div className="space-y-2.5 pt-1">
+                    <Collapsible open={verOtrasPuertas} onOpenChange={setVerOtrasPuertas} className="space-y-2">
+                      <CollapsibleTrigger asChild>
+                        <Button
                           type="button"
-                          onClick={() => {
-                            setVerOtrasPuertas(false);
-                            actualizarYGuardar({ puertaPreferida: sec.tipo });
-                          }}
-                          className="vx-option-card !min-h-[44px] !p-3"
+                          variant="outline"
+                          size="sm"
+                          className="rounded-full border-[#D5CFC2] bg-white"
+                          aria-expanded={verOtrasPuertas}
                         >
-                          <div className="font-medium text-sm text-[#141413]">{sec.etiqueta}</div>
-                          <div className="text-xs text-[#5E5D59] mt-0.5">{sec.duracion}</div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-
-                  {verApoyos && (
-                    <div className="p-4 rounded-xl border border-[#E6E2D8] bg-white space-y-3">
-                      <div className="flex flex-wrap gap-2">
-                        {(["mapa", "infografia", "tarjetas"] as const).map((tab) => (
-                          <Button
-                            key={tab}
-                            type="button"
-                            size="sm"
-                            variant={apoyoActivo === tab ? "default" : "outline"}
-                            className={
-                              apoyoActivo === tab
-                                ? "rounded-full bg-[#1F4A3D] hover:bg-[#16382E] text-white"
-                                : "rounded-full border-[#D5CFC2]"
-                            }
-                            onClick={() => setApoyoActivo(tab)}
-                          >
-                            {tab === "mapa" ? "Mapa mental" : tab === "infografia" ? "Infografía" : "Tarjetas"}
-                          </Button>
-                        ))}
-                      </div>
-                      {apoyoActivo === "mapa" && (
-                        <ul className="space-y-1.5 text-sm leading-relaxed text-[#141413]">
-                          {leccion.apoyos.mapaMental.map((n) => (
-                            <li key={n.nodo}>
-                              <span className="font-semibold text-[#1F4A3D]">{n.nodo}:</span> {n.detalle}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                      {apoyoActivo === "infografia" && (
-                        <ul className="list-disc pl-5 space-y-1.5 text-sm leading-relaxed text-[#141413]">
-                          {leccion.apoyos.infografiaResumen.map((linea, idx) => (
-                            <li key={idx}>{linea}</li>
-                          ))}
-                        </ul>
-                      )}
-                      {apoyoActivo === "tarjetas" && (
-                        <div className="space-y-2.5">
-                          <div className="p-4 rounded-xl bg-[#FAF9F5] border border-[#E6E2D8] text-sm">
-                            <span className="vx-kicker !text-[#5E5D59] block mb-1.5">
-                              Tarjeta {tarjetaIdx + 1} de {leccion.apoyos.tarjetas.length}
-                            </span>
-                            <p className="font-medium text-[15px] text-[#141413]">
-                              {tarjetaVolteada
-                                ? leccion.apoyos.tarjetas[tarjetaIdx].reverso
-                                : leccion.apoyos.tarjetas[tarjetaIdx].frente}
-                            </p>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button
+                          Ver otras formas de aprender ({secundarias.length})
+                          {verOtrasPuertas ? <ChevronUp className="w-4 h-4 ml-1.5" /> : <ChevronDown className="w-4 h-4 ml-1.5" />}
+                        </Button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <div className="grid gap-2.5 sm:grid-cols-3 pt-1">
+                          {secundarias.map((sec) => (
+                            <button
+                              key={sec.tipo}
                               type="button"
-                              size="sm"
-                              variant="outline"
-                              className="rounded-full border-[#D5CFC2]"
-                              onClick={() => setTarjetaVolteada((v) => !v)}
-                            >
-                              {tarjetaVolteada ? "Ver pregunta" : "Dar vuelta"}
-                            </Button>
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="outline"
-                              className="rounded-full border-[#D5CFC2]"
                               onClick={() => {
-                                setTarjetaVolteada(false);
-                                setTarjetaIdx((i) => (i + 1) % leccion.apoyos.tarjetas.length);
+                                setVerOtrasPuertas(false);
+                                actualizarYGuardar({ puertaPreferida: sec.tipo });
                               }}
+                              className="vx-option-card !min-h-[44px] !p-3"
                             >
-                              Siguiente tarjeta
-                            </Button>
-                          </div>
+                              <div className="font-medium text-sm text-[#141413]">{sec.etiqueta}</div>
+                              <div className="text-xs text-[#5E5D59] mt-0.5">{sec.duracion}</div>
+                            </button>
+                          ))}
                         </div>
-                      )}
-                    </div>
-                  )}
+                      </CollapsibleContent>
+                    </Collapsible>
+
+                    <Collapsible open={verApoyos} onOpenChange={setVerApoyos} className="space-y-2">
+                      <CollapsibleTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="rounded-full border-[#D5CFC2] bg-white"
+                          aria-expanded={verApoyos}
+                        >
+                          Apoyos (mapa, infografía, tarjetas)
+                          {verApoyos ? <ChevronUp className="w-4 h-4 ml-1.5" /> : <ChevronDown className="w-4 h-4 ml-1.5" />}
+                        </Button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <Tabs
+                          value={apoyoActivo}
+                          onValueChange={(v) => setApoyoActivo(v as "mapa" | "infografia" | "tarjetas")}
+                          className="p-4 rounded-xl border border-[#E6E2D8] bg-white space-y-3"
+                        >
+                          <TabsList className="inline-flex h-auto flex-wrap gap-1 rounded-full bg-[#F3F1EA] border border-[#E6E2D8] p-1">
+                            {(["mapa", "infografia", "tarjetas"] as const).map((tab) => (
+                              <TabsTrigger
+                                key={tab}
+                                value={tab}
+                                className="rounded-full px-3.5 py-1 text-xs font-medium text-[#5E5D59] data-[state=active]:bg-[#1F4A3D] data-[state=active]:text-white"
+                              >
+                                {tab === "mapa" ? "Mapa mental" : tab === "infografia" ? "Infografía" : "Tarjetas"}
+                              </TabsTrigger>
+                            ))}
+                          </TabsList>
+                          <TabsContent value="mapa" className="mt-0">
+                            <ul className="space-y-1.5 text-sm leading-relaxed text-[#141413]">
+                              {leccion.apoyos.mapaMental.map((n) => (
+                                <li key={n.nodo}>
+                                  <span className="font-semibold text-[#1F4A3D]">{n.nodo}:</span> {n.detalle}
+                                </li>
+                              ))}
+                            </ul>
+                          </TabsContent>
+                          <TabsContent value="infografia" className="mt-0">
+                            <ul className="list-disc pl-5 space-y-1.5 text-sm leading-relaxed text-[#141413]">
+                              {leccion.apoyos.infografiaResumen.map((linea, idx) => (
+                                <li key={idx}>{linea}</li>
+                              ))}
+                            </ul>
+                          </TabsContent>
+                          <TabsContent value="tarjetas" className="mt-0">
+                            <div className="space-y-2.5">
+                              <div className="p-4 rounded-xl bg-[#FAF9F5] border border-[#E6E2D8] text-sm">
+                                <span className="vx-kicker !text-[#5E5D59] block mb-1.5">
+                                  Tarjeta {tarjetaIdx + 1} de {leccion.apoyos.tarjetas.length}
+                                </span>
+                                <p className="font-medium text-[15px] text-[#141413]">
+                                  {tarjetaVolteada
+                                    ? leccion.apoyos.tarjetas[tarjetaIdx].reverso
+                                    : leccion.apoyos.tarjetas[tarjetaIdx].frente}
+                                </p>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="outline"
+                                  className="rounded-full border-[#D5CFC2]"
+                                  onClick={() => setTarjetaVolteada((v) => !v)}
+                                >
+                                  {tarjetaVolteada ? "Ver pregunta" : "Dar vuelta"}
+                                </Button>
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="outline"
+                                  className="rounded-full border-[#D5CFC2]"
+                                  onClick={() => {
+                                    setTarjetaVolteada(false);
+                                    setTarjetaIdx((i) => (i + 1) % leccion.apoyos.tarjetas.length);
+                                  }}
+                                >
+                                  Siguiente tarjeta
+                                </Button>
+                              </div>
+                            </div>
+                          </TabsContent>
+                        </Tabs>
+                      </CollapsibleContent>
+                    </Collapsible>
+                  </div>
                 </div>
 
                 {/* Micro-tramo actual (de a uno para menos carga cognitiva) */}
@@ -976,12 +993,10 @@ export default function VorticeAula() {
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              </TabsContent>
 
-            {/* BLOQUE 3: INTÉNTALO TÚ (1 pregunta por pantalla + 3 niveles deterministas de pista sin IA) */}
-            {pasoActual === "intentalo" && (
-              <div className="space-y-4">
+              {/* BLOQUE 3: INTÉNTALO TÚ (1 pregunta por pantalla + 3 niveles deterministas de pista sin IA) */}
+              <TabsContent value="intentalo" className="mt-0 space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <Badge variant="outline" className="vx-mono rounded-full border-[#D5CFC2] text-[#5E5D59] font-normal">
                     Práctica {idxPractica + 1} de {leccion.ejerciciosPractica.length} · Sin nota ni cronómetro
@@ -1135,12 +1150,10 @@ export default function VorticeAula() {
                     </Button>
                   </div>
                 </div>
-              </div>
-            )}
+              </TabsContent>
 
-            {/* BLOQUE 4: COMPRUEBA (proceso sin cronómetro ni porcentaje visible; solo Logrado / Sigue practicando) */}
-            {pasoActual === "comprueba" && (
-              <div className="space-y-5">
+              {/* BLOQUE 4: COMPRUEBA (proceso sin cronómetro ni porcentaje visible; solo Logrado / Sigue practicando) */}
+              <TabsContent value="comprueba" className="mt-0 space-y-5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <h2 className="vx-serif font-medium text-xl flex items-center gap-2 text-[#141413]">
@@ -1253,8 +1266,8 @@ export default function VorticeAula() {
                     )}
                   </div>
                 </div>
-              </div>
-            )}
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
       </div>
