@@ -1,0 +1,74 @@
+# Índice de decisiones de dirección
+
+Una línea por decisión. **Detalle completo:** `.junie/DECISIONES_DIRECCION.md` (buscar el título con `grep -n`). No cargar el archivo entero. Generado el 2026-11-22; añadir una línea aquí al registrar una decisión nueva.
+
+- L3: 2026-11-19 · Bloque 1, política de dominio — «Bloque 1: acepto todas»
+- L16: 2026-11-19 · Bloque 2, catálogo y banco — «Bloque 2: acepto todas»
+- L24: 2026-11-19 · Bloque 3, mapa y retención — «Bloque 3: acepto todas»
+- L34: 2026-11-19 · Bloque 4, evidencia de E2 — «Bloque 4: acepto todas»
+- L43: 2026-11-19 · Bloque 5, resultados y P21 — «acepto las recomendaciones; C3, C15 y C16 los decido aparte»
+- L56: 2026-11-19 · Bloque 6, núcleo P0-E — «acepto P7, C17, C18, N12»
+- L68: 2026-11-19 · C15, revisión normativa de P21 — declaración del sostenedor en chat
+- L71: 2026-11-19 · P21 reformulada por el sostenedor (descripción en chat; NO es aún texto normativo)
+- L84: 2026-11-19 · Respuestas del sostenedor a Q-A..Q-D (dictado por voz; transcripción confusa, interpretación de Claude)
+- L93: 2026-11-19 · P21 v2 CONFIRMADA por el sostenedor (Q-A y Q-D cerradas)
+- L108: 2026-11-19 · Aclaraciones de P21 v2 tras el inventario T9 (respuestas del sostenedor)
+- L115: 2026-11-19 · Plazo del intento extra (respuesta del sostenedor)
+- L118: 2026-11-19 · Plazo del extra corregido a 48 h y regla de inicio (sostenedor)
+- L124: 2026-11-19 · Duración y cierre de las evaluaciones (sostenedor)
+- L131: 2026-11-19 · Avisos, no reinicio e interrupciones (sostenedor)
+- L137: 2026-11-19 · Interrupciones y señales (sostenedor)
+- L142: 2026-11-19 · **P21 v2 APROBADA por el sostenedor** («Apruebo P21 v2»)
+- L147: 2026-11-19 · Cuatro decisiones de cierre — «Acepto las 4 y las 72 h solo en E2»
+- L157: 2026-11-19 · P8 y P20-v (sostenedor)
+- L163: 2026-11-19 · Alcance de las reglas decididas (sostenedor)
+- L166: 2026-11-19 · Reglas para estudiantes neurodivergentes declarados (sostenedor)
+- L178: 2026-11-19 · Avisos y declaración del perfil neurodivergente (sostenedor)
+- L182: 2026-11-19 · AUTORIZACIÓN DE P0 — «Autorizo T11 a T19 en copia aislada»
+- L185: 2026-11-19 · ENMIENDA a P21 v2 (sostenedor): el extra se rinde desde la publicación; 72 h son PLAZO
+- L191: 2026-11-19 · Bloque 7, piloto con estudiantes — «todas sí, menos la 1»
+- L199: 2026-11-19 · AUTORIZACIÓN: armador puro del intento extra («Autorizo el armador puro en copia aislada»)
+- L202: 2026-11-19 · ENMIENDA de P21 v2: énfasis del extra baja de 50 % a **35 %** (sostenedor: «35%»)
+- L205: 2026-11-19 · Fuente curricular oficial (directriz del sostenedor, recordada en chat)
+- L208: 2026-11-20 · O5 DECIDIDA: unidad del piloto = **Unidad 3 de Matemática 5.º Básico** («Unidad 3»)
+- L211: 2026-11-20 · Textos escolares entregados (sostenedor): «Sumo Primero» 5.º básico, Guía Digital del Docente 2026, Tomos 1 y 2, en `~/Downloads/BRKL_TEXTOS_OFICIALES/`
+- L214: 2026-11-20 · DIRECTRIZ: manda el temario de los Exámenes Libres de fin de año (sostenedor)
+- L217: 2026-11-20 · Temario de Exámenes Libres 5.º Básico recibido y cruzado con la unidad del piloto
+- L220: 2026-11-20 · Aclaraciones del sostenedor sobre el temario y E2
+- L225: 2026-11-20 · E2 tiene siempre 15 preguntas (sostenedor)
+- L228: 2026-11-20 · Subtemas del piloto APROBADOS (sostenedor: «Sí, 5 subtemas por OA»)
+- L231: 2026-11-20 · AUTORIZACIÓN: M1 acotado («Autorizo M1 acotado»)
+- L234: 2026-11-20 · DIRECTRIZ: el banco lo construyen Claude y Junie a partir del texto oficial; sin comité (sostenedor)
+- L237: 2026-11-20 · Uso de los textos, fuentes y alcance (sostenedor)
+- L243: 2026-11-20 · Cita de fuente CONFIRMADA («Sí»)
+- L246: 2026-11-20 · Estructura de la lección y fuente del material (sostenedor: «Acepto camino guiado y libreto como fuente única»)
+- L250: 2026-11-20 · AUTORIZACIÓN: contenido del OA 11 («sí, empieza con el contenido del OA 11»)
+- L253: 2026-11-20 · AUTORIZACIÓN: contenido del OA 10 («sí, sigue con el OA 10»)
+- L256: Autorizaciones de construcción
+- L259: 2026-11-19 · APLICADA la copia P21 v2 a `brkl-motor` (orden del sostenedor: «Aplica la copia a brkl-motor»)
+- L262: 2026-11-19 · COMMITS preparados en `brkl-motor` (orden del sostenedor), sin push
+- L265: 2026-11-20 · COMMITS del armador y de la enmienda 35 % en `brkl-motor` (orden del sostenedor), sin push
+- L268: 2026-11-20 · COMMITS de M1 acotado en `brkl-motor` (orden del sostenedor), sin push
+- L271: 2026-11-20 · Bosquejo del material de estudio (pedido del sostenedor)
+- L274: 2026-11-20 · Material multimedia en el dashboard (sostenedor)
+- L277: 2026-11-20 · Contenido del OA 11 listo para revisión del sostenedor (copia `brkl-motor-oa11`, sin aplicar a `brkl-motor`)
+- L280: 2026-11-20 · Muestra del OA 11 APROBADA por el sostenedor («Apruebo la muestra») y commits en `brkl-motor`, sin push
+- L283: 2026-11-20 · Muestra del OA 10 APROBADA por el sostenedor y commits en `brkl-motor`, sin push
+- L286: 2026-11-20 — Muestras OA 7 y OA 8 aprobadas
+- L291: 2026-11-20 — Muestra OA 13 aprobada
+- L295: 2026-11-20 — Cambio OA 7 aprobado (pregunta 09: ordenar tres fracciones)
+- L298: 2026-11-20 (tarde): fuentes oficiales del contenido
+- L301: 2026-11-21: fecha de cierre del año 2027 (sostenedor)
+- L306: 2026-11-21: cierre de 4.º medio 2027 (sostenedor)
+- L311: 2026-11-21: precios del plan escolar 2027 (sostenedor)
+- L314: 2026-11-21: ajuste del ciclo 2027 y recesos (sostenedor)
+- L321: 2026-11-21: flujo de trabajo solo con Neon e Hydrogen (sostenedor)
+- L325: 2026-11-21: T37 y T38 construidas en local con Neon e Hydrogen (sostenedor: «con todo»)
+- L330: 2026-11-21: fechas de cobro unificadas a enero de 2027 + migraciones SQL listas en local (sostenedor)
+- L334: 2026-11-21: T39 — perfil de evaluación del estudiante + esquema real de evaluaciones (sostenedor)
+- L343: 2026-11-21: Tareas 7, 9, 10 y Preview (sostenedor: «todo», sin orden `PRODUCCION`)
+- L349: 2026-11-21: Estándar universal de estudio (UDL) y alcance del perfil neurodivergente (sostenedor)
+- L363: 2026-11-21: Bloques A, B y C construidos y verificados en local (sostenedor: «a,b,c»)
+- L369: 2026-11-21: Paso 2 · Motor en sombra M2 y Mapa «Mis conocimientos» M3 (sostenedor: «si»)
+- L374: 2026-11-21: Paso 3 · Retención M4 y Cruce evaluación `4` M5/M6 (sostenedor: «3»)
+- L380: 2026-11-21: Rediseño visual editorial de Vórtice (tipografía estilo Anthropic, sostenedor)

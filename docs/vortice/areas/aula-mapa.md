@@ -1,0 +1,4 @@
+# Área: Aula Universal, mapa M3, retención M4, cruce M5/M6
+**Archivos:** `shared/aulaUniversal.ts`, `server/aulaUniversal.ts`, `shared/mapaConocimiento.ts`, `server/mapaConocimiento.ts`, `shared/retencionMapa.ts`, `server/retencionMapa.ts`, `shared/cruceEvaluacionMapa.ts`, `server/cruceEvaluacionMapa.ts`, `server/sembrarPilotoPractica.ts`, vistas `/vortice/aula` y `/vortice/conocimientos`.
+**Invariantes (según el registro de Antigravity):** no tocar `server/conocimiento.ts`, `practica.ts`, `reconstruccion.ts`; evaluaciones de proceso sin cronómetro ni porcentaje; el perfil neurodivergente solo afecta la Evaluación del módulo (`4`); retención sin castigo.
+**Estado:** construida por Antigravity (commits `5e88351`, `4f16b84`); pasa sus pruebas; **no verificada a fondo por mí**. Solo local (no empujada).
