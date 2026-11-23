@@ -74,4 +74,5 @@ Una línea por decisión. **Detalle completo:** `.junie/DECISIONES_DIRECCION.md`
 - L380: 2026-11-21: Rediseño visual editorial de Vórtice (tipografía estilo Anthropic, sostenedor)
 - L393: 2026-11-23: dirección visual del Inicio por tramo (referencia completa, logros = estrellas reales, solo lo que existe, ilustraciones del sostenedor)
 - L402: 2026-11-23: rojo en las barras de avance bajo se mantiene como alerta (sostenedor)
+- L407: 2026-11-23: Mis logros por etapas (hoy Mis estrellas; logros persistentes después, con tabla propia)
 - L385: 2026-11-23: cinco decisiones (repo privado, cobro Flow en sandbox primero, piloto interno sin menores, copiloto acotado después, sin feriados ni vacaciones)
