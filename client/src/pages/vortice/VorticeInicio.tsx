@@ -7,7 +7,7 @@ import { Link } from "wouter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowRight, BarChart3, BookOpen, Compass, BriefcaseBusiness, CalendarDays, ChevronRight, FileText, Home,
-  Link2, Menu, MessageCircle, ClipboardCheck, Target, Users, X,
+  Link2, Menu, MessageCircle, ClipboardCheck, Star, Target, Users, X,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
@@ -492,6 +492,20 @@ export default function VorticeInicio() {
                 )}
               </section>
 
+              {mapa.data?.disponible && (
+                <section className="vx-card vx-stars" aria-labelledby="vx-stars">
+                  <header>
+                    <h2 id="vx-stars"><Star aria-hidden="true" />Mis estrellas</h2>
+                    <Link href="/vortice/conocimientos">Constelación <ChevronRight aria-hidden="true" /></Link>
+                  </header>
+                  <ul className="vx-star-stats">
+                    <li><b>{mapa.data.resumen.dominados}</b><span>Confirmadas</span></li>
+                    <li><b>{mapa.data.resumen.enPractica + mapa.data.resumen.porReforzar + mapa.data.resumen.porComprobar}</b><span>En práctica</span></li>
+                    <li><b>{mapa.data.resumen.listos}</b><span>Listas para aprender</span></li>
+                  </ul>
+                </section>
+              )}
+
               <section className="vx-card" id="semana" aria-labelledby="vx-cal">
                 <header><h2 id="vx-cal"><CalendarDays aria-hidden="true" />{mes}</h2>{semana.data && !semana.data.saved && <small>Plan propuesto</small>}</header>
                 <div className="vx-week">
@@ -530,9 +544,6 @@ export default function VorticeInicio() {
                     <span className="vx-kicker">Conocimientos y repaso</span>
                     {mapa.data?.disponible ? (
                       <div className="vx-pulse-map">
-                        <p>
-                          <strong>{mapa.data.resumen.dominados}</strong> confirmadas · <b>{mapa.data.resumen.listos}</b> listos para aprender
-                        </p>
                         {(repasosMapa > 0 || pendientesRepaso > 0) && (
                           <div className="vx-pulse-alert">
                             <span>{repasosTotal} {repasosTotal === 1 ? "repaso pendiente" : "repasos pendientes"}</span>
