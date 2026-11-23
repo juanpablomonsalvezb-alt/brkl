@@ -391,15 +391,15 @@ export default function VorticeAula() {
   return (
     <div className="vx-editorial min-h-screen">
       <header className="vx-topbar">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 min-h-14 py-2 flex items-center justify-between flex-wrap gap-2">
           <Link href="/vortice" className="vx-pill-nav">
             <ArrowLeft className="w-4 h-4" />
-            Volver a Vórtice
+            <span className="sm:hidden">Volver</span><span className="hidden sm:inline">Volver a Vórtice</span>
           </Link>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 min-w-0">
             <Link href="/vortice/conocimientos" className="vx-pill-nav">
-              Mis conocimientos
+              <span className="sm:hidden">Conocimientos</span><span className="hidden sm:inline">Mis conocimientos</span>
             </Link>
             <button
               type="button"
@@ -409,7 +409,7 @@ export default function VorticeAula() {
               }`}
             >
               <Compass className="w-4 h-4" />
-              Diagnóstico inicial (0)
+              <span className="sm:hidden">Diagnóstico (0)</span><span className="hidden sm:inline">Diagnóstico inicial (0)</span>
             </button>
           </div>
         </div>
@@ -863,7 +863,7 @@ export default function VorticeAula() {
                                     : leccion.apoyos.tarjetas[tarjetaIdx].frente}
                                 </p>
                               </div>
-                              <div className="flex gap-2">
+                              <div className="flex flex-wrap gap-2">
                                 <Button
                                   type="button"
                                   size="sm"
@@ -1133,7 +1133,7 @@ export default function VorticeAula() {
                   >
                     Ejercicio anterior
                   </Button>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {idxPractica + 1 < leccion.ejerciciosPractica.length ? (
                       <Button
                         type="button"
