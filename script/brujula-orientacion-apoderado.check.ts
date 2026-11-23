@@ -57,6 +57,13 @@ const now = new Date(Date.UTC(2026, 5, 10)); // junio 2026
   if (res.proximaEvaluacion && res.proximaEvaluacion.titulo && res.proximaEvaluacion.subjectName && res.proximaEvaluacion.dias === 3) {
     ok("Caso 1: proximaEvaluacion estructurado con titulo, subjectName y dias=3");
   } else fail(`Caso 1: proximaEvaluacion no estructurado → ${JSON.stringify(res.proximaEvaluacion)}`);
+  // orientacionSinProximaEvaluacion
+  const sinProx = res.orientacionSinProximaEvaluacion;
+  if (sinProx.every((t) => !t.startsWith("Próxima evaluación:"))) ok("Caso 1: orientacionSinProximaEvaluacion no contiene 'Próxima evaluación:'");
+  else fail("Caso 1: orientacionSinProximaEvaluacion contiene frase de próxima evaluación");
+  const reconstruida = [...sinProx, frase];
+  if (JSON.stringify(res.orientacion) === JSON.stringify(reconstruida)) ok("Caso 1: orientacion = [...orientacionSinProximaEvaluacion, frase]");
+  else fail(`Caso 1: orientacion !== [...orientacionSinProximaEvaluacion, frase]`);
 }
 
 // --- Caso 2: dias: 1 → "en 1 día" (singular) ---
@@ -82,6 +89,14 @@ const now = new Date(Date.UTC(2026, 5, 10)); // junio 2026
   if (res.proximaEvaluacion && res.proximaEvaluacion.dias === 1) {
     ok("Caso 2: proximaEvaluacion.dias = 1");
   } else fail(`Caso 2: proximaEvaluacion.dias !== 1 → ${JSON.stringify(res.proximaEvaluacion)}`);
+  // orientacionSinProximaEvaluacion
+  const sinProx = res.orientacionSinProximaEvaluacion;
+  if (sinProx.every((t) => !t.startsWith("Próxima evaluación:"))) ok("Caso 2: orientacionSinProximaEvaluacion no contiene 'Próxima evaluación:'");
+  else fail("Caso 2: orientacionSinProximaEvaluacion contiene frase de próxima evaluación");
+  const frase2 = frases[0] ?? "";
+  const reconstruida2 = [...sinProx, frase2];
+  if (JSON.stringify(res.orientacion) === JSON.stringify(reconstruida2)) ok("Caso 2: orientacion = [...orientacionSinProximaEvaluacion, frase]");
+  else fail(`Caso 2: orientacion !== [...orientacionSinProximaEvaluacion, frase]`);
 }
 
 // --- Caso 3: dias: 0 → "disponible hoy" ---
@@ -116,6 +131,14 @@ const now = new Date(Date.UTC(2026, 5, 10)); // junio 2026
   if (res.proximaEvaluacion && res.proximaEvaluacion.dias === 0) {
     ok("Caso 3: proximaEvaluacion.dias = 0");
   } else fail(`Caso 3: proximaEvaluacion.dias !== 0 → ${JSON.stringify(res.proximaEvaluacion)}`);
+  // orientacionSinProximaEvaluacion
+  const sinProx3 = res.orientacionSinProximaEvaluacion;
+  if (sinProx3.every((t) => !t.startsWith("Próxima evaluación:"))) ok("Caso 3: orientacionSinProximaEvaluacion no contiene 'Próxima evaluación:'");
+  else fail("Caso 3: orientacionSinProximaEvaluacion contiene frase de próxima evaluación");
+  const frase3 = frases[0] ?? "";
+  const reconstruida3 = [...sinProx3, frase3];
+  if (JSON.stringify(res.orientacion) === JSON.stringify(reconstruida3)) ok("Caso 3: orientacion = [...orientacionSinProximaEvaluacion, frase]");
+  else fail(`Caso 3: orientacion !== [...orientacionSinProximaEvaluacion, frase]`);
 }
 
 // --- Caso 4: proximaEvaluacion = null → ninguna frase con "Próxima evaluación:" ---
@@ -137,6 +160,11 @@ const now = new Date(Date.UTC(2026, 5, 10)); // junio 2026
   else fail(`Caso 4: se esperaba 0 frases, se obtuvieron ${frases.length}`);
   if (res.proximaEvaluacion === null) ok("Caso 4: proximaEvaluacion es null");
   else fail(`Caso 4: proximaEvaluacion no es null → ${JSON.stringify(res.proximaEvaluacion)}`);
+  // orientacionSinProximaEvaluacion: sin próxima evaluación, ambas listas son iguales
+  if (JSON.stringify(res.orientacion) === JSON.stringify(res.orientacionSinProximaEvaluacion)) ok("Caso 4: orientacion === orientacionSinProximaEvaluacion (sin próxima evaluación)");
+  else fail("Caso 4: orientacion !== orientacionSinProximaEvaluacion");
+  if (res.orientacionSinProximaEvaluacion.every((t) => !t.startsWith("Próxima evaluación:"))) ok("Caso 4: orientacionSinProximaEvaluacion no contiene 'Próxima evaluación:'");
+  else fail("Caso 4: orientacionSinProximaEvaluacion contiene frase de próxima evaluación");
 }
 
 // --- Caso 5: proximaEvaluacion conserva estructura (titulo, subjectName, dias) ---

@@ -177,6 +177,8 @@ export interface ResumenBrujulaApoderado {
   bloquesCompletados: number;
   proximaEvaluacion: { titulo: string; subjectName: string; dias: number } | null;
   orientacion: string[];
+  /** Mismo contenido que `orientacion` pero sin la frase de próxima evaluación. */
+  orientacionSinProximaEvaluacion: string[];
   asignaturas: { subjectName: string; estado: EstadoRitmoApoderado; etiquetaEstado: string }[];
 }
 
@@ -216,20 +218,22 @@ export function resumenBrujulaParaApoderado(
     estadoGeneral = "al_dia";
   }
 
-  const orientacion: string[] = [];
+  const orientacionComunes: string[] = [];
+  let proximaEvaluacionFrase: string | null = null;
+
   if (estadoGeneral === "por_recuperar") {
-    orientacion.push("Tiene módulos pendientes por retomar; acompañarlo con bloques cortos esta semana ayuda a ponerse al día a su ritmo.");
+    orientacionComunes.push("Tiene módulos pendientes por retomar; acompañarlo con bloques cortos esta semana ayuda a ponerse al día a su ritmo.");
   } else if (estadoGeneral === "al_dia" || estadoGeneral === "adelantado") {
-    orientacion.push("Va al día con su calendario semanal.");
+    orientacionComunes.push("Va al día con su calendario semanal.");
   } else {
-    orientacion.push("Aún no hay contenido liberado para observar el ritmo esta semana.");
+    orientacionComunes.push("Aún no hay contenido liberado para observar el ritmo esta semana.");
   }
 
   if (agenda.bloquesPlanificados > 0) {
     if (agenda.bloquesCompletados >= agenda.bloquesPlanificados) {
-      orientacion.push(`Completó los ${agenda.bloquesPlanificados} bloques de estudio planificados esta semana.`);
+      orientacionComunes.push(`Completó los ${agenda.bloquesPlanificados} bloques de estudio planificados esta semana.`);
     } else {
-      orientacion.push(`Lleva ${agenda.bloquesCompletados} de ${agenda.bloquesPlanificados} bloques de estudio planificados esta semana.`);
+      orientacionComunes.push(`Lleva ${agenda.bloquesCompletados} de ${agenda.bloquesPlanificados} bloques de estudio planificados esta semana.`);
     }
   }
 
@@ -237,8 +241,13 @@ export function resumenBrujulaParaApoderado(
     const cuando = panel.proximaEvaluacion.dias === 0
       ? "disponible hoy"
       : `en ${plural(panel.proximaEvaluacion.dias, "día", "días")}`;
-    orientacion.push(`Próxima evaluación: «${panel.proximaEvaluacion.titulo}» de ${panel.proximaEvaluacion.subjectName} (${cuando}).`);
+    proximaEvaluacionFrase = `Próxima evaluación: «${panel.proximaEvaluacion.titulo}» de ${panel.proximaEvaluacion.subjectName} (${cuando}).`;
   }
+
+  const orientacionSinProximaEvaluacion = orientacionComunes.slice(0, 3);
+  const orientacion = proximaEvaluacionFrase
+    ? [...orientacionSinProximaEvaluacion, proximaEvaluacionFrase]
+    : orientacionSinProximaEvaluacion;
 
   return {
     estadoGeneral,
@@ -253,7 +262,8 @@ export function resumenBrujulaParaApoderado(
           dias: panel.proximaEvaluacion.dias,
         }
       : null,
-    orientacion: orientacion.slice(0, 3),
+    orientacion,
+    orientacionSinProximaEvaluacion,
     asignaturas,
   };
 }
