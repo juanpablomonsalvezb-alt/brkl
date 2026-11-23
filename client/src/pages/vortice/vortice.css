@@ -230,6 +230,14 @@
 .vx-bar-top { display: flex; align-items: baseline; gap: 10px; }
 .vx-bar-top strong { font-family: var(--vx-serif); font-size: 30px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; color: var(--vx-ink); }
 .vx-bar-top small { font-size: 13px; color: var(--vx-ink-soft); }
+.vx-next { display: grid; gap: 6px; }
+.vx-next-subject { font-size: 12.5px; color: var(--vx-ink-soft); }
+.vx-next-title { font-size: 15px; font-weight: 600; line-height: 1.3; margin-bottom: 8px; }
+.vx-next .vx-cta { justify-self: start; }
+.vx-ring { display: flex; align-items: center; gap: 14px; }
+.vx-ring svg { width: 84px; height: 84px; flex: none; }
+.vx-ring strong { display: block; font-family: var(--vx-serif); font-size: 30px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.vx-ring small { font-size: 13px; color: var(--vx-ink-soft); }
 .vx-bar-track { height: 7px; border-radius: 99px; background: #ECE8DE; overflow: hidden; }
 .vx-bar-track i { display: block; height: 100%; border-radius: inherit; background: var(--vx-green); transition: width 400ms ease; }
 .vx-stats { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 10px; flex: 1; min-width: 0; }

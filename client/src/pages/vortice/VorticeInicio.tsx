@@ -477,6 +477,21 @@ export default function VorticeInicio() {
             </div>
 
             <aside className="vx-rail-col" aria-label="Mi semana">
+              <section className="vx-card vx-next" aria-labelledby="vx-next">
+                <header><h2 id="vx-next"><Target aria-hidden="true" />Mi próximo paso</h2></header>
+                {siguiente ? (
+                  <>
+                    <small className="vx-next-subject">{siguiente.subjectName}</small>
+                    <b className="vx-next-title">{siguiente.itemTitle}</b>
+                    <Link className="vx-cta" href={linkSiguiente}>
+                      {aEvaluacion ? "Rendir mi evaluación" : "Continuar"} <ArrowRight aria-hidden="true" />
+                    </Link>
+                  </>
+                ) : (
+                  <p className="vx-empty">Cuando tengas contenido asignado, tu próximo paso aparecerá aquí.</p>
+                )}
+              </section>
+
               <section className="vx-card" id="semana" aria-labelledby="vx-cal">
                 <header><h2 id="vx-cal"><CalendarDays aria-hidden="true" />{mes}</h2>{semana.data && !semana.data.saved && <small>Plan propuesto</small>}</header>
                 <div className="vx-week">
@@ -549,16 +564,18 @@ export default function VorticeInicio() {
                       <p className="vx-empty">Todavía no hay contenido cargado para medir tu avance.</p>
                     ) : (
                       <>
-                        <div className="vx-bar-global">
-                          <div className="vx-bar-top">
+                        <div className="vx-ring">
+                          <svg viewBox="0 0 80 80" role="img" aria-label={`${ov.totals.percent}% de avance en actividades`}>
+                            <circle cx="40" cy="40" r="34" fill="none" stroke="#ECE8DE" strokeWidth="8" />
+                            <circle cx="40" cy="40" r="34" fill="none" stroke="var(--vx-primary)" strokeWidth="8" strokeLinecap="round"
+                              strokeDasharray={2 * Math.PI * 34}
+                              strokeDashoffset={2 * Math.PI * 34 * (1 - ov.totals.percent / 100)}
+                              transform="rotate(-90 40 40)" />
+                          </svg>
+                          <div>
                             <strong>{ov.totals.percent}%</strong>
                             <small>Avance en actividades</small>
                           </div>
-                          <Progress
-                            value={ov.totals.percent}
-                            aria-label={`${ov.totals.percent}% de avance en actividades`}
-                            className="h-2 bg-[#ECE8DE] [&>div]:bg-(--vx-primary)"
-                          />
                         </div>
                         <Separator className="my-1 bg-[#E6E2D8]" />
                         <ul className="vx-stats">
