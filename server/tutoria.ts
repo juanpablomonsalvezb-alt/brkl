@@ -1,13 +1,13 @@
 // Tutoría humana como caso (Atlas #006). Recibe la conexión como parámetro para probarse
 // contra una base en memoria. Los permisos se deciden aquí por el rol de user_profiles,
 // sin depender de los middlewares de la ruta (isAdmin hoy deja pasar a todos).
-import { and, desc, eq, inArray, ne } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNull, ne } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import { z } from "zod";
 import * as schema from "@shared/schema";
 import {
   enrollments, learningObjectives, weeklyResources, userProfiles, tutoringCases,
-  tutoringCaseStatuses, type TutoringCase,
+  tutoringCaseStatuses, levelSubjects, levels, subjects, users, type TutoringCase,
 } from "@shared/schema";
 
 type Db = LibSQLDatabase<typeof schema>;
@@ -112,6 +112,52 @@ export async function asignarCaso(db: Db, adminId: string, caseId: string, body:
   if ((await roleOf(db, parsed.data.tutorId)) !== "tutor") return fail(400, "El responsable debe tener rol tutor");
   // Reasignar (asignado → asignado) reinicia assignedAt: el tiempo se mide desde el responsable actual.
   return transicion(db, caseId, ["abierto", "asignado"], undefined, { tutorId: parsed.data.tutorId, status: "asignado", assignedAt: now });
+}
+
+// Bandeja compartida del tutor (decisión 9, 2026-11-23): el tutor ve los casos sin asignar y los TOMA; así una sola
+// persona puede ser tutor de todos sin necesitar una cuenta de administrador. Cada caso trae el contexto mínimo para
+// responder (estudiante, curso, asignatura y objetivo); no se expone el correo.
+export type CasoTutor = TutoringCase & {
+  estudiante: string; curso: string; asignatura: string; objetivoCodigo: string; objetivoTitulo: string;
+};
+
+async function casosConContexto(db: Db, condicion: ReturnType<typeof and>, orden: ReturnType<typeof asc>): Promise<CasoTutor[]> {
+  const filas = await db.select({
+    caso: tutoringCases, nombre: users.name, primerNombre: users.firstName,
+    curso: levels.name, asignatura: subjects.name, objetivoCodigo: learningObjectives.code, objetivoTitulo: learningObjectives.title,
+  }).from(tutoringCases)
+    .innerJoin(users, eq(tutoringCases.studentId, users.id))
+    .innerJoin(learningObjectives, eq(tutoringCases.learningObjectiveId, learningObjectives.id))
+    .innerJoin(levelSubjects, eq(learningObjectives.levelSubjectId, levelSubjects.id))
+    .innerJoin(levels, eq(levelSubjects.levelId, levels.id))
+    .innerJoin(subjects, eq(levelSubjects.subjectId, subjects.id))
+    .where(condicion).orderBy(orden);
+  return filas.map((f) => ({
+    ...f.caso, estudiante: f.nombre || f.primerNombre || "Estudiante sin nombre",
+    curso: f.curso, asignatura: f.asignatura, objetivoCodigo: f.objetivoCodigo, objetivoTitulo: f.objetivoTitulo,
+  }));
+}
+
+export async function bandejaTutor(db: Db, tutorId: string): Promise<TutoriaResult<{ sinAsignar: CasoTutor[]; mios: CasoTutor[] }>> {
+  const denied = await requireRole(db, tutorId, "tutor");
+  if (denied) return denied;
+  return {
+    ok: true,
+    value: {
+      // Los que llevan más tiempo esperando, primero.
+      sinAsignar: await casosConContexto(db, and(eq(tutoringCases.status, "abierto"), isNull(tutoringCases.tutorId)), asc(tutoringCases.createdAt)),
+      mios: await casosConContexto(db, and(eq(tutoringCases.tutorId, tutorId), ne(tutoringCases.status, "cerrado")), asc(tutoringCases.createdAt)),
+    },
+  };
+}
+
+export async function tomarCaso(db: Db, tutorId: string, caseId: string, now: Date): Promise<TutoriaResult<TutoringCase>> {
+  const denied = await requireRole(db, tutorId, "tutor");
+  if (denied) return denied;
+  const [caso] = await db.select({ id: tutoringCases.id }).from(tutoringCases).where(eq(tutoringCases.id, caseId));
+  if (!caso) return fail(404, "Caso no encontrado");
+  // Solo desde «abierto» y sin responsable: si otro tutor lo tomó antes, la transición no aplica y responde 409.
+  return transicion(db, caseId, ["abierto"], isNull(tutoringCases.tutorId), { tutorId, status: "asignado", assignedAt: now });
 }
 
 async function casoDelTutor(db: Db, tutorId: string, caseId: string) {

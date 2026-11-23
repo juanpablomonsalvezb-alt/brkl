@@ -43,6 +43,8 @@ import {
   asignarCaso,
   responderCaso,
   cerrarCaso,
+  bandejaTutor,
+  tomarCaso,
   type TutoriaResult,
 } from "./tutoria";
 import {
@@ -905,6 +907,8 @@ export async function registerRoutes(
   app.post("/api/vortice/ayuda", tutoriaRoute((u, req) => crearCaso(db, u, req.body, new Date()), true));
   app.get("/api/vortice/ayuda", tutoriaRoute((u) => casosDelEstudiante(db, u)));
   app.get("/api/tutoria/casos", tutoriaRoute((u) => casosDelTutor(db, u)));
+  app.get("/api/tutoria/bandeja", tutoriaRoute((u) => bandejaTutor(db, u)));
+  app.post("/api/tutoria/casos/:id/tomar", tutoriaRoute((u, req) => tomarCaso(db, u, getStringParam(req.params.id), new Date())));
   app.post("/api/tutoria/casos/:id/responder", tutoriaRoute((u, req) => responderCaso(db, u, getStringParam(req.params.id), req.body, new Date())));
   app.post("/api/tutoria/casos/:id/cerrar", tutoriaRoute((u, req) => cerrarCaso(db, u, getStringParam(req.params.id), req.body, new Date())));
   app.get("/api/admin/tutoria/casos", isAdmin, tutoriaRoute((u, req) => casosParaAdmin(db, u, req.query.estado)));

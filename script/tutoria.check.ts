@@ -8,6 +8,7 @@ import express from "express";
 import * as schema from "../shared/schema";
 import {
   crearCaso, casosDelEstudiante, casosDelTutor, casosParaAdmin, asignarCaso, responderCaso, cerrarCaso, MAX_OPEN_CASES,
+  bandejaTutor, tomarCaso,
 } from "../server/tutoria";
 
 // --- 500 de GET /api/reservations: sin setupAuth passport no agrega req.isAuthenticated. ---
@@ -128,5 +129,63 @@ fails(await responderCaso(db, "tut", otro.value.id, { respuesta: "Ya no es mío"
 // Tope de casos sin cerrar por estudiante.
 for (let i = 1; i < MAX_OPEN_CASES; i++) assert.ok((await crearCaso(db, "est", { learningObjectiveId: "oa1", pregunta }, t0)).ok);
 fails(await crearCaso(db, "est", { learningObjectiveId: "oa1", pregunta }, t0), 409);
+
+// --- Bandeja compartida (decisión 9): una sola persona es tutor de todos y toma los casos ---
+await db.insert(users).values([{ id: "e3", name: "Camila Prueba", email: "camila@ejemplo.cl" }, { id: "t3" }, { id: "t4" }]);
+await db.insert(userProfiles).values([{ userId: "e3", role: "student" }, { userId: "t3", role: "tutor" }, { userId: "t4", role: "tutor" }]);
+await db.insert(enrollments).values([{ userId: "e3", levelSubjectId: "ls1" }]);
+const viejo = await crearCaso(db, "e3", { learningObjectiveId: "oa1", pregunta: "Pregunta más antigua de Camila" }, t0);
+const nuevoCaso = await crearCaso(db, "e3", { learningObjectiveId: "oa1", pregunta: "Pregunta más reciente de Camila" }, t2);
+assert.ok(viejo.ok && nuevoCaso.ok);
+
+// Solo un tutor ve la bandeja: ni estudiantes, ni administradores, ni usuarios sin perfil.
+fails(await bandejaTutor(db, "e3"), 403);
+fails(await bandejaTutor(db, "adm"), 403);
+fails(await bandejaTutor(db, "sinperfil"), 403);
+const bandeja = await bandejaTutor(db, "t3");
+assert.ok(bandeja.ok);
+const sinAsignar = bandeja.value.sinAsignar;
+assert.ok(sinAsignar.every((c) => c.status === "abierto" && c.tutorId === null));
+// Los que llevan más tiempo esperando, primero (orden ascendente por fecha de creación en toda la lista).
+for (let i = 1; i < sinAsignar.length; i++) assert.ok(sinAsignar[i - 1].createdAt.getTime() <= sinAsignar[i].createdAt.getTime());
+const deCamila = sinAsignar.filter((c) => c.studentId === "e3");
+assert.deepEqual(deCamila.map((c) => c.id), [viejo.value.id, nuevoCaso.value.id]);
+// Contexto para responder y nada de datos personales de más.
+assert.deepEqual(
+  [deCamila[0].estudiante, deCamila[0].curso, deCamila[0].asignatura, deCamila[0].objetivoCodigo, deCamila[0].objetivoTitulo],
+  ["Camila Prueba", "7° Básico", "Matemática", "OA 1", "Enteros"],
+);
+assert.ok(!("email" in deCamila[0]));
+assert.equal(bandeja.value.mios.length, 0);
+
+// Tomar un caso: solo tutores; el caso debe existir.
+fails(await tomarCaso(db, "e3", viejo.value.id, t3), 403);
+fails(await tomarCaso(db, "adm", viejo.value.id, t3), 403);
+fails(await tomarCaso(db, "t3", "nope", t3), 404);
+const tomado = await tomarCaso(db, "t3", viejo.value.id, t3);
+assert.ok(tomado.ok && tomado.value.status === "asignado" && tomado.value.tutorId === "t3");
+assert.equal(tomado.value.assignedAt?.getTime(), t3.getTime());
+// Otro tutor no puede quitárselo ni tomarlo de nuevo, y tampoco responderlo.
+fails(await tomarCaso(db, "t4", viejo.value.id, t3), 409);
+fails(await tomarCaso(db, "t3", viejo.value.id, t3), 409);
+fails(await responderCaso(db, "t4", viejo.value.id, { respuesta: "No es mío" }, t3), 404);
+// Pasa de «sin asignar» a «míos» solo para quien lo tomó.
+const tras = await bandejaTutor(db, "t3");
+assert.ok(tras.ok && !tras.value.sinAsignar.some((c) => c.id === viejo.value.id) && tras.value.mios.map((c) => c.id).includes(viejo.value.id));
+const trasOtro = await bandejaTutor(db, "t4");
+assert.ok(trasOtro.ok && !trasOtro.value.sinAsignar.some((c) => c.id === viejo.value.id) && trasOtro.value.mios.length === 0);
+// Carrera: dos tutores toman el mismo caso a la vez; solo uno lo logra.
+const [r1, r2] = await Promise.all([tomarCaso(db, "t3", nuevoCaso.value.id, t3), tomarCaso(db, "t4", nuevoCaso.value.id, t3)]);
+assert.equal([r1, r2].filter((r) => r.ok).length, 1);
+assert.equal([r1, r2].filter((r) => !r.ok && r.status === 409).length, 1);
+// Un caso respondido no se puede volver a tomar, y los cerrados salen de «míos».
+assert.ok((await responderCaso(db, "t3", viejo.value.id, { respuesta: "Te lo explico con otro ejemplo." }, t3)).ok);
+fails(await tomarCaso(db, "t3", viejo.value.id, t3), 409);
+const respondidoMio = await bandejaTutor(db, "t3");
+assert.ok(respondidoMio.ok && respondidoMio.value.mios.some((c) => c.id === viejo.value.id && c.status === "respondido"));
+assert.ok((await cerrarCaso(db, "t3", viejo.value.id, { notaCierre: "Resuelto" }, t3)).ok);
+const trasCierre = await bandejaTutor(db, "t3");
+assert.ok(trasCierre.ok && !trasCierre.value.mios.some((c) => c.id === viejo.value.id));
+console.log("tutoria bandeja compartida: ok");
 
 console.log("tutoria: ok");
