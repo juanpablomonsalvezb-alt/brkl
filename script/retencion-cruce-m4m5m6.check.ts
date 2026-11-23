@@ -52,7 +52,8 @@ const { sembrarFicticios } = await import("./lib/esquemaHeredado");
 
 const DIA_SEG = 86400;
 
-/** Envuelve el cliente de pruebas para simular avance de reloj en `relojMotor` sin tocar código productivo. */
+/** Envuelve el cliente de pruebas para simular un reloj determinista en `relojMotor` sin depender del reloj real del sistema. */
+const RELOJ_BASE_SIM_SEG = 2_000_023_200; // 2033-05-18T10:00:00Z (06:00 America/Santiago)
 function clienteConOffset(base: Client, getOffsetSeg: () => number): Client {
   return new Proxy(base, {
     get(target, prop) {
@@ -60,9 +61,8 @@ function clienteConOffset(base: Client, getOffsetSeg: () => number): Client {
         return async (...args: Parameters<typeof target.execute>) => {
           const res = await target.execute(...args);
           const sqlTxt = typeof args[0] === "string" ? args[0] : (args[0] as any)?.sql;
-          const off = getOffsetSeg();
-          if (typeof sqlTxt === "string" && /SELECT\s+unixepoch\s*\(\s*'subsec'\s*\)/i.test(sqlTxt) && off !== 0 && res.rows?.[0]) {
-            const val = Number(res.rows[0][0]) + off;
+          if (typeof sqlTxt === "string" && /SELECT\s+unixepoch\s*\(\s*'subsec'\s*\)/i.test(sqlTxt) && res.rows?.[0]) {
+            const val = RELOJ_BASE_SIM_SEG + getOffsetSeg();
             const fila = Object.assign([val], { "unixepoch('subsec')": val });
             return { ...res, rows: [fila] };
           }
