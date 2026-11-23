@@ -30,6 +30,7 @@
   --vx-green-2: var(--vx-primary-2);
   --vx-green-soft: var(--vx-acento-soft);
   --vx-clay: #C96442;
+  --vx-clay-text: #9E4325; /* arcilla oscura para texto pequeño: 4,8 a 6,4:1 sobre los fondos de Vórtice */
   --vx-clay-hover: #B45435;
   --vx-clay-soft: #FBF0EB;
   --vx-amber: #D4942A;
@@ -83,7 +84,7 @@
   font-weight: 500;
   letter-spacing: 0.11em;
   text-transform: uppercase;
-  color: var(--vx-clay);
+  color: var(--vx-clay-text);
 }
 
 :is(.vx-editorial, .vx) .vx-mono {

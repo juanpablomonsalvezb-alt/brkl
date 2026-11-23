@@ -275,6 +275,8 @@
   letter-spacing: -0.03em;
   opacity: 0.88;
 }
+.vx-thumb--arte { aspect-ratio: 16 / 10; padding: 0; background: var(--vx-acento-soft); align-items: center; justify-content: center; }
+.vx-thumb--arte img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .vx-subject b {
   font-size: 13.5px; font-weight: 600; line-height: 1.3;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;

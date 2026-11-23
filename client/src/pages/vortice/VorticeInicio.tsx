@@ -83,6 +83,24 @@ function resolverEstiloAsignatura(slug: string, name: string) {
   if (norm.includes("ciudad")) return ESTILO_ASIGNATURA["educacion-ciudadana"];
   return { bg: "#F3F1EA", fg: "var(--vx-primary)", kicker: "Curso del nivel" };
 }
+function miniaturaAsignatura(slug: string, name: string, track: string | null | undefined): string | null {
+  const norm = `${slug} ${name}`
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+  if (norm.includes("matemat")) return "matematica";
+  if (norm.includes("lengua")) return "lenguaje";
+  // Historia va antes que Ciencias: «Historia, Geografía y Ciencias Sociales» también contiene «cienc».
+  if (norm.includes("histor") || norm.includes("geograf")) return "historia";
+  if (norm.includes("cienc")) return track === "media" ? "ciencias-media" : "ciencias-naturales";
+  if (norm.includes("ingl")) return "ingles";
+  if (norm.includes("arte")) return "artes";
+  if (norm.includes("tecnolog")) return "tecnologia";
+  if (norm.includes("filos")) return "filosofia";
+  if (norm.includes("ciudad")) return "educacion-ciudadana";
+  if (norm.includes("electiv")) return "electivo";
+  return null;
+}
 const VISIBILIDAD = { privada: ["Privada", "#F3F1EA", "#5E5D59"], tutor: ["Tutor", "#EEF4FC", "#2F5EA8"], familia: ["Familia", "var(--vx-acento-soft)", "var(--vx-primary)"] } as const;
 
 const claseAvance = (p: number) => (p >= 70 ? "[&>div]:bg-(--vx-primary-2)" : p >= 55 ? "[&>div]:bg-[#C96442]" : "[&>div]:bg-[#C84B3B]");
@@ -324,15 +342,32 @@ export default function VorticeInicio() {
                   <div className="vx-subjects">
                     {ov.subjects.map((s) => {
                       const est = resolverEstiloAsignatura(s.subjectSlug, s.subjectName);
+                      const arte = miniaturaAsignatura(s.subjectSlug, s.subjectName, ov.track);
                       return (
                         <Link key={s.levelSubjectId} className="vx-subject" href={linkAsignatura(s.subjectSlug)}>
-                          <div
-                            className="vx-thumb"
-                            style={{ background: est.bg, color: est.fg, borderColor: "rgba(20, 20, 19, 0.08)" }}
-                          >
-                            <span className="vx-thumb-kicker">{est.kicker}</span>
-                            <span className="vx-thumb-glyph" aria-hidden="true">{s.subjectName.slice(0, 2)}</span>
-                          </div>
+                          {arte !== null ? (
+                            <div className="vx-thumb vx-thumb--arte">
+                              <img
+                                src={`/images/vortice/asignaturas/${arte}-400.webp`}
+                                srcSet={`/images/vortice/asignaturas/${arte}-400.webp 400w, /images/vortice/asignaturas/${arte}-800.webp 800w`}
+                                sizes="(max-width: 760px) 45vw, 200px"
+                                width={400}
+                                height={300}
+                                alt=""
+                                aria-hidden="true"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            </div>
+                          ) : (
+                            <div
+                              className="vx-thumb"
+                              style={{ background: est.bg, color: est.fg, borderColor: "rgba(20, 20, 19, 0.08)" }}
+                            >
+                              <span className="vx-thumb-kicker">{est.kicker}</span>
+                              <span className="vx-thumb-glyph" aria-hidden="true">{s.subjectName.slice(0, 2)}</span>
+                            </div>
+                          )}
                           <b title={s.subjectName}>{s.subjectName}</b>
                           {s.percent === null ? <small className="vx-empty">Sin contenido aún</small> : (
                             <div className="vx-meter">
