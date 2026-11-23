@@ -112,7 +112,7 @@
   font-weight: 500; font-size: 14.5px; text-decoration: none;
   transition: background-color 160ms ease, transform 160ms ease;
 }
-.vx-cta:hover { background: #16382E; }
+.vx-cta:hover { background: var(--vx-primary-hover); }
 .vx-cta svg { width: 17px; height: 17px; }
 .vx-hero-kpis {
   display: grid;

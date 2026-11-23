@@ -146,8 +146,8 @@ function BotonVoz({
       size="sm"
       className={
         leyendo
-          ? "rounded-full bg-[#EDF3F0] text-[#1F4A3D] border border-[#1F4A3D]/40 hover:bg-[#E2EDE8]"
-          : "rounded-full border-[#D5CFC2] bg-white text-[#141413] hover:border-[#1F4A3D] hover:bg-[#FAF9F5]"
+          ? "rounded-full bg-(--vx-acento-soft) text-(--vx-primary) border border-(--vx-primary)/40 hover:bg-(--vx-acento-soft)"
+          : "rounded-full border-[#D5CFC2] bg-white text-[#141413] hover:border-(--vx-primary) hover:bg-[#FAF9F5]"
       }
       onClick={() => voz.alternar(id, texto)}
     >
@@ -405,7 +405,7 @@ export default function VorticeAula() {
               type="button"
               onClick={() => setAbiertoDiagnostico((v) => !v)}
               className={`vx-pill-nav ${
-                abiertoDiagnostico ? "!border-[#1F4A3D] !bg-[#EDF3F0] !text-[#1F4A3D]" : ""
+                abiertoDiagnostico ? "!border-(--vx-primary) !bg-(--vx-acento-soft) !text-(--vx-primary)" : ""
               }`}
             >
               <Compass className="w-4 h-4" />
@@ -435,12 +435,12 @@ export default function VorticeAula() {
                 onClick={() => setOaSeleccionado(item.oaId)}
                 className={`min-h-[56px] px-3.5 py-2.5 rounded-2xl border text-left transition flex flex-col justify-between gap-1 ${
                   activo
-                    ? "bg-[#1F4A3D] text-white border-[#1F4A3D] shadow-sm"
-                    : "bg-white text-[#141413] border-[#E6E2D8] hover:border-[#1F4A3D] hover:bg-[#FAF9F5]"
+                    ? "bg-(--vx-primary) text-white border-(--vx-primary) shadow-sm"
+                    : "bg-white text-[#141413] border-[#E6E2D8] hover:border-(--vx-primary) hover:bg-[#FAF9F5]"
                 }`}
               >
                 <div className="flex items-center justify-between gap-1.5 w-full">
-                  <span className={`vx-mono font-medium text-xs ${activo ? "text-[#DCE8E2]" : "text-[#C96442]"}`}>
+                  <span className={`vx-mono font-medium text-xs ${activo ? "text-(--vx-acento)" : "text-[#C96442]"}`}>
                     {item.codigo}
                   </span>
                   {p?.practicaLograda && <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />}
@@ -455,7 +455,7 @@ export default function VorticeAula() {
 
         {/* Panel de Diagnóstico 0 orientador (una pregunta a la vez, sin nota ni reloj) */}
         {abiertoDiagnostico && (
-          <Card className="vx-paper border-[#1F4A3D]/35 shadow-none">
+          <Card className="vx-paper border-(--vx-primary)/35 shadow-none">
             <CardHeader className="pb-3">
               <CardTitle className="vx-serif font-medium text-xl">Evaluación de diagnóstico (0) · Orientación sin nota</CardTitle>
               <CardDescription className="text-[#5E5D59]">
@@ -489,10 +489,10 @@ export default function VorticeAula() {
                             setRespDiag((prev) => ({ ...prev, [diagLeccion.preguntaDiagnostico.id]: alt.id }))
                           }
                           className={`vx-option-card ${
-                            marcada ? "!bg-[#EDF3F0] !border-[#1F4A3D] font-medium" : ""
+                            marcada ? "!bg-(--vx-acento-soft) !border-(--vx-primary) font-medium" : ""
                           }`}
                         >
-                          <span className="vx-mono text-xs font-medium text-[#1F4A3D] mr-2.5">{alt.id}.</span>
+                          <span className="vx-mono text-xs font-medium text-(--vx-primary) mr-2.5">{alt.id}.</span>
                           {alt.texto}
                         </button>
                       );
@@ -511,7 +511,7 @@ export default function VorticeAula() {
                     {idxDiag + 1 < lecciones.length ? (
                       <Button
                         type="button"
-                        className="rounded-full bg-[#1F4A3D] hover:bg-[#16382E] text-white"
+                        className="rounded-full bg-(--vx-primary) hover:bg-(--vx-primary-hover) text-white"
                         onClick={() => setIdxDiag((i) => i + 1)}
                       >
                         Siguiente tema
@@ -519,7 +519,7 @@ export default function VorticeAula() {
                     ) : (
                       <Button
                         type="button"
-                        className="rounded-full bg-[#1F4A3D] hover:bg-[#16382E] text-white"
+                        className="rounded-full bg-(--vx-primary) hover:bg-(--vx-primary-hover) text-white"
                         onClick={() => diagMutation.mutate(respDiag)}
                         disabled={diagMutation.isPending}
                       >
@@ -543,7 +543,7 @@ export default function VorticeAula() {
                       >
                         <ItemContent>
                           <ItemTitle className="text-[#141413]">
-                            <span className="vx-mono text-sm text-[#1F4A3D]">{item.codigo}</span>
+                            <span className="vx-mono text-sm text-(--vx-primary)">{item.codigo}</span>
                             <span className="font-normal">{item.titulo}</span>
                           </ItemTitle>
                         </ItemContent>
@@ -552,7 +552,7 @@ export default function VorticeAula() {
                             variant="outline"
                             className={`rounded-full font-normal ${
                               item.recomendacion === "ya_lo_se_sugerido"
-                                ? "bg-[#EDF3F0] text-[#1F4A3D] border-[#1F4A3D]/30"
+                                ? "bg-(--vx-acento-soft) text-(--vx-primary) border-(--vx-primary)/30"
                                 : "bg-[#FBF0EB] text-[#9A4225] border-[#C96442]/30"
                             }`}
                           >
@@ -597,11 +597,11 @@ export default function VorticeAula() {
         )}
 
         {retomadoBanner && (
-          <Alert className="rounded-2xl border-[#1F4A3D]/30 bg-[#EDF3F0] text-[#1F4A3D]">
+          <Alert className="rounded-2xl border-(--vx-primary)/30 bg-(--vx-acento-soft) text-(--vx-primary)">
             <AlertDescription className="flex flex-wrap items-center justify-between gap-2 text-[14.5px]">
               <span>{retomadoBanner}</span>
               {progresoActual?.practicaLograda && (
-                <Badge className="rounded-full bg-[#1F4A3D] text-white font-normal">Comprobación lograda</Badge>
+                <Badge className="rounded-full bg-(--vx-primary) text-white font-normal">Comprobación lograda</Badge>
               )}
             </AlertDescription>
           </Alert>
@@ -612,7 +612,7 @@ export default function VorticeAula() {
           <CardHeader className="pb-4 space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge className="vx-mono rounded-full bg-[#1F4A3D] text-white font-normal">{leccion.codigo}</Badge>
+                <Badge className="vx-mono rounded-full bg-(--vx-primary) text-white font-normal">{leccion.codigo}</Badge>
                 <Badge variant="outline" className="rounded-full border-[#D5CFC2] text-[#5E5D59] font-normal">
                   {leccion.prioridad === "nucleo_examen" ? "Prioridad de examen" : "Del nivel"}
                 </Badge>
@@ -635,7 +635,7 @@ export default function VorticeAula() {
               <Progress
                 value={((PASOS_LECCION.indexOf(pasoActual) + 1) / PASOS_LECCION.length) * 100}
                 aria-label={`Paso ${PASOS_LECCION.indexOf(pasoActual) + 1} de ${PASOS_LECCION.length}`}
-                className="h-1.5 bg-[#ECE8DE] [&>div]:bg-[#1F4A3D]"
+                className="h-1.5 bg-[#ECE8DE] [&>div]:bg-(--vx-primary)"
               />
             </div>
           </CardHeader>
@@ -670,7 +670,7 @@ export default function VorticeAula() {
                 <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#E6E2D8] border-l-2 border-l-[#C96442] space-y-2.5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <h2 className="vx-serif font-medium text-lg flex items-center gap-2 text-[#141413]">
-                      <BookOpen className="w-4 h-4 text-[#1F4A3D]" />
+                      <BookOpen className="w-4 h-4 text-(--vx-primary)" />
                       ¿Qué vas a lograr aquí?
                     </h2>
                     <BotonVoz id={`obj-${leccion.oaId}`} texto={leccion.objetivo} voz={voz} />
@@ -688,7 +688,7 @@ export default function VorticeAula() {
                   <div className="grid gap-3 sm:grid-cols-2">
                     {leccion.vocabulario.map((item) => (
                       <div key={item.termino} className="p-4 rounded-xl border border-[#E6E2D8] bg-white space-y-1.5">
-                        <div className="vx-serif font-medium text-[17px] text-[#1F4A3D]">{item.termino}</div>
+                        <div className="vx-serif font-medium text-[17px] text-(--vx-primary)">{item.termino}</div>
                         <p className="text-sm leading-relaxed text-[#141413]">{item.definicion}</p>
                         <p className="text-xs text-[#5E5D59]">Ejemplo: {item.ejemplo}</p>
                       </div>
@@ -712,7 +712,7 @@ export default function VorticeAula() {
                   </Button>
                   <Button
                     type="button"
-                    className="rounded-full px-5 bg-[#1F4A3D] hover:bg-[#16382E] text-white"
+                    className="rounded-full px-5 bg-(--vx-primary) hover:bg-(--vx-primary-hover) text-white"
                     onClick={() => actualizarYGuardar({ pasoActual: "aprende", tramoActual: 0 })}
                   >
                     Empezar en Aprende
@@ -724,10 +724,10 @@ export default function VorticeAula() {
               {/* BLOQUE 2: APRENDE (1 puerta principal + desplegables + micro-tramo + ejemplo paso a paso) */}
               <TabsContent value="aprende" className="mt-0 space-y-5">
                 {/* Única puerta principal visible por defecto */}
-                <div className="p-5 rounded-2xl border border-[#1F4A3D]/35 bg-[#FAF9F5] space-y-3.5">
+                <div className="p-5 rounded-2xl border border-(--vx-primary)/35 bg-[#FAF9F5] space-y-3.5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="space-y-1">
-                      <Badge className="rounded-full bg-[#1F4A3D] text-white font-normal">
+                      <Badge className="rounded-full bg-(--vx-primary) text-white font-normal">
                         Puerta principal · {principal.duracion}
                       </Badge>
                       <h2 className="vx-serif font-medium text-xl text-[#141413]">{principal.etiqueta}</h2>
@@ -755,7 +755,7 @@ export default function VorticeAula() {
                         <div className="text-xs font-medium text-[#141413]">{principal.explorarConfig.derEtiqueta}</div>
                         <div className="h-3 rounded-full bg-[#F3F1EA] overflow-hidden">
                           <div
-                            className="h-full bg-[#1F4A3D] rounded-full"
+                            className="h-full bg-(--vx-primary) rounded-full"
                             style={{ width: `${principal.explorarConfig.derValor}%` }}
                           />
                         </div>
@@ -829,7 +829,7 @@ export default function VorticeAula() {
                               <TabsTrigger
                                 key={tab}
                                 value={tab}
-                                className="rounded-full px-3.5 py-1 text-xs font-medium text-[#5E5D59] data-[state=active]:bg-[#1F4A3D] data-[state=active]:text-white"
+                                className="rounded-full px-3.5 py-1 text-xs font-medium text-[#5E5D59] data-[state=active]:bg-(--vx-primary) data-[state=active]:text-white"
                               >
                                 {tab === "mapa" ? "Mapa mental" : tab === "infografia" ? "Infografía" : "Tarjetas"}
                               </TabsTrigger>
@@ -839,7 +839,7 @@ export default function VorticeAula() {
                             <ul className="space-y-1.5 text-sm leading-relaxed text-[#141413]">
                               {leccion.apoyos.mapaMental.map((n) => (
                                 <li key={n.nodo}>
-                                  <span className="font-semibold text-[#1F4A3D]">{n.nodo}:</span> {n.detalle}
+                                  <span className="font-semibold text-(--vx-primary)">{n.nodo}:</span> {n.detalle}
                                 </li>
                               ))}
                             </ul>
@@ -907,7 +907,7 @@ export default function VorticeAula() {
                     />
                   </div>
                   <h3 className="vx-serif font-medium text-xl text-[#141413]">{tramo.titulo}</h3>
-                  <p className="text-sm font-medium text-[#1F4A3D]">{tramo.consigna}</p>
+                  <p className="text-sm font-medium text-(--vx-primary)">{tramo.consigna}</p>
                   <p className="text-[15.5px] leading-[1.68] text-[#141413] max-w-[66ch]">{tramo.contenido}</p>
                   <div className="flex justify-between pt-2">
                     <Button
@@ -951,11 +951,11 @@ export default function VorticeAula() {
                         key={i}
                         className={`p-3 rounded-xl border text-[14.5px] leading-relaxed ${
                           i <= pasoEjemploVisto
-                            ? "bg-white border-[#1F4A3D]/35 text-[#141413]"
+                            ? "bg-white border-(--vx-primary)/35 text-[#141413]"
                             : "bg-[#F3F1EA] border-dashed border-[#D5CFC2] text-[#87867F]"
                         }`}
                       >
-                        <span className="vx-mono text-xs font-medium text-[#1F4A3D] mr-2.5">Paso {i + 1}</span>
+                        <span className="vx-mono text-xs font-medium text-(--vx-primary) mr-2.5">Paso {i + 1}</span>
                         {i <= pasoEjemploVisto ? pasoTxt : "Paso oculto (pulsa mostrar siguiente paso)"}
                       </li>
                     ))}
@@ -975,7 +975,7 @@ export default function VorticeAula() {
                         Mostrar paso {pasoEjemploVisto + 2}
                       </Button>
                     ) : (
-                      <span className="text-xs font-medium text-[#1F4A3D] self-center">Ejemplo completo revisado</span>
+                      <span className="text-xs font-medium text-(--vx-primary) self-center">Ejemplo completo revisado</span>
                     )}
                     <div className="flex flex-wrap gap-2">
                       <Button
@@ -991,7 +991,7 @@ export default function VorticeAula() {
                       </Button>
                       <Button
                         type="button"
-                        className="rounded-full px-5 bg-[#1F4A3D] hover:bg-[#16382E] text-white"
+                        className="rounded-full px-5 bg-(--vx-primary) hover:bg-(--vx-primary-hover) text-white"
                         onClick={() => actualizarYGuardar({ pasoActual: "intentalo" })}
                       >
                         Seguir con Inténtalo tú
@@ -1044,12 +1044,12 @@ export default function VorticeAula() {
                         className={`vx-option-card ${
                           seleccionada
                             ? esCorrecta
-                              ? "!bg-[#EDF3F0] !border-[#1F4A3D] font-medium"
+                              ? "!bg-(--vx-acento-soft) !border-(--vx-primary) font-medium"
                               : "!bg-[#FBF0EB] !border-[#C84B3B]/60"
                             : ""
                         }`}
                       >
-                        <span className="vx-mono text-xs font-medium text-[#1F4A3D] mr-2.5">{alt.id}.</span>
+                        <span className="vx-mono text-xs font-medium text-(--vx-primary) mr-2.5">{alt.id}.</span>
                         {alt.texto}
                       </button>
                     );
@@ -1060,13 +1060,13 @@ export default function VorticeAula() {
                   <div
                     className={`p-3.5 rounded-xl border text-sm ${
                       respActual === ejercicioActual.respuestaCorrecta
-                        ? "bg-[#EDF3F0] border-[#1F4A3D]/35 text-[#141413]"
+                        ? "bg-(--vx-acento-soft) border-(--vx-primary)/35 text-[#141413]"
                         : "bg-[#FAF9F5] border-[#E6E2D8] text-[#141413]"
                     }`}
                   >
                     {respActual === ejercicioActual.respuestaCorrecta ? (
                       <>
-                        <span className="font-semibold text-[#1F4A3D]">Bien:</span> {ejercicioActual.explicacionCorrecta}
+                        <span className="font-semibold text-(--vx-primary)">Bien:</span> {ejercicioActual.explicacionCorrecta}
                       </>
                     ) : (
                       <span>Aún no coincide. Usa una pista abajo y vuelve a elegir con calma.</span>
@@ -1109,7 +1109,7 @@ export default function VorticeAula() {
                         .filter((n) => n <= nivelPistaActual)
                         .map((n) => (
                           <p key={n} className="p-3 rounded-xl bg-white border border-[#E6E2D8] leading-relaxed">
-                            <span className="font-medium text-[#1F4A3D]">
+                            <span className="font-medium text-(--vx-primary)">
                               Nivel {n} ({n === 1 ? "dónde mirar" : n === 2 ? "primer paso" : "ejemplo similar"}):{" "}
                             </span>
                             {pistaPorNivel(ejercicioActual, n)}
@@ -1146,7 +1146,7 @@ export default function VorticeAula() {
                     ) : null}
                     <Button
                       type="button"
-                      className="rounded-full px-5 bg-[#1F4A3D] hover:bg-[#16382E] text-white"
+                      className="rounded-full px-5 bg-(--vx-primary) hover:bg-(--vx-primary-hover) text-white"
                       onClick={() => {
                         setOrigenYaLoSe(false);
                         actualizarYGuardar({ pasoActual: "comprueba" });
@@ -1164,7 +1164,7 @@ export default function VorticeAula() {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <h2 className="vx-serif font-medium text-xl flex items-center gap-2 text-[#141413]">
-                      <Sparkles className="w-4 h-4 text-[#1F4A3D]" />
+                      <Sparkles className="w-4 h-4 text-(--vx-primary)" />
                       Comprueba lo aprendido (sin reloj ni nota)
                     </h2>
                     <p className="text-xs text-[#5E5D59] mt-0.5">
@@ -1198,10 +1198,10 @@ export default function VorticeAula() {
                               type="button"
                               onClick={() => setRespComprueba((prev) => ({ ...prev, [ej.id]: alt.id }))}
                               className={`vx-option-card text-sm ${
-                                marcada ? "!bg-[#EDF3F0] !border-[#1F4A3D] font-medium" : ""
+                                marcada ? "!bg-(--vx-acento-soft) !border-(--vx-primary) font-medium" : ""
                               }`}
                             >
-                              <span className="vx-mono text-xs font-medium text-[#1F4A3D] mr-2.5">{alt.id}.</span>
+                              <span className="vx-mono text-xs font-medium text-(--vx-primary) mr-2.5">{alt.id}.</span>
                               {alt.texto}
                             </button>
                           );
@@ -1222,7 +1222,7 @@ export default function VorticeAula() {
                   <Alert
                     className={
                       resComprueba.estado === "logrado"
-                        ? "rounded-2xl border-[#1F4A3D]/35 bg-[#EDF3F0] text-[#1F4A3D]"
+                        ? "rounded-2xl border-(--vx-primary)/35 bg-(--vx-acento-soft) text-(--vx-primary)"
                         : "rounded-2xl border-[#C96442]/35 bg-[#FBF0EB] text-[#141413]"
                     }
                   >
@@ -1246,7 +1246,7 @@ export default function VorticeAula() {
                   <div className="flex flex-wrap gap-2">
                     <Button
                       type="button"
-                      className="rounded-full px-5 bg-[#1F4A3D] hover:bg-[#16382E] text-white"
+                      className="rounded-full px-5 bg-(--vx-primary) hover:bg-(--vx-primary-hover) text-white"
                       disabled={comprobarMutation.isPending}
                       onClick={() =>
                         comprobarMutation.mutate({

@@ -20,9 +20,15 @@
   --vx-ink-soft: #5E5D59;
   --vx-muted: #87867F;
 
-  --vx-green: #1F4A3D;
-  --vx-green-2: #2D6654;
-  --vx-green-soft: #EDF3F0;
+  --vx-primary: #02316C;
+  --vx-primary-hover: #012552;
+  --vx-primary-2: #1F4C8F;
+  --vx-acento: #CADEF4;
+  --vx-acento-soft: #EAF2FB;
+
+  --vx-green: var(--vx-primary);
+  --vx-green-2: var(--vx-primary-2);
+  --vx-green-soft: var(--vx-acento-soft);
   --vx-clay: #C96442;
   --vx-clay-hover: #B45435;
   --vx-clay-soft: #FBF0EB;
@@ -148,8 +154,8 @@
 }
 
 :is(.vx-editorial, .vx) .vx-btn-primary:hover:not(:disabled) {
-  background: #16382E;
-  border-color: #16382E;
+  background: var(--vx-primary-hover);
+  border-color: var(--vx-primary-hover);
 }
 
 :is(.vx-editorial, .vx) .vx-btn-primary:disabled {
@@ -201,6 +207,10 @@
   background: var(--vx-green-soft);
   box-shadow: inset 0 0 0 1px var(--vx-green);
 }
+
+[data-tramo="basica-1-4"] { --vx-acento: #D9E3CD; --vx-acento-soft: #EEF3E8; }
+[data-tramo="basica-5-8"] { --vx-acento: #CADEF4; --vx-acento-soft: #EAF2FB; }
+[data-tramo="media"]      { --vx-acento: #CBDAEC; --vx-acento-soft: #EBF1F8; }
 
 @media (prefers-reduced-motion: reduce) {
   .vx-editorial *,

@@ -58,7 +58,7 @@ const SUBTITULO: Record<VorticeTrack, string> = {
 
 // Ilustraciones editoriales por asignatura (en vez de miniaturas stock repetidas).
 const ESTILO_ASIGNATURA: Record<string, { bg: string; fg: string; kicker: string }> = {
-  "matematica": { bg: "#EDF3F0", fg: "#1F4A3D", kicker: "Números y lógica" },
+  "matematica": { bg: "var(--vx-acento-soft)", fg: "var(--vx-primary)", kicker: "Números y lógica" },
   "lengua-y-literatura": { bg: "#FBF0EB", fg: "#9A4225", kicker: "Lectura y escritura" },
   "lenguaje": { bg: "#FBF0EB", fg: "#9A4225", kicker: "Lectura y escritura" },
   "ciencias-naturales": { bg: "#EEF4FC", fg: "#2F5EA8", kicker: "Entorno y método" },
@@ -66,7 +66,7 @@ const ESTILO_ASIGNATURA: Record<string, { bg: string; fg: string; kicker: string
   "historia": { bg: "#FEF6EA", fg: "#8A5A10", kicker: "Tiempo y sociedad" },
   "ingles": { bg: "#F3F1EA", fg: "#141413", kicker: "Idioma y comunicación" },
   "filosofia": { bg: "#F3EFFA", fg: "#5B4399", kicker: "Pensamiento crítico" },
-  "educacion-ciudadana": { bg: "#EDF3F0", fg: "#1F4A3D", kicker: "Comunidad y derechos" },
+  "educacion-ciudadana": { bg: "var(--vx-acento-soft)", fg: "var(--vx-primary)", kicker: "Comunidad y derechos" },
 };
 function resolverEstiloAsignatura(slug: string, name: string) {
   const norm = `${slug} ${name}`
@@ -81,11 +81,11 @@ function resolverEstiloAsignatura(slug: string, name: string) {
   if (norm.includes("ingl")) return ESTILO_ASIGNATURA["ingles"];
   if (norm.includes("filos")) return ESTILO_ASIGNATURA["filosofia"];
   if (norm.includes("ciudad")) return ESTILO_ASIGNATURA["educacion-ciudadana"];
-  return { bg: "#F3F1EA", fg: "#1F4A3D", kicker: "Curso del nivel" };
+  return { bg: "#F3F1EA", fg: "var(--vx-primary)", kicker: "Curso del nivel" };
 }
-const VISIBILIDAD = { privada: ["Privada", "#F3F1EA", "#5E5D59"], tutor: ["Tutor", "#EEF4FC", "#2F5EA8"], familia: ["Familia", "#EDF3F0", "#1F4A3D"] } as const;
+const VISIBILIDAD = { privada: ["Privada", "#F3F1EA", "#5E5D59"], tutor: ["Tutor", "#EEF4FC", "#2F5EA8"], familia: ["Familia", "var(--vx-acento-soft)", "var(--vx-primary)"] } as const;
 
-const claseAvance = (p: number) => (p >= 70 ? "[&>div]:bg-[#2D6654]" : p >= 55 ? "[&>div]:bg-[#C96442]" : "[&>div]:bg-[#C84B3B]");
+const claseAvance = (p: number) => (p >= 70 ? "[&>div]:bg-(--vx-primary-2)" : p >= 55 ? "[&>div]:bg-[#C96442]" : "[&>div]:bg-[#C84B3B]");
 
 function semanaActual(hoy: Date) {
   const lunes = new Date(hoy);
@@ -195,7 +195,7 @@ export default function VorticeInicio() {
   const evidencias = (portafolio.data ?? []).filter((e) => (pestana === "evaluaciones" ? e.kind === "evaluacion" : e.kind !== "evaluacion"));
 
   return (
-    <div className="vx">
+    <div className="vx" data-tramo={ov?.track ?? undefined}>
       <aside className="vx-side" data-open={menu} aria-label="Menú principal">
         <a className="vx-brand" href="/vortice">BARKLEY<span>INSTITUTO</span></a>
         <nav className="vx-nav" aria-label="Secciones">
@@ -300,7 +300,7 @@ export default function VorticeInicio() {
                   <Empty className="border border-dashed border-[#D5CFC2] bg-[#FAF9F5]/80 py-6 px-4 md:py-7">
                     <EmptyHeader>
                       <EmptyMedia variant="icon">
-                        <ClipboardCheck className="text-[#1F4A3D]" />
+                        <ClipboardCheck className="text-(--vx-primary)" />
                       </EmptyMedia>
                       <EmptyTitle className="text-base">Sin asignaturas matriculadas</EmptyTitle>
                       <EmptyDescription>Tus cursos aparecerán aquí apenas queden asignados a tu nivel.</EmptyDescription>
@@ -365,7 +365,7 @@ export default function VorticeInicio() {
                         <Empty className="border border-dashed border-[#D5CFC2] bg-[#FAF9F5]/80 py-6 px-4 md:py-7">
                           <EmptyHeader>
                             <EmptyMedia variant="icon">
-                              <FileText className="text-[#1F4A3D]" />
+                              <FileText className="text-(--vx-primary)" />
                             </EmptyMedia>
                             <EmptyTitle className="text-base">
                               {tab === "producciones" ? "Sin producciones todavía" : "Sin evaluaciones registradas"}
@@ -508,13 +508,13 @@ export default function VorticeInicio() {
                           <Progress
                             value={ov.totals.percent}
                             aria-label={`${ov.totals.percent}% de avance en actividades`}
-                            className="h-2 bg-[#ECE8DE] [&>div]:bg-[#1F4A3D]"
+                            className="h-2 bg-[#ECE8DE] [&>div]:bg-(--vx-primary)"
                           />
                         </div>
                         <Separator className="my-1 bg-[#E6E2D8]" />
                         <ul className="vx-stats">
-                          <li><i style={{ background: "#2D6654" }} />Actividades completadas <b>{ov.totals.completedItems} / {ov.totals.totalItems}</b></li>
-                          <li><i style={{ background: "#1F4A3D" }} />Asignaturas con avance <b>{ov.subjects.filter((s) => (s.percent ?? 0) > 0).length} / {ov.subjects.length}</b></li>
+                          <li><i style={{ background: "var(--vx-primary-2)" }} />Actividades completadas <b>{ov.totals.completedItems} / {ov.totals.totalItems}</b></li>
+                          <li><i style={{ background: "var(--vx-primary)" }} />Asignaturas con avance <b>{ov.subjects.filter((s) => (s.percent ?? 0) > 0).length} / {ov.subjects.length}</b></li>
                           <li><i style={{ background: "#C96442" }} />Metas de la semana <b>{metasCumplidas} / {metas.length}</b></li>
                           <li><i style={{ background: "#2F5EA8" }} />Repasos hoy <b>{repasosTotal}</b></li>
                         </ul>

@@ -4,7 +4,7 @@
 @import "./vortice-editorial.css";
 
 .ve {
-  --ve-ink: #141413; --ve-soft: #5E5D59; --ve-green: #1F4A3D; --ve-green-2: #2F6B55;
+  --ve-ink: #141413; --ve-soft: #5E5D59; --ve-green: var(--vx-primary); --ve-green-2: var(--vx-primary-2);
   --ve-paper: #FFFFFF; --ve-bg: #FAF9F5; --ve-line: #E6E2D8; --ve-orange: #C96442; --ve-red: #B84A39;
   --ve-ok: #2F6B55; --ve-serif: var(--vx-serif, "Newsreader", Georgia, serif);
   --ve-sans: var(--vx-sans, "DM Sans", system-ui, -apple-system, sans-serif);
@@ -12,7 +12,7 @@
   -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
   background:
     radial-gradient(960px 440px at 88% -10%, rgba(201,100,66,.06), transparent 62%),
-    radial-gradient(840px 440px at -8% 108%, rgba(31,74,61,.05), transparent 62%),
+    radial-gradient(840px 440px at -8% 108%, color-mix(in srgb, var(--vx-primary) 5%, transparent), transparent 62%),
     var(--ve-bg);
 }
 .ve h1, .ve h2, .ve h3, .ve h4 {
@@ -33,7 +33,7 @@
 
 .ve-top { display: flex; align-items: center; gap: 18px; padding: 14px clamp(16px, 4vw, 40px); border-bottom: 1px solid var(--ve-line); background: color-mix(in srgb, var(--ve-bg) 88%, #FFFFFF); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 5; }
 .ve-inicio { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; border: 1px solid #D5CFC2; background: var(--ve-paper); color: var(--ve-ink); font-size: 13.5px; font-weight: 500; text-decoration: none; transition: border-color .18s, background .18s, color .18s; }
-.ve-inicio:hover { border-color: var(--ve-green); background: #EDF3F0; color: var(--ve-green); }
+.ve-inicio:hover { border-color: var(--ve-green); background: var(--vx-acento-soft); color: var(--ve-green); }
 .ve-inicio:hover { background: var(--ve-green); color: #fff; }
 .ve-titulo { flex: 1; min-width: 0; }
 .ve-titulo h1 { margin: 0; font: 500 clamp(18px, 2.5vw, 24px)/1.2 var(--ve-serif); font-optical-sizing: auto; letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -66,7 +66,7 @@
 .ve-btn:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--ve-ink); box-shadow: 0 6px 14px -10px rgba(20,20,19,.25); }
 .ve-btn:disabled { opacity: .45; cursor: not-allowed; }
 .ve-btn-primario { background: var(--ve-green); border-color: var(--ve-green); color: #fff; }
-.ve-btn-primario:hover:not(:disabled) { background: #16382E; border-color: #16382E; }
+.ve-btn-primario:hover:not(:disabled) { background: var(--vx-primary-hover); border-color: var(--vx-primary-hover); }
 .ve-acciones { display: flex; justify-content: space-between; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
 .ve-volver { margin-top: 26px; }
 
@@ -95,7 +95,7 @@
 .ve-opcion { display: grid; grid-template-columns: 38px 1fr; align-items: start; gap: 14px; width: 100%; text-align: left; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--ve-line); background: #fff; animation: ve-entra .42s cubic-bezier(.2,.7,.2,1) both; transition: border-color .15s, background .15s, transform .15s, box-shadow .15s; }
 .ve-opcion:hover:not(:disabled) { border-color: var(--ve-green-2); transform: translateX(3px); }
 .ve-letra { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--ve-line); font: 500 15px var(--ve-serif); color: var(--ve-soft); transition: inherit; }
-.ve-opcion.marcada { border-color: var(--ve-green); background: color-mix(in srgb, var(--ve-green) 7%, #fff); box-shadow: 0 6px 18px -12px rgba(31,74,61,.45); }
+.ve-opcion.marcada { border-color: var(--ve-green); background: color-mix(in srgb, var(--ve-green) 7%, #fff); box-shadow: 0 6px 18px -12px color-mix(in srgb, var(--vx-primary) 45%, transparent); }
 .ve-opcion.marcada .ve-letra { background: var(--ve-green); border-color: var(--ve-green); color: #fff; }
 .ve-opcion:disabled { cursor: default; } .ve-opcion:disabled:not(.marcada) { opacity: .62; }
 .ve-bloqueada { display: flex; align-items: center; gap: 7px; margin: 16px 0 0; font-size: 14.5px; color: var(--ve-soft); }

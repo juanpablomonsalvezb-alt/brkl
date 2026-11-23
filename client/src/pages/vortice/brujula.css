@@ -44,7 +44,7 @@
   display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px;
   margin: 0 0 14px; padding: 11px 15px; border-radius: 12px;
   background: var(--vx-green-soft); color: var(--vx-ink);
-  border: 1px solid #C9DCD2; border-left: 3px solid var(--vx-green);
+  border: 1px solid var(--vx-acento); border-left: 3px solid var(--vx-green);
 }
 .vb-proxima span { font-family: var(--vx-mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.11em; text-transform: uppercase; color: var(--vx-green); }
 .vb-proxima b { font: 500 20px var(--vx-serif); letter-spacing: -0.015em; color: var(--vx-green); } .vb-proxima em { font-style: normal; font-size: 13.5px; color: var(--vx-ink-soft); }
@@ -53,7 +53,7 @@
 .vb-fila { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .vb-fila b { font-size: 14px; font-weight: 500; }
 .vb-chip { padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 500; background: var(--vx-surface); color: var(--vx-ink-soft); border: 1px solid var(--vx-line); }
-.vb-chip[data-ritmo="ok"] { background: var(--vx-green-soft); color: var(--vx-green); border-color: #C9DCD2; }
+.vb-chip[data-ritmo="ok"] { background: var(--vx-green-soft); color: var(--vx-green); border-color: var(--vx-acento); }
 .vb-chip[data-ritmo="atraso"] { background: var(--vx-clay-soft); color: #9E4325; border-color: #ECCCB8; }
 .vb-barra { height: 6px; margin: 7px 0 4px; border-radius: 6px; background: var(--vx-line); overflow: hidden; }
 .vb-barra i { display: block; height: 100%; border-radius: 6px; background: var(--vx-green-2); animation: vb-crece .8s cubic-bezier(.2,.7,.2,1) both; transform-origin: left; }
@@ -78,7 +78,7 @@
 .vb-bloques-head small { color: var(--vx-ink-soft); font-family: var(--vx-mono); font-size: 11.5px; }
 .vb-bloques-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px; }
 .vb-bloques-list li { display: flex; align-items: center; gap: 11px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--vx-line); background: var(--vx-card); transition: border-color 150ms ease, background-color 150ms ease; }
-.vb-bloques-list li[data-done="true"] { background: var(--vx-green-soft); border-color: #C9DCD2; }
+.vb-bloques-list li[data-done="true"] { background: var(--vx-green-soft); border-color: var(--vx-acento); }
 .vb-check { width: 22px; height: 22px; flex: none; border-radius: 6px; border: 1.5px solid var(--vx-line-strong); background: #fff; display: grid; place-items: center; cursor: pointer; color: #fff; padding: 0; transition: background-color 150ms ease, border-color 150ms ease; }
 .vb-check[aria-pressed="true"] { background: var(--vx-green); border-color: var(--vx-green); }
 .vb-check svg { width: 14px; height: 14px; }

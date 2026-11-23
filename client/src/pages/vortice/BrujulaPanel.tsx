@@ -89,7 +89,7 @@ export function BrujulaPanel({
           <Empty className="border border-dashed border-[#D5CFC2] bg-[#FAF9F5]/80 py-6 px-4 md:py-7">
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <Compass className="text-[#1F4A3D]" />
+                <Compass className="text-(--vx-primary)" />
               </EmptyMedia>
               <EmptyTitle className="text-base">Tu Brújula aún no tiene asignaturas</EmptyTitle>
               <EmptyDescription>
@@ -246,7 +246,7 @@ export function BrujulaPanel({
                           ? "[&>div]:bg-[#C96442]"
                           : clase === "nada"
                             ? "[&>div]:bg-[#87867F]"
-                            : "[&>div]:bg-[#2D6654]"
+                            : "[&>div]:bg-(--vx-primary-2)"
                       }`}
                     />
                     <small>
