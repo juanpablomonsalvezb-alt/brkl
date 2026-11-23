@@ -75,4 +75,5 @@ Una línea por decisión. **Detalle completo:** `.junie/DECISIONES_DIRECCION.md`
 - L393: 2026-11-23: dirección visual del Inicio por tramo (referencia completa, logros = estrellas reales, solo lo que existe, ilustraciones del sostenedor)
 - L402: 2026-11-23: rojo en las barras de avance bajo se mantiene como alerta (sostenedor)
 - L407: 2026-11-23: Mis logros por etapas (hoy Mis estrellas; logros persistentes después, con tabla propia)
+- L412: 2026-11-23: módulos nuevos (ayuda a persona, alertas, panel tutor, Mi año, preferencias de lectura); sin offline; el tutor no escribe primero
 - L385: 2026-11-23: cinco decisiones (repo privado, cobro Flow en sandbox primero, piloto interno sin menores, copiloto acotado después, sin feriados ni vacaciones)
