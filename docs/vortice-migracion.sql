@@ -68,6 +68,8 @@ CREATE TABLE `notification_preferences` (
 	`modulo_abierto` integer NOT NULL,
 	`resumen_semanal` integer NOT NULL,
 	`resumen_semanal_apoderado` integer NOT NULL,
+	`recordatorio_inactividad` integer DEFAULT true NOT NULL,
+	`aviso_inactividad_apoderado` integer DEFAULT true NOT NULL,
 	`updated_at` integer DEFAULT (cast((julianday('now') - 2440587.5)*86400000 as integer)),
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );

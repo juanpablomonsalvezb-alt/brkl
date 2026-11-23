@@ -2,8 +2,16 @@
 // Decide qué correos corresponden a un usuario en un instante dado.
 // Principio: informar, no presionar. Nada de rachas, culpa ni urgencia artificial:
 // solo se avisa lo que se abrió hoy y un resumen semanal; si no hubo avance, no se menciona.
+// Decisiones del sostenedor (2026-11-23): un estudiante inactivo recibe un aviso amable a los
+// 3 días sin actividad; a los 5 días se avisa a su apoderado y pasa a la lista de atención del tutor.
+// Ambos avisos vienen activados por defecto. Al apoderado solo se le envía con vínculo activo
+// (eso lo garantiza el servidor).
 import { z } from "zod";
 import type { VorticeOverview } from "./vortice";
+// Importa solo constantes numéricas de atencion.ts. No hay ciclo problemático porque
+// atencion.ts importa momentoChile (una función) y este archivo importa constantes
+// que se resuelven antes de que cualquier función se ejecute.
+import { UMBRAL_AVISO_ESTUDIANTE_DIAS, UMBRAL_ATENCION_DIAS } from "./atencion";
 
 // Tipos de notificación (también son las claves de preferencias y el `type` del registro).
 // - evaluacionLiberada: hoy se liberó una evaluación de un módulo que el estudiante ya tiene abierto.
@@ -12,17 +20,23 @@ import type { VorticeOverview } from "./vortice";
 // - resumenSemanalApoderado: el mismo resumen para el apoderado. Requiere un vínculo estudiante→apoderado
 //   que esta rama aún no modela (los datos del apoderado solo viven en `reservations`, sin relación con `users`).
 //   El tipo y su preferencia existen; el despacho lo omite hasta que exista ese vínculo.
-export const TIPOS = ["evaluacionLiberada", "moduloAbierto", "resumenSemanal", "resumenSemanalApoderado"] as const;
+// - recordatorioInactividad: aviso amable al estudiante cuando lleva 3 o más días sin actividad.
+// - avisoInactividadApoderado: aviso al apoderado cuando el estudiante lleva 5 o más días sin actividad.
+//   Por decisión del sostenedor ambos vienen activados por defecto.
+export const TIPOS = ["evaluacionLiberada", "moduloAbierto", "resumenSemanal", "resumenSemanalApoderado", "recordatorioInactividad", "avisoInactividadApoderado"] as const;
 export type TipoNotificacion = (typeof TIPOS)[number];
 export type Preferencias = Record<TipoNotificacion, boolean>;
 
 // Por defecto, conservadoras: solo el resumen semanal (un correo a la semana como máximo).
 // Los avisos diarios se activan explícitamente; al apoderado, nunca sin consentimiento.
+// Excepción: los avisos de inactividad vienen activados por defecto (decisión del sostenedor 2026-11-23).
 export const PREFERENCIAS_POR_DEFECTO: Preferencias = {
   evaluacionLiberada: false,
   moduloAbierto: false,
   resumenSemanal: true,
   resumenSemanalApoderado: false,
+  recordatorioInactividad: true,
+  avisoInactividadApoderado: true,
 };
 
 export const actualizarPreferenciasSchema = z.object({
@@ -30,6 +44,8 @@ export const actualizarPreferenciasSchema = z.object({
   moduloAbierto: z.boolean().optional(),
   resumenSemanal: z.boolean().optional(),
   resumenSemanalApoderado: z.boolean().optional(),
+  recordatorioInactividad: z.boolean().optional(),
+  avisoInactividadApoderado: z.boolean().optional(),
 }).strict();
 
 // Horario de envío, hora de Chile continental: [desde, hasta). Nada de noche ni madrugada.
@@ -62,10 +78,11 @@ export function semanaIso(fecha: string): string {
   return `${anio}-W${String(semana).padStart(2, "0")}`;
 }
 
-// Clave de idempotencia: diaria para avisos, semanal para resúmenes.
+// Clave de idempotencia: diaria para avisos, semanal para resúmenes y avisos de inactividad.
 export function periodoDe(tipo: TipoNotificacion, ahora: Date): string {
   const { fecha } = momentoChile(ahora);
-  return tipo === "resumenSemanal" || tipo === "resumenSemanalApoderado" ? semanaIso(fecha) : fecha;
+  const semanal = ["resumenSemanal", "resumenSemanalApoderado", "recordatorioInactividad", "avisoInactividadApoderado"].includes(tipo);
+  return semanal ? semanaIso(fecha) : fecha;
 }
 
 export const claveEnvio = (tipo: TipoNotificacion, periodo: string) => `${tipo}|${periodo}`;
@@ -101,6 +118,8 @@ export interface EntradaNotificaciones {
   resumen: VorticeOverview;
   // Recursos vistos + evaluaciones aprobadas en los últimos 7 días.
   avancesSemana: number;
+  // Días sin actividad del estudiante (null si no se puede medir).
+  diasSinActividad?: number | null;
   // Resumen cualitativo de Brújula parte 2 para el correo del apoderado (sin notas ni porcentajes de E2).
   brujulaApoderado?: {
     estadoGeneral: "al_dia" | "por_recuperar" | "adelantado" | "sin_datos";
@@ -169,7 +188,7 @@ export function planificarNotificaciones(e: EntradaNotificaciones): Notificacion
     if (hoy.length) {
       agregar("evaluacionLiberada", e.estudiante,
         plural(hoy.length, "Hay una evaluación nueva disponible", `Hay ${hoy.length} evaluaciones nuevas disponibles`),
-        ["Desde hoy puedes hacer:", ...hoy.map(({ ev, m }) => `• «${ev.titulo}» — ${m.asignatura}`),
+        ["Desde hoy puedes hacer:", ...hoy.map(({ ev, m }) => `• «${ev.titulo}» (${m.asignatura})`),
           "Hazla cuando te acomode, a tu ritmo."]);
     }
   }
@@ -195,5 +214,33 @@ export function planificarNotificaciones(e: EntradaNotificaciones): Notificacion
       agregar("resumenSemanalApoderado", e.apoderado, `La semana de ${quien} en Barkley`, lineasResumen(e, "su"));
     }
   }
+
+  // Avisos de inactividad: usan semana ISO para no enviar más de uno por semana de cada tipo.
+  const dias = e.diasSinActividad ?? null;
+  const sig = e.resumen.nextStep;
+
+  if (hayCursos && dias !== null && dias >= UMBRAL_AVISO_ESTUDIANTE_DIAS && corresponde("recordatorioInactividad")) {
+    const lineasInact: string[] = [];
+    lineasInact.push(`Hace ${dias} días que no avanzas en Barkley. No pasa nada: puedes retomar cuando quieras.`);
+    if (sig) {
+      lineasInact.push(`Tu siguiente paso es «${sig.itemTitle}» en ${sig.subjectName}.`);
+    }
+    lineasInact.push("Si algo se te hizo difícil, puedes pedir ayuda a tu tutor desde tu Inicio.");
+    agregar("recordatorioInactividad", e.estudiante, "Te esperamos en Barkley", lineasInact);
+  }
+
+  if (e.apoderado && hayCursos && dias !== null && dias >= UMBRAL_ATENCION_DIAS && corresponde("avisoInactividadApoderado")) {
+    const quien = e.estudiante.nombre ?? "tu estudiante";
+    const lineasApo: string[] = [];
+    lineasApo.push(`${quien} lleva ${dias} días sin actividad en Barkley.`);
+    lineasApo.push('Puedes acompañarle con una pregunta simple, por ejemplo: «¿qué es lo próximo que te toca?»');
+    if (sig) {
+      lineasApo.push(`Su siguiente paso es «${sig.itemTitle}» en ${sig.subjectName}.`);
+    }
+    lineasApo.push("Si necesita apoyo, puede pedir ayuda a su tutor desde su Inicio.");
+    lineasApo.push("Si prefieres no recibir estos avisos, responde a este correo.");
+    agregar("avisoInactividadApoderado", e.apoderado, `${quien} lleva unos días sin avanzar en Barkley`, lineasApo);
+  }
+
   return out;
 }

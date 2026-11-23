@@ -61,7 +61,7 @@ export function aCorreo(n: Notificacion): Correo {
     texto: n.lineas.join("\n\n"),
     html: `<div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#3a3a3a;line-height:1.6;">${
       n.lineas.map((l) => `<p style="margin:0 0 12px;">${escapar(l)}</p>`).join("")
-    }<p style="color:#5f6156;font-size:14px;">— Barkley Online</p></div>`,
+    }<p style="color:#5f6156;font-size:14px;">Barkley Online</p></div>`,
   };
 }
 

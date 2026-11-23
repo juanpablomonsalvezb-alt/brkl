@@ -71,6 +71,7 @@ const bMain = baseArchivo();
 const bInc = baseArchivo();
 const bIncPerfil = baseArchivo();
 const bIncAula = baseArchivo();
+const bIncAvisos = baseArchivo();
 const bSchema = baseArchivo();
 
 try {
@@ -281,6 +282,20 @@ try {
     /CHECK/,
   );
 
+  // ── Suite B4: Camino incremental de los avisos por inactividad (notification_preferences) ──
+  const cIncN = bIncAvisos.client;
+  await cIncN.execute("CREATE TABLE notification_preferences (user_id text PRIMARY KEY NOT NULL, evaluacion_liberada integer NOT NULL, modulo_abierto integer NOT NULL, resumen_semanal integer NOT NULL, resumen_semanal_apoderado integer NOT NULL, updated_at integer)");
+  await cIncN.execute("INSERT INTO notification_preferences (user_id, evaluacion_liberada, modulo_abierto, resumen_semanal, resumen_semanal_apoderado) VALUES ('u-prev', 0, 1, 1, 0)");
+  await ejecutarArchivoSql(cIncN, "docs/vortice-migracion-incremental-avisos-inactividad.sql");
+  const prefPrev = (await cIncN.execute("SELECT * FROM notification_preferences WHERE user_id = 'u-prev'")).rows[0] as any;
+  assert.equal(Number(prefPrev.recordatorio_inactividad), 1, "las filas previas quedan con el aviso al estudiante activado");
+  assert.equal(Number(prefPrev.aviso_inactividad_apoderado), 1, "las filas previas quedan con el aviso al apoderado activado");
+  assert.deepEqual([prefPrev.evaluacion_liberada, prefPrev.modulo_abierto, prefPrev.resumen_semanal, prefPrev.resumen_semanal_apoderado].map(Number), [0, 1, 1, 0], "no altera lo que el usuario ya había elegido");
+  await cIncN.execute("INSERT INTO notification_preferences (user_id, evaluacion_liberada, modulo_abierto, resumen_semanal, resumen_semanal_apoderado) VALUES ('u-nuevo', 0, 0, 1, 0)");
+  assert.equal(Number(((await cIncN.execute("SELECT recordatorio_inactividad AS v FROM notification_preferences WHERE user_id = 'u-nuevo'")).rows[0] as any).v), 1, "las filas nuevas nacen activadas");
+  await cIncN.execute("UPDATE notification_preferences SET recordatorio_inactividad = 0 WHERE user_id = 'u-prev'");
+  assert.equal(Number(((await cIncN.execute("SELECT recordatorio_inactividad AS v FROM notification_preferences WHERE user_id = 'u-prev'")).rows[0] as any).v), 0, "se puede apagar por usuario");
+
   // ── Suite C: Paridad exacta con shared/schema.ts generado por drizzle-kit ──
   const cSchema = bSchema.client;
   const ddlSchema = await generateSQLiteMigration(
@@ -327,11 +342,18 @@ try {
   const meInc = extraerCols((await describirTabla(cIncP, "module_evaluations")).cols, ["evaluation_function"]);
   assert.deepEqual(meCons, meSchema, "module_evaluations en consolidada difiere de shared/schema.ts");
   assert.deepEqual(meInc, meSchema, "module_evaluations en incremental T39 difiere de shared/schema.ts");
+  // Paridad de las columnas de avisos por inactividad entre shared/schema.ts, la consolidada y la incremental.
+  const colsAvisos = ["recordatorio_inactividad", "aviso_inactividad_apoderado"];
+  const nSchema = extraerCols((await describirTabla(cSchema, "notification_preferences")).cols, colsAvisos);
+  assert.ok(nSchema.every((c) => c && c.notnull === 1), "shared/schema.ts debe declarar las dos columnas NOT NULL");
+  assert.deepEqual(extraerCols((await describirTabla(cMain, "notification_preferences")).cols, colsAvisos), nSchema, "notification_preferences en consolidada difiere de shared/schema.ts");
+  assert.deepEqual(extraerCols((await describirTabla(cIncN, "notification_preferences")).cols, colsAvisos), nSchema, "notification_preferences en incremental de avisos difiere de shared/schema.ts");
 } finally {
   await bMain.cerrar();
   await bInc.cerrar();
   await bIncPerfil.cerrar();
   await bIncAula.cerrar();
+  await bIncAvisos.cerrar();
   await bSchema.cerrar();
 }
 

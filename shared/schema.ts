@@ -1167,6 +1167,9 @@ export const notificationPreferences = sqliteTable("notification_preferences", {
   moduloAbierto: integer("modulo_abierto", { mode: "boolean" }).notNull(),
   resumenSemanal: integer("resumen_semanal", { mode: "boolean" }).notNull(),
   resumenSemanalApoderado: integer("resumen_semanal_apoderado", { mode: "boolean" }).notNull(),
+  // Nuevos campos de inactividad (tarea A1, 2026-11-23). La migración DB se hace en tarea separada.
+  recordatorioInactividad: integer("recordatorio_inactividad", { mode: "boolean" }).default(true).notNull(),
+  avisoInactividadApoderado: integer("aviso_inactividad_apoderado", { mode: "boolean" }).default(true).notNull(),
   updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
 });
 
