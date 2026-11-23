@@ -21,9 +21,9 @@ Repo público: solo reglas y plantillas. Repo privado local `~/Downloads/brkl-ju
 ## Próximas prioridades
 1. Corregir los 4 hallazgos visuales de arriba; el desborde del Aula es una tarea de nivel 1 apta para `delegar.sh`.
 2. Confirmar que `brkl-junie-privado` en GitHub es privado antes de empujar el repo privado.
-3. Decidir cómo acortar el ciclo 2027 (la tabla de opciones está lista); confirmar la resolución 2027 del Mineduc.
-4. Validadores O4, revisión humana de las 81 preguntas, confirmación de la fecha de cobro «enero 2027».
-5. Si se decide habilitar Flow: aplicar migración SQL de facturas, definir variables en Vercel, verificar F8 en sandbox real — solo con orden «PRODUCCION».
+3. Validadores O4 y revisión humana de las 81 preguntas. (El ciclo 2027 y la fecha de cobro «enero 2027» ya estaban decididos el 2026-11-21; los feriados y las vacaciones no se consideran, 2026-11-23.)
+4. Flow, decidido el 2026-11-23: sandbox primero. Verificar F8 con credenciales de prueba que define el sostenedor; en diciembre el sostenedor da la orden «PRODUCCION» (migración SQL de facturas, variables en Vercel) desde una rama limpia.
+5. Piloto interno sin menores (adultos del equipo y personas de confianza). El piloto con estudiantes reales sigue sin autorizar; el copiloto de IA queda acotado y después del piloto.
 
 ## Riesgos abiertos
 - Antigravity trabajó con aprobaciones de una palabra sin mi verificación: verificar por área antes de confiar.

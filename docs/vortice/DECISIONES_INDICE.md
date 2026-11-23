@@ -72,3 +72,4 @@ Una línea por decisión. **Detalle completo:** `.junie/DECISIONES_DIRECCION.md`
 - L369: 2026-11-21: Paso 2 · Motor en sombra M2 y Mapa «Mis conocimientos» M3 (sostenedor: «si»)
 - L374: 2026-11-21: Paso 3 · Retención M4 y Cruce evaluación `4` M5/M6 (sostenedor: «3»)
 - L380: 2026-11-21: Rediseño visual editorial de Vórtice (tipografía estilo Anthropic, sostenedor)
+- L385: 2026-11-23: cinco decisiones (repo privado, cobro Flow en sandbox primero, piloto interno sin menores, copiloto acotado después, sin feriados ni vacaciones)
