@@ -108,7 +108,10 @@ export function BrujulaPanel({
             )}
 
             <ul className="vb-notas" aria-label="Mensajes de tu Brújula">
-              {panel.mensajes.map((m) => (
+              {(panel.proximaEvaluacion
+                ? panel.mensajes.filter((m) => m.id !== "proxima-evaluacion")
+                : panel.mensajes
+              ).map((m) => (
                 <li key={m.id} data-tono={m.tono}>
                   <span className="vb-aguja" aria-hidden="true" />
                   <div><small>{TONO_ETIQUETA[m.tono]}</small><p>{m.texto}</p></div>

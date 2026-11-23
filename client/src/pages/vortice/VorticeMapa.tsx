@@ -81,38 +81,38 @@ const ESTILO_ESTADO: Record<
   { fill: string; stroke: string; badgeClass: string; simbolo: string }
 > = {
   dominado: {
-    fill: "#F3C15A",
+    fill: "#D4942A",
     stroke: "#1F4A3D",
     badgeClass: "bg-[#EDF3F0] text-[#1F4A3D] border-[#1F4A3D]/30",
     simbolo: "★",
   },
   por_comprobar: {
-    fill: "#F6DBA0",
+    fill: "#FEF6EA",
     stroke: "#8A5A10",
     badgeClass: "bg-[#FEF6EA] text-[#8A5A10] border-[#D4942A]/40",
     simbolo: "✦",
   },
   incierto: {
-    fill: "#9CC3F5",
+    fill: "#EEF4FC",
     stroke: "#2F5EA8",
     badgeClass: "bg-[#EEF4FC] text-[#2F5EA8] border-[#2F5EA8]/35",
     simbolo: "◐",
   },
   no_dominado: {
-    fill: "#F29F7D",
+    fill: "#FBF0EB",
     stroke: "#9A4225",
     badgeClass: "bg-[#FBF0EB] text-[#9A4225] border-[#C96442]/40",
     simbolo: "↺",
   },
   listo: {
     fill: "#FFFFFF",
-    stroke: "#2F5EA8",
-    badgeClass: "bg-white text-[#2F5EA8] border-[#2F5EA8]/40",
+    stroke: "#1F4A3D",
+    badgeClass: "bg-white text-[#1F4A3D] border-[#1F4A3D]/40",
     simbolo: "◎",
   },
   bloqueado: {
-    fill: "#222C3A",
-    stroke: "#7B8494",
+    fill: "#F3F1EA",
+    stroke: "#A8A296",
     badgeClass: "bg-[#F3F1EA] text-[#5E5D59] border-[#D5CFC2]",
     simbolo: "·",
   },
@@ -249,14 +249,15 @@ export default function VorticeMapa() {
       </header>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-        <div className="space-y-2">
-          <span className="vx-kicker">Constelación de aprendizaje · M3</span>
-          <h1 className="text-3xl sm:text-[2.35rem] leading-[1.12] text-[#141413]">Mis conocimientos</h1>
-          <div className="rounded-2xl border border-[#E6E2D8] bg-[#F3F1EA]/80 px-4 py-3 text-[14.5px] leading-relaxed text-[#5E5D59]">
-            Completar lecturas o videos ordena tu camino, pero <strong className="text-[#141413] font-medium">no enciende estrellas</strong>. Las estrellas
-            se confirman por separado cuando practicas y compruebas sin pistas en dos ejercicios distintos.
-          </div>
-        </div>
+            <div className="space-y-1">
+              <span className="vx-kicker">Constelación de aprendizaje · M3</span>
+              <h1 className="text-3xl sm:text-[2.35rem] leading-[1.12] text-[#141413]">Mis conocimientos</h1>
+              <p className="text-[14.5px] leading-relaxed text-[#5E5D59] max-w-[68ch] pt-1">
+                Completar lecturas o videos ordena tu camino, pero <strong className="text-[#141413] font-medium">no enciende estrellas</strong>. Las estrellas
+                se confirman cuando practicas y compruebas sin pistas en dos ejercicios distintos.
+                {!data?.tieneEvidencia && " Tu mapa se irá encendiendo desde tu primera práctica o comprobación."}
+              </p>
+            </div>
 
         {mapaQuery.isLoading ? (
           <div className="space-y-5">
@@ -313,19 +314,10 @@ export default function VorticeMapa() {
           </Card>
         ) : (
           <>
-            {!data.tieneEvidencia && (
-              <Alert className="rounded-2xl border-[#2F5EA8]/30 bg-[#EEF4FC] text-[#1D3E72]">
-                <AlertDescription className="text-[14.5px]">
-                  Tu mapa aparecerá con estrellas reales desde tu primera práctica o comprobación. Ya puedes ver qué
-                  contenidos dependen de cuáles y dónde conviene empezar.
-                </AlertDescription>
-              </Alert>
-            )}
-
             {/* Sugerencia determinista de siguiente paso */}
             {data.recomendacion && (
               <Card className="rounded-2xl border border-[#1F4A3D]/25 bg-[#EDF3F0] shadow-none">
-                <CardContent className="py-5 px-5 sm:px-6 flex flex-wrap items-center justify-between gap-4">
+                <CardContent className="p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4">
                   <div className="space-y-1">
                     <div className="vx-kicker !text-[#1F4A3D] flex items-center gap-1.5">
                       <Compass className="w-3.5 h-3.5" />
@@ -346,10 +338,12 @@ export default function VorticeMapa() {
             {/* Resumen de estados sin porcentajes ni notas */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
               <Card className="vx-paper border-[#E6E2D8] shadow-none">
-                <CardContent className="p-4 sm:p-5">
-                  <div className="text-xs font-medium text-[#5E5D59]">Lo dominas</div>
-                  <div className="vx-serif text-[2rem] leading-none font-medium text-[#1F4A3D] mt-2">
-                    {data.resumen.dominados}
+                <CardContent className="p-4 sm:p-5 flex flex-col justify-between h-full">
+                  <div>
+                    <div className="text-xs font-medium text-[#5E5D59]">Lo dominas</div>
+                    <div className="vx-serif text-[2rem] leading-none font-medium text-[#1F4A3D] mt-2">
+                      {data.resumen.dominados}
+                    </div>
                   </div>
                   <Progress
                     value={nodos.length ? (data.resumen.dominados / nodos.length) * 100 : 0}
@@ -359,27 +353,36 @@ export default function VorticeMapa() {
                 </CardContent>
               </Card>
               <Card className="vx-paper border-[#E6E2D8] shadow-none">
-                <CardContent className="p-4 sm:p-5">
-                  <div className="text-xs font-medium text-[#5E5D59]">En práctica / refuerzo</div>
-                  <div className="vx-serif text-[2rem] leading-none font-medium text-[#141413] mt-2">
-                    {data.resumen.enPractica + data.resumen.porReforzar + data.resumen.porComprobar}
+                <CardContent className="p-4 sm:p-5 flex flex-col justify-between h-full">
+                  <div>
+                    <div className="text-xs font-medium text-[#5E5D59]">En práctica / refuerzo</div>
+                    <div className="vx-serif text-[2rem] leading-none font-medium text-[#141413] mt-2">
+                      {data.resumen.enPractica + data.resumen.porReforzar + data.resumen.porComprobar}
+                    </div>
                   </div>
+                  <span className="text-[11px] text-[#87867F] mt-3 block">Por consolidar</span>
                 </CardContent>
               </Card>
               <Card className="vx-paper border-[#E6E2D8] shadow-none">
-                <CardContent className="p-4 sm:p-5">
-                  <div className="text-xs font-medium text-[#5E5D59]">Listos para aprender</div>
-                  <div className="vx-serif text-[2rem] leading-none font-medium text-[#2F5EA8] mt-2">
-                    {data.resumen.listos}
+                <CardContent className="p-4 sm:p-5 flex flex-col justify-between h-full">
+                  <div>
+                    <div className="text-xs font-medium text-[#5E5D59]">Listos para aprender</div>
+                    <div className="vx-serif text-[2rem] leading-none font-medium text-[#1F4A3D] mt-2">
+                      {data.resumen.listos}
+                    </div>
                   </div>
+                  <span className="text-[11px] text-[#87867F] mt-3 block">Base completada</span>
                 </CardContent>
               </Card>
               <Card className="vx-paper border-[#E6E2D8] shadow-none">
-                <CardContent className="p-4 sm:p-5">
-                  <div className="text-xs font-medium text-[#5E5D59]">Esperando su base</div>
-                  <div className="vx-serif text-[2rem] leading-none font-medium text-[#87867F] mt-2">
-                    {data.resumen.bloqueados}
+                <CardContent className="p-4 sm:p-5 flex flex-col justify-between h-full">
+                  <div>
+                    <div className="text-xs font-medium text-[#5E5D59]">Esperando su base</div>
+                    <div className="vx-serif text-[2rem] leading-none font-medium text-[#87867F] mt-2">
+                      {data.resumen.bloqueados}
+                    </div>
                   </div>
+                  <span className="text-[11px] text-[#87867F] mt-3 block">Se abren al avanzar</span>
                 </CardContent>
               </Card>
             </div>
@@ -640,7 +643,7 @@ export default function VorticeMapa() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="rounded-2xl bg-[#141B24] p-3.5 border border-[#1E2836]">
+                  <div className="rounded-2xl bg-[#F7F5EE] p-3.5 border border-[#E6E2D8]">
                     <svg
                       viewBox="0 0 550 245"
                       className="w-full h-auto block"
@@ -649,11 +652,11 @@ export default function VorticeMapa() {
                     >
                       <defs>
                         <radialGradient id="vx-sky-glow" cx="50%" cy="50%" r="65%">
-                          <stop offset="0%" stopColor="#1F3448" stopOpacity="0.65" />
-                          <stop offset="100%" stopColor="#141B24" stopOpacity="0" />
+                          <stop offset="0%" stopColor="#EFECE3" stopOpacity="0.9" />
+                          <stop offset="100%" stopColor="#F7F5EE" stopOpacity="0" />
                         </radialGradient>
                         <marker id="vx-edge-arrow" viewBox="0 0 10 10" refX="27" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-                          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#7CA8DE" opacity="0.7" />
+                          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#1F4A3D" opacity="0.65" />
                         </marker>
                       </defs>
                       <rect x="0" y="0" width="550" height="245" rx="12" fill="url(#vx-sky-glow)" />
@@ -677,9 +680,9 @@ export default function VorticeMapa() {
                             key={`${orig.itemId}-${dest.itemId}`}
                             d={d}
                             fill="none"
-                            stroke={punteada ? "#475569" : "#7CA8DE"}
-                            strokeOpacity={punteada ? 0.65 : 0.78}
-                            strokeWidth={2}
+                            stroke={punteada ? "#C4BEAF" : "#1F4A3D"}
+                            strokeOpacity={punteada ? 0.85 : 0.65}
+                            strokeWidth={1.85}
                             strokeDasharray={punteada ? "4 5" : undefined}
                             markerEnd={punteada ? undefined : "url(#vx-edge-arrow)"}
                           />
@@ -712,15 +715,15 @@ export default function VorticeMapa() {
                                   cx={pos.x}
                                   cy={pos.y}
                                   r={28}
-                                  fill="rgba(243, 193, 90, 0.14)"
+                                  fill="rgba(31, 74, 61, 0.1)"
                                 />
                                 <circle
                                   cx={pos.x}
                                   cy={pos.y}
-                                  r={25}
+                                  r={24}
                                   fill="none"
-                                  stroke="#F3C15A"
-                                  strokeWidth={2}
+                                  stroke="#1F4A3D"
+                                  strokeWidth={1.75}
                                 />
                               </>
                             )}
@@ -730,7 +733,7 @@ export default function VorticeMapa() {
                               r={19}
                               fill={est.fill}
                               stroke={est.stroke}
-                              strokeWidth={2.25}
+                              strokeWidth={2}
                               strokeDasharray={n.estadoVisual === "bloqueado" ? "4 3" : undefined}
                             />
                             <text
@@ -739,7 +742,7 @@ export default function VorticeMapa() {
                               textAnchor="middle"
                               fontSize="13.5"
                               fontWeight="600"
-                              fill={n.estadoVisual === "bloqueado" ? "#94A3B8" : "#141413"}
+                              fill={n.estadoVisual === "bloqueado" ? "#87867F" : "#141413"}
                             >
                               {est.simbolo}
                             </text>
@@ -748,9 +751,9 @@ export default function VorticeMapa() {
                               y={pos.y + (textoDebajo ? 34 : -26)}
                               textAnchor="middle"
                               fontSize="11"
-                              fontWeight="500"
+                              fontWeight="600"
                               fontFamily="JetBrains Mono, monospace"
-                              fill="#EAF0F6"
+                              fill="#141413"
                             >
                               {n.oaId.toUpperCase()}
                             </text>
@@ -762,19 +765,19 @@ export default function VorticeMapa() {
 
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-[#5E5D59] px-1">
                     <span className="inline-flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#F3C15A] border border-[#1F4A3D]" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#D4942A] border border-[#1F4A3D]" />
                       Dominado
                     </span>
                     <span className="inline-flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#9CC3F5] border border-[#2F5EA8]" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#EEF4FC] border border-[#2F5EA8]" />
                       En práctica / incierto
                     </span>
                     <span className="inline-flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-white border border-[#2F5EA8]" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-white border border-[#1F4A3D]" />
                       Listo
                     </span>
                     <span className="inline-flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#222C3A] border border-[#7B8494]" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#F3F1EA] border border-[#A8A296]" />
                       Esperando base
                     </span>
                   </div>

@@ -162,7 +162,7 @@ export default function FamiliaVista() {
               )}
 
               <ul className="vb-notas" aria-label="Orientación para acompañar">
-                {b.orientacion.map((texto, i) => (
+                {b.orientacionSinProximaEvaluacion.map((texto, i) => (
                   <li key={i} data-tono={b.estadoGeneral === "por_recuperar" ? "aviso" : "ok"}>
                     <span className="vb-aguja" aria-hidden="true" />
                     <div><small>Orientación</small><p>{texto}</p></div>

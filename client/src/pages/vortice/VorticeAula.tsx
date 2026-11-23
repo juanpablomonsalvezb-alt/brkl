@@ -421,8 +421,8 @@ export default function VorticeAula() {
           <h1 className="text-3xl sm:text-[2.35rem] leading-[1.12] text-[#141413]">Aula Universal del Piloto</h1>
         </div>
 
-        {/* Selector de los 5 OA del piloto */}
-        <div className="flex flex-wrap gap-2" role="tablist" aria-label="Objetivos del módulo">
+        {/* Selector de los 5 OA del piloto con código y título corto */}
+        <div className="grid grid-cols-1 sm:grid-cols-5 gap-2" role="tablist" aria-label="Objetivos del módulo">
           {lecciones.map((item) => {
             const p = pilotoQuery.data?.progreso?.[item.oaId];
             const activo = item.oaId === leccion.oaId;
@@ -433,14 +433,21 @@ export default function VorticeAula() {
                 role="tab"
                 aria-selected={activo}
                 onClick={() => setOaSeleccionado(item.oaId)}
-                className={`min-h-[42px] px-4 py-2 rounded-full border text-left transition flex items-center gap-2 ${
+                className={`min-h-[56px] px-3.5 py-2.5 rounded-2xl border text-left transition flex flex-col justify-between gap-1 ${
                   activo
                     ? "bg-[#1F4A3D] text-white border-[#1F4A3D] shadow-sm"
                     : "bg-white text-[#141413] border-[#E6E2D8] hover:border-[#1F4A3D] hover:bg-[#FAF9F5]"
                 }`}
               >
-                <span className="vx-mono font-medium text-sm">{item.codigo}</span>
-                {p?.practicaLograda && <CheckCircle2 className="w-4 h-4 shrink-0" />}
+                <div className="flex items-center justify-between gap-1.5 w-full">
+                  <span className={`vx-mono font-medium text-xs ${activo ? "text-[#DCE8E2]" : "text-[#C96442]"}`}>
+                    {item.codigo}
+                  </span>
+                  {p?.practicaLograda && <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />}
+                </div>
+                <span className={`text-xs font-medium leading-tight line-clamp-1 ${activo ? "text-white" : "text-[#141413]"}`}>
+                  {item.titulo}
+                </span>
               </button>
             );
           })}

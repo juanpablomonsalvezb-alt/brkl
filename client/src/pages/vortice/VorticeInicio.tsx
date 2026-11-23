@@ -56,12 +56,33 @@ const SUBTITULO: Record<VorticeTrack, string> = {
   "media": "Tu aprendizaje construye tu futuro.",
 };
 
-// Miniatura por asignatura (provisionales, recortadas del diseño; reemplazar por originales).
-const MINIATURA: Record<string, string> = {
-  "lengua-y-literatura": "asig-lengua", "lenguaje": "asig-lengua", "matematica": "asig-matematica",
-  "historia": "asig-historia", "ingles": "asig-ingles", "ciencias-naturales": "asig-ciencias",
-  "filosofia": "asig-filosofia", "educacion-ciudadana": "asig-ciudadana",
+// Ilustraciones editoriales por asignatura (en vez de miniaturas stock repetidas).
+const ESTILO_ASIGNATURA: Record<string, { bg: string; fg: string; kicker: string }> = {
+  "matematica": { bg: "#EDF3F0", fg: "#1F4A3D", kicker: "Números y lógica" },
+  "lengua-y-literatura": { bg: "#FBF0EB", fg: "#9A4225", kicker: "Lectura y escritura" },
+  "lenguaje": { bg: "#FBF0EB", fg: "#9A4225", kicker: "Lectura y escritura" },
+  "ciencias-naturales": { bg: "#EEF4FC", fg: "#2F5EA8", kicker: "Entorno y método" },
+  "ciencias": { bg: "#EEF4FC", fg: "#2F5EA8", kicker: "Entorno y método" },
+  "historia": { bg: "#FEF6EA", fg: "#8A5A10", kicker: "Tiempo y sociedad" },
+  "ingles": { bg: "#F3F1EA", fg: "#141413", kicker: "Idioma y comunicación" },
+  "filosofia": { bg: "#F3EFFA", fg: "#5B4399", kicker: "Pensamiento crítico" },
+  "educacion-ciudadana": { bg: "#EDF3F0", fg: "#1F4A3D", kicker: "Comunidad y derechos" },
 };
+function resolverEstiloAsignatura(slug: string, name: string) {
+  const norm = `${slug} ${name}`
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+  if (ESTILO_ASIGNATURA[slug]) return ESTILO_ASIGNATURA[slug];
+  if (norm.includes("matemat")) return ESTILO_ASIGNATURA["matematica"];
+  if (norm.includes("lengua")) return ESTILO_ASIGNATURA["lenguaje"];
+  if (norm.includes("cienc")) return ESTILO_ASIGNATURA["ciencias"];
+  if (norm.includes("histor")) return ESTILO_ASIGNATURA["historia"];
+  if (norm.includes("ingl")) return ESTILO_ASIGNATURA["ingles"];
+  if (norm.includes("filos")) return ESTILO_ASIGNATURA["filosofia"];
+  if (norm.includes("ciudad")) return ESTILO_ASIGNATURA["educacion-ciudadana"];
+  return { bg: "#F3F1EA", fg: "#1F4A3D", kicker: "Curso del nivel" };
+}
 const VISIBILIDAD = { privada: ["Privada", "#F3F1EA", "#5E5D59"], tutor: ["Tutor", "#EEF4FC", "#2F5EA8"], familia: ["Familia", "#EDF3F0", "#1F4A3D"] } as const;
 
 const claseAvance = (p: number) => (p >= 70 ? "[&>div]:bg-[#2D6654]" : p >= 55 ? "[&>div]:bg-[#C96442]" : "[&>div]:bg-[#C84B3B]");
@@ -288,10 +309,16 @@ export default function VorticeInicio() {
                 ) : (
                   <div className="vx-subjects">
                     {ov.subjects.map((s) => {
-                      const img = MINIATURA[s.subjectSlug] ?? "asig-electivo";
+                      const est = resolverEstiloAsignatura(s.subjectSlug, s.subjectName);
                       return (
                         <Link key={s.levelSubjectId} className="vx-subject" href={linkAsignatura(s.subjectSlug)}>
-                          <div className="vx-thumb" style={{ backgroundImage: `url(/images/vortice/${img}.jpg)` }} />
+                          <div
+                            className="vx-thumb"
+                            style={{ background: est.bg, color: est.fg, borderColor: "rgba(20, 20, 19, 0.08)" }}
+                          >
+                            <span className="vx-thumb-kicker">{est.kicker}</span>
+                            <span className="vx-thumb-glyph" aria-hidden="true">{s.subjectName.slice(0, 2)}</span>
+                          </div>
                           <b title={s.subjectName}>{s.subjectName}</b>
                           {s.percent === null ? <small className="vx-empty">Sin contenido aún</small> : (
                             <div className="vx-meter">

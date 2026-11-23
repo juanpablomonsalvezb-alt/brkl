@@ -101,6 +101,15 @@
   box-shadow: var(--vx-shadow-card);
 }
 
+.vx-editorial [data-slot="item-content"] {
+  min-width: 0;
+}
+
+.vx-editorial [data-slot="item-title"] {
+  width: auto;
+  max-width: 100%;
+}
+
 .vx-editorial .vx-pill-nav {
   display: inline-flex;
   align-items: center;
