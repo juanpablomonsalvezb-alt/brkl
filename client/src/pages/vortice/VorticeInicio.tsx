@@ -21,6 +21,7 @@ import type { BloqueEstudio, BrujulaGoal, PreferenciasBrujula } from "@shared/br
 import type { PanelBrujula } from "@shared/brujulaPanel";
 import { RobotTutor } from "./RobotTutor";
 import { BrujulaPanel } from "./BrujulaPanel";
+import { AyudaTutor } from "./AyudaTutor";
 import "./vortice.css";
 
 interface Usuario { firstName: string | null; name: string | null }
@@ -608,6 +609,7 @@ export default function VorticeInicio() {
                   <p>Te explico con otras palabras o te doy pistas paso a paso.</p>
                   <Link href="/academic-copilot"><MessageCircle aria-hidden="true" />Tutor virtual</Link>
                 </div>
+                <AyudaTutor asignaturas={ov?.subjects ?? []} />
               </section>
             </aside>
           </div>

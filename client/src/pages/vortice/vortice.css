@@ -336,6 +336,69 @@
 .vx-help-compact a:hover { border-color: var(--vx-green); background: var(--vx-green-soft); color: var(--vx-green); }
 .vx-help-compact a svg { width: 16px; height: 16px; flex: none; }
 
+/* Ayuda al tutor humano */
+.vx-ayuda { margin-top: 14px; display: grid; gap: 14px; }
+.vx-ayuda-toggle {
+  min-height: 44px; padding: 10px 20px; border-radius: 999px;
+  border: 1px solid var(--vx-line-strong); background: var(--vx-card); color: var(--vx-ink);
+  font: 500 14px var(--vx-sans); cursor: pointer; width: 100%;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+.vx-ayuda-toggle:hover { border-color: var(--vx-green); background: var(--vx-green-soft); color: var(--vx-green); }
+.vx-ayuda-toggle[aria-expanded="true"] { border-color: var(--vx-green); background: var(--vx-green-soft); }
+
+.vx-ayuda-form { display: grid; gap: 12px; padding: 14px; border-radius: 14px; background: var(--vx-bg); border: 1px solid var(--vx-line); }
+.vx-ayuda-field { display: grid; gap: 5px; }
+.vx-ayuda-field label { font-size: 13px; font-weight: 500; color: var(--vx-ink-soft); }
+.vx-ayuda-field select,
+.vx-ayuda-field textarea {
+  padding: 9px 12px; border-radius: 12px; border: 1px solid var(--vx-line);
+  background: var(--vx-card); color: var(--vx-ink); font: 14px var(--vx-sans);
+  font-family: var(--vx-sans); resize: vertical; min-width: 0;
+  transition: border-color 160ms ease;
+}
+.vx-ayuda-field select:focus,
+.vx-ayuda-field textarea:focus { outline: none; border-color: var(--vx-green); }
+.vx-ayuda-counter { font-size: 12px; color: var(--vx-ink-soft); text-align: right; font-family: var(--vx-mono); }
+
+.vx-ayuda-form .vx-cta { justify-self: start; font-size: 14px; }
+.vx-ayuda-form .vx-cta:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.vx-ayuda-status,
+.vx-ayuda-success,
+.vx-ayuda-error { font-size: 13.5px; margin: 0; line-height: 1.45; }
+.vx-ayuda-status { color: var(--vx-ink-soft); }
+.vx-ayuda-success { color: var(--vx-green); }
+.vx-ayuda-error { color: var(--vx-red); background: #FDEAEA; padding: 10px 12px; border-radius: 10px; border: 1px solid #F5C6C0; }
+
+/* Lista de consultas */
+.vx-ayuda-lista { display: grid; gap: 10px; }
+.vx-ayuda-lista-title { font-size: 15px; font-weight: 600; margin: 0; color: var(--vx-ink); }
+.vx-ayuda-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.vx-ayuda-item { padding: 12px; border-radius: 12px; border: 1px solid var(--vx-line); background: var(--vx-card); display: grid; gap: 6px; }
+.vx-ayuda-item-header { display: flex; align-items: center; gap: 8px; }
+.vx-ayuda-item-date { font-size: 12.5px; color: var(--vx-ink-soft); font-family: var(--vx-mono); }
+.vx-ayuda-badge {
+  padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 500;
+  background: var(--vx-bg); color: var(--vx-ink); border: 1px solid var(--vx-line);
+}
+.vx-ayuda-badge--respondido { background: var(--vx-acento-soft); color: var(--vx-ink); border-color: transparent; }
+.vx-ayuda-item-question { margin: 0; font-size: 14px; line-height: 1.45; color: var(--vx-ink); }
+.vx-ayuda-response {
+  padding: 10px 12px; border-radius: 10px; background: var(--vx-acento-soft);
+  border: 1px solid #D6E6F5; display: grid; gap: 4px;
+}
+.vx-ayuda-response strong { font-size: 13px; color: var(--vx-ink); }
+.vx-ayuda-response p { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--vx-ink); }
+.vx-ayuda-closing { margin: 0; font-size: 13px; color: var(--vx-ink-soft); font-style: italic; }
+.vx-ayuda-ver-todo {
+  justify-self: center; min-height: 40px; padding: 8px 18px; border-radius: 999px;
+  border: 1px solid var(--vx-line); background: var(--vx-card); color: var(--vx-ink-soft);
+  font: 500 13px var(--vx-sans); cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+.vx-ayuda-ver-todo:hover { border-color: var(--vx-green); color: var(--vx-green); }
+
 /* Carga y error */
 .vx-skeleton { background: linear-gradient(90deg, #EFECE3, #FAF9F5, #EFECE3); background-size: 200% 100%; border-radius: 12px; min-height: 90px; animation: vx-shimmer 1.4s ease infinite; }
 @keyframes vx-shimmer { to { background-position: -200% 0; } }
