@@ -230,7 +230,21 @@ export default function VorticeInicio() {
         </div>
 
         <div className="vx-shell">
-          <section className="vx-hero-ed" aria-labelledby="vx-saludo">
+          <section className="vx-hero-ed" aria-labelledby="vx-saludo" data-con-imagen={ov?.track ? "true" : undefined}>
+            {ov?.track && (
+              <img
+                className="vx-hero-img"
+                src={`/images/vortice/heroes/${ov.track}-1024.webp`}
+                srcSet={`/images/vortice/heroes/${ov.track}-640.webp 640w, /images/vortice/heroes/${ov.track}-1024.webp 1024w, /images/vortice/heroes/${ov.track}-1600.webp 1600w`}
+                sizes="(max-width: 760px) 100vw, 1100px"
+                width={1600}
+                height={686}
+                alt=""
+                aria-hidden="true"
+                decoding="async"
+                fetchPriority="high"
+              />
+            )}
             <div className="vx-hero-copy">
               <span className="vx-kicker">{nivel?.name ?? "Tu espacio"} · {mes}</span>
               <h1 id="vx-saludo">{nombre ? `Hola, ${nombre}` : "Hola"}</h1>
