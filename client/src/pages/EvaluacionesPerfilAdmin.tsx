@@ -237,8 +237,8 @@ export default function EvaluacionesPerfilAdmin() {
           </p>
         </div>
 
-        <Alert className="rounded-2xl border-[#1F4A3D]/25 bg-[#EDF3F0] text-[#141413]">
-          <ShieldCheck className="h-4 w-4 text-[#1F4A3D]" />
+        <Alert className="rounded-2xl border-[#02316C]/25 bg-[#EAF2FB] text-[#141413]">
+          <ShieldCheck className="h-4 w-4 text-[#02316C]" />
           <AlertDescription className="text-[14.5px] leading-relaxed">
             <strong>Regla de privacidad O10:</strong> aquí nunca se guardan diagnósticos ni informes clínicos. El perfil{" "}
             <code className="vx-mono text-xs px-1.5 py-0.5 rounded bg-white/80 border border-[#E6E2D8]">regular</code> o{" "}
@@ -284,7 +284,7 @@ export default function EvaluacionesPerfilAdmin() {
                   placeholder="Buscar estudiante por nombre, correo o ID…"
                   value={busquedaPerfil}
                   onChange={(e) => setBusquedaPerfil(e.target.value)}
-                  className="max-w-md rounded-xl border-[#D5CFC2] bg-[#FAF9F5]/60 focus-visible:ring-[#1F4A3D]"
+                  className="max-w-md rounded-xl border-[#D5CFC2] bg-[#FAF9F5]/60 focus-visible:ring-[#02316C]"
                 />
 
                 {perfilesQuery.isLoading ? (
@@ -347,7 +347,7 @@ export default function EvaluacionesPerfilAdmin() {
                                   [row.userId]: e.target.value as EvaluationProfile,
                                 }))
                               }
-                              className="h-10 rounded-xl border border-[#D5CFC2] bg-white px-3 text-sm text-[#141413] focus:outline-none focus:border-[#1F4A3D]"
+                              className="h-10 rounded-xl border border-[#D5CFC2] bg-white px-3 text-sm text-[#141413] focus:outline-none focus:border-[#02316C]"
                             >
                               <option value="regular">regular (60 min, 70 %)</option>
                               <option value="neurodivergente">neurodivergente (120 min, 50 %)</option>
@@ -355,7 +355,7 @@ export default function EvaluacionesPerfilAdmin() {
                             <Button
                               type="button"
                               size="sm"
-                              className="h-10 rounded-full px-4 bg-[#1F4A3D] hover:bg-[#16382E] text-white"
+                              className="h-10 rounded-full px-4 bg-[#02316C] hover:bg-[#012552] text-white"
                               disabled={!hayCambios || guardarPerfilMutation.isPending}
                               onClick={() =>
                                 guardarPerfilMutation.mutate({ userId: row.userId, perfil: seleccion })
@@ -390,13 +390,13 @@ export default function EvaluacionesPerfilAdmin() {
                     placeholder="Filtrar por título, OA o asignatura…"
                     value={busquedaEval}
                     onChange={(e) => setBusquedaEval(e.target.value)}
-                    className="max-w-sm rounded-xl border-[#D5CFC2] bg-[#FAF9F5]/60 focus-visible:ring-[#1F4A3D]"
+                    className="max-w-sm rounded-xl border-[#D5CFC2] bg-[#FAF9F5]/60 focus-visible:ring-[#02316C]"
                   />
                   <select
                     aria-label="Filtrar por módulo"
                     value={filtroModulo}
                     onChange={(e) => setFiltroModulo(e.target.value)}
-                    className="h-10 rounded-xl border border-[#D5CFC2] bg-white px-3 text-sm text-[#141413] focus:outline-none focus:border-[#1F4A3D]"
+                    className="h-10 rounded-xl border border-[#D5CFC2] bg-white px-3 text-sm text-[#141413] focus:outline-none focus:border-[#02316C]"
                   >
                     <option value="todos">Todos los módulos</option>
                     {modulosDisponibles.map((m) => (
@@ -441,8 +441,8 @@ export default function EvaluacionesPerfilAdmin() {
                               {ev.objectiveCode}: {ev.objectiveTitle}
                             </p>
                             <div className="flex flex-wrap items-center gap-2 text-xs">
-                              <span className="inline-flex items-center gap-1 font-medium text-[#1F4A3D]">
-                                <CheckCircle2 className="w-3.5 h-3.5 text-[#1F4A3D]" />
+                              <span className="inline-flex items-center gap-1 font-medium text-[#02316C]">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-[#02316C]" />
                                 Efectiva: {ev.etiqueta} ({ev.effectiveFunction ?? "sin definir"})
                               </span>
                               {ev.heredadoP7 && (
@@ -466,7 +466,7 @@ export default function EvaluacionesPerfilAdmin() {
                                   [ev.id]: e.target.value as EvaluationFunction | "",
                                 }))
                               }
-                              className="h-10 rounded-xl border border-[#D5CFC2] bg-white px-3 text-sm text-[#141413] focus:outline-none focus:border-[#1F4A3D]"
+                              className="h-10 rounded-xl border border-[#D5CFC2] bg-white px-3 text-sm text-[#141413] focus:outline-none focus:border-[#02316C]"
                             >
                               <option value="">Sin clasificar (NULL / heredado P7)</option>
                               <option value="diagnostico">diagnostico (0 · diagnóstico inicial)</option>
@@ -476,7 +476,7 @@ export default function EvaluacionesPerfilAdmin() {
                             <Button
                               type="button"
                               size="sm"
-                              className="h-10 rounded-full px-4 bg-[#1F4A3D] hover:bg-[#16382E] text-white"
+                              className="h-10 rounded-full px-4 bg-[#02316C] hover:bg-[#012552] text-white"
                               disabled={!hayCambios || guardarFuncionMutation.isPending}
                               onClick={() =>
                                 guardarFuncionMutation.mutate({

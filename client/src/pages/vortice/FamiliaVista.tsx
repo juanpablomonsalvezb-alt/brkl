@@ -200,7 +200,7 @@ export default function FamiliaVista() {
               <ul className="vx-agenda">
                 {data.evaluationsInReview.map((ev, i) => (
                   <li key={`${ev.subjectName}-${ev.title}-${i}`}>
-                    <i style={{ background: "#e8893a" }} />
+                    <i style={{ background: "var(--vx-amber)" }} />
                     <span><b>{ev.subjectName}:</b> {ev.title}</span>
                     {ev.completedAt && (
                       <small>{new Date(ev.completedAt).toLocaleDateString("es-CL")}</small>

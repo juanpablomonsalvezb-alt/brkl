@@ -4,8 +4,8 @@
 @import "./vortice-editorial.css";
 
 .ve {
-  --ve-ink: #141413; --ve-soft: #5E5D59; --ve-green: var(--vx-primary); --ve-green-2: var(--vx-primary-2);
-  --ve-paper: #FFFFFF; --ve-bg: #FAF9F5; --ve-line: #E6E2D8; --ve-orange: #C96442; --ve-red: #B84A39;
+  --ve-ink: var(--vx-ink); --ve-soft: var(--vx-ink-soft); --ve-green: var(--vx-primary); --ve-green-2: var(--vx-primary-2);
+  --ve-paper: #FFFFFF; --ve-bg: var(--vx-bg); --ve-line: var(--vx-line); --ve-orange: #C96442; --ve-red: #B84A39;
   --ve-ok: #2F6B55; --ve-serif: var(--vx-serif, "Newsreader", Georgia, serif);
   --ve-sans: var(--vx-sans, "DM Sans", system-ui, -apple-system, sans-serif);
   min-height: 100vh; color: var(--ve-ink); font-family: var(--ve-sans); font-size: 16px; line-height: 1.6;
