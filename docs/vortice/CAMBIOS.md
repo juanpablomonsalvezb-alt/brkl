@@ -12,8 +12,11 @@ Sirve para no releer lo que no cambió: `git diff --stat <commit> -- <rutas del 
 | aula-mapa | `shared/{aulaUniversal,mapaConocimiento,retencionMapa,cruceEvaluacionMapa}.ts` | `4f16b84` | sin verificar a fondo |
 | banco | `docs/vortice/piloto/` | `ad8c264` | `ad8c264` |
 | perfil | `server/perfilEvaluacion.ts`, `shared/clasificacionEvaluacion.ts` | `835f124` | sin verificar a fondo |
+| tutoria-atencion | `server/tutoria.ts`, `server/atencion.ts`, `shared/atencion.ts`, `shared/notificaciones.ts`, `AyudaTutor.tsx`, `TutorBandeja.tsx` | `02a77ef` (2026-11-24) | revisado por diff, mutaciones y pantalla simulada; sin base real ni `/security-review` |
+| diseno-inicio | `client/src/pages/vortice/{VorticeInicio.tsx,vortice.css,vortice-editorial.css}`, `client/public/images/vortice/` | `d8ccd25` (2026-11-23) | visto en pantalla (3 tramos, 375/1024/1440 px); Familia y Evaluación sin el tema nuevo |
 
 ## Registro reciente
+- 2026-11-24: alertas de atraso cerradas (reglas puras `0367061`, cálculo y avisos `6686211`, lista del tutor `02a77ef`). Junie requirió `junie update` a 26.11.3 (la 26.11.2 ya no soportaba el modelo gratuito). Antes, entre el 2026-11-23 y hoy: rediseño del Inicio (`4724ac2` a `d8ccd25`), «Pedir ayuda» (`a50c4f9`) y bandeja del tutor (`fac7bb3`, `0d70807`). Ver `areas/tutoria-atencion.md`.
 - 2026-11-23: arquitectura Sonnet 5.5 + Junie Lite decidida y `delegar.sh` probado (fuera del repo); primera tarea real delegada: `a0c8373` (check de «Próxima evaluación» en la orientación del apoderado, endurecido por el arquitecto). Revisados en lectura los 9 archivos sin commitear del 2026-11-22 (rediseño visual y reloj determinista de `retencion-cruce-m4m5m6.check.ts`); siguen sin commitear y sin verse en pantalla. **Actualización:** commiteados `3ed5d8d` y `7cde32f`, vistos en pantalla (Inicio, Aula, Brújula, Familia y Mapa, con datos ficticios); 4 hallazgos visuales pendientes en `MEMORIA.md`. Segunda tarea delegada: `94ef248`.
 - 2026-11-22: auditoría de reconciliación (Antigravity), auditoría de seguridad de Flow, optimización de contexto, T40 fusionada (verificada, corregido 1 error del informe de Junie).
 - 2026-11-21: precios y 3 PR a producción; Brújula 1; calendario 2027; evaluación E2 probada en Preview; HANDOFF.
