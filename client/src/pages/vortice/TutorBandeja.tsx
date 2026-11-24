@@ -26,6 +26,14 @@ interface BandejaResponse {
   mios: CasoTutor[];
 }
 
+interface EstudianteAtencion {
+  studentId: string;
+  estudiante: string;
+  cursos: string[];
+  diasSinActividad: number;
+  ultimaActividad: string | null;
+}
+
 function tiempoRelativo(isoString: string): string {
   const date = new Date(isoString);
   const now = new Date();
@@ -220,6 +228,16 @@ export default function TutorBandeja() {
     retry: false,
   });
 
+  const atencionQuery = useQuery<EstudianteAtencion[]>({
+    queryKey: ["/api/tutoria/atencion"],
+    queryFn: async () => {
+      const res = await fetch("/api/tutoria/atencion", { credentials: "include" });
+      if (!res.ok) throw new Error("No pudimos cargar la lista de atención");
+      return res.json();
+    },
+    retry: false,
+  });
+
   const tomarMutation = useMutation({
     mutationFn: async (id: string) => {
       const res = await fetch(`/api/tutoria/casos/${id}/tomar`, {
@@ -296,10 +314,13 @@ export default function TutorBandeja() {
           <button
             type="button"
             className="vx-btn-ghost !min-h-0 h-9 px-4 text-sm"
-            onClick={() => bandejaQuery.refetch()}
-            disabled={bandejaQuery.isFetching}
+            onClick={() => {
+              void bandejaQuery.refetch();
+              void atencionQuery.refetch();
+            }}
+            disabled={bandejaQuery.isFetching || atencionQuery.isFetching}
           >
-            <RefreshCw className={`w-4 h-4 ${bandejaQuery.isFetching ? "animate-spin" : ""}`} />
+            <RefreshCw className={`w-4 h-4 ${bandejaQuery.isFetching || atencionQuery.isFetching ? "animate-spin" : ""}`} />
             Actualizar
           </button>
         </div>
@@ -324,6 +345,30 @@ export default function TutorBandeja() {
           </p>
         ) : (
           <>
+            <section className="vx-tutor-section">
+              <h2 className="vx-tutor-section-title">
+                Necesitan atención ({atencionQuery.data?.length ?? 0})
+              </h2>
+              {atencionQuery.isError ? (
+                <p role="alert" className="vx-tutor-error">No pudimos cargar la lista de atención.</p>
+              ) : atencionQuery.isSuccess && atencionQuery.data.length === 0 ? (
+                <p className="vx-tutor-empty">Nadie lleva 5 días sin actividad.</p>
+              ) : atencionQuery.data && atencionQuery.data.length > 0 ? (
+                <ul className="vx-tutor-attention-list">
+                  {atencionQuery.data.map((estudiante) => (
+                    <li key={estudiante.studentId} className="vx-card vx-tutor-attention-card">
+                      <strong>{estudiante.estudiante}</strong>
+                      <span>{estudiante.cursos.join(" · ")}</span>
+                      <span>Lleva {estudiante.diasSinActividad} días sin actividad</span>
+                      {estudiante.ultimaActividad && (
+                        <span>Última actividad: {fechaCorta(estudiante.ultimaActividad)}</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </section>
+
             <section className="vx-tutor-section">
               <h2 className="vx-tutor-section-title">
                 Sin asignar ({sinAsignar.length})

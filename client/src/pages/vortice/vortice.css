@@ -450,6 +450,24 @@
   font-size: 14px;
 }
 .vx-tutor-list { display: grid; gap: 14px; }
+.vx-tutor-attention-list {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.vx-tutor-attention-card {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 16px 18px;
+  overflow-wrap: anywhere;
+  color: var(--vx-ink-soft);
+  font-size: 13.5px;
+}
+.vx-tutor-attention-card strong { color: var(--vx-ink); font-size: 14.5px; }
 
 .vx-tutor-card {
   background: var(--vx-card);

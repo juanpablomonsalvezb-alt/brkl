@@ -9,6 +9,8 @@ import {
   enrollments, learningObjectives, weeklyResources, userProfiles, tutoringCases,
   tutoringCaseStatuses, levelSubjects, levels, subjects, users, type TutoringCase,
 } from "@shared/schema";
+import { UMBRAL_ATENCION_DIAS } from "@shared/atencion";
+import { diasSinActividadDe, ultimaActividad } from "./atencion";
 
 type Db = LibSQLDatabase<typeof schema>;
 type Role = (typeof userProfiles.$inferSelect)["role"];
@@ -149,6 +151,63 @@ export async function bandejaTutor(db: Db, tutorId: string): Promise<TutoriaResu
       mios: await casosConContexto(db, and(eq(tutoringCases.tutorId, tutorId), ne(tutoringCases.status, "cerrado")), asc(tutoringCases.createdAt)),
     },
   };
+}
+
+export type EstudianteAtencion = {
+  studentId: string;
+  estudiante: string;
+  cursos: string[];
+  diasSinActividad: number;
+  ultimaActividad: string | null;
+};
+
+export async function estudiantesQueNecesitanAtencion(
+  db: Db, tutorId: string, ahora: Date,
+): Promise<TutoriaResult<EstudianteAtencion[]>> {
+  const denied = await requireRole(db, tutorId, "tutor");
+  if (denied) return denied;
+
+  const filas = await db.selectDistinct({
+    studentId: users.id,
+    nombre: users.name,
+    primerNombre: users.firstName,
+    curso: levels.name,
+  }).from(enrollments)
+    .innerJoin(userProfiles, eq(enrollments.userId, userProfiles.userId))
+    .innerJoin(users, eq(enrollments.userId, users.id))
+    .innerJoin(levelSubjects, eq(enrollments.levelSubjectId, levelSubjects.id))
+    .innerJoin(levels, eq(levelSubjects.levelId, levels.id))
+    .where(and(eq(enrollments.isActive, true), eq(userProfiles.role, "student")));
+
+  const estudiantes = new Map<string, { estudiante: string; cursos: Set<string> }>();
+  for (const fila of filas) {
+    const estudiante = estudiantes.get(fila.studentId) ?? {
+      estudiante: fila.nombre || fila.primerNombre || "Estudiante sin nombre",
+      cursos: new Set<string>(),
+    };
+    estudiante.cursos.add(fila.curso);
+    estudiantes.set(fila.studentId, estudiante);
+  }
+
+  // ponytail: se consulta la actividad de cada estudiante por separado; paginar o precalcular si el colegio crece a miles.
+  const filasAtencion = await Promise.all([...estudiantes.entries()].map(async ([studentId, datos]) => {
+    const [diasSinActividad, ultima] = await Promise.all([
+      diasSinActividadDe(db, studentId, ahora),
+      ultimaActividad(db, studentId),
+    ]);
+    if (diasSinActividad === null || diasSinActividad < UMBRAL_ATENCION_DIAS) return null;
+    return {
+      studentId,
+      estudiante: datos.estudiante,
+      cursos: [...datos.cursos].sort((a, b) => a.localeCompare(b, "es-CL")),
+      diasSinActividad,
+      ultimaActividad: ultima?.toISOString() ?? null,
+    };
+  }));
+
+  const value = filasAtencion.filter((fila): fila is EstudianteAtencion => fila !== null)
+    .sort((a, b) => b.diasSinActividad - a.diasSinActividad || a.estudiante.localeCompare(b.estudiante, "es-CL"));
+  return { ok: true, value };
 }
 
 export async function tomarCaso(db: Db, tutorId: string, caseId: string, now: Date): Promise<TutoriaResult<TutoringCase>> {

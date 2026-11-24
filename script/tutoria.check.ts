@@ -8,7 +8,7 @@ import express from "express";
 import * as schema from "../shared/schema";
 import {
   crearCaso, casosDelEstudiante, casosDelTutor, casosParaAdmin, asignarCaso, responderCaso, cerrarCaso, MAX_OPEN_CASES,
-  bandejaTutor, tomarCaso,
+  bandejaTutor, tomarCaso, estudiantesQueNecesitanAtencion,
 } from "../server/tutoria";
 
 // --- 500 de GET /api/reservations: sin setupAuth passport no agrega req.isAuthenticated. ---
@@ -37,9 +37,9 @@ await db.insert(userProfiles).values([
   { userId: "est", role: "student" }, { userId: "est2", role: "student" },
   { userId: "tut", role: "tutor" }, { userId: "tut2", role: "tutor" }, { userId: "adm", role: "admin" },
 ]);
-await db.insert(levels).values([{ id: "7b", name: "7° Básico", programType: "menores" }]);
+await db.insert(levels).values([{ id: "7b", name: "7° Básico", programType: "menores" }, { id: "6b", name: "6° Básico", programType: "menores" }]);
 await db.insert(subjects).values([{ id: "s-mat", name: "Matemática", slug: "matematica" }, { id: "s-len", name: "Lenguaje", slug: "lenguaje" }]);
-await db.insert(levelSubjects).values([{ id: "ls1", levelId: "7b", subjectId: "s-mat" }, { id: "ls2", levelId: "7b", subjectId: "s-len" }]);
+await db.insert(levelSubjects).values([{ id: "ls1", levelId: "7b", subjectId: "s-mat" }, { id: "ls2", levelId: "7b", subjectId: "s-len" }, { id: "ls3", levelId: "6b", subjectId: "s-mat" }]);
 await db.insert(enrollments).values([{ userId: "est", levelSubjectId: "ls1" }, { userId: "est2", levelSubjectId: "ls1" }]);
 await db.insert(learningObjectives).values([
   { id: "oa1", levelSubjectId: "ls1", code: "OA 1", title: "Enteros", weekNumber: 1 },
@@ -187,5 +187,67 @@ assert.ok((await cerrarCaso(db, "t3", viejo.value.id, { notaCierre: "Resuelto" }
 const trasCierre = await bandejaTutor(db, "t3");
 assert.ok(trasCierre.ok && !trasCierre.value.mios.some((c) => c.id === viejo.value.id));
 console.log("tutoria bandeja compartida: ok");
+
+// --- Estudiantes que necesitan atención: acceso, umbral, matrícula y datos mínimos ---
+await db.insert(users).values([
+  { id: "att-7", name: "Zoe Siete", email: "att-7@ejemplo.cl" },
+  { id: "att-5", name: "Beatriz Cinco", email: "att-5@ejemplo.cl" },
+  { id: "att-4", name: "Cuatro Días", email: "att-4@ejemplo.cl" },
+  { id: "att-inicio", name: "Alicia Sin Actividad", email: "att-inicio@ejemplo.cl" },
+  { id: "att-ajeno", name: "Actividad Ajena", email: "att-ajeno@ejemplo.cl" },
+  { id: "att-inactiva", name: "Matrícula Inactiva", email: "att-inactiva@ejemplo.cl" },
+  { id: "att-sinperfil", name: "Sin Perfil", email: "att-sinperfil@ejemplo.cl" },
+  { id: "att-guardian", name: "Apoderada", email: "att-guardian@ejemplo.cl" },
+  { id: "att-admin", name: "Administradora", email: "att-admin@ejemplo.cl" },
+  { id: "att-tutor", name: "Tutor Matriculado", email: "att-tutor@ejemplo.cl" },
+  { id: "att-otro", name: "Otra Persona", email: "att-otro@ejemplo.cl" },
+]);
+await db.insert(userProfiles).values([
+  { userId: "att-7", role: "student" }, { userId: "att-5", role: "student" },
+  { userId: "att-4", role: "student" }, { userId: "att-inicio", role: "student" },
+  { userId: "att-ajeno", role: "student" }, { userId: "att-inactiva", role: "student" },
+  { userId: "att-guardian", role: "guardian" }, { userId: "att-admin", role: "admin" },
+  { userId: "att-tutor", role: "tutor" },
+]);
+await db.insert(enrollments).values([
+  { userId: "att-7", levelSubjectId: "ls1", enrolledAt: new Date("2026-04-01T15:00:00Z") },
+  { userId: "att-7", levelSubjectId: "ls2", enrolledAt: new Date("2026-04-01T15:00:00Z") },
+  { userId: "att-7", levelSubjectId: "ls3", enrolledAt: new Date("2026-04-02T15:00:00Z") },
+  { userId: "att-5", levelSubjectId: "ls1", enrolledAt: new Date("2026-04-01T15:00:00Z") },
+  { userId: "att-4", levelSubjectId: "ls1", enrolledAt: new Date("2026-04-01T15:00:00Z") },
+  { userId: "att-inicio", levelSubjectId: "ls1", enrolledAt: new Date("2026-04-05T15:00:00Z") },
+  { userId: "att-ajeno", levelSubjectId: "ls1", enrolledAt: new Date("2026-04-01T15:00:00Z") },
+  { userId: "att-inactiva", levelSubjectId: "ls1", isActive: false, enrolledAt: new Date("2026-04-01T15:00:00Z") },
+  { userId: "att-sinperfil", levelSubjectId: "ls1", enrolledAt: new Date("2026-04-01T15:00:00Z") },
+  { userId: "att-guardian", levelSubjectId: "ls1", enrolledAt: new Date("2026-04-01T15:00:00Z") },
+  { userId: "att-admin", levelSubjectId: "ls1", enrolledAt: new Date("2026-04-01T15:00:00Z") },
+  { userId: "att-tutor", levelSubjectId: "ls1", enrolledAt: new Date("2026-04-01T15:00:00Z") },
+]);
+await db.insert(schema.learningEvents).values([
+  { userId: "att-7", tipo: "recurso_abierto", referencia: "r1", levelSubjectId: "ls1", createdAt: new Date("2026-04-03T15:00:00Z") },
+  { userId: "att-5", tipo: "recurso_abierto", referencia: "r1", levelSubjectId: "ls1", createdAt: new Date("2026-04-05T15:00:00Z") },
+  { userId: "att-4", tipo: "recurso_abierto", referencia: "r1", levelSubjectId: "ls1", createdAt: new Date("2026-04-06T15:00:00Z") },
+  { userId: "att-otro", tipo: "recurso_abierto", referencia: "r1", levelSubjectId: "ls1", createdAt: new Date("2026-04-10T15:00:00Z") },
+]);
+
+const ahoraAtencion = new Date("2026-04-10T15:00:00Z");
+fails(await estudiantesQueNecesitanAtencion(db, "att-7", ahoraAtencion), 403);
+fails(await estudiantesQueNecesitanAtencion(db, "att-guardian", ahoraAtencion), 403);
+fails(await estudiantesQueNecesitanAtencion(db, "att-admin", ahoraAtencion), 403);
+fails(await estudiantesQueNecesitanAtencion(db, "att-sinperfil", ahoraAtencion), 403);
+const atencion = await estudiantesQueNecesitanAtencion(db, "t3", ahoraAtencion);
+assert.ok(atencion.ok);
+assert.deepEqual(atencion.value.map((e) => [e.studentId, e.diasSinActividad]), [
+  ["att-ajeno", 9], ["att-7", 7], ["att-inicio", 5], ["att-5", 5],
+]);
+assert.ok(!atencion.value.some((e) => ["att-4", "att-inactiva", "att-sinperfil", "att-guardian", "att-admin", "att-tutor"].includes(e.studentId)));
+assert.deepEqual(atencion.value.find((e) => e.studentId === "att-7")?.cursos, ["6° Básico", "7° Básico"]);
+assert.equal(atencion.value.find((e) => e.studentId === "att-7")?.ultimaActividad, "2026-04-03T15:00:00.000Z");
+assert.equal(atencion.value.find((e) => e.studentId === "att-inicio")?.ultimaActividad, null);
+for (const estudiante of atencion.value) {
+  assert.deepEqual(Object.keys(estudiante).sort(), ["studentId", "estudiante", "cursos", "diasSinActividad", "ultimaActividad"].sort());
+}
+assert.equal(atencion.value.find((e) => e.studentId === "att-5")?.estudiante, "Beatriz Cinco");
+console.log("tutoria atencion: ok");
 
 console.log("tutoria: ok");
