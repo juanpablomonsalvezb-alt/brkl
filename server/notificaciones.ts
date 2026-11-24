@@ -17,6 +17,7 @@ import {
 } from "@shared/notificaciones";
 import { loadVorticeInput } from "./vortice";
 import { getBrujulaBlocks, getBrujulaPanel } from "./brujula";
+import { diasSinActividadDe } from "./atencion";
 import {
   getModuleStartDate, getEvaluation1ReleaseDate, getEvaluation2ReleaseDate, getEvaluation3ReleaseDate, getEvaluation4ReleaseDate,
 } from "./calendarUtils";
@@ -151,6 +152,7 @@ export async function despacharNotificaciones(db: Db, transporte: Transporte, ah
         };
       }
 
+      const diasSinActividad = await diasSinActividadDe(db, u.id, ahora);
       const plan = planificarNotificaciones({
         ahora,
         estudiante: { nombre: u.firstName || u.name || null, email: u.email },
@@ -160,6 +162,7 @@ export async function despacharNotificaciones(db: Db, transporte: Transporte, ah
         modulos,
         resumen: buildOverview(level, input, completed, passed),
         avancesSemana: (vistos?.n ?? 0) + (aprobadas?.n ?? 0),
+        diasSinActividad,
         brujulaApoderado,
       });
 
