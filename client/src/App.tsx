@@ -8,6 +8,7 @@ import Home from "@/pages/Home";
 import { lazyRoute } from "@/lib/lazyRoute";
 import Lenis from 'lenis';
 import { useEffect, lazy, Suspense } from "react";
+import { aplicarLectura, cargarLectura } from "@/lib/lectura";
 
 // Code-splitting: solo Home va en el bundle inicial (es la landing pública y
 // define el LCP). Todo lo demás — dashboards, admin, course player — se carga
@@ -168,6 +169,10 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    aplicarLectura(cargarLectura());
+  }, []);
+
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>

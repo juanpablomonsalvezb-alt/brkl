@@ -1,5 +1,6 @@
 /* Sistema visual editorial compartido de Vórtice (estética editorial calma + tipografía estilo Anthropic).
    Aislado bajo .vx-editorial, .vx y .ve para no alterar la landing pública ni Home.tsx. */
+@import "./lectura.css";
 
 .vx-editorial,
 .vx,

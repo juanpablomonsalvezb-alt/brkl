@@ -1,0 +1,136 @@
+:root[data-vx-tam="grande"] .vx,
+:root[data-vx-tam="grande"] .ve,
+:root[data-vx-tam="grande"] .vx-editorial {
+  zoom: 1.15;
+  overflow-wrap: anywhere;
+}
+
+:root[data-vx-tam="muy-grande"] .vx,
+:root[data-vx-tam="muy-grande"] .ve,
+:root[data-vx-tam="muy-grande"] .vx-editorial {
+  zoom: 1.3;
+  overflow-wrap: anywhere;
+}
+
+/* Con texto ampliado, las etiquetas que no parten línea (p. ej. insignias del Aula) desbordan en teléfono. */
+:root:is([data-vx-tam="grande"], [data-vx-tam="muy-grande"]) :is(.vx, .ve, .vx-editorial) .whitespace-nowrap {
+  white-space: normal;
+  max-width: 100%;
+}
+
+:root[data-vx-fuente="legible"] .vx,
+:root[data-vx-fuente="legible"] .ve,
+:root[data-vx-fuente="legible"] .vx-editorial {
+  --vx-sans: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  --vx-serif: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root[data-vx-fuente="legible"] .vx p,
+:root[data-vx-fuente="legible"] .vx li,
+:root[data-vx-fuente="legible"] .vx label,
+:root[data-vx-fuente="legible"] .ve p,
+:root[data-vx-fuente="legible"] .ve li,
+:root[data-vx-fuente="legible"] .ve label,
+:root[data-vx-fuente="legible"] .vx-editorial p,
+:root[data-vx-fuente="legible"] .vx-editorial li,
+:root[data-vx-fuente="legible"] .vx-editorial label {
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+:root[data-vx-contraste="alto"] .vx,
+:root[data-vx-contraste="alto"] .ve,
+:root[data-vx-contraste="alto"] .vx-editorial {
+  --vx-ink: #000000;
+  --vx-ink-soft: #2B2A28;
+  --vx-muted: #46453F;
+  --vx-line: #8A8880;
+  --vx-line-strong: #46453F;
+  --vx-card: #FFFFFF;
+  --vx-bg: #FFFFFF;
+}
+
+.vx-lectura {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  max-width: 100%;
+  color: var(--vx-ink);
+  overflow-wrap: anywhere;
+}
+
+.vx-lectura-toggle,
+.vx-lectura-restablecer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 8px 14px;
+  border: 1px solid var(--vx-line-strong);
+  border-radius: 12px;
+  background: var(--vx-card);
+  color: var(--vx-ink);
+  font: inherit;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.vx-lectura-panel {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.vx-lectura-panel fieldset {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  margin: 0;
+  padding: 8px 10px 10px;
+  border: 1px solid var(--vx-line);
+  border-radius: 12px;
+  color: var(--vx-ink);
+}
+
+.vx-lectura-panel legend {
+  padding: 0 4px;
+  font-weight: 600;
+}
+
+.vx-lectura-panel label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 4px 2px;
+  color: var(--vx-ink);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.vx-lectura-panel input[type="radio"] {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--vx-primary);
+}
+
+.vx-lectura-guardado,
+.vx-lectura-preview {
+  margin: 0;
+  color: var(--vx-ink-soft);
+}
+
+.vx-lectura-restablecer {
+  justify-self: start;
+}
+
+.vx-lectura-preview {
+  font-family: var(--vx-sans);
+}
