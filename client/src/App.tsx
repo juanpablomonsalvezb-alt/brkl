@@ -68,6 +68,7 @@ const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const VorticeInicio = lazy(() => import("@/pages/vortice/VorticeInicio"));
 const VorticeAula = lazy(() => import("@/pages/vortice/VorticeAula"));
 const VorticeMapa = lazy(() => import("@/pages/vortice/VorticeMapa"));
+const VorticeMiAno = lazy(() => import("@/pages/vortice/VorticeMiAno"));
 const VorticeEvaluacion = lazy(() => import("@/pages/vortice/VorticeEvaluacion"));
 const FamiliaVista = lazy(() => import("@/pages/vortice/FamiliaVista"));
 const TutorBandeja = lazy(() => import("@/pages/vortice/TutorBandeja"));
@@ -137,6 +138,7 @@ function Router() {
       <Route path="/vortice/aula" component={VorticeAula} />
       <Route path="/vortice/aula/:oaId" component={VorticeAula} />
       <Route path="/vortice/conocimientos" component={VorticeMapa} />
+      <Route path="/vortice/mi-ano" component={VorticeMiAno} />
       <Route path="/vortice/evaluacion/:evaluacionId" component={VorticeEvaluacion} />
       <Route path="/tutor" component={TutorBandeja} />
       <Route path="/familia" component={FamiliaVista} />

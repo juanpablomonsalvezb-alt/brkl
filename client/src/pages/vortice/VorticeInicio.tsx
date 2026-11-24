@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  ArrowRight, BarChart3, BookOpen, Compass, BriefcaseBusiness, CalendarDays, ChevronRight, FileText, Home,
+  ArrowRight, BarChart3, BookOpen, CalendarRange, Compass, BriefcaseBusiness, CalendarDays, ChevronRight, FileText, Home,
   Link2, Menu, MessageCircle, ClipboardCheck, Star, Target, Users, X,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -226,6 +226,7 @@ export default function VorticeInicio() {
 
           <div className="vx-nav-group">Organización</div>
           <a href="#semana" onClick={() => setMenu(false)}><CalendarDays />Planificador</a>
+          <Link href="/vortice/mi-ano"><CalendarRange />Mi año</Link>
           <a href="#brujula" onClick={() => setMenu(false)}><Compass />Brújula</a>
           <a href="#portafolio" onClick={() => setMenu(false)}><BriefcaseBusiness />Portafolio</a>
 

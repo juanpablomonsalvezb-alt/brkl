@@ -67,6 +67,7 @@ import {
 } from "./portafolio";
 import { notifyByEmail, sendConfirmationEmail, sendLearningEmail } from "./notify";
 import { cronAutorizado, despacharNotificaciones, guardarPreferencias, leerPreferencias } from "./notificaciones";
+import { construirMiAno } from "./miAno";
 import { HORARIO, actualizarPreferenciasSchema } from "@shared/notificaciones";
 import { listRootFolders, listModuleFolders, getModuleResources, searchFolderByName } from "./googleDrive";
 import {
@@ -577,6 +578,17 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error building Vórtice overview:", error);
       res.status(500).json({ message: "Failed to build overview" });
+    }
+  });
+
+  app.get("/api/vortice/mi-ano", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      res.json(await construirMiAno(db, userId, new Date()));
+    } catch (error) {
+      console.error("Error building Mi año:", error);
+      res.status(500).json({ message: "Failed to build Mi año" });
     }
   });
 

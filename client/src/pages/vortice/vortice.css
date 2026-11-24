@@ -572,3 +572,34 @@
   color: var(--vx-ink-soft);
   margin: 0;
 }
+
+.vx-ano-content {
+  width: min(100% - 2rem, 56rem);
+  margin-inline: auto;
+  padding-block: 2rem 3rem;
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+}
+.vx-ano-title { font-size: clamp(2rem, 5vw, 2.75rem); }
+.vx-ano-message { margin: 0; color: var(--vx-ink-soft); }
+.vx-ano-summary { padding: 1.25rem; display: grid; gap: 0.35rem; }
+.vx-ano-summary h2, .vx-ano-item h2 { font-size: 1.35rem; line-height: 1.25; overflow-wrap: anywhere; }
+.vx-ano-summary p, .vx-ano-dates { margin: 0; color: var(--vx-ink-soft); }
+.vx-ano-timeline { display: grid; gap: 0.9rem; list-style: none; margin: 0; padding: 0; min-width: 0; }
+.vx-ano-item { padding: 1.1rem 1.2rem; min-width: 0; }
+.vx-ano-item-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; min-width: 0; }
+.vx-ano-item-heading > div { min-width: 0; }
+.vx-ano-status { flex: none; color: var(--vx-ink); font-size: 0.875rem; font-weight: 600; }
+.vx-ano-item-actual { background: var(--vx-acento-soft); border-color: var(--vx-primary); }
+.vx-ano-item-pasado { color: var(--vx-ink-soft); }
+.vx-ano-evaluations { display: grid; gap: 0.3rem; list-style: none; margin: 0.85rem 0 0; padding: 0; color: var(--vx-ink-soft); font-size: 0.925rem; }
+
+.vx-ano .vx-topbar { position: sticky; }
+
+@media (max-width: 30rem) {
+  .vx-ano-content { width: auto; padding: 1.5rem 1rem 2.5rem; }
+  .vx-ano-item { padding: 1rem; }
+  .vx-ano-item-heading { flex-direction: column; gap: 0.5rem; }
+  .vx-ano-status { align-self: flex-start; }
+}
