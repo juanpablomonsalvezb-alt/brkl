@@ -133,6 +133,16 @@
       "source": "/adaptativo{/}?",
       "destination": "/neurodivergentes",
       "permanent": true
+    },
+    {
+      "source": "/blog/clase-sincr%C3%B3nica-vs-asincr%C3%B3nica{/}?",
+      "destination": "/blog/clase-sincronica-vs-asincronica/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/clase-sincronica-vs-asincr%C3%B3nica{/}?",
+      "destination": "/blog/clase-sincronica-vs-asincronica/",
+      "permanent": true
     }
   ],
   "headers": [
