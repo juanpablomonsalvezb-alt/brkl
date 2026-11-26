@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { BookOpen, CalendarDays, Compass, Users } from "lucide-react";
 import { CONFIG_INTENSIDAD } from "@shared/brujula";
 import type { EstadoRitmoApoderado, ResumenBrujulaApoderado } from "@shared/brujulaPanel";
+import StateBlock from "@/components/vortice/StateBlock";
 import "./vortice.css";
 import "./brujula.css";
 
@@ -125,13 +126,15 @@ export default function FamiliaVista() {
           </header>
 
           {estudiantes.isLoading ? (
-            <div className="vx-skeleton" />
+            <StateBlock tipo="cargando" />
+          ) : estudiantes.isError ? (
+            <StateBlock tipo="error" texto="No pudimos cargar tus estudiantes." onReintentar={() => estudiantes.refetch()} />
           ) : lista.length === 0 ? (
-            <p className="vx-empty">Aún no tienes estudiantes vinculados en Portal Familia.</p>
+            <StateBlock tipo="vacio" texto="Aún no tienes estudiantes vinculados en Portal Familia." />
           ) : resumen.isLoading ? (
-            <div className="vx-skeleton" />
+            <StateBlock tipo="cargando" />
           ) : !data || !b ? (
-            <p className="vx-empty">No pudimos cargar el resumen de tu estudiante. Intenta recargar la página.</p>
+            <StateBlock tipo="error" texto="No pudimos cargar el resumen de tu estudiante." onReintentar={() => resumen.refetch()} />
           ) : (
             <>
               <div className="vb-fila" style={{ marginBottom: 14, alignItems: "flex-end" }}>

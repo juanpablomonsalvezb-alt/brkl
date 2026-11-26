@@ -12,7 +12,7 @@
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
-.vx :focus-visible { outline: 2px solid var(--vx-green-2); outline-offset: 2px; }
+.vx :focus-visible { outline: 3px solid var(--vx-primary); outline-offset: 2px; }
 /* Anula Poppins de index.css para encabezados dentro de Vórtice. */
 .vx h1, .vx h2, .vx h3 {
   font-family: var(--vx-serif);
@@ -106,13 +106,14 @@
 .vx-hero-copy .vx-sub { font-size: 16.5px; margin: 0 0 18px; color: var(--vx-ink-soft); font-weight: 400; }
 .vx-hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .vx-cta {
-  display: inline-flex; align-items: center; gap: 9px;
-  min-height: 44px; padding: 10px 22px; border-radius: 999px;
-  background: var(--vx-green); color: #fff;
-  font-weight: 500; font-size: 14.5px; text-decoration: none;
-  transition: background-color 160ms ease, transform 160ms ease;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 10px 18px; border-radius: 10px;
+  border: 1px solid var(--vx-primary); background: var(--vx-primary); color: #fff;
+  font-family: var(--vx-sans); font-size: 15px; font-weight: 500; line-height: 1.25; text-decoration: none;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
 }
-.vx-cta:hover { background: var(--vx-primary-hover); }
+.vx-cta:hover:not(:disabled) { background: var(--vx-primary-hover); border-color: var(--vx-primary-hover); }
+.vx-cta:disabled { opacity: .45; cursor: not-allowed; }
 .vx-cta svg { width: 17px; height: 17px; }
 .vx-hero-kpis {
   display: grid;
@@ -167,10 +168,10 @@
 /* Tarjetas */
 .vx-card {
   background: var(--vx-card);
-  border: 1px solid var(--vx-line);
-  border-radius: 18px;
+  border: 0;
+  border-radius: 14px;
   padding: 20px 22px 22px;
-  box-shadow: var(--vx-shadow-card);
+  box-shadow: none;
   min-width: 0;
 }
 .vx-card > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
@@ -361,8 +362,8 @@
 .vx-ayuda-field textarea:focus { outline: none; border-color: var(--vx-green); }
 .vx-ayuda-counter { font-size: 12px; color: var(--vx-ink-soft); text-align: right; font-family: var(--vx-mono); }
 
-.vx-ayuda-form .vx-cta { justify-self: start; font-size: 14px; }
-.vx-ayuda-form .vx-cta:disabled { opacity: 0.5; cursor: not-allowed; }
+.vx-ayuda-form .vx-cta { justify-self: start; font-size: 15px; }
+.vx-ayuda-form .vx-cta:disabled { opacity: .45; cursor: not-allowed; }
 
 .vx-ayuda-status,
 .vx-ayuda-success,
@@ -401,7 +402,6 @@
 
 /* Carga y error */
 .vx-skeleton { background: linear-gradient(90deg, var(--vx-surface), var(--vx-bg), var(--vx-surface)); background-size: 200% 100%; border-radius: 12px; min-height: 90px; animation: vx-shimmer 1.4s ease infinite; }
-@keyframes vx-shimmer { to { background-position: -200% 0; } }
 .vx-state { max-width: 480px; margin: 18vh auto; text-align: center; padding: 0 20px; }
 .vx-state h1 { font-size: 32px; margin: 0 0 10px; }
 .vx-state p { color: var(--vx-ink-soft); margin: 0 0 20px; }

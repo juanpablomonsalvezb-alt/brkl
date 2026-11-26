@@ -50,6 +50,10 @@
   --vx-bg: #FFFFFF;
 }
 
+:root[data-vx-contraste="alto"] :is(.vx-card, .vx-paper, .ve-hoja) {
+  border: 1px solid var(--vx-line-strong);
+}
+
 .vx-lectura {
   display: grid;
   gap: 12px;

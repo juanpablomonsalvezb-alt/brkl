@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   Compass,
   Lock,
-  RefreshCw,
   RotateCcw,
   Sparkles,
   Star,
@@ -23,7 +22,7 @@ import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTi
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
+import StateBlock from "@/components/vortice/StateBlock";
 import type {
   AristaMapa,
   EstadoVisualMapa,
@@ -260,34 +259,9 @@ export default function VorticeMapa() {
             </div>
 
         {mapaQuery.isLoading ? (
-          <div className="space-y-5">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-              {[0, 1, 2, 3].map((i) => (
-                <Card key={i} className="vx-paper border-[#E6E2D8] shadow-none">
-                  <CardContent className="p-4 sm:p-5 space-y-2">
-                    <Skeleton className="h-3.5 w-24 bg-[#EFECE3]" />
-                    <Skeleton className="h-8 w-12 bg-[#EFECE3]" />
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            <Card className="vx-paper border-[#E6E2D8] shadow-none">
-              <CardContent className="py-8 space-y-3">
-                <Skeleton className="h-5 w-60 bg-[#EFECE3]" />
-                <Skeleton className="h-56 w-full rounded-2xl bg-[#EFECE3]" />
-              </CardContent>
-            </Card>
-          </div>
+          <StateBlock tipo="cargando" filas={4} />
         ) : mapaQuery.isError ? (
-          <Card className="vx-paper border-[#C84B3B]/40 shadow-none">
-            <CardContent className="py-8 flex flex-wrap items-center justify-between gap-4">
-              <p className="text-sm font-medium text-[#9A4225]">No pudimos cargar el mapa.</p>
-              <Button type="button" variant="outline" className="rounded-full border-[#D5CFC2]" onClick={() => mapaQuery.refetch()}>
-                <RefreshCw className="w-4 h-4 mr-1.5" />
-                Reintentar
-              </Button>
-            </CardContent>
-          </Card>
+          <StateBlock tipo="error" texto="No pudimos cargar el mapa." onReintentar={() => mapaQuery.refetch()} />
         ) : !data?.disponible || nodos.length === 0 ? (
           <Card className="vx-paper border-[#E6E2D8] shadow-none">
             <CardContent className="py-4">

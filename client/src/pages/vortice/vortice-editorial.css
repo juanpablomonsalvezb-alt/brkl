@@ -74,7 +74,7 @@
 }
 
 .vx-editorial :focus-visible {
-  outline: 2px solid var(--vx-green-2);
+  outline: 3px solid var(--vx-primary);
   outline-offset: 2px;
 }
 
@@ -121,9 +121,9 @@
 
 .vx-editorial .vx-paper {
   background: var(--vx-card);
-  border: 1px solid var(--vx-line);
-  border-radius: 18px;
-  box-shadow: var(--vx-shadow-card);
+  border: 0;
+  border-radius: 14px;
+  box-shadow: none;
 }
 
 .vx-editorial [data-slot="item-content"] {
@@ -135,25 +135,30 @@
   max-width: 100%;
 }
 
-.vx-editorial .vx-pill-nav {
+:is(.vx-editorial, .vx) .vx-pill-nav,
+:is(.vx-editorial, .vx) .vx-btn-ghost {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--vx-line);
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--vx-line-strong);
   background: var(--vx-card);
   color: var(--vx-ink);
-  font-size: 13.5px;
+  font-family: var(--vx-sans);
+  font-size: 15px;
   font-weight: 500;
+  line-height: 1.25;
   text-decoration: none;
-  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
 }
 
-.vx-editorial .vx-pill-nav:hover {
-  border-color: var(--vx-green);
-  color: var(--vx-green);
-  background: var(--vx-green-soft);
+:is(.vx-editorial, .vx) .vx-pill-nav:hover:not(:disabled),
+:is(.vx-editorial, .vx) .vx-btn-ghost:hover:not(:disabled) {
+  border-color: var(--vx-primary);
+  color: var(--vx-primary);
 }
 
 :is(.vx-editorial, .vx) .vx-btn-primary {
@@ -162,14 +167,17 @@
   justify-content: center;
   gap: 8px;
   min-height: 44px;
-  padding: 10px 20px;
-  border-radius: 999px;
-  border: 1px solid var(--vx-green);
-  background: var(--vx-green);
-  color: #FFFFFF;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--vx-primary);
+  background: var(--vx-primary);
+  color: #fff;
+  font-family: var(--vx-sans);
+  font-size: 15px;
   font-weight: 500;
-  font-size: 14.5px;
-  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+  line-height: 1.25;
+  text-decoration: none;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
 }
 
 :is(.vx-editorial, .vx) .vx-btn-primary:hover:not(:disabled) {
@@ -177,31 +185,30 @@
   border-color: var(--vx-primary-hover);
 }
 
-:is(.vx-editorial, .vx) .vx-btn-primary:disabled {
-  opacity: 0.48;
+:is(.vx-editorial, .vx) :is(.vx-btn-primary, .vx-btn-ghost, .vx-pill-nav):disabled {
+  opacity: .45;
   cursor: not-allowed;
 }
 
-:is(.vx-editorial, .vx) .vx-btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  border: 1px solid var(--vx-line-strong);
+:is(.vx-editorial, .vx) .vx-estado {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  padding: 24px;
   background: var(--vx-card);
-  color: var(--vx-ink);
-  font-weight: 500;
-  font-size: 14.5px;
-  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+  border-radius: 14px;
+  color: var(--vx-ink-soft);
 }
 
-:is(.vx-editorial, .vx) .vx-btn-ghost:hover:not(:disabled) {
-  border-color: var(--vx-ink);
-  background: var(--vx-surface);
+.vx-editorial .vx-skeleton {
+  background: linear-gradient(90deg, var(--vx-surface), var(--vx-bg), var(--vx-surface));
+  background-size: 200% 100%;
+  border-radius: 12px;
+  min-height: 56px;
+  animation: vx-shimmer 1.4s ease infinite;
 }
+
+@keyframes vx-shimmer { to { background-position: -200% 0; } }
 
 .vx-editorial .vx-option-card {
   width: 100%;
@@ -238,4 +245,10 @@
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* La cabecera crece con los botones de 44 px; en teléfono estos no parten línea y la fila puede saltar. */
+.vx-topbar > .h-14 { height: auto; min-height: 56px; padding-block: 6px; flex-wrap: wrap; }
+@media (max-width: 30rem) {
+  .vx-topbar :is(.vx-pill-nav, .vx-btn-primary, .vx-btn-ghost) { padding-inline: 12px; font-size: 14px; white-space: nowrap; }
 }
