@@ -2,12 +2,11 @@
 // Solo datos reales: /api/auth/user, /api/vortice/overview, /api/vortice/brujula/semana,
 // /api/vortice/repaso y /api/vortice/portafolio. Las secciones del diseño sin datos en la
 // plataforma (ruta PAES, proyectos, recursos, orientación, evaluaciones con fecha) no se muestran.
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  ArrowRight, BarChart3, BookOpen, CalendarRange, Compass, BriefcaseBusiness, CalendarDays, ChevronRight, FileText, Home,
-  Link2, Menu, MessageCircle, ClipboardCheck, Star, Target, Users, X,
+  ArrowRight, BarChart3, CalendarDays, ChevronRight, FileText, Link2, MessageCircle, ClipboardCheck, Star, Target,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
@@ -22,7 +21,7 @@ import type { PanelBrujula } from "@shared/brujulaPanel";
 import { RobotTutor } from "./RobotTutor";
 import { BrujulaPanel } from "./BrujulaPanel";
 import { AyudaTutor } from "./AyudaTutor";
-import { PreferenciasLectura } from "./PreferenciasLectura";
+import { VorticeShell } from "@/components/vortice/VorticeShell";
 import "./vortice.css";
 
 interface Usuario { firstName: string | null; name: string | null }
@@ -119,7 +118,6 @@ function semanaActual(hoy: Date) {
 const mismoDia = (a: Date, b: Date) => a.toDateString() === b.toDateString();
 
 export default function VorticeInicio() {
-  const [menu, setMenu] = useState(false);
   const [pestana, setPestana] = useState<"producciones" | "evaluaciones">("producciones");
 
   const queryClient = useQueryClient();
@@ -133,6 +131,11 @@ export default function VorticeInicio() {
   const repaso = useQuery({ queryKey: ["/api/vortice/repaso"], queryFn: () => getJson<Repaso>("/api/vortice/repaso"), enabled: sesion });
   const mapa = useQuery({ queryKey: ["/api/vortice/conocimiento/mapa"], queryFn: () => getJson<MapaResumenInicio>("/api/vortice/conocimiento/mapa"), enabled: sesion, retry: false });
   const portafolio = useQuery({ queryKey: ["/api/vortice/portafolio"], queryFn: () => getJson<Evidencia[]>("/api/vortice/portafolio"), enabled: sesion });
+
+  useEffect(() => {
+    if (!overview.data || !window.location.hash) return;
+    document.getElementById(window.location.hash.slice(1))?.scrollIntoView();
+  }, [overview.data]);
 
   const savePrefsMutation = useMutation({
     mutationFn: async (next: PreferenciasBrujula) => {
@@ -215,41 +218,7 @@ export default function VorticeInicio() {
   const evidencias = (portafolio.data ?? []).filter((e) => (pestana === "evaluaciones" ? e.kind === "evaluacion" : e.kind !== "evaluacion"));
 
   return (
-    <div className="vx" data-tramo={ov?.track ?? undefined}>
-      <aside className="vx-side" data-open={menu} aria-label="Menú principal">
-        <a className="vx-brand" href="/vortice">BARKLEY<span>INSTITUTO</span></a>
-        <nav className="vx-nav" aria-label="Secciones">
-          <div className="vx-nav-group">Estudio</div>
-          <Link href="/vortice" aria-current="page"><Home />Inicio</Link>
-          <Link href="/vortice/aula"><BookOpen />Aula del piloto</Link>
-          <Link href="/vortice/conocimientos"><Target />Mis conocimientos</Link>
-          <a href="#asignaturas" onClick={() => setMenu(false)}><ClipboardCheck />Asignaturas</a>
-
-          <div className="vx-nav-group">Organización</div>
-          <a href="#semana" onClick={() => setMenu(false)}><CalendarDays />Planificador</a>
-          <Link href="/vortice/mi-ano"><CalendarRange />Mi año</Link>
-          <a href="#brujula" onClick={() => setMenu(false)}><Compass />Brújula</a>
-          <a href="#portafolio" onClick={() => setMenu(false)}><BriefcaseBusiness />Portafolio</a>
-
-          <div className="vx-nav-group">Apoyo</div>
-          <Link href="/academic-copilot"><MessageCircle />Tutor virtual</Link>
-          <Link href="/together"><Users />Together</Link>
-        </nav>
-        <div className="vx-me">
-          <div className="vx-avatar" aria-hidden="true">{(nombre ?? "?").charAt(0)}</div>
-          <div><b>{nombre ?? "Estudiante"}</b><small>{nivel?.name ?? "Sin curso asignado"}</small></div>
-          <a href={salir}>Salir</a>
-        </div>
-      </aside>
-
-      <main className="vx-main">
-        <div className="vx-top">
-          <a className="vx-brand" href="/vortice">BARKLEY<span>INSTITUTO</span></a>
-          <button type="button" onClick={() => setMenu(!menu)} aria-label={menu ? "Cerrar menú" : "Abrir menú"} aria-expanded={menu}>
-            {menu ? <X /> : <Menu />}
-          </button>
-        </div>
-
+    <VorticeShell variante="estudiante" activo="inicio" nombre={nombre} detalle={nivel?.name ?? "Sin curso asignado"} tramo={ov?.track} salirHref={salir}>
         <div className="vx-shell">
           <section className="vx-hero-ed" aria-labelledby="vx-saludo" data-con-imagen={ov?.track ? "true" : undefined}>
             {ov?.track && (
@@ -611,13 +580,11 @@ export default function VorticeInicio() {
                   <p>Te explico con otras palabras o te doy pistas paso a paso.</p>
                   <Link href="/academic-copilot"><MessageCircle aria-hidden="true" />Tutor virtual</Link>
                 </div>
-                <PreferenciasLectura />
                 <AyudaTutor asignaturas={ov?.subjects ?? []} />
               </section>
             </aside>
           </div>
         </div>
-      </main>
-    </div>
+    </VorticeShell>
   );
 }

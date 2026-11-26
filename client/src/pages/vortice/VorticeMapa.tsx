@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  ArrowLeft,
   ArrowRight,
   CheckCircle2,
   Compass,
@@ -23,6 +22,7 @@ import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, 
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import StateBlock from "@/components/vortice/StateBlock";
+import { VorticeShell } from "@/components/vortice/VorticeShell";
 import type {
   AristaMapa,
   EstadoVisualMapa,
@@ -32,7 +32,7 @@ import type {
 } from "@shared/mapaConocimiento";
 import type { ResumenEvaluacionMapa } from "@shared/cruceEvaluacionMapa";
 import type { ItemRetencionProgramado } from "@shared/retencionMapa";
-import "./vortice-editorial.css";
+import "./vortice.css";
 
 interface PreguntaRetencionItem {
   preguntaVersionId: string;
@@ -230,33 +230,24 @@ export default function VorticeMapa() {
     : "/vortice/aula";
 
   return (
-    <div className="vx-editorial min-h-screen">
-      <header className="vx-topbar">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
-          <Link href="/vortice" className="vx-pill-nav">
-            <ArrowLeft className="w-4 h-4" />
-            Volver a Vórtice
-          </Link>
-          <div className="flex items-center gap-3">
-            <span className="vx-kicker hidden sm:inline">5.º Básico · Matemática</span>
-            <Link href="/vortice/aula" className="vx-btn-primary min-h-0 h-9 px-4 text-sm">
-              Ir al Aula Universal
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </header>
-
+    <VorticeShell variante="estudiante" activo="saber" claseRaiz="vx vx-editorial">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-            <div className="space-y-1">
-              <span className="vx-kicker">Constelación de aprendizaje · M3</span>
-              <h1 className="text-3xl sm:text-[2.35rem] leading-[1.12] text-[#141413]">Mis conocimientos</h1>
-              <p className="text-[14.5px] leading-relaxed text-[#5E5D59] max-w-[68ch] pt-1">
-                Completar lecturas o videos ordena tu camino, pero <strong className="text-[#141413] font-medium">no enciende estrellas</strong>. Las estrellas
-                se confirman cuando practicas y compruebas sin pistas en dos ejercicios distintos.
-                {!data?.tieneEvidencia && " Tu mapa se irá encendiendo desde tu primera práctica o comprobación."}
-              </p>
-            </div>
+        <div className="vx-pagina-acciones">
+          <span className="vx-kicker">5.º Básico · Matemática</span>
+          <Link href="/vortice/aula" className="vx-btn-primary min-h-0 h-9 px-4 text-sm">
+            Ir al Aula Universal
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+        <div className="space-y-1">
+          <span className="vx-kicker">Constelación de aprendizaje · M3</span>
+          <h1 className="text-3xl sm:text-[2.35rem] leading-[1.12] text-[#141413]">Mis conocimientos</h1>
+          <p className="text-[14.5px] leading-relaxed text-[#5E5D59] max-w-[68ch] pt-1">
+            Completar lecturas o videos ordena tu camino, pero <strong className="text-[#141413] font-medium">no enciende estrellas</strong>. Las estrellas
+            se confirman cuando practicas y compruebas sin pistas en dos ejercicios distintos.
+            {!data?.tieneEvidencia && " Tu mapa se irá encendiendo desde tu primera práctica o comprobación."}
+          </p>
+        </div>
 
         {mapaQuery.isLoading ? (
           <StateBlock tipo="cargando" filas={4} />
@@ -884,6 +875,6 @@ export default function VorticeMapa() {
           </>
         )}
       </div>
-    </div>
+    </VorticeShell>
   );
 }

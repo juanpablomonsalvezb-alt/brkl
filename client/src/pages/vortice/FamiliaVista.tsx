@@ -2,10 +2,11 @@
 // Nunca muestra porcentajes ni notas de evaluación E2.
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { BookOpen, CalendarDays, Compass, Users } from "lucide-react";
+import { BookOpen, CalendarDays, Compass } from "lucide-react";
 import { CONFIG_INTENSIDAD } from "@shared/brujula";
 import type { EstadoRitmoApoderado, ResumenBrujulaApoderado } from "@shared/brujulaPanel";
 import StateBlock from "@/components/vortice/StateBlock";
+import { VorticeShell } from "@/components/vortice/VorticeShell";
 import "./vortice.css";
 import "./brujula.css";
 
@@ -78,22 +79,7 @@ export default function FamiliaVista() {
   const b = data?.brujula;
 
   return (
-    <div className="vx">
-      <aside className="vx-side" aria-label="Menú familia">
-        <a className="vx-brand" href="/familia">BARKLEY<span>FAMILIA</span></a>
-        <nav className="vx-nav" aria-label="Estudiantes">
-          <a href="#resumen" aria-current="page"><Compass />Resumen</a>
-          <a href="#asignaturas"><BookOpen />Asignaturas</a>
-          <a href="#evaluaciones"><CalendarDays />Evaluaciones</a>
-        </nav>
-        <div className="vx-me">
-          <div className="vx-avatar" aria-hidden="true"><Users size={18} /></div>
-          <div><b>Apoderado</b><small>Solo lectura</small></div>
-          <a href={salir}>Salir</a>
-        </div>
-      </aside>
-
-      <main className="vx-main" style={{ paddingTop: 18 }}>
+    <VorticeShell variante="familia" activo="resumen" nombre="Apoderado" detalle="Solo lectura" salirHref={salir}>
         <section className="vx-card" id="resumen" style={{ marginBottom: 16 }}>
           <header>
             <div>
@@ -214,7 +200,6 @@ export default function FamiliaVista() {
             )}
           </section>
         )}
-      </main>
-    </div>
+    </VorticeShell>
   );
 }
