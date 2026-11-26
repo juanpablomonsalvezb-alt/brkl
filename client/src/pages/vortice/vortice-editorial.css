@@ -9,38 +9,55 @@
   --vx-sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --vx-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --vx-bg: #FAF9F5;
-  --vx-cream: #FAF9F5;
-  --vx-surface: #F3F1EA;
-  --vx-side: #F3F1EA;
+  --vx-bg: #F6F5F1; /* Winter White */
+  --vx-cream: #F6F5F1;
+  --vx-surface: #EFEEEA;
+  --vx-side: #EFEEEA;
   --vx-card: #FFFFFF;
-  --vx-line: #E6E2D8;
-  --vx-line-strong: #D5CFC2;
+  --vx-line: #E3E2DD;
+  --vx-line-strong: #868CA6;
 
-  --vx-ink: #141413;
-  --vx-ink-soft: #5E5D59;
-  --vx-muted: #87867F;
+  --vx-ink: #0E1A3A;
+  --vx-ink-soft: #4A5270;
+  --vx-muted: #5F6784;
+  --vx-night: #0E1A3A;
 
-  --vx-primary: #02316C;
-  --vx-primary-hover: #012552;
-  --vx-primary-2: #1F4C8F;
-  --vx-acento: #CADEF4;
-  --vx-acento-soft: #EAF2FB;
+  --vx-primary: #2447E5;
+  --vx-primary-hover: #1A35B8;
+  --vx-primary-2: #3A5BEF;
+  --vx-primary-soft: #E8EDFD;
+  --vx-acento: #CBD6FA;
+  --vx-acento-soft: #E8EDFD;
 
+  --vx-turquesa: #12B5CB;
+  --vx-turquesa-text: #0B6E86;
+  --vx-turquesa-soft: #E2F5F8;
+  --vx-violeta: #6A3FD0;
+  --vx-violeta-soft: #EFE9FB;
+  --vx-naranja: #F2801E;
+  --vx-naranja-text: #A8480A;
+  --vx-naranja-soft: #FDEEDF;
+  --vx-rojo: #B3261E;
+  --vx-rojo-soft: #FBE9E7;
+  --vx-dorado: #E8B31E;
+  --vx-dorado-text: #7A5A00;
+  --vx-dorado-soft: #FBF1D3;
+
+  /* Alias: nombres anteriores que usa el CSS existente. */
   --vx-green: var(--vx-primary);
   --vx-green-2: var(--vx-primary-2);
   --vx-green-soft: var(--vx-acento-soft);
-  --vx-clay: #C96442;
-  --vx-clay-text: #9E4325; /* arcilla oscura para texto pequeño: 4,8 a 6,4:1 sobre los fondos de Vórtice */
-  --vx-clay-hover: #B45435;
-  --vx-clay-soft: #FBF0EB;
-  --vx-amber: #D4942A;
-  --vx-amber-soft: #FEF6EA;
-  --vx-blue: #2F5EA8;
-  --vx-blue-soft: #EEF4FC;
-  --vx-orange: #D97736;
-  --vx-red: #C84B3B;
-  --vx-purple: #6D58B8;
+  --vx-clay: var(--vx-naranja-text);
+  --vx-clay-text: var(--vx-naranja-text);
+  --vx-clay-hover: #8C3A06;
+  --vx-clay-soft: var(--vx-naranja-soft);
+  --vx-amber: var(--vx-dorado);
+  --vx-amber-soft: var(--vx-dorado-soft);
+  --vx-blue: var(--vx-primary);
+  --vx-blue-soft: var(--vx-primary-soft);
+  --vx-orange: var(--vx-naranja);
+  --vx-red: var(--vx-rojo);
+  --vx-purple: var(--vx-violeta);
 
   --vx-shadow-sm: 0 1px 2px rgba(20, 20, 19, 0.04);
   --vx-shadow-card: 0 1px 2px rgba(20, 20, 19, 0.04), 0 10px 28px -16px rgba(20, 20, 19, 0.08);
@@ -210,9 +227,9 @@
   box-shadow: inset 0 0 0 1px var(--vx-green);
 }
 
-[data-tramo="basica-1-4"] { --vx-acento: #D9E3CD; --vx-acento-soft: #EEF3E8; }
-[data-tramo="basica-5-8"] { --vx-acento: #CADEF4; --vx-acento-soft: #EAF2FB; }
-[data-tramo="media"]      { --vx-acento: #CBDAEC; --vx-acento-soft: #EBF1F8; }
+[data-tramo="basica-1-4"] { --vx-acento: #BFE8F0; --vx-acento-soft: #E2F5F8; }
+[data-tramo="basica-5-8"] { --vx-acento: #CBD6FA; --vx-acento-soft: #E8EDFD; }
+[data-tramo="media"]      { --vx-acento: #DACDF6; --vx-acento-soft: #EFE9FB; }
 
 @media (prefers-reduced-motion: reduce) {
   .vx-editorial *,

@@ -184,7 +184,7 @@
 .vx-week { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 14px; text-align: center; }
 .vx-week div { padding: 9px 0; border-radius: 12px; color: var(--vx-ink-soft); font-size: 12px; border: 1px solid transparent; }
 .vx-week b { display: block; font-size: 16px; color: var(--vx-ink); font-weight: 500; margin-top: 4px; font-variant-numeric: tabular-nums; }
-.vx-week [aria-current="date"] { background: var(--vx-green); color: #dfe9e3; }
+.vx-week [aria-current="date"] { background: var(--vx-green); color: #FFFFFF; }
 .vx-week [aria-current="date"] b { color: #fff; font-weight: 600; }
 .vx-agenda { list-style: none; margin: 0; padding: 0; }
 .vx-agenda li { display: flex; align-items: center; gap: 10px; padding: 10px 2px; border-top: 1px solid var(--vx-line); font-size: 13.5px; line-height: 1.38; }
@@ -242,7 +242,7 @@
 .vx-ring svg { width: 84px; height: 84px; flex: none; }
 .vx-ring strong { display: block; font-family: var(--vx-serif); font-size: 30px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
 .vx-ring small { font-size: 13px; color: var(--vx-ink-soft); }
-.vx-bar-track { height: 7px; border-radius: 99px; background: #ECE8DE; overflow: hidden; }
+.vx-bar-track { height: 7px; border-radius: 99px; background: var(--vx-surface); overflow: hidden; }
 .vx-bar-track i { display: block; height: 100%; border-radius: inherit; background: var(--vx-green); transition: width 400ms ease; }
 .vx-stats { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 10px; flex: 1; min-width: 0; }
 .vx-stats li { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--vx-ink-soft); }
@@ -262,7 +262,7 @@
 .vx-thumb {
   aspect-ratio: 5 / 2;
   border-radius: 10px;
-  background: #EFECE3;
+  background: var(--vx-surface);
   border: 1px solid var(--vx-line);
   padding: 10px 12px;
   display: flex;
@@ -294,7 +294,7 @@
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 .vx-meter { display: flex; align-items: center; gap: 8px; font-size: 12px; font-family: var(--vx-mono); color: var(--vx-ink-soft); }
-.vx-meter span { flex: 1; height: 5px; border-radius: 99px; background: #ECE8DE; overflow: hidden; }
+.vx-meter span { flex: 1; height: 5px; border-radius: 99px; background: var(--vx-surface); overflow: hidden; }
 .vx-meter span i { display: block; height: 100%; border-radius: inherit; }
 .vx-subject:hover b { color: var(--vx-green); }
 
@@ -400,7 +400,7 @@
 .vx-ayuda-ver-todo:hover { border-color: var(--vx-green); color: var(--vx-green); }
 
 /* Carga y error */
-.vx-skeleton { background: linear-gradient(90deg, #EFECE3, #FAF9F5, #EFECE3); background-size: 200% 100%; border-radius: 12px; min-height: 90px; animation: vx-shimmer 1.4s ease infinite; }
+.vx-skeleton { background: linear-gradient(90deg, var(--vx-surface), var(--vx-bg), var(--vx-surface)); background-size: 200% 100%; border-radius: 12px; min-height: 90px; animation: vx-shimmer 1.4s ease infinite; }
 @keyframes vx-shimmer { to { background-position: -200% 0; } }
 .vx-state { max-width: 480px; margin: 18vh auto; text-align: center; padding: 0 20px; }
 .vx-state h1 { font-size: 32px; margin: 0 0 10px; }

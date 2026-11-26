@@ -38,7 +38,7 @@
 .vb-notas li[data-tono="alerta"] { border-color: var(--vx-line); border-left-color: var(--vx-red); background: #FCF7F6; } .vb-notas li[data-tono="alerta"] .vb-aguja { color: var(--vx-red); } .vb-notas li[data-tono="alerta"] .vb-aguja::after { transform: rotate(160deg); }
 .vb-notas li[data-tono="aviso"] { border-color: var(--vx-line); border-left-color: var(--vx-clay); background: #FCF8F5; } .vb-notas li[data-tono="aviso"] .vb-aguja { color: var(--vx-clay); } .vb-notas li[data-tono="aviso"] .vb-aguja::after { transform: rotate(95deg); }
 .vb-notas li[data-tono="info"] { border-color: var(--vx-line); border-left-color: var(--vx-blue); background: #F7FAFE; } .vb-notas li[data-tono="info"] .vb-aguja { color: var(--vx-blue); } .vb-notas li[data-tono="info"] .vb-aguja::after { transform: rotate(60deg); }
-.vb-notas li[data-tono="ok"] { background: #F5F9F7; border-color: var(--vx-line); border-left-color: var(--vx-green); }
+.vb-notas li[data-tono="ok"] { background: var(--vx-turquesa-soft); border-color: var(--vx-line); border-left-color: var(--vx-turquesa-text); }
 
 .vb-proxima {
   display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px;

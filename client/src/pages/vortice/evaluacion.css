@@ -1,12 +1,12 @@
 /* Evaluación de cierre: hoja editorial sobre papel cálido alabastro con regla izquierda terracota.
    Hereda el sistema tipográfico Newsreader + DM Sans + JetBrains Mono de vortice-editorial.css,
-   conservando [data-calmo="1"] salvia de bajo contraste para perfil neurodivergente. */
+   conservando [data-calmo="1"] lavanda gris de bajo contraste para perfil neurodivergente. */
 @import "./vortice-editorial.css";
 
 .ve {
   --ve-ink: var(--vx-ink); --ve-soft: var(--vx-ink-soft); --ve-green: var(--vx-primary); --ve-green-2: var(--vx-primary-2);
-  --ve-paper: #FFFFFF; --ve-bg: var(--vx-bg); --ve-line: var(--vx-line); --ve-orange: #C96442; --ve-red: #B84A39;
-  --ve-ok: #2F6B55; --ve-serif: var(--vx-serif, "Newsreader", Georgia, serif);
+  --ve-paper: #FFFFFF; --ve-bg: var(--vx-bg); --ve-line: var(--vx-line); --ve-orange: var(--vx-naranja-text); --ve-red: var(--vx-rojo);
+  --ve-ok: var(--vx-turquesa-text); --ve-serif: var(--vx-serif, "Newsreader", Georgia, serif);
   --ve-sans: var(--vx-sans, "DM Sans", system-ui, -apple-system, sans-serif);
   min-height: 100vh; color: var(--ve-ink); font-family: var(--ve-sans); font-size: 16px; line-height: 1.6;
   -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
@@ -22,10 +22,10 @@
   letter-spacing: -0.022em;
   color: var(--ve-ink);
 }
-/* Perfil calmo: salvia, menos contraste cromático, sin urgencia visual. */
+/* Perfil calmo: lavanda gris, menos contraste cromático, sin urgencia visual. */
 .ve[data-calmo="1"] {
-  --ve-bg: #EBF0E8; --ve-paper: #F7FAF5; --ve-line: #D4DFCE; --ve-orange: #7D9378; --ve-red: #6A7D65;
-  background: radial-gradient(980px 500px at 82% -10%, rgba(47,107,85,.08), transparent 60%), var(--ve-bg);
+  --ve-ink: #1D2547; --ve-bg: #EEEDF4; --ve-paper: #F9F8FC; --ve-line: #DBD9E6; --ve-orange: #6E6A92; --ve-red: #5F5B82; --ve-ok: #4A6A86;
+  background: radial-gradient(980px 500px at 82% -10%, rgba(106,63,208,.06), transparent 60%), var(--ve-bg);
 }
 .ve *, .ve *::before, .ve *::after { box-sizing: border-box; }
 .ve :where(button) { font: inherit; color: inherit; cursor: pointer; }
@@ -110,7 +110,7 @@
 .ve-score { display: flex; align-items: flex-end; gap: 22px; flex-wrap: wrap; }
 .ve-grande { font: 500 clamp(72px, 14vw, 128px)/.95 var(--ve-serif); font-optical-sizing: auto; letter-spacing: -.04em; color: var(--ve-green); } .ve-grande small { font-size: .4em; margin-left: 4px; letter-spacing: 0; }
 .ve-sello { margin-bottom: 14px; padding: 6px 16px; border: 2px solid; border-radius: 999px; font: 500 16px var(--ve-serif); letter-spacing: .05em; text-transform: uppercase; transform: rotate(-3deg); animation: ve-sello .6s .25s cubic-bezier(.3,1.6,.5,1) both; }
-.ve-sello.ok { color: var(--ve-ok); border-color: var(--ve-ok); } .ve-sello.no { color: #9A4225; border-color: #9A4225; }
+.ve-sello.ok { color: var(--ve-ok); border-color: var(--ve-ok); } .ve-sello.no { color: var(--vx-naranja-text); border-color: var(--vx-naranja-text); }
 .ve[data-calmo="1"] .ve-sello.no { color: var(--ve-soft); border-color: var(--ve-soft); }
 .ve-escala { position: relative; height: 12px; margin: 26px 0 12px; border-radius: 999px; background: var(--ve-line); }
 .ve-relleno { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: var(--ve-green-2); animation: ve-crece .9s .15s cubic-bezier(.2,.7,.2,1) both; transform-origin: left; }
