@@ -152,6 +152,8 @@ export default function CoursePlayer() {
 
   // Solo oculta controles; la autorización real la hace el servidor (isAdmin en /api/admin).
   const isAdmin = profileData?.role === 'admin';
+  // El estudiante vuelve a Vórtice; el resto (y mientras carga el perfil) sigue a la intranet.
+  const esEstudiante = profileData?.role === 'student';
 
   const { data: moduleInfo } = useQuery<{ moduleOAs: string | null; moduleContents: string | null; moduleDateRange: string | null }>({
     queryKey: ['/api/objectives', currentObjectiveId, 'module-info'],
@@ -515,9 +517,9 @@ export default function CoursePlayer() {
       <div className="min-h-screen bg-background flex flex-col font-sans text-foreground">
         <header className="h-16 bg-primary text-primary-foreground flex items-center justify-between px-8 shrink-0 border-b border-primary/20 sticky top-0 z-50">
           <div className="flex items-center gap-6">
-            <Link href="/dashboard">
+            <Link href={esEstudiante ? "/vortice" : "/dashboard"}>
               <button className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary-foreground/70 hover:text-white transition-colors" data-testid="back-button">
-                <ArrowLeft className="w-4 h-4" /> Volver a Intranet
+                <ArrowLeft className="w-4 h-4" /> {esEstudiante ? "Volver a Inicio" : "Volver a Intranet"}
               </button>
             </Link>
             <div className="h-4 w-px bg-white/20"></div>
