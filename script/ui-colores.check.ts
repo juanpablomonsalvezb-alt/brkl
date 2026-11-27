@@ -45,4 +45,17 @@ for (const t of ["vx-ink", "vx-ink-soft", "vx-muted", "vx-primary", "vx-turquesa
 assert.ok(contraste(token("vx-line-strong"), token("vx-card")) >= 3, "borde de control bajo 3:1");
 assert.ok(contraste([255, 255, 255], token("vx-primary")) >= 4.5, "texto blanco sobre el azul eléctrico");
 
+const uiFiles = [
+  "client/src/pages/CoursePlayer.tsx",
+  "client/src/pages/AcademicCopilot.tsx",
+  "client/src/components/TextbookViewer.tsx",
+  "client/src/components/EvaluationQuiz.tsx",
+  "client/src/components/GeminiCopilotButton.tsx",
+];
+for (const f of uiFiles) {
+  const source = readFileSync(f, "utf8");
+  assert.ok(!/\b(?:bg|text|border|from|to|via|ring|fill|stroke)-(?:emerald|green|teal|lime)-\d+\b/i.test(source), `${f} contiene un color verde de Tailwind`);
+  assert.ok(!/#(?:A51C30|821626|C41E3A|8B1725)\b/i.test(source), `${f} contiene un color de marca anterior`);
+}
+
 console.log("ui-colores: ok");

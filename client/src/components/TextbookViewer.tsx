@@ -47,9 +47,9 @@ export function TextbookViewer({ pdfUrl, title, startPage, endPage, moduleNumber
   };
 
   return (
-    <div className="w-full flex flex-col bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+    <div className="vx-course w-full flex flex-col bg-(--vx-surface) rounded-lg border border-(--vx-line) overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#A51C30] to-[#821626] text-white p-6 shadow-lg">
+      <div className="bg-gradient-to-r from-(--vx-primary) to-(--vx-primary-hover) text-white p-6 shadow-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <motion.div 
@@ -73,13 +73,13 @@ export function TextbookViewer({ pdfUrl, title, startPage, endPage, moduleNumber
           </div>
           <div className="text-right hidden sm:block">
             <div className="text-3xl font-black tracking-tight">{relativePageNum}/{totalAllowedPages}</div>
-            <div className="text-xs text-white/80 uppercase tracking-wider">Página actual</div>
+            <div className="text-xs text-white/80">Página actual</div>
           </div>
         </div>
       </div>
 
       {/* PDF Viewer - Using Google Drive Embed */}
-      <div className="flex-1 bg-gray-100 min-h-[580px] relative">
+      <div className="flex-1 bg-(--vx-surface) min-h-[580px] relative">
         <iframe
           src={embedUrl}
           className="w-full h-[580px] border-0"
@@ -88,25 +88,25 @@ export function TextbookViewer({ pdfUrl, title, startPage, endPage, moduleNumber
         />
         
         <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg">
-          <p className="text-sm font-semibold text-gray-800">
+          <p className="text-sm font-semibold text-(--vx-ink)">
             📖 Páginas {startPage} - {endPage}
           </p>
-          <p className="text-xs text-gray-600 mt-1">
+          <p className="text-xs text-(--vx-ink-soft) mt-1">
             Solo de este módulo
           </p>
         </div>
       </div>
 
       {/* Controls */}
-      <div className="bg-white border-t border-gray-200 p-4">
+      <div className="bg-(--vx-card) border-t border-(--vx-line) p-4">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
           <div className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-[#A51C30]" />
+            <BookOpen className="w-5 h-5 text-(--vx-primary)" />
             <div>
-              <p className="text-sm font-semibold text-gray-800">
+              <p className="text-sm font-semibold text-(--vx-ink)">
                 {totalAllowedPages} página{totalAllowedPages !== 1 ? 's' : ''} de este módulo
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-(--vx-muted)">
                 Páginas {startPage} - {endPage} del libro completo
               </p>
             </div>

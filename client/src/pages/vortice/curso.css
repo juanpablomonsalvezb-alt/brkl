@@ -1,0 +1,45 @@
+@import "./vortice-editorial.css";
+
+.vx-course,
+.vx-copilot {
+  --primary: 228 78% 52%;
+  --primary-foreground: 0 0% 100%;
+  --background: 48 22% 96%;
+  --foreground: 224 61% 14%;
+  --card: 0 0% 100%;
+  --card-foreground: 224 61% 14%;
+  --accent: 228 78% 52%;
+  --accent-foreground: 0 0% 100%;
+  --muted: 48 10% 92%;
+  --muted-foreground: 227 22% 34%;
+  --border: 50 10% 88%;
+  --ring: 228 78% 52%;
+
+  font-family: var(--vx-sans);
+  color: var(--vx-ink);
+}
+
+:is(.vx-course, .vx-copilot):not([class*="bg-"]) {
+  background: var(--vx-bg);
+}
+
+:is(.vx-course, .vx-copilot):is(.font-sans, .font-display, .font-serif),
+:is(.vx-course, .vx-copilot) :is(.font-sans, .font-display, .font-serif) {
+  font-family: var(--vx-sans);
+}
+
+:is(.vx-course, .vx-copilot).bg-background:not([class*="bg-(--vx-card)"]) {
+  background: var(--vx-bg);
+}
+
+:is(.vx-course, .vx-copilot).text-foreground {
+  color: var(--vx-ink);
+}
+
+:is(.vx-course, .vx-copilot) h1,
+:is(.vx-course, .vx-copilot) h2,
+:is(.vx-course, .vx-copilot) h3,
+:is(.vx-course, .vx-copilot) :is(h1, h2, h3):is(.font-sans, .font-display, .font-serif) {
+  font-family: var(--vx-serif);
+  font-weight: 500;
+}

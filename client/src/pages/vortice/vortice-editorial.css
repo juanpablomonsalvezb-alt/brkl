@@ -1,8 +1,10 @@
 /* Sistema visual editorial compartido de Vórtice (estética editorial calma + tipografía estilo Anthropic).
-   Aislado bajo .vx-editorial, .vx y .ve para no alterar la landing pública ni Home.tsx. */
+   Aislado bajo sus raíces para no alterar la landing pública ni Home.tsx. */
 @import "./lectura.css";
 
 .vx-editorial,
+.vx-course,
+.vx-copilot,
 .vx,
 .ve {
   --vx-serif: "Newsreader", Georgia, "Times New Roman", serif;

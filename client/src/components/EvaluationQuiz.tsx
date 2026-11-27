@@ -101,35 +101,35 @@ export function EvaluationQuiz({
   if (showResults && results) {
     const aprobado = results.resultado === "aprobado";
     return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white">
+      <div className="vx-course fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-(--vx-card)">
           <CardContent className="p-8 space-y-6">
             <div className="text-center">
               <div className={cn(
                 "w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4",
-                aprobado ? "bg-green-100" : "bg-red-100"
+                aprobado ? "bg-(--vx-turquesa-soft)" : "bg-(--vx-rojo-soft)"
               )}>
                 {aprobado ? (
-                  <Check className="w-12 h-12 text-green-600" aria-hidden="true" />
+                  <Check className="w-12 h-12 text-(--vx-turquesa-text)" aria-hidden="true" />
                 ) : (
-                  <X className="w-12 h-12 text-red-600" aria-hidden="true" />
+                  <X className="w-12 h-12 text-(--vx-rojo)" aria-hidden="true" />
                 )}
               </div>
 
-              <h2 className="text-2xl font-bold text-[#0A192F] mb-2" data-testid="evaluation-result">
+              <h2 className="text-2xl font-bold text-(--vx-night) mb-2" data-testid="evaluation-result">
                 {aprobado ? "Aprobado" : "No aprobado"}
               </h2>
             </div>
 
             <div className="border-t pt-6">
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-(--vx-ink-soft)">
                 Las respuestas correctas y sus explicaciones estarán disponibles cuando termine el período de revisión.
               </p>
             </div>
 
             <Button
               onClick={onClose}
-              className="w-full bg-[#A51C30] hover:bg-[#821626]"
+              className="w-full bg-(--vx-primary) hover:bg-(--vx-primary-hover)"
               data-testid="close-results-button"
             >
               Cerrar
@@ -141,11 +141,11 @@ export function EvaluationQuiz({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-2xl bg-white">
+    <div className="vx-course fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <Card className="w-full max-w-2xl bg-(--vx-card)">
         <CardContent className="p-6 space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-[#0A192F]">{title}</h2>
+            <h2 className="text-xl font-bold text-(--vx-night)">{title}</h2>
             <Button
               variant="ghost"
               size="sm"
@@ -157,7 +157,7 @@ export function EvaluationQuiz({
           </div>
 
           <div className="space-y-2">
-            <div className="flex justify-between text-sm text-slate-500">
+            <div className="flex justify-between text-sm text-(--vx-muted)">
               <span>Pregunta {currentIndex + 1} de {questions.length}</span>
               <span>{answeredCount} respondidas</span>
             </div>
@@ -165,7 +165,7 @@ export function EvaluationQuiz({
           </div>
 
           <div className="space-y-4">
-            <p className="text-lg font-medium text-[#0A192F]" data-testid="question-text">
+            <p className="text-lg font-medium text-(--vx-night)" data-testid="question-text">
               {currentQuestion?.question}
             </p>
 
@@ -177,8 +177,8 @@ export function EvaluationQuiz({
                   className={cn(
                     "w-full p-4 text-left rounded-lg border-2 transition-all",
                     currentAnswer?.answer === idx
-                      ? "border-[#A51C30] bg-[#A51C30]/5"
-                      : "border-slate-200 hover:border-slate-300"
+                      ? "border-(--vx-primary) bg-(--vx-primary)/5"
+                      : "border-(--vx-line) hover:border-(--vx-line)"
                   )}
                   data-testid={`option-${idx}`}
                 >
@@ -186,12 +186,12 @@ export function EvaluationQuiz({
                     <span className={cn(
                       "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold",
                       currentAnswer?.answer === idx
-                        ? "bg-[#A51C30] text-white"
-                        : "bg-slate-100 text-slate-600"
+                        ? "bg-(--vx-primary) text-white"
+                        : "bg-(--vx-surface) text-(--vx-ink-soft)"
                     )}>
                       {String.fromCharCode(65 + idx)}
                     </span>
-                    <span className="text-sm text-[#0A192F]">{option}</span>
+                    <span className="text-sm text-(--vx-night)">{option}</span>
                   </div>
                 </button>
               ))}
@@ -217,10 +217,10 @@ export function EvaluationQuiz({
                   className={cn(
                     "w-3 h-3 rounded-full transition-all",
                     idx === currentIndex
-                      ? "bg-[#A51C30]"
+                      ? "bg-(--vx-primary)"
                       : answers.some(a => a.questionId === questions[idx].id)
-                        ? "bg-green-500"
-                        : "bg-slate-300"
+                        ? "bg-(--vx-turquesa-text)"
+                        : "bg-(--vx-line)"
                   )}
                   data-testid={`nav-dot-${idx}`}
                 />
@@ -231,7 +231,7 @@ export function EvaluationQuiz({
               <Button
                 onClick={handleSubmit}
                 disabled={submitMutation.isPending}
-                className="bg-[#A51C30] hover:bg-[#821626]"
+                className="bg-(--vx-primary) hover:bg-(--vx-primary-hover)"
                 data-testid="submit-evaluation-button"
               >
                 {submitMutation.isPending ? (

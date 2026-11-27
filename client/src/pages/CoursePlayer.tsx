@@ -37,6 +37,7 @@ import { TextbookViewer } from "@/components/TextbookViewer";
 import { EvaluationQuiz } from "@/components/EvaluationQuiz";
 import { GeminiCopilotButton } from "@/components/GeminiCopilotButton";
 import { etiquetaEvaluacion, type EvaluationFunction } from "@shared/clasificacionEvaluacion";
+import "./vortice/curso.css";
 import {
   AreaChart, Area,
   PieChart, Pie, Cell,
@@ -208,10 +209,10 @@ export default function CoursePlayer() {
   };
 
   const resources = [
-    { id: "video", title: "Video", icon: Video, color: "bg-red-500", embedUrl: getResourceUrl("video") },
-    { id: "infografia", title: "Infografía", icon: Map, color: "bg-blue-500", embedUrl: getResourceUrl("infografia") },
-    { id: "presentacion", title: "Presentación", icon: Presentation, color: "bg-emerald-500", embedUrl: getResourceUrl("presentacion") },
-    { id: "audio", title: "Audio", icon: Headphones, color: "bg-orange-500", embedUrl: getResourceUrl("audio") },
+    { id: "video", title: "Video", icon: Video, color: "bg-(--vx-rojo)", embedUrl: getResourceUrl("video") },
+    { id: "infografia", title: "Infografía", icon: Map, color: "bg-(--vx-primary)", embedUrl: getResourceUrl("infografia") },
+    { id: "presentacion", title: "Presentación", icon: Presentation, color: "bg-(--vx-turquesa-text)", embedUrl: getResourceUrl("presentacion") },
+    { id: "audio", title: "Audio", icon: Headphones, color: "bg-(--vx-naranja-text)", embedUrl: getResourceUrl("audio") },
   ];
 
   const getEvaluationDates = (moduleStartDate: string) => {
@@ -260,7 +261,7 @@ export default function CoursePlayer() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="vx-course min-h-screen bg-background flex items-center justify-center font-sans">
         <div className="text-center space-y-4">
           <Loader2 className="w-12 h-12 animate-spin text-accent mx-auto" />
           <p className="text-primary font-medium">Cargando curso...</p>
@@ -269,7 +270,7 @@ export default function CoursePlayer() {
     );
   }
 
-  if (!isAuthenticated) return <RequiereSesion titulo="Inicia sesión para ver el curso" />;
+  if (!isAuthenticated) return <div className="vx-course"><RequiereSesion titulo="Inicia sesión para ver el curso" /></div>;
 
   const handleResourceClick = (res: typeof resources[0]) => {
     setSelectedResource({
@@ -514,11 +515,11 @@ export default function CoursePlayer() {
 
   return (
     <>
-      <div className="min-h-screen bg-background flex flex-col font-sans text-foreground">
+      <div className="vx-course min-h-screen bg-background flex flex-col font-sans text-foreground">
         <header className="h-16 bg-primary text-primary-foreground flex items-center justify-between px-8 shrink-0 border-b border-primary/20 sticky top-0 z-50">
           <div className="flex items-center gap-6">
             <Link href={esEstudiante ? "/vortice" : "/dashboard"}>
-              <button className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary-foreground/70 hover:text-white transition-colors" data-testid="back-button">
+              <button className="flex items-center gap-2 text-xs font-semibold min-h-11 text-primary-foreground/70 hover:text-white transition-colors" data-testid="back-button">
                 <ArrowLeft className="w-4 h-4" /> {esEstudiante ? "Volver a Inicio" : "Volver a Intranet"}
               </button>
             </Link>
@@ -536,18 +537,18 @@ export default function CoursePlayer() {
             {/* Título del curso */}
             <div className="mb-8">
               <div className="flex items-center gap-3 mb-2">
-                <Badge className="bg-[#A51C30]/10 text-[#A51C30] hover:bg-[#A51C30]/20 border-[#A51C30]/20 px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md">{levelName}</Badge>
-                <span className="text-sm text-slate-500 font-medium">Programa 2026</span>
+                <Badge className="bg-(--vx-primary)/10 text-(--vx-primary) hover:bg-(--vx-primary)/20 border-(--vx-primary)/20 px-3 py-1 text-[13px] font-bold rounded-md">{levelName}</Badge>
+                <span className="text-sm text-(--vx-muted) font-medium">Programa 2026</span>
               </div>
-              <h1 className="text-4xl font-serif font-bold text-[#1e1e1e] tracking-tight">{subjectLabel}</h1>
+              <h1 className="text-4xl font-serif font-bold text-(--vx-ink) tracking-tight">{subjectLabel}</h1>
             </div>
 
             <div className="flex flex-col lg:flex-row gap-6">
               {/* LEFT SIDEBAR: Módulos List */}
               <div className="w-full lg:w-80 shrink-0 space-y-4">
-                <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                  <div className="bg-gradient-to-r from-[#0A192F] to-[#1a365d] p-3 flex items-center justify-between">
-                    <h3 className="text-xs font-bold text-white uppercase tracking-widest">Temario</h3>
+                <div className="bg-(--vx-card) border border-(--vx-line) rounded-xl overflow-hidden shadow-sm">
+                  <div className="bg-(--vx-night) p-3 flex items-center justify-between">
+                    <h3 className="text-xs font-bold text-white">Temario</h3>
                     <div className="flex gap-1">
                       <button
                         onClick={() => {
@@ -569,7 +570,7 @@ export default function CoursePlayer() {
                       </button>
                     </div>
                   </div>
-                  <div id="module-list" className="divide-y divide-slate-100 max-h-[65vh] overflow-y-auto scroll-smooth">
+                  <div id="module-list" className="divide-y divide-(--vx-line) max-h-[65vh] overflow-y-auto scroll-smooth">
                     {(() => {
                       // Build items: 15 modules + 2 evaluation weeks
                       const items: Array<{ type: 'module' | 'evaluation'; number?: number; title: string; dateRange: string; afterModule?: number }> = [];
@@ -607,14 +608,14 @@ export default function CoursePlayer() {
                           return (
                             <div
                               key={`eval-${item.afterModule}`}
-                              className="p-3 bg-amber-50 flex items-center gap-3"
+                              className="p-3 bg-(--vx-naranja-soft) flex items-center gap-3"
                             >
-                              <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
-                                <ClipboardCheck className="w-4 h-4 text-amber-600" />
+                              <div className="w-8 h-8 rounded-lg bg-(--vx-naranja-soft) flex items-center justify-center shrink-0">
+                                <ClipboardCheck className="w-4 h-4 text-(--vx-naranja-text)" />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <p className="text-xs font-bold text-amber-800">{item.title}</p>
-                                <p className="text-[10px] text-amber-600">{item.dateRange}</p>
+                                <p className="text-xs font-bold text-(--vx-naranja-text)">{item.title}</p>
+                                <p className="text-[13px] text-(--vx-naranja-text)">{item.dateRange}</p>
                               </div>
                             </div>
                           );
@@ -630,28 +631,28 @@ export default function CoursePlayer() {
                             key={`module-${moduleNum}`}
                             onClick={() => setCurrentModule(moduleNum)}
                             className={cn(
-                              "w-full text-left p-3 hover:bg-slate-50 transition-colors flex items-center gap-3",
-                              isCurrent && "bg-[#A51C30]/5 hover:bg-[#A51C30]/10 border-l-4 border-l-[#A51C30]"
+                              "w-full text-left p-3 hover:bg-(--vx-surface) transition-colors flex items-center gap-3",
+                              isCurrent && "bg-(--vx-primary)/5 hover:bg-(--vx-primary)/10 border-l-4 border-l-(--vx-primary)"
                             )}
                             data-testid={`sidebar-module-${moduleNum}`}
                           >
                             <div className={cn(
                               "w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold shrink-0",
-                              isCompleted ? "bg-emerald-100 text-emerald-700" :
-                                isCurrent ? "bg-[#A51C30] text-white" : "bg-slate-100 text-slate-400"
+                              isCompleted ? "bg-(--vx-turquesa-soft) text-(--vx-turquesa-text)" :
+                                isCurrent ? "bg-(--vx-primary) text-white" : "bg-(--vx-surface) text-(--vx-muted)"
                             )}>
                               {isCompleted ? <Check className="w-4 h-4" /> : moduleNum}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className={cn("text-sm font-bold mb-0.5", isCurrent ? "text-[#A51C30]" : "text-slate-600")}>
+                              <p className={cn("text-sm font-bold mb-0.5", isCurrent ? "text-(--vx-primary)" : "text-(--vx-ink-soft)")}>
                                 Módulo {moduleNum}
                               </p>
-                              <p className="text-xs text-slate-500">{item.dateRange}</p>
+                              <p className="text-xs text-(--vx-muted)">{item.dateRange}</p>
                             </div>
                             <div className={cn(
-                              "text-[9px] px-2 py-0.5 rounded-full font-medium shrink-0",
-                              isCompleted ? "bg-emerald-100 text-emerald-700" :
-                                isCurrent ? "bg-[#A51C30]/10 text-[#A51C30]" : "bg-slate-100 text-slate-400"
+                              "text-[13px] px-2 py-0.5 rounded-full font-medium shrink-0",
+                              isCompleted ? "bg-(--vx-turquesa-soft) text-(--vx-turquesa-text)" :
+                                isCurrent ? "bg-(--vx-primary)/10 text-(--vx-primary)" : "bg-(--vx-surface) text-(--vx-muted)"
                             )}>
                               {isCompleted ? "✓" : isCurrent ? "●" : "○"}
                             </div>
@@ -667,16 +668,16 @@ export default function CoursePlayer() {
               <div className="flex-1 min-w-0 space-y-6">
                 {/* Admin Controls - Solo admin */}
                 {isAdmin && (
-                  <div className="bg-white border border-slate-200 p-4 shadow-sm space-y-4">
+                  <div className="bg-(--vx-card) border border-(--vx-line) p-4 shadow-sm space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-sm font-bold text-[#0A192F]">Planificación del Programa</h3>
-                        <p className="text-xs text-slate-500 mt-1">
+                        <h3 className="text-sm font-bold text-(--vx-night)">Planificación del Programa</h3>
+                        <p className="text-xs text-(--vx-muted) mt-1">
                           Sube un documento Word con la tabla de módulos, fechas, OAs y contenidos
                         </p>
                       </div>
                       <label
-                        className="flex items-center gap-2 px-4 py-2 bg-[#A51C30] hover:bg-[#821626] text-white cursor-pointer transition-colors text-sm"
+                        className="flex items-center gap-2 px-4 py-2 bg-(--vx-primary) hover:bg-(--vx-primary-hover) text-white cursor-pointer transition-colors text-sm"
                         data-testid="word-upload-button"
                       >
                         {isUploadingWord ? (
@@ -701,18 +702,18 @@ export default function CoursePlayer() {
                       </label>
                     </div>
 
-                    <div className="border-t border-slate-200 pt-4">
+                    <div className="border-t border-(--vx-line) pt-4">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="text-sm font-bold text-[#0A192F]">Generar Evaluaciones con IA</h3>
-                          <p className="text-xs text-slate-500 mt-1">
+                          <h3 className="text-sm font-bold text-(--vx-night)">Generar Evaluaciones con IA</h3>
+                          <p className="text-xs text-(--vx-muted) mt-1">
                             Genera 4 evaluaciones formativas (15-20 preguntas c/u) para el Módulo {currentModule}
                           </p>
                         </div>
                         <Button
                           onClick={handleGenerateEvaluations}
                           disabled={isGeneratingEvaluations || !currentObjectiveId}
-                          className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+                          className="flex items-center gap-2 bg-(--vx-turquesa-text) hover:bg-(--vx-turquesa-text) text-white"
                           data-testid="generate-evaluations-button"
                         >
                           {isGeneratingEvaluations ? (
@@ -733,10 +734,10 @@ export default function CoursePlayer() {
                 )}
 
                 {/* CUADRO DEL MÓDULO ACTUAL */}
-                <Card className="bg-white shadow-soft border border-border/50 overflow-hidden rounded-2xl">
-                  <div className="h-1.5 bg-gradient-to-r from-accent/80 to-accent" />
+                <Card className="bg-(--vx-card) shadow-soft border border-border/50 overflow-hidden rounded-2xl">
+                  <div className="h-1.5 bg-(--vx-primary)" />
                   <div className="p-8 lg:p-12 text-center space-y-6">
-                    <Badge className="bg-muted text-foreground border-border/50 rounded-full px-4 py-1.5 text-xs font-bold tracking-widest uppercase">
+                    <Badge className="bg-muted text-foreground border-border/50 rounded-full px-4 py-1.5 text-xs font-bold">
                       Módulo {currentModule}
                     </Badge>
 
@@ -754,14 +755,14 @@ export default function CoursePlayer() {
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
                         {moduleInfo?.moduleOAs && (
                           <div className="text-left bg-muted/30 p-6 border border-border/50 rounded-xl hover:bg-muted/50 transition-colors">
-                            <h4 className="text-xs font-bold text-accent uppercase tracking-wider mb-3">Objetivos de Aprendizaje</h4>
+                            <h4 className="text-xs font-bold text-accent mb-3">Objetivos de Aprendizaje</h4>
                             <p className="text-sm text-foreground/80 whitespace-pre-line leading-relaxed">{moduleInfo.moduleOAs}</p>
                           </div>
                         )}
 
                         {moduleInfo?.moduleContents && (
                           <div className="text-left bg-muted/30 p-6 border border-border/50 rounded-xl hover:bg-muted/50 transition-colors">
-                            <h4 className="text-xs font-bold text-accent uppercase tracking-wider mb-3">Contenidos</h4>
+                            <h4 className="text-xs font-bold text-accent mb-3">Contenidos</h4>
                             <p className="text-sm text-foreground/80 whitespace-pre-line leading-relaxed">{moduleInfo.moduleContents}</p>
                           </div>
                         )}
@@ -775,15 +776,15 @@ export default function CoursePlayer() {
                 {/* 4 RECURSOS DIDÁCTICOS */}
                 <div>
                   <div className="flex items-center gap-2 mb-4">
-                    <Brain className="w-5 h-5 text-[#A51C30]" />
-                    <h3 className="text-lg font-bold text-[#0A192F]">Recursos Didácticos</h3>
+                    <Brain className="w-5 h-5 text-(--vx-primary)" />
+                    <h3 className="text-lg font-bold text-(--vx-night)">Recursos Didácticos</h3>
                   </div>
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {resources.map((res) => (
                       <button
                         key={res.id}
                         onClick={() => handleResourceClick(res)}
-                        className="p-6 bg-white border border-border/50 hover:border-accent hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col items-center gap-4 group rounded-2xl"
+                        className="p-6 bg-(--vx-card) border border-border/50 hover:border-accent hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col items-center gap-4 group rounded-2xl"
                         data-testid={`resource-${res.id}`}
                       >
                         <div className={cn(
@@ -804,11 +805,11 @@ export default function CoursePlayer() {
                 {textbookData?.textbookPdfUrl && textbookData?.modulePages?.startPage && textbookData?.modulePages?.endPage && (
                   <div className="mt-8">
                     <div className="flex items-center gap-2 mb-6">
-                      <div className="p-2 bg-[#A51C30]/10 rounded-lg">
-                        <BookOpen className="w-5 h-5 text-[#A51C30]" />
+                      <div className="p-2 bg-(--vx-primary)/10 rounded-lg">
+                        <BookOpen className="w-5 h-5 text-(--vx-primary)" />
                       </div>
-                      <h3 className="text-lg font-bold text-[#0A192F]">Libro de Texto del Módulo</h3>
-                      <Badge className="bg-blue-100 text-blue-700 rounded-full text-[10px] ml-2 px-3">
+                      <h3 className="text-lg font-bold text-(--vx-night)">Libro de Texto del Módulo</h3>
+                      <Badge className="bg-(--vx-primary)/10 text-(--vx-primary) rounded-full text-[13px] ml-2 px-3">
                         Páginas {textbookData.modulePages.startPage}-{textbookData.modulePages.endPage}
                       </Badge>
                     </div>
@@ -829,13 +830,13 @@ export default function CoursePlayer() {
                       <ClipboardCheck className="w-5 h-5 text-accent" />
                     </div>
                     <h3 className="text-xl font-bold text-foreground">Evaluaciones Formativas</h3>
-                    <Badge className="bg-muted text-muted-foreground rounded-full text-[10px] ml-2 px-3">
+                    <Badge className="bg-muted text-muted-foreground rounded-full text-[13px] ml-2 px-3">
                       4 evaluaciones por módulo
                     </Badge>
                   </div>
 
                   {/* Carrusel de evaluaciones */}
-                  <div className="bg-white border border-border/50 p-8 rounded-2xl shadow-sm">
+                  <div className="bg-(--vx-card) border border-border/50 p-8 rounded-2xl shadow-sm">
                     <div className="flex items-center justify-between">
                       <Button
                         variant="outline"
@@ -864,12 +865,12 @@ export default function CoursePlayer() {
                               {evaluations[currentEvaluation]?.dayName} {formatDate(evaluations[currentEvaluation]?.date)}
                             </p>
                             {moduleEvaluations?.find(e => e.evaluationNumber === evaluations[currentEvaluation]?.number)?.hasQuestions ? (
-                              <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none rounded-full text-xs mt-4 px-3 py-1">
+                              <Badge className="bg-(--vx-turquesa-soft) text-(--vx-turquesa-text) hover:bg-(--vx-turquesa-soft) border-none rounded-full text-xs mt-4 px-3 py-1">
                                 <Sparkles className="w-3 h-3 mr-1" />
                                 IA • {moduleEvaluations?.find(e => e.evaluationNumber === evaluations[currentEvaluation]?.number)?.totalQuestions} preguntas
                               </Badge>
                             ) : (
-                              <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-200 border-none rounded-full text-xs mt-4 px-3 py-1">
+                              <Badge className="bg-(--vx-naranja-soft) text-(--vx-naranja-text) hover:bg-(--vx-naranja-soft) border-none rounded-full text-xs mt-4 px-3 py-1">
                                 Clic para abrir
                               </Badge>
                             )}
@@ -914,8 +915,8 @@ export default function CoursePlayer() {
                 </div>
 
                 {/* Progress Chart */}
-                <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Avance Total</h4>
+                <div className="bg-(--vx-card) border border-(--vx-line) rounded-xl p-4 shadow-sm">
+                  <h4 className="text-xs font-bold text-(--vx-muted) mb-4">Avance Total</h4>
                   <div className="flex items-center justify-center">
                     <ResponsiveContainer width={130} height={130}>
                       <PieChart>
@@ -931,23 +932,23 @@ export default function CoursePlayer() {
                           paddingAngle={3}
                           dataKey="value"
                         >
-                          <Cell fill="#A51C30" />
-                          <Cell fill="#e2e8f0" />
+                          <Cell fill="var(--vx-primary)" />
+                          <Cell fill="var(--vx-line)" />
                         </Pie>
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
                   <div className="text-center -mt-2">
-                    <span className="text-3xl font-bold text-[#A51C30]">
+                    <span className="text-3xl font-bold text-(--vx-primary)">
                       {Math.round((calendarData?.modules?.filter((m: any) => m.status === 'completed').length || 0) / 15 * 100) || 7}%
                     </span>
-                    <p className="text-xs text-slate-500">de la asignatura</p>
+                    <p className="text-xs text-(--vx-muted)">de la asignatura</p>
                   </div>
                 </div>
 
                 {/* Connection Time Chart */}
-                <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Tiempo de Conexión</h4>
+                <div className="bg-(--vx-card) border border-(--vx-line) rounded-xl p-4 shadow-sm">
+                  <h4 className="text-xs font-bold text-(--vx-muted) mb-3">Tiempo de Conexión</h4>
                   <ResponsiveContainer width="100%" height={90}>
                     <AreaChart data={[
                       { day: 'L', hours: 2.5 },
@@ -960,45 +961,45 @@ export default function CoursePlayer() {
                     ]}>
                       <defs>
                         <linearGradient id="colorHours" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#A51C30" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="#A51C30" stopOpacity={0} />
+                          <stop offset="5%" stopColor="var(--vx-primary)" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="var(--vx-primary)" stopOpacity={0} />
                         </linearGradient>
                       </defs>
-                      <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
+                      <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--vx-muted)' }} />
                       <Tooltip
-                        contentStyle={{ background: '#0A192F', border: 'none', borderRadius: '8px', fontSize: '12px' }}
-                        labelStyle={{ color: '#fff' }}
+                        contentStyle={{ background: 'var(--vx-night)', border: 'none', borderRadius: '8px', fontSize: '12px', color: 'var(--vx-card)' }}
+                        labelStyle={{ color: 'var(--vx-card)' }}
                         formatter={(value: number) => [`${value}h`, 'Tiempo']}
                       />
-                      <Area type="monotone" dataKey="hours" stroke="#A51C30" strokeWidth={2} fill="url(#colorHours)" />
+                      <Area type="monotone" dataKey="hours" stroke="var(--vx-primary)" strokeWidth={2} fill="url(#colorHours)" />
                     </AreaChart>
                   </ResponsiveContainer>
                   <div className="text-center mt-2">
-                    <span className="text-2xl font-bold text-slate-700">15.8h</span>
-                    <p className="text-xs text-slate-500">esta semana</p>
+                    <span className="text-2xl font-bold text-(--vx-ink-soft)">15.8h</span>
+                    <p className="text-xs text-(--vx-muted)">esta semana</p>
                   </div>
                 </div>
 
                 {/* Estado de evaluaciones del módulo: datos reales, sin puntajes. */}
-                <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Estado de evaluaciones</h4>
+                <div className="bg-(--vx-card) border border-(--vx-line) rounded-xl p-4 shadow-sm">
+                  <h4 className="text-xs font-bold text-(--vx-muted) mb-3">Estado de evaluaciones</h4>
                   {moduleEvaluations && moduleEvaluations.length > 0 ? (
                     <ul className="space-y-2" data-testid="evaluation-status-list">
                       {[...moduleEvaluations].sort((a, b) => a.evaluationNumber - b.evaluationNumber).map((e) => (
                         <li key={e.id} className="flex items-center justify-between text-sm">
-                          <span className="text-slate-700">{etiquetaEvaluacion(e.evaluationFunction, e.evaluationNumber)}</span>
+                          <span className="text-(--vx-ink-soft)">{etiquetaEvaluacion(e.evaluationFunction, e.evaluationNumber)}</span>
                           {e.aprobada ? (
-                            <span className="flex items-center gap-1 font-medium text-emerald-700">
+                            <span className="flex items-center gap-1 font-medium text-(--vx-turquesa-text)">
                               <Check className="w-4 h-4" aria-hidden="true" /> Aprobado
                             </span>
                           ) : (
-                            <span className="text-slate-500">Sin resultado</span>
+                            <span className="text-(--vx-muted)">Sin resultado</span>
                           )}
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-sm text-slate-500">Aún no hay evaluaciones registradas en este módulo.</p>
+                    <p className="text-sm text-(--vx-muted)">Aún no hay evaluaciones registradas en este módulo.</p>
                   )}
                 </div>
               </div>
@@ -1007,13 +1008,13 @@ export default function CoursePlayer() {
         </div>
       </div>
       <Dialog open={selectedResource !== null} onOpenChange={() => setSelectedResource(null)}>
-        <DialogContent className="max-w-5xl w-[90vw] h-[85vh] p-0 border-none bg-white flex flex-col overflow-hidden [&>button]:text-white [&>button]:hover:bg-white/20 [&>button]:top-4 [&>button]:right-4">
+        <DialogContent className="vx-course max-w-5xl w-[90vw] h-[85vh] p-0 border-none bg-(--vx-card) flex flex-col overflow-hidden [&>button]:text-white [&>button]:hover:bg-white/20 [&>button]:top-4 [&>button]:right-4">
           {/* Institutional Header with accent bar */}
           <div className="shrink-0">
-            <div className="h-1 bg-gradient-to-r from-[#A51C30] via-[#C41E3A] to-[#A51C30]" />
-            <DialogHeader className="px-6 py-4 bg-[#0A192F]">
+            <div className="h-1 bg-(--vx-primary)" />
+            <DialogHeader className="px-6 py-4 bg-(--vx-night)">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-[#A51C30] flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 rounded-lg bg-(--vx-primary) flex items-center justify-center shrink-0">
                   {selectedResource?.embedType === "video" && <Video className="w-6 h-6 text-white" />}
                   {selectedResource?.embedType === "audio" && <Headphones className="w-6 h-6 text-white" />}
                   {selectedResource?.embedType === "presentacion" && <Presentation className="w-6 h-6 text-white" />}
@@ -1021,15 +1022,15 @@ export default function CoursePlayer() {
                 </div>
                 <div className="flex-1 min-w-0 pr-8">
                   <DialogTitle className="text-xl font-serif font-bold text-white">{selectedResource?.title}</DialogTitle>
-                  <p className="text-sm text-slate-300 mt-1">
+                  <p className="text-sm text-(--vx-line) mt-1">
                     {(currentModuleData as any)?.objective?.title || `Módulo ${currentModule}`}
                     {moduleInfo?.moduleContents && (
-                      <span className="block text-xs text-slate-400 mt-0.5 truncate">
+                      <span className="block text-xs text-(--vx-muted) mt-0.5 truncate">
                         {moduleInfo.moduleContents.split('\n')[0]}
                       </span>
                     )}
                   </p>
-                  <p className="text-xs text-[#A51C30] font-medium mt-1">
+                  <p className="text-xs text-(--vx-primary) font-medium mt-1">
                     {levelSubjectName} • Instituto Barkley
                   </p>
                 </div>
@@ -1042,7 +1043,7 @@ export default function CoursePlayer() {
           <div className="flex-1 w-full bg-black relative overflow-hidden">
             {selectedResource?.embedUrl ? (
               selectedResource.embedType === "infografia" ? (
-                <div className="w-full h-full flex items-center justify-center bg-slate-100 p-4">
+                <div className="w-full h-full flex items-center justify-center bg-(--vx-surface) p-4">
                   <img
                     src={convertToEmbedUrl(selectedResource.embedUrl, "infografia")}
                     alt={selectedResource.title}
@@ -1064,17 +1065,17 @@ export default function CoursePlayer() {
                 />
               )
             ) : (
-              <div className="flex flex-col items-center justify-center h-full p-12 text-center space-y-6 bg-slate-50">
-                <div className="w-20 h-20 bg-slate-200 flex items-center justify-center rounded-lg">
-                  {selectedResource?.embedType === "video" && <Video className="w-10 h-10 text-slate-400" />}
-                  {selectedResource?.embedType === "audio" && <Headphones className="w-10 h-10 text-slate-400" />}
-                  {selectedResource?.embedType === "presentacion" && <Presentation className="w-10 h-10 text-slate-400" />}
-                  {selectedResource?.embedType === "infografia" && <Map className="w-10 h-10 text-slate-400" />}
+              <div className="flex flex-col items-center justify-center h-full p-12 text-center space-y-6 bg-(--vx-surface)">
+                <div className="w-20 h-20 bg-(--vx-line) flex items-center justify-center rounded-lg">
+                  {selectedResource?.embedType === "video" && <Video className="w-10 h-10 text-(--vx-muted)" />}
+                  {selectedResource?.embedType === "audio" && <Headphones className="w-10 h-10 text-(--vx-muted)" />}
+                  {selectedResource?.embedType === "presentacion" && <Presentation className="w-10 h-10 text-(--vx-muted)" />}
+                  {selectedResource?.embedType === "infografia" && <Map className="w-10 h-10 text-(--vx-muted)" />}
                 </div>
 
                 <div className="space-y-2 max-w-md">
-                  <h3 className="text-xl font-bold text-[#0A192F]">Recurso Pendiente</h3>
-                  <p className="text-sm text-slate-500">
+                  <h3 className="text-xl font-bold text-(--vx-night)">Recurso Pendiente</h3>
+                  <p className="text-sm text-(--vx-muted)">
                     Este recurso aún no ha sido configurado. El administrador debe agregar el enlace correspondiente.
                   </p>
                 </div>
@@ -1086,12 +1087,12 @@ export default function CoursePlayer() {
 
       {/* Evaluation Modal with HTML content */}
       < Dialog open={selectedEvaluation !== null} onOpenChange={() => setSelectedEvaluation(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] p-0 rounded-none border-none bg-white overflow-hidden">
-          <DialogHeader className="p-6 border-b border-slate-100 shrink-0 bg-[#F8F9FA]">
-            <DialogTitle className="text-xl font-serif font-bold text-[#0A192F]">
+        <DialogContent className="vx-course max-w-4xl max-h-[90vh] p-0 rounded-[10px] border-none bg-(--vx-card) overflow-hidden">
+          <DialogHeader className="p-6 border-b border-(--vx-line) shrink-0 bg-(--vx-bg)">
+            <DialogTitle className="text-xl font-serif font-bold text-(--vx-night)">
               {selectedEvaluation?.title}
             </DialogTitle>
-            <DialogDescription className="text-sm text-slate-500">
+            <DialogDescription className="text-sm text-(--vx-muted)">
               Módulo {currentModule} • Evaluación formativa generada por Gemini
             </DialogDescription>
           </DialogHeader>
@@ -1103,30 +1104,30 @@ export default function CoursePlayer() {
               />
             ) : (
               <div className="text-center py-12 space-y-6">
-                <div className="w-20 h-20 bg-[#A51C30]/10 flex items-center justify-center mx-auto">
-                  <FileText className="w-10 h-10 text-[#A51C30]" />
+                <div className="w-20 h-20 bg-(--vx-primary)/10 flex items-center justify-center mx-auto">
+                  <FileText className="w-10 h-10 text-(--vx-primary)" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-[#0A192F]">Evaluación Pendiente</h3>
-                  <p className="text-sm text-slate-500 max-w-md mx-auto">
+                  <h3 className="text-xl font-bold text-(--vx-night)">Evaluación Pendiente</h3>
+                  <p className="text-sm text-(--vx-muted) max-w-md mx-auto">
                     Esta evaluación aún no tiene contenido. El administrador debe pegar el código HTML generado por Gemini.
                   </p>
                 </div>
 
                 {isAdmin && (
-                  <div className="bg-slate-50 border border-slate-200 p-6 max-w-lg mx-auto text-left">
-                    <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-2">
+                  <div className="bg-(--vx-surface) border border-(--vx-line) p-6 max-w-lg mx-auto text-left">
+                    <label className="text-xs font-bold text-(--vx-ink-soft) block mb-2">
                       Pegar código HTML de Gemini aquí:
                     </label>
                     <textarea
-                      className="w-full h-32 border border-slate-300 p-3 text-sm font-mono resize-none focus:outline-none focus:border-[#A51C30]"
+                      className="w-full h-32 border border-(--vx-line) p-3 text-sm font-mono resize-none focus:outline-none focus:border-(--vx-primary)"
                       placeholder="<div>...</div>"
                       value={htmlInputValue}
                       onChange={(e) => setHtmlInputValue(e.target.value)}
                       data-testid="evaluation-html-input"
                     />
                     <Button
-                      className="mt-3 bg-[#A51C30] hover:bg-[#821626] text-white rounded-none text-xs"
+                      className="mt-3 bg-(--vx-primary) hover:bg-(--vx-primary-hover) text-white rounded-[10px] text-xs"
                       onClick={handleSaveEvaluationHtml}
                       disabled={isSaving || !htmlInputValue.trim()}
                       data-testid="save-evaluation-html"
