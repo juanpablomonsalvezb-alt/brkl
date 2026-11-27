@@ -1,6 +1,6 @@
 # Memoria técnica viva de Vórtice
 
-**Actualizar al cerrar cada tarea importante. Es la única fuente del estado actual.** (El `HANDOFF.md` del 2026-11-21 es histórico.) Última actualización: 2026-11-23.
+**Actualizar al cerrar cada tarea importante. Es la única fuente del estado actual.** (El `HANDOFF.md` del 2026-11-21 es histórico.) Última actualización: 2026-11-26.
 
 ## Estado
 - Verificado el 2026-11-22: `tsc` limpio y `check:vortice` en 0 tras fusionar T40; los 5 archivos protegidos intactos.
@@ -14,6 +14,11 @@
 
 - **Rediseño del Inicio, tutoría y alertas (2026-11-23 y 24, local hasta el push):** tema marino con acento por tramo, hero por tramo, miniaturas por asignatura, «Mi próximo paso», anillo y «Mis estrellas»; «Pedir ayuda a mi tutor» y `/tutor` con bandeja compartida; alertas de 3 y 5 días con su lista «Necesitan atención». Detalle y límites en `areas/tutoria-atencion.md`. Pendiente: tema nuevo en Familia y Evaluación (`EvaluacionesPerfilAdmin.tsx` conserva el verde viejo), «Mi año», preferencias de lectura, logros persistentes, `/code-review` y `/security-review`, y probar con base y login reales.
 
+- **Rediseño de interfaz UI-01 (2026-11-26, empujado hasta `819764b`):** paleta Winter White sin verde, navegación común, Inicio de 4 bloques con páginas Mi semana, Portafolio y Apoyo, «Lo que sé», evaluación, asignatura y tutor virtual. Faltan Aula, y navegación en Mi año y Tutor. Detalle, reglas y límites en `areas/interfaz.md`. Reemplaza al tema marino y a la prioridad 1 de abajo.
+- **«Mi año», preferencias de lectura y alertas (2026-11-24):** hechos y empujados (`718f129`, `98c5f43`).
+- **SEO (2026-11-25):** dos artículos del blog ajustados según Search Console (`b9c36ea`, `5060b47`); falta medir con un export nuevo en unas semanas.
+- **Trabajo ajeno sin confirmar (2026-11-26):** otra sesión tenía más de 40 archivos sin commitear (seguridad de aula, mapa, sesiones, siembra). No se tocaron ni se subieron.
+
 ## Versionado de `.junie/` (2026-11-22)
 Repo público: solo reglas y plantillas. Repo privado local `~/Downloads/brkl-junie-privado.git` (commit `6cfc402`, 27 archivos, sin remoto): ver `JUNIE_PRIVADO.md`. La condición de no empujar antes de cerrar T40 ya se cumplió (T40 fusionada y verificada) y la rama se empujó el 2026-11-23. Los informes `.junie/` que habían llegado antes al repo público se quitaron del árbol, pero **siguen en el historial público**. El repo privado tiene un remoto `origin` en GitHub (`brkl-junie-privado`) que no estaba documentado; no se ha empujado ni verificado que sea privado.
 
@@ -21,7 +26,7 @@ Repo público: solo reglas y plantillas. Repo privado local `~/Downloads/brkl-ju
 - Nada en curso con Junie. **Arquitectura decidida (2026-11-23):** Sonnet 5.5 como arquitecto y Junie Lite (`Qwen/Qwen3.6-27B-FP8`, única opción con acceso en la cuenta; los otros 42 modelos del catálogo dan «Junie Lite-only access») como programador, sin Hermes. Se delega con `~/.local/bin/delegar.sh <repo> <tarea.md> [modelo] [intentos]` (fuera del repo): copia aislada, línea base cacheada, `tsc` y checks en paralelo, reintentos con el error real, guardia de los 5 protegidos y de `.env`, `migrations/`, `db.sqlite`, `package-lock.json`, entrega `final.diff` e `informe.md` y no aplica nada. Límite conocido: pasar `tsc` y checks no basta para tests escritos por Junie; hay que correr mutaciones antes de aceptarlos. Consultor Gemini (BYOK) queda como mejora futura opcional.
 
 ## Próximas prioridades
-1. **(Inicio ya hecho; ver arriba.)** Rediseño ilustrado del Inicio por tramo (decisiones visuales del 2026-11-23): tema de color por tramo, hero, columna derecha (próximo paso, anillo de progreso, logros = estrellas reales, eventos de la semana) y tarjetas de asignaturas con imagen, solo con datos reales. **Bloqueado por los archivos de arte originales del sostenedor.** Incluye los 3 hallazgos visuales que quedan (etiquetas del mapa en teléfono, títulos del selector de OA, mes crudo en Familia) y la barra del Mapa; el desborde del Aula ya se corrigió en `9e76267`.
+1. **(Sustituido por UI-01, ver arriba.)** Rediseño ilustrado del Inicio por tramo (decisiones visuales del 2026-11-23): tema de color por tramo, hero, columna derecha (próximo paso, anillo de progreso, logros = estrellas reales, eventos de la semana) y tarjetas de asignaturas con imagen, solo con datos reales. **Bloqueado por los archivos de arte originales del sostenedor.** Incluye los 3 hallazgos visuales que quedan (etiquetas del mapa en teléfono, títulos del selector de OA, mes crudo en Familia) y la barra del Mapa; el desborde del Aula ya se corrigió en `9e76267`.
 2. Confirmar que `brkl-junie-privado` en GitHub es privado antes de empujar el repo privado.
 3. Validadores O4 y revisión humana de las 81 preguntas. (El ciclo 2027 y la fecha de cobro «enero 2027» ya estaban decididos el 2026-11-21; los feriados y las vacaciones no se consideran, 2026-11-23.)
 4. Flow, decidido el 2026-11-23: sandbox primero. Verificar F8 con credenciales de prueba que define el sostenedor; en diciembre el sostenedor da la orden «PRODUCCION» (migración SQL de facturas, variables en Vercel) desde una rama limpia.
@@ -30,5 +35,5 @@ Repo público: solo reglas y plantillas. Repo privado local `~/Downloads/brkl-ju
 ## Riesgos abiertos
 - Antigravity trabajó con aprobaciones de una palabra sin mi verificación: verificar por área antes de confiar.
 - Formato real del callback de Flow sin verificar; `FLOW_API_URL` de producción desconocida (cifrada).
-- Disco al 97 % (~14 GB libres el 2026-11-23). Cada ejecución de `delegar.sh` usa ~600 MB hasta terminar con éxito; las fallidas conservan la copia (se limpian a los 3 días).
+- Disco: llegó a 316 MB libres el 2026-11-26; el sostenedor liberó cachés y modelos (~30 GB libres). Cada ejecución de `delegar.sh` usa ~600 MB hasta terminar con éxito; las fallidas conservan la copia (se limpian a los 3 días).
 - `preview_start barkley-dev` levanta el checkout principal (`Moodle-Theme-Creator`), no este worktree: para ver cambios de esta rama hay que arrancar el servidor desde `brkl-motor` con `TEST_DATABASE_URL` temporal y otro puerto.
