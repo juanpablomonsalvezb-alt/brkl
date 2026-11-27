@@ -102,29 +102,23 @@ function parseAllModulesFromText(text: string): ModuleInfo[] {
 
 // Admin authorization middleware - must be used after isAuthenticated
 const isAdmin: RequestHandler = async (req: any, res, next) => {
-  // DEV MODE: Allow all access
-  next();
-  return;
-
-  /*
   try {
     // Support both Google OAuth (req.user.id) and Replit Auth (req.user.claims.sub)
     const userId = req.user?.id || req.user?.claims?.sub;
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    
+
     const profile = await storage.getUserProfile(userId);
     if (!profile || profile.role !== "admin") {
       return res.status(403).json({ message: "Forbidden: Admin access required" });
     }
-    
+
     next();
   } catch (error) {
     console.error("Error checking admin status:", error);
     res.status(500).json({ message: "Failed to verify admin status" });
   }
-  */
 };
 
 export async function registerRoutes(
@@ -336,6 +330,11 @@ export async function registerRoutes(
     console.log("⚠️  Running in development mode without authentication");
   }
   registerAuthRoutes(app);
+
+  // Cierre por prefijo: cubre también las rutas que se registren sin middleware propio.
+  app.use("/api/admin", isAdmin);
+  app.use("/api/textbooks/auto-match", isAdmin);
+  app.use("/api/evaluation-links", (req, res, next) => (req.method === "GET" ? next() : isAdmin(req, res, next)));
 
   // === PUBLIC ROUTES ===
 
