@@ -1,0 +1,145 @@
+.vx-curriculo {
+  --vx-curriculo-gap: 18px;
+  display: grid;
+  gap: var(--vx-curriculo-gap);
+  min-width: 0;
+  max-width: 980px;
+  margin: 0 auto;
+  font-family: var(--vx-sans);
+}
+
+.vx-curriculo-intro {
+  display: grid;
+  gap: 8px;
+}
+
+.vx-curriculo-intro h1,
+.vx-curriculo-detalle h2,
+.vx-curriculo-oa h3 {
+  font-family: var(--vx-serif);
+}
+
+.vx-curriculo-intro > p:last-child {
+  margin: 0;
+  color: var(--vx-ink-soft);
+}
+
+.vx-curriculo-kicker {
+  margin: 0;
+  color: var(--vx-primary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.vx-curriculo-filtros {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.vx-curriculo-campo {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.vx-curriculo-campo label {
+  color: var(--vx-ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.vx-curriculo-campo select {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 38px 10px 12px;
+  border: 1px solid var(--vx-line-strong);
+  border-radius: 10px;
+  background: var(--vx-card);
+  color: var(--vx-ink);
+  font: inherit;
+}
+
+.vx-curriculo-campo select:disabled {
+  color: var(--vx-muted);
+  opacity: 0.75;
+}
+
+.vx-curriculo-detalle h2 {
+  font-size: clamp(22px, 3vw, 28px);
+}
+
+.vx-curriculo-descripcion {
+  margin: 10px 0 0;
+  color: var(--vx-ink-soft);
+}
+
+.vx-curriculo-objetivos {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.vx-curriculo-oa {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.vx-curriculo-oa h3 {
+  font-size: 19px;
+}
+
+.vx-curriculo-texto {
+  margin: 10px 0 16px;
+  white-space: pre-line;
+}
+
+.vx-curriculo-indicadores {
+  border-top: 1px solid var(--vx-line);
+  padding-top: 12px;
+}
+
+.vx-curriculo-indicadores summary {
+  width: fit-content;
+  color: var(--vx-primary);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.vx-curriculo-indicadores ul {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding-left: 21px;
+  color: var(--vx-ink-soft);
+}
+
+.vx-curriculo-fuente {
+  margin: 0;
+  color: var(--vx-muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.vx-curriculo-estado,
+.vx-curriculo-no-incorporado {
+  margin: 0;
+  color: var(--vx-ink-soft);
+}
+
+.vx-curriculo-error {
+  color: var(--vx-rojo);
+}
+
+@media (max-width: 600px) {
+  .vx-curriculo {
+    --vx-curriculo-gap: 14px;
+  }
+
+  .vx-curriculo-filtros {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+}

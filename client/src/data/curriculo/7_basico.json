@@ -1,0 +1,495 @@
+{
+  "grado": "7_basico",
+  "etiqueta": "7° Básico",
+  "asignaturas": [
+    {
+      "slug": "lengua-literatura",
+      "nombre": "Lengua y Literatura",
+      "descripcion": "• La asignatura de Lengua y Literatura busca que los menores de edad a través de la escritura, lectura, comunicación oral e investigación logren conocerse a sí mismos y reflexionar sobre la experiencia humana en diversas culturas. Desde un enfoque comunicativo y cultural de la asignatura, se propone desarrollar competencias comunicativas indispensables para una participación activa, democrática y responsable en sociedad. Específicamente se profundiza el carácter cultural de la lengua en sus diversas manifestaciones, desarrollando perspectivas críticas frente a los discursos y profundizando la relación entre lengua y literatura con sus contextos culturales. En este ciclo escolar se evaluarán 2 ejes: Lectura y Escritura.",
+      "fuente": "temario_basica_7deg_basico_uce_2.pdf",
+      "oa": [
+        {
+          "numero": 3,
+          "texto": "Analizar las narraciones leídas para enriquecer su comprensión, considerando, cuando sea pertinente:\n● El o los conflictos de la historia.\n● El papel que juega cada personaje en el conflicto y cómo sus acciones afectan a otros personajes.\n● El efecto de ciertas acciones en el desarrollo de la historia.\n● Cuándo habla el narrador y cuándo hablan los personajes.\n● La disposición temporal de los hechos.\n● Elementos en común con otros textos leídos en el año.",
+          "indicadores": [
+            "Extraen información explícita e implícita relevante para el análisis literario.",
+            "Infieren el o los conflictos de la historia.",
+            "Describen a los personajes respecto de su rol en el conflicto, desarrollo de la historia, y efecto de sus acciones en otros personajes.",
+            "Distinguen la voz del narrador de las de los personajes cuando es pertinente.",
+            "Describen la disposición temporal de los hechos.",
+            "Establecen relaciones entre obras en base a elementos en común de estas."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 4,
+          "texto": "Analizar los poemas leídos para enriquecer su comprensión, considerando, cuando sea pertinente:\n● Cómo el lenguaje poético que emplea el autor apela a los sentidos, sugiere estados de ánimo y crea imágenes.\n● El significado o el efecto que produce el uso de lenguaje figurado en el poema.\n● El efecto que produce el ritmo y la sonoridad del poema al leerlo en voz alta.\n● Elementos en común con otros textos leídos en el año.",
+          "indicadores": [
+            "Evalúan el lenguaje poético que emplea el autor para apelar a los sentidos, sugerir estados de ánimo y crear imágenes.",
+            "Interpretan significados a partir del lenguaje figurado presente en un poema.",
+            "Infieren efectos producidos por el uso del lenguaje figurado y el ritmo y sonoridad del poema.",
+            "Establecen relaciones entre obras en base a elementos en común de estas."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 7,
+          "texto": "Formular una interpretación de los textos literarios, considerando:\n● Su experiencia personal y sus conocimientos.\n● Un dilema presentado en el texto y su postura personal acerca del mismo.\n● La relación de la obra con la visión de mundo y el contexto histórico en el que se ambienta y/o en el que fue creada.",
+          "indicadores": [
+            "Formulan una interpretación sobre el sentido de una obra literaria que considere un dilema presentado y su postura personal.",
+            "Fundamentan su interpretación considerando la visión de mundo de la obra y el contexto histórico en el que se ambienta."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 8,
+          "texto": "Analizar y evaluar textos con finalidad argumentativa, como columnas de opinión, cartas y discursos, considerando:\n• La postura del autor y los argumentos e información que la sostienen.\n• La diferencia entre hecho y opinión.\n• Su postura personal frente a lo leído y argumentos que la sustentan.",
+          "indicadores": [
+            "Identifican la postura del autor y los argumentos utilizados en textos con finalidad argumentativa.",
+            "Distinguen hechos y opiniones en la argumentación.",
+            "Formulan una postura personal frente a lo leído."
+          ],
+          "eje": null,
+          "pagina": 4
+        },
+        {
+          "numero": 9,
+          "texto": "Analizar y evaluar textos de los medios de comunicación, como noticias, reportajes, cartas al director, textos publicitarios o de las redes sociales, considerando:\n● Los propósitos explícitos e implícitos del texto.\n● Una distinción entre los hechos y las opiniones expresadas.\n● Presencia de estereotipos y prejuicios.\n● El análisis e interpretación de imágenes, gráficos, tablas, mapas o diagramas, y su relación con el texto en el que están insertos.\n● Los efectos que puede tener la información divulgada en los hombres o las mujeres aludidos en el texto.",
+          "indicadores": [
+            "Identifican los propósitos explícitos e implícitos de textos presentes en medios de comunicación.",
+            "Distinguen entre hechos y opiniones presentes en los textos leídos.",
+            "Identifican la presencia de estereotipos y prejuicios.",
+            "Interpretan imágenes, gráficos, tablas, mapas o diagramas en relación con el texto en el que están insertos.",
+            "Infieren efectos que puede tener la información divulgada en las personas aludidas en los textos."
+          ],
+          "eje": null,
+          "pagina": 4
+        },
+        {
+          "numero": 15,
+          "texto": "Planificar, escribir, revisar, reescribir y editar sus textos en función del contexto, el destinatario y el propósito:\n● Recopilando información e ideas y organizándolas antes de escribir.\n● Adecuando el registro, específicamente el vocabulario (uso de términos técnicos, frases hechas, palabras propias de las redes sociales, términos y expresiones propios del lenguaje hablado), el uso de la persona gramatical y la estructura del texto, al género discursivo, contexto y destinatario.\n● Incorporando información pertinente.\n● Asegurando la coherencia y la cohesión del texto.\n● Cuidando la organización a nivel oracional y textual\n● Usando conectores adecuados para unir las secciones que componen el texto.\n● Usando un vocabulario variado y preciso, reconociendo y corrigiendo usos inadecuados, especialmente de pronombres personales y reflejos, conjugaciones verbales, participios irregulares, y concordancia sujeto – verbo, artículo – sustantivo y sustantivo – adjetivo.\n● Corrigiendo la ortografía y mejorando la presentación.\n● Usando eficazmente las herramientas del procesador de texto.",
+          "indicadores": [
+            "Escriben un texto acorde a un destinatario y propósito dado.",
+            "Adecuan el registro (persona gramatical, estructura) al contexto, género y destinatario dados.",
+            "Adecuan el registro empleado al destinatario y género dados.",
+            "Escriben un texto coherente a nivel local y global. -",
+            "Emplean adecuadamente mecanismos de cohesión.",
+            "Escriben un texto respetando las normas de la ortografía literal, puntual y acentual.",
+            "Usan correctamente las conjugaciones verbales, concordancias y uso de pronombres."
+          ],
+          "eje": null,
+          "pagina": 4
+        }
+      ]
+    },
+    {
+      "slug": "matematica",
+      "nombre": "Matemática",
+      "descripcion": "En la asignatura de Matemática, las y los estudiantes serán evaluados considerando una selección de",
+      "fuente": "temario_basica_7deg_basico_uce_2.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Mostrar que comprenden la adición y la sustracción de números enteros:\n• Representando los enteros en la recta numérica.\n• Representándolas de manera concreta, pictórica y simbólica.\n• Dándole significado a los símbolos + y – según el contexto (por ejemplo: un movimiento en una dirección seguido de un movimiento equivalente en la posición opuesta no representa ningún cambio de posición).\n• Resolviendo problemas en contextos cotidianos.",
+          "indicadores": [
+            "Relacionan cantidades de la vida diaria con números enteros; por ejemplo: en el ámbito de las temperaturas, cuentas corrientes, niveles de profundidad en el mar o en minas subterráneas, cargas eléctricas, líneas de tiempo, superávit y déficit, balances financieros, etc.",
+            "Representan la adición y sustracción de números enteros de manera pictórica (recta numérica) y simbólica y resuelven problemas en contextos cotidianos.",
+            "Distinguen entre el signo de números enteros y el símbolo de la adición o la sustracción.",
+            "Resuelven problemas en contextos cotidianos de manera algebraica."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 3,
+          "texto": "Resolver problemas que involucren la multiplicación y la división de fracciones y de decimales positivos de manera concreta, pictórica y simbólica (de forma manual y/o con software educativo).",
+          "indicadores": [
+            "Resuelven problemas que involucran la división de números decimales o la multiplicación de fracciones, de manera concreta, pictórica y simbólica."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 4,
+          "texto": "Mostrar que comprenden el concepto de porcentaje:\n• Representándolo de manera pictórica.\n• Calculando de varias maneras.\n• Aplicándolo a situaciones sencillas.",
+          "indicadores": [
+            "Relacionan porcentajes conocidos con sus respectivas divisiones; por ejemplo calcular el 25% de un valor es lo mismo que dividirlo por 4, el 20% es lo mismo que dividir por 5 y así sucesivamente para los porcentajes 10%, 50% y 75%.",
+            "Resuelven problemas que involucran porcentajes en situaciones de la vida real (IVA, ofertas, préstamos, etc.)."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 6,
+          "texto": "Utilizar el lenguaje algebraico para generalizar relaciones entre números, para establecer y formular reglas y propiedades y construir ecuaciones.",
+          "indicadores": [
+            "Relacionan expresiones algebraicas con patrones dados.",
+            "Resuelven problemas de la vida cotidiana que pueden ser resueltos con ecuaciones.",
+            "Relacionan expresiones del lenguaje natural con términos algebraicos; por ejemplo: “el doble de...” o “la mitad de...” 𝑥 con 2𝑥 o , etc. 2"
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 8,
+          "texto": "Mostrar que comprenden las proporciones directas e inversas:\n• realizando tablas de valores para relaciones proporcionales.\n• graficando los valores de la tabla.\n• explicando las características de la gráfica.\n• resolviendo problemas de la vida diaria y de otras asignaturas.",
+          "indicadores": [
+            "Reconocen la proporcionalidad directa e inversa en tablas de valores, gráficos y situaciones reales.",
+            "Resuelven problemas mediante la proporcionalidad correspondiente.",
+            "Completan y elaboran tablas de valores que pertenecen a proporcionalidades directas.",
+            "Confeccionan gráficos que pertenecen a proporcionalidades directas."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 11,
+          "texto": "Mostrar que comprenden el círculo:\n• describiendo las relaciones entre el radio, el diámetro y el perímetro del círculo.\n• estimando de manera intuitiva el perímetro y el área de un círculo.\n• aplicando las aproximaciones del perímetro y del área en la resolución de problemas geométricos de otras asignaturas y de la vida diaria.\n• identificándolo como lugar geométrico.",
+          "indicadores": [
+            "Aplican la fórmula P=d en ejercicios rutinarios y no rutinarios, para resolver problemas que involucran perímetros de círculos, como línea del ecuador, paralelos y meridianos.",
+            "Resuelven problemas de la vida diaria que implican el cálculo de área de un círculo; por ejemplo: los cultivos en círculos para el ahorro de agua.",
+            "Aplican la fórmula 𝐴 = 𝑟2∙Π (𝑐𝑜𝑛 Π≈ 3,14)en ejercicios rutinarios y en la solución de problemas que involucran áreas de círculos."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 14,
+          "texto": "Identificar puntos en el plano cartesiano, usando pares ordenados y vectores de forma concreta (juegos) y pictórica.",
+          "indicadores": [
+            "Identifican segmentos y figuras en los cuatro cuadrantes del plano cartesiano, usando coordenadas enteras.",
+            "Dibujan figuras 2D y descubren que las formas se mantienen si se traslada el sistema, aunque las coordenadas se cambien. •"
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 16,
+          "texto": "Representar datos obtenidos en una muestra mediante tablas de frecuencias absolutas y relativas, utilizando gráficos apropiados, de manera manual y/o con software educativo.",
+          "indicadores": [
+            "Elaboran el gráfico más conveniente para representar los datos; por ejemplo: el gráfico de tallo y hojas si se representan muestras opuestas, etc.",
+            "Identifican información presentada en gráficos."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 18,
+          "texto": "Explicar las probabilidades de eventos obtenidos por medio de experimentos de manera manual y/o con software educativo:\n• estimándolas de manera intuitiva.\n• utilizando frecuencias relativas.\n• relacionándolas con razones, fracciones o porcentaje",
+          "indicadores": [
+            "Establecen la probabilidad de un evento mediante razones, fracciones o porcentajes por medio de un problema."
+          ],
+          "eje": null,
+          "pagina": 6
+        }
+      ]
+    },
+    {
+      "slug": "ciencias-naturales",
+      "nombre": "Ciencias Naturales",
+      "descripcion": "• En la asignatura de Ciencias Naturales los menores de edad serán evaluados en tres ejes temáticos: Biología, Física y Química.\n• Para alcanzar la comprensión de los contenidos disciplinares enmarcado en estos tres ejes, los menores de edad deberán desarrollar habilidades asociadas a los procesos de investigación científica, las cuales se agrupan en cinco etapas: observar y plantear preguntas; planificar y conducir una investigación; procesar y analizar la evidencia; evaluar; comunicar. De esta manera, la asignatura promueve la comprensión de las grandes ideas, la adquisición progresiva de las habilidades de investigación y las actitudes científicas, para así tomar decisiones informadas acerca de fenómenos y problemas que afectan a las personas, la sociedad y ambiente, en materia de ciencia y tecnología.",
+      "fuente": "temario_basica_7deg_basico_uce_2.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Explicar los aspectos biológicos, afectivos y sociales que se integran en la sexualidad, considerando:\n• los cambios físicos que ocurren durante la pubertad\n• la relación afectiva entre dos personas en la intimidad y el respeto mutuo\n• la responsabilidad individual",
+          "indicadores": [
+            "Distinguen aspectos físicos, biológicos, afectivos y sociales de la sexualidad considerando elementos como los sistemas reproductores, la expresión de sentimientos, valores y el modo de interactuar con otros.",
+            "Describen los cambios físicos y emocionales durante la pubertad.",
+            "Reconocen la responsabilidad individual y el respeto hacia sí mismo y hacia el otro en relaciones afectivas y expresiones de la sexualidad."
+          ],
+          "eje": "Biología",
+          "pagina": 7
+        },
+        {
+          "numero": 2,
+          "texto": "Explicar la formación de un nuevo individuo, considerando:\n• el ciclo menstrual (días fértiles, menstruación y ovulación).\n• la participación de espermatozoides y ovocitos.\n• métodos de control de la natalidad.\n• la paternidad y la maternidad responsables.",
+          "indicadores": [
+            "Describen el ciclo menstrual y su relación con la reproducción humana.",
+            "-Explican el rol de espermatozoides y ovocitos en el proceso de fecundación y la formación de un nuevo individuo.",
+            "Caracterizan los diferentes métodos de control de la natalidad, tanto naturales, como de barrera, químicos, entre otros",
+            "Describen los mecanismos de acción de diferentes métodos de control de natalidad.",
+            "Analizan casos de embarazo adolescente y las implicancias que trae la paternidad y maternidad responsables en la etapa de la adolescencia"
+          ],
+          "eje": "Biología",
+          "pagina": 7
+        },
+        {
+          "numero": 5,
+          "texto": "Comparar, usando modelos, microorganismos como virus, bacterias y hongos, en relación con:\n• características estructurales (tamaño, forma y componentes).\n• características comunes de los seres vivos (alimentación, reproducción, respiración, etc.).\n• efectos sobre la salud humana (positivos y negativos)",
+          "indicadores": [
+            "Comparan células eucariontes y procariontes en términos de sus características estructurales y funcionales.",
+            "Describen las características comunes de los seres vivos.",
+            "Describen efectos positivos en la salud humana de microorganismos como virus, bacterias y hongos.",
+            "Comparan microorganismos en base a las propiedades comunes de los seres vivos (alimentación, reproducción, respiración, entre otras)"
+          ],
+          "eje": "Biología",
+          "pagina": 8
+        },
+        {
+          "numero": 7,
+          "texto": "Planificar y conducir una investigación experimental para proveer evidencias que expliquen los efectos de las fuerzas gravitacional, de roce y elástica, entre otras, en situaciones cotidianas.",
+          "indicadores": [
+            "Identifican la fuerza de gravedad en situaciones cotidianas.",
+            "Explican los efectos de las fuerzas en resortes y elásticos.",
+            "Describen la fuerza de roce (estática, cinética y con el aire), considerando su efecto en objetos en situaciones cotidianas y los factores de los que depende.",
+            "Describen los efectos de fuerzas como la gravitacional, la de roce y la elástica sobre objetos, en contextos cotidianos."
+          ],
+          "eje": "Física",
+          "pagina": 8
+        },
+        {
+          "numero": 9,
+          "texto": "Explicar, con el modelo de la tectónica de placas, los patrones de distribución de la actividad geológica (volcanes y sismos), los tipos de interacción entre las placas (convergente, divergente y transformante) y su importancia en la teoría de la deriva continental.",
+          "indicadores": [
+            "Describen las formas en que interactúan las placas tectónicas (límites convergente, divergente y transformante).",
+            "Explican las corrientes convectivas en el manto terrestre como la principal causa del movimiento de las placas tectónicas.",
+            "Reconocen algunas consecuencias, para Chile y el continente, de las interacciones entre las placas de Nazca, Antártica con la Sudamericana.",
+            "Describen la distribución de la actividad geológica (volcanes y sismos) en Chile y el planeta.",
+            "Relacionan la teoría de la deriva continental con la tectónica de placas."
+          ],
+          "eje": "Física",
+          "pagina": 8
+        },
+        {
+          "numero": 13,
+          "texto": "Investigar experimentalmente y explicar el comportamiento de gases ideales en situaciones cotidianas, considerando:\n• factores como presión, volumen y temperatura.\n• las leyes que los modelan.\n• la teoría cinético-molecular.",
+          "indicadores": [
+            "Describen las magnitudes de presión, volumen y temperatura de gases del entorno.",
+            "Describen la compresibilidad de gases, líquidos y sólidos.",
+            "Explican la diferencia entre gases y líquidos de acuerdo con la teoría cinético-molecular.",
+            "Identifican las leyes de los gases ideales (Boyle, Gay-Lussac, Charles)."
+          ],
+          "eje": "Química",
+          "pagina": 8
+        },
+        {
+          "numero": 14,
+          "texto": "Investigar experimentalmente y explicar la clasificación de la materia en sustancias puras y mezclas (homogéneas y heterogéneas), los procedimientos de separación de mezclas (decantación, filtración, tamizado y destilación), considerando su aplicación industrial en la metalurgia, la minería y el tratamiento de aguas servidas, entre otros.",
+          "indicadores": [
+            "Diferencian y comparan sustancias puras y mezclas, tanto homogéneas como heterogéneas.",
+            "Identifican los procedimientos de separación de mezclas (decantación, filtración, tamizado y destilación) y lo relacionan con procesos industriales (por ejemplo, tratamiento de aguas o procesos de potabilización)."
+          ],
+          "eje": "Química",
+          "pagina": 9
+        }
+      ]
+    },
+    {
+      "slug": "historia-geografia-ciencias-sociales",
+      "nombre": "Historia, Geografía y Ciencias Sociales",
+      "descripcion": "• La asignatura de Historia, Geografía y Ciencias Sociales está conformada por disciplinas que estudian, desde diversas perspectivas, al ser humano en el tiempo y espacio. Su trabajo conjunto permite a los menores de edad desarrollar conocimientos, habilidades y actitudes necesarias para comprender la complejidad de la realidad social y el devenir de nuestra sociedad. Para adquirir estos aprendizajes, se considera imprescindible que los menores de edad reconozcan que la realidad social es compleja y se ha construido en forma colectiva, considerando distintas perspectivas para abordarla y múltiples interpretaciones para comprenderla. Estos aprendizajes se organizan en tres ejes temáticos: Historia, Geografía y Formación Ciudadana.\n• En Historia se estudia la historia de la humanidad desde sus orígenes hasta la Edad Media. El primer organizador aborda el proceso mediante el cual las sociedades humanas se fueron complejizando paulatinamente, comenzando con la Revolución neolítica y el surgimiento de las primeras civilizaciones en distintos tiempos y lugares del planeta, tanto en la cuenca del Mediterráneo como en América. El segundo organizador reconoce las distintas civilizaciones que confluyen en la conformación de la cultura americana. En este sentido, se estudian las civilizaciones maya, azteca, inca, griega, romana y europea medieval, y se explica cómo confluyen en la configuración de la cultura americana tras la conquista española y se proyectan en nuestro presente.\n• En Geografía se estudia la relación entre el ser humano y el medio a partir de las experiencias de las civilizaciones estudiadas, comprendiendo cómo las sociedades modifican su entorno natural para habitarlo, y cómo, al mismo tiempo, el medio afecta a la población.\n• En Formación Ciudadana se estudia el legado del mundo antiguo y del mundo medieval para la vida política actual. En concreto, se busca comprender cómo las prácticas sociales y políticas de las civilizaciones estudiadas influyen en nuestra concepción actual sobre la democracia y la organización política de la sociedad actual.\n• En conjunto con las comprensiones y conocimientos antes descritos, los menores de edad deberán desarrollar los objetivos de habilidades de Pensamiento temporal y espacial; análisis y trabajo con fuentes; pensamiento crítico; y la comunicación. Página 10 de 17",
+      "fuente": "temario_basica_7deg_basico_uce_2.pdf",
+      "oa": [
+        {
+          "numero": 2,
+          "texto": "Explicar que el surgimiento de la agricultura, la domesticación de animales, la sedentarización, la acumulación de bienes y el desarrollo del comercio fueron procesos de larga duración que revolucionaron la forma en que los seres humanos se relacionaron con el espacio geográfico.",
+          "indicadores": [
+            "Reconocen el origen y la expansión de la agricultura en distintos lugares del planeta.",
+            "Explican por qué la domesticación de animales y plantas posibilitó el sedentarismo de las primeras sociedades.",
+            "Relacionan los avances en las técnicas de producción agrícola con la acumulación de bienes y el desarrollo del comercio.",
+            "Describen algunos de los múltiples cambios que provocó la revolución agrícola, considerando el impacto de estos cambios sobre las personas hasta el presente."
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 3,
+          "texto": "Explicar que, en las primeras civilizaciones, la formación de estados organizados y el ejercicio del poder estuvieron marcados por la centralización de la administración, la organización en torno a ciudades, la estratificación social, la formación de sistemas religiosos y el desarrollo de técnicas de contabilidad y escritura.",
+          "indicadores": [
+            "Caracterizan la centralización del poder político en las primeras civilizaciones.",
+            "Explican por qué el desarrollo de nuevas formas de trabajo y de la estratificación social incidieron en el desarrollo de sociedades más complejas",
+            "Explican de qué modo el desarrollo de técnicas de contabilidad y escritura facilitaron la administración de los Estados organizados."
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 6,
+          "texto": "Analizar las principales características de la democracia en Atenas, considerando el contraste con otras formas de gobierno del mundo antiguo, y su importancia para el desarrollo de la vida política actual y el reconocimiento de los derechos de los ciudadanos.",
+          "indicadores": [
+            "Describen los principales rasgos de la ciudadanía en la Atenas clásica, identificando quiénes accedían a ella, los derechos que esta condición otorgaba y quiénes eran excluidos, con el fin de contrastar elementos de continuidad y cambio con el presente.",
+            "Contrastan distintas formas de gobierno del mundo antiguo con la democracia en Atenas, haciendo especial énfasis en los derechos de los ciudadanos.",
+            "Establecen relaciones entre características de la democracia en Atenas y de la política actual."
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 7,
+          "texto": "Relacionar las principales características de la civilización romana (derecho, organización burocrática y militar, infraestructura, esclavitud, entre otras) con la extensión territorial de su imperio, la relación con los pueblos conquistados, el proceso de romanización y la posterior expansión del cristianismo.",
+          "indicadores": [
+            "Identifican la extensión territorial del imperio romano en sus distintas fases, la red de caminos y los principales elementos de infraestructura urbana.",
+            "Caracterizan la organización de la república romana y de sus aportes a la regulación de la vida pública como por ejemplo el derecho, la burocracia, el ejército, entre otras.",
+            "Dan ejemplos de cómo el ejército romano fue un factor clave en la expansión y la defensa de la extensión territorial de la república y del imperio romano.",
+            "Explica el proceso de romanización de los territorios conquistados.",
+            "Identifican algunos factores que permitieron la difusión del cristianismo y su cultura, explicando la importancia de su establecimiento como culto oficial del imperio."
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 9,
+          "texto": "Explicar que la civilización europea se conforma a partir de la fragmentación de la unidad imperial de Occidente y la confluencia de las tradiciones grecorromana, judeocristiana y germana, e identificar a la Iglesia Católica como el elemento que articuló esta síntesis y que legitimó el poder político.",
+          "indicadores": [
+            "Explican las consecuencias geopolíticas de la caída del imperio romano de occidente.",
+            "Dan ejemplos de la síntesis cultural entre las tradiciones grecorromana, judeocristiana y germana que se generó durante la Edad Media.",
+            "Explican el rol que tuvo la Iglesia católica y el cristianismo como elementos de unificación de Europa y de legitimación del poder político durante la Edad Media."
+          ],
+          "eje": null,
+          "pagina": 12
+        },
+        {
+          "numero": 12,
+          "texto": "Analizar las transformaciones que se producen en Europa a partir del siglo XII, considerando el renacimiento de la vida urbana, los cambios demográficos, las innovaciones tecnológicas, el desarrollo del comercio y el surgimiento de las universidades.",
+          "indicadores": [
+            "Explican por qué las innovaciones tecnológicas, el desarrollo del comercio y la acumulación de capitales influyeron en el renacimiento de la vida urbana en Europa.",
+            "Explican cómo el desarrollo de las universidades permitió la recuperación de la cultura clásica, valorando la difusión del conocimiento y la cultura.",
+            "Describen los principales cambios demográficos durante los siglos XIII y XV."
+          ],
+          "eje": null,
+          "pagina": 12
+        },
+        {
+          "numero": 13,
+          "texto": "Identificar las principales características de las civilizaciones maya y azteca, considerando las tecnologías utilizadas para transformar el territorio que habitaban (urbanización, canales, acueductos y calzadas, formas de cultivo, entre otras) y el desarrollo de una red comercial que vinculaba al área mesoamericana.",
+          "indicadores": [
+            "Ubican a través de representaciones espaciales, el territorio que habitaron mayas y aztecas, describiendo su entorno natural.",
+            "Explican cómo la construcción de chinampas y milpas permitió el desarrollo de la agricultura en la zona mesoamericana, considerando su compleja geografía.",
+            "Explican el impacto que tuvo el desarrollo de una red comercial en el área mesoamericana.",
+            "Caracterizar el elemento militar de las civilizaciones y su función en torno a la expansión territorial y comercial.",
+            "Caracterizar la cosmología Azteca y Maya y su uso y función social"
+          ],
+          "eje": null,
+          "pagina": 12
+        },
+        {
+          "numero": 16,
+          "texto": "Reconocer en expresiones culturales latinoamericanas del presente la confluencia del legado de múltiples civilizaciones, como la maya, azteca, inca, griega, romana y europea.",
+          "indicadores": [
+            "Reconocen aspectos de los modos de vida de las civilizaciones estudiadas que persisten en las sociedades americanas del presente.",
+            "Reconocen el legado político del mundo clásico en las sociedades americanas actuales.",
+            "Caracterizan expresiones culturales del presente que tienen sus raíces en las grandes civilizaciones americanas y en la cultura clásica (arquitectura e infraestructura, etc.), reconociendo la importancia del patrimonio cultural."
+          ],
+          "eje": null,
+          "pagina": 12
+        },
+        {
+          "numero": 18,
+          "texto": "Comparar los conceptos de ciudadanía, democracia, derecho, república, municipio y gremio del mundo clásico y medieval, con la sociedad contemporánea.",
+          "indicadores": [
+            "Caracterizan los conceptos de ciudadanía, democracia, derecho, república, municipio y gremio del mundo clásico y medieval.",
+            "Reconocen las similitudes y diferencias de las concepciones de ciudadanía, democracia, derecho, república, municipio y gremio de la sociedad contemporánea, en relación con el mundo antiguo y medieval."
+          ],
+          "eje": null,
+          "pagina": 13
+        },
+        {
+          "numero": 19,
+          "texto": "Reconocer el valor de la diversidad como una forma de enriquecer culturalmente a las sociedades, identificando, a modo de ejemplo, los aportes que las distintas culturas existentes en el mundo antiguo y medieval (árabes, judeocristianos, germanos, eslavos, etc.) hicieron a las sociedades europeas, considerando el lenguaje, la religión y las ciencias, entre otros.",
+          "indicadores": [
+            "Caracterizan diversas culturas como la árabe, la bizantina, la germana y la cristiana.",
+            "Identifican vocablos y nombres del habla española actual que provienen del árabe, del latín y de las lenguas germanas."
+          ],
+          "eje": null,
+          "pagina": 13
+        },
+        {
+          "numero": 20,
+          "texto": "Reconocer distintas formas de convivencia y conflicto entre culturas en las civilizaciones estudiadas, y debatir sobre la importancia que tienen el respeto, la tolerancia y las estrategias de resolución pacífica de conflictos, entre otros, para la convivencia entre distintos pueblos y culturas.",
+          "indicadores": [
+            "Dan ejemplos de las relaciones de conflicto y convivencia entre el Imperio romano de Occidente y de Oriente, valorando la diversidad y el diálogo en la resolución de conflictos.",
+            "Dan ejemplos de mutua influencia entre musulmanes y católicos en la península ibérica en la Edad Media, reconociendo elementos de continuidad y cambio.",
+            "Explican el rol que tuvo la tolerancia religiosa en la conformación de los imperios romano e incaico, valorando el conocimiento histórico como forma de comprender el presente.",
+            "Explican, con ejemplos concretos, el rol del intercambio comercial, los acuerdos diplomáticos y las relaciones de frontera, en la convivencia entre pueblos en el mundo antiguo y medieval."
+          ],
+          "eje": null,
+          "pagina": 13
+        },
+        {
+          "numero": 21,
+          "texto": "Reconocer procesos de adaptación y transformación que se derivan de la relación entre el ser humano y el medio, e identificar factores que inciden en el asentamiento de las sociedades humanas (por ejemplo, disponibilidad de recursos, cercanía a zonas fértiles, fragilidad del medio ante la acción humana, o la vulnerabilidad de la población ante las amenazas del entorno).",
+          "indicadores": [
+            "Dan ejemplos, tanto del pasado como del presente, de distintas formas en que el ser humano se ha adaptado a su medio y lo ha transformado, valorando los efectos positivos de esta relación.",
+            "Explican cómo los factores de disponibilidad de recursos y la cercanía de zonas fértiles, entre otros, inciden en la relación ser humano-medio.",
+            "Identifican situaciones en que las amenazas del entorno pueden generar riesgos para la población, sugiriendo alternativas y propuestas posibles de mejora."
+          ],
+          "eje": null,
+          "pagina": 13
+        },
+        {
+          "numero": 22,
+          "texto": "Reconocer y explicar formas en que la acción humana genera impactos en el medio y formas en las que el medio afecta a la población, y evaluar distintas medidas para propiciar efectos positivos y mitigar efectos negativos sobre ambos.",
+          "indicadores": [
+            "Identifican impactos que la revolución agrícola del neolítico provocó sobre el medio reconociendo elementos de continuidad y cambio con el presente.",
+            "Analizan medidas de intervención en el medio que se han implementado para propiciar efectos positivos sobre la población (por ejemplo, embalses de riego en zonas secas, acueductos, etc.), señalando ventajas y desventajas.",
+            "Caracterizan algunas medidas que buscan mitigar efectos negativos en el territorio, tanto a escala local como global."
+          ],
+          "eje": null,
+          "pagina": 14
+        }
+      ]
+    },
+    {
+      "slug": "ingles",
+      "nombre": "Idioma Extranjero: Inglés",
+      "descripcion": "• La asignatura propone que menores de edad, mediante el desarrollo de las habilidades lingüísticas de comprensión y producción de variados tipos de textos, progresen en las competencias para comunicarse en inglés en diversos contextos.\n• Los menores de edad serán evaluados a través de dos habilidades lingüísticas: comprensión de lectura (reading) y expresión escrita (writing), apoyándose en textos orales y escritos relacionados con temas variados, del contexto inmediato, de actualidad e interés global o de otras culturas.",
+      "fuente": "temario_basica_7deg_basico_uce_2.pdf",
+      "oa": [
+        {
+          "numero": 9,
+          "texto": "Demostrar comprensión de ideas generales e información explícita en textos adaptados y auténticos simples, en formato impreso o digital, acerca de temas variados (como experiencias personales, temas de otras asignaturas, del contexto inmediato, de actualidad e interés global o de otras culturas) y que contienen las funciones del año",
+          "indicadores": [
+            "Identifican la idea general en el texto leído.",
+            "Identifican la información explícita en el texto leído.",
+            "Responden preguntas acerca de la información general y explicita del texto.",
+            "Plantean una postura (acuerdo o desacuerdo) con respecto a información del texto leído."
+          ],
+          "eje": null,
+          "pagina": 15
+        },
+        {
+          "numero": 10,
+          "texto": "Demostrar comprensión de textos no literarios (como descripciones, instrucciones, procedimientos, avisos publicitarios, emails, diálogos, páginas web, biografías, gráficos) al identificar:\n• Ideas generales, información específica y detalles. Relaciones de adición y secuencia entre ideas, diferencia hecho-opinión y causa- efecto.\n• Palabras y frases clave, expresiones de uso frecuente y vocabulario temático.\n• Conectores (first, second, finally, next, or, when, while, before, after, too, because) y palabras derivadas de otras por medio del prefijo un- y de los sufijos –ing, -ly.",
+          "indicadores": [
+            "Identifican y describen con oraciones simples la idea general del texto.",
+            "Identifican información específica relacionada con el texto leído.",
+            "Completan organizadores o esquemas de acuerdo con información explícita y detalles expuestos en el texto.",
+            "Identifican relaciones de hecho opinión o causa y efecto, y uso de conectores en el texto.",
+            "Identifican expresiones de uso frecuente y vocabulario asociados al tema del texto y las usan en completar oraciones o responder preguntas."
+          ],
+          "eje": null,
+          "pagina": 15
+        },
+        {
+          "numero": 13,
+          "texto": "Escribir historias e información relevante, usando recursos multimodales que refuercen el mensaje en forma creativa en textos variados acerca de temas como:\n• experiencias personales\n• contenidos interdisciplinarios\n• problemas globales\n• cultura de otros países\n• textos leídos",
+          "indicadores": [
+            "Describen información relevante acerca de experiencias personales o problemas globales.",
+            "Redactan una opinión sobre aspectos conocidos de otras culturas, problemas actuales, con apoyo de imágenes.",
+            "Escriben para compartir información sobre algunos de los temas señalados (experiencias personales, contenidos interdisciplinarios, problemas globales, cultura de otros países, o textos leídos)."
+          ],
+          "eje": null,
+          "pagina": 16
+        },
+        {
+          "numero": 16,
+          "texto": "Demostrar conocimiento y uso del lenguaje en sus textos escritos por medio de las siguientes funciones:\n• Expresar cantidades, contar y enumerar; por ejemplo: there is /are many/ much/a hundred/eighty/some people/water; too.\n• Identificar y describir objetos, deportes y pasatiempos; por ejemplo: these/ those cars are fast; it’s a plastic bottle.\n• Expresarse sobre actividades; por ejemplo: riding/skating is cool/boring.\n• Expresar obligación y prohibición; por ejemplo: I must practice; you mustn’t ride without a helmet.\n• Expresarse con claridad usando palabras y expresiones de uso común, sinónimos, palabras compuestas; por ejemplo: afraid of flying; angry about/ with..., give advice on...; have fun/a good time; I want/don’t want...; see you later/ soon; make a mistake/plans/friends; for example; suddenly; outdoor.\n• Señalar el tiempo, el grado y el modo en que ocurren las acciones; por ejemplo: he won the race yesterday; she sings quietly/softly/loudly; they run very fast; every week; very...\n• Explicar causa y efecto; por ejemplo: an ice cream melts if you heat it.\n• Formular y responder preguntas sobre rutinas y acciones presentes y pasadas; por ejemplo: Does/did he cook? Yes/No, he does/doesn’t/did/didn’t.\n• Describir acciones que interrumpen u ocurren simultáneamente en el pasado; por ejemplo: I was playing football, when it started to rain; while he was cycling, she was listening to music; I saw a shark while I was swimming.\n• Unir ideas; por ejemplo: first, second, next, finally; he felt nervous before/after the test; it’s too dangerous to visit.",
+          "indicadores": [
+            "Completan ideas con palabras y expresiones de uso común, palabras compuestas como, por ejemplo: afraid of; make friends/ plans; see you soon/later; take a break/give advice; want/don’t want; ask for advice.",
+            "Completan oraciones, haciendo referencias al tiempo, grado o modo, en que ocurren las acciones, por ejemplo: She visits him every weekend, he plays tennis very well.",
+            "Describen rutinas y hábitos; deportes y pasatiempos; acciones realizadas, por ejemplo: I play computer games frequently; She practices sports every week; She went to a tournament last month .",
+            "Describen acciones que interrumpen otras u ocurren simultáneamente; por ejemplo: I was playing tennis when it started to rain; While I was cooking, the lights went out.",
+            "Responden preguntas sobre acciones realizadas en el presente o en el pasado, por ejemplo: He doesn´t work on Sundays. I cooked dinner last night.",
+            "Responden preguntas donde justifiquen las opiniones, por ejemplo: I study mathematics because I want to be a teacher."
+          ],
+          "eje": null,
+          "pagina": 16
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,320 @@
+{
+  "grado": "3_medio",
+  "etiqueta": "3° Medio",
+  "asignaturas": [
+    {
+      "slug": "lengua-literatura",
+      "nombre": "Lengua y Literatura",
+      "descripcion": "• La asignatura de Lengua y Literatura busca que los menores de edad a través de la escritura, lectura, comunicación oral e investigación logran conocerse a sí mismos y reflexionar sobre la experiencia humana en diversas culturas. Desde un enfoque comunicativo y cultural de la asignatura, se propone desarrollar competencias comunicativas indispensables para una participación, democrática y responsable en sociedad.\n• Específicamente, en el ciclo de 3° y 4° medio, se espera que los menores potencien y apliquen sus habilidades de comprensión, análisis crítico y producción de textos orales y escritos, para participar activa y reflexivamente en una sociedad multicultural y globalizada, y en sus distintas comunidades discursivas.",
+      "fuente": "temario_media_3deg_medio_uce_2.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Formular interpretaciones surgidas de sus análisis literarios, considerando:\n● La contribución de los recursos literarios (narrador, personajes, tópicos literarios, características del lenguaje, figuras literarias, etc.) en la construcción del sentido de la obra.\n● Las relaciones intertextuales que se establecen con otras obras leídas y con otros referentes de la cultura y del arte.",
+          "indicadores": [
+            "Establecen relaciones entre recursos literarios (narrador, personajes, tópicos literarios, características del lenguaje, figuras literarias, etc.) y la construcción del sentido de la obra.",
+            "Formulan una hipótesis de sentido que se sustenta en los recursos literarios (personajes, narradores, tópicos literarios, figuras literarias) usados en la obra."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 3,
+          "texto": "Analizar críticamente textos de diversos géneros discursivos no literarios orales, escritos y audiovisuales, considerando:\n• La influencia de los contextos socioculturales de enunciador y audiencia.\n• Las características del género discursivo al que pertenece el texto.\n• Las relaciones establecidas entre las ideas para construir razonamientos.\n• La selección y la veracidad de la información.",
+          "indicadores": [
+            "Establecen relaciones entre el contenido del texto y el contexto sociocultural de su audiencia.",
+            "Identifican la función que cumple la selección de cierta información en el texto, en relación con los propósitos comunicativos.",
+            "Identifican las relaciones entre las ideas que sustentan el razonamiento del discurso."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 4,
+          "texto": "Analizar críticamente los géneros discursivos surgidos en diversas comunidades digitales (post, tweet, fotografías y videos, comentarios en foros, memes, etc.), considerando:\n• Influencia del contexto sociocultural.\n• Intereses, motivaciones, características y temas compartidos por los participantes de la comunidad.\n• Posicionamiento de los enunciadores frente a los temas y el rol que asumen ante la audiencia.\n• Modos de razonamiento y calidad de la evidencia para sostener opiniones.\n• Problemas éticos asociados a la participación: difusión de información, formas de acoso, descalificación o discriminación, sus alcances y consecuencias.",
+          "indicadores": [
+            "Establecen relaciones entre el contenido del texto y el contexto sociocultural de la comunidad digital.",
+            "Describen el rol que asume el enunciador ante la audiencia a partir de su discurso.",
+            "Identifican problemáticas éticas asociadas a la participación en comunidades digitales.",
+            "Fundamentan una postura ética sobre la participación en comunidades digitales y sus problemáticas.",
+            "Identifican los modos de razonamiento en discursos de comunidades digitales.",
+            "Evalúan la calidad de la evidencia para sostener opiniones en discursos de comunidades digitales."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 6,
+          "texto": "Producir textos (orales, escritos o audiovisuales) coherentes y cohesionados, para comunicar sus análisis e interpretaciones de textos, desarrollar posturas sobre temas, explorar creativamente con el lenguaje, entre otros propósitos:\n• Aplicando un proceso de escritura, según sus propósitos, el género discursivo seleccionado, el tema y la audiencia.\n• Adecuando el texto a las convenciones del género y a las características de la audiencia (conocimientos, intereses, convenciones culturales)",
+          "indicadores": [
+            "Escriben textos para comunicar sus análisis e interpretaciones sobre un texto leído.",
+            "Escriben un texto coherente y cohesivo (progresión temática, mantención del tema y uso de conectores de forma adecuada).",
+            "Adecuan la escritura a las convenciones del género y a las características de la audiencia (conocimientos, intereses, convenciones culturales)."
+          ],
+          "eje": null,
+          "pagina": 4
+        }
+      ]
+    },
+    {
+      "slug": "matematica",
+      "nombre": "Matemática",
+      "descripcion": "La asignatura de Matemática busca que los y las estudiantes continúen desarrollando sus habilidades de modelar el mundo matemáticamente, resolver problemas en diferentes contextos, representar para expresar ideas matemáticas, comunicar y argumentar, de modo de favorecer su tránsito al mundo laboral y profesional y promover que contribuyan a la comunidad local, nacional y global. La asignatura provee distintos espacios para que profundicen y permite estudiar la matemática para contribuir positivamente a su autoestima y al concepto que se están formando acerca de sus propias capacidades. Asimismo, deberán integrar las habilidades propias de la disciplina, representar, modelar, argumentar y comunicar y resolver problemas, en conjunto con las habilidades digitales para el siglo XXI, para analizar situaciones o fenómenos interdisciplinares y transdisciplinares. Por otra parte, podrán entender la matemática como una construcción, en la que se puede participar activamente y que es significativa para el proyecto personal y la vida individual y ciudadana.",
+      "fuente": "temario_media_3deg_medio_uce_2.pdf",
+      "oa": [
+        {
+          "numero": 2,
+          "texto": "Tomar decisiones en situaciones de incerteza que involucren el análisis de datos estadísticos con medidas de dispersión y probabilidades condicionales",
+          "indicadores": [
+            "Extraen e interpretan información estadística, calculando medidas de dispersión para comparar situaciones.",
+            "Analizan datos, calculando las medidas de dispersión para tomar decisiones.",
+            "Representan la información y utilizan las medidas de dispersión para comunicar alguna decisión.",
+            "Seleccionan y relacionan información, calculando probabilidades condicionales para tomar decisiones.",
+            "Utilizan árboles o tablas de doble entrada para representar y determinar la probabilidad condicional."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 3,
+          "texto": "Aplicar modelos matemáticos que describen fenómenos o situaciones de crecimiento y decrecimiento, que involucran las funciones exponencial y logarítmica, de forma manuscrita, con uso de herramientas tecnológicas y promoviendo la búsqueda, selección, contrastación y verificación de información en ambientes digitales y redes sociales.",
+          "indicadores": [
+            "Utilizan modelos de situaciones de crecimiento y decrecimiento que involucran las funciones exponencial y logarítmica, para determinar valores o hacer proyecciones.",
+            "Identifican los intervalos donde el modelo exponencial o logarítmico tiene sentido, según la situación de crecimiento o decrecimiento.",
+            "Varían parámetros para ajustar un modelo exponencial o logarítmico según la situación.",
+            "Construyen modelos de situaciones de crecimiento y decrecimiento que involucran las funciones exponencial y logarítmica, para determinar valores o hacer proyecciones."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 4,
+          "texto": "Resolver problemas de geometría euclidiana que involucran relaciones métricas entre ángulos, arcos, cuerdas y secantes en la circunferencia, de forma manuscrita y con uso de herramientas tecnológicas.",
+          "indicadores": [
+            "Utilizan relaciones métricas entre ángulos, arcos o cuerdas en la circunferencia para determinar medidas de objetos geométricos.",
+            "Justifican el uso de propiedades sobre ángulos, arcos o cuerdas para resolver un problema.",
+            "Explican las relaciones métricas entre ángulos, arcos o cuerdas en la circunferencia, utilizando dibujos, esquemas o proposiciones."
+          ],
+          "eje": null,
+          "pagina": 5
+        }
+      ]
+    },
+    {
+      "slug": "ciencias-para-la-ciudadania",
+      "nombre": "Ciencia para la Ciudadanía",
+      "descripcion": "• Esta asignatura busca promover una comprensión integrada de fenómenos complejos y problemas que ocurren en nuestro quehacer cotidiano, fomentando la integración entre la biología, la física y la química, entre otras especialidades científicas, y la integración de las ciencias con otras áreas del saber, como la matemática, mediante la aplicación, por ejemplo, de modelos y herramientas estadísticas. De esta manera, se espera que los menores de edad adquieran la capacidad de aplicar el razonamiento, los conceptos y procedimientos de las ciencias para comprender experiencias y situaciones cercanas, y para proponer soluciones creativas y viables a problemas que puedan afectar a las personas, la sociedad y el ambiente, en contextos locales y globales.\n• En síntesis, la asignatura Ciencias para la Ciudadanía ofrece oportunidades a los menores de edad para: desarrollar habilidades y actitudes necesarias para la investigación científica, comprender conocimientos centrales de las ciencias, relacionar ciencia y tecnología con sociedad y ambiente, y establecer integración curricular entre tópicos de la ciencia y otras disciplinas.",
+      "fuente": "temario_media_3deg_medio_uce_2.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Analizar, sobre la base de la investigación, factores biológicos, ambientales y sociales que influyen en la salud humana (como la nutrición, el consumo de alimentos transgénicos, la actividad física, el estrés, el consumo de alcohol y drogas, y la exposición a rayos UV, plaguicidas, patógenos y elementos contaminantes, entre otros.)",
+          "indicadores": [
+            "Clasifican factores que influyen en la salud humana en biológicos, ambientales y sociales.",
+            "Describen factores que influyen en la salud humana tales como: la nutrición, el consumo de alimentos transgénicos, la actividad física, el estrés, el consumo de alcohol y drogas, y la exposición a rayos UV, plaguicidas, patógenos y elementos contaminantes, entre otros.",
+            "Analizan los efectos a corto y largo plazo, de los factores que influyen en la salud humana.",
+            "Relacionan el comportamiento y las decisiones personales con factores biológicos, ambientales y sociales que afectan la salud propia y de otros.",
+            "Explican la salud humana considerando las dimensiones físicas, psíquicas, sociales y ambientales que le constituyen."
+          ],
+          "eje": "Módulo 1: Bienestar y salud",
+          "pagina": 6
+        },
+        {
+          "numero": 3,
+          "texto": "Analizar, a partir de evidencias, situaciones de transmisión de agentes infecciosos a nivel nacional y mundial (como virus de influenza, VIH-sida, hanta, hepatitis B, sarampión, entre otros), y evaluar críticamente posibles medidas de prevención como el uso de vacunas.",
+          "indicadores": [
+            "Identifican agentes infecciosos tales como virus de influenza, VIH-sida, hanta, hepatitis B, sarampión, entre otros.",
+            "Explican vías de transmisión de agentes infecciosos en la población humana con virus de influenza, VIH/sida, hanta, hepatitis B, sarampión, entre otros.",
+            "Caracterizan medidas de prevención de la transmisión de agentes infecciosos tales como las vacunas.",
+            "Evalúan diversas medidas de prevención y mitigación en la población frente a la transmisión de agentes infecciosos.",
+            "Reconocen la importancia de prácticas de higiene en el hogar, el trabajo y la escuela, para prevenir la transmisión de agentes infecciosos.",
+            "Analizan implicancias éticas, económicas, ambientales y sociales relacionadas con las medidas de prevención y mitigación frente a la transmisión de agentes infecciosos a escala nacional y mundial en la población."
+          ],
+          "eje": "Módulo 1: Bienestar y salud",
+          "pagina": 6
+        },
+        {
+          "numero": 1,
+          "texto": "Investigar sustancias químicas de uso cotidiano en el hogar y el trabajo (medicamentos, detergentes y plaguicidas, entre otros), analizando su composición, reactividad, riesgos potenciales y medidas de seguridad asociadas (manipulación, almacenaje y eliminación).",
+          "indicadores": [
+            "Identifican sustancias químicas de uso cotidiano en el hogar y el trabajo (medicamentos, detergentes y plaguicidas, entre otros).",
+            "Describen la composición y reactividad de sustancias químicas de uso cotidiano en el hogar y el trabajo (medicamentos, detergentes y plaguicidas, entre otros).",
+            "Analizan el etiquetado de sustancias químicas de uso cotidiano en el hogar y en trabajo.",
+            "Describen el potencial riesgo de sustancias químicas de uso cotidiano en base a su composición y reactividad.",
+            "Identifican medidas de seguridad en el hogar y en el trabajo en los procesos de manipulación, almacenaje y eliminación de sustancias químicas.",
+            "Evalúan medidas de seguridad en el hogar y en el trabajo, a partir de las amenazas existentes para el bienestar de las personas y el cuidado del ambiente."
+          ],
+          "eje": "Módulo 2: Seguridad, prevención y autocuidado",
+          "pagina": 7
+        },
+        {
+          "numero": 3,
+          "texto": "Analizar, a partir de modelos, riesgos de origen natural o provocados por la acción humana en su contexto local (como aludes, incendios, sismos de alta magnitud, erupciones volcánicas, tsunamis e inundaciones, entre otros) y evaluar las capacidades existentes en la escuela y la comunidad para la prevención, la mitigación y la adaptación frente a sus consecuencias.",
+          "indicadores": [
+            "Distinguen riesgos de origen natural o provocados por la acción humana, tales como aludes, incendios, sismos de alta magnitud, erupciones volcánicas, tsunamis e inundaciones, entre otros.",
+            "Explican, a partir de evidencias (tablas, gráficos, diagramas y/o modelos), riesgos de origen natural o antropogénico en diversos contextos, considerando causas y efectos.",
+            "Analizan casos de controversia pública sobre riesgos socionaturales, considerando implicancias sociales, económicas, éticas y ambientales.",
+            "Clasifican medidas frente a riesgos de origen natural o provocados por la acción humana, según los propósitos de prevención, mitigación y adaptación.",
+            "Evalúan propuestas y medidas de seguridad existentes frente a fenómenos naturales y antropogénicos, a nivel local y nacional."
+          ],
+          "eje": "Módulo 2: Seguridad, prevención y autocuidado",
+          "pagina": 7
+        }
+      ]
+    },
+    {
+      "slug": "educacion-ciudadana",
+      "nombre": "Educación Ciudadana",
+      "descripcion": "• La asignatura Educación Ciudadana tiene por objetivo desarrollar un conjunto de conocimientos, habilidades y actitudes para que los menores conozcan el sistema democrático y se desenvuelvan en él, participando en forma activa y corresponsable en la construcción de una sociedad orientada hacia el fortalecimiento del bien común, la justicia social y el desarrollo sustentable.\n• La asignatura desarrolla e integra conocimientos, habilidades y actitudes de la política, las ciencias sociales, la geografía, la economía y la filosofía.\n• La asignatura buscar fortalecer las habilidades de investigación, pensamiento crítico y comunicación para el ejercicio de la autonomía, la construcción del conocimiento y la resolución pacífica de conflictos en una sociedad democrática.",
+      "fuente": "temario_media_3deg_medio_uce_2.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Identificar los fundamentos, atributos y dimensiones de la democracia y la ciudadanía, considerando las libertades fundamentales de las personas como un principio de estas y reconociendo sus implicancias en los deberes del Estado y en los derechos y responsabilidades ciudadanas.",
+          "indicadores": [
+            "Reconocen la participación efectiva, igualdad de voto, control de la agenda, el Estado de Derecho y el respeto a las libertades fundamentales como atributos de la Democracia y la ciudadanía.",
+            "Reconocen la soberanía popular, el respecto, promoción y garantía de los Derechos Humanos, la libertad, la igualdad y la dignidad de la persona como fundamentos de la Democracia",
+            "Identifican la protección de las libertades fundamentales en algunos deberes del Estado y derechos y responsabilidades ciudadanas."
+          ],
+          "eje": null,
+          "pagina": 8
+        },
+        {
+          "numero": 2,
+          "texto": ". Investigar, a partir de casos de interés público, los mecanismos de acceso a la justicia y las principales características del sistema judicial, para fortalecer estrategias de resguardo de las libertades fundamentales, los propios derechos y los de la comunidad.",
+          "indicadores": [
+            "Explican las principales funciones del sistema judicial chileno (Ministerio Público, Defensoría Penal Pública, cortes, tribunales y juzgados). Explican las principales funciones de diferentes mecanismos institucionales de acceso a la justicia (Fiscalía, Defensoría Pública y Corporación de Asistencia Judicial).",
+            "Identifican los mecanismos institucionales de acceso a la justicia y las principales funciones del sistema judicial chileno a partir de un caso actual de interés público."
+          ],
+          "eje": null,
+          "pagina": 8
+        },
+        {
+          "numero": 4,
+          "texto": "Evaluar las relaciones entre el Estado y el mercado, considerando temas como sueldos justos, productividad, carga tributaria, comercio justo, probidad, desarrollo sustentable, riqueza y pobreza. -",
+          "indicadores": [
+            "Reconocen distintas perspectivas respecto de la relación entre el Estado y el mercado",
+            "Identifican la función fiscalizadora, reguladora, proveedora de bienes y servicios, estabilizadora y redistribuidora como parte de las funciones económicas del Estado",
+            "Argumentan puntos de vista sobre del rol del Estado y el mercado respecto de sueldos justos, productividad, carga tributaria, comercio justo, probidad, desarrollo sustentable, riqueza y pobreza."
+          ],
+          "eje": null,
+          "pagina": 8
+        },
+        {
+          "numero": 5,
+          "texto": "Promover el reconocimiento, la defensa y exigibilidad de los derechos humanos en la vida cotidiana, considerando los principios de universalidad, indivisibilidad, inalienabilidad, igualdad y no discriminación que los sustentan. -",
+          "indicadores": [
+            "Conocen la definición del concepto de Derechos Humanos.",
+            "Identifican transgresiones a los Derechos Humanos a partir de casos actuales de interés público.",
+            "Explican, por medio de ejemplos, los principios de universalidad, indivisibilidad, inalienabilidad, igualdad y no discriminación de los Derechos Humanos. Distinguen los deberes y obligaciones que los derechos humanos establece a los Estados."
+          ],
+          "eje": null,
+          "pagina": 9
+        },
+        {
+          "numero": 6,
+          "texto": "Reflexionar personal y grupalmente sobre diversas formas de participación y su aporte al fortalecimiento del bien común, considerando experiencias personales, fenómenos sociales contemporáneos y las perspectivas del republicanismo, el liberalismo, y el comunitarismo.",
+          "indicadores": [
+            "Distinguen distintas formas de participación en vistas del bien común (instancias de sufragio, organizaciones comunitarias y locales, partidos políticos, informarse y emitir juicios y opiniones, etc.). Identifican los principales planteamientos del republicanismo, del liberalismo, y del comunitarismo respecto del bien común Relacionan experiencias personales de participación ciudadana con las perspectivas republicanista, liberal y comunitarista del bien común."
+          ],
+          "eje": null,
+          "pagina": 9
+        },
+        {
+          "numero": 7,
+          "texto": "Distinguir relaciones políticas, económicas y socioculturales que configuran el territorio en distintas escalas, proponiendo alternativas para avanzar en justicia social y ambiental.",
+          "indicadores": [
+            "Definen territorio a partir de la Constitución política y la administración político-administrativa de Chile. Relacionan la organización política de Chile con las distintas escalas territoriales como son la nacional, regional, provincial y comunal, distinguiendo principales autoridades y límites en sus funciones. Identifican el rol de los alcaldes, las juntas de vecinos, organizaciones locales y otros actores en la configuración política del territorio. Reconocen la importancia del plan regulador en la configuración del territorio comunal y las posibilidades participación de los distintos actores sociales en estas definiciones. Analizan en algunos casos de interés público los impactos positivos y negativos de la organización y administración territorial sobre la comunidad, considerando las dimensiones de justicia social y ambiental. Identifican de qué manera el Estado interviene, planifica y configura el territorio, por ejemplo, por medio del censo, la construcción de obras públicas, el análisis de impacto ambiental, entre otros. Reconocen situaciones de su entorno local que incidan sobre el medioambiente, el acceso a servicios o la calidad de vida de las personas, proponiendo alternativas de acción ciudadana."
+          ],
+          "eje": null,
+          "pagina": 9
+        }
+      ]
+    },
+    {
+      "slug": "filosofia",
+      "nombre": "Filosofía",
+      "descripcion": "• La asignatura Filosofía para 3° y 4° medio tiene como objetivo que los menores de edad desarrollen y fortalezcan la reflexión crítica, metódica y rigurosa, así como adquirir un conocimiento disciplinar de la Filosofía. Estos objetivos están intrínsecamente unidos y tienen como horizonte formativo que el menor de edad logre ser capaz de filosofar por sí mismo. De esta forma, se debe facilitar y estimular la indagación con rigor y espíritu crítico acerca de preguntas filosóficas actuales, y también hacerse cargo de razonamientos y textos fundamentales de la tradición filosófica desde sus inicios hasta nuestros días. Esta asignatura, además, es un espacio pertinente para promover actitudes y virtudes intelectuales necesarias para que los menores de edad logren un desarrollo integral. La capacidad de asombro, de precisión argumentativa, de detenerse y cuestionar aquello que aparece como dado y de pensar por sí mismos, son disposiciones fundamentales para que los menores de edad avancen en el desarrollo de sus hábitos intelectuales, logrando con ello fortalecer su autonomía y enriquecer a la comunidad en la que están insertos.\n• El estudio de la ontología, la epistemología y la ética, dentro del plan común, cumple la función de introducir a los estudiantes en la disciplina, considerando que los aprendizajes se pueden enriquecer a partir de otras áreas temáticas que el docente estime convenientes. La lógica, por su parte, es considerada un instrumento de análisis filosófico o procedimiento racional que asegura la rigurosidad en la argumentación, por lo que se espera que los menores de edad apliquen algunos de sus principios en diálogos filosóficos, ensayos, formulación de preguntas filosóficas, entre otras actividades que lo requieran.",
+      "fuente": "temario_media_3deg_medio_uce_2.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Describir las características del quehacer filosófico, considerando el problema de su origen y sentido, e identificando algunas de sus grandes preguntas y temas.",
+          "indicadores": [
+            "Reconocen el asombro como origen de la filosofía. Relacionan la filosofía con la ignorancia, la opinión y la práctica. Distinguen preguntas filosóficas de preguntas no filosóficas en temas como el sentido de la vida, lo bueno y lo real. Describen algunas características del quehacer filosófico, tales como la experiencia como punto de partida, búsqueda de supuestos y clarificación conceptos."
+          ],
+          "eje": null,
+          "pagina": 10
+        },
+        {
+          "numero": 3,
+          "texto": "Formular preguntas filosóficas referidas al ser y la naturaleza de la realidad que sean significativas para su vida, considerando conceptos y teorías ontológicas fundamentales.",
+          "indicadores": [
+            "Conocen el propósito y el campo de estudio de la ontología.",
+            "Vinculan problemas, preguntas y conceptos propios de la ontología con experiencias de la vida cotidiana.",
+            "Describen, en términos generales, una teoría ontológica a su elección y sus conceptos fundamentales."
+          ],
+          "eje": null,
+          "pagina": 10
+        },
+        {
+          "numero": 4,
+          "texto": "Formular preguntas filosóficas referidas al conocimiento, la ciencia y la verdad que sean significativas para su vida, considerando conceptos y teorías epistemológicas fundamentales.",
+          "indicadores": [
+            "Conocen el propósito y el campo de estudio de la epistemología y de la teoría del conocimiento.",
+            "Vinculan problemas, preguntas y conceptos propios de la epistemología y la teoría del conocimiento con experiencias de la vida cotidiana.",
+            "Distinguen entre dogmatismo, criticismo y escepticismo."
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 6,
+          "texto": "Aplicar principios y herramientas elementales de argumentación por escrito, considerando la consistencia y rigurosidad lógica, identificando razonamientos validos e inválidos y métodos de razonamiento filosófico.",
+          "indicadores": [
+            "Identifican las estructura inductiva y deductiva de la argumentación.",
+            "Distinguen entre verdad y validez.",
+            "identifican razonamientos válidos e inválidos, inferencias lógicas y falacias en textos. Construyen argumentos, distinguiendo algunos de sus componentes como razón, garantía y evidencia Evalúan las características argumentativas y lógicas de algunos métodos filosóficos, tales como la mayéutica, los experimentos mentales, la fenomenología o la axiomática."
+          ],
+          "eje": null,
+          "pagina": 11
+        }
+      ]
+    },
+    {
+      "slug": "ingles",
+      "nombre": "Idioma Extranjero: Inglés",
+      "descripcion": "• La asignatura Idioma Extranjero Inglés tiene como objetivo lograr que los menores de edad sean partícipes de una sociedad multicultural, conectada y cambiante en la cual tengan la capacidad de comprender y expresarse apropiadamente en inglés.\n• El propósito de la asignatura enfatiza la comprensión y expresión, posibilitando la incorporación de los menores de edad a un mundo multicultural que emplea el inglés como vehículo de comunicación. La asignatura busca generar espacios donde existan estas interacciones con otras personas y donde la comprensión se manifiesta integradamente.",
+      "fuente": "temario_media_3deg_medio_uce_2.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Comprender información central de textos escritos en contextos relacionados con sus intereses e inquietudes, con el fin de conocer las maneras en que otras culturas abordan dichos contextos.",
+          "indicadores": [
+            "Usan organizadores gráficos para registrar y clasificar la información identificada en los textos leídos. Completan frases, usando estructuras vistas previamente presentes en los textos. Emplean conectores variados y adecuados para unir ideas. Comparan información sobre un tema específico, obtenido de los textos escritos."
+          ],
+          "eje": null,
+          "pagina": 12
+        },
+        {
+          "numero": 3,
+          "texto": "Utilizar su conocimiento del inglés en la comprensión y producción de textos escritos breves y claros, con el fin de construir una postura personal crítica en contextos relacionados con sus intereses e inquietudes.",
+          "indicadores": [
+            "Analizan artículos relacionado a su contexto, identificando vocabulario específico y/o estructuras del lenguaje vistas previamente. Elaboran resúmenes de la información general del texto leído, siguiendo un modelo de escritura. Comunican las ideas principales identificadas en un texto propuesto para el nivel, considerando el público, el contexto y el propósito, y usando conectores adecuados para articular las ideas. Comparan información sobre un tema específico obtenido de los textos escritos trabajados."
+          ],
+          "eje": null,
+          "pagina": 12
+        },
+        {
+          "numero": 4,
+          "texto": "Producir y comprender con fluidez textos escritos breves y claros en situaciones comunicativas que involucren otras visiones de mundo y la propia, con el fin de interactuar y tomar conciencia de su propia identidad.",
+          "indicadores": [
+            "Escriben un párrafo sobre un tema de interés, según las características propias de un texto escrito. Emplean un modelo de escritura considerando público objetivo, contexto y propósito. Crean oraciones con estructuras vistas previamente, para entregar un significado específico. Articulan ideas con uso adecuado y variado de conectores y manteniendo la fluidez de la comunicación. Evalúan el cumplimiento de la estructura de un texto, dependiendo de su función."
+          ],
+          "eje": null,
+          "pagina": 12
+        }
+      ]
+    }
+  ]
+}

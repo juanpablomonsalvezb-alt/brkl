@@ -1,0 +1,521 @@
+{
+  "grado": "2_medio",
+  "etiqueta": "2° Medio",
+  "asignaturas": [
+    {
+      "slug": "lengua-literatura",
+      "nombre": "Lengua y Literatura",
+      "descripcion": "• La asignatura de Lengua y Literatura busca que los menores de edad participen de experiencias de aprendizaje con el lenguaje y la literatura a través de la escritura, lectura, comunicación oral e investigación, para conocerse a sí mismos y reflexionar sobre la experiencia humana en diversas culturas. Desde un enfoque comunicativo y cultural de la asignatura, se propone desarrollar competencias comunicativas indispensables para una participación activa, democrática y responsable en sociedad. Específicamente, en el ciclo de 7° básico a 2° medio, se profundiza el carácter cultural de la lengua en sus diversas manifestaciones, desarrollando perspectivas críticas frente a los discursos y profundizando la relación entre lengua y literatura con sus contextos culturales. En este ciclo escolar se evaluarán 2 ejes: Lectura y Escritura.",
+      "fuente": "temario_media_2deg_medio_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 3,
+          "texto": "Analizar las narraciones leídas para enriquecer su comprensión, considerando, cuando sea pertinente:\n• El o los conflictos de la historia.\n• Un análisis de los personajes que considere su relación con otros personajes, qué dicen, qué se dice de ellos, sus acciones y motivaciones, sus convicciones y los dilemas que enfrentan.\n• La relación de un fragmento de la obra con el total.\n• Cómo el relato está influido por la visión del narrador.\n• Personajes tipo (por ejemplo, el pícaro, el avaro, el seductor, la madrastra, etc.), símbolos y tópicos literarios presentes en el texto.\n• Las creencias, prejuicios y estereotipos presentes en el relato, a la luz de la visión de mundo de la época en la que fue escrito y su conexión con el mundo actual.\n• El efecto producido por recursos como flashback, indicios, caja china (historia dentro de una historia), historia paralela.\n• Relaciones intertextuales con otras obras.",
+          "indicadores": [
+            "Extraen información explícita e implícita relevante para el análisis literario.",
+            "Infieren el o los conflictos de la historia.",
+            "Describen a los personajes respecto de la relación con otros personajes, su comportamiento, motivaciones, convicciones y dilemas.",
+            "Establecen relaciones entre un fragmento y el total de la obra.",
+            "Relacionan las características del narrador con los efectos que producen en la historia.",
+            "Identifican personajes tipo, símbolos y tópicos literarios en narraciones.",
+            "Inferir el efecto producido por recursos como flashback, indicios, caja china, historia paralela.",
+            "Identifican prejuicios, estereotipos o creencias presentes en el relato.",
+            "Establecen relaciones intertextuales con otras obras."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 5,
+          "texto": "Analizar los textos dramáticos leídos o vistos, para enriquecer su comprensión, considerando, cuando sea pertinente:\n• El conflicto y qué problema humano se expresa a través de él.\n• Un análisis de los personajes principales que considere su evolución, su relación con otros personajes, qué dicen, qué se dice de ellos, lo que hacen, cómo reaccionan, qué piensan y cuáles son sus motivaciones.\n• Personajes tipo, símbolos y tópicos literarios.\n• Las creencias, prejuicios y estereotipos presentes en el relato, a la luz de la visión de mundo de la época en la que fue escrito y su conexión con el mundo actual.\n• La atmósfera de la obra y cómo se construye a través de los diálogos, los monólogos, las acciones y las acotaciones.\n• Cómo los elementos propios de la puesta en escena aportan a la comprensión de la obra: iluminación, sonido, vestuario, escenografía, actuación.\n• Relaciones intertextuales con otras obras.",
+          "indicadores": [
+            "Identifican el conflicto en textos dramáticos y el problema humano que se expresa a través de él.",
+            "Relacionan el comportamiento de los personajes con los conflictos presentes en la historia.",
+            "Describen a los personajes principales respecto de su evolución, la relación con otros personajes, su comportamiento y motivaciones.",
+            "Identifican personajes tipo, símbolos y tópicos literarios en narraciones.",
+            "Identifican creencias, prejuicios y estereotipos presentes en textos dramáticos.",
+            "Identifican el efecto que tienen los elementos propios de la puesta en escena (iluminación, sonido, vestuario, escenografía, actuación) en el sentido de la obra.",
+            "Establecen relaciones intertextuales con otras obras."
+          ],
+          "eje": null,
+          "pagina": 4
+        },
+        {
+          "numero": 8,
+          "texto": "Formular una interpretación de los textos literarios leídos o vistos, que sea coherente con su análisis, considerando:\n• una hipótesis sobre el sentido de la obra, que muestre un punto de vista personal, histórico, social o universal.\n• una crítica de la obra sustentada en citas o ejemplos.\n• los antecedentes culturales que influyen en la visión que refleja la obra sobre temas como el destino, la muerte, la trascendencia, la guerra u otros.\n• la relación de la obra con la visión de mundo y el contexto histórico en el que se ambienta y/o en el que fue creada, ejemplificando dicha relación.",
+          "indicadores": [
+            "Formular una hipótesis sobre el sentido de una obra literaria que muestre un punto de vista personal, histórico o social.",
+            "Fundamentan su hipótesis de interpretación en coherencia con su análisis literario, considerando la visión de mundo de la obra y el contexto histórico en el que se ambienta, mediante citas o ejemplos."
+          ],
+          "eje": null,
+          "pagina": 4
+        },
+        {
+          "numero": 9,
+          "texto": "Analizar y evaluar textos con finalidad argumentativa como columnas de opinión, cartas al director, discursos y ensayos, considerando:\n• la tesis, ya sea explícita o implícita, y los argumentos e información que la sostienen\n• los recursos emocionales que usa el autor para persuadir o convencer al lector, y evaluándolos.\n• fallas evidentes en la argumentación, por ejemplo, exageración, estereotipos, generalizaciones, descalificaciones personales, entre otras.\n• el efecto que produce el uso de modalizadores en el grado de certeza con que se presenta la información.\n• la manera en que el autor organiza el texto.\n• con qué intención el autor usa distintos elementos léxicos valorativos y figuras retóricas.\n• su postura personal frente a lo leído, refutando o apoyando los argumentos que la sustentan.",
+          "indicadores": [
+            "Identifican la tesis del autor.",
+            "Identifican los argumentos utilizados en textos con finalidad argumentativa.",
+            "Evalúan, si es pertinente, los recursos emocionales utilizados para persuadir o convencer al lector.",
+            "Identifican fallas evidentes en la argumentación (exageración, estereotipos, generalizaciones, descalificaciones personales, entre otras).",
+            "Describen el efecto que producen los modalizadores en el grado de certeza con que se presenta la información.",
+            "Evalúan la organización del texto en relación con su finalidad argumentativa.",
+            "Evalúan elementos léxicos valorativos y figuras retóricas en relación con los propósitos del autor.",
+            "Formulan una postura personal frente a lo leído."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 10,
+          "texto": "Analizar y evaluar textos de los medios de comunicación, como noticias, reportajes, cartas al director, propaganda o crónicas, considerando:\n• los propósitos explícitos e implícitos del texto, justificando con ejemplos sus afirmaciones sobre dichos propósitos.\n• las estrategias de persuasión utilizadas en el texto (uso del humor, presencia de estereotipos, apelación a los sentimientos, etc.) y evaluándolas.\n• las evidencias que se entregan o se omiten para apoyar una afirmación.\n• los efectos causados por recursos no lingüísticos (como diseño, imágenes, disposición gráfica y efectos de audio) y lingüísticos (uso de imperativo, figuras literarias, expresiones populares, palabras en otros idiomas, intertextualidad, modalizaciones, etc.) presentes en el texto.\n• similitudes y diferencias en la forma en que distintas fuentes presentan un mismo hecho.\n• qué elementos del texto influyen en las propias opiniones, percepción de sí mismo y opciones que tomamos.",
+          "indicadores": [
+            "Identifican los propósitos explícitos e implícitos de textos presentes en medios de comunicación.",
+            "Evalúan las estrategias de persuasión utilizadas en el texto (uso del humor, presencia de estereotipos, apelación a los sentimientos, etc.).",
+            "Describen los efectos causados por los recursos no lingüísticos (diseño, imágenes, disposición gráfica y efectos de audio) presentes en el texto.",
+            "Describen los efectos causados por los recursos lingüísticos (uso de imperativo, figuras literarias, expresiones populares, palabras en otros idiomas, intertextualidad, modalizaciones, etc.) presentes en el texto.",
+            "Identifican similitudes y diferencias en la forma en que distintas fuentes presentan un mismo hecho.",
+            "Evalúan elementos del texto que influyen en las opiniones y percepciones de la audiencia."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 14,
+          "texto": "Escribir, con el propósito de persuadir, textos de diversos géneros, en particular ensayos sobre los temas o lecturas propuestos para el nivel, caracterizados por:\n• la presentación de una hipótesis o afirmación referida a temas contingentes o literarios.\n• la presencia de evidencias e información pertinente, extraídas de textos literarios y no literarios.\n• el uso de contraargumentos cuando es pertinente.\n• el uso de recursos variados que favorezcan el interés y la comprensión del lector, tales como anécdotas, citas, síntesis, imágenes, infografías, etc.\n• la mantención de la coherencia temática.\n• una conclusión coherente con los argumentos presentados.\n• el uso de citas y referencias según un formato previamente acordado.",
+          "indicadores": [
+            "Escriben textos con finalidad argumentativa sobre temas o lecturas, considerando la presentación de una hipótesis/tesis.",
+            "Fundamentan de manera consistente sus ideas a partir de evidencias e información pertinente, citas y/o referencias extraídas del texto leído, y contraargumentos cuando es pertinente.",
+            "Mantienen la coherencia temática de su texto.",
+            "Utilizan recursos para favorecer el interés y la comprensión del lector (anécdotas, citas, síntesis, imágenes, infografías, entre otros)."
+          ],
+          "eje": null,
+          "pagina": 6
+        }
+      ]
+    },
+    {
+      "slug": "matematica",
+      "nombre": "Matemática",
+      "descripcion": "Para la asignatura de Matemática los y las estudiantes serán evaluados considerando los Objetivos de Aprendizajes de los 4 ejes temáticos o disciplinares: Números y Operaciones; Álgebra y Funciones; Geometría; Probabilidad y Estadística, con esto ellos(as) podrán enriquecer la comprensión de la realidad, facilitar la selección de estrategias para resolver problemas y contribuir al desarrollo del pensamiento crítico y autónomo, y así lograr proporcionar herramientas conceptuales para analizar información cuantitativa presente en diversos contextos. Para lograr la comprensión conceptual enmarcado en estos cuatro ejes descritos y así adquirir conocimiento en otras áreas, los y las estudiantes deberán desarrollar habilidades del pensamiento matemático, a saber, Resolver problemas; Argumentar y comunicar; Modelar; y Representar, las cuales tienen un rol fundamental en la adquisición de nuevas destrezas y la aprehensión conceptual.",
+      "fuente": "temario_media_2deg_medio_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Realizar cálculos y estimaciones que involucren operaciones con números reales:\n• Utilizando la descomposición de raíces y las propiedades de las raíces.\n• Combinando raíces con números racionales.\n• Resolviendo problemas que involucren estas operaciones en contextos diversos.",
+          "indicadores": [
+            "Aplican propiedades relativas a multiplicación y divisiones con potencias.",
+            "Aplican propiedades relativas a multiplicación y divisiones con raíces.",
+            "Transforman raíces a potencias y viceversa.",
+            "Resuelven problemas rutinarios y no rutinarios que involucren logaritmos (Propiedades de los logaritmos)"
+          ],
+          "eje": null,
+          "pagina": 7
+        },
+        {
+          "numero": 2,
+          "texto": "Mostrar que comprenden las relaciones entre potencias, raíces enésimas y logaritmos:\n• Comparando representaciones de potencias de exponente racional con raíces enésimas en la recta numérica.\n• Convirtiendo raíces enésimas a potencias de exponente racional y viceversa.\n• Describiendo la relación entre potencias y logaritmos.\n• Resolviendo problemas rutinarios y no rutinarios que involucren potencias, logaritmos y raíces enésimas.",
+          "indicadores": [
+            "Resuelven problemas que involucren raíces y números racionales.",
+            "Establecen relaciones entre potencias, raíces y logaritmos.",
+            "Comparan representaciones de potencias con exponente racional, con raíces enésimas, y las representan en la recta numérica.",
+            "Convierten desde un tipo de registro a otro; es decir, desde potencias a raíces y viceversa, y desde potencias a logaritmos y viceversa.",
+            "Resuelven problemas rutinarios y no rutinarios que involucran logaritmos."
+          ],
+          "eje": null,
+          "pagina": 7
+        },
+        {
+          "numero": 3,
+          "texto": "• Mostrar que comprenden la función cuadrática 𝑓(𝑥)=𝑎𝑥2+𝑏𝑥+𝑐 ; (𝑎≠0)\n• Reconociendo la función cuadrática 𝑓(𝑥)=𝑎𝑥2 en situaciones de la vida diaria y otras asignaturas.\n• Representándola en tablas y gráficos de manera manual y/o con software educativo.\n• Determinando puntos especiales de su gráfica.\n• Seleccionándola como modelo de situaciones de cambio cuadrático de otras asignaturas, en particular de la oferta y demanda.",
+          "indicadores": [
+            "Elaboran gráficos de la función 𝑓(𝑥)=𝑎𝑥2+𝑏𝑥+ 𝑐 ; (𝑎 ≠0) , considerando 𝑎 >0 ó 𝑎<0 (variando respectivamente b y c).",
+            "Identifican los elementos de las funciones cuadráticas (vértice, intersecciones de los ejes, eje de simetría, concavidad)",
+            "Modelan problemas geométricos, de la vida cotidiana y de ciencias naturales y sociales, mediante ecuaciones cuadráticas.",
+            "Determinan en el plano cartesiano las regiones cuyos puntos 𝑃 (𝑥,𝑦) representan soluciones (𝑥,𝑦) de las inecuaciones cuadráticas 𝑦 <𝑎𝑥2+ 𝑏𝑥+𝑐 ó 𝑦> 𝑎𝑥2+ 𝑏𝑥+𝑐"
+          ],
+          "eje": null,
+          "pagina": 7
+        },
+        {
+          "numero": 5,
+          "texto": "Mostrar que comprenden la inversa de una función:\n• Utilizando la metáfora de una máquina.\n• Representándola por medio de tablas y gráficos, de manera manual y/o con software educativo.\n• Utilizando la reflexión de la función representada en el gráfico en un plano cartesiano.\n• Calculando las inversas en casos de funciones lineales y cuadráticas.",
+          "indicadores": [
+            "Determinan las ecuaciones de las funciones inversas de funciones lineales y cuadráticas.",
+            "Reconocen la función inversa de una función dada, en representaciones pictóricas y simbólicas.",
+            "Resuelven problemas de la vida cotidiana y de otras ciencias, que involucren el concepto de la función inversa."
+          ],
+          "eje": null,
+          "pagina": 8
+        },
+        {
+          "numero": 8,
+          "texto": "Mostrar que comprenden las razones trigonométricas de seno, coseno y tangente en triángulos rectángulos:\n• relacionándolas con las propiedades de la semejanza y los ángulos.\n• explicándolas de manera pictórica y simbólica, de manera manual y/o con software educativo.\n• aplicándolas para determinar ángulos o medidas de lados.\n• resolviendo problemas geométricos y de otras asignaturas",
+          "indicadores": [
+            "Resuelven triángulos rectángulos en ejercicios rutinarios; es decir, determinan todos sus ángulos y la medida de todos sus lados.",
+            "Resuelven problemas de la vida cotidiana, de geometría y de ciencias naturales, aplicando las razones trigonométricas."
+          ],
+          "eje": null,
+          "pagina": 8
+        },
+        {
+          "numero": 11,
+          "texto": "• Utilizar permutaciones y la combinatoria sencilla para calcular probabilidades de eventos y resolver problemas.",
+          "indicadores": [
+            "Resuelven problemas de juegos de azar y de la vida cotidiana, aplicando combinatoria y permutaciones."
+          ],
+          "eje": null,
+          "pagina": 8
+        }
+      ]
+    },
+    {
+      "slug": "ciencias-naturales",
+      "nombre": "Ciencias Naturales",
+      "descripcion": "• En la asignatura de Ciencias Naturales los menores de edad serán evaluados a través de tres ejes temáticos: Biología, Química, Física, con esto se pretende promover la comprensión de las grandes ideas, la adquisición progresiva de las habilidades de investigación y las actitudes científicas.\n• Para alcanzar la comprensión de los contenidos disciplinares enmarcado en estos tres ejes descritos, los menores de edad deberán desarrollar Habilidades y procesos de investigación científica, las cuales se agrupan en cinco etapas: Observar y plantear preguntas; planificar y conducir una investigación; procesar y analizar la evidencia; evaluar; comunicar.",
+      "fuente": "temario_media_2deg_medio_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Explicar cómo el sistema nervioso coordina las acciones del organismo para adaptarse a estímulos del ambiente por medio de señales transmitidas por neuronas a lo largo del cuerpo, e investigar y comunicar sus cuidados, como las horas de sueño, el consumo de drogas, café y alcohol, y la prevención de traumatismos.",
+          "indicadores": [
+            "Identifican estímulos, receptores sensoriales y estructuras involucradas en las respuestas de receptores sensoriales.",
+            "Analizan actos reflejos simples considerando sus componentes e interacciones",
+            "Describen el rol de la médula espinal, el cerebro, elementos sensoriales y efectores (muscular/endocrino) en el proceso de elaboración de la respuesta nerviosa mediante el uso de modelos.",
+            "Explican las propiedades estructurales de las neuronas que permiten producir diferentes tipos de respuestas.",
+            "Interpretan las respuestas de receptores sensoriales como señales electroquímicas que se propagan desde neuronas sensoriales a otros lugares del sistema nervioso.",
+            "Identifican medidas de autocuidado del sistema nervioso considerando los efectos de las horas de sueño, estrés, cambio de huso horario, consumo de drogas, fármacos, café y alcohol, entre otros."
+          ],
+          "eje": "Biología",
+          "pagina": 9
+        },
+        {
+          "numero": 3,
+          "texto": "Explicar que la sexualidad humana y la reproducción son aspectos fundamentales de la vida del ser humano, considerando los aspectos biológicos, sociales, afectivos y psicológicos, y la responsabilidad individual frente a sí mismo y los demás.",
+          "indicadores": [
+            "Caracterizan las dimensiones biológica, física, afectiva, psicológica y sociocultural de la sexualidad y las diversas formas en que se viven.",
+            "Analizan situaciones de embarazo adolescente y de adquisición y transmisión de ITS en relación con la responsabilidad individual frente a sí mismo y los demás."
+          ],
+          "eje": "Biología",
+          "pagina": 9
+        },
+        {
+          "numero": 6,
+          "texto": "Investigar y argumentar, en base a evidencias, que el material genético se transmite de generación en generación en organismos como plantas y animales, considerando:\n• la comparación de la mitosis y la meiosis\n• las causas y consecuencias de anomalías y pérdida de control de la división celular (tumor, cáncer, trisomía, entre otros)",
+          "indicadores": [
+            "Describen el modelo del material genético considerando las diferencias entre cromosomas, ADN y genes, y sus características en las distintas etapas del ciclo celular.",
+            "Explican la importancia de la regulación de la proliferación celular de acuerdo a evidencias de su descontrol en procesos patológicos como tumores, cáncer y otros.",
+            "Establecen la relación entre ADN, cromosomas, ciclo proliferativo y crecimiento, reparación de heridas y regeneración de tejidos, mediante la investigación y la elaboración de modelos.",
+            "Analizan y comparan la mitosis y la meiosis en plantas y animales considerando el mecanismo de transmisión del material genético de generación en generación."
+          ],
+          "eje": "Biología",
+          "pagina": 9
+        },
+        {
+          "numero": 8,
+          "texto": "Investigar y explicar las aplicaciones que han surgido a raíz de la manipulación genética para generar alimentos, detergentes, vestuario, fármacos u otras, y evaluar sus implicancias éticas y sociales.",
+          "indicadores": [
+            "Explican ejemplos concretos y cotidianos de los términos ingeniería genética, manipulación genética, terapia génica, organismos transgénicos y biotecnología.",
+            "Evalúan el impacto en la vida cotidiana, la economía y el medioambiente de la ingeniería genética y la biotecnología con enzimas para detergentes, biocombustibles o aplicaciones en el rubro del vestuario, entre otros ejemplos.",
+            "Evalúan el impacto social, económico y ambiental, entre otros, de innovaciones biotecnológicas como la producción de insulina y fármacos, y la generación o creación de vacunas."
+          ],
+          "eje": "Biología",
+          "pagina": 10
+        },
+        {
+          "numero": 9,
+          "texto": "Analizar, sobre la base de la experimentación, el movimiento rectilíneo uniforme y acelerado de un objeto respecto de un sistema de referencia espaciotemporal, considerando variables como la posición, la velocidad y la aceleración en situaciones cotidianas.",
+          "indicadores": [
+            "Identifican características de la cinemática del movimiento rectilíneo, en fenómenos naturales y en situaciones cotidianas, como ocurre con la luz y con vehículos, respectivamente, entre otros ejemplos.",
+            "Utilizan las fórmulas de adición de velocidades de Galileo en situaciones simples y cotidianas, como la de vehículos que se mueven unidimensionalmente.",
+            "Determinan cuantitativamente parámetros de cinemática, como tiempo transcurrido, posición, desplazamiento, distancia recorrida, velocidad media e instantánea y aceleración, entre otros, asociados al movimiento rectilíneo de un objeto.",
+            "Analizan, con conceptos de cinemática y herramientas gráficas y analíticas, el movimiento rectilíneo de un objeto en situaciones cotidianas.",
+            "Analizan, con conceptos de cinemática y herramientas gráficas y analíticas, el movimiento rectilíneo de un objeto en situaciones cotidianas."
+          ],
+          "eje": "Física",
+          "pagina": 10
+        },
+        {
+          "numero": 10,
+          "texto": "Explicar, por medio de investigaciones experimentales, los efectos que tiene una fuerza neta sobre un objeto, utilizando las leyes de Newton y el diagrama de cuerpo libre.",
+          "indicadores": [
+            "Identifican características de las fuerzas como la interacción entre dos cuerpos, su carácter vectorial, entre otras.",
+            "Aplican las leyes de Newton en diversas situaciones cotidianas, como cuando vehículo frena, acelera o cambia de dirección, entre otras.",
+            "Determinan, con un diagrama de cuerpo libre, la fuerza neta o resultante sobre un objeto en el que actúa más de una fuerza.",
+            "Describen el efecto que provoca la fuerza neta o resultante en el movimiento de un objeto."
+          ],
+          "eje": "Física",
+          "pagina": 10
+        },
+        {
+          "numero": 13,
+          "texto": "Demostrar que comprenden que el conocimiento del Universo cambia y aumenta a partir de nuevas evidencias, usando modelos como el geocéntrico y el heliocéntrico, y teorías como la del Big-Bang, entre otros.",
+          "indicadores": [
+            "Explican diversos modelos que han intentado describir el Universo desde la Antigüedad hasta inicios del siglo XX, como el geocéntrico y el heliocéntrico, patrocinados por Ptolomeo y Copérnico respectivamente, entre otros.",
+            "Identifican virtudes y limitaciones de los modelos del Universo.",
+            "Distinguen a científicos como Galileo, Brahe y Newton, entre otros, por sus aportes en la concepción de modelos del Universo.",
+            "Explican cualitativamente la evolución del Universo según la teoría del Big-Bang."
+          ],
+          "eje": "Física",
+          "pagina": 10
+        },
+        {
+          "numero": 15,
+          "texto": "Explicar, por medio de modelos y la experimentación, las propiedades de las soluciones en ejemplos cercanos, considerando:\n• El estado físico (sólido, líquido y gaseoso).\n• Sus componentes (soluto y solvente).\n• La cantidad de soluto disuelto (concentración).",
+          "indicadores": [
+            "Reconocen las características de las soluciones químicas en diferentes estados físicos en cuanto a sus componentes y propiedades.",
+            "Caracterizan los componentes de la solución como soluto y solvente mediante ejemplos del entorno y la vida cotidiana, considerando los cambios en la propiedad de la solución por influencia del soluto (conductividad, entre otros).",
+            "Evalúan la solubilidad en una solución mediante los factores que influyen sobre ella, como la temperatura.",
+            "Establecen cantidad de soluto en la solución mediante cálculos de concentración en solución y en diluciones."
+          ],
+          "eje": "Química",
+          "pagina": 11
+        },
+        {
+          "numero": 17,
+          "texto": "Crear modelos del carbono y explicar sus propiedades como base para la formación de moléculas útiles para los seres vivos (Biomoléculas presentes en la célula) y el entorno (hidrocarburos como petróleo y sus derivados).",
+          "indicadores": [
+            "Identifican propiedades y características del carbono que promueven las características de las moléculas orgánicas.",
+            "Identifican y caracterizan modelos de representación de moléculas orgánicas: fórmula molecular, estructural expandida, estructural condensada, esferas y varillas, entre otras, como identificación de las moléculas orgánicas.",
+            "Identifican la cadena principal y las ramificaciones en un compuesto orgánico mediante uso de nomenclatura IUPAC.",
+            "Identifican la fórmula y representación de hidruros (alcanos, alquenos, alquinos)"
+          ],
+          "eje": "Química",
+          "pagina": 11
+        }
+      ]
+    },
+    {
+      "slug": "historia-geografia-ciencias-sociales",
+      "nombre": "Historia, Geografía y Ciencias Sociales",
+      "descripcion": "• La asignatura de Historia, Geografía y Ciencias Sociales está conformada por disciplinas que estudian, desde diversas perspectivas, al ser humano en el tiempo y espacio. Su trabajo conjunto permite a los menores de edad desarrollar conocimientos, habilidades y actitudes necesarias para comprender la complejidad de la realidad social y el devenir de nuestra sociedad. Para adquirir estos aprendizajes, se considera imprescindible que las y los estudiantes reconozcan que la realidad social es compleja y se ha construido en forma colectiva, considerando distintas perspectivas para abordarla y múltiples interpretaciones para comprenderla. Estos aprendizajes se organizan en tres ejes temáticos: Historia, Geografía y Formación Ciudadana.\n• En Historia se estudia el siglo XX mundial y latinoamericano, con un foco especial en la historia de Chile. En primer lugar, se abordan los primeros cincuenta años de la historia de Europa que estuvieron marcados por la crisis del liberalismo, el surgimiento de los totalitarismos y el desarrollo de la Segunda Guerra Mundial. En segundo lugar, se busca que los estudiantes analicen la Guerra Fría y los diversos escenarios en que se manifiesta y, asimismo, los procesos que marcan el cambio de un mundo bipolar a uno globalizado hacia fines del siglo. En este marco, interesa analizar cómo la Guerra Fría impactó en América Latina y generó una tensión permanente entre revolución y reforma que desembocó en golpes de Estado y dictaduras militares en distintos países del continente. Luego, se retoma la segunda mitad del siglo XX chileno a partir de las condiciones de extrema pobreza de la década de 1950, las nuevas demandas sociales y la polarización política. Junto a esto, se busca reconocer cómo el ambiente de crisis de fines de los '60 y principios de los '70 desembocó en el quiebre de la democracia. Respecto de la dictadura militar interesa que los estudiantes reconozcan que se suprimió el Estado de derecho y que se violaron sistemáticamente los Derechos Humanos, y que analicen las transformaciones que provocaron en la sociedad chilena la implantación de un nuevo modelo económico y de una nueva institucionalidad política. Asimismo, se estudiará el proceso de recuperación de la democracia, y las transformaciones sociales y culturales de la sociedad chilena a partir de 1990.\n• En Formación Ciudadana se incluye un organizador temático que se enfoca en el estudio de los Derechos Humanos y en el Estado de Derecho como fundamento de nuestra vida en sociedad. En este contexto, se estudia el concepto de Derechos Humanos y la institucionalidad creada para resguardarlos, haciendo hincapié en el reconocimiento de los derechos de los grupos de especial protección.\n• En conjunto con las comprensiones y conocimientos antes descritos, los menores de edad deberán desarrollar los objetivos de habilidades de Pensamiento temporal y espacial; análisis y trabajo con fuentes; pensamiento crítico; y la comunicación.",
+      "fuente": "temario_media_2deg_medio_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 2,
+          "texto": "Analizar la crisis del Estado liberal decimonónico a comienzos del siglo XX, considerando la Gran Depresión de 1929 y el surgimiento de distintos modelos políticos y económicos en Europa, Estados Unidos y América Latina, como los totalitarismos y su oposición a la democracia liberal (por ejemplo, nazismo, comunismo y fascismo), el populismo latinoamericano, y los inicios del Estado de Bienestar.",
+          "indicadores": [
+            "Identifican los antecedentes de la crisis económica de 1929.",
+            "Describen las consecuencias de la Gran Depresión de 1929 en la crisis de los Estados liberales de Europa y Norteamérica.",
+            "Distinguen las principales características de algunos modelos políticos y económicos en Europa, Estados Unidos y América Latina surgidos en el contexto de la crisis del Estado liberal decimonónico.",
+            "Comparan algunas características de modelos políticos y económicos en Europa, Estados Unidos y América Latina surgidos en el contexto de la crisis del Estado liberal decimonónico con la democracia liberal.",
+            "Caracterizan los populismos por simulacro en Latinoamérica (por ejemplo, Argentina, Brasil y México) a partir de dos o más criterios (por ejemplo, origen, ideologías, tipo de discurso, políticas, etc.).",
+            "Explican el surgimiento del Estado de bienestar, comprendiendo las características de este nuevo modelo de Estado."
+          ],
+          "eje": null,
+          "pagina": 13
+        },
+        {
+          "numero": 4,
+          "texto": "Evaluar las consecuencias de la Segunda Guerra Mundial, considerando el surgimiento de Estados Unidos y la URSS como superpotencias y la perdida de hegemonía de Europa, el inicio del proceso de descolonización, los acuerdos de las conferencias de paz y la creación de un nuevo marco regulador de las relaciones internacionales reflejado en la ONU y en la Declaración Universal de Derechos Humanos.",
+          "indicadores": [
+            "Evaluar las consecuencias de la Segunda Guerra Mundial y la nueva configuración del orden mundial, considerando la pérdida de hegemonía política y económica de Europa, el surgimiento de Estados Unidos y la URSS como superpotencias,",
+            "Analizar las consecuencias de la Segunda Guerra Mundial, tomando en cuenta el proceso de descolonización en África y Asia, y el nuevo marco regulador de las relaciones internacionales del periodo reflejado en la ONU y la Declaración Universal de los DD. HH."
+          ],
+          "eje": null,
+          "pagina": 13
+        },
+        {
+          "numero": 7,
+          "texto": "Evaluar cómo la participación de nuevos actores sociales y la expansión de la cultura de masas a mediados de siglo XX, contribuyeron a la democratización de la sociedad chilena, considerando la incorporación de las mujeres a la ciudadanía política, el empoderamiento de la clase media y de la clase obrera, y el creciente acceso a la radio, el cine, el deporte, entre otros.",
+          "indicadores": [
+            "Analizan el proceso de ampliación del sufragio a las mujeres, valorando la importancia de la creciente democratización de la sociedad chilena a mediados del siglo XX.",
+            "Caracterizan el empoderamiento de la clase media y obrera a mediados del siglo XX, considerando sus organizaciones y medios de difusión de sus ideas.",
+            "Relacionan el creciente acceso a una cultura de masas (radio, cine, revistas) y el aumento de la democratización en Chile del periodo."
+          ],
+          "eje": null,
+          "pagina": 13
+        },
+        {
+          "numero": 8,
+          "texto": "Analizar la Guerra Fría como la confrontación ideológica de dos proyectos antagónicos que, bajo la amenaza del enfrentamiento nuclear, se manifestó́ en distintos escenarios locales, y dar ejemplos de cómo afectó diversas esferas, como la política, la cultura, el deporte y las ciencias.",
+          "indicadores": [
+            "Reconocen las características históricas de la Guerra Fría y la formación de un orden bipolar, considerando sus principales hitos (división de Alemania, crisis de los misiles, muro de Berlin, entre otros).",
+            "Reconocen en mapas la división del mundo provocada por la Guerra Fría.",
+            "Comparan los componentes ideológicos de Estados Unidos y la Unión Soviética, comprendiendo su carácter antagónico.",
+            "Reconocen ámbitos en los que se reflejó el enfrentamiento entre ambos bloques, como por ejemplo el deporte, la carrera espacial, las ciencias, entre otros."
+          ],
+          "eje": null,
+          "pagina": 14
+        },
+        {
+          "numero": 10,
+          "texto": "Caracterizar el contexto de movilización social en América Latina como un escenario de tensión permanente entre revolución y reforma, considerando la Revolución Cubana, la influencia de Estados Unidos, los golpes de Estado, las dictaduras militares (por ejemplo, Argentina, Chile, Brasil, Uruguay y Paraguay, entre otros), y la violación de los Derechos Humanos.",
+          "indicadores": [
+            "Caracterizan los efectos de la Revolución cubana en la política Latinoamericana durante la Guerra Fría.",
+            "Reconocen las consecuencias de la influencia de EE. UU. en América Latina, considerando la Alianza para el Progreso y el desarrollo de la Doctrina de la Seguridad Nacional.",
+            "Caracterizan algunos golpes de Estado y dictaduras militares de Latinoamérica entre las décadas de 1960 y 1970, considerando antecedentes del proceso, actores relevantes, ideologías, medidas políticas, violencia, situación de los derechos humanos, entre otros.",
+            "Analizan la violación de los derechos humanos en distintos países de Latinoamérica en el marco de las dictaduras."
+          ],
+          "eje": null,
+          "pagina": 14
+        },
+        {
+          "numero": 11,
+          "texto": "Analizar los principales procesos que marcaron el fin de la Guerra Fría, considerando la crisis de la URSS y el derrumbe del comunismo, las transformaciones geopolíticas, el auge del neoliberalismo, y la aceleración de la globalización (por ejemplo, la internacionalización de la economía, la revolución tecnológica, la sociedad de la información).",
+          "indicadores": [
+            "Identifican los principales hitos que explican la crisis de la URSS y el derrumbe del comunismo. (Perestroika y glasnot, revoluciones populares de 1989, caída del muro de Berlín, etc.)",
+            "Reconocen las principales transformaciones geopolíticas tras el fin de la Guerra Fría (disolución de Yugoslavia, Checoslovaquia, Unión Soviética, el surgimiento de nuevas naciones, un nuevo orden multipolar, etc.).",
+            "Distinguen algunos factores que permiten la aceleración de la globalización, como por ejemplo la internacionalización de la economía, la revolución tecnológica y la sociedad de la información.",
+            "Analizan el neoliberalismo como modelo económico social imperante en el periodo postguerra fría, considerando su auge y consecuencias sociales."
+          ],
+          "eje": null,
+          "pagina": 14
+        },
+        {
+          "numero": 12,
+          "texto": "Caracterizar la extendida pobreza y precariedad de la sociedad chilena de mediados de siglo (magros indicadores sociodemográficos, bajo poder adquisitivo y de acceso al crédito, desnutrición y marginalidad), y evaluar el impacto que generó en esta sociedad la migración del campo a la ciudad (por ejemplo, el progresivo crecimiento de la población urbana, la segregación urbana, la escasez de viviendas, entre otros).",
+          "indicadores": [
+            "Identifican las principales causas que explican la extensión de la pobreza y precarización de la sociedad chilena a mediados del siglo XX, (inflación, marginalidad, desnutrición, escasez de vivienda, etc.)",
+            "Reconocen las características del proceso de migración campociudad producido en Chile a mediados del siglo pasado, considerando las consecuencias en las modificaciones de las dinámicas urbano-rurales.",
+            "Describen algunas de las transformaciones que sufrió el espacio urbano como consecuencia de la sobrepoblación de las ciudades y puertos (surgimiento poblaciones callampas, segregación urbana, etc.). -"
+          ],
+          "eje": null,
+          "pagina": 15
+        },
+        {
+          "numero": 15,
+          "texto": "Analizar y comparar críticamente distintas interpretaciones historiográficas sobre el golpe de Estado de 1973 y el quiebre de la democracia.",
+          "indicadores": [
+            "Identifican diversas interpretaciones historiográficas sobre el golpe de Estado y el quiebre de la democracia, reconociendo las ideas centrales a partir de las cuales sustentan sus postulados.",
+            "Analizan distintas interpretaciones historiográficas sobre el golpe de Estado de 1973 y el quiebre de la democracia."
+          ],
+          "eje": null,
+          "pagina": 15
+        },
+        {
+          "numero": 16,
+          "texto": "Explicar que durante la dictadura militar se suprimió́ el Estado de Derecho y se violaron sistemáticamente los Derechos Humanos, reconociendo que hubo instituciones civiles y religiosas que procuraron la defensa de las víctimas.",
+          "indicadores": [
+            "Explican por qué el golpe de Estado suprime el Estado de derecho y las consecuencias asociadas a esta medida (cierre del Congreso, supresión de los partidos políticos, concentración del poder político en la Junta Militar, estado de sitio, toque de queda, entre otras).",
+            "Ejemplifican actores (DINA, CNI, Comando Conjunto), políticas y acciones del Estado destinadas a la violación sistemática de los derechos humanos en dictadura, valorando la defensa irrestricta de estos derechos.",
+            "Ejemplifican acciones emprendidas por grupos e instituciones en defensa de los derechos humanos (Comité Pro Paz, Vicaría de la Solidad, etc.) en dictadura, valorando el derecho a la verdad y la justicia en función de las garantías de reparación y de no repetición."
+          ],
+          "eje": null,
+          "pagina": 15
+        },
+        {
+          "numero": 17,
+          "texto": "Caracterizar el modelo económico neoliberal implementado en Chile durante el régimen o dictadura militar, considerando aspectos como la transformación del rol del Estado y la disminución del gasto social, la supremacía del libre mercado como asignador de recursos, la apertura comercial y la disponibilidad de bienes, la política de privatizaciones e incentivo a la empresa privada, el cambio en las relaciones y derechos laborales, y evaluar sus consecuencias sociales en el corto y largo plazo.",
+          "indicadores": [
+            "Describen la trasformación del rol del Estado producto del modelo económico neoliberal, considerando las funciones y atribuciones asignadas al mercado y al Estado.",
+            "Reconocen los efectos de la disminución del gasto social durante la dictadura considerando información estadística.",
+            "Explican la adopción del libre mercado como asignador de recursos y la apertura comercial mediante la rebaja arancelaria iniciada en la dictadura militar.",
+            "Reconoce la política de privatizaciones e incentivo a la empresa privada promovida por las autoridades de la dictadura militar.",
+            "Describen los cambios en la legislación laboral que producen las políticas en dictadura, en el marco del modelo económico neoliberal.",
+            "Evalúan logros y debilidades del desenvolvimiento de la economía durante el período dictatorial y su proyección hasta la actualidad."
+          ],
+          "eje": null,
+          "pagina": 15
+        },
+        {
+          "numero": 19,
+          "texto": "Explicar los factores que incidieron en el proceso de recuperación de la democracia durante la década de 1980, considerando la crisis económica, el surgimiento de protestas, la rearticulación del mundo político y el rol mediador de la Iglesia Católica, de organismos de defensa de Derechos Humanos y de la comunidad internacional.",
+          "indicadores": [
+            "Describen los principales factores intervinientes en la recuperación de la democracia, comprendiendo la multicausalidad del proceso (crisis económica de 1980, protestas nacionales, violencia política, articulación alianzas políticas opositoras, plebiscito de 1988, etc.).",
+            "Explican el rol de algunos actores clave en la recuperación de la democracia, tales como los movimientos sociales, partidos políticos, comunidad internacional, instituciones civiles y religiosas, valorando su diversidad ideológica."
+          ],
+          "eje": null,
+          "pagina": 16
+        },
+        {
+          "numero": 20,
+          "texto": "Analizar la transición a la democracia como un proceso marcado por el plebiscito de 1988, la búsqueda de acuerdos entre el gobierno y la oposición, las reformas constitucionales, las tensiones cívico-militares, el consenso generado en torno a la democracia representativa como sistema político y la reivindicación de los Derechos Humanos mediante diversas políticas de reparación.",
+          "indicadores": [
+            "Describen las principales características del plebiscito de 1988, la negociación de las reformas constitucionales y la elección presidencial de 1989.",
+            "Analizan los principales acontecimientos de las tensiones cívicomilitares de la década de 1990 y sus consecuencias.",
+            "Reconocen las principales características de las políticas de reparación y reivindicación de los Derechos Humanos durante el período de transición."
+          ],
+          "eje": null,
+          "pagina": 16
+        },
+        {
+          "numero": 22,
+          "texto": "Analizar el concepto de Derechos Humanos, considerando características como su universalidad, indivisibilidad, interdependencia e imprescriptibilidad y la institucionalidad creada para resguardarlos a nivel nacional e internacional, reconociendo, en este contexto, los derechos vinculados a los grupos de especial protección.",
+          "indicadores": [
+            "Explican y ejemplifican las características de los Derechos Humanos como su universalidad, indivisibilidad, interdependencia e imprescriptibilidad reconociendo la importancia de respetarlos sin excepción alguna.",
+            "Reconocen que el concepto de derechos humanos refiere tanto al conjunto de normas del derecho internacional como a los valores que inspiran un trato de respeto y valoración de otros, basada en los principios de igualdad y libertad de todas las personas, sin exclusión.",
+            "Reconocen las funciones y limitaciones de la institucionalidad nacional e internacional de protección de derechos humanos, a través de su actuación en casos específicos de vulneraciones de derechos."
+          ],
+          "eje": null,
+          "pagina": 16
+        },
+        {
+          "numero": 25,
+          "texto": "Reconocer la diversidad inherente a las sociedades como manifestación de la libertad y de la dignidad humana, y evaluar las oportunidades y desafíos que un mundo globalizado entrega para evitar toda forma de discriminación, sea por raza o etnia, nacionalidad, situación socioeconómica, religión o creencia, género, orientación sexual o discapacidad, entre otras.",
+          "indicadores": [
+            "Reconocen situaciones de discriminación por raza o etnia, nacionalidad, situación socioeconómica, idioma, ideología u opinión política, religión o creencia, sindicación o participación en organizaciones gremiales o la falta de ellas, sexo, orientación sexual, identidad de género, estado civil, edad, filiación, apariencia personal y enfermedad o discapacidad, demostrando empatía con las situaciones vividas por los actores discriminados.",
+            "Reconocen las oportunidades y desafíos que la progresiva consolidación de un ordenamiento jurídico internacional entrega para evitar toda forma de discriminación.",
+            "Explican y ejemplifican los principales aportes de la ley que establece medidas contra la discriminación (Ley Zamudio), a través de ejemplos concretos, reconociendo su importancia para avanzar en la construcción de una sociedad menos discriminadora."
+          ],
+          "eje": null,
+          "pagina": 16
+        }
+      ]
+    },
+    {
+      "slug": "ingles",
+      "nombre": "Idioma Extranjero: Inglés",
+      "descripcion": "• La asignatura propone que los menores de edad, mediante el desarrollo de las habilidades lingüísticas de comprensión y producción de variados tipos de textos progresen en las competencias para comunicarse en inglés en diversos contextos.\n• Los menores de edad serán evaluados a través de dos habilidades lingüísticas: comprensión de lectura (reading) y expresión escrita (writing), apoyándose en textos orales y escritos relacionados con temas variados, del contexto inmediato, de actualidad e interés global o de otras culturas.",
+      "fuente": "temario_media_2deg_medio_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 9,
+          "texto": "Demostrar comprensión de ideas generales e información explícita en textos adaptados y auténticos simples, en formato impreso o digital, acerca de temas variados (como temas de interés de los alumnos, temas de otras asignaturas, del contexto inmediato, de actualidad e interés global, de otras culturas y algunos temas menos conocidos) y que contienen las funciones del año.",
+          "indicadores": [
+            "Responden a preguntas acerca de información explicita y específica de textos leídos.",
+            "Identifican información específica del texto.",
+            "Resumen información de los textos leídos basado en preguntas o esquemas.",
+            "Identifican funciones del año en textos leídos. -"
+          ],
+          "eje": null,
+          "pagina": 17
+        },
+        {
+          "numero": 10,
+          "texto": "Demostrar comprensión de textos no literarios (como descripciones, artículos de revistas, procedimientos, catálogos, avisos publicitarios, emails, diálogos, páginas web, biografías, gráficos, reseñas, noticias, discursos) al identificar:\n• Propósito del texto.\n• Idea principal, información específica y detalles. Relaciones de importancia y problema-solución entre ideas.\n• Palabras y frases clave, expresiones idiomáticas y de uso frecuente y vocabulario temático.\n• Combinaciones frecuentes de palabras (collocations), conectores, (neither… nor; either… or though, unless, as soon as, as a result, y los del año anterior) y palabras derivadas de otras por medio de los prefijos im-, in-, il-.",
+          "indicadores": [
+            "Identifican el propósito e idea principal del texto leído y lo justifican, identificando elementos clave de este.",
+            "Describen cómo la información específica y los detalles apoyan la idea principal.",
+            "Responden preguntas acerca de la información específica y detalles.",
+            "Reconocen relaciones de importancia y otras posibilidades de solución a los problemas y situaciones planteados en los textos.",
+            "Responden preguntas acerca del texto leído, usando expresiones idiomáticas y combinaciones de palabras presentes en el texto.",
+            "Reconocen relaciones entre ideas al identificar los conectores que las unen; por ejemplo: Neither John nor Pedro saw the TV documentary.",
+            "Usan vocabulario del nivel para hacer preguntas o responder acerca de los temas leídos."
+          ],
+          "eje": null,
+          "pagina": 17
+        },
+        {
+          "numero": 13,
+          "texto": "Escribir historias e información relevante, usando recursos multimodales que refuercen el mensaje en forma creativa en textos variados acerca de temas como:\n• experiencias personales\n• contenidos interdisciplinarios\n• problemas globales\n• cultura de otros países\n• textos leídos",
+          "indicadores": [
+            "Expresan opinión sobre aspectos conocidos de otras culturas, problemas globales o contenidos interdisciplinarios, con apoyo de imágenes.",
+            "Expresan preferencias sobre algunos de los temas señalados.",
+            "Escriben para compartir información sobre algunos de los temas señalados, de acuerdo con su interés.",
+            "Escriben ideas y experiencias sobre temas de otras asignaturas en forma interesante"
+          ],
+          "eje": null,
+          "pagina": 18
+        },
+        {
+          "numero": 16,
+          "texto": "Demostrar conocimiento y uso del lenguaje en sus textos escritos por medio de las siguientes funciones:\n• Expresar cantidades, contar y enumerar; por ejemplo: there are a few/few girls; there is little sugar left.\n• Describir frecuencia, tiempo, grado de acciones; por ejemplo: I usually/often call her in the morning; he is rather shy; Susan will be here soon.\n• Describir personas y situaciones; por ejemplo: he is polite/impolite; it was complete/incomplete/legal/illegal.\n• Expresarse con claridad usando palabras y expresiones de uso común, sinónimos y palabras compuestas; por ejemplo: enough time; sorry about, belong to, look for…; online.\n• Solicitar información sobre frecuencia de actividades; por ejemplo: How often do you practice sports?\n• Describir acciones que comenzaron en el pasado y que aún continúan o acaban de finalizar; por ejemplo: we have been training for 3 months; she has been working all day.\n• Expresar acuerdo o desacuerdo, opinión, posesión, tiempo; por ejemplo: I agree/disagree with…; I was left without…; he has been working during the summer; I believe that/in…\n• Unir ideas; por ejemplo: neither John nor Susan are in the office; he looks tough, he is shy, though; It is raining today, as a result the air will be cleaner in the city; he told us to go as soon as we could.\n• Expresar énfasis en quien realiza la acción; por ejemplo: he cut himself.\n• Describir acciones que ocurrieron antes de otra acción en el pasado; por ejemplo: He didn’t have money because he had lost his wallet.\n• Informar lo que otros dicen; por ejemplo: Mr. Brown said he had finished the report; she told me to go home. Describir situaciones hipotéticas o imaginarias y dar consejos; por ejemplo: If I were you, I would tell her the truth; He would meet more people if he spoke English.",
+          "indicadores": [
+            "Expresan cantidades, y enumeran (por ejemplo.:There is little communication; There are few/a few girls).",
+            "Emplean palabras y expresiones de uso común, palabras compuestas, vinculadas a las temáticas contempladas para este nivel (por ejemplo: global issues, globalization; I’m pleased with…; role model, I’d rather; look for/after).",
+            "Describen personas, situaciones, frecuencia, tiempo y grado de acciones como, por ejemplo: He is a polite employee; that situation is completely illegal.",
+            "Describen acciones que comenzaron en el pasado y que aún continúan o acaban de finalizar (por ejemplo: We have been training for three months).",
+            "Expresan acuerdo o desacuerdo, posesión, tiempo (por ejemplo: I agree/disagree with…; he has been working during the summer).",
+            "Formulan preguntas solicitando información sobre frecuencia de actividades (por ejemplo: I have been learning English).",
+            "Responden preguntas apoyándose en el uso de conectores para unir ideas. (por ejemplo: Neither John nor Susan are in the office; As soon as he finished, we left; He looks tough, he is shy, though; As a result…, unless…).",
+            "Comunican la información que otros dicen (por ejemplo: Mr. Brown said he had finished the report; she told me to go home).",
+            "Describen situaciones hipotéticas o imaginarias y proposición de consejos (por ejemplo: If I were you, I would tell her the truth; He would meet more people if he spoke English)."
+          ],
+          "eje": null,
+          "pagina": 19
+        }
+      ]
+    }
+  ]
+}

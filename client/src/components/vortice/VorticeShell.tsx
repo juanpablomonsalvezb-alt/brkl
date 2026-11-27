@@ -39,6 +39,7 @@ interface VorticeShellProps {
 const ICONOS_NAV: Record<string, LucideIcon> = {
   inicio: Home,
   aula: BookOpen,
+  curriculo: BookOpen,
   saber: Target,
   semana: CalendarDays,
   calendario: CalendarClock,

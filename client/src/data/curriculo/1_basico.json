@@ -1,0 +1,334 @@
+{
+  "grado": "1_basico",
+  "etiqueta": "1° Básico",
+  "asignaturas": [
+    {
+      "slug": "lenguaje",
+      "nombre": "Lenguaje y Comunicación",
+      "descripcion": null,
+      "fuente": "temario_basica_1deg_basico_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 3,
+          "texto": "Identificar los sonidos que componen las palabras (conciencia fonológica), reconociendo, separando y combinando sus fonemas y sílabas.",
+          "indicadores": [
+            "Identifican la cantidad de sílabas de una palabra.",
+            "Identifican el sonido (fonema) inicial de una palabra.",
+            "Identifican el sonido (fonema) final de una palabra dada."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 4,
+          "texto": "Leer palabras aisladas y en contexto, aplicando su conocimiento de la correspondencia letra-sonido en diferentes combinaciones: sílaba directa, indirecta o compleja, y dígrafos rr-ll-ch-qu.",
+          "indicadores": [
+            "Leen palabras que contengan la “rr, ll, ch, qu”, en sílabas directas.",
+            "Leen palabras con sílabas indirectas y complejas.",
+            "Leen frases cortas en textos apropiados a la edad."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 8,
+          "texto": "Demostrar comprensión de narraciones que aborden temas que les sean familiares:\n• extrayendo información explícita e implícita.\n• respondiendo preguntas simples, oralmente o por escrito, sobre los textos (qué, quién, dónde, cuándo, por qué).\n• recreando personajes a través de distintas expresiones artísticas, como títeres, dramatizaciones, dibujos o esculturas.\n• describiendo con sus palabras las ilustraciones del texto y relacionándolas con la historia.\n• estableciendo relaciones entre el texto y sus propias experiencias.\n• emitiendo una opinión sobre un aspecto de la lectura.",
+          "indicadores": [
+            "Identifican información explícita en narraciones.",
+            "Identifican información implícita en narraciones.",
+            "Identifican personajes, acontecimientos y lugares presentes en los cuentos, fábulas, leyendas y otras narraciones.",
+            "Relacionan las ilustraciones del texto con la historia.",
+            "Opinan sobre algún aspecto de la lectura."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 10,
+          "texto": "Leer independientemente y comprender textos no literarios escritos con oraciones simples (cartas, notas, instrucciones y artículos informativos) para entretenerse y ampliar su conocimiento del mundo:\n• extrayendo información explícita e implícita.\n• formulando una opinión sobre algún aspecto de la lectura.",
+          "indicadores": [
+            "Extraen información explícita en textos no literarios.",
+            "Extraen información implícita en textos no literarios."
+          ],
+          "eje": null,
+          "pagina": 4
+        },
+        {
+          "numero": 13,
+          "texto": "Experimentar con la escritura para comunicar hechos, ideas y sentimientos, entre otros.",
+          "indicadores": [
+            "Escriben una palabra haciendo una correcta relación letra-sonido.",
+            "Escriben una palabra o frase para responder una pregunta.",
+            "Separan las palabras familiares por u n espacio cuando experimentan con la escritura."
+          ],
+          "eje": null,
+          "pagina": 4
+        }
+      ]
+    },
+    {
+      "slug": "matematica",
+      "nombre": "Matemática",
+      "descripcion": "En la asignatura de Matemática, las y los estudiantes serán evaluados considerando una selección de",
+      "fuente": "temario_basica_1deg_basico_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 3,
+          "texto": "Leer números del 0 al 20 y representarlos en forma concreta, pictórica y simbólica.",
+          "indicadores": [
+            "Escriben de manera simbólica el número representado.",
+            "Identifican la representación de un número dado."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 4,
+          "texto": "Comparar y ordenar números del 0 al 20 de menor a mayor y/o viceversa, utilizando material concreto y/o software educativo.",
+          "indicadores": [
+            "Comparan números en el ámbito del 0 al 20 utilizando expresiones como mayor que o menor que.",
+            "Ordenan números del 0 al 20 de mayor a menor o viceversa, de manera pictórica y simbólica."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 6,
+          "texto": "Componer y descomponer números del 0 al 20 de manera aditiva de forma concreta, pictórica y simbólica.",
+          "indicadores": [
+            "Identifican la representación de composiciones y descomposiciones de números de manera pictórica hasta 20.",
+            "Componen y descomponen de manera simbólica números hasta 20.",
+            "Reconocen más de una descomposición para un mismo número hasta 20."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 8,
+          "texto": "Determinar las unidades y decenas en números del 0 al 20, agrupando de a 10 de manera concreta, pictórica y simbólica.",
+          "indicadores": [
+            "Forman grupos de 10 en un conjunto de elementos.",
+            "Registran de manera simbólica agrupaciones de a 10 y los elementos restantes.",
+            "Registran el número representado en bloques multibase."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 9,
+          "texto": "Demostrar que comprenden la adición y la sustracción de números del 0 a 20, progresivamente de 0 a 5, de 6 a 10, y de 11 a 20 con dos sumandos:\n• usando un lenguaje cotidiano para describir acciones desde su propia experiencia.\n• representando adiciones y sustracciones con material concreto y pictórico, de manera manual y/o usando software educativo.\n• representando el proceso en forma simbólica.\n• resolviendo problemas en contextos familiares.\n• creando problemas matemáticos y resolviéndolos.",
+          "indicadores": [
+            "Representan adiciones y sustracciones de manera pictórica.",
+            "Resuelven problemas que involucran adiciones y sustracciones.",
+            "Crean un problema matemático y lo resuelven.",
+            "Reconocen la operación que resuelve un problema dado (adición o sustracción)",
+            "Identifican la expresión numérica que resuelve un problema dado (adición o sustracción)"
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 11,
+          "texto": "Reconocer, describir, crear y continuar patrones repetitivos (sonidos, figuras, ritmos…) y patrones numéricos hasta el 20, crecientes y decrecientes, usando material concreto, pictórico y simbólico, de manera manual y/o por medio de software educativo.",
+          "indicadores": [
+            "Continúan patrones repetitivos y numéricos.",
+            "Identifican patrones numéricos en secuencias crecientes y decrecient",
+            "es hasta 20.",
+            "Completan elementos faltantes en secuencias de patrones numéricos o repetitivos."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 13,
+          "texto": "Describir la posición de objetos y personas en relación a sí mismos y a otros objetos y personas, usando un lenguaje común (como derecha e izquierda).",
+          "indicadores": [
+            "Describen la posición de objetos y personas en relación a sí mismos o a otros objetos o personas."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 18,
+          "texto": "Identificar y comparar la longitud de objetos, usando palabras como largo y corto.",
+          "indicadores": [
+            "Comparan la longitud de dos objetos, usando unidades de medida no estandarizadas.",
+            "Comparan las longitudes de dos o más objetos utilizando palabras como largo y corto."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 19,
+          "texto": "Recolectar y registrar datos para responder preguntas estadísticas sobre sí mismo y el entorno, usando bloques, tablas de conteo y pictogramas.",
+          "indicadores": [
+            "Interpretan datos registrados en tablas de conteo y/o bloques respondiendo preguntas estadísticas.",
+            "Evalúan el registro de un conjunto de datos en tablas de conteo o bloques."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 20,
+          "texto": "Construir, leer e interpretar pictogramas.",
+          "indicadores": [
+            "Leen e interpretan información representada en pictogramas respondiendo preguntas.",
+            "Construyen un pictograma a partir de datos entregados."
+          ],
+          "eje": null,
+          "pagina": 6
+        }
+      ]
+    },
+    {
+      "slug": "ciencias-naturales",
+      "nombre": "Ciencias Naturales",
+      "descripcion": "• En la asignatura de Ciencias Naturales los menores de edad serán evaluados por medio de una selección",
+      "fuente": "temario_basica_1deg_basico_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Reconocer y observar, por medio de la exploración, que los seres vivos crecen, responden a estímulos del medio, se reproducen y necesitan agua, alimento y aire para vivir, comparándolos con las cosas no vivas.",
+          "indicadores": [
+            "Mencionan diferencias entre seres vivos y cosas no vivas.",
+            "Agrupan seres vivos de acuerdo a características comunes.",
+            "Mencionan necesidades de los seres vivos (agua, aire y alimento).",
+            "Mencionan los sentidos que utilizan para describir objetos y elementos que constituyen la naturaleza",
+            "Describen cómo los seres vivos satisfacen sus necesidades.",
+            "Identifican las necesidades básicas de las plantas y animales seleccionados y observados."
+          ],
+          "eje": null,
+          "pagina": 7
+        },
+        {
+          "numero": 5,
+          "texto": "Reconocer y comparar diversas plantas y animales de nuestro país, considerando las características observables y proponiendo medidas para su cuidado.",
+          "indicadores": [
+            "-Dan ejemplos de animales y plantas típicas chilenas. -Comparan plantas y animales de distintas regiones de Chile.",
+            "Describir situaciones que representen o se relacionen con la protección de plantas y animales."
+          ],
+          "eje": null,
+          "pagina": 7
+        },
+        {
+          "numero": 6,
+          "texto": "Identificar y describir la ubicación y la función de los sentidos, proponiendo medidas para protegerlos y para prevenir situaciones de riesgo.",
+          "indicadores": [
+            "Identifican la ubicación y función de los órganos de los sentidos.",
+            "Describen los usos de los sentidos en la vida diaria.",
+            "Identifican situaciones donde el uso de los sentidos previene de situaciones de riesgos en el hogar, las calles y la escuela.",
+            "Dan ejemplos de actividades perjudiciales para los órganos de los sentidos.",
+            "Describen cuidados y medidas de protección para los órganos de los sentidos."
+          ],
+          "eje": null,
+          "pagina": 7
+        },
+        {
+          "numero": 8,
+          "texto": "Explorar y describir diferentes tipos de materiales en diversos objetos, clasificándolos según sus propiedades (goma-flexible, plásticoimpermeable) e identificando su uso en la vida cotidiana.",
+          "indicadores": [
+            "Identifican y caracterizan materiales de los que están hechos objetos de madera, plástico, goma, género, corcho, metal, entre otros.",
+            "Dan ejemplos de propiedades de diversos materiales del entorno.",
+            "Clasifican diversos materiales según sus propiedades presentes en contextos cotidianos.",
+            "Relacionan propiedades de los materiales con el uso de objetos cotidianos."
+          ],
+          "eje": null,
+          "pagina": 7
+        },
+        {
+          "numero": 9,
+          "texto": "Observar y describir los cambios que se producen en los materiales al aplicarles fuerza, luz, calor y agua.",
+          "indicadores": [
+            "Mencionan los cambios en los materiales producto de la aplicación de luz, calor, agua y fuerzas.",
+            "Clasifican materiales según las semejanzas producidas al aplicar calor, fuerza, luz y agua."
+          ],
+          "eje": null,
+          "pagina": 8
+        },
+        {
+          "numero": 11,
+          "texto": "Describir y registrar el ciclo diario y las diferencias entre el día y la noche, a partir de la observación del Sol, la Luna, las estrellas y la luminosidad del cielo, entre otras, y sus efectos en los seres vivos y el ambiente.",
+          "indicadores": [
+            "Nombran astros como el Sol, la Luna y las estrellas.",
+            "Asocian la salida del Sol con el amanecer, su presencia visible con el día, su puesta con el anochecer, la no visibilidad del Sol con la noche y los cambios de luminosidad asociados.",
+            "Comparan las características del día y la noche en relación al Sol, la Luna, las estrellas, la luminosidad y la sensación térmica.",
+            "Describen las actividades o cambios que realizan seres vivos (plantas y animales) durante el día y las que realizan otros durante la noche."
+          ],
+          "eje": null,
+          "pagina": 8
+        }
+      ]
+    },
+    {
+      "slug": "historia-geografia-ciencias-sociales",
+      "nombre": "Historia, Geografía y Ciencias Sociales",
+      "descripcion": "• La asignatura de Historia, Geografía y Ciencias Sociales está conformada por disciplinas que estudian, desde diversas perspectivas, al ser humano en el tiempo y espacio. Su trabajo conjunto permite desarrollar conocimientos, habilidades y actitudes necesarias para comprender la complejidad de la realidad social y el devenir de nuestra sociedad. Estos aprendizajes se organizan en tres ejes temáticos: Historia, Geografía y Formación Ciudadana.\n• En el eje de Historia, se espera que los menores de edad secuencien acontecimientos de la vida cotidiana, y desarrollen un sentido de pertenencia a la familia, a comunidades locales y a la nación, mediante el conocimiento y la valoración de su propia cultura en sus diversas manifestaciones, de los símbolos representativos y del aporte que diferentes personas han hecho a la sociedad a lo largo de la historia de Chile.\n• En el eje de Geografía se espera que los menores de edad empiecen a reconocer y usar herramientas geográficas y categorías de ubicación relativa. En relación con su entorno local y con la diversidad cultural en el mundo.\n• En el eje de Formación Ciudadana, se avanza en el conocimiento y la valoración de las instituciones públicas y privadas, desde las más cercanas, vinculadas a su vida cotidiana.\n• En conjunto con las comprensiones y conocimientos antes descritos, los menores de edad deberán desarrollar los objetivos de habilidades de pensamiento temporal y espacial; análisis y trabajo con fuentes; pensamiento crítico; y la comunicación.",
+      "fuente": "temario_basica_1deg_basico_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 2,
+          "texto": "Secuenciar acontecimientos y actividades de la vida cotidiana, personal y familiar, utilizando categorías relativas de ubicación temporal, como antes, después; ayer, hoy, mañana; día, noche; este año, el año pasado, el año próximo.",
+          "indicadores": [
+            "Secuencian, ordenan y describen eventos de la vida cotidiana usando categorías temporales relativas (antes, ahora, después); (ayer, hoy, mañana); (día, noche); (este año, el año pasado, el año próximo)."
+          ],
+          "eje": null,
+          "pagina": 9
+        },
+        {
+          "numero": 6,
+          "texto": "Conocer expresiones culturales locales y nacionales (como comidas, flores y animales típicos, música y juegos, entre otros), describir fiestas y tradiciones importantes de nivel local (como Fiesta de La Tirana, Fiesta de San Pedro, Fiesta de Cuasimodo, carreras a la chilena, el rodeo, la vendimia y la fundación del pueblo o de la ciudad, entre otras) y reconocer estas expresiones como elementos de unidad e identidad local y/o nacional.",
+          "indicadores": [
+            "Caracterizan conmemoraciones nacionales y expresiones culturales, locales y/o nacionales (fiestas patrias, naval de Iquique, entre otros), y tradiciones importantes de nivel local (Fiesta de La Tirana, Fiesta de San Pedro, Fiesta de Cuasimodo, carreras a la chilena, el rodeo, la vendimia, entre otras).",
+            "Reconocen comidas características de las distintas zonas del país.",
+            "Reconocen flora y fauna típica de Chile.",
+            "Identifican juegos típicos chilenos.",
+            "Reconocen monumentos e hitos geográficos significativos de su ciudad o región."
+          ],
+          "eje": null,
+          "pagina": 9
+        },
+        {
+          "numero": 9,
+          "texto": "Identificar a Chile en mapas, incluyendo la Cordillera de los Andes, el océano Pacífico, la ciudad de Santiago, su región, su capital y su localidad.",
+          "indicadores": [
+            "Distinguen la ubicación general de la Cordillera de los Andes y el océano Pacífico en mapas.",
+            "Localizan en mapas, la ubicación de Chile, de Santiago, de su región y de su localidad."
+          ],
+          "eje": null,
+          "pagina": 10
+        },
+        {
+          "numero": 10,
+          "texto": "Observar y describir paisajes de su entorno local, utilizando vocabulario geográfico adecuado (país, ciudad, camino, pueblo, construcciones, cordillera, mar, vegetación y desierto) y categorías de ubicación relativa (derecha, izquierda, delante, detrás, entre otros).",
+          "indicadores": [
+            "Identifican algunas características físicas y naturales del paisaje en imágenes, usando vocabulario geográfico (cordillera, mar, vegetación, ríos, lagos y desierto).",
+            "Distinguen en imágenes de paisajes característicos de su región elementos construidos por el ser humano.",
+            "Describen con sus propias palabras el entorno local, usando categorías de ubicación espacial relativa (derecha, izquierda, delante, detrás, entre otros)."
+          ],
+          "eje": null,
+          "pagina": 10
+        },
+        {
+          "numero": 14,
+          "texto": "Explicar y aplicar algunas normas para la buena convivencia y para la seguridad y el autocuidado en su familia, en la escuela y en la vía pública.",
+          "indicadores": [
+            "Identifican algunas normas para la seguridad de todos y todas en el espacio público (mirar hacia ambos lados antes de cruzar, respetar los semáforos, entre otros).",
+            "Explican los beneficios que tiene el respetar una norma de la comunidad para la buena convivencia (mantener la limpieza, evitar ruidos molestos con los vecinos, etc.)."
+          ],
+          "eje": null,
+          "pagina": 10
+        },
+        {
+          "numero": 15,
+          "texto": "Identificar la labor que cumplen, en beneficio de la comunidad, instituciones como la escuela, la municipalidad, el hospital o la posta, Carabineros de Chile, y las personas que trabajan en ellas.",
+          "indicadores": [
+            "Reconocen la labor de distintas instituciones públicas (como la escuela, la municipalidad, el hospital o la posta, Carabineros de Chile) y quienes las llevan a cabo.",
+            "Reconocen las instituciones a las que se debe acudir en determinadas situaciones."
+          ],
+          "eje": null,
+          "pagina": 10
+        }
+      ]
+    }
+  ]
+}

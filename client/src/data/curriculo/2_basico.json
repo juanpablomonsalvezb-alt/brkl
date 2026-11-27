@@ -1,0 +1,411 @@
+{
+  "grado": "2_basico",
+  "etiqueta": "2° Básico",
+  "asignaturas": [
+    {
+      "slug": "lenguaje",
+      "nombre": "Lenguaje y Comunicación",
+      "descripcion": "• La asignatura Lenguaje y Comunicación busca que los menores de edad logren conocerse a sí mismos y reflexionar sobre la experiencia humana en diversas culturas mediante la lectura, la escritura y la comunicación oral. Desde un enfoque comunicativo, se propone desarrollar competencias comunicativas indispensables para una participación activa, democrática y responsable en sociedad. Específicamente, se busca lograr autonomía y flexibilidad en los menores de edad para que puedan aplicar las habilidades comunicativas en distintos ámbitos de la vida escolar y social. En este ciclo escolar se evaluarán 2 ejes: Lectura y Escritura.",
+      "fuente": "temario_basica_2deg_basico_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Leer textos significativos que incluyan palabras con hiatos y diptongos, con grupos consonánticos y con combinación ce-ci, que-qui, ge-gi, gue-gui, güe-güi.",
+          "indicadores": [
+            "Leen palabras con hiatos y diptongos.",
+            "Leen palabras con las combinaciones ce-ci, que-qui, gegi, gue-gui, güe-güi."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 5,
+          "texto": "Demostrar comprensión de las narraciones leídas:\n● extrayendo información explícita e implícita.\n● reconstruyendo la secuencia de las acciones en la historia.\n● identificando y describiendo las características físicas y sentimientos de los distintos personajes.\n● recreando, a través de distintas expresiones (dibujos, modelos tridimensionales u otras), el ambiente en el que ocurre la acción.\n● estableciendo relaciones entre el texto y sus propias experiencias.\n● emitiendo una opinión sobre un aspecto de la lectura.",
+          "indicadores": [
+            "Identifican información explícita en narraciones.",
+            "Identifican información implícita en narraciones.",
+            "Secuencian acciones de la historia.",
+            "Identifican las características físicas y sentimientos de los personajes presentes en las narraciones.",
+            "Opinan sobre algún aspecto de la lectura."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 7,
+          "texto": "Leer y comprender textos no literarios (cartas, notas, instrucciones y artículos informativos) para entretenerse y ampliar su conocimiento del mundo:\n• extrayendo información explícita e implícita.\n• comprendiendo la información que aportan las ilustraciones y los símbolos a un texto.\n• formulando una opinión sobre algún aspecto de la lectura.",
+          "indicadores": [
+            "Extraen información explícita en textos no literarios.",
+            "Extraen información implícita en textos no literarios.",
+            "Identifican la función de las ilustraciones y símbolos en los textos no literarios.",
+            "Opinan sobre algún aspecto de la lectura."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 17,
+          "texto": "Escribir, revisar y editar sus textos para satisfacer un propósito y transmitir sus ideas con claridad. Durante este proceso:\n• organizan las ideas en oraciones que comienzan con mayúscula y terminan con punto\n• utilizan un vocabulario variado\n• mejoran la redacción del texto a partir de sugerencias de los pares y el docente\n• corrigen la concordancia de género y número, la ortografía y la presentación",
+          "indicadores": [
+            "Escriben un texto breve acorde a un propósito comunicativo y destinatarios dados.",
+            "Usan mayúsculas al comenzar una oración.",
+            "Usan punto al terminar una oración.",
+            "Organizan sus ideas en oraciones con sentido completo.",
+            "Mantienen la concordancia entre género y número en la escritura de textos breves."
+          ],
+          "eje": null,
+          "pagina": 4
+        }
+      ]
+    },
+    {
+      "slug": "matematica",
+      "nombre": "Matemática",
+      "descripcion": "En la asignatura de Matemática, las y los estudiantes serán evaluados considerando una selección de los",
+      "fuente": "temario_basica_2deg_basico_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 2,
+          "texto": "Leer números del 0 al 100 y representarlos en forma concreta, pictórica y simbólica.",
+          "indicadores": [
+            "Escriben un número dado en cifras o en palabras.",
+            "Asocian una representación pictórica a un número."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 3,
+          "texto": "Comparar y ordenar números del 0 al 100 de menor a mayor y viceversa, usando material concreto y monedas nacionales de manera manual y/o por medio de software educativo.",
+          "indicadores": [
+            "Comparan números hasta 100.",
+            "Ordenan un conjunto de números dados en forma ascendente o descendente."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 5,
+          "texto": "Componer y descomponer números del 0 a 100 de manera aditiva, en forma concreta, pictórica y simbólica.",
+          "indicadores": [
+            "Componen y descomponen números del 0 hasta 100 de manera aditiva en forma simbólica.",
+            "Relacionan composiciones y descomposiciones pictóricas a números del 0 al 100."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 7,
+          "texto": "Identificar las unidades y decenas en números del 0 al 100, representando las cantidades de acuerdo a su valor posicional, con material concreto, pictórico y simbólico.",
+          "indicadores": [
+            "Identifican que el valor de un dígito depende de su posición dentro de un numeral.",
+            "Indican decenas y unidades en un número de dos dígitos.",
+            "Representan las cantidades de acuerdo a su valor posicional de manera simbólica.",
+            "Identifican representaciones pictóricas de números dados, según su valor posicional."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 9,
+          "texto": "Demostrar que comprende la adición y la sustracción en el ámbito del 0 al 100:\n• usando un lenguaje cotidiano y matemático para describir acciones desde su propia experiencia.\n• resolviendo problemas con una variedad de representaciones concretas y pictóricas, de manera manual y/o usando software educativo.\n• registrando el proceso en forma simbólica.\n• aplicando los resultados de las adiciones y las sustracciones de los números del 0 a 20 sin realizar cálculos.\n• aplicando el algoritmo de la adición y la sustracción sin considerar reserva.\n• creando problemas matemáticos en contextos familiares y resolviéndolos.",
+          "indicadores": [
+            "Reconocen la operación que resuelve un problema dado (adición o sustracción)",
+            "Identifican la expresión numérica que resuelve un problema dado (adición o sustracción)",
+            "Resuelven problemas de adición y sustracción utilizando diversas estrategias.",
+            "Aplican algoritmo de la adición y sustracción.",
+            "Crean un problema matemático de adición o sustracción y luego lo resuelven."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 11,
+          "texto": "Demostrar que comprende la multiplicación:\n• usando representaciones concretas y pictóricas\n• expresando una multiplicación como una adición de sumandos iguales.\n• usando la distributividad como estrategia para construir las tablas del 2, del 5 y del 10\n• resolviendo problemas que involucren las tablas del 2, del 5 y del 10",
+          "indicadores": [
+            "Representan una multiplicación como la adición de sumandos iguales.",
+            "Identifican la representación pictórica de una situación de multiplicación.",
+            "Reconocen la operación que resuelve un problema dado (multiplicación, adición o sustracción)",
+            "Identifican la expresión numérica que resuelve un problema dado (multiplicación, adición o sustracción)",
+            "Resuelven problemas que involucran las tablas del 2, el 5 y el 10."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 12,
+          "texto": "Crear, representar y continuar una variedad de patrones numéricos y completar los elementos faltantes, de manera manual y/o usando software educativo.",
+          "indicadores": [
+            "Continúan patrones numéricos y completan elementos faltantes.",
+            "Identifican patrones numéricos en secuencias crecientes y decrecientes.",
+            "Completan elementos faltantes en secuencias de patrones numéricos.",
+            "Crean un patrón numérico generando una secuencia."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 13,
+          "texto": "Demostrar, explicar y registrar la igualdad y desigualdad en forma concreta y pictórica del 0 al 20, usando el símbolo igual (=) y los símbolos no igual (>,<)",
+          "indicadores": [
+            "Comparan y registran igualdades o desigualdades con el uso de símbolos (>,<,=) en forma pictórica y simbólica, con números hasta 20.",
+            "Identifican la balanza que representa una igualdad o desigualdad"
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 15,
+          "texto": "Describir, comparar y construir figuras 2D (triángulos, cuadrados, rectángulos y círculos) con material concreto.",
+          "indicadores": [
+            "Describen figuras 2D.",
+            "Comparan atributos de figuras 2D (triángulos, cuadrados, rectángulos y círculos)."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 16,
+          "texto": "Describir, comparar y construir figuras 3D (cubos, paralelepípedos, esferas y conos) con diversos materiales.",
+          "indicadores": [
+            "Describen figuras 3D.",
+            "Comparan atributos de figuras 3D (cubos, pirámides, conos, cilindros, paralelepípedos, entre otros)."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 19,
+          "texto": "Determinar la longitud de objetos, usando unidades de medidas no estandarizadas y unidades estandarizadas (cm y m) en el contexto de la resolución de problemas.",
+          "indicadores": [
+            "Resuelven problemas empleando diferentes estrategias en la comparación de mediciones, con unidades estandarizadas y no estandarizadas.",
+            "Miden diferentes objetos representados de manera pictórica con regla también representada de manera pictórica."
+          ],
+          "eje": null,
+          "pagina": 7
+        },
+        {
+          "numero": 20,
+          "texto": "Recolectar y registrar datos para responder preguntas estadísticas sobre juegos con monedas y dados, usando bloques, tablas de conteo y pictogramas.",
+          "indicadores": [
+            "Interpretan datos de lanzamiento de monedas y dados registrados en tablas de conteo y/o bloques respondiendo preguntas estadísticas.",
+            "Evalúan el registro de un conjunto de juegos con monedas y dados, en tablas de conteo o bloques."
+          ],
+          "eje": null,
+          "pagina": 7
+        },
+        {
+          "numero": 22,
+          "texto": "Construir, leer e interpretar pictogramas con escala y gráficos de barra simple.",
+          "indicadores": [
+            "Leen e interpretan pictogramas donde la figura representa más de una unidad y luego responden preguntas.",
+            "Leen e interpretan gráficos de barra simple dados y luego responden preguntas."
+          ],
+          "eje": null,
+          "pagina": 7
+        }
+      ]
+    },
+    {
+      "slug": "ciencias-naturales",
+      "nombre": "Ciencias Naturales",
+      "descripcion": "• En la asignatura de Ciencias Naturales los menores de edad serán evaluados a través de tres ejes: Ciencias de la vida; Ciencias Físicas y Químicas, Ciencias de la Tierra y el Universo, con esto ellos podrán despertar el asombro por conocer el mundo que lo rodea, comprenderlo y utilizar metodologías para estudiarlo y dar la posibilidad de aplicar una mirada científica a su aproximación a la naturaleza.\n• Para alcanzar la comprensión de los contenidos disciplinares enmarcado en estos tres ejes los menores de edad deberán desarrollar habilidades científicas, las que son comunes a todas las disciplinas de las Ciencias Naturales, estas son: analizar, clasificar, comparar, comunicar, evaluar, experimentar, explorar, formular preguntas, investigar, medir, observar, planificar, predecir, registrar, usar instrumentos y usar modelos. Así como también se deberá promover el desarrollo de actitudes inherentes al estudio de las ciencias, para así tomar decisiones informadas acerca de fenómenos y problemas que afectan a las personas, la sociedad y ambiente, en materia de ciencia y tecnología.",
+      "fuente": "temario_basica_2deg_basico_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 3,
+          "texto": "Observar y comparar las características de las etapas del ciclo de vida de distintos animales (mamíferos, aves, insectos y anfibios), relacionándolas con su hábitat.",
+          "indicadores": [
+            "Identifican en un esquema las distintas etapas del ciclo de vida de un animal y las describen.",
+            "Describen los cambios que experimenta un animal en las etapas de su ciclo de vida.",
+            "Comparan ciclos de vida de distintos animales en cuanto a similitud con los padres, crecimiento dentro o fuera de la madre.",
+            "Relacionan elementos del hábitat con las etapas del desarrollo de algunos animales. por ejemplo, desarrollo de un anfibio en un medio acuático."
+          ],
+          "eje": null,
+          "pagina": 8
+        },
+        {
+          "numero": 5,
+          "texto": "Observar e identificar algunos animales nativos que se encuentran en peligro de extinción, así como el deterioro de su hábitat, proponiendo medidas para protegerlos.",
+          "indicadores": [
+            "Dan ejemplos de animales nativos en peligro de extinción y su distribución por las regiones.",
+            "Proponen medidas que permitan proteger animales en peligro de extinción y sus hábitats."
+          ],
+          "eje": null,
+          "pagina": 8
+        },
+        {
+          "numero": 7,
+          "texto": "Identificar la ubicación y explicar la función de algunas partes del cuerpo que son fundamentales para vivir: corazón, pulmones, estómago, esqueleto y músculos.",
+          "indicadores": [
+            "Identifican ubicación de algunas partes del cuerpo fundamentales para vivir (corazón, pulmones, estómago, músculos y esqueleto).",
+            "Describen la función básica de los principales órganos internos del cuerpo.",
+            "Explican que los músculos, son órganos activos y permiten el movimiento del cuerpo.",
+            "Explican que el cuerpo humano tiene huesos que se unen a nivel de las articulaciones permitiendo el movimiento y soporte del organismo."
+          ],
+          "eje": null,
+          "pagina": 8
+        },
+        {
+          "numero": 8,
+          "texto": "Explicar la importancia de la actividad física para el desarrollo de los músculos y el fortalecimiento del corazón, proponiendo formas de ejercitarla e incorporarla en sus hábitos diarios.",
+          "indicadores": [
+            "Describen los cambios que ocurren en el cuerpo durante el ejercicio.",
+            "Establecen diferencias corporales entre una persona que realiza actividad física y otra con inactividad física.",
+            "Dan ejemplos sobre los beneficios de la actividad física para el cuerpo como desarrollo de músculos fuertes y el fortalecimiento del corazón.",
+            "Predicen consecuencias de la inactividad física (sedentarismo) sobre la salud humana. (aumento de peso, falta de agilidad y coordinación, corazón menos fuerte, etc.)."
+          ],
+          "eje": null,
+          "pagina": 8
+        },
+        {
+          "numero": 9,
+          "texto": "Observar y describir, por medio de la investigación experimental, algunas características del agua, como:\n• escurrir\n• adaptarse a la forma del recipiente\n• disolver algunos sólidos, como el azúcar y la sal\n• ser transparente e inodora\n• evaporarse y congelarse con los cambios de temperatura",
+          "indicadores": [
+            "Describen las diferentes apariencias en que se encuentra el agua en el entorno natural.",
+            "Describen características del agua como su capacidad de escurrir y adaptarse a la forma del recipiente.",
+            "Predicen la capacidad que posee el agua de disolver o no diferentes sustancias como la sal y el azúcar.",
+            "Identifican los cambios del agua líquida en sólida o vapor en ejemplos de la naturaleza."
+          ],
+          "eje": null,
+          "pagina": 9
+        },
+        {
+          "numero": 11,
+          "texto": "Describir el ciclo del agua en la naturaleza, reconociendo que el agua es un recurso preciado y proponiendo acciones cotidianas para su cuidado.",
+          "indicadores": [
+            "Identifican la localización del agua sobre el planeta Tierra.",
+            "Describen los movimientos del agua sobre la superficie terrestre.",
+            "Proponen acciones que promueven el cuidado y uso responsable del agua."
+          ],
+          "eje": null,
+          "pagina": 9
+        },
+        {
+          "numero": 12,
+          "texto": "Reconocer y describir algunas características del tiempo atmosférico, como precipitaciones (lluvia, granizo, nieve), viento y temperatura ambiente, entre otras, y sus cambios a lo largo del año.",
+          "indicadores": [
+            "Describen fenómenos naturales relacionados con el tiempo atmosférico, tales como diferentes tipos de precipitaciones, temperatura, vientos, nubosidad, etc.",
+            "Relacionan la presencia de nieve con la sensación de frío.",
+            "Relacionan los días de lluvia con la presencia de nubes.",
+            "Identifican los efectos producidos por el viento.",
+            "Identifican los cambios del tiempo atmosférico a lo largo del año."
+          ],
+          "eje": null,
+          "pagina": 9
+        },
+        {
+          "numero": 14,
+          "texto": "Describir la relación de los cambios del tiempo atmosférico con las estaciones del año y sus efectos sobre los seres vivos y el ambiente.",
+          "indicadores": [
+            "Relacionan el verano con la sensación térmica de calor y sol; el invierno con frío, nieve y lluvia y, el otoño con el viento y la disminución de las horas de luz.",
+            "Identifican las estaciones del año en calendarios.",
+            "Relacionan las diferentes estaciones del año con cambios que, en general, se producen en las plantas.",
+            "Relacionan los cambios alimenticios de ciertos animales con las condiciones desfavorables del invierno."
+          ],
+          "eje": null,
+          "pagina": 9
+        }
+      ]
+    },
+    {
+      "slug": "historia-geografia-ciencias-sociales",
+      "nombre": "Historia, Geografía y Ciencias Sociales",
+      "descripcion": "• La asignatura de Historia, Geografía y Ciencias Sociales está conformada por disciplinas que estudian, desde diversas perspectivas, al ser humano en el tiempo y espacio. Su trabajo conjunto permite a los menores de edad desarrollar conocimientos, habilidades y actitudes necesarias para comprender la complejidad de la realidad social y el devenir de nuestra sociedad. Para adquirir estos aprendizajes, se considera imprescindible que los menores de edad reconozcan que la realidad social es compleja y se ha construido en forma colectiva, considerando distintas perspectivas para abordarla y múltiples interpretaciones para comprenderla. Estos aprendizajes se organizan en tres ejes temáticos: Historia, Geografía y Formación Ciudadana.\n• En el eje de Historia, se espera que los menores de edad valoren la diversidad cultural de la sociedad chilena, mediante el estudio de los pueblos indígenas que habitaron el actual territorio nacional en el período precolombino, enfatizando el reconocimiento de su legado en expresiones del patrimonio cultural y su presencia en la actualidad. Luego, se abordan los aportes realizados por españoles e indígenas y la importancia del mestizaje en la conformación de nuestra sociedad. Finalmente, se destacan los aportes realizados por inmigrantes de diferentes naciones a lo largo del tiempo, la huella que han dejado en nuestro país y su contribución a la riqueza cultural de nuestra sociedad.\n• En el eje de Geografía se incorporan categorías de ubicación absoluta, se inicia el trabajo con el concepto de paisaje (en este caso, diversos paisajes de Chile) y se incluye vocabulario geográfico. En este mismo nivel y eje, se abordan OA directamente vinculados con el eje de Historia. Es el caso de los temas referidos a la localización de los pueblos precolombinos de Chile y a la relación que esos pueblos establecieron con su medio geográfico.\n• En el eje de Formación Ciudadana, se avanza en el conocimiento y cumplimiento de las normas básicas de convivencia y de respeto a los demás, con énfasis en el cuidado de los demás y del medioambiente. Asimismo, se espera que estudien la importancia del sistema de transportes y medios de comunicación, presentes en su entorno local.\n• En conjunto con las comprensiones y conocimientos antes descritos, los menores de edad deberán desarrollar los objetivos de habilidades de Pensamiento temporal y espacial; análisis y trabajo con fuentes; pensamiento crítico; y la comunicación.",
+      "fuente": "temario_basica_2deg_basico_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Describir los modos de vida de algunos pueblos originarios de Chile en el período precolombino, incluyendo ubicación geográfica, medio natural en que habitaban, vida nómade o sedentaria, roles de hombres y mujeres, herramientas y tecnología, principales actividades, vivienda, costumbres, idioma, creencias, alimentación y fiestas, entre otros.",
+          "indicadores": [
+            "Localizan en un mapa la ubicación de los pueblos originarios que habitaban el territorio actual de Chile previo a la llegada de los europeos a América.",
+            "Caracterizan el modo de vida de los pueblos estudiados, distinguiendo entre nómades y sedentarios.",
+            "Identifican el idioma, creencias, fiestas y costumbres de los pueblos originarios.",
+            "Identifican los principales recursos, alimentos y viviendas de los pueblos estudiados, y los relacionan con las características del medio geográfico."
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 2,
+          "texto": "Comparar el modo de vida y expresiones culturales de pueblos indígenas presentes en Chile actual (como mapuche, aimara, rapa nui) con respecto al periodo precolombino, identificando aspectos de su cultura que se han mantenido hasta el presente y aspectos que han cambiado.",
+          "indicadores": [
+            "Reconocen el modo de vida actual de algunos pueblos indígenas y lo comparan con el periodo precolombino.",
+            "Identifican costumbres y tradiciones de pueblos originarios que se mantienen en el presente."
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 3,
+          "texto": "Distinguir los diversos aportes a la sociedad chilena proveniente de los pueblos originarios (palabras, alimentos, tradiciones, cultura, etc.) y de los españoles (idioma, religión, alimentos, cultura, etc.) y reconocer nuestra sociedad como mestiza.",
+          "indicadores": [
+            "Reconocen palabras de uso común en el idioma español usado en Chile, provenientes de las lenguas de los pueblos originarios.",
+            "Distinguen ingredientes de la comida tradicional chilena provenientes de las tradiciones indígena y española.",
+            "Identifican juegos tradicionales chilenos y reconocen su origen.",
+            "Reconocen que la sociedad chilena se formó sobre la base del mestizaje de los pueblos indígenas prehispánicos con los conquistadores españoles."
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 4,
+          "texto": "Reconocer y dar ejemplos de la influencia y los aportes de inmigrantes de distintas naciones europeas, orientales, árabes y latinoamericanas a la diversidad de la sociedad chilena, a lo largo de su historia.",
+          "indicadores": [
+            "Reconocen la diversidad de la sociedad chilena y el aporte de inmigrantes de distintos orígenes a ella.",
+            "Identifican ejemplos de comidas extranjeras de uso común en Chile.",
+            "Distinguen expresiones artísticas (música, arquitectura, etc.) procedentes de naciones extranjeras que se han integrado a la sociedad chilena.",
+            "Identifican personas de origen extranjero que han aportado en diversos ámbitos a la cultura chilena."
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 7,
+          "texto": "Ubicar Chile, Santiago, la propia región y su capital en el globo terráqueo o en mapas, y describir la ubicación relativa de países limítrofes y de otros países de América del Sur, utilizando los puntos cardinales.",
+          "indicadores": [
+            "Ubican Chile en el planisferio, en el globo terráqueo y en el mapa de América del Sur.",
+            "Ubican la capital del país, la región donde viven y su capital en un mapa",
+            "Distinguen países de América del Sur en diversos soportes de representación espacial.",
+            "Describen la ubicación relativa de países de América del Sur con respecto a Chile usando de referencia los puntos cardinales"
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 8,
+          "texto": "Clasificar y caracterizar algunos paisajes de Chile según su ubicación en la zona norte, centro y sur del país, observando imágenes, y utilizando diversas fuentes y un vocabulario geográfico adecuado (océano, río, cordillera de los Andes y de la Costa, desierto, valle, costa, volcán, archipiélago, isla, fiordo, lago, ciudad y pueblo, entre otros).",
+          "indicadores": [
+            "Describen paisajes representativos de las zonas norte, centro y sur de Chile utilizando conocimientos y conceptos geográficos pertinentes.",
+            "Relacionan vegetación y fauna con los diversos paisajes de las regiones naturales de Chile."
+          ],
+          "eje": null,
+          "pagina": 12
+        },
+        {
+          "numero": 14,
+          "texto": "Conocer, proponer, aplicar y explicar la importancia de algunas normas necesarias para: cuidarse, cuidar a otros y evitar situaciones de riesgo (como seguridad vial, vías de evacuación, adaptaciones para discapacitados, zonas de silencio), organizar un ambiente propicio al aprendizaje y acogedor para todos (por ejemplo, respetar los turnos, cuidar el espacio y las pertenencias comunes y de sus pares), cuidar el patrimonio y el medioambiente",
+          "indicadores": [
+            "Identifican algunas normas para la seguridad de todos en la vía pública (mirar a ambos lados antes de cruzar, respetar los semáforos, entre otros).",
+            "Describen la importancia de cumplir las normas establecidas en la sala de clases y en el hogar.",
+            "Reconocen acciones y normas establecida para cuidar el medioambiente y el patrimonio."
+          ],
+          "eje": null,
+          "pagina": 12
+        },
+        {
+          "numero": 15,
+          "texto": "Identificar la labor que cumplen en beneficio de la comunidad servicios como los medios de transporte y de comunicación y el mercado, y algunas instituciones encargadas de proteger nuestro patrimonio cultural y natural",
+          "indicadores": [
+            "Describen la importancia de los medios de transporte para trasladarse de un punto a otro y trasladar diversos productos.",
+            "Explican la importancia de los medios de comunicación para transmitir información relevante a la comunidad.",
+            "Identifican el papel del comercio de su ciudad o localidad en el abastecimiento y satisfacción de las necesidades.",
+            "Identifican algunas instituciones encargadas de proteger nuestro patrimonio cultural y natural."
+          ],
+          "eje": null,
+          "pagina": 12
+        }
+      ]
+    }
+  ]
+}

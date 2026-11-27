@@ -1,0 +1,539 @@
+{
+  "grado": "5_basico",
+  "etiqueta": "5° Básico",
+  "asignaturas": [
+    {
+      "slug": "lenguaje",
+      "nombre": "Lenguaje y Comunicación",
+      "descripcion": "• La asignatura Lenguaje y Comunicación busca que los menores de edad logren conocerse a sí mismos y reflexionar sobre la experiencia humana en diversas culturas mediante la lectura, la escritura y la comunicación oral. Desde un enfoque comunicativo, se propone desarrollar competencias comunicativas indispensables para una participación activa, democrática y responsable en sociedad. Específicamente, se busca lograr autonomía y flexibilidad en los menores de edad para que puedan aplicar las habilidades comunicativas en distintos ámbitos de la vida escolar y social. En este ciclo escolar se evaluarán 2 ejes: Lectura y Escritura.",
+      "fuente": "temario_basica_5deg_basico_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 4,
+          "texto": "Analizar aspectos relevantes de narraciones leídas para profundizar su comprensión:\n• interpretando el lenguaje figurado presente en el texto\n• expresando opiniones sobre las actitudes y acciones de los personajes y fundamentándolas con ejemplos del texto\n• determinando las consecuencias de hechos y acciones\n• describiendo el ambiente y las costumbres representadas en el texto\n• explicando las características físicas y sicológicas de los personajes que son relevantes para el desarrollo de la historia\n• comparando textos de autores diferentes y justificando su preferencia por alguno",
+          "indicadores": [
+            "Extraen información explícita en narraciones.",
+            "Extraen información implícita en narraciones.",
+            "Interpretan expresiones que usen lenguaje figurado.",
+            "Identifican características físicas y sicológicas que son relevantes para el desarrollo de la historia.",
+            "Describen el ambiente de la narración.",
+            "Describen costumbres representadas en las narraciones.",
+            "Opinan sobre actitudes y acciones de los personajes de las narraciones leídas.",
+            "Fundamentan sus opiniones a partir de información del texto."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 5,
+          "texto": "Analizar aspectos relevantes de diversos poemas para profundizar su comprensión:\n• explicando cómo el lenguaje poético que emplea el autor apela a los sentidos, sugiere estados de ánimo y crea imágenes en el lector\n• identificando personificaciones y comparaciones y explicando su significado dentro del poema\n• distinguiendo los elementos formales de la poesía (rima asonante y consonante, verso y estrofa)",
+          "indicadores": [
+            "Identifican información explícita e implícita en un poema.",
+            "Establecen relaciones entre las palabras de un poema con las emociones e imágenes que evoca.",
+            "Distinguen los elementos formales de la poesía (versos, estrofas, rima asonante y consonante).",
+            "Explican el significado de personificaciones y comparaciones dentro de un poema."
+          ],
+          "eje": null,
+          "pagina": 3
+        },
+        {
+          "numero": 6,
+          "texto": "Leer independientemente y comprender textos no literarios (cartas, biografías, relatos históricos, libros y artículos informativos, noticias, etc.) para ampliar su conocimiento del mundo y formarse una opinión:\n• extrayendo información explícita e implícita\n• haciendo inferencias a partir de la información del texto y de sus experiencias y conocimientos\n• relacionando la información de imágenes, gráficos, tablas, mapas o diagramas, con el texto en el cual están insertos\n• interpretando expresiones en lenguaje figurado\n• comparando información\n• formulando una opinión sobre algún aspecto de la lectura\n• fundamentando su opinión con información del texto o sus conocimientos previos",
+          "indicadores": [
+            "Extraen información explícita en textos no literarios.",
+            "Extraen información implícita en textos no literarios.",
+            "Interpretan expresiones de lenguaje figurado.",
+            "Relacionan información entre el texto con y los gráficos o imágenes de este.",
+            "Comparan información presente en diferentes fragmentos de textos no literarios.",
+            "Opinan sobre algún aspecto de la lectura en textos no literarios.",
+            "Fundamentan sus opiniones con información del texto."
+          ],
+          "eje": null,
+          "pagina": 4
+        },
+        {
+          "numero": 7,
+          "texto": "Evaluar críticamente la información presente en textos de diversa procedencia:\n• determinando quién es el emisor, cuál es su propósito y a quién dirige el mensaje\n• evaluando si un texto entrega suficiente información para responder una determinada pregunta o cumplir un propósito",
+          "indicadores": [
+            "Identifican el emisor, destinatario y propósito de un texto.",
+            "Discriminan qué preguntas o propósitos se pueden cumplir con la información entregada en el texto."
+          ],
+          "eje": null,
+          "pagina": 4
+        },
+        {
+          "numero": 14,
+          "texto": "Escribir creativamente narraciones (relatos de experiencias personales, noticias, cuentos, etc.) que:\n• tengan una estructura clara\n• utilicen conectores adecuados\n• incluyan descripciones y diálogo (si es pertinente) para desarrollar la trama, los personajes y el ambiente",
+          "indicadores": [
+            "Escriben narraciones, utilizando conectores adecuados.",
+            "Escriben narraciones con un conflicto evidente que se resuelve a lo largo del relato.",
+            "Incluyen descripciones que detallen personajes y ambiente en la narración.",
+            "Incluyen diálogos que desarrollen la trama."
+          ],
+          "eje": null,
+          "pagina": 4
+        },
+        {
+          "numero": 15,
+          "texto": "Escribir artículos informativos para comunicar información sobre un tema:\n• presentando el tema en una oración\n• desarrollando una idea central por párrafo\n• agregando las fuentes utilizadas",
+          "indicadores": [
+            "Escriben textos que tienen el propósito de informar sobre un tema.",
+            "Presentan el tema del artículo en una oración al inicio del texto.",
+            "Desarrollan una idea central por párrafos.",
+            "Usan puntos aparte para separar los párrafos.",
+            "Usan vocabulario variado, evitando repeticiones.",
+            "Usan conectores para marcar relaciones entre las ideas."
+          ],
+          "eje": null,
+          "pagina": 4
+        }
+      ]
+    },
+    {
+      "slug": "matematica",
+      "nombre": "Matemática",
+      "descripcion": "En la asignatura de Matemática, las y los estudiantes serán evaluados considerando una selección de",
+      "fuente": "temario_basica_5deg_basico_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Representar y describir números naturales de hasta más de 6 dígitos y menores que 1 000 millones:\n• identificando el valor posicional de los dígitos\n• componiendo y descomponiendo números naturales en forma estándar y expandida aproximando cantidades\n• comparando y ordenando números naturales en este ámbito numérico\n• dando ejemplos de estos números naturales en contextos reales.",
+          "indicadores": [
+            "Identifican el valor posicional de un dígito en un número determinado hasta 1 000 millones.",
+            "Componen y descomponen números en forma estándar y expandida.",
+            "Ordenan números de manera creciente y decreciente."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 3,
+          "texto": "Demostrar que comprenden la multiplicación de números naturales de dos dígitos por números naturales de dos dígitos:\n• estimando productos\n• aplicando estrategias de cálculo mental\n• resolviendo problemas rutinarios y no rutinarios aplicando el algoritmo.",
+          "indicadores": [
+            "Resuelven multiplicaciones en el contexto de problemas rutinarios y no rutinarios, usando el algoritmo de la multiplicación.",
+            "Identifican la expresión matemática que resuelve un problema."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 4,
+          "texto": "Demostrar que comprenden la división con dividendos de tres dígitos y divisores de un dígito:\n• interpretando el resto\n• resolviendo problemas rutinarios y no rutinarios que impliquen divisiones",
+          "indicadores": [
+            "Resuelven divisiones en el contexto de problemas rutinarios y no rutinarios, usando el algoritmo de la división",
+            "Identifican la expresión matemática que resuelve un problema."
+          ],
+          "eje": null,
+          "pagina": 5
+        },
+        {
+          "numero": 6,
+          "texto": "Resolver problemas rutinarios y no rutinarios que involucren las cuatro operaciones y combinaciones de ellas:\n• que incluyan situaciones con dinero\n• usando la calculadora y el computador en ámbitos numéricos superiores al 10 000",
+          "indicadores": [
+            "Identifican qué operación es necesaria para resolver un problema dado y lo resuelven.",
+            "Resuelven problemas de situaciones de dinero que involucran las cuatro operaciones y combinaciones de ellas."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 7,
+          "texto": "Demostrar que comprenden las fracciones propias:\n• representándolas de manera concreta, pictórica y simbólica\n• creando grupos de fracciones equivalentes - simplificando y amplificando- de manera concreta, pictórica y simbólica, de forma manual y/o software educativo\n• comparando fracciones propias con igual y distinto denominador de manera concreta, pictórica y simbólica.",
+          "indicadores": [
+            "Identifican representaciones de fracciones propias en diferentes modelos de representación",
+            "Identifican fracciones equivalentes.",
+            "Comparan fracciones propias de igual y distinto denominador en la recta numérica, de manera pictórica y simbólica."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 10,
+          "texto": "Determinar el decimal que corresponde a fracciones con denominador 2, 4, 5 y 10.",
+          "indicadores": [
+            "Escriben en forma de decimal números dados en forma fraccionaria con denominadores 2, 4, 5 y 10.",
+            "Relacionan una representación pictórica en forma decimal y fraccionaria, con su representación simbólica."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 11,
+          "texto": "Comparar y ordenar decimales hasta la milésima.",
+          "indicadores": [
+            "Ordenan números decimales hasta la cifra de las milésimas.",
+            "Comparan números decimales hasta la cifra de las milésimas."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 13,
+          "texto": "Resolver problemas rutinarios y no rutinarios, aplicando adiciones y sustracciones de fracciones propias o decimales hasta la milésima.",
+          "indicadores": [
+            "Identifican expresión numérica que resuelve un problema dado, que involucra fracciones y/o decimales.",
+            "Resuelven problemas que involucran adiciones y sustracciones de decimales hasta el centésimo.",
+            "Resuelven problemas que involucran adiciones y sustracciones de fracciones hasta el centésimo."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 14,
+          "texto": "Descubrir alguna regla que explique una sucesión dada y que permita hacer predicciones.",
+          "indicadores": [
+            "Extienden un patrón numérico.",
+            "Describen la regla de formación de una secuencia dada."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 15,
+          "texto": "Resolver problemas, usando ecuaciones e inecuaciones de un paso, que involucren adiciones y sustracciones, en forma pictórica y simbólica.",
+          "indicadores": [
+            "Identifican la ecuación que resuelve un problema dado.",
+            "Resuelven problemas por medio de ecuaciones de un paso, que involucran adiciones o sustracciones."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 17,
+          "texto": "Describir y dar ejemplos de aristas y caras de figuras 3D y lados de figuras 2D:\n• que son paralelos\n• que se intersecan\n• que son perpendiculares",
+          "indicadores": [
+            "Identifican caras y aristas paralelas, perpendiculares e intersecciones de ellas en figuras 3D.",
+            "Identifican caras y aristas paralelas, perpendiculares e intersecciones de ellas en figuras 2D.",
+            "Describen las caras y aristas de figuras 3D y 2D, usando términos como paralelas, perpendiculares, intersecciones."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 18,
+          "texto": "Demostrar que comprenden el concepto de congruencia, usando la traslación, la reflexión y la rotación en cuadrículas y mediante software geométrico.",
+          "indicadores": [
+            "Identifican figuras congruentes y lo justifican con alguna de las transformaciones isométricas estudiadas."
+          ],
+          "eje": null,
+          "pagina": 6
+        },
+        {
+          "numero": 19,
+          "texto": "Medir longitudes con unidades estandarizadas (mm, cm, m) en el contexto de la resolución de problemas.",
+          "indicadores": [
+            "Resuelven problemas que involucran longitudes y sus transformaciones."
+          ],
+          "eje": null,
+          "pagina": 7
+        },
+        {
+          "numero": 22,
+          "texto": "Calcular áreas de triángulos, de paralelogramos y de trapecios, y estimar áreas de figuras irregulares, aplicando las siguientes estrategias:\n• conteo de cuadrículas\n• comparación con el área de un rectángulo\n• completar figuras por traslación.",
+          "indicadores": [
+            "Calculan el área de triángulos, paralelogramos y trapecios.",
+            "Estiman áreas de figuras irregulares aplicando estrategias elaboradas, por ejemplo: conteo de cuadrículas comparación con el área de un rectángulo completar figuras por traslación."
+          ],
+          "eje": null,
+          "pagina": 7
+        },
+        {
+          "numero": 23,
+          "texto": "Calcular el promedio de datos e interpretarlos en su contexto",
+          "indicadores": [
+            "Determinan el promedio de un conjunto de datos y sacan conclusiones.",
+            "Resuelven un problema, utilizando promedios de datos."
+          ],
+          "eje": null,
+          "pagina": 7
+        },
+        {
+          "numero": 24,
+          "texto": "Describir la posibilidad de ocurrencia de un evento en base a un experimento aleatorio, empleando los términos seguro - posible - poco posible - imposible.",
+          "indicadores": [
+            "Describen la posibilidad de ocurrencia de un evento, mediante expresiones simples como seguro, posible, o imposible."
+          ],
+          "eje": null,
+          "pagina": 7
+        },
+        {
+          "numero": 26,
+          "texto": "Leer, interpretar y completar tablas, gráficos de barra simple y gráficos de línea y comunicar sus conclusiones.",
+          "indicadores": [
+            "Interpretan y comparan información presentada en tablas, gráficos de barra y gráficos de línea y responden preguntas a partir de la información extraída de estos."
+          ],
+          "eje": null,
+          "pagina": 7
+        }
+      ]
+    },
+    {
+      "slug": "ciencias-naturales",
+      "nombre": "Ciencias Naturales",
+      "descripcion": "• En la asignatura de Ciencias Naturales los menores de edad serán evaluados a través de tres ejes: Ciencias de la vida; Ciencias Físicas y Químicas, Ciencias de la Tierra y el Universo, con esto ellos podrán despertar el asombro por conocer el mundo que lo rodea, comprenderlo y utilizar metodologías para estudiarlo y dar la posibilidad de aplicar una mirada científica a su aproximación a la naturaleza.\n• Para alcanzar la comprensión de los contenidos disciplinares enmarcado en estos tres ejes los menores de edad deberán desarrollar habilidades científicas, las que son comunes a todas las disciplinas de las Ciencias Naturales, estas son: analizar, clasificar, comparar, comunicar, evaluar, experimentar, explorar, formular preguntas, investigar, medir, observar, planificar, predecir, registrar, usar instrumentos y usar modelos. Así como también se deberá promover el desarrollo de actitudes inherentes al estudio de las ciencias, para así tomar decisiones informadas acerca de fenómenos y problemas que afectan a las personas, la sociedad y ambiente, en materia de ciencia y tecnología",
+      "fuente": "temario_basica_5deg_basico_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 1,
+          "texto": "Reconocer y explicar que los seres vivos están formados por una o más células y que estas se organizan en tejidos, órganos y sistemas.",
+          "indicadores": [
+            "Explican que todos los seres vivos están constituidos por unidades estructurales llamadas células.",
+            "Identifican los niveles de organización de los seres vivos (célula, tejidos, órganos, sistemas, organismo) y relaciones simples que se establecen entre los distintos niveles.",
+            "Explican que los órganos cumplen funciones específicas y que según sus funciones son agrupados en sistemas.",
+            "Reconocen que los organismos (plantas y animales) están constituidos por varios sistemas que funcionan coordinadamente."
+          ],
+          "eje": null,
+          "pagina": 8
+        },
+        {
+          "numero": 5,
+          "texto": "Analizar el consumo de alimento diario (variedad, tamaño y frecuencia de porciones), reconociendo los alimentos para el crecimiento, la reparación, el desarrollo y el movimiento del cuerpo.",
+          "indicadores": [
+            "Explican la función y características de los nutrientes.",
+            "Agrupan alimentos según sus características nutricionales.",
+            "Relacionan los distintos grupos de alimentos con el aporte específico que realizan al cuerpo, por ejemplo, el consumo de carne y legumbres con procesos de reparación y crecimiento del cuerpo.",
+            "Evalúan dietas y los alimentos que consideran según si propician el desarrollo de un cuerpo sano."
+          ],
+          "eje": null,
+          "pagina": 8
+        },
+        {
+          "numero": 6,
+          "texto": "Investigar en diversas fuentes y comunicar los efectos nocivos que produce el cigarrillo (humo del tabaco) en los sistemas respiratorio y circulatorio.",
+          "indicadores": [
+            "Identifican los efectos nocivos que produce el cigarrillo (humo de tabaco) en el organismo, tanto en personas fumadoras como en personas expuestas al humo del tabaco de forma pasiva.",
+            "Identifican enfermedades del sistema respiratorio y circulatorio, provocadas por el consumo de tabaco (trombosis, arritmias, infecciones respiratorias, asma, cáncer pulmonar)."
+          ],
+          "eje": null,
+          "pagina": 8
+        },
+        {
+          "numero": 7,
+          "texto": "Investigar e identificar algunos microorganismos beneficiosos y dañinos para la salud (bacterias, virus y hongos), y proponer medidas de cuidado e higiene del cuerpo.",
+          "indicadores": [
+            "Describen el efecto beneficioso de algunas bacterias en el organismo y del consumo de hongos comestibles.",
+            "Identifican agentes daños para la salud (bacterias, virus y hongos).",
+            "Describen diversas acciones que permiten prevenir el contagio de enfermedades infectocontagiosas, como el uso de desinfectantes, el lavado de manos, entre otras."
+          ],
+          "eje": null,
+          "pagina": 9
+        },
+        {
+          "numero": 10,
+          "texto": "Observar y distinguir, por medio de la investigación experimental, los materiales conductores (cobre y aluminio) y aisladores (plásticos y goma) de electricidad, relacionándolos con la manipulación segura de artefactos tecnológicos y circuitos eléctricos domiciliarios.",
+          "indicadores": [
+            "Identifican similitudes y diferencias entre materiales conductores y aisladores de la electricidad.",
+            "Clasifican materiales buenos y malos conductores de la electricidad.",
+            "Explican en qué partes de un circuito eléctrico son necesarios los buenos conductores y en qué partes los malos conductores eléctricos.",
+            "Identifican normas de seguridad frente a la manipulación de artefactos tecnológicos."
+          ],
+          "eje": null,
+          "pagina": 9
+        },
+        {
+          "numero": 12,
+          "texto": "Describir la distribución del agua dulce y salada en la Tierra, considerando océanos, glaciares, ríos y lagos, aguas subterráneas, nubes, vapor de agua, etc., y comparar sus volúmenes, reconociendo la escasez relativa de agua dulce.",
+          "indicadores": [
+            "Comparan algunas características del agua dulce y salada señalando los porcentajes de estas en la Tierra.",
+            "Reconocen la escasez relativa de agua dulce.",
+            "Ubican los lugares de nuestro país donde se encuentran los mayores depósitos de agua dulce.",
+            "Señalan lugares en que el agua dulce está presente en la Tierra (ríos, lagos, casquetes polares, nubes, vapor de agua en la atmósfera, y aguas subterráneas).",
+            "Reconocen el papel que juegan los depósitos de agua en el ciclo del agua."
+          ],
+          "eje": null,
+          "pagina": 9
+        },
+        {
+          "numero": 14,
+          "texto": "Investigar y explicar efectos positivos y negativos de la actividad humana en los océanos, lagos, ríos, glaciares, entre otros, proponiendo acciones de protección de las reservas hídricas en Chile y comunicando sus resultados.",
+          "indicadores": [
+            "Clasifican las formas de contaminación más frecuentes y significativas en los mares, ríos y lagos.",
+            "Identifican acciones de protección de reservas hídricas."
+          ],
+          "eje": null,
+          "pagina": 9
+        }
+      ]
+    },
+    {
+      "slug": "historia-geografia-ciencias-sociales",
+      "nombre": "Historia, Geografía y Ciencias Sociales",
+      "descripcion": "• La asignatura de Historia, Geografía y Ciencias Sociales está conformada por disciplinas que estudian, desde diversas perspectivas, al ser humano en el tiempo y espacio. Su trabajo conjunto permite a los menores de edad desarrollar conocimientos, habilidades y actitudes necesarias para comprender la complejidad de la realidad social y el devenir de nuestra sociedad. Para adquirir estos aprendizajes, se considera imprescindible que los menores de edad reconozcan que la realidad social es compleja y se ha construido en forma colectiva, considerando distintas perspectivas para abordarla y múltiples interpretaciones para comprenderla. Estos aprendizajes se organizan en tres ejes temáticos: Historia, Geografía y Formación Ciudadana.\n• En el eje de Historia se trabaja el proceso de conquista de América y de Chile, así como el período colonial, poniendo énfasis en el impacto de la Conquista en Europa y América, las relaciones entre españoles y mapuches, y la conformación de la sociedad colonial. En este sentido, se destacan los aspectos centrales de la sociedad colonial chilena.\n• En el eje de Geografía se estudian las zonas naturales de Chile en sus dimensiones físicas y humanas. Además, se avanza en el uso de conceptos de Economía al introducir el estudio de los recursos naturales y las actividades productivas de las zonas naturales del país, desde la perspectiva del desarrollo sostenible.\n• En el eje de Formación Ciudadana se avanza en el estudio de los derechos humanos, así como en algunas de sus características como lo es su universalidad. En este sentido, explican la relevancia que la comunidad y el Estado promueva su cuidado y protección, reconociendo su importancia para convivir en una sociedad justa y equitativa.\n• En conjunto con las comprensiones y conocimientos antes descritos, los menores de edad deberán desarrollar los objetivos de habilidades de Pensamiento temporal y espacial; análisis y trabajo con fuentes; pensamiento crítico; y la comunicación.",
+      "fuente": "temario_basica_5deg_basico_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 2,
+          "texto": "Describir el proceso de conquista de América y de Chile, incluyendo a los principales actores (Corona española, Iglesia católica y hombres y mujeres protagonistas, entre otros), algunas expediciones y conflictos bélicos, y la fundación de ciudades como expresión de la voluntad de los españoles de quedarse y expandirse, y reconocer en este proceso el surgimiento de una nueva sociedad.",
+          "indicadores": [
+            "Secuencian acontecimientos del proceso de conquista en líneas temporales o cuadros cronológicos.",
+            "Describen los principales objetivos de la conquista de América para la Corona española (incorporación de nuevos territorios, evangelización y obtención de riquezas).",
+            "Distinguen las características principales de las expediciones de Diego de Almagro y Pedro de Valdivia.",
+            "Explican que la fundación de ciudades ayudó a la consolidación de la conquista y a la incorporación de nuevos territorios a la Corona Española.",
+            "Dan ejemplos de las dificultades que representó la conquista de Chile para los españoles, como la destrucción de Santiago al mando de Michimalonco, el levantamiento de Lautaro y el desastre de Curalaba.",
+            "Caracterizan la nueva sociedad surgida a partir del proceso de conquista, considerando aspectos tales como mestizaje, nuevas ciudades, enfrentamientos bélicos, entre otros."
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 3,
+          "texto": "Analizar el impacto y las consecuencias que tuvo el proceso de conquista para Europa y para América, considerando diversos ámbitos.",
+          "indicadores": [
+            "Distinguen consecuencias del proceso de conquista para Europa y para América.",
+            "Dan ejemplos del impacto del proceso de conquista para Europa y para América."
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 6,
+          "texto": "Explicar aspectos centrales de la Colonia, como la dependencia de las colonias americanas de la metrópoli, el rol de la Iglesia católica y el surgimiento de una sociedad mestiza.",
+          "indicadores": [
+            "Caracterizan la dependencia de las colonias americanas de la metrópoli.",
+            "Explican el rol de la Iglesia Católica en aspectos como la evangelización, la educación y las costumbres, durante la Colonia.",
+            "Identifican manifestaciones del sincretismo, como las festividades religiosas y expresiones artísticas, entre otras.",
+            "Reconocen la conformación de una sociedad mestiza con rasgos comunes en toda América que se proyectan hasta el presente."
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 7,
+          "texto": "Explicar y dar ejemplos de las distintas formas en las que españoles y mapuches se relacionaron en el período colonial, considerando resistencia mapuche y guerra de Arauco, mestizaje, formas de trabajo (como encomienda y esclavitud), evangelización, vida fronteriza y sistema de parlamentos.",
+          "indicadores": [
+            "Describen la guerra de Arauco, considerado la guerra defensiva y el sistema de parlamentos.",
+            "Reconocen las formas de trabajo establecidas por los españoles, tales como la encomienda y la esclavitud.",
+            "Explican los objetivos de la evangelización y dan ejemplos de cómo se llevó a cabo (ej. Pueblos de indios, utilización de lenguas indígenas, misiones, etc.).",
+            "Reconocen el proceso de mestizaje como una consecuencia de la relación entre españoles e indígenas."
+          ],
+          "eje": null,
+          "pagina": 11
+        },
+        {
+          "numero": 9,
+          "texto": "Caracterizar las grandes zonas de Chile y sus paisajes (Norte Grande, Norte Chico, Zona Central, Zona Sur y Zona Austral), considerando ubicación, clima (temperatura y precipitaciones), relieve, hidrografía, población y recursos naturales, entre otros.",
+          "indicadores": [
+            "Identifican en un mapa las grandes zonas naturales del país.",
+            "Describen las características de los principales climas en Chile, a partir de elementos como temperatura y precipitaciones.",
+            "Localizan las macroformas del relieve presentes en cada zona natural y describen sus rasgos fundamentales (por ejemplo, cordillera de los Andes, cordillera de la costa, depresión intermedia, planicies litorales).",
+            "Caracterizan los rasgos más relevantes de la población de cada zona natural (volumen, distribución).",
+            "Identifican la presencia y distribución de los principales recursos existentes en cada zona natural."
+          ],
+          "eje": null,
+          "pagina": 12
+        },
+        {
+          "numero": 10,
+          "texto": "Reconocer y ubicar en mapas recursos naturales significativos de Chile, como cobre, hierro, recursos marítimos y forestales, entre otros; diferenciar recursos renovables y no renovables y explicar la importancia de cuidarlos en el marco de un desarrollo sostenible.",
+          "indicadores": [
+            "Localizan en un mapa algunos de los principales recursos naturales de Chile e infieren actividades productivas asociadas a ellos, tales como agricultura, minería, pesca y actividad forestal.",
+            "Distinguen recursos naturales renovables y no renovables, y explican por qué es importante preservar la diversidad de recursos naturales existentes en el territorio nacional.",
+            "Describen acciones que contribuyen al desarrollo sostenible de su región."
+          ],
+          "eje": null,
+          "pagina": 12
+        },
+        {
+          "numero": 13,
+          "texto": "Reconocer que todas las personas son sujetos de derecho, que deben ser respetados por los pares, la comunidad y el Estado, y que esos derechos no dependen de características individuales, como etnia, sexo, lugar de nacimiento u otras.",
+          "indicadores": [
+            "Reconocen que todas las personas tienen derechos, como el derecho a la educación, a recibir atención de salud, a expresarse libremente, entre otros.",
+            "Reconocen que los derechos de las personas deben ser respetados por sus pares, la comunidad y el Estado.",
+            "Reconocen que los derechos de las personas no dependen de características individuales, como etnia, sexo, lugar de nacimiento u otras."
+          ],
+          "eje": null,
+          "pagina": 12
+        },
+        {
+          "numero": 14,
+          "texto": "Reconocer que los derechos generan deberes y responsabilidades en las personas y en el Estado, lo que, por ejemplo, se manifiesta en que:\n• las personas deben respetar los derechos de los demás.\n• todas las personas deben respetar las leyes.\n• el Estado debe asegurar que las personas puedan ejercer sus derechos (a la educación, a la protección de la salud, a la libertad de expresión, a la propiedad privada y a la igualdad ante la ley, entre otros).\n• el Estado debe asegurar los derechos de las personas a participar en la vida pública, como el derecho a formar organizaciones de participación social (fundaciones, juntas de vecinos, etc.), a participar en partidos políticos y el derecho a sufragio, entre otros.",
+          "indicadores": [
+            "Reconocen la importancia del respeto de los derechos para convivir en una sociedad justa y equitativa.",
+            "Reconocen normas que se apliquen en su vida cotidiana que ayuden a mantener una buena convivencia.",
+            "Reconocen que el Estado debe garantizar el ejercicio y respeto a los derechos de las personas."
+          ],
+          "eje": null,
+          "pagina": 12
+        }
+      ]
+    },
+    {
+      "slug": "ingles",
+      "nombre": "Idioma Extranjero: Inglés",
+      "descripcion": "• La asignatura propone que los menores de edad mediante el desarrollo de las habilidades lingüísticas de comprensión y producción de variados tipos de textos, progresen en las competencias para comunicarse en inglés en diversos contextos.\n• Los menores de edad serán evaluados a través de dos habilidades lingüísticas: comprensión de lectura (reading) y expresión escrita (writing), apoyándose en textos orales y escritos relacionados con los siguientes temas de la vida cotidiana: la escuela, la casa, la familia, la ropa, la comida, el clima, y los señalados para este nivel.",
+      "fuente": "temario_basica_5deg_basico_uce_1.pdf",
+      "oa": [
+        {
+          "numero": 5,
+          "texto": "Leer y demostrar comprensión de textos adaptados y auténticos simples no literarios, que contengan palabras de uso frecuente, familias de palabras, repetición de palabras y frases, estén acompañados de abundante apoyo visual y estén relacionados con los temas y las siguientes funciones del año:\n• saludar y despedirse\n• solicitar y entregar información personal y de temas familiares\n• agradecer, disculparse y pedir permiso\n• seguir y dar instrucciones\n• describir personas, objetos y su posición, lugares, acciones cotidianas y clima\n• expresar gustos, preferencias, cantidades y posesiones",
+          "indicadores": [
+            "Responden preguntas simples asociadas a palabras y expresiones presentes en un texto relacionado con los temas y funciones del año.",
+            "Siguen instrucciones simples de acuerdo a un texto leído; por ejemplo: color the table, brown; draw a ball under the table.",
+            "Asocian palabras y frases del texto con ilustraciones.",
+            "Identifican formas de saludar, despedirse, agradecer, disculparse y pedir permiso en los textos leídos.",
+            "Identifican descripciones de objetos, personas y lugares en los textos leídos.",
+            "Identifican expresiones de cantidades en los textos leídos.",
+            "Localizan información para responder preguntas con what acerca de la hora, la fecha, gustos, actividades; where, referidas a lugares y ubicación; how old para preguntar la edad.",
+            "Reconocen conexiones entre ideas por medio del conector and para indicar adición.",
+            "Localizan información que se relaciona con cantidades.",
+            "Reconocen referencias a cantidades.",
+            "Responden preguntas simples acerca de gustos y preferencias."
+          ],
+          "eje": null,
+          "pagina": 13
+        },
+        {
+          "numero": 6,
+          "texto": "Leer comprensivamente textos no literarios, como notas, postales, invitaciones, tarjetas de saludo, menús, recetas, diálogos, instrucciones o emails, identificando:\n• propósito del texto\n• ideas generales\n• información explícita\n• palabras clave, expresiones de uso común asociadas a las funciones del nivel (por ejemplo: I’m sorry, excuse me) y vocabulario temático",
+          "indicadores": [
+            "Identifican propósito del texto de acuerdo con elementos como título, subtítulos, ilustraciones.",
+            "Responden preguntas para identificar las ideas generales.",
+            "Responden preguntas para identificar información explícita en el texto.",
+            "Identifican palabras de uso común en los textos leídos (por ejemplo: cognados u expresiones muy comunes como thank you, I’m sorry)."
+          ],
+          "eje": null,
+          "pagina": 13
+        },
+        {
+          "numero": 8,
+          "texto": "Reaccionar a los textos leídos, expresando preferencias o haciendo conexiones con experiencias personales, en forma oral, escrita o mediante ilustraciones.",
+          "indicadores": [
+            "Representan eventos o personajes del texto que les han gustado o impresionado mediante ilustraciones.",
+            "Responden preguntas, conectando lo leído con experiencias personales.",
+            "Realizan comparaciones entre un personaje y ellos mismos por medio de ilustraciones.",
+            "Responden preguntas para expresar sus preferencias frente a lo leído."
+          ],
+          "eje": null,
+          "pagina": 14
+        },
+        {
+          "numero": 14,
+          "texto": "Completar y escribir, de acuerdo a un modelo y con apoyo de lenguaje visual, textos no literarios (como postales, mini libros, listas de compras) textos literarios (como rimas, tiras cómicas) con el propósito de compartir información en torno a los temas del año.",
+          "indicadores": [
+            "Completan un texto con información, con los temas del año.",
+            "Completan información como una lista de compras, una postal o una rima, con apoyo de lenguaje visual.",
+            "Escriben partes de una rima o de una tira cómica con ilustraciones.",
+            "Escriben una postal o una lista de compras siguiendo un modelo."
+          ],
+          "eje": null,
+          "pagina": 14
+        },
+        {
+          "numero": 15,
+          "texto": "Escribir para realizar las siguientes funciones:\n• describir acciones cotidianas; por ejemplo: I run, I sleep\n• expresar gustos y preferencias; por ejemplo: I like/don’t like\n• identificar y expresar cantidades; por ejemplo: there is a/an/one…; there are two/twenty… ; It is a/an…\n• agregar información; por ejemplo: it is big and black\n• describir posesiones; por ejemplo: this is my/your… …; I/They have…\n• expresar cantidad numérica hasta el 12\n• identificar y describir objetos, personas y lugares por su apariencia; por ejemplo: the… is big; it; is black\n• describir posición de objetos; por ejemplo: the… is on/in/under the…\n• dar información general sobre un tema conocido; por ejemplo: the…is/are/have/eat/read…; he/ they is/are/have/eat/read…\n• describir el clima; por ejemplo: today is sunny/cloudy\n• solicitar y dar información; por ejemplo: What/ Where is/are...?; there is/are…; it/this/the… is/ are…; Is this…? Yes, it is/No, it isn’t; Is he your father? Yes, he is/No, he isn’t",
+          "indicadores": [
+            "Identifican y escriben la cantidad de objetos.",
+            "Escriben sobre acciones cotidianas relacionadas con los temas del nivel (I live in an apartment, I walk to school)",
+            "Completan oraciones que describen personas y objetos (de la escuela, familia, casa, comida, ropa), por ejemplo: the ball is red; the boy is tall.",
+            "Completan oraciones que señalan el tiempo (clima): today is sunny, cloudy.",
+            "Completan oraciones para describir la cantidad y la posición de ciertos objetos, por ejemplo: There is one cat under the table; There ten tennis balls in the drawer.",
+            "Completan preguntas usando what, who, where, how old?",
+            "Escriben oraciones simples para señalar sus posesiones (My cat is black, That is your house)."
+          ],
+          "eje": null,
+          "pagina": 14
+        }
+      ]
+    }
+  ]
+}
