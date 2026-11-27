@@ -269,7 +269,6 @@ function Rendir({ intento, proceso, offset, onTerminar, setError }: {
       <div className="ve-aviso" aria-live="polite">{aviso}</div>
 
       <section className="ve-hoja ve-pregunta" key={p.preguntaVersionId} aria-labelledby="ve-enun">
-        <span className="ve-numero" aria-hidden>{i + 1}</span>
         <div className="ve-cuerpo">
           <p className="ve-kicker">Pregunta {i + 1} de {total}</p>
           <h2 id="ve-enun">{p.enunciado}</h2>
