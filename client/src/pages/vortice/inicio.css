@@ -2,9 +2,9 @@
 .vx.vx-flotante { display: block; }
 .vx.vx-flotante > .vx-side { display: none; }
 .vx.vx-flotante > .vx-main { padding: 0 0 calc(40px + env(safe-area-inset-bottom)); }
-.vx-flota { position: absolute; z-index: 20; top: 18px; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 clamp(16px, 2.5vw, 32px); font-family: "Instrument Sans", var(--vx-sans); }
+.vx-flota { position: absolute; z-index: 20; top: 18px; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 clamp(16px, 2.5vw, 32px); font-family: var(--vx-sans); }
 .vx-flota-marca, .vx-flota-yo { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; border: 0; border-radius: 999px; background: #fff; color: var(--vx-ink); font-weight: 700; text-decoration: none; cursor: pointer; }
-.vx-flota-marca { padding: 0 18px; font-family: "Bricolage Grotesque", var(--vx-sans); font-size: 21px; font-weight: 800; }
+.vx-flota-marca { padding: 0 18px; font-family: var(--vx-serif); font-size: 22px; font-weight: 600; }
 .vx-flota-yo { width: 46px; flex: none; font-size: 16px; }
 .vx-flota-nav { display: flex; gap: 2px; padding: 5px; border-radius: 999px; background: color-mix(in srgb, var(--vx-card) 90%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 10px 30px -14px rgb(14 26 58 / .45); }
 .vx-flota-nav .vx-enlace-nav { display: flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 13px; border-radius: 999px; color: var(--vx-ink); font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap; }
@@ -13,8 +13,7 @@
 @media (max-width: 1279px) { .vx-flota-nav svg { display: none; } .vx-flota-nav .vx-enlace-nav { padding: 0 11px; font-size: 13px; } }
 @media (max-width: 1023px) { .vx-flota-nav { display: none; } .vx.vx-flotante > .vx-main { padding-bottom: calc(88px + env(safe-area-inset-bottom)); } }
 
-.ini { font-family: "Instrument Sans", var(--vx-sans); color: var(--vx-ink); }
-.ini h1, .ini h2, .ini b, .ini-letras { font-family: "Bricolage Grotesque", var(--vx-sans); }
+.ini { font-family: var(--vx-sans); color: var(--vx-ink); }
 .ini ul, .ini ol { list-style: none; margin: 0; padding: 0; }
 .ini p { margin: 0; }
 .ini-hero { position: relative; isolation: isolate; min-height: 540px; display: flex; align-items: flex-end; background: var(--vx-night); overflow: hidden; }
@@ -23,8 +22,8 @@
 .ini-hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, var(--vx-bg), transparent 22%), linear-gradient(90deg, rgb(14 26 58 / .86), rgb(14 26 58 / .5) 42%, transparent 70%); }
 .ini-saludo { width: 100%; max-width: 1264px; margin: 0 auto; padding: 110px 32px 120px; color: #fff; }
 .ini-saludo > * { max-width: 600px; }
-.ini h1.ini-hola { font-family: "Instrument Sans", var(--vx-sans); font-size: 18px; font-weight: 500; color: #fff; margin: 0; }
-.ini h2.ini-titulo { margin: 10px 0 14px; color: #fff; font-size: clamp(40px, 5.4vw, 68px); font-weight: 800; line-height: .98; letter-spacing: -.02em; }
+.ini h1.ini-hola { font-family: var(--vx-sans); font-size: 18px; font-weight: 500; color: #fff; margin: 0; }
+.ini h2.ini-titulo { margin: 10px 0 14px; color: #fff; font-size: clamp(40px, 5.4vw, 68px); font-weight: 500; line-height: 1.04; letter-spacing: -.01em; }
 .ini h2.ini-titulo-largo { font-size: clamp(32px, 3.6vw, 46px); }
 .ini-item { font-size: 17px; margin-bottom: 24px !important; }
 .ini-cta { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 28px; border-radius: 999px; background: #fff; color: var(--vx-ink); font-weight: 700; font-size: 16px; text-decoration: none; transition: transform 150ms ease; }
@@ -41,26 +40,26 @@
 .ini-card[data-tinte="turquesa"] { --t: var(--vx-turquesa-text); --s: var(--vx-turquesa-soft); }
 .ini-arte { display: grid; place-items: center; aspect-ratio: 4 / 3; border-radius: 18px; background: var(--s); overflow: hidden; }
 .ini-arte img { width: 100%; height: 100%; object-fit: contain; }
-.ini-letras { color: var(--t); font-size: 48px; font-weight: 800; }
+.ini-letras { color: var(--t); font-size: 48px; font-weight: 700; }
 .ini-pie { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 8px; padding: 14px 6px 8px; }
 .ini-pie b { font-size: 17px; font-weight: 700; }
 .ini-pie small { color: var(--vx-ink-soft); font-size: 13px; }
-.ini-pct { font-family: "Bricolage Grotesque", var(--vx-sans); font-size: 22px; font-weight: 800; color: var(--t); }
+.ini-pct { font-size: 22px; font-weight: 700; color: var(--t); }
 .ini-barra { display: block; height: 10px; margin: 0 6px; border-radius: 99px; background: var(--s); overflow: hidden; }
 .ini-barra i { display: block; height: 100%; border-radius: 99px; background: var(--t); }
 .ini-dos { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 18px; margin-top: 34px; }
 .ini-panel { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; padding: 28px 30px; border-radius: 28px; background: var(--vx-card); }
-.ini-panel h2 { margin: 0; font-size: 24px; font-weight: 700; color: inherit; }
+.ini-panel h2 { margin: 0; font-size: 26px; font-weight: 500; color: inherit; }
 .ini-oscuro { background: var(--vx-night); color: #fff; }
 .ini ul.ini-cifras { display: flex; flex-wrap: wrap; gap: 30px; }
 .ini-cifras li { display: grid; font-size: 14px; }
-.ini-cifras b { font-size: 60px; font-weight: 800; line-height: 1; }
+.ini-cifras b { font-size: 60px; font-weight: 700; line-height: 1; }
 .ini-cifras [data-tono="dorado"] b { color: var(--vx-dorado); }
 .ini-cifras [data-tono="violeta"] b { color: #B79BFF; }
 .ini-cifras [data-tono="naranja"] b { color: #FF9A45; }
 .ini-fila { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; width: 100%; }
 .ini-grande { display: flex; align-items: center; gap: 10px; }
-.ini-grande b { font-size: 52px; font-weight: 800; line-height: 1; }
+.ini-grande b { font-size: 52px; font-weight: 700; line-height: 1; }
 .ini-grande span { max-width: 10ch; font-size: 13px; color: var(--vx-ink-soft); }
 .ini ol.ini-puntos { display: flex; flex-wrap: wrap; gap: 8px; }
 .ini-puntos li { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--vx-surface); color: var(--vx-muted); font-size: 13px; font-weight: 700; }
@@ -78,10 +77,9 @@
   .ini-dos { grid-template-columns: minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) { .ini-card, .ini-cta { transition: none; } }
-/* Más específico que los títulos serif de .vx. */
-.vx .ini :is(h1, h2) { font-family: "Bricolage Grotesque", var(--vx-sans); }
-.vx .ini h1.ini-hola { font-family: "Instrument Sans", var(--vx-sans); font-size: 18px; font-weight: 500; letter-spacing: 0; color: #fff; }
-.vx .ini h2.ini-titulo { color: #fff; font-weight: 800; font-size: clamp(40px, 5.4vw, 68px); line-height: .98; }
+/* Más específico que los títulos de .vx. */
+.vx .ini h1.ini-hola { font-family: var(--vx-sans); font-size: 18px; font-weight: 500; letter-spacing: 0; color: #fff; }
+.vx .ini h2.ini-titulo { color: #fff; font-weight: 500; font-size: clamp(40px, 5.4vw, 68px); line-height: 1.04; }
 .vx .ini h2.ini-titulo-largo { font-size: clamp(32px, 3.6vw, 46px); }
-.vx .ini .ini-panel h2 { font-size: 24px; font-weight: 700; color: var(--vx-ink); }
+.vx .ini .ini-panel h2 { font-size: 26px; font-weight: 500; color: var(--vx-ink); }
 .vx .ini .ini-oscuro h2 { color: #fff; }

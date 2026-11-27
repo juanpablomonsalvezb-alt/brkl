@@ -40,8 +40,6 @@ export function InicioPanoramico({ datos, nombre, linkSiguiente, aEvaluacion, re
 
   return (
     <div className="ini">
-      <link rel="stylesheet" precedence="default" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap" />
-
       <section className="ini-hero" aria-labelledby="ini-paso">
         {ov?.track && (
           <img
