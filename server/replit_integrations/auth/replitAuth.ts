@@ -6,90 +6,9 @@ import session from "express-session";
 import type { Express, RequestHandler } from "express";
 import memoize from "memoizee";
 import { authStorage } from "./storage";
-import { db } from "../../db";
-import { sql } from "drizzle-orm";
-
-// Ensure sessions table exists (runs once on startup)
-const initSessionsTable = async () => {
-  try {
-    await db.run(sql`
-      CREATE TABLE IF NOT EXISTS sessions (
-        sid TEXT PRIMARY KEY,
-        sess TEXT NOT NULL,
-        expire INTEGER NOT NULL
-      )
-    `);
-    await db.run(sql`CREATE INDEX IF NOT EXISTS IDX_session_expire ON sessions(expire)`);
-  } catch (error) {
-    // Table might already exist, ignore error
-  }
-};
-
-// Initialize sessions table
-initSessionsTable().catch(console.error);
-
-// Simple in-memory session store for development
-// For production, sessions are handled by Vercel's edge runtime
-class MemoryStore extends session.Store {
-  private sessions: Map<string, { sess: any; expire: number }> = new Map();
-
-  get(sid: string, callback: (err?: any, session?: any) => void) {
-    try {
-      const data = this.sessions.get(sid);
-      
-      if (!data || data.expire < Date.now()) {
-        this.sessions.delete(sid);
-        return callback();
-      }
-      
-      callback(null, data.sess);
-    } catch (error) {
-      callback(error);
-    }
-  }
-
-  set(sid: string, sess: any, callback?: (err?: any) => void) {
-    try {
-      const expire = Date.now() + (sess.cookie?.maxAge || 7 * 24 * 60 * 60 * 1000);
-      this.sessions.set(sid, { sess, expire });
-      callback?.();
-    } catch (error) {
-      callback?.(error);
-    }
-  }
-
-  destroy(sid: string, callback?: (err?: any) => void) {
-    try {
-      this.sessions.delete(sid);
-      callback?.();
-    } catch (error) {
-      callback?.(error);
-    }
-  }
-
-  touch(sid: string, sess: any, callback?: (err?: any) => void) {
-    try {
-      const expire = Date.now() + (sess.cookie?.maxAge || 7 * 24 * 60 * 60 * 1000);
-      const data = this.sessions.get(sid);
-      if (data) {
-        data.expire = expire;
-      }
-      callback?.();
-    } catch (error) {
-      callback?.(error);
-    }
-  }
-
-  // Clean up expired sessions
-  cleanup() {
-    const now = Date.now();
-    for (const [sid, data] of this.sessions.entries()) {
-      if (data.expire < now) {
-        this.sessions.delete(sid);
-      }
-    }
-  }
-}
+import type { Client } from "@libsql/client";
+import { client as dbClient } from "../../db";
+import { LibSQLSessionStore } from "../../libsqlSessionStore";
 
 const getOidcConfig = memoize(
   async () => {
@@ -101,18 +20,15 @@ const getOidcConfig = memoize(
   { maxAge: 3600 * 1000 }
 );
 
-export function getSession() {
+export function getSession(customClient?: Client, env: NodeJS.ProcessEnv = process.env) {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
-  const sessionStore = new MemoryStore();
-  
-  // Clean up expired sessions periodically
-  setInterval(() => {
-    sessionStore.cleanup();
-  }, 60 * 60 * 1000); // Every hour
-  
+  // Sesiones persistentes en LibSQL/Turso: sin estado en memoria ni temporizadores (serverless).
+  const sessionStore = new LibSQLSessionStore(customClient ?? dbClient, { ttlMs: sessionTtl });
+
   // Sin secreto propio no se firman sesiones: un valor por defecto público permitiría falsificarlas.
-  const secret = process.env.SESSION_SECRET?.trim();
+  const secret = env.SESSION_SECRET?.trim();
   if (!secret || secret.length < 32) throw new Error("SESSION_SECRET ausente o demasiado corto (mínimo 32 caracteres)");
+  const esHttps = env.NODE_ENV === "production" || env.VERCEL_ENV === "production" || env.VERCEL_ENV === "preview";
   return session({
     secret,
     store: sessionStore,
@@ -120,7 +36,8 @@ export function getSession() {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      secure: esHttps,
       maxAge: sessionTtl,
     },
   });
@@ -205,13 +122,25 @@ export async function setupAuth(app: Express) {
   });
 
   app.get("/api/logout", (req, res) => {
-    req.logout(() => {
+    const esHttps = process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production" || process.env.VERCEL_ENV === "preview";
+    const redirigir = () => {
+      res.clearCookie("connect.sid", { path: "/", httpOnly: true, sameSite: "lax", secure: esHttps });
       res.redirect(
         client.buildEndSessionUrl(config, {
           client_id: process.env.REPL_ID!,
           post_logout_redirect_uri: `${req.protocol}://${req.hostname}`,
         }).href
       );
+    };
+    req.logout(() => {
+      if (req.session && typeof req.session.destroy === "function") {
+        req.session.destroy((err) => {
+          if (err) console.error("[auth:replit] Error destruyendo sesión en store");
+          redirigir();
+        });
+      } else {
+        redirigir();
+      }
     });
   });
 }
@@ -219,9 +148,23 @@ export async function setupAuth(app: Express) {
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
   const user = req.user as any;
 
-  // Sin login configurado (setupAuth no corre) passport no agrega req.isAuthenticated:
-  // llamarlo lanzaba TypeError y toda ruta protegida respondía 500 en vez de 401.
-  if (typeof req.isAuthenticated !== "function" || !req.isAuthenticated() || !user?.expires_at) {
+  // Sin login configurado (ni Google OAuth, ni Preview firmado, ni Replit) req.isAuthenticated no es función.
+  if (typeof req.isAuthenticated !== "function" || !req.isAuthenticated() || !user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  // Acceso firmado exclusivo de Vercel Preview (validado por HMAC en server/previewLogin.ts).
+  if (user.preview === true && typeof user.id === "string" && user.id) {
+    return next();
+  }
+
+  // Sesión persistente de Google OAuth (hidratada desde LibSQLSessionStore en server/googleAuth.ts).
+  if (user.provider === "google" && typeof user.id === "string" && user.id && typeof user.expires_at === "number") {
+    const now = Math.floor(Date.now() / 1000);
+    return now <= user.expires_at ? next() : res.status(401).json({ message: "Unauthorized" });
+  }
+
+  if (!user.expires_at) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 

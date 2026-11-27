@@ -25,13 +25,25 @@ function enabledSecret(env: NodeJS.ProcessEnv): string | null {
   return env.VERCEL_ENV === "preview" && secret && secret.length >= 32 ? secret : null;
 }
 
-const firmar = (secret: string, user: string) => createHmac("sha256", secret).update(user).digest("hex");
+const PREVIEW_TTL_SEC = 28800; // 8 horas
 
-function cookieUser(secret: string, header: string | undefined): string | null {
+const firmar = (secret: string, payload: string) => createHmac("sha256", secret).update(payload).digest("hex");
+
+function cookieUser(secret: string, header: string | undefined, ahoraSeg = Math.floor(Date.now() / 1000)): string | null {
   const raw = (header ?? "").split(";").map((c) => c.trim()).find((c) => c.startsWith(`${COOKIE}=`));
   if (!raw) return null;
-  const [user, sig] = decodeURIComponent(raw.slice(COOKIE.length + 1)).split(".");
-  return user && sig && CUENTA.test(user) && igual(sig, firmar(secret, user)) ? user : null;
+  let decoded: string;
+  try {
+    decoded = decodeURIComponent(raw.slice(COOKIE.length + 1));
+  } catch {
+    return null;
+  }
+  const partes = decoded.split(".");
+  if (partes.length !== 3) return null;
+  const [user, expStr, sig] = partes;
+  const exp = Number(expStr);
+  if (!user || !sig || !Number.isFinite(exp) || exp <= ahoraSeg) return null;
+  return CUENTA.test(user) && igual(sig, firmar(secret, `${user}.${expStr}`)) ? user : null;
 }
 
 export function previewTestLogin(env: NodeJS.ProcessEnv): RequestHandler | null {
@@ -42,7 +54,7 @@ export function previewTestLogin(env: NodeJS.ProcessEnv): RequestHandler | null 
     const viaHeader = igual(String(req.headers["x-preview-secret"] ?? ""), secret) && CUENTA.test(user) ? user : null;
     const id = viaHeader ?? cookieUser(secret, req.headers.cookie);
     if (id) {
-      req.user = { id };
+      req.user = { id, preview: true };
       req.isAuthenticated = () => true;
     }
     next();
@@ -70,7 +82,9 @@ button:hover,button:focus-visible{border-color:#237b72;outline:2px solid #237b72
   app.post("/api/preview/entrar", (req, res) => {
     const cuenta = String(req.body?.cuenta ?? "");
     if (!CUENTAS_FICTICIAS.some(([id]) => id === cuenta)) return res.status(400).send("Cuenta no válida");
-    res.setHeader("Set-Cookie", `${COOKIE}=${encodeURIComponent(`${cuenta}.${firmar(secret, cuenta)}`)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=28800`);
+    const exp = String(Math.floor(Date.now() / 1000) + PREVIEW_TTL_SEC);
+    const payload = `${cuenta}.${exp}`;
+    res.setHeader("Set-Cookie", `${COOKIE}=${encodeURIComponent(`${payload}.${firmar(secret, payload)}`)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${PREVIEW_TTL_SEC}`);
     res.redirect(303, cuenta === "ficticio-admin" ? "/barkley-admin" : "/vortice");
   });
   app.get("/api/preview/salir", (_req, res) => {

@@ -5,6 +5,7 @@ import { and, eq, gte, isNull } from "drizzle-orm";
 import { storage } from "./storage";
 import { previewTestLogin, registerPreviewLoginPages } from "./previewLogin";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
+import { setupGoogleAuth } from "./googleAuth";
 import {
   insertLevelSchema, insertSubjectSchema, insertLevelSubjectSchema,
   insertLearningObjectiveSchema, insertWeeklyResourceSchema, updateWeeklyResourceSchema, insertStudentProgressSchema,
@@ -403,14 +404,14 @@ export async function registerRoutes(
     }
   });
 
-  // Setup authentication (BEFORE registering other routes)
-  // Only enable auth if OAuth credentials are configured
-  if (process.env.REPLIT_DEPLOYMENT || (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)) {
-    try {
-      await setupAuth(app);
-    } catch (error) {
-      console.warn("Authentication setup failed, continuing without auth:", error);
-    }
+  // Setup authentication (BEFORE registering other routes).
+  // Fail-fast: si se declararon credenciales OAuth/OIDC, un fallo de inicialización debe abortar
+  // el arranque en lugar de dejar la aplicación corriendo silenciosamente sin autenticación.
+  app.set("trust proxy", 1);
+  if (process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_SECRET) {
+    await setupGoogleAuth(app);
+  } else if (process.env.REPLIT_DEPLOYMENT) {
+    await setupAuth(app);
   } else {
     console.log("⚠️  Running in development mode without authentication");
   }
