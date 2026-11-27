@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { BARRA_ESTUDIANTE, NAV_ESTUDIANTE, NAV_FAMILIA } from "../client/src/components/vortice/navegacion";
 
 const app = readFileSync("client/src/App.tsx", "utf8");
@@ -7,6 +7,30 @@ const rutas = [...app.matchAll(/<Route\s+path="([^"]+)"/g)].map(([, path]) => pa
 const estudiante = readFileSync("client/src/pages/vortice/VorticeInicio.tsx", "utf8");
 const brujula = readFileSync("client/src/pages/vortice/BrujulaPanel.tsx", "utf8");
 const familia = readFileSync("client/src/pages/vortice/FamiliaVista.tsx", "utf8");
+
+for (const [ruta, pagina] of [
+  ["/vortice/semana", "client/src/pages/vortice/VorticeSemana.tsx"],
+  ["/vortice/portafolio", "client/src/pages/vortice/VorticePortafolio.tsx"],
+  ["/vortice/apoyo", "client/src/pages/vortice/VorticeApoyo.tsx"],
+] as const) {
+  assert.ok(rutas.includes(ruta), `no existe <Route path="${ruta}">`);
+  assert.ok(existsSync(pagina), `no existe la página ${pagina}`);
+}
+
+assert.deepEqual(
+  NAV_ESTUDIANTE.map(({ id, href }) => [id, href]),
+  [
+    ["inicio", "/vortice"],
+    ["aula", "/vortice/aula"],
+    ["saber", "/vortice/conocimientos"],
+    ["semana", "/vortice/semana"],
+    ["ano", "/vortice/mi-ano"],
+    ["portafolio", "/vortice/portafolio"],
+    ["apoyo", "/vortice/apoyo"],
+  ],
+  "NAV_ESTUDIANTE debe conservar los destinos y el orden definidos",
+);
+assert.deepEqual(BARRA_ESTUDIANTE, ["inicio", "aula", "saber", "semana"]);
 
 for (const item of [...NAV_ESTUDIANTE, ...NAV_FAMILIA]) {
   const [ruta, ancla] = item.href.split("#");

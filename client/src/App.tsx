@@ -67,6 +67,9 @@ export function preloadRoute(pathname: string): Promise<void> {
 const NotFound = lazy(() => import("@/pages/not-found"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const VorticeInicio = lazy(() => import("@/pages/vortice/VorticeInicio"));
+const VorticeSemana = lazy(() => import("@/pages/vortice/VorticeSemana"));
+const VorticePortafolio = lazy(() => import("@/pages/vortice/VorticePortafolio"));
+const VorticeApoyo = lazy(() => import("@/pages/vortice/VorticeApoyo"));
 const VorticeAula = lazy(() => import("@/pages/vortice/VorticeAula"));
 const VorticeMapa = lazy(() => import("@/pages/vortice/VorticeMapa"));
 const VorticeMiAno = lazy(() => import("@/pages/vortice/VorticeMiAno"));
@@ -136,6 +139,9 @@ function Router() {
       <Route path="/electivos" component={Electivos} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/vortice" component={VorticeInicio} />
+      <Route path="/vortice/semana" component={VorticeSemana} />
+      <Route path="/vortice/portafolio" component={VorticePortafolio} />
+      <Route path="/vortice/apoyo" component={VorticeApoyo} />
       <Route path="/vortice/aula" component={VorticeAula} />
       <Route path="/vortice/aula/:oaId" component={VorticeAula} />
       <Route path="/vortice/conocimientos" component={VorticeMapa} />

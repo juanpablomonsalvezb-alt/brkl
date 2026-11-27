@@ -3,11 +3,10 @@ export const NAV_ESTUDIANTE: ItemNav[] = [
   { id: "inicio", texto: "Inicio", href: "/vortice" },
   { id: "aula", texto: "Aula", href: "/vortice/aula" },
   { id: "saber", texto: "Lo que sé", href: "/vortice/conocimientos" },
-  { id: "semana", texto: "Mi semana", href: "/vortice#brujula" },
+  { id: "semana", texto: "Mi semana", href: "/vortice/semana" },
   { id: "ano", texto: "Mi año", href: "/vortice/mi-ano" },
-  { id: "portafolio", texto: "Portafolio", href: "/vortice#portafolio" },
-  { id: "tutor-virtual", texto: "Tutor virtual", href: "/academic-copilot" },
-  { id: "together", texto: "Together", href: "/together" },
+  { id: "portafolio", texto: "Portafolio", href: "/vortice/portafolio" },
+  { id: "apoyo", texto: "Apoyo", href: "/vortice/apoyo" },
 ];
 export const BARRA_ESTUDIANTE = ["inicio", "aula", "saber", "semana"];
 export const NAV_FAMILIA: ItemNav[] = [

@@ -10,7 +10,6 @@ import {
   MessageCircle,
   MoreHorizontal,
   Target,
-  Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Link } from "wouter";
@@ -41,8 +40,7 @@ const ICONOS_NAV: Record<string, LucideIcon> = {
   semana: CalendarDays,
   ano: CalendarRange,
   portafolio: BriefcaseBusiness,
-  "tutor-virtual": MessageCircle,
-  together: Users,
+  apoyo: MessageCircle,
   resumen: Compass,
   asignaturas: BookOpen,
   evaluaciones: CalendarDays,
