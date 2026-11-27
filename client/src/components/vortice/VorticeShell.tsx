@@ -30,6 +30,8 @@ interface VorticeShellProps {
   tramo?: string | null;
   salirHref?: string;
   claseRaiz?: string;
+  /** Menú superior flotante en vez de barra lateral (Inicio del estudiante). */
+  flotante?: boolean;
   children: ReactNode;
 }
 
@@ -78,6 +80,7 @@ export function VorticeShell({
   tramo,
   salirHref,
   claseRaiz,
+  flotante,
   children,
 }: VorticeShellProps) {
   const [masAbierto, setMasAbierto] = useState(false);
@@ -94,8 +97,17 @@ export function VorticeShell({
   const visibleEnBarra = new Set(idsBarra);
 
   return (
-    <div className={raiz} data-tramo={tramo ?? undefined}>
+    <div className={flotante ? `${raiz} vx-flotante` : raiz} data-tramo={tramo ?? undefined}>
       <a className="vx-saltar" href="#contenido">Saltar al contenido</a>
+      {flotante && (
+        <header className="vx-flota">
+          <Link className="vx-flota-marca" href={hrefMarca}>Barkley</Link>
+          <nav className="vx-flota-nav" aria-label="Secciones">
+            {items.map((item) => <EnlaceNav key={item.id} item={item} activo={item.id === activo} />)}
+          </nav>
+          <button type="button" className="vx-flota-yo" aria-haspopup="dialog" aria-label={`Mi cuenta y preferencias${nombre ? `, ${nombre}` : ""}`} onClick={() => setMasAbierto(true)}>{inicial}</button>
+        </header>
+      )}
       <aside className="vx-side" aria-label="Menú principal">
         <Link className="vx-brand" href={hrefMarca}>
           BARKLEY<span>{esEstudiante ? "INSTITUTO" : "FAMILIA"}</span>
