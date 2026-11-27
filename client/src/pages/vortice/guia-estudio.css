@@ -2,9 +2,9 @@
 
 .vx-guia-wrap {
   width: 100%;
-  max-width: 1320px;
+  max-width: 1480px;
   margin: 0 auto;
-  padding: 24px clamp(16px, 3vw, 40px) 64px;
+  padding: 24px clamp(16px, 2.5vw, 36px) 64px;
   color: var(--vx-ink);
   font-family: var(--vx-sans);
 }
@@ -57,11 +57,11 @@
   color: #ffffff;
 }
 
-/* Layout principal: índice lateral sticky + columna de lectura óptima */
+/* Layout principal: índice lateral sticky + columna de lectura a ancho completo del contenedor */
 .vx-guia-layout {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  gap: 32px;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 28px;
   align-items: start;
 }
 
@@ -122,12 +122,12 @@
 
 /* Documento de lectura prolongada */
 .vx-guia-doc {
-  max-width: 72ch;
   width: 100%;
+  max-width: none;
   background: var(--vx-card);
   border: 1px solid var(--vx-line);
   border-radius: 20px;
-  padding: clamp(24px, 4vw, 48px);
+  padding: clamp(24px, 3.5vw, 48px);
   box-shadow: var(--vx-shadow-sm);
   display: grid;
   gap: 36px;
