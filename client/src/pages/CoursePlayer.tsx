@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRoute, Link } from "wouter";
+import { useRoute, useLocation, Link } from "wouter";
 import {
   ArrowLeft,
   Brain,
@@ -37,6 +37,8 @@ import { TextbookViewer } from "@/components/TextbookViewer";
 import { EvaluationQuiz } from "@/components/EvaluationQuiz";
 import { GeminiCopilotButton } from "@/components/GeminiCopilotButton";
 import { etiquetaEvaluacion, type EvaluationFunction } from "@shared/clasificacionEvaluacion";
+import type { LeccionUniversalPiloto } from "@shared/aulaUniversal";
+import GuiaEstudioModulo from "@/components/vortice/GuiaEstudioModulo";
 import "./vortice/curso.css";
 import {
   AreaChart, Area,
@@ -47,9 +49,24 @@ import {
 
 export default function CoursePlayer() {
   const [, params] = useRoute("/course/:id");
+  const [, navigate] = useLocation();
   const courseId = params?.id || "";
   const { user, isLoading, isAuthenticated } = useAuth();
   const { toast } = useToast();
+  const [verGuiaModulo, setVerGuiaModulo] = useState(false);
+  const esMatematica = courseId.toLowerCase().includes("matematica");
+
+  const guiaPilotoQuery = useQuery<{ lecciones: LeccionUniversalPiloto[] }>({
+    queryKey: ["/api/vortice/aula/piloto"],
+    queryFn: async () => {
+      const res = await fetch("/api/vortice/aula/piloto", { credentials: "include" });
+      if (!res.ok) return { lecciones: [] };
+      return res.json();
+    },
+    enabled: Boolean(isAuthenticated && esMatematica),
+    retry: false,
+  });
+  const guiaLecciones = guiaPilotoQuery.data?.lecciones ?? [];
 
   const parts = courseId.split("-");
   const levelCode = parts[0];
@@ -513,6 +530,37 @@ export default function CoursePlayer() {
     }
   };
 
+  if (verGuiaModulo && guiaLecciones.length > 0) {
+    return (
+      <div className="vx-course min-h-screen bg-(--vx-bg) flex flex-col font-sans text-foreground">
+        <header className="no-print h-16 bg-primary text-primary-foreground flex items-center justify-between px-8 shrink-0 border-b border-primary/20 sticky top-0 z-50">
+          <div className="flex items-center gap-6">
+            <button
+              type="button"
+              onClick={() => setVerGuiaModulo(false)}
+              className="flex items-center gap-2 text-xs font-semibold min-h-11 text-primary-foreground/80 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" /> Volver al Módulo {currentModule}
+            </button>
+            <div className="h-4 w-px bg-white/20"></div>
+            <span className="text-sm font-medium text-primary-foreground/90">
+              {levelName} / {subjectLabel} · Guía de Estudio
+            </span>
+          </div>
+        </header>
+        <GuiaEstudioModulo
+          curso={levelName}
+          asignatura={subjectLabel}
+          modulo={guiaLecciones[0].modulo}
+          lecciones={guiaLecciones}
+          oaActualId={guiaLecciones[0].oaId}
+          onVolverAula={() => setVerGuiaModulo(false)}
+          onIrAlAula={(oaId) => navigate(`/vortice/aula/${oaId}`)}
+        />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="vx-course min-h-screen bg-background flex flex-col font-sans text-foreground">
@@ -772,6 +820,46 @@ export default function CoursePlayer() {
                   </div>
                 </Card>
 
+
+                {/* GUÍA DE ESTUDIO INTEGRAL DEL MÓDULO */}
+                <Card className="bg-(--vx-card) shadow-soft border border-(--vx-primary)/30 overflow-hidden rounded-2xl">
+                  <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 shrink-0 flex items-center justify-center rounded-xl bg-(--vx-primary) text-white shadow-sm">
+                        <BookOpen className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="text-lg font-bold text-(--vx-night)">Guía de Estudio del Módulo</h3>
+                          {guiaLecciones.length > 0 && currentModule === 1 && (
+                            <Badge className="bg-(--vx-primary-soft) text-(--vx-primary) border-0 rounded-full px-2.5 py-0.5 text-xs font-semibold">
+                              Disponible · Lectura y PDF
+                            </Badge>
+                          )}
+                        </div>
+                        {guiaLecciones.length > 0 && currentModule === 1 ? (
+                          <p className="text-sm text-muted-foreground">
+                            Material central escrito de lectura autónoma ({guiaLecciones[0].modulo}: {guiaLecciones.length} objetivos con desarrollo paso a paso, ejemplos, errores frecuentes, síntesis, autoevaluación e impresión en PDF).
+                          </p>
+                        ) : (
+                          <p className="text-sm text-muted-foreground">
+                            La guía escrita de este módulo aún está en preparación. Puedes consultar la guía piloto completa en Matemática · Módulo 1.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    {guiaLecciones.length > 0 && currentModule === 1 && (
+                      <Button
+                        type="button"
+                        onClick={() => setVerGuiaModulo(true)}
+                        className="shrink-0 bg-(--vx-primary) hover:bg-(--vx-night) text-white rounded-xl px-5"
+                      >
+                        <FileText className="w-4 h-4 mr-2" />
+                        Leer Guía de estudio
+                      </Button>
+                    )}
+                  </div>
+                </Card>
 
                 {/* 4 RECURSOS DIDÁCTICOS */}
                 <div>
