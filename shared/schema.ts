@@ -113,6 +113,8 @@ export const levelSubjects = sqliteTable("level_subjects", {
   totalOAs: integer("total_oas").default(0),
   textbookPdfUrl: text("textbook_pdf_url"),
   textbookTitle: text("textbook_title"),
+  // M-R06 (D3): bandera de entrega gradual por asignatura (`aula_universal` | `legacy`).
+  deliveryMode: text("delivery_mode", { enum: ["legacy", "aula_universal"] }).default("legacy").notNull(),
 });
 
 // Learning Objectives (OAs - Objetivos de Aprendizaje) / Módulos
@@ -1197,3 +1199,18 @@ export const lessonStudyProgress = sqliteTable("lesson_study_progress", {
 }, (t) => [uniqueIndex("lesson_study_progress_user_oa_uidx").on(t.userId, t.oaId)]);
 
 export type LessonStudyProgressRow = typeof lessonStudyProgress.$inferSelect;
+
+// M-R06 (D3): catálogo persistido en base de datos para lecciones de Aula Universal.
+export const universalLessons = sqliteTable("universal_lessons", {
+  id: text("id").primaryKey(),
+  oaId: text("oa_id").notNull().unique(),
+  levelSubjectId: text("level_subject_id").notNull(),
+  learningObjectiveId: text("learning_objective_id"),
+  knowledgeItemId: text("knowledge_item_id"),
+  version: integer("version").default(1).notNull(),
+  sortOrder: integer("sort_order").default(0).notNull(),
+  payloadJson: text("payload_json").notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow().notNull(),
+});
+
+export type UniversalLessonRow = typeof universalLessons.$inferSelect;

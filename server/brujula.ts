@@ -274,26 +274,64 @@ export async function saveBrujulaBlocks(
   for (const b of bloques) {
     if (seenIds.has(b.id)) return { ok: false, status: 400, reason: "Bloques con id repetido" };
     seenIds.add(b.id);
-    if (b.fecha < weekStart || b.fecha > weekEnd) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(b.fecha) || b.fecha < weekStart || b.fecha > weekEnd) {
       return { ok: false, status: 400, reason: "La fecha del bloque debe corresponder a la semana actual" };
     }
     uniqueObjectives.add(b.objectiveId);
   }
 
+  const oaMetaPorId = new Map<string, {
+    levelSubjectId: string;
+    subjectName: string;
+    objectiveCode: string;
+    objectiveTitle: string;
+  }>();
+
   for (const objectiveId of Array.from(uniqueObjectives)) {
     const [oa] = await db.select({
       levelSubjectId: learningObjectives.levelSubjectId,
       weekNumber: learningObjectives.weekNumber,
+      code: learningObjectives.code,
+      title: learningObjectives.title,
+      subjectName: subjects.name,
     })
       .from(learningObjectives)
+      .innerJoin(levelSubjects, eq(learningObjectives.levelSubjectId, levelSubjects.id))
+      .innerJoin(subjects, eq(levelSubjects.subjectId, subjects.id))
       .where(eq(learningObjectives.id, objectiveId));
     if (!oa) return { ok: false, status: 404, reason: "Objetivo no encontrado" };
     const config = await resolveCalendarConfigForLevelSubject(db, oa.levelSubjectId, now);
     const access = await checkModuleAccess(db, userId, oa.levelSubjectId, oa.weekNumber, now, config);
     if (!access.ok) return { ok: false, status: access.status, reason: access.reason };
+    oaMetaPorId.set(objectiveId, {
+      levelSubjectId: oa.levelSubjectId,
+      subjectName: oa.subjectName,
+      objectiveCode: oa.code,
+      objectiveTitle: oa.title,
+    });
   }
 
-  const blocksJson = JSON.stringify(bloques);
+  // Sanitizar metadatos desde la BD y calcular diaSemana en el servidor (nunca confiar en strings del cliente).
+  const bloquesSanitizados: BloqueEstudio[] = bloques.map((b) => {
+    const meta = oaMetaPorId.get(b.objectiveId)!;
+    const utcDay = new Date(`${b.fecha}T12:00:00Z`).getUTCDay();
+    const diaSemana = utcDay === 0 ? 7 : utcDay;
+    return {
+      id: b.id,
+      fecha: b.fecha,
+      diaSemana,
+      franja: b.franja,
+      duracionMin: b.duracionMin,
+      objectiveId: b.objectiveId,
+      levelSubjectId: meta.levelSubjectId,
+      subjectName: meta.subjectName,
+      objectiveCode: meta.objectiveCode,
+      objectiveTitle: meta.objectiveTitle,
+      completado: Boolean(b.completado),
+    };
+  });
+
+  const blocksJson = JSON.stringify(bloquesSanitizados);
   await db
     .insert(brujulaStudyBlocks)
     .values({ userId, weekStart, blocksJson, updatedAt: now })
@@ -304,7 +342,7 @@ export async function saveBrujulaBlocks(
 
   return {
     ok: true,
-    data: { weekStart, preferencias, saved: true, bloques },
+    data: { weekStart, preferencias, saved: true, bloques: bloquesSanitizados },
   };
 }
 

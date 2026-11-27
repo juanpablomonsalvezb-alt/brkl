@@ -8,6 +8,7 @@ import { publicable } from "./publicable";
 export { moduloSiguienteAbierto, publicable };
 
 export interface ResumenOaEvaluacionPublicable {
+  itemId?: string;
   oaId: string;
   correctas: number;
   incorrectas: number;
@@ -83,12 +84,21 @@ export function calcularRefuerzoDesdeEvaluacionPublicada(params: {
     return { refuerzos: [], dominadosPorComprobarOaIds: [] };
   }
 
+  const incorrectasPorItemId = new Map<string, number>();
   const incorrectasPorOa = new Map<string, number>();
   for (const r of params.resultadosPublicadosPorOa) {
     if (r.incorrectas > 0) {
+      if (r.itemId) {
+        incorrectasPorItemId.set(r.itemId, (incorrectasPorItemId.get(r.itemId) ?? 0) + r.incorrectas);
+      }
       incorrectasPorOa.set(r.oaId, (incorrectasPorOa.get(r.oaId) ?? 0) + r.incorrectas);
     }
   }
+
+  const nodosItemIds = new Set(params.nodos.map((n) => n.itemId));
+  const usarMatchPorItemId = params.resultadosPublicadosPorOa.some(
+    (r) => Boolean(r.itemId && nodosItemIds.has(r.itemId)),
+  );
 
   const nodosOrdenados = [...params.nodos].sort((a, b) =>
     a.code < b.code ? -1 : a.code > b.code ? 1 : 0,
@@ -97,7 +107,9 @@ export function calcularRefuerzoDesdeEvaluacionPublicada(params: {
   const dominadosPorComprobarOaIds: string[] = [];
 
   for (const nodo of nodosOrdenados) {
-    const incorrectas = incorrectasPorOa.get(nodo.oaId) ?? 0;
+    const incorrectas = usarMatchPorItemId
+      ? (incorrectasPorItemId.get(nodo.itemId) ?? 0)
+      : (incorrectasPorOa.get(nodo.oaId) ?? 0);
     if (incorrectas <= 0) continue;
 
     if (nodo.estado === "dominado") {

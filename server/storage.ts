@@ -169,6 +169,7 @@ export class DatabaseStorage implements IStorage {
         totalOAs: levelSubjects.totalOAs,
         textbookPdfUrl: levelSubjects.textbookPdfUrl,
         textbookTitle: levelSubjects.textbookTitle,
+        deliveryMode: levelSubjects.deliveryMode,
         level: levels,
         subject: subjects,
       })
@@ -184,6 +185,7 @@ export class DatabaseStorage implements IStorage {
       totalOAs: r.totalOAs,
       textbookPdfUrl: r.textbookPdfUrl,
       textbookTitle: r.textbookTitle,
+      deliveryMode: r.deliveryMode,
       level: r.level,
       subject: r.subject,
     }));
@@ -198,6 +200,7 @@ export class DatabaseStorage implements IStorage {
         totalOAs: levelSubjects.totalOAs,
         textbookPdfUrl: levelSubjects.textbookPdfUrl,
         textbookTitle: levelSubjects.textbookTitle,
+        deliveryMode: levelSubjects.deliveryMode,
         subject: subjects,
       })
       .from(levelSubjects)
@@ -211,6 +214,7 @@ export class DatabaseStorage implements IStorage {
       totalOAs: r.totalOAs,
       textbookPdfUrl: r.textbookPdfUrl,
       textbookTitle: r.textbookTitle,
+      deliveryMode: r.deliveryMode,
       subject: r.subject,
     }));
   }

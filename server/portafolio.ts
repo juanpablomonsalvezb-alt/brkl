@@ -12,7 +12,7 @@ import { z } from "zod";
 import * as schema from "@shared/schema";
 import {
   portfolioEvidences, portfolioEvidenceVersions, learningObjectives, evaluationProgress,
-  moduleEvaluations, userProfiles,
+  moduleEvaluations, userProfiles, guardianLinks,
 } from "@shared/schema";
 import { hasActiveEnrollment } from "./vortice";
 
@@ -168,22 +168,58 @@ export async function deleteEvidence(db: Db, userId: string, id: string): Promis
   return { ok: true, value: { id } };
 }
 
-// Tutor/admin: evidencias compartidas de un estudiante. Lo privado nunca sale.
-export async function listStudentEvidences(db: Db, viewerId: string, studentId: string): Promise<PortafolioResult<unknown[]>> {
-  const role = await viewerRole(db, viewerId);
-  if (role !== "tutor" && role !== "admin") return fail(403, "Solo tutores y administración");
-  const rows = await selectEvidences(db)
-    .where(and(eq(portfolioEvidences.userId, studentId), inArray(portfolioEvidences.visibility, [...SHARED])))
-    .orderBy(desc(portfolioEvidences.createdAt));
-  return { ok: true, value: rows };
+async function hasActiveGuardianLink(db: Db, guardianId: string, studentId: string): Promise<boolean> {
+  const [link] = await db
+    .select({ id: guardianLinks.id })
+    .from(guardianLinks)
+    .where(
+      and(
+        eq(guardianLinks.guardianUserId, guardianId),
+        eq(guardianLinks.studentUserId, studentId),
+        eq(guardianLinks.status, "activo"),
+      ),
+    );
+  return Boolean(link);
 }
 
-// Historial de mejora: el dueño siempre; tutor/admin si la evidencia está compartida. Si no, 404 (no revela existencia).
+// Tutor/admin leen visibilidad "tutor" y "familia"; apoderado con vínculo activo lee solo "familia".
+export async function listStudentEvidences(db: Db, viewerId: string, studentId: string): Promise<PortafolioResult<unknown[]>> {
+  const role = await viewerRole(db, viewerId);
+  if (role === "admin" || role === "tutor") {
+    const rows = await selectEvidences(db)
+      .where(and(eq(portfolioEvidences.userId, studentId), inArray(portfolioEvidences.visibility, [...SHARED])))
+      .orderBy(desc(portfolioEvidences.createdAt));
+    return { ok: true, value: rows };
+  }
+  if (role === "guardian") {
+    if (!(await hasActiveGuardianLink(db, viewerId, studentId))) {
+      return fail(403, "Sin vínculo activo con este estudiante");
+    }
+    const rows = await selectEvidences(db)
+      .where(and(eq(portfolioEvidences.userId, studentId), eq(portfolioEvidences.visibility, "familia")))
+      .orderBy(desc(portfolioEvidences.createdAt));
+    return { ok: true, value: rows };
+  }
+  return fail(403, "Solo tutores, apoderados vinculados y administración");
+}
+
+// Historial de mejora: el dueño siempre; tutor/admin si compartida; apoderado vinculado si visibilidad "familia".
 export async function listEvidenceVersions(db: Db, viewerId: string, id: string): Promise<PortafolioResult<unknown[]>> {
   const [ev] = await db.select({ userId: portfolioEvidences.userId, visibility: portfolioEvidences.visibility })
     .from(portfolioEvidences).where(eq(portfolioEvidences.id, id));
-  const allowed = ev && (ev.userId === viewerId
-    || (ev.visibility !== "privada" && ["tutor", "admin"].includes(await viewerRole(db, viewerId))));
+  let allowed = false;
+  if (ev) {
+    if (ev.userId === viewerId) {
+      allowed = true;
+    } else if (ev.visibility !== "privada") {
+      const role = await viewerRole(db, viewerId);
+      if (role === "admin" || role === "tutor") {
+        allowed = true;
+      } else if (role === "guardian" && ev.visibility === "familia") {
+        allowed = await hasActiveGuardianLink(db, viewerId, ev.userId);
+      }
+    }
+  }
   if (!allowed) return fail(404, "Evidencia no encontrada");
   const rows = await db.select().from(portfolioEvidenceVersions)
     .where(eq(portfolioEvidenceVersions.evidenceId, id)).orderBy(portfolioEvidenceVersions.version);

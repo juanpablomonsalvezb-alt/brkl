@@ -121,6 +121,7 @@ try {
     "0003_integridad_catalogo.sql",
     "0004_evidencia_practica.sql",
     "0005_evaluacion.sql",
+    "0006_reapertura_administrativa.sql",
   ]);
   assert.equal((await verificarDeriva(cMain)).ok, true);
   assert.deepEqual((await migrar(cMain, "migrations/vortice")).aplicadas, []);

@@ -8,7 +8,8 @@ import { relojMotor } from "./reloj";
 import { estadoExtra, ventanaExtra } from "../shared/ventanas";
 import {
   abrirProceso, iniciarIntento, responder, enviarIntento, cerrarProceso,
-  reabrirPorAdministrador, verificarEntregaAutomatica, preguntasDelIntento, ErrorEvaluacion, type CodigoEvaluacion,
+  reabrirPorAdministrador, listarProcesosEvaluacionAdmin, verificarEntregaAutomatica, preguntasDelIntento,
+  ErrorEvaluacion, type CodigoEvaluacion,
 } from "./evaluacion";
 
 export interface DepsRutasEvaluacion {
@@ -36,6 +37,8 @@ const ESTADO: Record<CodigoEvaluacion, number> = {
   entrega_automatica: 409,
   cierre_no_permitido: 409,
   respuesta_existente: 409,
+  reapertura_ya_existe: 409,
+  motivo_invalido: 400,
   extra_plazo_vencido: 410,
 };
 
@@ -99,7 +102,7 @@ export function registrarRutasEvaluacion(app: Express, deps: DepsRutasEvaluacion
     if (!ev.rows.length) throw new ErrorEvaluacion("proceso_no_encontrado", "evaluación no encontrada");
     const titulo = String((ev.rows[0] as any).title);
     const pr = await c.execute({
-      sql: "SELECT p.id AS proceso_id, p.status AS estado, i.id AS instancia_id, i.student_profile AS perfil, i.duration_minutes AS duracion, i.passing_score AS umbral FROM evaluation_processes p JOIN evaluation_instances i ON i.process_id = p.id WHERE p.student_id = ? AND p.evaluation_id = ? ORDER BY i.id DESC LIMIT 1",
+      sql: "SELECT p.id AS proceso_id, p.status AS estado, i.id AS instancia_id, i.phase AS fase, i.student_profile AS perfil, i.duration_minutes AS duracion, i.passing_score AS umbral FROM evaluation_processes p JOIN evaluation_instances i ON i.process_id = p.id WHERE p.student_id = ? AND p.evaluation_id = ? ORDER BY i.rowid DESC LIMIT 1",
       args: [uid, evaluacionId],
     });
     if (!pr.rows.length) return { ahora, titulo, proceso: null };
@@ -128,7 +131,7 @@ export function registrarRutasEvaluacion(app: Express, deps: DepsRutasEvaluacion
     if (!evaluacionId) throw new ErrorEvaluacion("proceso_no_encontrado", "evaluación requerida");
     await exigirAcceso(uid, evaluacionId);
     const existente = await c.execute({
-      sql: "SELECT p.id AS proceso_id, i.id AS instancia_id, i.student_profile AS perfil, i.duration_minutes AS duracion, i.passing_score AS umbral, p.status AS estado FROM evaluation_processes p JOIN evaluation_instances i ON i.process_id = p.id WHERE p.student_id = ? AND p.evaluation_id = ? ORDER BY i.id DESC LIMIT 1",
+      sql: "SELECT p.id AS proceso_id, i.id AS instancia_id, i.student_profile AS perfil, i.duration_minutes AS duracion, i.passing_score AS umbral, p.status AS estado FROM evaluation_processes p JOIN evaluation_instances i ON i.process_id = p.id WHERE p.student_id = ? AND p.evaluation_id = ? ORDER BY i.rowid DESC LIMIT 1",
       args: [uid, evaluacionId],
     });
     if (existente.rows.length) {
@@ -195,10 +198,15 @@ export function registrarRutasEvaluacion(app: Express, deps: DepsRutasEvaluacion
     return abrirProceso(c, { estudianteId, evaluacionId, versionId: String((v.rows[0] as any).id), perfil });
   }));
 
+  app.get("/api/admin/vortice/evaluaciones/procesos", ruta(async (uid) => {
+    if (!(await deps.esAdmin(uid))) throw new ErrorHttp(403, "Forbidden: Admin access required");
+    return listarProcesosEvaluacionAdmin(c);
+  }));
+
   app.post("/api/admin/vortice/evaluaciones/procesos/:procesoId/reabrir", ruta(async (uid, req) => {
     if (!(await deps.esAdmin(uid))) throw new ErrorHttp(403, "Forbidden: Admin access required");
-    const estudianteId = texto(req.body?.estudianteId), motivo = texto(req.body?.motivo);
-    if (!estudianteId || !motivo) throw new ErrorEvaluacion("proceso_no_encontrado", "estudianteId y motivo son obligatorios");
-    return reabrirPorAdministrador(c, { procesoId: String(req.params.procesoId), estudianteId, administradorId: uid, motivo });
+    const estudianteId = texto(req.body?.estudianteId), motivo = texto(req.body?.motivo), versionId = texto(req.body?.versionId);
+    if (!estudianteId || !motivo) throw new ErrorEvaluacion("motivo_invalido", "estudianteId y motivo son obligatorios");
+    return reabrirPorAdministrador(c, { procesoId: String(req.params.procesoId), estudianteId, administradorId: uid, motivo, versionId });
   }));
 }

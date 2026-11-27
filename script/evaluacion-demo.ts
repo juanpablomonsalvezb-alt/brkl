@@ -11,10 +11,14 @@ import viteConfig from "../vite.config";
 import * as schema from "../shared/schema";
 import {
   diagnosticoRespuestasSchema,
-  evaluarDiagnosticoCero,
-  obtenerLeccionPorOa,
-  obtenerLeccionesPiloto,
+  practicaAulaRespuestaSchema,
 } from "../shared/aulaUniversal";
+import {
+  evaluarDiagnosticoCero,
+  evaluarEjercicioPractica,
+  obtenerLeccionPublicaPorOa,
+  obtenerLeccionesPilotoPublicas,
+} from "../server/aulaUniversalCatalogo";
 import {
   getProgresoLeccion,
   getProgresoLecciones,
@@ -108,13 +112,35 @@ registrarRutasEvaluacion(app, { client: cDemo, userId: cookie, esAdmin: async ()
 // Aula Universal UDL (Bloque A) usando el estudiante activo en cookie (por defecto est-reg).
 const demoStudentId = (r: express.Request) => cookie(r) ?? "est-reg";
 app.get("/api/vortice/aula/piloto", async (req, res) => {
-  res.json({ lecciones: obtenerLeccionesPiloto(), progreso: await getProgresoLecciones(demoDb, demoStudentId(req)) });
+  res.json({ lecciones: obtenerLeccionesPilotoPublicas(), progreso: await getProgresoLecciones(demoDb, demoStudentId(req)) });
 });
 app.get("/api/vortice/aula/lecciones/:oaId", async (req, res) => {
   const oaId = String(req.params.oaId);
-  const leccion = obtenerLeccionPorOa(oaId);
+  const leccion = obtenerLeccionPublicaPorOa(oaId);
   if (!leccion) return res.status(404).json({ message: "Lección no encontrada" });
   res.json({ leccion, progreso: await getProgresoLeccion(demoDb, demoStudentId(req), oaId) });
+});
+app.post("/api/vortice/aula/lecciones/:oaId/practica", async (req, res) => {
+  const parsed = practicaAulaRespuestaSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ message: "Práctica inválida" });
+  const oaId = String(req.params.oaId);
+  const evalRes = evaluarEjercicioPractica(oaId, parsed.data.preguntaId, parsed.data.opcionId);
+  if (!evalRes.ok) return res.status(evalRes.status).json({ message: evalRes.reason });
+  if (parsed.data.clientSubmissionId) {
+    try {
+      await registrarPracticaEnMotor(cDemo, {
+        estudianteId: demoStudentId(req),
+        oaId,
+        preguntaId: parsed.data.preguntaId,
+        opcionId: parsed.data.opcionId,
+        usoPista: parsed.data.usoPista,
+        clientSubmissionId: parsed.data.clientSubmissionId,
+      });
+    } catch {
+      // demo local
+    }
+  }
+  res.json({ correcta: evalRes.correcta, explicacion: evalRes.explicacion });
 });
 app.put("/api/vortice/aula/lecciones/:oaId/progreso", async (req, res) => {
   const r = await saveProgresoLeccion(demoDb, {

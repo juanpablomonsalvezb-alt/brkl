@@ -4,7 +4,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AlertCircle, ArrowLeft, CheckCircle2, ClipboardList, Loader2, Save, ShieldCheck, Users } from "lucide-react";
+import { AlertCircle, ArrowLeft, CheckCircle2, ClipboardList, Loader2, RotateCcw, Save, ShieldCheck, Users } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,36 @@ interface ClasificacionRow {
   etiqueta: string;
 }
 
+interface ProcesoAdminRow {
+  procesoId: string;
+  studentId: string;
+  studentName: string | null;
+  studentEmail: string | null;
+  evaluationId: string;
+  evaluationTitle: string;
+  status: string;
+  closeCause: string | null;
+  closedAt: number | null;
+  perfilVigente: EvaluationProfile;
+  duracionMinVigente: number;
+  intentosEnviados: number;
+  mejorScorePct: number | null;
+  reapertura: {
+    id: string;
+    adminUserId: string;
+    adminName: string | null;
+    reason: string;
+    sourceAttemptId: string | null;
+    newInstanceId: string;
+    reopenedAt: number;
+    resultadoIntento: {
+      status: string;
+      scorePct: number | null;
+      passed: boolean | null;
+    } | null;
+  } | null;
+}
+
 async function fetchAdminJson<T>(url: string): Promise<T> {
   const res = await fetch(url, { credentials: "include" });
   if (res.status === 401 || res.status === 403) {
@@ -63,6 +93,7 @@ export default function EvaluacionesPerfilAdmin() {
 
   const [perfilesEditados, setPerfilesEditados] = useState<Record<string, EvaluationProfile>>({});
   const [funcionesEditadas, setFuncionesEditadas] = useState<Record<string, EvaluationFunction | "">>({});
+  const [motivosReapertura, setMotivosReapertura] = useState<Record<string, string>>({});
 
   const perfilesQuery = useQuery<PerfilRow[]>({
     queryKey: ["/api/admin/evaluation-profiles"],
@@ -74,6 +105,47 @@ export default function EvaluacionesPerfilAdmin() {
     queryKey: ["/api/admin/evaluations/classification"],
     queryFn: () => fetchAdminJson<ClasificacionRow[]>("/api/admin/evaluations/classification"),
     retry: false,
+  });
+
+  const procesosQuery = useQuery<ProcesoAdminRow[]>({
+    queryKey: ["/api/admin/vortice/evaluaciones/procesos"],
+    queryFn: () => fetchAdminJson<ProcesoAdminRow[]>("/api/admin/vortice/evaluaciones/procesos"),
+    retry: false,
+  });
+
+  const reabrirMutation = useMutation({
+    mutationFn: async ({
+      procesoId,
+      estudianteId,
+      motivo,
+    }: {
+      procesoId: string;
+      estudianteId: string;
+      motivo: string;
+    }) => {
+      const res = await fetch(`/api/admin/vortice/evaluaciones/procesos/${encodeURIComponent(procesoId)}/reabrir`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ estudianteId, motivo }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "No se pudo autorizar la reapertura");
+      }
+      return res.json();
+    },
+    onSuccess: (_data, vars) => {
+      setMotivosReapertura((prev) => ({ ...prev, [vars.procesoId]: "" }));
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/vortice/evaluaciones/procesos"] });
+      toast({
+        title: "Reapertura autorizada",
+        description: "Se habilitó un nuevo intento completo con registro de auditoría administrativa.",
+      });
+    },
+    onError: (err: Error) => {
+      toast({ title: "Error al reabrir", description: err.message, variant: "destructive" });
+    },
   });
 
   useEffect(() => {
@@ -262,6 +334,13 @@ export default function EvaluacionesPerfilAdmin() {
             >
               <ClipboardList className="w-4 h-4 mr-2" />
               Clasificación 0..4
+            </TabsTrigger>
+            <TabsTrigger
+              value="reaperturas"
+              className="rounded-full px-4 py-2 text-sm text-[#5E5D59] data-[state=active]:bg-white data-[state=active]:text-[#141413] data-[state=active]:shadow-sm"
+            >
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Reaperturas E2 (D2)
             </TabsTrigger>
           </TabsList>
 
@@ -489,6 +568,123 @@ export default function EvaluacionesPerfilAdmin() {
                               Guardar
                             </Button>
                           </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* PESTAÑA 3: REAPERTURAS ADMINISTRATIVAS E2 (D2 · M-R05) */}
+          <TabsContent value="reaperturas">
+            <Card className="vx-paper border-[#E6E2D8] shadow-none">
+              <CardHeader className="pb-4">
+                <CardTitle className="vx-serif font-medium text-xl">
+                  Reapertura administrativa de E2{" "}
+                  <code className="vx-mono text-xs font-normal px-2 py-0.5 rounded-md bg-[#F3F1EA] text-[#5E5D59] align-middle">
+                    evaluation_reopenings
+                  </code>
+                </CardTitle>
+                <CardDescription className="text-[#5E5D59]">
+                  Autoriza un único nuevo intento completo ante interrupción involuntaria justificada (60 min regular / 120 min neurodivergente), conservando intacto el historial previo.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {procesosQuery.isLoading ? (
+                  <div className="flex items-center gap-2 py-8 text-[#5E5D59]">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Cargando procesos de evaluación…
+                  </div>
+                ) : procesosQuery.isError ? (
+                  <p className="text-sm text-[#87867F] py-4">
+                    Las rutas de evaluación E2 no están activas en este entorno (<code className="vx-mono text-xs">VORTICE_EVALUACION_RUTAS=1</code>).
+                  </p>
+                ) : (procesosQuery.data ?? []).length === 0 ? (
+                  <p className="text-sm text-[#87867F] py-4">No existen procesos de evaluación E2 registrados todavía.</p>
+                ) : (
+                  <div className="divide-y divide-[#E6E2D8] rounded-2xl border border-[#E6E2D8] bg-white overflow-hidden">
+                    {(procesosQuery.data ?? []).map((p) => {
+                      const puedeReabrir = p.status !== "aprobado" && !p.reapertura;
+                      const motivo = motivosReapertura[p.procesoId] ?? "";
+                      return (
+                        <div key={p.procesoId} className="p-4 sm:p-5 space-y-3">
+                          <div className="flex flex-wrap items-center justify-between gap-3">
+                            <div className="space-y-1">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="font-medium text-[15px] text-[#141413]">
+                                  {p.studentName || p.studentEmail || p.studentId}
+                                </span>
+                                <Badge variant="outline" className="rounded-full border-[#E6E2D8] text-[#5E5D59]">
+                                  {p.evaluationTitle}
+                                </Badge>
+                                <Badge variant="secondary" className="rounded-full bg-[#F3F1EA] text-[#141413]">
+                                  {p.status}
+                                </Badge>
+                                <Badge variant="outline" className="rounded-full border-[#02316C]/30 text-[#02316C]">
+                                  {p.perfilVigente} · {p.duracionMinVigente} min
+                                </Badge>
+                              </div>
+                              <p className="text-xs text-[#5E5D59]">
+                                Proceso <code className="vx-mono">{p.procesoId}</code> · Intentos enviados: {p.intentosEnviados}
+                                {p.mejorScorePct != null ? ` · Mejor logro: ${p.mejorScorePct.toFixed(1)} %` : ""}
+                              </p>
+                            </div>
+                          </div>
+
+                          {p.reapertura ? (
+                            <div className="rounded-xl border border-[#02316C]/20 bg-[#EAF2FB]/60 p-3 text-xs text-[#141413] space-y-1">
+                              <p className="font-medium text-[#02316C]">
+                                Reapertura registrada · {new Date(p.reapertura.reopenedAt * 1000).toLocaleString("es-CL")}
+                              </p>
+                              <p>
+                                <strong>Responsable:</strong> {p.reapertura.adminName || p.reapertura.adminUserId}
+                              </p>
+                              <p>
+                                <strong>Motivo:</strong> {p.reapertura.reason}
+                              </p>
+                              <p>
+                                <strong>Nueva instancia:</strong> <code className="vx-mono">{p.reapertura.newInstanceId}</code>
+                                {p.reapertura.sourceAttemptId ? ` · Intento origen: ${p.reapertura.sourceAttemptId}` : ""}
+                              </p>
+                              {p.reapertura.resultadoIntento && (
+                                <p>
+                                  <strong>Resultado del intento reabierto:</strong> {p.reapertura.resultadoIntento.status}
+                                  {p.reapertura.resultadoIntento.scorePct != null
+                                    ? ` (${p.reapertura.resultadoIntento.scorePct.toFixed(1)} % · ${p.reapertura.resultadoIntento.passed ? "Aprobado" : "No aprobado"})`
+                                    : ""}
+                                </p>
+                              )}
+                            </div>
+                          ) : puedeReabrir ? (
+                            <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                              <Input
+                                placeholder="Motivo justificado de la interrupción involuntaria (mín. 10 caracteres)…"
+                                value={motivo}
+                                onChange={(e) =>
+                                  setMotivosReapertura((prev) => ({ ...prev, [p.procesoId]: e.target.value }))
+                                }
+                                className="flex-1 min-w-[260px] rounded-xl border-[#D5CFC2] bg-[#FAF9F5]/60"
+                              />
+                              <Button
+                                type="button"
+                                size="sm"
+                                className="h-10 rounded-full px-4 bg-[#02316C] hover:bg-[#012552] text-white"
+                                disabled={motivo.trim().length < 10 || reabrirMutation.isPending}
+                                onClick={() =>
+                                  reabrirMutation.mutate({
+                                    procesoId: p.procesoId,
+                                    estudianteId: p.studentId,
+                                    motivo: motivo.trim(),
+                                  })
+                                }
+                              >
+                                <RotateCcw className="w-4 h-4 mr-1.5" />
+                                Autorizar reapertura ({p.duracionMinVigente} min)
+                              </Button>
+                            </div>
+                          ) : null}
                         </div>
                       );
                     })}

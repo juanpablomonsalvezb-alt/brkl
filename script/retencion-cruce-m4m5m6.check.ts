@@ -221,8 +221,9 @@ try {
   });
   await sembrarPilotoPractica(cSim, { levelSubjectId: "ls-mat-5b" });
 
-  // Est A y Est B dominan exactamente igual OA7 en práctica.
-  for (const est of ["est-a", "est-b"]) {
+  // Est A, Est B y Est C dominan exactamente igual OA7 en práctica (D1: aciertos en 2 días calendario distintos: T-1 y T0).
+  simOffsetSeg = -DIA_SEG;
+  for (const est of ["est-a", "est-b", "est-c"]) {
     await registrarPracticaEnMotor(cSim, {
       estudianteId: est,
       oaId: "oa7",
@@ -231,6 +232,9 @@ try {
       usoPista: false,
       clientSubmissionId: `init-${est}-c1`,
     });
+  }
+  simOffsetSeg = 0;
+  for (const est of ["est-a", "est-b", "est-c"]) {
     await registrarPracticaEnMotor(cSim, {
       estudianteId: est,
       oaId: "oa7",
@@ -240,23 +244,6 @@ try {
       clientSubmissionId: `init-${est}-c2`,
     });
   }
-  // Est C también domina OA7 para garantizar igualdad base en NI2 antes de review_at.
-  await registrarPracticaEnMotor(cSim, {
-    estudianteId: "est-c",
-    oaId: "oa7",
-    preguntaId: "oa7-c1",
-    opcionId: "A",
-    usoPista: false,
-    clientSubmissionId: "init-est-c-c1",
-  });
-  await registrarPracticaEnMotor(cSim, {
-    estudianteId: "est-c",
-    oaId: "oa7",
-    preguntaId: "oa7-c2",
-    opcionId: "C",
-    usoPista: false,
-    clientSubmissionId: "init-est-c-c2",
-  });
 
   // ── 2a. M4 Retención sobre Est A con reloj simulado ──
   const agA0 = await cargarAgendaRetencion(cSim, { estudianteId: "est-a" });
@@ -273,8 +260,9 @@ try {
   assert.ok(agA3.pendientes[0].pregunta, "debe ofrecer pregunta de práctica");
   assert.equal("correcta" in (agA3.pendientes[0].pregunta as any), false);
   assert.equal("explicacion" in (agA3.pendientes[0].pregunta as any), false);
-  // Verifica que proviene del banco practica y evita oa7-c1 / oa7-c2 ya usados.
+  // Verifica que proviene del banco independiente de práctica y evita oa7-c1 / oa7-c2 ya usados (M-R04).
   assert.ok(!["oa7-c1", "oa7-c2"].includes(agA3.pendientes[0].pregunta!.preguntaId));
+  assert.ok(agA3.pendientes[0].pregunta!.preguntaId.includes("-ind-"), "Retención M4 debe priorizar variantes del banco independiente");
 
   const mapaRetVencida = await cargarMapaConocimiento(cSim, { estudianteId: "est-a" });
   assert.equal(mapaRetVencida.nodos.find((n) => n.oaId === "oa7")?.estadoVisual, "por_comprobar");
@@ -359,6 +347,8 @@ try {
       isActive: true,
     })),
   );
+  // D1 (M-R04): dominar OA7 en 2 días calendario distintos (día 39 y día 40) para que tEval quede en día 40.
+  simOffsetSeg = 39 * DIA_SEG;
   for (const est of ["est-ni1", "est-ni2", "est-ni3"]) {
     await registrarPracticaEnMotor(cSim, {
       estudianteId: est,
@@ -368,6 +358,9 @@ try {
       usoPista: false,
       clientSubmissionId: `ni-${est}-c1`,
     });
+  }
+  simOffsetSeg = 40 * DIA_SEG;
+  for (const est of ["est-ni1", "est-ni2", "est-ni3"]) {
     await registrarPracticaEnMotor(cSim, {
       estudianteId: est,
       oaId: "oa7",
@@ -531,10 +524,10 @@ try {
   };
   const fechaMod2 = new Date("2026-04-01T12:00:00Z");
 
-  // est-d tiene proceso en_curso: aunque domine los 5 OA en el mapa, módulo 2 sigue bloqueado (05 §1).
-  for (const oaId of ["oa7", "oa8", "oa10", "oa11", "oa13"]) {
+  // est-d tiene proceso en_curso: aunque domine los 5 OA en el mapa (en 2 días calendario distintos, D1), módulo 2 sigue bloqueado (05 §1).
+  const oasM6 = ["oa7", "oa8", "oa10", "oa11", "oa13"] as const;
+  for (const oaId of oasM6) {
     const qC1 = (await client.execute({ sql: "SELECT correct_option_id FROM question_versions WHERE id = ?", args: [`qv-prac-${oaId}-c1`] })).rows[0];
-    const qC2 = (await client.execute({ sql: "SELECT correct_option_id FROM question_versions WHERE id = ?", args: [`qv-prac-${oaId}-c2`] })).rows[0];
     await registrarPracticaEnMotor(cSim, {
       estudianteId: "est-d",
       oaId,
@@ -543,6 +536,10 @@ try {
       usoPista: false,
       clientSubmissionId: `dom-d-${oaId}-1`,
     });
+  }
+  simOffsetSeg += DIA_SEG;
+  for (const oaId of oasM6) {
+    const qC2 = (await client.execute({ sql: "SELECT correct_option_id FROM question_versions WHERE id = ?", args: [`qv-prac-${oaId}-c2`] })).rows[0];
     await registrarPracticaEnMotor(cSim, {
       estudianteId: "est-d",
       oaId,
@@ -597,6 +594,7 @@ try {
   assert.equal((await fetch(`${base}/api/vortice/conocimiento/retencion`, { method: "POST", body: "{}" })).status, 401);
 
   // Con reloj real del servidor (sin offset simulado), est-ni2 aún está bajo embargo.
+  await db.insert(schema.userProfiles).values({ userId: "est-ni2", role: "student" });
   const mapaHttpEmbargado = await fetch(`${base}/api/vortice/conocimiento/mapa`, {
     headers: { "x-test-user": "est-ni2" },
   });
@@ -609,6 +607,8 @@ try {
 
   // Para probar HTTP publicado real + POST /conocimiento/retencion, est-http rinde en ev-piloto-v2 con reviewAt pasado.
   await db.insert(users).values({ id: "est-http", email: "http@ficticio.test" });
+  await db.insert(schema.userProfiles).values({ userId: "est-http", role: "student" });
+  await db.insert(schema.enrollments).values({ userId: "est-http", levelSubjectId: "ls-mat-5b", isActive: true });
   const qOrig = (
     await client.execute({
       sql: "SELECT question_version_id, family_id, item_id, bank, position FROM evaluation_version_questions WHERE evaluation_version_id = 'ev-piloto' ORDER BY position",

@@ -4,6 +4,7 @@ export const NAV_ESTUDIANTE: ItemNav[] = [
   { id: "aula", texto: "Aula", href: "/vortice/aula" },
   { id: "saber", texto: "Lo que sé", href: "/vortice/conocimientos" },
   { id: "semana", texto: "Mi semana", href: "/vortice/semana" },
+  { id: "calendario", texto: "Mi calendario", href: "/vortice/calendario" },
   { id: "ano", texto: "Mi año", href: "/vortice/mi-ano" },
   { id: "portafolio", texto: "Portafolio", href: "/vortice/portafolio" },
   { id: "apoyo", texto: "Apoyo", href: "/vortice/apoyo" },

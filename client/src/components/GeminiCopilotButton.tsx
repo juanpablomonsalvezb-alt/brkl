@@ -33,7 +33,7 @@ export function GeminiCopilotButton({
   const [showDialog, setShowDialog] = useState(false);
 
   // Fetch copilot for this level
-  const { data: copilot, isLoading } = useQuery<GeminiCopilot>({
+  const { data: copilot, isLoading, isError } = useQuery<GeminiCopilot>({
     queryKey: [`/api/gemini-copilots/by-level/${levelId}`],
     retry: false,
   });
@@ -48,8 +48,8 @@ export function GeminiCopilotButton({
     }
   };
 
-  // For non-sidebar variants, hide if loading or no copilot
-  if ((isLoading || !copilot) && variant !== "sidebar") {
+  // M-R08 (C19): si el servidor desactiva el copiloto (403) o no existe, ocultar en todas las variantes (incluida sidebar).
+  if (isLoading || isError || !copilot) {
     return null;
   }
 

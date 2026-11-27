@@ -8,12 +8,14 @@ import {
   studentProgress, userProfiles, moduleEvaluations, evaluationProgress, reflectionResponses,
   reflectionPromptsSchema, reflectionAnswersSchema, updatePedagogicalStepSchema,
 } from "@shared/schema";
-import { buildOverview, canViewReflection, type OverviewSubjectInput, type VorticeOverview } from "@shared/vortice";
+import { buildOverview, canViewReflection, type ContinuationNotice, type OverviewSubjectInput, type VorticeOverview } from "@shared/vortice";
 import { obtenerEvaluacionesDeCierre } from "@shared/clasificacionEvaluacion";
 import { mapearProcesoAEstadoE2 } from "@shared/cruceEvaluacionMapa";
 import { moduloSiguienteAbierto, type EstadoE2 } from "@shared/progresion";
 import { isEvaluationAvailable, isModuleAvailable, type CalendarConfig } from "./calendarUtils";
 import { resolveCalendarConfig } from "./calendarConfig";
+import { esEntornoEstrictoEsquema } from "./saludEsquema";
+import { progresoAulaPorAsignatura } from "./actividadUnificada";
 
 async function procesosCierreEnP0E(
   db: LibSQLDatabase<typeof schema>,
@@ -41,9 +43,92 @@ async function procesosCierreEnP0E(
       if (status === "aprobado") aprobadas.add(evId);
     }
   } catch (error) {
-    if (!/no such table/i.test((error as Error)?.message ?? "")) throw error;
+    if (esEntornoEstrictoEsquema() || !/no such table/i.test((error as Error)?.message ?? "")) throw error;
   }
   return { abrenSiguiente, aprobadas };
+}
+
+export interface ContinuacionPendienteDetalle extends ContinuationNotice {
+  levelSubjectId: string | null;
+  targetWeekNumber: number | null;
+}
+
+/**
+ * M-R05: consulta `progression_continuations` del estudiante para exponer los contenidos
+ * pendientes («requiere base») al abrir el módulo siguiente tras una E2 reprobada.
+ */
+export async function cargarContinuacionesPendientes(
+  db: LibSQLDatabase<typeof schema>,
+  userId: string,
+): Promise<ContinuacionPendienteDetalle[]> {
+  try {
+    const rows = await db.all<{
+      process_id: string;
+      from_module_id: string | null;
+      pending_items_json: string | null;
+      level_subject_id: string | null;
+      week_number: number | null;
+    }>(sql`
+      SELECT pc.process_id, pc.from_module_id, pc.pending_items_json,
+             lo.level_subject_id, lo.week_number
+      FROM progression_continuations pc
+      LEFT JOIN learning_objectives lo ON lo.id = pc.from_module_id
+      WHERE pc.student_id = ${userId}
+      ORDER BY pc.rowid DESC
+    `);
+    if (rows.length === 0) return [];
+
+    const allItemIds = new Set<string>();
+    const parsedByRow = rows.map((r) => {
+      let ids: string[] = [];
+      if (r.pending_items_json) {
+        try {
+          const parsed = JSON.parse(String(r.pending_items_json));
+          if (Array.isArray(parsed)) ids = parsed.map((x) => String(x)).filter(Boolean);
+        } catch {
+          ids = [];
+        }
+      }
+      for (const id of ids) allItemIds.add(id);
+      return { r, ids };
+    });
+
+    const itemInfo = new Map<string, { code: string | null; name: string | null }>();
+    if (allItemIds.size > 0) {
+      const lista = sql.join([...allItemIds].map((id) => sql`${id}`), sql`, `);
+      const items = await db.all<{ id: string; code: string | null; name: string | null }>(sql`
+        SELECT ki.id, ki.code,
+               (SELECT kiv.name FROM knowledge_item_versions kiv WHERE kiv.item_id = ki.id ORDER BY kiv.rowid DESC LIMIT 1) AS name
+        FROM knowledge_items ki
+        WHERE ki.id IN (${lista})
+      `);
+      for (const it of items) {
+        itemInfo.set(String(it.id), {
+          code: it.code == null ? null : String(it.code),
+          name: it.name == null ? null : String(it.name),
+        });
+      }
+    }
+
+    return parsedByRow.map(({ r, ids }) => {
+      const fromWeek = r.week_number == null ? null : Number(r.week_number);
+      return {
+        processId: String(r.process_id),
+        fromModuleId: r.from_module_id == null ? null : String(r.from_module_id),
+        fromWeekNumber: fromWeek,
+        levelSubjectId: r.level_subject_id == null ? null : String(r.level_subject_id),
+        targetWeekNumber: fromWeek == null ? null : fromWeek + 1,
+        pendingItems: ids.map((id) => ({
+          itemId: id,
+          code: itemInfo.get(id)?.code ?? null,
+          name: itemInfo.get(id)?.name ?? null,
+        })),
+      };
+    });
+  } catch (error) {
+    if (esEntornoEstrictoEsquema() || !/no such table/i.test((error as Error)?.message ?? "")) throw error;
+    return [];
+  }
 }
 
 export async function loadVorticeOverview(
@@ -68,6 +153,7 @@ export async function loadVorticeInput(
       levelName: levels.name,
       subjectName: subjects.name,
       subjectSlug: subjects.slug,
+      deliveryMode: levelSubjects.deliveryMode,
     })
     .from(enrollments)
     .innerJoin(levelSubjects, eq(enrollments.levelSubjectId, levelSubjects.id))
@@ -128,14 +214,38 @@ export async function loadVorticeInput(
       .map((o) => moduleKey(o.levelSubjectId, o.weekNumber)),
   );
 
+  const continuaciones = await cargarContinuacionesPendientes(db, userId);
+  const contPorModuloDestino = new Map<string, ContinuationNotice[]>();
+  for (const cont of continuaciones) {
+    if (!cont.levelSubjectId || cont.targetWeekNumber == null) continue;
+    const key = moduleKey(cont.levelSubjectId, cont.targetWeekNumber);
+    const lista = contPorModuloDestino.get(key) ?? [];
+    lista.push({
+      processId: cont.processId,
+      fromModuleId: cont.fromModuleId,
+      fromWeekNumber: cont.fromWeekNumber,
+      pendingItems: cont.pendingItems,
+    });
+    contPorModuloDestino.set(key, lista);
+  }
+
   // Calendario resuelto por nivel (normalmente todas las matrículas son del mismo nivel).
   const configs = new Map<string, CalendarConfig>();
   for (const levelId of new Set(rows.map((r) => r.levelId))) configs.set(levelId, await resolveCalendarConfig(db, levelId, now));
+
+  const aulaProgresoPorLs = new Map<string, Awaited<ReturnType<typeof progresoAulaPorAsignatura>>>();
+  for (const r of rows) {
+    if (r.deliveryMode === "aula_universal") {
+      aulaProgresoPorLs.set(r.levelSubjectId, await progresoAulaPorAsignatura(db, userId, r.levelSubjectId));
+    }
+  }
 
   const input: OverviewSubjectInput[] = rows.map((r) => ({
     levelSubjectId: r.levelSubjectId,
     subjectName: r.subjectName,
     subjectSlug: r.subjectSlug,
+    deliveryMode: r.deliveryMode,
+    aulaProgreso: aulaProgresoPorLs.get(r.levelSubjectId) ?? null,
     objectives: objectives
       .filter((o) => o.levelSubjectId === r.levelSubjectId)
       .map((o) => {
@@ -145,9 +255,11 @@ export async function loadVorticeInput(
           completedModules.has(moduleKey(r.levelSubjectId, o.weekNumber - 1)),
           configs.get(r.levelId),
         );
+        const requiereBase = contPorModuloDestino.get(moduleKey(r.levelSubjectId, o.weekNumber));
         return {
           id: o.id, code: o.code, title: o.title, weekNumber: o.weekNumber, sortOrder: o.sortOrder,
           available: moduleOpen,
+          ...(requiereBase && requiereBase.length > 0 ? { requiereBase } : {}),
           resources: resources
             .filter((x) => x.learningObjectiveId === o.id)
             .map((x) => ({

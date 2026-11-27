@@ -163,9 +163,9 @@ await caso("R11", "admin: estudiante común recibe 403; admin declara perfil neu
   assert.equal(r.s, 200); assert.equal(r.j.duracionMin, 120); assert.equal(r.j.umbral, 50);
   assert.equal((await http("POST", "/api/admin/vortice/evaluaciones/me-e2/proceso", "adm-1", { estudianteId: "est-b", perfil: "raro" })).s, 400);
 });
-await caso("R12", "reabrir: 403 si no es admin; motivo obligatorio", async () => {
+await caso("R12", "reabrir: 403 si no es admin; motivo obligatorio (400)", async () => {
   assert.equal((await http("POST", `/api/admin/vortice/evaluaciones/procesos/${proc.procesoId}/reabrir`, EST, { estudianteId: EST, motivo: "x" })).s, 403);
-  assert.equal((await http("POST", `/api/admin/vortice/evaluaciones/procesos/${proc.procesoId}/reabrir`, "adm-1", { estudianteId: EST })).s, 404);
+  assert.equal((await http("POST", `/api/admin/vortice/evaluaciones/procesos/${proc.procesoId}/reabrir`, "adm-1", { estudianteId: EST })).s, 400);
 });
 await caso("R13", "error interno no filtra detalles", async () => {
   const r = await http("GET", `${E}/intentos/%00/preguntas`, EST); assert.ok(r.s === 404 || r.s === 500); assert.ok(!JSON.stringify(r.j).includes("SELECT"));

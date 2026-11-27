@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import {
   BookOpen,
   BriefcaseBusiness,
+  CalendarClock,
   CalendarDays,
   CalendarRange,
   Compass,
@@ -40,6 +41,7 @@ const ICONOS_NAV: Record<string, LucideIcon> = {
   aula: BookOpen,
   saber: Target,
   semana: CalendarDays,
+  calendario: CalendarClock,
   ano: CalendarRange,
   portafolio: BriefcaseBusiness,
   apoyo: MessageCircle,

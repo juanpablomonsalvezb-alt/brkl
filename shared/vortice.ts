@@ -58,6 +58,19 @@ export interface OverviewEvaluation {
   available: boolean;
 }
 
+export interface ContinuationPendingItem {
+  itemId: string;
+  code: string | null;
+  name: string | null;
+}
+
+export interface ContinuationNotice {
+  processId: string;
+  fromModuleId: string | null;
+  fromWeekNumber: number | null;
+  pendingItems: ContinuationPendingItem[];
+}
+
 export interface OverviewObjective {
   id: string;
   code: string;
@@ -69,12 +82,23 @@ export interface OverviewObjective {
   available?: boolean;
   // Solo evaluaciones obligatorias; cuentan como completadas al aprobarse.
   evaluations?: OverviewEvaluation[];
+  // M-R05: pendientes arrastrados desde el módulo anterior tras reprobar E2 (progression_continuations).
+  requiereBase?: ContinuationNotice[];
+}
+
+export type DeliveryMode = "legacy" | "aula_universal";
+
+export interface AulaProgresoResumen {
+  logradas: number;
+  total: number;
 }
 
 export interface OverviewSubjectInput {
   levelSubjectId: string;
   subjectName: string;
   subjectSlug: string;
+  deliveryMode?: DeliveryMode;
+  aulaProgreso?: AulaProgresoResumen | null;
   objectives: OverviewObjective[];
 }
 
@@ -96,6 +120,10 @@ export interface SubjectSummary {
   levelSubjectId: string;
   subjectName: string;
   subjectSlug: string;
+  /** M-R06 (D3): determina si la asignatura navega a Aula Universal o al reproductor legado `/course/:id`. */
+  deliveryMode?: DeliveryMode;
+  /** M-R07: avance cualitativo de lecciones de Aula Universal (separado del dominio K6). */
+  aulaProgreso?: AulaProgresoResumen | null;
   // Ítems = recursos + evaluaciones obligatorias.
   totalItems: number;
   completedItems: number;
@@ -105,6 +133,8 @@ export interface SubjectSummary {
   waitingForRelease: boolean;
   currentObjective: { id: string; code: string; title: string } | null;
   next: NextStep | null;
+  /** M-R05: pendientes de base arrastrados desde E2 reprobadas de módulos anteriores. */
+  requiereBase?: ContinuationNotice[];
 }
 
 const byModule = (a: OverviewObjective, b: OverviewObjective) =>
@@ -137,8 +167,10 @@ export function summarizeSubject(
       if (completed.has(r.id)) done++;
       else if (!open) lockedPending++;
       else if (!next) {
-        next = { kind: "resource", ...base(oa), itemId: r.id, itemTitle: r.title, resourceType: r.resourceType,
-          pedagogicalStep: r.pedagogicalStep ?? null };
+        next = {
+          kind: "resource", ...base(oa), itemId: r.id, itemTitle: r.title, resourceType: r.resourceType,
+          pedagogicalStep: r.pedagogicalStep ?? null
+        };
       }
     }
     for (const ev of [...(oa.evaluations ?? [])].sort((a, b) => a.evaluationNumber - b.evaluationNumber)) {
@@ -152,16 +184,23 @@ export function summarizeSubject(
     if (next && !current) current = { id: oa.id, code: oa.code, title: oa.title };
   }
 
+  const requiereBase = objectives.flatMap((oa) => oa.requiereBase ?? []);
+  const sumaAula = input.deliveryMode === "aula_universal" && input.aulaProgreso ? input.aulaProgreso : null;
+  const totalEfectivo = total + (sumaAula?.total ?? 0);
+  const doneEfectivo = done + (sumaAula?.logradas ?? 0);
   return {
     levelSubjectId: input.levelSubjectId,
     subjectName: input.subjectName,
     subjectSlug: input.subjectSlug,
-    totalItems: total,
-    completedItems: done,
-    percent: total ? Math.round((done / total) * 100) : null,
+    ...(input.deliveryMode ? { deliveryMode: input.deliveryMode } : {}),
+    ...(input.aulaProgreso ? { aulaProgreso: input.aulaProgreso } : {}),
+    totalItems: totalEfectivo,
+    completedItems: doneEfectivo,
+    percent: totalEfectivo ? Math.round((doneEfectivo / totalEfectivo) * 100) : null,
     waitingForRelease: !next && lockedPending > 0,
     currentObjective: current,
     next,
+    ...(requiereBase.length > 0 ? { requiereBase } : {}),
   };
 }
 

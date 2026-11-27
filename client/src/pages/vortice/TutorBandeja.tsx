@@ -235,12 +235,13 @@ export default function TutorBandeja() {
       if (!res.ok) throw new Error("No pudimos cargar la lista de atención");
       return res.json();
     },
+    enabled: bandejaQuery.isSuccess,
     retry: false,
   });
 
   const tomarMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`/api/tutoria/casos/${id}/tomar`, {
+      const res = await fetch(`/api/tutoria/casos/${encodeURIComponent(id)}/tomar`, {
         method: "POST",
         credentials: "include",
       });
@@ -254,7 +255,7 @@ export default function TutorBandeja() {
 
   const responderMutation = useMutation({
     mutationFn: async ({ id, respuesta }: { id: string; respuesta: string }) => {
-      const res = await fetch(`/api/tutoria/casos/${id}/responder`, {
+      const res = await fetch(`/api/tutoria/casos/${encodeURIComponent(id)}/responder`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -270,7 +271,7 @@ export default function TutorBandeja() {
 
   const cerrarMutation = useMutation({
     mutationFn: async ({ id, notaCierre }: { id: string; notaCierre: string }) => {
-      const res = await fetch(`/api/tutoria/casos/${id}/cerrar`, {
+      const res = await fetch(`/api/tutoria/casos/${encodeURIComponent(id)}/cerrar`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

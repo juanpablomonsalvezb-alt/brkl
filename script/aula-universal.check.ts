@@ -10,14 +10,19 @@ import express from "express";
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import {
-  evaluarDiagnosticoCero,
-  evaluarProcesoSinPorcentaje,
-  obtenerLeccionPorOa,
-  obtenerLeccionesPiloto,
   pistaPorNivel,
   PUERTAS_APRENDIZAJE,
   seleccionarPuertaPrincipal,
 } from "../shared/aulaUniversal";
+import {
+  evaluarDiagnosticoCero,
+  evaluarEjercicioPractica,
+  evaluarProcesoSinPorcentaje,
+  obtenerLeccionPrivadaPorOa,
+  obtenerLeccionPublicaPorOa,
+  obtenerLeccionesPilotoPrivadas,
+  obtenerLeccionesPilotoPublicas,
+} from "../server/aulaUniversalCatalogo";
 
 if (process.env.NODE_ENV === "production") {
   throw new Error("aula-universal.check no debe correr en producción");
@@ -36,8 +41,10 @@ const { saveProgresoLeccion } = await import("../server/aulaUniversal");
 let server: ReturnType<typeof createServer> | null = null;
 try {
   // ── 1. Pruebas puras del piloto y reglas UDL ──
-  const lecciones = obtenerLeccionesPiloto();
+  const lecciones = obtenerLeccionesPilotoPrivadas();
   assert.deepEqual(lecciones.map((l) => l.oaId), ["oa7", "oa8", "oa10", "oa11", "oa13"]);
+  const publicas = obtenerLeccionesPilotoPublicas();
+  assert.equal(/respuestaCorrecta|explicacionCorrecta/.test(JSON.stringify(publicas)), false, "Catálogo público sin claves");
 
   for (const l of lecciones) {
     assert.ok(l.vocabulario.length >= 2, `${l.oaId} requiere vocabulario clave`);
@@ -46,9 +53,23 @@ try {
     assert.equal(l.ejerciciosPractica.length, 2, `${l.oaId} requiere 2 ejercicios de práctica`);
     assert.equal(l.ejerciciosComprobacion.length, 3, `${l.oaId} requiere 3 ejercicios de comprobación`);
 
-    // Regla 1 puerta principal + 3 secundarias.
+    // M-R06: puertas multimedia sin mediaUrl real se ocultan (queda solo `explorar`);
+    // cuando todas tienen mediaUrl real, se mantiene la regla de 1 puerta principal + 3 secundarias.
+    const selSinMedios = seleccionarPuertaPrincipal(l, "video");
+    assert.equal(selSinMedios.principal.tipo, "explorar");
+    assert.equal(selSinMedios.secundarias.length, 0);
+
+    const leccionConMedios = {
+      ...l,
+      puertas: {
+        ...l.puertas,
+        video: { ...l.puertas.video, mediaUrl: "https://cdn.barkleyinstituto.cl/demo.mp4" },
+        podcast: { ...l.puertas.podcast, mediaUrl: "https://cdn.barkleyinstituto.cl/demo.mp3" },
+        presentacion: { ...l.puertas.presentacion, mediaUrl: "https://cdn.barkleyinstituto.cl/demo.pdf" },
+      },
+    };
     for (const pPref of PUERTAS_APRENDIZAJE) {
-      const sel = seleccionarPuertaPrincipal(l, pPref);
+      const sel = seleccionarPuertaPrincipal(leccionConMedios, pPref);
       assert.equal(sel.principal.tipo, pPref);
       assert.equal(sel.secundarias.length, 3);
       assert.equal(sel.secundarias.some((s) => s.tipo === pPref), false);
@@ -74,7 +95,12 @@ try {
     assert.equal(/\[[EGS]:\d+|MATME|matematica5/i.test(textoVisible), false, `Fuga interna en ${l.oaId}`);
   }
 
-  assert.equal(obtenerLeccionPorOa("no-existe"), null);
+  assert.equal(obtenerLeccionPrivadaPorOa("no-existe"), null);
+  assert.equal(obtenerLeccionPublicaPorOa("no-existe"), null);
+  const pracOk = evaluarEjercicioPractica("oa7", "oa7-p1", "A");
+  assert.ok(pracOk.ok && pracOk.correcta === true && typeof pracOk.explicacion === "string");
+  const pracFail = evaluarEjercicioPractica("oa7", "oa7-p1", "B");
+  assert.ok(pracFail.ok && pracFail.correcta === false && pracFail.explicacion === null);
 
   // Diagnóstico 0 orientador: sin porcentaje ni bloqueo.
   const diag = evaluarDiagnosticoCero({
@@ -107,7 +133,18 @@ try {
   const ddl = await generateSQLiteMigration(await generateSQLiteDrizzleJson({}), await generateSQLiteDrizzleJson(schema as any));
   for (const s of ddl) await db.run(sql.raw(s));
 
-  await db.insert(users).values([{ id: "est-aula", email: "aula@prueba.test", name: "Estudiante Aula" }]);
+  await db.insert(users).values([
+    { id: "est-aula", email: "aula@prueba.test", name: "Estudiante Aula" },
+    { id: "est-ajeno", email: "ajeno@prueba.test", name: "Sin Matrícula" },
+  ]);
+  await db.insert(schema.levels).values({ id: "5b", name: "5° Básico", programType: "menores", sortOrder: 5 });
+  await db.insert(schema.subjects).values({ id: "mat", name: "Matemática", slug: "matematica" });
+  await db.insert(schema.levelSubjects).values({ id: "ls-mat-5b", levelId: "5b", subjectId: "mat" });
+  await db.insert(schema.userProfiles).values([
+    { userId: "est-aula", role: "student" },
+    { userId: "est-ajeno", role: "student" },
+  ]);
+  await db.insert(schema.enrollments).values({ userId: "est-aula", levelSubjectId: "ls-mat-5b", isActive: true });
 
   const { registerRoutes } = await import("../server/routes");
   const app = express();
@@ -122,9 +159,13 @@ try {
   await new Promise<void>((resolve) => server!.listen(0, "127.0.0.1", () => resolve()));
   const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
 
-  // Sin sesión -> 401.
+  // Sin sesión -> 401; sin matrícula activa -> 403.
   const noAuth = await fetch(`${base}/api/vortice/aula/piloto`);
   assert.equal(noAuth.status, 401);
+  const noEnroll = await fetch(`${base}/api/vortice/aula/piloto`, {
+    headers: { "x-test-user": "est-ajeno" },
+  });
+  assert.equal(noEnroll.status, 403);
 
   // OA inexistente -> 404.
   const notFound = await fetch(`${base}/api/vortice/aula/lecciones/oa99`, {
@@ -167,12 +208,14 @@ try {
   });
   assert.equal(badPut.ok, false);
 
-  // Al recargar el piloto se retoma el tramo exacto guardado.
+  // Al recargar el piloto se retoma el tramo exacto guardado y nunca viajan claves al cliente.
   const pilotoRes = await fetch(`${base}/api/vortice/aula/piloto`, {
     headers: { "x-test-user": "est-aula" },
   });
   assert.equal(pilotoRes.status, 200);
-  const pilotoJson = await pilotoRes.json();
+  const pilotoRaw = await pilotoRes.text();
+  assert.equal(/respuestaCorrecta|explicacionCorrecta/.test(pilotoRaw), false, "Payload HTTP sin claves");
+  const pilotoJson = JSON.parse(pilotoRaw);
   assert.equal(pilotoJson.progreso.oa7.tramoActual, 2);
   assert.equal(pilotoJson.progreso.oa7.puertaPreferida, "podcast");
 

@@ -9,6 +9,7 @@ import type { AddressInfo } from "node:net";
 
 if (process.env.NODE_ENV === "production") throw new Error("p0.check no debe correr con NODE_ENV=production");
 process.env.TEST_DATABASE_URL = ":memory:";
+process.env.ENABLE_AI_COPILOT = "true"; // Habilitado explícitamente solo en esta prueba del filtro anti-copia IA.
 
 const { sql } = await import("drizzle-orm");
 const { generateSQLiteDrizzleJson, generateSQLiteMigration } = await import("drizzle-kit/api");

@@ -13,6 +13,7 @@ import {
   type EventoRetencion,
   type ItemRetencionProgramado,
 } from "../shared/retencionMapa";
+import { esPreguntaBancoIndependiente } from "./bancoPracticaPiloto";
 import { versionPublicada } from "./catalogo";
 import { leerEstado, politicaVigente } from "./conocimiento";
 import { iniciarSesion, PracticaError, registrarRespuesta } from "./practica";
@@ -107,19 +108,20 @@ export async function cargarAgendaRetencion(
   const itemIds = filasDominadas.map((f) => f.itemId);
   const placeholders = itemIds.map(() => "?").join(",");
   const answersRes = await c.execute({
-    sql: `SELECT item_id, family_id, is_correct, assistance, session_id, study_day, answered_at, purpose
+    sql: `SELECT item_id, family_id, question_version_id, is_correct, assistance, session_id, study_day, answered_at, purpose
           FROM practice_answers
           WHERE student_id = ? AND item_id IN (${placeholders})
           ORDER BY answered_at ASC, sequence_no ASC`,
     args: [params.estudianteId, ...itemIds],
   });
 
-  const k6Separation = pol?.politica.k6_separation ?? "ninguna";
+  const k6Separation = pol?.politica.k6_separation ?? "dia";
   const k6Min = pol?.politica.k6_min_families ?? K6_FAMILIAS;
   const assistedCounts = pol?.politica.assisted_counts ?? false;
 
   const historialRetencion: EventoRetencion[] = [];
   const familiasUsadasPorItem = new Map<string, string[]>();
+  const preguntasUsadasPorItem = new Map<string, Set<string>>();
   const aciertosPreviosPorItem = new Map<
     string,
     Array<{ familyId: string; sessionId: string; studyDay: string; answeredAt: number }>
@@ -129,6 +131,7 @@ export async function cargarAgendaRetencion(
   for (const r of answersRes.rows) {
     const itemId = String(r.item_id);
     const familyId = String(r.family_id);
+    const questionVersionId = String(r.question_version_id);
     const isCorrect = Number(r.is_correct) === 1;
     const assistance = String(r.assistance);
     const sinAyuda = assistance === "ninguna";
@@ -140,6 +143,10 @@ export async function cargarAgendaRetencion(
     const usadas = familiasUsadasPorItem.get(itemId) ?? [];
     usadas.push(familyId);
     familiasUsadasPorItem.set(itemId, usadas);
+
+    const qUsadas = preguntasUsadasPorItem.get(itemId) ?? new Set<string>();
+    qUsadas.add(questionVersionId);
+    preguntasUsadasPorItem.set(itemId, qUsadas);
 
     if (purpose === "retencion") {
       historialRetencion.push({ itemId, correcta: isCorrect, sinAyuda, ocurridaAt: answeredAt, studyDay });
@@ -188,12 +195,17 @@ export async function cargarAgendaRetencion(
             ORDER BY q.id ASC`,
       args: [item.itemId],
     });
-    const candidatas = qRes.rows.map((q) => ({
+    const candidatasTodas = qRes.rows.map((q) => ({
       questionVersionId: String(q.id),
       familyId: String(q.family_id),
       stem: String(q.stem),
       optionsJson: String(q.options_json),
     }));
+    const usadasSet = preguntasUsadasPorItem.get(item.itemId) ?? new Set<string>();
+    const independientes = candidatasTodas.filter((q) => esPreguntaBancoIndependiente(q.questionVersionId));
+    const poolBase = independientes.length > 0 ? independientes : candidatasTodas;
+    const noRespondidas = poolBase.filter((q) => !usadasSet.has(q.questionVersionId));
+    const candidatas = noRespondidas.length > 0 ? noRespondidas : poolBase;
     const elegida = seleccionarPreguntaRetencion(candidatas, familiasUsadasPorItem.get(item.itemId) ?? []);
     pendientes.push({
       ...item,

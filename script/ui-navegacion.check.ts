@@ -10,6 +10,7 @@ const familia = readFileSync("client/src/pages/vortice/FamiliaVista.tsx", "utf8"
 
 for (const [ruta, pagina] of [
   ["/vortice/semana", "client/src/pages/vortice/VorticeSemana.tsx"],
+  ["/vortice/calendario", "client/src/pages/vortice/VorticeCalendario.tsx"],
   ["/vortice/portafolio", "client/src/pages/vortice/VorticePortafolio.tsx"],
   ["/vortice/apoyo", "client/src/pages/vortice/VorticeApoyo.tsx"],
 ] as const) {
@@ -24,6 +25,7 @@ assert.deepEqual(
     ["aula", "/vortice/aula"],
     ["saber", "/vortice/conocimientos"],
     ["semana", "/vortice/semana"],
+    ["calendario", "/vortice/calendario"],
     ["ano", "/vortice/mi-ano"],
     ["portafolio", "/vortice/portafolio"],
     ["apoyo", "/vortice/apoyo"],

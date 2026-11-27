@@ -3,7 +3,7 @@
 // nunca lee el reloj del sistema (usa server/reloj.ts) ni modifica P0-E.
 import { randomUUID } from "node:crypto";
 import type { Client } from "@libsql/client";
-import { obtenerLeccionPorOa } from "../shared/aulaUniversal";
+import { obtenerLeccionPrivadaPorOa } from "./aulaUniversalCatalogo";
 import {
   calcularRefuerzoDesdeEvaluacionPublicada,
   type ResumenEvaluacionMapa,
@@ -19,6 +19,7 @@ import {
   type ResumenMapaConocimiento,
 } from "../shared/mapaConocimiento";
 import type { ItemRetencionProgramado } from "../shared/retencionMapa";
+import { dayKey } from "../shared/repaso";
 import { grafoDeVersion, versionPublicada } from "./catalogo";
 import { leerEstado } from "./conocimiento";
 import { cargarResumenEvaluacionParaMapa } from "./cruceEvaluacionMapa";
@@ -26,6 +27,7 @@ import { iniciarSesion, PracticaError, registrarRespuesta } from "./practica";
 import { relojMotor } from "./reloj";
 import { cargarAgendaRetencion, type ItemRetencionConPregunta } from "./retencionMapa";
 import { DOMINIO_PILOTO_PRACTICA_ID } from "./sembrarPilotoPractica";
+import { esEntornoEstrictoEsquema } from "./saludEsquema";
 
 export { DOMINIO_PILOTO_PRACTICA_ID };
 
@@ -55,6 +57,8 @@ export interface RegistrarPracticaMotorResultado {
   motivo?: string;
   correcta?: boolean;
   duplicada?: boolean;
+  /** M-R04: verdadero si el estudiante reintentó la misma pregunta tras fallarla en la misma sesión o día. */
+  reintentoMismaPregunta?: boolean;
   estado?: { estado: string; marca: "por_comprobar" | null; motivo: string | null } | null;
 }
 
@@ -101,19 +105,51 @@ export async function cargarMapaConocimiento(
   const proyeccion = await leerEstado(c, params.estudianteId, ahora);
   const filaPorItem = new Map(proyeccion.filas.map((f) => [f.itemId, f]));
 
+  const itemIdsDelDominioList = itemsRes.rows.map((r) => String(r.item_id));
+  const phItems = itemIdsDelDominioList.map(() => "?").join(",");
+  const aciertosSinAyudaRes = await c.execute({
+    sql: `SELECT item_id, COUNT(DISTINCT study_day) AS dias_acierto
+          FROM practice_answers
+          WHERE student_id = ? AND item_id IN (${phItems}) AND is_correct = 1 AND assistance = 'ninguna'
+          GROUP BY item_id`,
+    args: [params.estudianteId, ...itemIdsDelDominioList],
+  });
+  const diasAciertoPorItem = new Map<string, number>();
+  for (const r of aciertosSinAyudaRes.rows) {
+    diasAciertoPorItem.set(String(r.item_id), Number(r.dias_acierto ?? 0));
+  }
+
+  const yaLoSeOas = new Set<string>();
+  try {
+    const progRes = await c.execute({
+      sql: "SELECT oa_id FROM lesson_study_progress WHERE user_id = ? AND completada_por_ya_lo_se = 1",
+      args: [params.estudianteId],
+    });
+    for (const r of progRes.rows) yaLoSeOas.add(String(r.oa_id));
+  } catch (err) {
+    if (esEntornoEstrictoEsquema() || !/no such table/i.test((err as Error)?.message ?? "")) {
+      throw err;
+    }
+  }
+
   const nodosBase: NodoEntradaMapa[] = itemsRes.rows.map((r) => {
     const itemId = String(r.item_id);
     const code = String(r.code);
+    const oaId = oaIdDesdeCodigo(code);
     const fila = filaPorItem.get(itemId);
+    const estado = fila?.state ?? "sin_evidencia";
+    const diasAcierto = diasAciertoPorItem.get(itemId) ?? 0;
+    const pendienteOtroDia = estado === "incierto" && (diasAcierto === 1 || yaLoSeOas.has(oaId));
     return {
       itemId,
       code,
-      oaId: oaIdDesdeCodigo(code),
+      oaId,
       nombre: String(r.name),
       definicion: String(r.operational_definition),
-      estado: fila?.state ?? "sin_evidencia",
+      estado,
       marca: fila?.flag ?? null,
       motivo: fila?.uncertaintyReason ?? null,
+      pendienteOtroDia,
     };
   });
 
@@ -200,23 +236,23 @@ export async function registrarPracticaEnMotor(
     return { registrado: false, motivo: "motor_no_sembrado" };
   }
 
-  const preguntaVersionId = `qv-prac-${params.preguntaId}`;
   const qRow = (
     await c.execute({
       sql: `SELECT q.id, i.code
             FROM question_versions q
             JOIN knowledge_items i ON i.id = q.item_id
             JOIN knowledge_item_versions v ON v.item_id = q.item_id AND v.domain_version_id = ?
-            WHERE q.id = ? AND q.bank = 'practica' AND q.status = 'aprobada'
+            WHERE q.id IN (?, ?) AND q.bank = 'practica' AND q.status = 'aprobada'
               AND NOT EXISTS (SELECT 1 FROM question_voids qv WHERE qv.question_version_id = q.id)
             LIMIT 1`,
-      args: [pub.id, preguntaVersionId],
+      args: [pub.id, params.preguntaId, `qv-prac-${params.preguntaId}`],
     })
   ).rows[0];
 
   if (!qRow) {
     return { registrado: false, motivo: "pregunta_no_sembrada" };
   }
+  const preguntaVersionId = String(qRow.id);
   if (oaIdDesdeCodigo(String(qRow.code)) !== params.oaId) {
     throw new PracticaError("pregunta_no_disponible", "La pregunta no pertenece al objetivo indicado");
   }
@@ -239,10 +275,24 @@ export async function registrarPracticaEnMotor(
     return creada.id;
   };
 
-  const asistencia = params.usoPista ? "pista" : "ninguna";
-
   for (let intento = 0; intento < 2; intento++) {
     const sesionId = await obtenerSesionActiva();
+    // M-R04: impedir auto-reparación inmediata sobre la misma pregunta en la misma sesión o mismo día.
+    // Si ya falló esta misma pregunta hoy o en la sesión activa, el reintento se registra con
+    // `explicacion_vista` (no cuenta como acierto autónomo ni repara el error bajo `assisted_counts: false`).
+    const ahora = await relojMotor(c).ahora();
+    const hoy = dayKey(new Date(ahora * 1000));
+    const falloPrevio = (
+      await c.execute({
+        sql: `SELECT 1 FROM practice_answers
+              WHERE student_id = ? AND question_version_id = ? AND is_correct = 0
+                AND (session_id = ? OR study_day = ?)
+                AND client_submission_id <> ?
+              LIMIT 1`,
+        args: [params.estudianteId, preguntaVersionId, sesionId, hoy, params.clientSubmissionId],
+      })
+    ).rows.length > 0;
+    const asistencia = params.usoPista ? "pista" : falloPrevio ? "explicacion_vista" : "ninguna";
     try {
       const res = await registrarRespuesta(c, {
         estudiante: params.estudianteId,
@@ -256,6 +306,7 @@ export async function registrarPracticaEnMotor(
         registrado: true,
         correcta: res.correcta,
         duplicada: res.duplicada,
+        reintentoMismaPregunta: falloPrevio,
         estado: res.estado,
       };
     } catch (e) {
@@ -282,7 +333,7 @@ export async function registrarComprobacionEnMotorSombra(
     dominioId?: string;
   },
 ): Promise<void> {
-  const leccion = obtenerLeccionPorOa(params.oaId);
+  const leccion = obtenerLeccionPrivadaPorOa(params.oaId);
   if (!leccion) return;
   for (const ej of leccion.ejerciciosComprobacion) {
     const opcionId = params.respuestas[ej.id];
@@ -297,8 +348,15 @@ export async function registrarComprobacionEnMotorSombra(
         usoPista: false,
         clientSubmissionId: `aula-comp-${leccion.oaId}-${ej.id}-${randomUUID()}`,
       });
-    } catch {
-      // Modo sombra: nunca bloquea ni interrumpe la respuesta del Aula Universal.
+    } catch (err) {
+      if (esEntornoEstrictoEsquema()) {
+        throw err;
+      }
+      console.error("[vortice:motor-sombra] Fallo sincronizando comprobación:", {
+        oaId: leccion.oaId,
+        preguntaId: ej.id,
+        error: err instanceof Error ? err.message : String(err),
+      });
     }
   }
 }

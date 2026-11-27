@@ -44,15 +44,20 @@ function fechaCorta(ymd: string): string {
 }
 
 function fechaEvaluacion(ymd: string): string {
-  const partes = new Date(`${ymd}T12:00:00`).toLocaleDateString("es-CL", {
+  const date = new Date(`${ymd}T12:00:00`);
+  const parts = new Intl.DateTimeFormat("es-CL", {
     weekday: "long",
     day: "numeric",
     month: "long",
-  });
-  const fecha = new Date(`${ymd}T12:00:00`).toLocaleDateString("es-CL", { day: "numeric", month: "long" });
-  const [dia, mes] = fecha.split(" de ");
-  const weekday = partes.split(",")[0];
-  return `${weekday} ${dia} de ${mes}`;
+  }).formatToParts(date);
+  const byType = new Map(parts.map((p) => [p.type, p.value]));
+  const weekday = byType.get("weekday");
+  const day = byType.get("day");
+  const month = byType.get("month");
+  if (weekday && day && month) {
+    return `${weekday} ${day} de ${month}`;
+  }
+  return date.toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" });
 }
 
 function rango(inicio: string, fin: string): string {
@@ -64,6 +69,7 @@ export default function VorticeMiAno() {
     queryKey: ["/api/vortice/mi-ano"],
     queryFn: async () => {
       const response = await fetch("/api/vortice/mi-ano", { credentials: "include" });
+      if (response.status === 401) throw new Error("UNAUTHORIZED");
       if (!response.ok) throw new Error("No fue posible cargar el calendario");
       return response.json();
     },
@@ -94,6 +100,11 @@ export default function VorticeMiAno() {
 
         {ano.isLoading ? (
           <p className="vx-ano-message">Cargando tu año…</p>
+        ) : ano.isError && (ano.error as Error)?.message === "UNAUTHORIZED" ? (
+          <div className="vx-ano-message space-y-3" role="alert">
+            <p>Necesitas iniciar sesión para revisar tu calendario del año.</p>
+            <Link href="/vortice" className="vx-btn-primary">Ir a Vórtice</Link>
+          </div>
         ) : ano.isError ? (
           <p className="vx-ano-message" role="alert">No pudimos cargar tu año. Intenta de nuevo más tarde.</p>
         ) : data?.nivel === null ? (

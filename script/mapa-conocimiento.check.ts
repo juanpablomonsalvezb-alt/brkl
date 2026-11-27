@@ -12,12 +12,36 @@ import path from "node:path";
 import express from "express";
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
+import type { Client } from "@libsql/client";
 import {
   calcularFronteras,
   recomendarSiguienteContenido,
   type AristaMapa,
   type NodoEntradaMapa,
 } from "../shared/mapaConocimiento";
+
+const DIA_SEG = 86400;
+const RELOJ_BASE_SIM_SEG = 2_000_023_200; // 2033-05-18T10:00:00Z
+function clienteConOffset(base: Client, getOffsetSeg: () => number): Client {
+  return new Proxy(base, {
+    get(target, prop) {
+      if (prop === "execute") {
+        return async (...args: Parameters<typeof target.execute>) => {
+          const res = await target.execute(...args);
+          const sqlTxt = typeof args[0] === "string" ? args[0] : (args[0] as any)?.sql;
+          if (typeof sqlTxt === "string" && /SELECT\s+unixepoch\s*\(\s*'subsec'\s*\)/i.test(sqlTxt) && res.rows?.[0]) {
+            const val = RELOJ_BASE_SIM_SEG + getOffsetSeg();
+            const fila = Object.assign([val], { "unixepoch('subsec')": val });
+            return { ...res, rows: [fila] };
+          }
+          return res;
+        };
+      }
+      const v = Reflect.get(target, prop, target);
+      return typeof v === "function" ? v.bind(target) : v;
+    },
+  });
+}
 
 if (process.env.NODE_ENV === "production") {
   throw new Error("mapa-conocimiento.check no debe correr en producción");
@@ -76,14 +100,19 @@ try {
   await sembrarFicticios(client as any);
 
   await db.insert(users).values([{ id: "est-m2", email: "m2@prueba.test", name: "Estudiante M2" }]);
+  await db.insert(schema.userProfiles).values({ userId: "est-m2", role: "student" });
+  await db.insert(schema.enrollments).values({ userId: "est-m2", levelSubjectId: "ls-mat-5b", isActive: true });
 
-  const s1 = await sembrarPilotoPractica(client as any, { levelSubjectId: "ls-mat-5b" });
+  let simOffsetSeg = 0;
+  const cSim = clienteConOffset(client as unknown as Client, () => simOffsetSeg);
+
+  const s1 = await sembrarPilotoPractica(cSim, { levelSubjectId: "ls-mat-5b" });
   assert.equal(s1.yaPublicado, false);
-  const s2 = await sembrarPilotoPractica(client as any, { levelSubjectId: "ls-mat-5b" });
+  const s2 = await sembrarPilotoPractica(cSim, { levelSubjectId: "ls-mat-5b" });
   assert.equal(s2.yaPublicado, true);
 
   // Estado inicial en DB: oa7 listo, oa8..oa13 bloqueados.
-  const m0 = await cargarMapaConocimiento(client as any, { estudianteId: "est-m2" });
+  const m0 = await cargarMapaConocimiento(cSim, { estudianteId: "est-m2" });
   assert.equal(m0.disponible, true);
   assert.equal(m0.politicaActiva, true);
   assert.equal(m0.tieneEvidencia, false);
@@ -98,12 +127,12 @@ try {
     body: { pasoActual: "comprueba", tramoActual: 2, puertaPreferida: "video", pasoEjemploVisto: 2 },
     now: new Date(),
   });
-  const mDespuesLectura = await cargarMapaConocimiento(client as any, { estudianteId: "est-m2" });
+  const mDespuesLectura = await cargarMapaConocimiento(cSim, { estudianteId: "est-m2" });
   assert.equal(mDespuesLectura.tieneEvidencia, false);
   assert.equal(mDespuesLectura.nodos.find((n) => n.oaId === "oa7")?.estadoVisual, "listo");
 
   // Práctica con pista (`usoPista: true`) en dos familias distintas -> incierto (`solo_con_ayuda`), NO dominado.
-  await registrarPracticaEnMotor(client as any, {
+  await registrarPracticaEnMotor(cSim, {
     estudianteId: "est-m2",
     oaId: "oa7",
     preguntaId: "oa7-p1",
@@ -111,7 +140,7 @@ try {
     usoPista: true,
     clientSubmissionId: "sub-pista-1",
   });
-  const rPista2 = await registrarPracticaEnMotor(client as any, {
+  const rPista2 = await registrarPracticaEnMotor(cSim, {
     estudianteId: "est-m2",
     oaId: "oa7",
     preguntaId: "oa7-p2",
@@ -125,7 +154,7 @@ try {
   assert.equal(rPista2.estado?.motivo, "solo_con_ayuda");
 
   // Idempotencia: reenvío con mismo clientSubmissionId -> duplicada: true.
-  const rDup = await registrarPracticaEnMotor(client as any, {
+  const rDup = await registrarPracticaEnMotor(cSim, {
     estudianteId: "est-m2",
     oaId: "oa7",
     preguntaId: "oa7-p2",
@@ -135,8 +164,8 @@ try {
   });
   assert.equal(rDup.duplicada, true);
 
-  // Dos aciertos SIN pista en familias distintas de oa7 -> dominado y desbloquea oa8 y oa10.
-  await registrarPracticaEnMotor(client as any, {
+  // D1 (M-R04): múltiples aciertos SIN pista en el MISMO día T -> NUNCA domina; queda en «Por confirmar otro día».
+  await registrarPracticaEnMotor(cSim, {
     estudianteId: "est-m2",
     oaId: "oa7",
     preguntaId: "oa7-c1",
@@ -144,7 +173,7 @@ try {
     usoPista: false,
     clientSubmissionId: "sub-oa7-c1",
   });
-  await registrarPracticaEnMotor(client as any, {
+  const rMismoDia = await registrarPracticaEnMotor(cSim, {
     estudianteId: "est-m2",
     oaId: "oa7",
     preguntaId: "oa7-c2",
@@ -152,8 +181,25 @@ try {
     usoPista: false,
     clientSubmissionId: "sub-oa7-c2",
   });
+  assert.equal(rMismoDia.estado?.estado, "incierto", "D1: aciertos en el mismo día T nunca generan dominio");
+  const mDia1 = await cargarMapaConocimiento(cSim, { estudianteId: "est-m2" });
+  assert.equal(mDia1.nodos.find((n) => n.oaId === "oa7")?.etiqueta, "Por confirmar otro día");
+  assert.equal(mDia1.nodos.find((n) => n.oaId === "oa8")?.estadoVisual, "bloqueado");
 
-  const mDesbloqueado = await cargarMapaConocimiento(client as any, { estudianteId: "est-m2" });
+  // Avanzar reloj a día T+1 y responder una familia independiente sin ayuda -> domina oa7 y desbloquea oa8 y oa10.
+  simOffsetSeg += DIA_SEG;
+  const rDia2 = await registrarPracticaEnMotor(cSim, {
+    estudianteId: "est-m2",
+    oaId: "oa7",
+    preguntaId: "oa7-ind-f1-v1",
+    opcionId: "B",
+    usoPista: false,
+    clientSubmissionId: "sub-oa7-ind-dia2",
+  });
+  assert.equal(rDia2.correcta, true);
+  assert.equal(rDia2.estado?.estado, "dominado", "D1: acierto en día T+1 con familia distinta promueve a dominado");
+
+  const mDesbloqueado = await cargarMapaConocimiento(cSim, { estudianteId: "est-m2" });
   assert.equal(mDesbloqueado.tieneEvidencia, true);
   assert.equal(mDesbloqueado.nodos.find((n) => n.oaId === "oa7")?.estadoVisual, "dominado");
   assert.equal(mDesbloqueado.nodos.find((n) => n.oaId === "oa7")?.etiqueta, "Lo dominas");
@@ -161,8 +207,8 @@ try {
   assert.equal(mDesbloqueado.nodos.find((n) => n.oaId === "oa10")?.estadoVisual, "listo");
   assert.equal(mDesbloqueado.nodos.find((n) => n.oaId === "oa11")?.estadoVisual, "bloqueado");
 
-  // Dos errores sin ayuda en familias distintas de oa8 -> no_dominado («Lo reforzamos»).
-  await registrarPracticaEnMotor(client as any, {
+  // M-R04 anti-auto-reparación: fallar y reintentar la MISMA pregunta 2 segundos después NO repara el error ni suma acierto autónomo.
+  await registrarPracticaEnMotor(cSim, {
     estudianteId: "est-m2",
     oaId: "oa8",
     preguntaId: "oa8-p1",
@@ -170,7 +216,18 @@ try {
     usoPista: false,
     clientSubmissionId: "sub-oa8-err1",
   });
-  await registrarPracticaEnMotor(client as any, {
+  simOffsetSeg += 2;
+  const rReintento = await registrarPracticaEnMotor(cSim, {
+    estudianteId: "est-m2",
+    oaId: "oa8",
+    preguntaId: "oa8-p1",
+    opcionId: "B", // correcta, pero reintento inmediato tras fallar
+    usoPista: false,
+    clientSubmissionId: "sub-oa8-retry1",
+  });
+  assert.equal(rReintento.reintentoMismaPregunta, true, "Reintentar misma pregunta tras error debe marcarse como reintento asistido");
+
+  await registrarPracticaEnMotor(cSim, {
     estudianteId: "est-m2",
     oaId: "oa8",
     preguntaId: "oa8-p2",
@@ -178,13 +235,13 @@ try {
     usoPista: false,
     clientSubmissionId: "sub-oa8-err2",
   });
-  const mReforzar = await cargarMapaConocimiento(client as any, { estudianteId: "est-m2" });
-  assert.equal(mReforzar.nodos.find((n) => n.oaId === "oa8")?.estadoVisual, "no_dominado");
+  const mReforzar = await cargarMapaConocimiento(cSim, { estudianteId: "est-m2" });
+  assert.equal(mReforzar.nodos.find((n) => n.oaId === "oa8")?.estadoVisual, "no_dominado", "El reintento inmediato no debió reparar el error de oa8-p1");
   assert.equal(mReforzar.nodos.find((n) => n.oaId === "oa8")?.etiqueta, "Lo reforzamos");
 
   // Consistencia total con reconstrucción.
-  const ahora = await relojMotor(client as any).ahora();
-  const comp = await compararProyeccion(client as any, "est-m2", ahora);
+  const ahora = await relojMotor(cSim).ahora();
+  const comp = await compararProyeccion(cSim, "est-m2", ahora);
   assert.equal(comp.iguales, true);
   assert.equal(comp.politicaEjecutable, true);
   assert.deepEqual(comp.diferencias, []);
@@ -213,18 +270,20 @@ try {
   });
   assert.equal(badPrac.status, 400);
 
-  // Enviar comprobación correcta en oa10 vía Aula Universal -> sombra domina oa10 y desbloquea oa11.
+  // D1 («Ya lo sé»): enviar comprobación correcta en oa10 el mismo día -> logrado en Aula (`completadaPorYaLoSe`),
+  // pero en Mapa queda `incierto` («Por confirmar otro día») hasta confirmar en otro día calendario.
   const compOa10 = await fetch(`${base}/api/vortice/aula/lecciones/oa10/comprobar`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-test-user": "est-m2" },
     body: JSON.stringify({
       respuestas: { "oa10-c1": "C", "oa10-c2": "A", "oa10-c3": "B" },
-      origen: "normal",
+      origen: "ya_lo_se",
     }),
   });
   assert.equal(compOa10.status, 200);
   const compOa10Json = await compOa10.json();
   assert.equal(compOa10Json.estado, "logrado");
+  assert.equal(compOa10Json.progreso?.completadaPorYaLoSe, true);
   assert.equal("porcentaje" in compOa10Json, false);
 
   const mapaHttpRes = await fetch(`${base}/api/vortice/conocimiento/mapa`, {
@@ -232,8 +291,21 @@ try {
   });
   assert.equal(mapaHttpRes.status, 200);
   const mapaHttp = await mapaHttpRes.json();
-  assert.equal(mapaHttp.nodos.find((n: any) => n.oaId === "oa10")?.estadoVisual, "dominado");
-  assert.equal(mapaHttp.nodos.find((n: any) => n.oaId === "oa11")?.estadoVisual, "listo");
+  assert.equal(mapaHttp.nodos.find((n: any) => n.oaId === "oa10")?.estadoVisual, "incierto");
+  assert.equal(mapaHttp.nodos.find((n: any) => n.oaId === "oa10")?.etiqueta, "Por confirmar otro día");
+
+  // Al responder una familia independiente de oa10 en otro día (cSim en 2033 vs hoy), oa10 transiciona a dominado.
+  await registrarPracticaEnMotor(cSim, {
+    estudianteId: "est-m2",
+    oaId: "oa10",
+    preguntaId: "oa10-ind-f1-v1",
+    opcionId: "C",
+    usoPista: false,
+    clientSubmissionId: "sub-oa10-ind-otro-dia",
+  });
+  const mOa10Dom = await cargarMapaConocimiento(cSim, { estudianteId: "est-m2" });
+  assert.equal(mOa10Dom.nodos.find((n) => n.oaId === "oa10")?.estadoVisual, "dominado");
+  assert.equal(mOa10Dom.nodos.find((n) => n.oaId === "oa11")?.estadoVisual, "listo");
 } finally {
   if (server) await new Promise<void>((r) => server!.close(() => r()));
   client.close();

@@ -68,6 +68,7 @@ const NotFound = lazy(() => import("@/pages/not-found"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const VorticeInicio = lazy(() => import("@/pages/vortice/VorticeInicio"));
 const VorticeSemana = lazy(() => import("@/pages/vortice/VorticeSemana"));
+const VorticeCalendario = lazy(() => import("@/pages/vortice/VorticeCalendario"));
 const VorticePortafolio = lazy(() => import("@/pages/vortice/VorticePortafolio"));
 const VorticeApoyo = lazy(() => import("@/pages/vortice/VorticeApoyo"));
 const VorticeAula = lazy(() => import("@/pages/vortice/VorticeAula"));
@@ -140,6 +141,7 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/vortice" component={VorticeInicio} />
       <Route path="/vortice/semana" component={VorticeSemana} />
+      <Route path="/vortice/calendario" component={VorticeCalendario} />
       <Route path="/vortice/portafolio" component={VorticePortafolio} />
       <Route path="/vortice/apoyo" component={VorticeApoyo} />
       <Route path="/vortice/aula" component={VorticeAula} />

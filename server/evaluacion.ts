@@ -68,7 +68,9 @@ export type CodigoEvaluacion =
   | "capacidad_insuficiente"
   | "entrega_automatica"
   | "cierre_no_permitido"
-  | "respuesta_existente";
+  | "respuesta_existente"
+  | "reapertura_ya_existe"
+  | "motivo_invalido";
 
 export class ErrorEvaluacion extends Error {
   constructor(readonly codigo: CodigoEvaluacion, mensaje: string) {
@@ -179,12 +181,12 @@ async function preguntasDelIntentoX(x: X, intentoId: string): Promise<PreguntaDe
 // Carga el estado P0E de una instancia desde la base.
 async function cargarInstanciaP0E(x: X, instanciaId: string): Promise<InstanciaP0E> {
   const inst = row<{
-    id: string; max_attempts: number; window_end_at: number; extension_ends_at: number | null;
+    id: string; phase: string; max_attempts: number; window_end_at: number; extension_ends_at: number | null;
     review_at: number | null; status: string; close_cause: string | null;
     student_profile: string | null; duration_minutes: number | null; passing_score: number | null;
     extra_deadline_at: number | null; evaluation_version_id: string;
   }>(await x(
-    "SELECT id, max_attempts, window_end_at, extension_ends_at, review_at, status, close_cause, student_profile, duration_minutes, passing_score, extra_deadline_at, evaluation_version_id FROM evaluation_instances WHERE id = ?",
+    "SELECT id, phase, max_attempts, window_end_at, extension_ends_at, review_at, status, close_cause, student_profile, duration_minutes, passing_score, extra_deadline_at, evaluation_version_id FROM evaluation_instances WHERE id = ?",
     [instanciaId],
   ));
   if (!inst) throw new ErrorEvaluacion("instancia_no_encontrada", `instancia ${instanciaId} no existe`);
@@ -233,15 +235,16 @@ async function cargarInstanciaP0E(x: X, instanciaId: string): Promise<InstanciaP
   const causaCierre = inst.close_cause as InstanciaP0E["causaCierre"];
   const finExtension = inst.extension_ends_at ?? inst.window_end_at;
 
+  const esOrdinaria = inst.phase === "ordinaria";
   return {
     estado: estadoMap[inst.status] ?? "disponible",
     maxIntentos: Number(inst.max_attempts),
     finExtension,
     intentos,
     causaCierre,
-    esE2: true,
-    extraDisponible,
-    extraAgotado,
+    esE2: esOrdinaria,
+    extraDisponible: esOrdinaria && extraDisponible,
+    extraAgotado: esOrdinaria && extraAgotado,
   };
 }
 
@@ -983,13 +986,17 @@ export async function cerrarProceso(
     }
   }
 
-  // El estudiante no puede cerrar a su antojo: solo con un intento aprobado, el extra ya enviado
-  // o el plazo del extra vencido. Así el extra obligatorio no se salta.
+  // El estudiante no puede cerrar a su antojo: solo con un intento aprobado, el extra ya enviado,
+  // el plazo del extra vencido o el intento único de una instancia de reapertura enviado.
   const hayExtraEnviado = rows<{ n: number }>(await x(
     "SELECT COUNT(*) AS n FROM evaluation_attempts a JOIN evaluation_instances i ON i.id = a.instance_id WHERE i.process_id = ? AND a.attempt_kind = 'extra' AND a.status = 'enviado'",
     [params.procesoId],
   ))[0]?.n;
-  if (!hayAprobado && !Number(hayExtraEnviado ?? 0) && !hayExtraNoRendido) {
+  const hayReaperturaEnviada = rows<{ n: number }>(await x(
+    "SELECT COUNT(*) AS n FROM evaluation_attempts a JOIN evaluation_instances i ON i.id = a.instance_id WHERE i.process_id = ? AND i.phase = 'recuperacion' AND a.status = 'enviado'",
+    [params.procesoId],
+  ))[0]?.n;
+  if (!hayAprobado && !Number(hayExtraEnviado ?? 0) && !hayExtraNoRendido && !Number(hayReaperturaEnviada ?? 0)) {
     throw new ErrorEvaluacion("cierre_no_permitido", "el proceso no se puede cerrar todavía: falta el intento extra o que venza su plazo");
   }
   const estado: "aprobado" | "reprobado" = hayAprobado ? "aprobado" : "reprobado";
@@ -1056,14 +1063,31 @@ export async function cerrarProceso(
 
 // ——— 6. reabrirPorAdministrador ———
 
+export interface ReaperturaAdministrativaResultado {
+  reopeningId: string;
+  procesoId: string;
+  evaluacionId: string;
+  estudianteId: string;
+  administradorId: string;
+  motivo: string;
+  reopenedAt: number;
+  sourceAttemptId: string | null;
+  nuevaInstanciaId: string;
+  versionId: string;
+  perfil: PerfilEstudiante;
+  duracionMin: number;
+  umbral: number;
+}
+
 /**
- * Reabre un proceso de evaluación tras una interrupción involuntaria.
+ * Reabre un proceso de evaluación E2 tras una interrupción involuntaria justificada (D2 · M-R05).
  *
- * Según P21 v2 §4 (DECISIONES_DIRECCION.md):
- * "Interrupción involuntaria: caso manual — el administrador autoriza un intento nuevo
- * completo de 60 min, solo una vez más por evaluación; motivo y fecha registrados."
- *
- * Esta función está en P21_v2_APROBADA.md (sección 4, "Interrupción involuntaria").
+ * Reglas aprobadas:
+ * - Solo una reapertura administrativa por proceso (`evaluation_reopenings.process_id UNIQUE`).
+ * - Respeta el perfil vigente del estudiante (60 min regular / 120 min neurodivergente).
+ * - Exige motivo obligatorio (mínimo 10 caracteres) y registra trazabilidad completa.
+ * - Respeta P18: solo usa una versión validada/asignada que no esté expuesta.
+ * - Conserva inmutable todo el historial de instancias, intentos y respuestas previas.
  */
 export async function reabrirPorAdministrador(
   c: Client,
@@ -1072,12 +1096,16 @@ export async function reabrirPorAdministrador(
     estudianteId: string;
     administradorId: string;
     motivo: string;
+    versionId?: string;
   },
-): Promise<{ procesoId: string; nuevaInstanciaId: string }> {
+): Promise<ReaperturaAdministrativaResultado> {
   const x: X = (s, a = []) => c.execute({ sql: s, args: a as InValue[] });
   const ahora = await relojMotor(c).ahora();
+  const motivoLimpio = params.motivo.trim();
+  if (motivoLimpio.length < 10) {
+    throw new ErrorEvaluacion("motivo_invalido", "el motivo de reapertura debe tener al menos 10 caracteres");
+  }
 
-  // Verificar proceso cerrado.
   const proceso = row<{ id: string; status: string; student_id: string; evaluation_id: string }>(await x(
     "SELECT id, status, student_id, evaluation_id FROM evaluation_processes WHERE id = ?",
     [params.procesoId],
@@ -1086,53 +1114,268 @@ export async function reabrirPorAdministrador(
   if (String(proceso.student_id) !== params.estudianteId) {
     throw new ErrorEvaluacion("proceso_no_encontrado", `proceso no pertenece al estudiante ${params.estudianteId}`);
   }
-  if (proceso.status !== "aprobado" && proceso.status !== "reprobado") {
-    throw new ErrorEvaluacion("proceso_cerrado", `proceso ${params.procesoId} no está cerrado`);
+  if (proceso.status === "aprobado") {
+    throw new ErrorEvaluacion("proceso_cerrado", `proceso ${params.procesoId} ya fue aprobado y no puede reabrirse`);
   }
 
-  // Obtener perfil del estudiante de la instancia existente.
-  const instAnterior = row<{ student_profile: string; evaluation_version_id: string }>(await x(
-    "SELECT student_profile, evaluation_version_id FROM evaluation_instances WHERE process_id = ? ORDER BY id DESC LIMIT 1",
+  // Solo una reapertura administrativa por proceso.
+  const yaReabierto = row<{ id: string }>(await x(
+    "SELECT id FROM evaluation_reopenings WHERE process_id = ? LIMIT 1",
     [params.procesoId],
   ));
-  const perfil = (instAnterior?.student_profile as PerfilEstudiante) ?? "regular";
+  if (yaReabierto) {
+    throw new ErrorEvaluacion("reapertura_ya_existe", `el proceso ${params.procesoId} ya fue reabierto una vez`);
+  }
+
+  const instAnterior = row<{ student_profile: string | null; evaluation_version_id: string }>(await x(
+    "SELECT student_profile, evaluation_version_id FROM evaluation_instances WHERE process_id = ? ORDER BY rowid DESC LIMIT 1",
+    [params.procesoId],
+  ));
+
+  // D2 confirmada: respeta el perfil de adaptación vigente en user_profiles (regular 60 min / neurodivergente 120 min).
+  const perfilRow = row<{ evaluation_profile: string | null }>(await x(
+    "SELECT evaluation_profile FROM user_profiles WHERE user_id = ? LIMIT 1",
+    [params.estudianteId],
+  ));
+  const perfilVigenteRaw = perfilRow?.evaluation_profile ?? instAnterior?.student_profile ?? "regular";
+  const perfil: PerfilEstudiante = perfilVigenteRaw === "neurodivergente" ? "neurodivergente" : "regular";
   const perfilParams = parametrosPerfil(perfil);
 
-  // P21_v2_APROBADA.md §4: "el administrador autoriza un intento nuevo completo de 60 min,
-  // solo una vez más por evaluación; motivo y fecha registrados".
-  //
-  // Limitación de la base (decisión pendiente):
-  // - El trigger ep_no_reabrir bloquea UPDATE en procesos cerrados (aprobado/reprobado).
-  // - El UNIQUE (student_id, evaluation_id) en evaluation_processes impide crear un segundo proceso.
-  // - Por lo tanto, la migración 0005 no soporta directamente la reapertura administrativa.
-  //
-  // Implementación actual: intenta crear una nueva instancia en el proceso existente.
-  // Si el proceso está en estado intermedio (recuperacion_pendiente/recuperacion_abierta),
-  // funciona. Si está cerrado, la instancia se crea pero el proceso no se reabre.
-  // Se requiere una migración futura para soportar este flujo completo.
-  //
-  // Decisión pendiente: modificar la migración 0005 para permitir reapertura administrativa
-  // (por ejemplo, eliminando el trigger ep_no_reabrir para transiciones autorizadas,
-  // o añadiendo una tabla de auditoría de reaperturas).
+  // P18: seleccionar versión validada/asignada NO expuesta.
+  let versionElegida: string | null = null;
+  const candidatas: string[] = [];
+  if (params.versionId?.trim()) {
+    const vRow = row<{ id: string }>(await x(
+      "SELECT id FROM evaluation_versions WHERE id = ? AND evaluation_id = ? AND status IN ('validada','asignada') LIMIT 1",
+      [params.versionId.trim(), proceso.evaluation_id],
+    ));
+    if (!vRow) throw new ErrorEvaluacion("version_no_encontrada", `versión ${params.versionId} no válida para la evaluación`);
+    candidatas.push(String(vRow.id));
+  } else {
+    const versiones = rows<{ id: string }>(await x(
+      "SELECT id FROM evaluation_versions WHERE evaluation_id = ? AND status IN ('validada','asignada') ORDER BY version DESC",
+      [proceso.evaluation_id],
+    ));
+    if (instAnterior?.evaluation_version_id) {
+      candidatas.push(String(instAnterior.evaluation_version_id));
+    }
+    for (const v of versiones) {
+      const vid = String(v.id);
+      if (!candidatas.includes(vid)) candidatas.push(vid);
+    }
+  }
+  for (const vid of candidatas) {
+    if (!(await esVersionEvaluacionExpuesta(c, vid, ahora))) {
+      versionElegida = vid;
+      break;
+    }
+  }
+  if (!versionElegida) {
+    throw new ErrorEvaluacion("version_no_encontrada", "no hay versión no expuesta disponible para reabrir (P18)");
+  }
+
+  // Intento origen (último intento registrado en el proceso, si existe) para trazabilidad.
+  const ultimoIntento = row<{ id: string }>(await x(
+    `SELECT a.id
+     FROM evaluation_attempts a
+     JOIN evaluation_instances i ON i.id = a.instance_id
+     WHERE i.process_id = ?
+     ORDER BY a.rowid DESC
+     LIMIT 1`,
+    [params.procesoId],
+  ));
+  const sourceAttemptId = ultimoIntento ? String(ultimoIntento.id) : null;
 
   const nuevaInstanciaId = randomUUID();
-  await x(
-    "INSERT INTO evaluation_instances (id, process_id, student_id, evaluation_version_id, phase, window_end_at, max_attempts, status, student_profile, duration_minutes, passing_score, extra_deadline_at) VALUES (?, ?, ?, ?, 'recuperacion', ?, 1, 'disponible', ?, ?, ?, ?)",
-    [
-      nuevaInstanciaId,
-      params.procesoId,
-      params.estudianteId,
-      instAnterior?.evaluation_version_id ?? "",
-      ahora + HORAS_PLAZO_EXTRA * SEG_POR_HORA * 2,
-      perfil,
-      perfilParams.duracionMin,
-      perfilParams.umbralAprobacion,
-      ahora + HORAS_PLAZO_EXTRA * SEG_POR_HORA,
-    ],
+  const reopeningId = randomUUID();
+  const batchStmts: Array<{ sql: string; args: InValue[] }> = [
+    {
+      sql: `INSERT INTO evaluation_instances
+              (id, process_id, student_id, evaluation_version_id, phase, window_end_at, max_attempts, status, student_profile, duration_minutes, passing_score, extra_deadline_at)
+            VALUES (?, ?, ?, ?, 'recuperacion', ?, 1, 'disponible', ?, ?, ?, NULL)`,
+      args: [
+        nuevaInstanciaId,
+        params.procesoId,
+        params.estudianteId,
+        versionElegida,
+        ahora + HORAS_PLAZO_EXTRA * SEG_POR_HORA * 2,
+        perfil,
+        perfilParams.duracionMin,
+        perfilParams.umbralAprobacion,
+      ],
+    },
+    {
+      sql: `INSERT INTO evaluation_reopenings
+              (id, process_id, student_id, evaluation_id, admin_user_id, reason, source_attempt_id, new_instance_id, reopened_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      args: [
+        reopeningId,
+        params.procesoId,
+        params.estudianteId,
+        proceso.evaluation_id,
+        params.administradorId,
+        motivoLimpio,
+        sourceAttemptId,
+        nuevaInstanciaId,
+        ahora,
+      ],
+    },
+  ];
+  if (proceso.status !== "recuperacion_abierta") {
+    batchStmts.push({
+      sql: "UPDATE evaluation_processes SET status = 'recuperacion_abierta', closed_at = NULL, close_cause = NULL WHERE id = ?",
+      args: [params.procesoId],
+    });
+  }
+
+  await c.batch(batchStmts, "write");
+
+  return {
+    reopeningId,
+    procesoId: params.procesoId,
+    evaluacionId: String(proceso.evaluation_id),
+    estudianteId: params.estudianteId,
+    administradorId: params.administradorId,
+    motivo: motivoLimpio,
+    reopenedAt: ahora,
+    sourceAttemptId,
+    nuevaInstanciaId,
+    versionId: versionElegida,
+    perfil,
+    duracionMin: perfilParams.duracionMin,
+    umbral: perfilParams.umbralAprobacion,
+  };
+}
+
+export interface ProcesoEvaluacionAdminDTO {
+  procesoId: string;
+  studentId: string;
+  studentName: string | null;
+  studentEmail: string | null;
+  evaluationId: string;
+  evaluationTitle: string;
+  status: string;
+  closeCause: string | null;
+  closedAt: number | null;
+  perfilVigente: PerfilEstudiante;
+  duracionMinVigente: number;
+  intentosEnviados: number;
+  mejorScorePct: number | null;
+  reapertura: {
+    id: string;
+    adminUserId: string;
+    adminName: string | null;
+    reason: string;
+    sourceAttemptId: string | null;
+    newInstanceId: string;
+    reopenedAt: number;
+    resultadoIntento: {
+      status: string;
+      scorePct: number | null;
+      passed: boolean | null;
+    } | null;
+  } | null;
+}
+
+export async function listarProcesosEvaluacionAdmin(c: Client): Promise<ProcesoEvaluacionAdminDTO[]> {
+  const x: X = (s, a = []) => c.execute({ sql: s, args: a as InValue[] });
+  const procs = rows<{
+    proceso_id: string;
+    student_id: string;
+    student_name: string | null;
+    student_email: string | null;
+    evaluation_id: string;
+    evaluation_title: string | null;
+    status: string;
+    close_cause: string | null;
+    closed_at: number | null;
+    evaluation_profile: string | null;
+  }>(
+    await x(
+      `SELECT p.id AS proceso_id, p.student_id, u.name AS student_name, u.email AS student_email,
+              p.evaluation_id, me.title AS evaluation_title, p.status, p.close_cause, p.closed_at,
+              up.evaluation_profile
+       FROM evaluation_processes p
+       LEFT JOIN users u ON u.id = p.student_id
+       LEFT JOIN module_evaluations me ON me.id = p.evaluation_id
+       LEFT JOIN user_profiles up ON up.user_id = p.student_id
+       ORDER BY p.rowid DESC`,
+    ),
   );
 
-  // Decisión pendiente: tabla de auditoría para registrar motivo y administrador.
-  // El motivo y administradorId se reciben pero no hay tabla dedicada en la migración 0005.
-
-  return { procesoId: params.procesoId, nuevaInstanciaId };
+  const out: ProcesoEvaluacionAdminDTO[] = [];
+  for (const p of procs) {
+    const agg = row<{ enviados: number; mejor: number | null }>(
+      await x(
+        `SELECT COUNT(*) AS enviados, MAX(a.score_pct) AS mejor
+         FROM evaluation_attempts a
+         JOIN evaluation_instances i ON i.id = a.instance_id
+         WHERE i.process_id = ? AND a.status = 'enviado'`,
+        [p.proceso_id],
+      ),
+    );
+    const reap = row<{
+      id: string;
+      admin_user_id: string;
+      admin_name: string | null;
+      reason: string;
+      source_attempt_id: string | null;
+      new_instance_id: string;
+      reopened_at: number;
+    }>(
+      await x(
+        `SELECT r.id, r.admin_user_id, au.name AS admin_name, r.reason, r.source_attempt_id, r.new_instance_id, r.reopened_at
+         FROM evaluation_reopenings r
+         LEFT JOIN users au ON au.id = r.admin_user_id
+         WHERE r.process_id = ?
+         LIMIT 1`,
+        [p.proceso_id],
+      ),
+    );
+    let resultadoIntento: { status: string; scorePct: number | null; passed: boolean | null } | null = null;
+    if (reap) {
+      const att = row<{ status: string; score_pct: number | null; passed: number | null }>(
+        await x(
+          "SELECT status, score_pct, passed FROM evaluation_attempts WHERE instance_id = ? ORDER BY rowid DESC LIMIT 1",
+          [reap.new_instance_id],
+        ),
+      );
+      if (att) {
+        resultadoIntento = {
+          status: String(att.status),
+          scorePct: att.score_pct == null ? null : Number(att.score_pct),
+          passed: att.passed == null ? null : Number(att.passed) === 1,
+        };
+      }
+    }
+    const perfilVigente: PerfilEstudiante = p.evaluation_profile === "neurodivergente" ? "neurodivergente" : "regular";
+    out.push({
+      procesoId: String(p.proceso_id),
+      studentId: String(p.student_id),
+      studentName: p.student_name ? String(p.student_name) : null,
+      studentEmail: p.student_email ? String(p.student_email) : null,
+      evaluationId: String(p.evaluation_id),
+      evaluationTitle: p.evaluation_title ? String(p.evaluation_title) : String(p.evaluation_id),
+      status: String(p.status),
+      closeCause: p.close_cause ? String(p.close_cause) : null,
+      closedAt: p.closed_at == null ? null : Number(p.closed_at),
+      perfilVigente,
+      duracionMinVigente: parametrosPerfil(perfilVigente).duracionMin,
+      intentosEnviados: Number(agg?.enviados ?? 0),
+      mejorScorePct: agg?.mejor == null ? null : Number(agg.mejor),
+      reapertura: reap
+        ? {
+            id: String(reap.id),
+            adminUserId: String(reap.admin_user_id),
+            adminName: reap.admin_name ? String(reap.admin_name) : null,
+            reason: String(reap.reason),
+            sourceAttemptId: reap.source_attempt_id ? String(reap.source_attempt_id) : null,
+            newInstanceId: String(reap.new_instance_id),
+            reopenedAt: Number(reap.reopened_at),
+            resultadoIntento,
+          }
+        : null,
+    });
+  }
+  return out;
 }

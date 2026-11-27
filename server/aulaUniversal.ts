@@ -6,13 +6,16 @@ import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import * as schema from "@shared/schema";
 import { lessonStudyProgress, type LessonStudyProgressRow } from "@shared/schema";
 import {
-  evaluarProcesoSinPorcentaje,
   guardarProgresoLeccionSchema,
-  obtenerLeccionPorOa,
   procesoRespuestasSchema,
   type PasoLeccion,
   type PuertaAprendizaje,
 } from "@shared/aulaUniversal";
+import {
+  evaluarProcesoSinPorcentaje,
+  explicacionesAcertadasProceso,
+  obtenerLeccionPrivadaPorOa,
+} from "./aulaUniversalCatalogo";
 
 export interface ProgresoLeccionDTO {
   oaId: string;
@@ -71,7 +74,7 @@ export async function saveProgresoLeccion(
   db: LibSQLDatabase<typeof schema>,
   params: { userId: string; oaId: string; body: unknown; now: Date },
 ): Promise<Res<ProgresoLeccionDTO>> {
-  const leccion = obtenerLeccionPorOa(params.oaId);
+  const leccion = obtenerLeccionPrivadaPorOa(params.oaId);
   if (!leccion) {
     return { ok: false, status: 404, reason: "Lección no encontrada" };
   }
@@ -130,10 +133,11 @@ export async function registrarComprobacionProceso(
   Res<{
     estado: "logrado" | "sigue_practicando";
     detalle: Record<string, boolean>;
+    explicaciones: Record<string, string>;
     progreso: ProgresoLeccionDTO | null;
   }>
 > {
-  const leccion = obtenerLeccionPorOa(params.oaId);
+  const leccion = obtenerLeccionPrivadaPorOa(params.oaId);
   if (!leccion) {
     return { ok: false, status: 404, reason: "Lección no encontrada" };
   }
@@ -188,6 +192,7 @@ export async function registrarComprobacionProceso(
     value: {
       estado: evaluacion.estado,
       detalle: evaluacion.detalle,
+      explicaciones: explicacionesAcertadasProceso(leccion.oaId, evaluacion.detalle),
       progreso,
     },
   };

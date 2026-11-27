@@ -106,6 +106,7 @@ const { generateSQLiteDrizzleJson, generateSQLiteMigration } = await import("dri
 const S = await import("../shared/schema");
 const { users } = await import("../shared/models/auth");
 const { db, client } = await import("../server/db");
+const { aplicarMigracionesUnificadas } = await import("../server/migrarTodo");
 const { registerAuthRoutes, isAuthenticated } = await import("../server/replit_integrations/auth");
 const { previewTestLogin } = await import("../server/previewLogin");
 
@@ -114,6 +115,7 @@ const ddl = await generateSQLiteMigration(
   await generateSQLiteDrizzleJson(S as any),
 );
 for (const stmt of ddl) await db.run(sql.raw(stmt));
+await aplicarMigracionesUnificadas(client as any);
 
 await db.insert(users).values([
   { id: "est-preexistente-id", email: "sofia.real@colegio.cl", name: "Sofía Previa" },

@@ -76,6 +76,8 @@ export interface NodoEntradaMapa {
   estado: Estado;
   marca: "por_comprobar" | null;
   motivo: Motivo | null;
+  /** D1 (M-R04): verdadero cuando el estudiante ya tiene acierto autónomo hoy o saltó con «Ya lo sé», pendiente de confirmación en otro día calendario. */
+  pendienteOtroDia?: boolean;
 }
 
 export interface AristaMapa {
@@ -210,8 +212,8 @@ export function calcularFronteras(
         accion = "Repasar";
       } else if (n.estado === "incierto") {
         estadoVisual = "incierto";
-        etiqueta = "Sigue practicando";
-        accion = "Practicar";
+        etiqueta = n.pendienteOtroDia ? "Por confirmar otro día" : "Sigue practicando";
+        accion = n.pendienteOtroDia ? "Confirmar otro día" : "Practicar";
       } else if (disponible) {
         estadoVisual = "listo";
         etiqueta = "Listo para aprender";
@@ -321,7 +323,9 @@ export function recomendarSiguienteContenido(
   }
 
   const enProgresoDisponible = mapa.nodos.find(
-    (n) => (n.estadoVisual === "no_dominado" || n.estadoVisual === "incierto") && n.disponible,
+    (n) =>
+      (n.estadoVisual === "no_dominado" || (n.estadoVisual === "incierto" && !n.pendienteOtroDia)) &&
+      n.disponible,
   );
   if (enProgresoDisponible) {
     const tipo = enProgresoDisponible.estadoVisual === "no_dominado" ? "reforzar" : "aprender";
@@ -337,6 +341,23 @@ export function recomendarSiguienteContenido(
       tipo,
       motivo,
     };
+  }
+
+  const porConfirmarOtroDia = mapa.nodos.find(
+    (n) => n.estadoVisual === "incierto" && n.pendienteOtroDia && n.disponible,
+  );
+  if (porConfirmarOtroDia) {
+    const otroListo = mapa.nodos.find((n) => n.estadoVisual === "listo" && n.itemId !== porConfirmarOtroDia.itemId);
+    if (!otroListo) {
+      return {
+        itemId: porConfirmarOtroDia.itemId,
+        code: porConfirmarOtroDia.code,
+        oaId: porConfirmarOtroDia.oaId,
+        nombre: porConfirmarOtroDia.nombre,
+        tipo: "comprobar",
+        motivo: `Buen avance hoy en ${porConfirmarOtroDia.nombre}: vuelve en un día diferente para confirmar tu dominio.`,
+      };
+    }
   }
 
   const listo = mapa.nodos.find((n) => n.estadoVisual === "listo");

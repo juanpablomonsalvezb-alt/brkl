@@ -32,7 +32,6 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  obtenerLeccionesPiloto,
   PASOS_LECCION,
   pistaPorNivel,
   seleccionarPuertaPrincipal,
@@ -69,7 +68,14 @@ interface DiagnosticoResult {
 interface ComprobacionResult {
   estado: "logrado" | "sigue_practicando";
   detalle: Record<string, boolean>;
+  explicaciones?: Record<string, string>;
   progreso: ProgresoLeccionDTO | null;
+}
+
+interface PracticaRespuestaEstado {
+  opcionId: string;
+  correcta: boolean;
+  explicacion: string | null;
 }
 
 const ETIQUETA_PASO: Record<PasoLeccion, string> = {
@@ -167,28 +173,31 @@ export default function VorticeAula() {
     queryFn: async () => {
       const res = await fetch("/api/vortice/aula/piloto", { credentials: "include" });
       if (res.status === 401) throw new Error("UNAUTHORIZED");
+      if (res.status === 403) throw new Error("FORBIDDEN");
       if (!res.ok) throw new Error("Error cargando Aula Universal");
       return res.json();
     },
     retry: false,
   });
 
-  const lecciones = pilotoQuery.data?.lecciones ?? obtenerLeccionesPiloto();
-  const oaInicial = lecciones.some((l) => l.oaId === params?.oaId) ? params!.oaId : lecciones[0].oaId;
+  const lecciones = pilotoQuery.data?.lecciones ?? [];
+  const oaInicial = params?.oaId ?? "oa7";
 
   const [oaSeleccionado, setOaSeleccionado] = useState<string>(oaInicial);
   useEffect(() => {
     if (params?.oaId && lecciones.some((l) => l.oaId === params.oaId)) {
       setOaSeleccionado(params.oaId);
+    } else if (lecciones.length > 0 && !lecciones.some((l) => l.oaId === oaSeleccionado)) {
+      setOaSeleccionado(lecciones[0].oaId);
     }
-  }, [params?.oaId, lecciones]);
+  }, [params?.oaId, lecciones, oaSeleccionado]);
 
-  const leccion = lecciones.find((l) => l.oaId === oaSeleccionado) ?? lecciones[0];
-  const progresoActual = pilotoQuery.data?.progreso?.[leccion.oaId] ?? null;
+  const leccion = lecciones.find((l) => l.oaId === oaSeleccionado) ?? lecciones[0] ?? null;
+  const progresoActual = leccion ? pilotoQuery.data?.progreso?.[leccion.oaId] ?? null : null;
 
   const [pasoActual, setPasoActual] = useState<PasoLeccion>("me_ubico");
   const [tramoActual, setTramoActual] = useState<number>(0);
-  const [puertaPreferida, setPuertaPreferida] = useState<PuertaAprendizaje>(leccion.puertaSugerida);
+  const [puertaPreferida, setPuertaPreferida] = useState<PuertaAprendizaje>("video");
   const [pasoEjemploVisto, setPasoEjemploVisto] = useState<number>(0);
   const [retomadoBanner, setRetomadoBanner] = useState<string | null>(null);
 
@@ -199,9 +208,9 @@ export default function VorticeAula() {
   const [tarjetaIdx, setTarjetaIdx] = useState(0);
   const [tarjetaVolteada, setTarjetaVolteada] = useState(false);
 
-  // «Inténtalo tú»: 1 pregunta por pantalla y pistas en 3 niveles.
+  // «Inténtalo tú»: 1 pregunta por pantalla y pistas en 3 niveles (corrección en servidor).
   const [idxPractica, setIdxPractica] = useState(0);
-  const [respPractica, setRespPractica] = useState<Record<string, string>>({});
+  const [respPractica, setRespPractica] = useState<Record<string, PracticaRespuestaEstado>>({});
   const [nivelPistaPorEj, setNivelPistaPorEj] = useState<Record<string, 1 | 2 | 3>>({});
 
   // «Comprueba» (proceso sin nota ni porcentaje).
@@ -218,6 +227,7 @@ export default function VorticeAula() {
   const saltoYaLoSeOaRef = useRef<string | null>(null);
 
   useEffect(() => {
+    if (!leccion) return;
     const cambioOa = hidratacionRef.current?.oaId !== leccion.oaId;
     const primeraCargaServidor = Boolean(
       pilotoQuery.isSuccess &&
@@ -266,10 +276,11 @@ export default function VorticeAula() {
       setPasoEjemploVisto(0);
       setRetomadoBanner(null);
     }
-  }, [leccion.oaId, leccion.microTramos.length, leccion.ejemploResuelto.pasos.length, leccion.puertaSugerida, pilotoQuery.isSuccess, progresoActual]);
+  }, [leccion, pilotoQuery.isSuccess, progresoActual]);
 
   const guardarProgresoMutation = useMutation({
     mutationFn: async (input: GuardarProgresoLeccionInput) => {
+      if (!leccion) throw new Error("Lección no cargada");
       const res = await fetch(`/api/vortice/aula/lecciones/${encodeURIComponent(leccion.oaId)}/progreso`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -302,6 +313,7 @@ export default function VorticeAula() {
 
   const comprobarMutation = useMutation({
     mutationFn: async (payload: { respuestas: Record<string, string>; origen: "normal" | "ya_lo_se" }) => {
+      if (!leccion) throw new Error("Lección no cargada");
       const res = await fetch(`/api/vortice/aula/lecciones/${encodeURIComponent(leccion.oaId)}/comprobar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -330,16 +342,29 @@ export default function VorticeAula() {
       usoPista: boolean;
       clientSubmissionId: string;
     }) => {
-      const res = await fetch("/api/vortice/conocimiento/practica", {
+      const res = await fetch(`/api/vortice/aula/lecciones/${encodeURIComponent(payload.oaId)}/practica`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          preguntaId: payload.preguntaId,
+          opcionId: payload.opcionId,
+          usoPista: payload.usoPista,
+          clientSubmissionId: payload.clientSubmissionId,
+        }),
       });
-      if (!res.ok) return null;
-      return res.json();
+      if (!res.ok) throw new Error("Error corrigiendo práctica");
+      return res.json() as Promise<{ correcta: boolean; explicacion: string | null }>;
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      setRespPractica((prev) => ({
+        ...prev,
+        [variables.preguntaId]: {
+          opcionId: variables.opcionId,
+          correcta: data.correcta,
+          explicacion: data.explicacion,
+        },
+      }));
       queryClient.invalidateQueries({ queryKey: ["/api/vortice/conocimiento/mapa"] });
     },
   });
@@ -372,6 +397,55 @@ export default function VorticeAula() {
           <CardContent>
             <Link href="/vortice" className="vx-btn-primary">
               Ir a Vórtice
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (pilotoQuery.isError && (pilotoQuery.error as Error).message === "FORBIDDEN") {
+    return (
+      <div className="vx-editorial min-h-screen flex items-center justify-center p-6">
+        <Card className="vx-paper max-w-md w-full border-[#E6E2D8] shadow-none">
+          <CardHeader>
+            <span className="vx-kicker">Acceso restringido</span>
+            <CardTitle className="vx-serif font-medium text-2xl mt-1">Sin matrícula activa en esta asignatura</CardTitle>
+            <CardDescription className="text-[#5E5D59]">
+              Esta unidad está disponible únicamente para estudiantes con matrícula activa en el curso correspondiente.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Link href="/vortice" className="vx-btn-primary">
+              Volver a Vórtice
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (pilotoQuery.isLoading) {
+    return (
+      <div className="vx-editorial min-h-screen flex items-center justify-center p-6">
+        <p className="text-[#5E5D59]">Cargando Aula Universal…</p>
+      </div>
+    );
+  }
+
+  if (pilotoQuery.isError || !leccion) {
+    return (
+      <div className="vx-editorial min-h-screen flex items-center justify-center p-6">
+        <Card className="vx-paper max-w-md w-full border-[#E6E2D8] shadow-none">
+          <CardHeader>
+            <CardTitle className="vx-serif font-medium text-2xl">No pudimos abrir el Aula</CardTitle>
+            <CardDescription className="text-[#5E5D59]">
+              Intenta recargar en unos segundos o vuelve al inicio de Vórtice.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Link href="/vortice" className="vx-btn-primary">
+              Volver a Vórtice
             </Link>
           </CardContent>
         </Card>
@@ -772,6 +846,7 @@ export default function VorticeAula() {
 
                   {/* Controles desplegables para no saturar */}
                   <div className="space-y-2.5 pt-1">
+                    {secundarias.length > 0 && (
                     <Collapsible open={verOtrasPuertas} onOpenChange={setVerOtrasPuertas} className="space-y-2">
                       <CollapsibleTrigger asChild>
                         <Button
@@ -804,6 +879,7 @@ export default function VorticeAula() {
                         </div>
                       </CollapsibleContent>
                     </Collapsible>
+                    )}
 
                     <Collapsible open={verApoyos} onOpenChange={setVerApoyos} className="space-y-2">
                       <CollapsibleTrigger asChild>
@@ -1021,14 +1097,14 @@ export default function VorticeAula() {
 
                 <div className="grid gap-2">
                   {ejercicioActual.alternativas.map((alt) => {
-                    const seleccionada = respActual === alt.id;
-                    const esCorrecta = alt.id === ejercicioActual.respuestaCorrecta;
+                    const seleccionada = respActual?.opcionId === alt.id;
+                    const esCorrecta = Boolean(respActual?.correcta);
                     return (
                       <button
                         key={alt.id}
                         type="button"
+                        disabled={registrarPracticaMutation.isPending}
                         onClick={() => {
-                          setRespPractica((prev) => ({ ...prev, [ejercicioActual.id]: alt.id }));
                           const submissionId =
                             typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
                               ? crypto.randomUUID()
@@ -1059,14 +1135,14 @@ export default function VorticeAula() {
                 {respActual && (
                   <div
                     className={`p-3.5 rounded-xl border text-sm ${
-                      respActual === ejercicioActual.respuestaCorrecta
+                      respActual.correcta
                         ? "bg-(--vx-acento-soft) border-(--vx-primary)/35 text-[#141413]"
                         : "bg-[#FAF9F5] border-[#E6E2D8] text-[#141413]"
                     }`}
                   >
-                    {respActual === ejercicioActual.respuestaCorrecta ? (
+                    {respActual.correcta ? (
                       <>
-                        <span className="font-semibold text-(--vx-primary)">Bien:</span> {ejercicioActual.explicacionCorrecta}
+                        <span className="font-semibold text-(--vx-primary)">Bien:</span> {respActual.explicacion}
                       </>
                     ) : (
                       <span>Aún no coincide. Usa una pista abajo y vuelve a elegir con calma.</span>
@@ -1210,7 +1286,7 @@ export default function VorticeAula() {
                       {resComprueba && (
                         <p className="text-xs font-medium text-[#141413]">
                           {resComprueba.detalle[ej.id]
-                            ? `Correcto: ${ej.explicacionCorrecta}`
+                            ? `Correcto: ${resComprueba.explicaciones?.[ej.id] ?? ""}`
                             : "Revisa este ejercicio antes de volver a comprobar."}
                         </p>
                       )}
@@ -1228,7 +1304,9 @@ export default function VorticeAula() {
                   >
                     <AlertDescription className="font-medium">
                       {resComprueba.estado === "logrado"
-                        ? "Logrado: dominas este tema y tu avance quedó guardado."
+                        ? origenYaLoSe || progresoActual?.completadaPorYaLoSe
+                          ? "Buen avance: saltaste el estudio y este tema quedó «Por confirmar otro día». Vuelve en un día diferente para confirmar tu dominio."
+                          : "Buen avance hoy: tu progreso quedó guardado. Vuelve en un día diferente para confirmar tu dominio."
                         : "Sigue practicando: revisa las preguntas pendientes o vuelve al paso Aprende."}
                     </AlertDescription>
                   </Alert>

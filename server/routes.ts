@@ -17,6 +17,7 @@ import {
   evaluationProgress,
 } from "@shared/schema";
 import {
+  cargarContinuacionesPendientes,
   loadVorticeOverview,
   checkResourceAccess,
   checkEvaluationAccess,
@@ -50,7 +51,13 @@ import {
   type TutoriaResult,
 } from "./tutoria";
 import {
-  listLinkedStudents, loadFamiliaResumen, getFamiliaBrujula, guardianLinkInput, upsertGuardianLink,
+  listLinkedStudents,
+  loadFamiliaResumen,
+  getFamiliaBrujula,
+  guardianLinkInput,
+  upsertGuardianLink,
+  listAllGuardianLinks,
+  revokeGuardianLink,
 } from "./familia";
 import { recordEvent, recordResourceOpened, loadAnaliticaResumen } from "./analitica";
 import { enrollStudentInLevel, listEnrollments, findUserIdByEmail, MatriculaError } from "./matricula";
@@ -106,10 +113,25 @@ import {
 } from "./aulaUniversal";
 import {
   diagnosticoRespuestasSchema,
-  evaluarDiagnosticoCero,
-  obtenerLeccionPorOa,
-  obtenerLeccionesPiloto,
+  practicaAulaRespuestaSchema,
 } from "@shared/aulaUniversal";
+import {
+  evaluarDiagnosticoCero,
+  evaluarEjercicioPractica,
+  obtenerLeccionPublicaPorOa,
+  obtenerLeccionesPilotoPublicas,
+} from "./aulaUniversalCatalogo";
+import {
+  obtenerLeccionAulaDesdeDb,
+  obtenerLeccionesAulaDesdeDb,
+} from "./aulaUniversalDb";
+import {
+  cargarPlanificadorAdaptativo,
+  simularPlanificadorAdaptativo,
+} from "./planificadorAdaptativo";
+import { simularPlanificadorInputSchema } from "@shared/planificadorAdaptativo";
+import { verificarAccesoEstudiantePiloto } from "./accesoAulaMapa";
+import { verificarSaludEsquemaVortice } from "./saludEsquema";
 import {
   cargarMapaConocimiento,
   DOMINIO_PILOTO_PRACTICA_ID,
@@ -949,9 +971,8 @@ export async function registerRoutes(
   });
 
   // Analítica agregada por asignatura de un nivel: conteos por semana y tasas por objetivo.
-  // Nunca lista estudiantes. isAdmin hoy deja pasar a todos (modo desarrollo), así que esta
-  // ruta exige el rol admin del perfil por su cuenta: son datos de menores.
-  app.get("/api/admin/analitica/resumen", async (req: any, res) => {
+  // Nunca lista estudiantes. Exige sesión válida y rol admin verificado en servidor.
+  app.get("/api/admin/analitica/resumen", isAdmin, async (req: any, res) => {
     try {
       const userId = currentUserId(req);
       if (!userId) return res.status(401).json({ message: "Unauthorized" });
@@ -966,13 +987,31 @@ export async function registerRoutes(
     }
   });
 
-  // Aula Universal UDL del piloto (Bloque A): 5 OA de Matemática 5.º U3 con guardado real por tramo.
+  // Verificación obligatoria de sesión + rol student + matrícula activa para Aula Universal y Mapa (M-R01).
+  const exigirAccesoPiloto = async (req: any, res: any, dominioId?: string): Promise<string | null> => {
+    const userId = currentUserId(req);
+    if (!userId) {
+      res.status(401).json({ message: "Unauthorized" });
+      return null;
+    }
+    const acceso = await verificarAccesoEstudiantePiloto(db, dbClient, userId, dominioId);
+    if (!acceso.ok) {
+      res.status(acceso.status).json({ message: acceso.reason });
+      return null;
+    }
+    return userId;
+  };
+
+  // Aula Universal UDL del piloto (Bloque A + M-R06): lee catálogo desde BD (`universal_lessons`) sin pauta en cliente.
   app.get("/api/vortice/aula/piloto", async (req: any, res) => {
     try {
-      const userId = currentUserId(req);
-      if (!userId) return res.status(401).json({ message: "Unauthorized" });
-      const progreso = await getProgresoLecciones(db, userId);
-      res.json({ lecciones: obtenerLeccionesPiloto(), progreso });
+      const userId = await exigirAccesoPiloto(req, res);
+      if (!userId) return;
+      const [lecciones, progreso] = await Promise.all([
+        obtenerLeccionesAulaDesdeDb(db, dbClient),
+        getProgresoLecciones(db, userId),
+      ]);
+      res.json({ lecciones, progreso });
     } catch (error) {
       console.error("Error loading Aula Universal pilot:", error);
       res.status(500).json({ message: "Failed to load Aula Universal pilot" });
@@ -981,10 +1020,10 @@ export async function registerRoutes(
 
   app.get("/api/vortice/aula/lecciones/:oaId", async (req: any, res) => {
     try {
-      const userId = currentUserId(req);
-      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const userId = await exigirAccesoPiloto(req, res);
+      if (!userId) return;
       const oaId = getStringParam(req.params.oaId);
-      const leccion = obtenerLeccionPorOa(oaId);
+      const leccion = await obtenerLeccionAulaDesdeDb(db, oaId, dbClient);
       if (!leccion) return res.status(404).json({ message: "Lección no encontrada" });
       const progreso = await getProgresoLeccion(db, userId, oaId);
       res.json({ leccion, progreso });
@@ -996,8 +1035,8 @@ export async function registerRoutes(
 
   app.put("/api/vortice/aula/lecciones/:oaId/progreso", async (req: any, res) => {
     try {
-      const userId = currentUserId(req);
-      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const userId = await exigirAccesoPiloto(req, res);
+      if (!userId) return;
       const r = await saveProgresoLeccion(db, {
         userId,
         oaId: getStringParam(req.params.oaId),
@@ -1014,8 +1053,8 @@ export async function registerRoutes(
 
   app.post("/api/vortice/aula/diagnostico", async (req: any, res) => {
     try {
-      const userId = currentUserId(req);
-      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const userId = await exigirAccesoPiloto(req, res);
+      if (!userId) return;
       const parsed = diagnosticoRespuestasSchema.safeParse(req.body);
       if (!parsed.success) return res.status(400).json({ message: "Respuestas de diagnóstico inválidas" });
       res.json(evaluarDiagnosticoCero(parsed.data.respuestas));
@@ -1025,10 +1064,42 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/vortice/aula/lecciones/:oaId/practica", async (req: any, res) => {
+    try {
+      const userId = await exigirAccesoPiloto(req, res);
+      if (!userId) return;
+      const oaId = getStringParam(req.params.oaId);
+      const parsed = practicaAulaRespuestaSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Práctica inválida" });
+      const evalRes = evaluarEjercicioPractica(oaId, parsed.data.preguntaId, parsed.data.opcionId);
+      if (!evalRes.ok) return res.status(evalRes.status).json({ message: evalRes.reason });
+      if (parsed.data.clientSubmissionId) {
+        try {
+          await registrarPracticaEnMotor(dbClient, {
+            estudianteId: userId,
+            oaId,
+            preguntaId: parsed.data.preguntaId,
+            opcionId: parsed.data.opcionId,
+            usoPista: parsed.data.usoPista,
+            clientSubmissionId: parsed.data.clientSubmissionId,
+          });
+        } catch (err) {
+          if (err instanceof PracticaError && err.codigo === "conflicto_idempotencia") {
+            return res.status(409).json({ message: err.message });
+          }
+        }
+      }
+      res.json({ correcta: evalRes.correcta, explicacion: evalRes.explicacion });
+    } catch (error) {
+      console.error("Error evaluating Aula Universal practice:", error);
+      res.status(500).json({ message: "Failed to evaluate practice" });
+    }
+  });
+
   app.post("/api/vortice/aula/lecciones/:oaId/comprobar", async (req: any, res) => {
     try {
-      const userId = currentUserId(req);
-      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const userId = await exigirAccesoPiloto(req, res);
+      if (!userId) return;
       const oaId = getStringParam(req.params.oaId);
       const r = await registrarComprobacionProceso(db, {
         userId,
@@ -1049,6 +1120,72 @@ export async function registerRoutes(
     }
   });
 
+  // Planificador Adaptativo («Mi calendario», solo lectura, nunca modifica calendario oficial).
+  const exigirEstudianteCalendario = async (req: any, res: any): Promise<string | null> => {
+    const userId = currentUserId(req);
+    if (!userId) {
+      res.status(401).json({ message: "Unauthorized" });
+      return null;
+    }
+    const perfil = await storage.getUserProfile(userId);
+    if (perfil && perfil.role !== "student") {
+      res.status(403).json({ message: "Solo los estudiantes pueden acceder a Mi calendario" });
+      return null;
+    }
+    return userId;
+  };
+
+  app.get("/api/vortice/calendario", async (req: any, res) => {
+    res.set("Cache-Control", "no-store");
+    try {
+      const userId = await exigirEstudianteCalendario(req, res);
+      if (!userId) return;
+      res.json(await cargarPlanificadorAdaptativo(db, dbClient, userId, new Date()));
+    } catch (error) {
+      console.error("Error loading adaptive planner:", error);
+      res.status(500).json({ message: "Failed to load adaptive calendar" });
+    }
+  });
+
+  app.post("/api/vortice/calendario/simular", async (req: any, res) => {
+    res.set("Cache-Control", "no-store");
+    try {
+      const userId = await exigirEstudianteCalendario(req, res);
+      if (!userId) return;
+      const parsed = simularPlanificadorInputSchema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Parámetros de simulación inválidos" });
+      res.json(await simularPlanificadorAdaptativo(db, dbClient, userId, parsed.data, new Date()));
+    } catch (error) {
+      console.error("Error simulating adaptive planner:", error);
+      res.status(500).json({ message: "Failed to simulate adaptive calendar" });
+    }
+  });
+
+  // M-R05: continuaciones pendientes (`progression_continuations`) para el módulo siguiente.
+  app.get("/api/vortice/continuaciones", async (req: any, res) => {
+    try {
+      const userId = currentUserId(req);
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      res.set("Cache-Control", "no-store");
+      res.json(await cargarContinuacionesPendientes(db, userId));
+    } catch (error) {
+      console.error("Error loading progression continuations:", error);
+      res.status(500).json({ message: "Failed to load progression continuations" });
+    }
+  });
+
+  // Salud del esquema Vórtice (M-R02): 200 solo si existen tablas núcleo y no hay deriva en migraciones.
+  app.get("/api/health/vortice", async (_req, res) => {
+    res.set("Cache-Control", "no-store");
+    try {
+      const salud = await verificarSaludEsquemaVortice(dbClient);
+      res.status(salud.ok ? 200 : 503).json(salud);
+    } catch (error) {
+      console.error("Error checking Vortice schema health:", error);
+      res.status(503).json({ ok: false, message: "Schema health check failed" });
+    }
+  });
+
   // Motor en sombra M2 + Mapa «Mis conocimientos» M3 + Retención M4 + Cruce M5 (nunca altera checkModuleAccess ni checkEvaluationAccess).
   app.get("/api/vortice/conocimiento/mapa", async (req: any, res) => {
     res.set("Cache-Control", "no-store");
@@ -1056,26 +1193,10 @@ export async function registerRoutes(
       ? req.query.dominio.trim()
       : DOMINIO_PILOTO_PRACTICA_ID;
     try {
-      const userId = currentUserId(req);
-      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const userId = await exigirAccesoPiloto(req, res, dominioId);
+      if (!userId) return;
       res.json(await cargarMapaConocimiento(dbClient, { estudianteId: userId, dominioId }));
     } catch (error) {
-      const msg = (error as Error)?.message ?? "";
-      if (/no such table/i.test(msg)) {
-        return res.json({
-          disponible: false,
-          dominioId,
-          dominioNombre: null,
-          politicaActiva: false,
-          tieneEvidencia: false,
-          nodos: [],
-          aristas: [],
-          recomendacion: null,
-          resumen: { dominados: 0, porComprobar: 0, enPractica: 0, porReforzar: 0, listos: 0, bloqueados: 0, total: 0 },
-          retencion: { hoy: "", pendientesCount: 0, pendientes: [], proximas: [] },
-          evaluacion: null,
-        });
-      }
       console.error("Error loading knowledge map:", error);
       res.status(500).json({ message: "Failed to load knowledge map" });
     }
@@ -1087,22 +1208,10 @@ export async function registerRoutes(
       ? req.query.dominio.trim()
       : DOMINIO_PILOTO_PRACTICA_ID;
     try {
-      const userId = currentUserId(req);
-      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const userId = await exigirAccesoPiloto(req, res, dominioId);
+      if (!userId) return;
       res.json(await cargarAgendaRetencion(dbClient, { estudianteId: userId, dominioId }));
     } catch (error) {
-      const msg = (error as Error)?.message ?? "";
-      if (/no such table/i.test(msg)) {
-        return res.json({
-          disponible: false,
-          dominioId,
-          hoy: "",
-          pendientesCount: 0,
-          pendientes: [],
-          proximas: [],
-          vencidosIds: [],
-        });
-      }
       console.error("Error loading retention agenda:", error);
       res.status(500).json({ message: "Failed to load retention agenda" });
     }
@@ -1110,9 +1219,12 @@ export async function registerRoutes(
 
   app.post("/api/vortice/conocimiento/retencion", async (req: any, res) => {
     res.set("Cache-Control", "no-store");
+    const domReq = typeof req.body?.dominioId === "string" && req.body.dominioId.trim()
+      ? req.body.dominioId.trim()
+      : DOMINIO_PILOTO_PRACTICA_ID;
     try {
-      const userId = currentUserId(req);
-      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const userId = await exigirAccesoPiloto(req, res, domReq);
+      if (!userId) return;
       const parsed = registrarRetencionInputSchema.safeParse(req.body);
       if (!parsed.success) return res.status(400).json({ message: "Comprobación de retención inválida" });
       res.json(await registrarComprobacionRetencion(dbClient, { estudianteId: userId, ...parsed.data }));
@@ -1121,19 +1233,18 @@ export async function registerRoutes(
         const status = error.codigo === "conflicto_idempotencia" ? 409 : 400;
         return res.status(status).json({ message: error.message });
       }
-      const msg = (error as Error)?.message ?? "";
-      if (/no such table/i.test(msg)) {
-        return res.json({ registrado: false, motivo: "motor_no_migrado" });
-      }
       console.error("Error recording retention check:", error);
       res.status(500).json({ message: "Failed to record retention check" });
     }
   });
 
   app.post("/api/vortice/conocimiento/practica", async (req: any, res) => {
+    const domReq = typeof req.body?.dominioId === "string" && req.body.dominioId.trim()
+      ? req.body.dominioId.trim()
+      : DOMINIO_PILOTO_PRACTICA_ID;
     try {
-      const userId = currentUserId(req);
-      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      const userId = await exigirAccesoPiloto(req, res, domReq);
+      if (!userId) return;
       const parsed = registrarPracticaInputSchema.safeParse(req.body);
       if (!parsed.success) return res.status(400).json({ message: "Práctica inválida" });
       const result = await registrarPracticaEnMotor(dbClient, {
@@ -1145,10 +1256,6 @@ export async function registerRoutes(
       if (error instanceof PracticaError) {
         const status = error.codigo === "conflicto_idempotencia" ? 409 : 400;
         return res.status(status).json({ message: error.message });
-      }
-      const msg = (error as Error)?.message ?? "";
-      if (/no such table/i.test(msg)) {
-        return res.json({ registrado: false, motivo: "motor_no_migrado" });
       }
       console.error("Error recording practice in knowledge engine:", error);
       res.status(500).json({ message: "Failed to record practice" });
@@ -1249,8 +1356,16 @@ export async function registerRoutes(
     });
   }
 
-  // Vórtice familia: crear o activar vínculo apoderado ↔ estudiante.
-  // isAdmin está en modo dev (deja pasar todo); un vínculo da lectura de un menor, así que aquí se exige admin real.
+  // Vórtice familia: listar, crear/activar y revocar vínculos apoderado ↔ estudiante (solo admin verificado).
+  app.get("/api/admin/familia/vinculos", isAdmin, async (_req: any, res) => {
+    try {
+      res.json(await listAllGuardianLinks(db));
+    } catch (error) {
+      console.error("Error listing guardian links:", error);
+      res.status(500).json({ message: "Failed to list guardian links" });
+    }
+  });
+
   app.post("/api/admin/familia/vinculos", isAdmin, async (req: any, res) => {
     try {
       const adminId = currentUserId(req);
@@ -1264,6 +1379,17 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error saving guardian link:", error);
       res.status(500).json({ message: "Failed to save link" });
+    }
+  });
+
+  app.delete("/api/admin/familia/vinculos/:id", isAdmin, async (req: any, res) => {
+    try {
+      const result = await revokeGuardianLink(db, getStringParam(req.params.id));
+      if (!result.ok) return res.status(result.status).json({ message: result.reason });
+      res.json(result);
+    } catch (error) {
+      console.error("Error revoking guardian link:", error);
+      res.status(500).json({ message: "Failed to revoke link" });
     }
   });
 
@@ -1584,6 +1710,15 @@ export async function registerRoutes(
     if (data.levelId) {
       const [lvl] = await db.select({ id: levels.id }).from(levels).where(eq(levels.id, data.levelId));
       if (!lvl) return res.status(400).json({ message: "Nivel inexistente" });
+    } else {
+      // En SQLite UNIQUE(academic_year, level_id) no colisiona cuando level_id es NULL: impedir duplicado global.
+      const existentes = await db
+        .select({ id: programCalendar.id })
+        .from(programCalendar)
+        .where(and(eq(programCalendar.academicYear, data.academicYear), isNull(programCalendar.levelId)));
+      if (existentes.some((r) => r.id !== id)) {
+        return res.status(409).json({ message: "Ya existe una configuración global para ese año académico" });
+      }
     }
     try {
       const values = { ...calendarInputToRow(data), updatedAt: new Date() };
@@ -1930,10 +2065,9 @@ export async function registerRoutes(
     }
   });
 
-  // Previsualizar la conversión HTML → questionsJson (no escribe). Incluye respuestas correctas.
+  // Previsualizar la conversión HTML → questionsJson (no escribe). Protegido por isAdmin (rol verificado en BD).
   app.get("/api/admin/evaluations/:id/html-preview", isAdmin, async (req: any, res) => {
     try {
-      // ponytail: isAdmin está en modo dev (deja pasar todo); al menos exigimos sesión.
       if (!currentUserId(req)) return res.status(401).json({ message: "Unauthorized" });
       const evaluation = await storage.getModuleEvaluationById(req.params.id);
       if (!evaluation) return res.status(404).json({ message: "Evaluation not found" });
@@ -3105,12 +3239,19 @@ export async function registerRoutes(
   // Gemini Copilots Routes
   // ============================================
 
+  // M-R08 (C19): Copiloto IA desactivado por defecto durante el piloto (`ENABLE_AI_COPILOT=false`).
+  const aiCopilotHabilitado = () =>
+    process.env.ENABLE_AI_COPILOT === "true" || process.env.ENABLE_AI_COPILOT === "1";
+
   // POST: copiloto académico (IA Barkley). Política en shared/iaPolicy.ts.
   // ponytail: límite de frecuencia en memoria = por instancia (cada lambda serverless tiene el suyo);
   // pasar a Redis/Upstash si se necesita un tope global.
   const copilotRate = new Map<string, number[]>();
   app.post("/api/academic-copilot/chat", async (req: any, res) => {
     try {
+      if (!aiCopilotHabilitado()) {
+        return res.status(403).json({ message: "El copiloto IA está desactivado en este entorno (C19)." });
+      }
       const userId = currentUserId(req);
       if (!userId) return res.status(401).json({ message: "Debes iniciar sesión" });
       if (!takeRateToken(copilotRate, userId, Date.now())) {
@@ -3151,6 +3292,9 @@ export async function registerRoutes(
   // GET: Get all copilots
   app.get("/api/gemini-copilots", requireSession, async (req: any, res) => {
     try {
+      if (!aiCopilotHabilitado()) {
+        return res.status(403).json({ message: "El copiloto IA está desactivado en este entorno (C19)." });
+      }
       const copilots = await storage.getAllGeminiCopilots();
       res.json(copilots);
     } catch (error) {
@@ -3162,6 +3306,9 @@ export async function registerRoutes(
   // GET: Get copilot by level ID
   app.get("/api/gemini-copilots/by-level/:levelId", requireSession, async (req: any, res) => {
     try {
+      if (!aiCopilotHabilitado()) {
+        return res.status(403).json({ message: "El copiloto IA está desactivado en este entorno (C19)." });
+      }
       const copilot = await storage.getGeminiCopilotByLevel(req.params.levelId);
       if (!copilot) {
         return res.status(404).json({ message: "No copilot found for this level" });
@@ -3176,6 +3323,9 @@ export async function registerRoutes(
   // GET: Get copilot by ID
   app.get("/api/gemini-copilots/:id", requireSession, async (req: any, res) => {
     try {
+      if (!aiCopilotHabilitado()) {
+        return res.status(403).json({ message: "El copiloto IA está desactivado en este entorno (C19)." });
+      }
       const copilot = await storage.getGeminiCopilotById(req.params.id);
       if (!copilot) {
         return res.status(404).json({ message: "Copilot not found" });

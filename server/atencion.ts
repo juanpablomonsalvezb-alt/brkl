@@ -8,21 +8,23 @@ import {
 import { diasSinActividad } from "@shared/atencion";
 import { getModuleStartDate } from "./calendarUtils";
 import { resolveCalendarConfig } from "./calendarConfig";
+import { ultimaActividadMotorVortice } from "./actividadUnificada";
 
 type Db = LibSQLDatabase<typeof schema>;
 
 export async function ultimaActividad(db: Db, userId: string): Promise<Date | null> {
-  const [eventos, progreso, leccion, evaluacion, reflexion, portafolio] = await Promise.all([
+  const [eventos, progreso, leccion, evaluacion, reflexion, portafolio, motorVortice] = await Promise.all([
     db.select({ fecha: max(learningEvents.createdAt) }).from(learningEvents).where(eq(learningEvents.userId, userId)),
     db.select({ fecha: max(studentProgress.completedAt) }).from(studentProgress).where(eq(studentProgress.userId, userId)),
     db.select({ fecha: max(lessonStudyProgress.updatedAt) }).from(lessonStudyProgress).where(eq(lessonStudyProgress.userId, userId)),
     db.select({ fecha: max(evaluationProgress.completedAt) }).from(evaluationProgress).where(eq(evaluationProgress.userId, userId)),
     db.select({ fecha: max(reflectionResponses.updatedAt) }).from(reflectionResponses).where(eq(reflectionResponses.userId, userId)),
     db.select({ fecha: max(portfolioEvidences.updatedAt) }).from(portfolioEvidences).where(eq(portfolioEvidences.userId, userId)),
+    ultimaActividadMotorVortice(db, userId),
   ]);
 
   // limitación: brujula_study_blocks guarda los bloques en JSON y no se consulta aquí su estado completado.
-  const fechas = [eventos[0]?.fecha, progreso[0]?.fecha, leccion[0]?.fecha, evaluacion[0]?.fecha, reflexion[0]?.fecha, portafolio[0]?.fecha]
+  const fechas = [eventos[0]?.fecha, progreso[0]?.fecha, leccion[0]?.fecha, evaluacion[0]?.fecha, reflexion[0]?.fecha, portafolio[0]?.fecha, motorVortice]
     .filter((fecha): fecha is Date => fecha instanceof Date);
   return fechas.reduce<Date | null>((ultima, fecha) => ultima === null || fecha > ultima ? fecha : ultima, null);
 }

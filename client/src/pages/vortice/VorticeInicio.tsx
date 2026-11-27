@@ -31,14 +31,25 @@ export default function VorticeInicio() {
   const nivel = ov?.level;
   const siguiente = ov?.nextStep;
   const aEvaluacion = siguiente?.kind === "evaluation" && ov?.evaluacionE2 === true;
-  const linkAsignatura = (slug: string) => (nivel ? `/course/${nivel.id}-${slug}` : "#");
+  const linkAsignatura = (subject: { subjectSlug: string; deliveryMode?: "legacy" | "aula_universal" }) =>
+    subject.deliveryMode === "aula_universal"
+      ? "/vortice/aula"
+      : nivel
+        ? `/course/${nivel.id}-${subject.subjectSlug}`
+        : "#";
+  const asignaturaSiguiente = siguiente
+    ? ov?.subjects.find((subject) => subject.levelSubjectId === siguiente.levelSubjectId)
+    : undefined;
   const linkSiguiente = aEvaluacion
     ? `/vortice/evaluacion/${encodeURIComponent(siguiente!.itemId)}`
-    : siguiente ? linkAsignatura(ov!.subjects.find((subject) => subject.levelSubjectId === siguiente.levelSubjectId)?.subjectSlug ?? "") : "#asignaturas";
+    : asignaturaSiguiente
+      ? linkAsignatura(asignaturaSiguiente)
+      : "#asignaturas";
   const nombre = datos.usuario.data?.firstName || datos.usuario.data?.name?.split(" ")[0] || null;
+  // M-R08: cuando Retención M4 está activa (`mapa.disponible`), no sumar el motor heredado `repaso.ts`.
   const pendientesRepaso = datos.repaso.data?.domains.reduce((total, domain) => total + domain.due, 0) ?? 0;
   const repasosMapa = datos.mapa.data?.disponible ? (datos.mapa.data.retencion?.pendientesCount ?? 0) : 0;
-  const repasosTotal = repasosMapa + pendientesRepaso;
+  const repasosTotal = datos.mapa.data?.disponible ? repasosMapa : pendientesRepaso;
 
   useEffect(() => {
     const ancla = window.location.hash.slice(1);
@@ -61,7 +72,7 @@ export default function VorticeInicio() {
   return (
     <VorticeShell variante="estudiante" activo="inicio" nombre={nombre} detalle={nivel?.name ?? "Sin curso asignado"} tramo={ov?.track} salirHref={datos.salir} flotante>
       <InicioPanoramico datos={datos} nombre={nombre} linkSiguiente={linkSiguiente} aEvaluacion={aEvaluacion} repasosTotal={repasosTotal}
-        hrefAsignatura={(s) => linkAsignatura(s.subjectSlug)} miniatura={miniaturaAsignatura} />
+        hrefAsignatura={linkAsignatura} miniatura={miniaturaAsignatura} />
     </VorticeShell>
   );
 }

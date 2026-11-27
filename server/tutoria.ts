@@ -1,7 +1,8 @@
 // Tutoría humana como caso (Atlas #006). Recibe la conexión como parámetro para probarse
-// contra una base en memoria. Los permisos se deciden aquí por el rol de user_profiles,
-// sin depender de los middlewares de la ruta (isAdmin hoy deja pasar a todos).
-import { and, asc, desc, eq, inArray, isNull, ne } from "drizzle-orm";
+// contra una base en memoria. Los permisos se deciden aquí por el rol de user_profiles
+// como defensa en profundidad además de los middlewares de ruta.
+import { randomUUID } from "node:crypto";
+import { and, asc, desc, eq, inArray, isNull, ne, sql } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import { z } from "zod";
 import * as schema from "@shared/schema";
@@ -62,13 +63,19 @@ export async function crearCaso(db: Db, studentId: string, body: unknown, now: D
     ));
     if (!r) return fail(404, "Actividad no encontrada en este objetivo");
   }
-  const open = await db.select({ id: tutoringCases.id }).from(tutoringCases)
-    .where(and(eq(tutoringCases.studentId, studentId), ne(tutoringCases.status, "cerrado")));
-  if (open.length >= MAX_OPEN_CASES) return fail(409, `Ya tienes ${MAX_OPEN_CASES} casos sin cerrar`);
-
-  const [created] = await db.insert(tutoringCases).values({
-    studentId, learningObjectiveId, resourceId: resourceId ?? null, question: pregunta, createdAt: now,
-  }).returning();
+  // Inserción condicional atómica en una sola sentencia SQL para evitar carreras sobre MAX_OPEN_CASES.
+  const caseId = randomUUID();
+  const createdUnix = Math.floor(now.getTime() / 1000);
+  await db.run(sql`
+    INSERT INTO tutoring_cases (id, student_id, learning_objective_id, resource_id, question, status, created_at)
+    SELECT ${caseId}, ${studentId}, ${learningObjectiveId}, ${resourceId ?? null}, ${pregunta}, 'abierto', ${createdUnix}
+    WHERE (
+      SELECT COUNT(*) FROM tutoring_cases
+      WHERE student_id = ${studentId} AND status <> 'cerrado'
+    ) < ${MAX_OPEN_CASES}
+  `);
+  const [created] = await db.select().from(tutoringCases).where(eq(tutoringCases.id, caseId));
+  if (!created) return fail(409, `Ya tienes ${MAX_OPEN_CASES} casos sin cerrar`);
   return { ok: true, value: created };
 }
 
