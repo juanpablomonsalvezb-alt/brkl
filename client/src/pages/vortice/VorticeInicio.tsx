@@ -68,10 +68,9 @@ export default function VorticeInicio() {
   return (
     <VorticeShell variante="estudiante" activo="inicio" nombre={nombre} detalle={nivel?.name ?? "Sin curso asignado"} tramo={ov?.track} salirHref={datos.salir}>
       <div className="vx-pagina vx-inicio">
-        <h1 id="vx-saludo" className="vx-titulo">{nombre ? `Hola, ${nombre}` : "Hola"}</h1>
-
-        <section className="vx-paso" aria-labelledby="vx-paso">
+        <section className="vx-paso" aria-labelledby="vx-paso" data-con-imagen={ov?.track ? "true" : undefined}>
           <div className="vx-paso-contenido">
+            <h1 id="vx-saludo" className="vx-titulo">{nombre ? `Hola, ${nombre}` : "Hola"}</h1>
             <h2 id="vx-paso">Tu siguiente paso</h2>
             {datos.overview.isLoading ? (
               <Skeleton className="h-12 w-full rounded-lg bg-(--vx-surface)" />
@@ -95,7 +94,7 @@ export default function VorticeInicio() {
               className="vx-paso-imagen"
               src={`/images/vortice/heroes/${ov.track}-1024.webp`}
               srcSet={`/images/vortice/heroes/${ov.track}-640.webp 640w, /images/vortice/heroes/${ov.track}-1024.webp 1024w, /images/vortice/heroes/${ov.track}-1600.webp 1600w`}
-              sizes="(min-width: 1024px) 40vw, 0px"
+              sizes="(max-width: 760px) 100vw, 1040px"
               width={1600}
               height={686}
               alt=""
@@ -134,9 +133,9 @@ export default function VorticeInicio() {
                             className="vx-inicio-asignatura-imagen"
                             src={`/images/vortice/asignaturas/${arte}-400.webp`}
                             srcSet={`/images/vortice/asignaturas/${arte}-400.webp 400w, /images/vortice/asignaturas/${arte}-800.webp 800w`}
-                            sizes="48px"
-                            width={48}
-                            height={48}
+                            sizes="(max-width: 760px) 45vw, 240px"
+                            width={400}
+                            height={300}
                             alt=""
                             aria-hidden="true"
                             loading="lazy"
