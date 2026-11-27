@@ -28,7 +28,11 @@ export const POLITICA_PILOTO_DEMO: PoliticaEjecutable = {
 const AUTOR = "ficticio-autor";
 const VALIDADOR = "ficticio-validador";
 const OAS_PILOTO = [7, 8, 10, 11, 13] as const;
-const DIR_CONTENIDO_PILOTO = path.resolve(import.meta.dirname, "../docs/vortice/piloto/contenido");
+// Evita import.meta.dirname sin guarda porque el bundle CJS de Vercel (api/handler.js) deja import.meta vacío.
+const BASE_PILOTO_DIR = typeof import.meta?.dirname === "string"
+  ? path.resolve(import.meta.dirname, "..")
+  : process.cwd();
+const DIR_CONTENIDO_PILOTO = path.resolve(BASE_PILOTO_DIR, "docs/vortice/piloto/contenido");
 
 export type EjecutorSql = (sql: string, args?: InArgs) => Promise<ResultSet>;
 
