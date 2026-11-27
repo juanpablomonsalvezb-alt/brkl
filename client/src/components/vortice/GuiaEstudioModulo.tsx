@@ -279,7 +279,7 @@ export default function GuiaEstudioModulo({
                         <div className="vx-guia-barra-track" aria-hidden="true">
                           <div
                             className="vx-guia-barra-fill-a"
-                            style={{ width: `${Math.min(100, Math.max(8, Math.round(explorar.izqValor * 100)))}%` }}
+                            style={{ width: `${Math.min(100, Math.max(8, Math.round(explorar.izqValor <= 1 ? explorar.izqValor * 100 : explorar.izqValor)))}%` }}
                           />
                         </div>
                       </div>
@@ -288,7 +288,7 @@ export default function GuiaEstudioModulo({
                         <div className="vx-guia-barra-track" aria-hidden="true">
                           <div
                             className="vx-guia-barra-fill-b"
-                            style={{ width: `${Math.min(100, Math.max(8, Math.round(explorar.derValor * 100)))}%` }}
+                            style={{ width: `${Math.min(100, Math.max(8, Math.round(explorar.derValor <= 1 ? explorar.derValor * 100 : explorar.derValor)))}%` }}
                           />
                         </div>
                       </div>
