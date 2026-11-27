@@ -56,7 +56,7 @@
   En 4° medio incluye ensayos PAES mensuales sin costo adicional.
 - **Adultos (18 años o más)**: {{precio_adultos}} CLP mensuales. Planes de Educación
   Básica, Media I (1° y 2° medio) y Media II (3° y 4° medio).
-- **Matrícula**: {{matricula}}, gratis para quienes se inscriban antes del 30 de noviembre.
+- **Matrícula**: {{matricula}}, gratis para quienes se inscriban hasta el 31 de diciembre.
 - **Incluye**: todas las asignaturas del nivel, 2 a 3 videos y pódcasts por lección,
   tutor asignado, asesor, Portal Familia y preparación para Exámenes Libres MINEDUC.
   Sin costos ocultos.
