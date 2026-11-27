@@ -20,8 +20,8 @@
 .ini-escena { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 60% 40%; }
 .ini-escena[data-tramo="basica-1-4"] { object-position: 50% 40%; }
 .ini-hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, var(--vx-bg), transparent 22%), linear-gradient(90deg, rgb(14 26 58 / .86), rgb(14 26 58 / .5) 42%, transparent 70%); }
-.ini-saludo { width: 100%; max-width: 1264px; margin: 0 auto; padding: 110px 32px 120px; color: #fff; }
-.ini-saludo > * { max-width: 600px; }
+.ini-saludo { width: 100%; max-width: 1560px; margin: 0 auto; padding: 110px clamp(20px, 3vw, 48px) 120px; color: #fff; }
+.ini-saludo > * { max-width: 640px; }
 .ini h1.ini-hola { font-family: var(--vx-sans); font-size: 18px; font-weight: 500; color: #fff; margin: 0; }
 .ini h2.ini-titulo { margin: 10px 0 14px; color: #fff; font-size: clamp(40px, 5.4vw, 68px); font-weight: 500; line-height: 1.04; letter-spacing: -.01em; }
 .ini h2.ini-titulo-largo { font-size: clamp(32px, 3.6vw, 46px); }
@@ -30,9 +30,9 @@
 .ini-cta:hover { transform: translateY(-2px); }
 .ini-cta svg { width: 18px; height: 18px; fill: currentColor; }
 .ini-cta:focus-visible { outline: 3px solid var(--vx-turquesa); outline-offset: 3px; }
-.ini-cuerpo { position: relative; max-width: 1264px; margin: -82px auto 0; padding: 0 32px; }
-.ini ul.ini-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
-.ini div.ini-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.ini-cuerpo { position: relative; max-width: 1560px; margin: -82px auto 0; padding: 0 clamp(20px, 3vw, 48px); }
+.ini ul.ini-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.ini div.ini-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
 .ini-card { --t: var(--vx-primary); --s: var(--vx-primary-soft); display: block; height: 100%; padding: 12px 12px 18px; border-radius: 26px; background: var(--vx-card); color: var(--vx-ink); text-decoration: none; box-shadow: 0 24px 44px -28px rgb(14 26 58 / .5); transition: transform 180ms ease; }
 .ini-card:hover { transform: translateY(-6px); }
 .ini-card[data-tinte="violeta"] { --t: var(--vx-violeta); --s: var(--vx-violeta-soft); }

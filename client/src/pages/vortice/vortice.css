@@ -74,8 +74,8 @@
 .vx-me a:hover { color: var(--vx-clay); }
 
 /* Área principal */
-.vx-main { min-width: 0; padding: 24px 28px 42px; }
-.vx-shell { max-width: 1240px; margin: 0 auto; display: grid; gap: 20px; }
+.vx-main { min-width: 0; padding: 24px clamp(20px, 2.5vw, 40px) 42px; }
+.vx-shell { max-width: 1440px; margin: 0 auto; display: grid; gap: 20px; }
 .vx-cols { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr); gap: 20px; align-items: start; }
 .vx-main-col, .vx-rail-col { display: grid; gap: 20px; min-width: 0; }
 
@@ -109,7 +109,7 @@
 .vx-mapa-svg-scroll { width: 100%; min-width: 0; }
 .vx-mapa-camino-item + .vx-mapa-camino-item::before { content: ", "; }
 .vx-mapa-lista [data-slot="item-title"] { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; }
-.vx-pagina { display: grid; gap: 20px; width: 100%; max-width: 1040px; margin: 0 auto; }
+.vx-pagina { display: grid; gap: 20px; width: 100%; max-width: 1360px; margin: 0 auto; }
 .vx-titulo { margin: 0; font-family: var(--vx-serif); font-size: 34px; font-weight: 500; line-height: 40px; }
 .vx-inicio-rejilla { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 20px; align-items: start; }
 .vx-inicio-como-voy { grid-column: 1 / -1; }
