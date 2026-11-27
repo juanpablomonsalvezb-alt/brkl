@@ -40,6 +40,7 @@ import {
   type PasoLeccion,
   type PuertaAprendizaje,
 } from "@shared/aulaUniversal";
+import GuiaEstudioModulo from "@/components/vortice/GuiaEstudioModulo";
 import "./vortice-editorial.css";
 
 interface ProgresoLeccionDTO extends GuardarProgresoLeccionInput {
@@ -184,6 +185,9 @@ export default function VorticeAula() {
   const oaInicial = params?.oaId ?? "oa7";
 
   const [oaSeleccionado, setOaSeleccionado] = useState<string>(oaInicial);
+  const [modoGuia, setModoGuia] = useState<boolean>(
+    () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("vista") === "guia",
+  );
   useEffect(() => {
     if (params?.oaId && lecciones.some((l) => l.oaId === params.oaId)) {
       setOaSeleccionado(params.oaId);
@@ -464,7 +468,7 @@ export default function VorticeAula() {
 
   return (
     <div className="vx-editorial min-h-screen">
-      <header className="vx-topbar">
+      <header className="vx-topbar no-print">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 min-h-14 py-2 flex items-center justify-between flex-wrap gap-2">
           <Link href="/vortice" className="vx-pill-nav">
             <ArrowLeft className="w-4 h-4" />
@@ -472,14 +476,28 @@ export default function VorticeAula() {
           </Link>
 
           <div className="flex flex-wrap items-center gap-2 min-w-0">
+            <button
+              type="button"
+              onClick={() => setModoGuia((v) => !v)}
+              aria-pressed={modoGuia}
+              className={`vx-pill-nav ${
+                modoGuia ? "!border-(--vx-primary) !bg-(--vx-acento-soft) !text-(--vx-primary)" : ""
+              }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>Guía de estudio</span>
+            </button>
             <Link href="/vortice/conocimientos" className="vx-pill-nav">
               <span className="sm:hidden">Conocimientos</span><span className="hidden sm:inline">Mis conocimientos</span>
             </Link>
             <button
               type="button"
-              onClick={() => setAbiertoDiagnostico((v) => !v)}
+              onClick={() => {
+                setModoGuia(false);
+                setAbiertoDiagnostico((v) => !v);
+              }}
               className={`vx-pill-nav ${
-                abiertoDiagnostico ? "!border-(--vx-primary) !bg-(--vx-acento-soft) !text-(--vx-primary)" : ""
+                abiertoDiagnostico && !modoGuia ? "!border-(--vx-primary) !bg-(--vx-acento-soft) !text-(--vx-primary)" : ""
               }`}
             >
               <Compass className="w-4 h-4" />
@@ -489,10 +507,31 @@ export default function VorticeAula() {
         </div>
       </header>
 
+      {modoGuia ? (
+        <GuiaEstudioModulo
+          curso="5.º Básico"
+          asignatura="Matemática"
+          modulo={leccion.modulo}
+          lecciones={lecciones}
+          oaActualId={leccion.oaId}
+          onVolverAula={() => setModoGuia(false)}
+          onIrAlAula={(oaId, paso) => {
+            setOaSeleccionado(oaId);
+            setPasoActual(paso);
+            setModoGuia(false);
+          }}
+        />
+      ) : (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-        <div className="space-y-1.5">
-          <span className="vx-kicker">5.º Básico · Matemática · {leccion.modulo}</span>
-          <h1 className="text-3xl sm:text-[2.35rem] leading-[1.12] text-[#141413]">Aula Universal del Piloto</h1>
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div className="space-y-1.5">
+            <span className="vx-kicker">5.º Básico · Matemática · {leccion.modulo}</span>
+            <h1 className="text-3xl sm:text-[2.35rem] leading-[1.12] text-[#141413]">Aula Universal del Piloto</h1>
+          </div>
+          <Button type="button" variant="outline" size="sm" onClick={() => setModoGuia(true)}>
+            <BookOpen className="w-4 h-4" />
+            Abrir Guía de estudio (PDF)
+          </Button>
         </div>
 
         {/* Selector de los 5 OA del piloto con código y título corto */}
@@ -1356,6 +1395,7 @@ export default function VorticeAula() {
           </CardContent>
         </Card>
       </div>
+      )}
     </div>
   );
 }
