@@ -186,13 +186,13 @@ async function registrarInteresadoDesdeChat(args: { nombre?: string; email?: str
   if (!yaInscrito) {
     await db.insert(waitlistSignups).values(parsed.data);
   }
-  notifyByEmail(yaInscrito ? "Reinscripción vía chatbot (correo ya registrado)" : "Nuevo interesado vía chatbot", {
+  const aviso = notifyByEmail(yaInscrito ? "Reinscripción vía chatbot (correo ya registrado)" : "Nuevo interesado vía chatbot", {
     Nombre: parsed.data.name,
     Correo: parsed.data.email,
     Nivel: parsed.data.levelInterest,
     Origen: "Chatbot del sitio",
   });
-  sendConfirmationEmail(parsed.data.email, parsed.data.name || "");
+  await Promise.all([aviso, sendConfirmationEmail(parsed.data.email, parsed.data.name || "")]);
   return { ok: true, alreadySubscribed: yaInscrito };
 }
 

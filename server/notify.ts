@@ -8,7 +8,10 @@ export async function notifyByEmail(subject: string, rows: Record<string, string
   // la dirección del destinatario — Resend rechaza el envío sin explicación.
   const apiKey = process.env.RESEND_API_KEY?.trim();
   const to = process.env.NOTIFY_EMAIL?.trim();
-  if (!apiKey || !to) return false;
+  if (!apiKey || !to) {
+    console.error("Aviso no enviado: falta RESEND_API_KEY o NOTIFY_EMAIL");
+    return false;
+  }
 
   const html = `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
@@ -28,6 +31,7 @@ export async function notifyByEmail(subject: string, rows: Record<string, string
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
+      signal: AbortSignal.timeout(8000),
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         from: "Barkley Online <notificaciones@barkleyinstituto.cl>",
@@ -38,6 +42,8 @@ export async function notifyByEmail(subject: string, rows: Record<string, string
     });
     if (!res.ok) {
       console.error("Resend rechazó el envío:", res.status, await res.text());
+    } else {
+      console.log("Resend aceptó el aviso interno");
     }
     return res.ok;
   } catch (err) {
@@ -69,6 +75,7 @@ export async function sendConfirmationEmail(to: string, name: string) {
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
+      signal: AbortSignal.timeout(8000),
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         from: "Barkley Online <notificaciones@barkleyinstituto.cl>",
@@ -79,6 +86,8 @@ export async function sendConfirmationEmail(to: string, name: string) {
     });
     if (!res.ok) {
       console.error("Resend rechazó la confirmación al usuario:", res.status, await res.text());
+    } else {
+      console.log("Resend aceptó la confirmación al usuario");
     }
   } catch (err) {
     console.error("No se pudo enviar la confirmación al usuario:", err);

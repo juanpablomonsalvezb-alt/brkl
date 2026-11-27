@@ -241,13 +241,14 @@ export async function registerRoutes(
           console.error("waitlist: base no disponible al guardar; se continúa solo con correo:", e?.message || e);
         }
       }
-      notifyByEmail(!bdDisponible ? "Nueva inscripción en Barkley (SIN GUARDAR EN LA BASE: anotar a mano)" : yaInscrito ? "Reinscripción en Barkley (correo ya registrado)" : "Nueva inscripción en Barkley", {
+      // Hay que esperar los envíos: en Vercel la función se congela al responder.
+      const aviso = notifyByEmail(!bdDisponible ? "Nueva inscripción en Barkley (SIN GUARDAR EN LA BASE: anotar a mano)" : yaInscrito ? "Reinscripción en Barkley (correo ya registrado)" : "Nueva inscripción en Barkley", {
         Nombre: parsed.data.name,
         Correo: parsed.data.email,
         Nivel: parsed.data.levelInterest,
         "Perfil Adaptativo": parsed.data.learningProfileInterest,
       });
-      sendConfirmationEmail(parsed.data.email, parsed.data.name || "");
+      await Promise.all([aviso, sendConfirmationEmail(parsed.data.email, parsed.data.name || "")]);
       if (yaInscrito) {
         return res.status(200).json({ message: "Ya estabas en la lista", alreadySubscribed: true });
       }
@@ -1841,7 +1842,7 @@ export async function registerRoutes(
       // Create reservation
       const reservation = await storage.createReservation(result.data);
 
-      notifyByEmail("Nueva reserva/llamada en Barkley", {
+      await notifyByEmail("Nueva reserva/llamada en Barkley", {
         Nombre: result.data.fullName,
         Correo: result.data.email,
         Teléfono: result.data.phone,
