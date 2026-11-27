@@ -27,6 +27,22 @@ function normalizarPuertasPublicas(leccion: LeccionUniversalPublica): LeccionUni
   return { ...leccion, puertas };
 }
 
+async function asegurarTablaUniversalLessons(c: Pick<Client, "execute">): Promise<void> {
+  await c.execute(`
+    CREATE TABLE IF NOT EXISTS universal_lessons (
+      id TEXT PRIMARY KEY,
+      oa_id TEXT NOT NULL UNIQUE,
+      level_subject_id TEXT NOT NULL,
+      learning_objective_id TEXT,
+      knowledge_item_id TEXT,
+      version INTEGER NOT NULL DEFAULT 1,
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      payload_json TEXT NOT NULL,
+      updated_at INTEGER
+    )
+  `);
+}
+
 /**
  * Siembra idempotentemente las 5 lecciones del piloto en `universal_lessons` y activa
  * `delivery_mode = 'aula_universal'` en la asignatura de Matemática 5.º Básico.
@@ -35,6 +51,7 @@ export async function sembrarLeccionesAulaUniversalSql(
   c: Pick<Client, "execute">,
   opts: { levelSubjectId?: string; learningObjectiveId?: string | null } = {},
 ): Promise<{ sembradas: number; levelSubjectId: string | null }> {
+  await asegurarTablaUniversalLessons(c);
   let lsId = opts.levelSubjectId ?? null;
   if (!lsId) {
     const lsRow = (
@@ -90,7 +107,7 @@ export async function sembrarLeccionesAulaUniversalSql(
         args: [lsId],
       });
     } catch (err) {
-      if (esEntornoEstrictoEsquema() || !/no such column/i.test((err as Error)?.message ?? "")) {
+      if (!/no such column/i.test((err as Error)?.message ?? "")) {
         throw err;
       }
     }
@@ -113,7 +130,15 @@ export async function obtenerLeccionesAulaDesdeDb(
       return rows.map((r) => normalizarPuertasPublicas(JSON.parse(r.payloadJson) as LeccionUniversalPublica));
     }
   } catch (err) {
-    if (esEntornoEstrictoEsquema() || !/no such table/i.test((err as Error)?.message ?? "")) {
+    const esTablaFaltante = /no such table/i.test((err as Error)?.message ?? "");
+    if (esTablaFaltante && c) {
+      await sembrarLeccionesAulaUniversalSql(c);
+      const rows = await db.select().from(universalLessons).orderBy(asc(universalLessons.sortOrder));
+      if (rows.length > 0) {
+        return rows.map((r) => normalizarPuertasPublicas(JSON.parse(r.payloadJson) as LeccionUniversalPublica));
+      }
+    }
+    if (esEntornoEstrictoEsquema() || !esTablaFaltante) {
       throw err;
     }
   }
@@ -141,7 +166,13 @@ export async function obtenerLeccionAulaDesdeDb(
     }
     return null;
   } catch (err) {
-    if (esEntornoEstrictoEsquema() || !/no such table/i.test((err as Error)?.message ?? "")) {
+    const esTablaFaltante = /no such table/i.test((err as Error)?.message ?? "");
+    if (esTablaFaltante && c) {
+      await sembrarLeccionesAulaUniversalSql(c);
+      const [seeded] = await db.select().from(universalLessons).where(eq(universalLessons.oaId, norm));
+      if (seeded) return normalizarPuertasPublicas(JSON.parse(seeded.payloadJson) as LeccionUniversalPublica);
+    }
+    if (esEntornoEstrictoEsquema() || !esTablaFaltante) {
       throw err;
     }
   }
