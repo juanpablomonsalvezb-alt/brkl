@@ -141,25 +141,51 @@ export async function loadVorticeOverview(
 }
 
 // Datos crudos del resumen (también los usan las notificaciones, que necesitan el detalle por módulo).
+async function tieneColumnaDeliveryMode(db: LibSQLDatabase<typeof schema>): Promise<boolean> {
+  try {
+    const cols = await db.all<{ name: string }>(sql`PRAGMA table_info(level_subjects)`);
+    return cols.some((c) => String(c.name) === "delivery_mode");
+  } catch {
+    return false;
+  }
+}
+
 export async function loadVorticeInput(
   db: LibSQLDatabase<typeof schema>,
   userId: string,
   now: Date,
 ) {
-  const rows = await db
-    .select({
-      levelSubjectId: levelSubjects.id,
-      levelId: levels.id,
-      levelName: levels.name,
-      subjectName: subjects.name,
-      subjectSlug: subjects.slug,
-      deliveryMode: levelSubjects.deliveryMode,
-    })
-    .from(enrollments)
-    .innerJoin(levelSubjects, eq(enrollments.levelSubjectId, levelSubjects.id))
-    .innerJoin(subjects, eq(levelSubjects.subjectId, subjects.id))
-    .innerJoin(levels, eq(levelSubjects.levelId, levels.id))
-    .where(and(eq(enrollments.userId, userId), eq(enrollments.isActive, true)));
+  const conDeliveryMode = await tieneColumnaDeliveryMode(db);
+  const rows = conDeliveryMode
+    ? await db
+        .select({
+          levelSubjectId: levelSubjects.id,
+          levelId: levels.id,
+          levelName: levels.name,
+          subjectName: subjects.name,
+          subjectSlug: subjects.slug,
+          deliveryMode: levelSubjects.deliveryMode,
+        })
+        .from(enrollments)
+        .innerJoin(levelSubjects, eq(enrollments.levelSubjectId, levelSubjects.id))
+        .innerJoin(subjects, eq(levelSubjects.subjectId, subjects.id))
+        .innerJoin(levels, eq(levelSubjects.levelId, levels.id))
+        .where(and(eq(enrollments.userId, userId), eq(enrollments.isActive, true)))
+    : (
+        await db
+          .select({
+            levelSubjectId: levelSubjects.id,
+            levelId: levels.id,
+            levelName: levels.name,
+            subjectName: subjects.name,
+            subjectSlug: subjects.slug,
+          })
+          .from(enrollments)
+          .innerJoin(levelSubjects, eq(enrollments.levelSubjectId, levelSubjects.id))
+          .innerJoin(subjects, eq(levelSubjects.subjectId, subjects.id))
+          .innerJoin(levels, eq(levelSubjects.levelId, levels.id))
+          .where(and(eq(enrollments.userId, userId), eq(enrollments.isActive, true)))
+      ).map((r) => ({ ...r, deliveryMode: "legacy" as const }));
 
   // Nivel: el de la matrícula; si aún no hay matrícula, el del perfil.
   let level = rows[0] ? { id: rows[0].levelId, name: rows[0].levelName } : null;

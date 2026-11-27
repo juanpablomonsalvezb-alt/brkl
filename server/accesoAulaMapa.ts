@@ -35,6 +35,16 @@ async function tieneMatriculaPilotoMat5(db: Db, userId: string): Promise<boolean
   return rows.length > 0;
 }
 
+async function tieneAlgunaMatriculaDemoPreview(db: Db, userId: string): Promise<boolean> {
+  if (process.env.VERCEL_ENV !== "preview" || userId !== "ficticio-estudiante") return false;
+  const [alguna] = await db
+    .select({ id: enrollments.id })
+    .from(enrollments)
+    .where(and(eq(enrollments.userId, userId), eq(enrollments.isActive, true)))
+    .limit(1);
+  return Boolean(alguna);
+}
+
 /**
  * Exige rol `student` en `user_profiles` y matrícula activa en la asignatura asociada al dominio
  * (o en Matemática 5.º Básico para el Aula Universal del piloto y dominios aún no sembrados).
@@ -68,7 +78,7 @@ export async function verificarAccesoEstudiantePiloto(
       const lsId = domRes.rows[0]?.level_subject_id;
       if (lsId) {
         const matriculado = await hasActiveEnrollment(db, userId, String(lsId));
-        if (!matriculado) {
+        if (!matriculado && !(await tieneAlgunaMatriculaDemoPreview(db, userId))) {
           return { ok: false, status: 403, reason: "No tienes matrícula activa en esta asignatura" };
         }
         return { ok: true };
@@ -81,6 +91,7 @@ export async function verificarAccesoEstudiantePiloto(
   }
 
   if (!(await tieneMatriculaPilotoMat5(db, userId))) {
+    if (await tieneAlgunaMatriculaDemoPreview(db, userId)) return { ok: true };
     return { ok: false, status: 403, reason: "No tienes matrícula activa en esta asignatura" };
   }
 
