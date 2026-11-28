@@ -267,6 +267,148 @@
   color: var(--vx-ink);
 }
 
+/* Capa pedagógica IABARKLEY: activación de conocimientos previos */
+.vx-guia-previos {
+  padding: 15px 18px;
+  border-radius: 14px;
+  background: var(--vx-bg);
+  border: 1px solid var(--vx-line);
+  border-left: 4px solid var(--vx-acento);
+  display: grid;
+  gap: 8px;
+}
+
+.vx-guia-previos-lista {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+  font-size: 0.94em;
+  color: var(--vx-ink-soft);
+}
+
+/* Capa pedagógica IABARKLEY: analogía acotada y contraejemplo */
+.vx-guia-apoyo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.vx-guia-analogia,
+.vx-guia-contraejemplo {
+  padding: 15px 18px;
+  border-radius: 14px;
+  background: var(--vx-card);
+  border: 1px solid var(--vx-line);
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  font-size: 0.94em;
+}
+
+.vx-guia-analogia {
+  border-left: 4px solid var(--vx-turquesa);
+}
+
+.vx-guia-contraejemplo {
+  border-left: 4px solid var(--vx-violeta);
+}
+
+.vx-guia-etiqueta-mini {
+  font-family: var(--vx-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vx-muted);
+}
+
+.vx-guia-analogia-limite {
+  margin: 2px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--vx-line);
+  font-size: 0.9em;
+  color: var(--vx-ink-soft);
+}
+
+/* Capa pedagógica IABARKLEY: porqué del modelado y verificación */
+.vx-guia-modelado-nota {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--vx-line);
+  display: grid;
+  gap: 6px;
+  font-size: 0.93em;
+  color: var(--vx-ink-soft);
+}
+
+.vx-guia-modelado-nota p {
+  margin: 0;
+}
+
+/* Capa pedagógica IABARKLEY: guía de lectura visual y representación alternativa */
+.vx-guia-visual-guia {
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid var(--vx-line);
+  display: grid;
+  gap: 6px;
+  font-size: 0.92em;
+  color: var(--vx-ink-soft);
+}
+
+.vx-guia-visual-guia p {
+  margin: 0;
+}
+
+/* Capa pedagógica IABARKLEY: causa y prevención del error frecuente */
+.vx-guia-error-detalle {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: grid;
+  gap: 4px;
+  font-size: 0.92em;
+}
+
+.vx-guia-error-detalle p {
+  margin: 0;
+}
+
+/* Capa pedagógica IABARKLEY: reflexión metacognitiva no evaluativa */
+.vx-guia-reflexion {
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: var(--vx-bg);
+  border: 1px solid var(--vx-line-strong);
+  border-left: 4px solid var(--vx-violeta);
+  display: grid;
+  gap: 10px;
+}
+
+.vx-guia-reflexion-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.vx-guia-reflexion-nota {
+  margin: 0;
+  font-size: 0.9em;
+  color: var(--vx-muted);
+}
+
+.vx-guia-reflexion-lista {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+  font-size: 0.95em;
+  color: var(--vx-ink);
+}
+
 /* Tabla de conceptos fundamentales (vocabulario) */
 .vx-guia-tabla-wrap {
   width: 100%;
@@ -529,6 +671,10 @@
     padding-top: 0 !important;
   }
 
+  .vx-guia-previos,
+  .vx-guia-analogia,
+  .vx-guia-contraejemplo,
+  .vx-guia-reflexion,
   .vx-guia-tramo,
   .vx-guia-ejemplo,
   .vx-guia-diagrama,

@@ -17,6 +17,7 @@ import {
   type OaPilotoId,
   type PasoLeccion,
 } from "@shared/aulaUniversal";
+import { ENRIQUECIMIENTO_MATEMATICA_M1 } from "@/data/iabarkley/matematica-m1";
 import "../../pages/vortice/guia-estudio.css";
 
 type EscalaTexto = "normal" | "grande" | "xl";
@@ -185,6 +186,7 @@ export default function GuiaEstudioModulo({
           {leccionesVisibles.map((leccion) => {
             const puertasActivas = puertasDisponibles(leccion);
             const explorar = leccion.puertas.explorar?.explorarConfig;
+            const ia = ENRIQUECIMIENTO_MATEMATICA_M1[leccion.oaId];
             return (
               <section
                 key={leccion.oaId}
@@ -214,6 +216,20 @@ export default function GuiaEstudioModulo({
                   <h3 className="vx-guia-subtitulo">Qué aprenderás</h3>
                   <div className="vx-guia-caja-objetivo">{leccion.objetivo}</div>
                 </div>
+
+                {/* 1b. Activación de conocimientos previos (IABARKLEY) */}
+                {ia && ia.conocimientosPrevios.length > 0 && (
+                  <div className="vx-guia-seccion">
+                    <h3 className="vx-guia-subtitulo">Antes de empezar: qué conviene recordar</h3>
+                    <div className="vx-guia-previos">
+                      <ul className="vx-guia-previos-lista">
+                        {ia.conocimientosPrevios.map((idea, idx) => (
+                          <li key={idx}>{idea}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
 
                 {/* 2. Conceptos fundamentales */}
                 {leccion.vocabulario.length > 0 && (
@@ -252,6 +268,23 @@ export default function GuiaEstudioModulo({
                       <p style={{ margin: 0 }}>{tramo.contenido}</p>
                     </div>
                   ))}
+                  {ia && (
+                    <div className="vx-guia-apoyo-grid">
+                      <div className="vx-guia-analogia">
+                        <span className="vx-guia-etiqueta-mini">Para entenderlo mejor (analogía)</span>
+                        <strong>{ia.analogia.titulo}</strong>
+                        <p style={{ margin: 0 }}>{ia.analogia.explicacion}</p>
+                        <p className="vx-guia-analogia-limite">
+                          <strong>Límite de la comparación:</strong> {ia.analogia.limite}
+                        </p>
+                      </div>
+                      <div className="vx-guia-contraejemplo">
+                        <span className="vx-guia-etiqueta-mini">Qué NO funciona (contraejemplo)</span>
+                        <strong>{ia.contraejemplo.enunciado}</strong>
+                        <p style={{ margin: 0 }}>{ia.contraejemplo.porQueNoSirve}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* 4. Ejemplo desarrollado paso a paso */}
@@ -264,6 +297,18 @@ export default function GuiaEstudioModulo({
                         <li key={idx}>{paso}</li>
                       ))}
                     </ol>
+                    {ia && (
+                      <div className="vx-guia-modelado-nota">
+                        <p>
+                          <strong>Por qué funciona este procedimiento:</strong>{" "}
+                          {ia.modeladoPorque.porqueFunciona}
+                        </p>
+                        <p>
+                          <strong>Cómo verificar tu resultado:</strong>{" "}
+                          {ia.modeladoPorque.comoVerificar}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -292,6 +337,18 @@ export default function GuiaEstudioModulo({
                           />
                         </div>
                       </div>
+                      {ia && (
+                        <div className="vx-guia-visual-guia">
+                          <p>
+                            <strong>Qué observar en las barras:</strong>{" "}
+                            {ia.guiaLecturaVisual.queObservar}
+                          </p>
+                          <p>
+                            <strong>Otra forma de verlo:</strong>{" "}
+                            {ia.guiaLecturaVisual.otraForma}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -300,6 +357,16 @@ export default function GuiaEstudioModulo({
                 <div className="vx-guia-error" role="note" aria-label="Error frecuente">
                   <strong>Error frecuente a evitar</strong>
                   <span>{leccion.ejemploResuelto.errorFrecuente}</span>
+                  {ia && (
+                    <div className="vx-guia-error-detalle">
+                      <p>
+                        <strong>Por qué suele ocurrir:</strong> {ia.errorFrecuenteCausa.porqueOcurre}
+                      </p>
+                      <p>
+                        <strong>Cómo evitarlo:</strong> {ia.errorFrecuenteCausa.comoEvitarlo}
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* 7. Síntesis de conceptos clave */}
@@ -324,6 +391,28 @@ export default function GuiaEstudioModulo({
                           ))}
                         </div>
                       )}
+                    </div>
+                  </div>
+                )}
+
+                {/* 7b. Reflexión metacognitiva no evaluativa (IABARKLEY) */}
+                {ia && ia.reflexionMetacognitiva.length > 0 && (
+                  <div className="vx-guia-seccion">
+                    <h3 className="vx-guia-subtitulo">Pausa para comprobar tu comprensión</h3>
+                    <div className="vx-guia-reflexion" role="note" aria-label="Reflexión metacognitiva sin nota">
+                      <div className="vx-guia-reflexion-head">
+                        <p className="vx-guia-reflexion-nota">
+                          Preguntas personales para ordenar tus ideas antes de practicar.
+                        </p>
+                        <span className="vx-guia-badge vx-guia-badge-tiempo">
+                          Sin nota · solo para reflexionar
+                        </span>
+                      </div>
+                      <ul className="vx-guia-reflexion-lista">
+                        {ia.reflexionMetacognitiva.map((pregunta, idx) => (
+                          <li key={idx}>{pregunta}</li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
                 )}
