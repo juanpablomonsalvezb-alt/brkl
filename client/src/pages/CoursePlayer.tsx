@@ -47,6 +47,13 @@ import {
   XAxis, YAxis, Tooltip
 } from "recharts";
 
+// Título que sirve para mostrar; genérico ("Módulo 3") o vacío => null (la UI cae al texto de siempre).
+function tituloEspecifico(titulo: string | null | undefined): string | null {
+  const t = titulo?.trim();
+  if (!t || /^m[óo]dulo\s*\d+$/i.test(t)) return null;
+  return t;
+}
+
 export default function CoursePlayer() {
   const [, params] = useRoute("/course/:id");
   const [, navigate] = useLocation();
@@ -142,6 +149,7 @@ export default function CoursePlayer() {
       status: string;
       startFormatted: string;
       endFormatted: string;
+      objective: { id: string; title: string } | null;
     }>;
   }>({
     queryKey: ['/api/level-subjects', courseId, 'calendar'],
@@ -157,6 +165,7 @@ export default function CoursePlayer() {
 
   const currentModuleData = calendarData?.modules?.find(m => m.moduleNumber === currentModule);
   const currentObjectiveId = (currentModuleData as any)?.objective?.id || "";
+  const tituloCuadro = tituloEspecifico(currentModuleData?.objective?.title);
 
   const { data: profileData } = useQuery<{ role: string }>({
     queryKey: ['/api/profile'],
@@ -695,6 +704,11 @@ export default function CoursePlayer() {
                               <p className={cn("text-sm font-bold mb-0.5", isCurrent ? "text-(--vx-primary)" : "text-(--vx-ink-soft)")}>
                                 Módulo {moduleNum}
                               </p>
+                              {tituloEspecifico(moduleData?.objective?.title) && (
+                                <p className="text-xs font-medium text-(--vx-ink-soft) leading-snug mb-0.5">
+                                  {tituloEspecifico(moduleData?.objective?.title)}
+                                </p>
+                              )}
                               <p className="text-xs text-(--vx-muted)">{item.dateRange}</p>
                             </div>
                             <div className={cn(
@@ -789,9 +803,20 @@ export default function CoursePlayer() {
                       Módulo {currentModule}
                     </Badge>
 
-                    <h2 className="text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
-                      Contenidos del Módulo {currentModule}
-                    </h2>
+                    {tituloCuadro ? (
+                      <>
+                        <h2 className="text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
+                          {tituloCuadro}
+                        </h2>
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Contenidos del Módulo {currentModule}
+                        </p>
+                      </>
+                    ) : (
+                      <h2 className="text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
+                        Contenidos del Módulo {currentModule}
+                      </h2>
+                    )}
 
                     {currentModuleData && (
                       <p className="text-sm font-medium text-muted-foreground">
