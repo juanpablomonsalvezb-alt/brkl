@@ -5,24 +5,25 @@
 // marcadores como {{precio_escolar}}; se reemplazan en el build (dist/public)
 // y al servir /api/faqs. Un marcador desconocido hace fallar el build.
 const BASE = {
-  escolarMensual: 70000, // decisión 2026-11-21: plan mensual escolar de 7 meses (marzo a septiembre)
+  escolarMensual: 59990, // decisión 2026-11-28: 7 cuotas, marzo a septiembre; octubre incluido
   adultosMensual: 55000,
   matricula: 30000,
   mesesEscolar: 7, // marzo a septiembre (el año cierra el 15-oct, pero octubre no se cobra: intencional)
   mesesAdultos: 8, // marzo a octubre
-  descuentoAnual: 0.15,
+  descuentoAnual: 0.10, // escolar (decisión 2026-11-28)
+  descuentoAdultos: 0.15,
 };
 
 const clp = (n: number) => "$" + n.toLocaleString("es-CL").replace(/,/g, ".");
 
-function anual(mensual: number, meses: number) {
+function anual(mensual: number, meses: number, descuento: number) {
   const lista = mensual * meses;
-  const conDescuento = Math.round(lista * (1 - BASE.descuentoAnual));
+  const conDescuento = Math.round(lista * (1 - descuento));
   return { lista, conDescuento, ahorro: lista - conDescuento };
 }
 
-const escolar = anual(BASE.escolarMensual, BASE.mesesEscolar);
-const adultos = anual(BASE.adultosMensual, BASE.mesesAdultos);
+const escolar = anual(BASE.escolarMensual, BASE.mesesEscolar, BASE.descuentoAnual);
+const adultos = anual(BASE.adultosMensual, BASE.mesesAdultos, BASE.descuentoAdultos);
 
 export const PRECIOS = {
   escolar: clp(BASE.escolarMensual),
@@ -35,6 +36,7 @@ export const PRECIOS = {
   adultosAhorroAnual: clp(adultos.ahorro),
   matricula: clp(BASE.matricula),
   descuentoAnual: `${Math.round(BASE.descuentoAnual * 100)}%`,
+  descuentoAdultos: `${Math.round(BASE.descuentoAdultos * 100)}%`,
 };
 
 export const MARCADORES: Record<string, string> = {
@@ -52,6 +54,7 @@ export const MARCADORES: Record<string, string> = {
   ahorro_adultos_anual: PRECIOS.adultosAhorroAnual,
   matricula: PRECIOS.matricula,
   descuento_anual: PRECIOS.descuentoAnual,
+  descuento_adultos: PRECIOS.descuentoAdultos,
 };
 
 const MARCADOR = /\{\{\s*([a-z_]+)\s*\}\}/g;
