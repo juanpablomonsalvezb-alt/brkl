@@ -9,7 +9,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PREVIEW_HOST_PATTERN, assertBaseLocal } from "../server/dbGuard";
 import { crearClienteDb } from "../server/cliente";
-import { cargarModulos, type DatosModulos } from "../server/cargarModulos";
+import { cargarModulos, resolverCursoEscolar, type DatosModulos } from "../server/cargarModulos";
 
 const fallar = (m: string): never => {
   console.error(`Abortado: ${m}`);
@@ -20,8 +20,9 @@ async function main() {
   if (process.env.NODE_ENV === "production") fallar("NODE_ENV=production");
 
   const args = process.argv.slice(2);
-  const grado = args.find((a) => /^[1-6]$/.test(a));
-  if (!grado) fallar("indica el grado (1 a 6)");
+  const grado = args.find((a) => !a.startsWith("-") && resolverCursoEscolar(a));
+  const curso = grado ? resolverCursoEscolar(grado) : undefined;
+  if (!grado || !curso) fallar("indica el curso (1..6, 1b..8b, 1m..4m o 1_basico..4_medio)");
   const apply = args.includes("--apply");
   const dbIdx = args.indexOf("--db");
   const dbArg = dbIdx >= 0 ? args[dbIdx + 1] : undefined;
@@ -54,7 +55,7 @@ async function main() {
     fallar("indica --db file:<ruta> o PREVIEW_DB_URL y PREVIEW_DB_TOKEN");
   }
 
-  const archivo = fileURLToPath(new URL(`../scripts/data/modulos/${grado}_basico.json`, import.meta.url));
+  const archivo = fileURLToPath(new URL(`../scripts/data/modulos/${curso.archivo}.json`, import.meta.url));
   if (!existsSync(archivo)) fallar(`no existe ${archivo}`);
   const datos = JSON.parse(readFileSync(archivo, "utf8")) as DatosModulos;
 
@@ -63,7 +64,7 @@ async function main() {
     console.log(`Destino: ${destino}`);
     console.log(`Modo: ${apply ? "APLICAR (escribe)" : "simulación (no escribe)"}`);
     const r = await cargarModulos(client, grado!, datos, { escribir: apply });
-    console.log(`Nivel ${grado}b creado: ${r.nivelCreado ? "sí" : "no"}`);
+    console.log(`Nivel ${curso.nivelId} creado: ${r.nivelCreado ? "sí" : "no"}`);
     console.log(`Asignaturas creadas: ${r.asignaturasCreadas}`);
     console.log(`level_subjects creados: ${r.levelSubjectsCreados}`);
     console.log(`Módulos insertados: ${r.modulosInsertados}`);

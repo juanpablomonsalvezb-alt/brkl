@@ -101,10 +101,39 @@ async function main() {
     );
     eq(titulo5.rows[0]?.t, datos["Matemática"]?.find((m) => m.modulo === 5)?.titulo, "título de Matemática módulo 5 cargado");
 
-    // 6. Grado inválido se rechaza sin tocar nada.
+    // 6. Grado inválido (adultos o fuera de 1° básico a 4° medio) se rechaza sin tocar nada.
     let rechazo = false;
-    try { await cargarModulos(c, "7", datos, { escribir: true }); } catch { rechazo = true; }
-    eq(rechazo, true, "grado fuera de 1..6 se rechaza");
+    try { await cargarModulos(c, "nb1", datos, { escribir: true }); } catch { rechazo = true; }
+    eq(rechazo, true, "grado no escolar (nb1) se rechaza");
+
+    // 7. Inglés y cursos de media (p. ej. 7b) se aceptan y reutilizan slug 'ingles'.
+    const datosIngles: DatosModulos = {
+      "Idioma Extranjero: Inglés": Array.from({ length: 15 }, (_, i) => ({
+        modulo: i + 1,
+        oa: [5],
+        titulo: `Tema inglés ${i + 1}`,
+        contenido: `Contenido de prueba ${i + 1}.`,
+      })),
+    };
+    const r7 = await cargarModulos(c, "7b", datosIngles, { escribir: true });
+    eq(r7.nivelCreado, true, "7b se crea si no existe");
+    eq(r7.modulosInsertados, 15, "7b inserta 15 módulos de Inglés");
+    const slugIngles = await c.execute("SELECT slug FROM subjects WHERE slug = 'ingles'");
+    eq(slugIngles.rows.length, 1, "Idioma Extranjero: Inglés mapea al slug ingles");
+
+    // 8. Ciencias para la ciudadanía (3m/4m) mapea al slug ciencias-naturales.
+    const datosCiudadania: DatosModulos = {
+      "Ciencias para la ciudadanía": Array.from({ length: 15 }, (_, i) => ({
+        modulo: i + 1,
+        oa: [2],
+        titulo: `Tema sostenibilidad ${i + 1}`,
+        contenido: `Contenido científico ${i + 1}.`,
+      })),
+    };
+    const r4m = await cargarModulos(c, "4m", datosCiudadania, { escribir: true });
+    eq(r4m.modulosInsertados, 15, "4m inserta 15 módulos de Ciencias para la ciudadanía");
+    const slugCiencias = await c.execute("SELECT COUNT(*) AS n FROM subjects WHERE slug = 'ciencias-naturales'");
+    eq(Number(slugCiencias.rows[0]?.n), 1, "Ciencias para la ciudadanía reutiliza ciencias-naturales sin duplicar");
   } finally {
     c.close();
     rmSync(dir, { recursive: true, force: true });
