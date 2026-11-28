@@ -95,7 +95,7 @@ curso, solo reserva de cupo (sin pago) para 2027.
 === MODALIDAD DE ADULTOS (18 años o más) ===
 Se organiza en niveles agrupados, no año por año: Educación Básica de Adultos (3 niveles, equivale a
 1°-8° básico) y Educación Media de Adultos (2 niveles: 1°-2° medio y 3°-4° medio).
-Precio: ${PRECIOS.adultos}/mes, o ${PRECIOS.adultosAnual} pago único anual (${PRECIOS.descuentoAnual} descuento, ahorra ${PRECIOS.adultosAhorroAnual}).
+Precio: ${PRECIOS.adultos}/mes, o ${PRECIOS.adultosAnual} pago único anual (${PRECIOS.descuentoAdultos} descuento, ahorra ${PRECIOS.adultosAhorroAnual}).
 Requisito: 18 años o más y haber completado el nivel anterior al que se desea validar.
 La licencia obtenida es la misma que entrega un colegio tradicional, sirve para postular a la PAES.
 

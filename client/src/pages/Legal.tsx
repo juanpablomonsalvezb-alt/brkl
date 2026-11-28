@@ -113,12 +113,12 @@ export function RefundPolicy() {
         El plan mensual se cobra mes a mes. Puedes cancelar en cualquier momento desde el mes siguiente al aviso;
         el mes ya facturado no es reembolsable, pero el estudiante conserva acceso hasta el término de ese mes.
       </P>
-      <H2>Plan anual (pago único con 15% de descuento)</H2>
+      <H2>Plan anual (pago único con descuento)</H2>
       <Ul>
         <li>Cancelación dentro de los primeros 14 días desde el inicio de clases en marzo: reembolso del 100%.</li>
         <li>
           Cancelación después de los 14 días: se reembolsa el saldo proporcional a los meses no cursados, calculado
-          al valor del plan mensual (sin el 15% de descuento), descontando los meses ya utilizados.
+          al valor del plan mensual (sin el descuento por pago anual), descontando los meses ya utilizados.
         </li>
       </Ul>
       <H2>Cómo solicitarlo</H2>
