@@ -159,8 +159,44 @@ export class DatabaseStorage implements IStorage {
     return created;
   }
 
-  // Level-Subjects
+  // Level-Subjects (tolerante a bases Preview sin columna delivery_mode)
+  private tieneDeliveryModeCache: boolean | null = null;
+  private async tieneColumnaDeliveryMode(): Promise<boolean> {
+    if (this.tieneDeliveryModeCache !== null) return this.tieneDeliveryModeCache;
+    try {
+      const cols = await db.all<{ name: string }>(sql`PRAGMA table_info(level_subjects)`);
+      this.tieneDeliveryModeCache = cols.some((c) => c.name === "delivery_mode");
+    } catch {
+      this.tieneDeliveryModeCache = false;
+    }
+    return this.tieneDeliveryModeCache;
+  }
+
   async getAllLevelSubjects(): Promise<(LevelSubject & { level: Level; subject: Subject })[]> {
+    const conDelivery = await this.tieneColumnaDeliveryMode();
+    if (!conDelivery) {
+      const result = await db
+        .select({
+          id: levelSubjects.id,
+          levelId: levelSubjects.levelId,
+          subjectId: levelSubjects.subjectId,
+          totalOAs: levelSubjects.totalOAs,
+          textbookPdfUrl: levelSubjects.textbookPdfUrl,
+          textbookTitle: levelSubjects.textbookTitle,
+          level: levels,
+          subject: subjects,
+        })
+        .from(levelSubjects)
+        .innerJoin(levels, eq(levelSubjects.levelId, levels.id))
+        .innerJoin(subjects, eq(levelSubjects.subjectId, subjects.id))
+        .orderBy(levels.sortOrder, subjects.name);
+
+      return result.map(r => ({
+        ...r,
+        deliveryMode: "legacy" as const,
+      }));
+    }
+
     const result = await db
       .select({
         id: levelSubjects.id,
@@ -192,6 +228,28 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getLevelSubjects(levelId: string): Promise<(LevelSubject & { subject: Subject })[]> {
+    const conDelivery = await this.tieneColumnaDeliveryMode();
+    if (!conDelivery) {
+      const result = await db
+        .select({
+          id: levelSubjects.id,
+          levelId: levelSubjects.levelId,
+          subjectId: levelSubjects.subjectId,
+          totalOAs: levelSubjects.totalOAs,
+          textbookPdfUrl: levelSubjects.textbookPdfUrl,
+          textbookTitle: levelSubjects.textbookTitle,
+          subject: subjects,
+        })
+        .from(levelSubjects)
+        .innerJoin(subjects, eq(levelSubjects.subjectId, subjects.id))
+        .where(eq(levelSubjects.levelId, levelId));
+
+      return result.map(r => ({
+        ...r,
+        deliveryMode: "legacy" as const,
+      }));
+    }
+
     const result = await db
       .select({
         id: levelSubjects.id,
@@ -220,6 +278,21 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getLevelSubjectById(id: string): Promise<LevelSubject | undefined> {
+    const conDelivery = await this.tieneColumnaDeliveryMode();
+    if (!conDelivery) {
+      const [ls] = await db
+        .select({
+          id: levelSubjects.id,
+          levelId: levelSubjects.levelId,
+          subjectId: levelSubjects.subjectId,
+          totalOAs: levelSubjects.totalOAs,
+          textbookPdfUrl: levelSubjects.textbookPdfUrl,
+          textbookTitle: levelSubjects.textbookTitle,
+        })
+        .from(levelSubjects)
+        .where(eq(levelSubjects.id, id));
+      return ls ? { ...ls, deliveryMode: "legacy" as const } : undefined;
+    }
     const [ls] = await db.select().from(levelSubjects).where(eq(levelSubjects.id, id));
     return ls;
   }
